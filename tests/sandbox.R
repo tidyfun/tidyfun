@@ -77,5 +77,5 @@ test <- data_frame(id = dti$ID, sex = dti$sex, cca = f_cca)
 test
 
 test %>% filter(cca[, .7, raw = TRUE] > .6)
-test %>% filter(rowMeans(cca[, seq(.7, 1, l = 10), raw = TRUE]) > .6)
+test %>% filter(apply(cca[, seq(.7, 1, l = 50), raw = TRUE], 1, max) > .8)
 
