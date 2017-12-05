@@ -1,13 +1,18 @@
 # conversions to/from data.frame, matrix
 as.feval <- function(data, ...) UseMethod("as.feval")
 as.feval.matrix  <- function(data, argvals = NULL, regular = NULL, domain = NULL, 
-  range = NULL, ...) {
+    range = NULL, ...) {
   feval(data, argvals, regular, domain, range, ...)
 }
 as.feval.data.frame <- function(data, id = 1, argvals = 2, value = 3, domain = NULL, 
-  range = NULL, ...) {
+    range = NULL, ...) {
   feval(data, id, argvals, value, domain, range, ...)
 }
+as.feval.list <- function(data, argvals = NULL, regular = NULL, domain = NULL, 
+    range = NULL, ...) {
+  feval(data, argvals, value, domain, range, ...)
+}
+
 
 as.data.frame.feval <- function(x) {
   #FIXME: add argvals
@@ -26,6 +31,7 @@ as.matrix.feval_reg <- function(x, argvals = NULL) {
   structure(ret, argvals = argvals)
 }
 as.matrix.feval_irreg <- function(x) {
+  #FIXME: add argvals
   argvals <- argvals(x)
   grid <- sort(unique(unlist(argvals)))
   ret <- do.call(rbind, 

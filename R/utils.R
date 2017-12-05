@@ -1,6 +1,10 @@
 find_argvals <- function(data, argvals) {
   if (is.null(argvals)) {
-    argvals <- as.numeric(dimnames(data)[[2]])
+    suppressWarnings(argvals <- as.numeric(dimnames(data)[[2]]))
+    if (is.null(argvals) | any(is.na(argvals))) {
+      message("Column names of <data> not suitable as argvals.")
+      argvals <- numeric(0)
+    }
   } 
   if (!length(argvals)) argvals <- seq_len(dim(data)[2])
   stopifnot(length(argvals)  == dim(data)[2], 
