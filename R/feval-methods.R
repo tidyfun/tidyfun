@@ -1,18 +1,41 @@
 #'@import checkmate
-argvals <- function(x) UseMethod("argvals")
+#-------------------------------------------------------------------------------
+# new generics & methods 
+argvals <- function(f) UseMethod("argvals")
+argvals.default <- function(f) .NotYetImplemented()
 argvals.feval_irreg <- function(x) map(x, ~ environment(.x)$.argvals)
 argvals.feval_reg <- function(x) parent.env(environment(x[[1]]))$.argvals
 
 evaluations <- function(f) UseMethod("evaluations")
+evaluations.default <- function(f) .NotYetImplemented()
 evaluations.function <- function(f) environment(f)$.data
 evaluations.feval <- function(f) map(f, evaluations)
 
-domain <- function(x) attr(x, "domain")
+n_evaluations <- function(f) UseMethod("n_evaluations")
+n_evaluations.default <- function(f) .NotYetImplemented()
+n_evaluations.feval_irreg <- function(f) {
+  unlist(map(x, ~ length(environment(.f)$.argvals)))
+}
+n_evaluations.feval_reg <- function(f) {
+  length(parent.env(environment(f[[1]]))$.argvals)
+}
+
+domain <- function(f) attr(f, "domain")
+interpolator <- function(f) attr(f, "interpolator")
+
+`interpolator<-` <- function(f, value) {
+  stopifnot(inherits(f, "feval"), is.function(value))
+  f <- map(f, function(.f) environment(.f)$interpolator <- value)
+  attr(f, "interpolator") <- attr(value, "label") %||% substitute(value)
+}
+
+#-------------------------------------------------------------------------------
+# new methods
 range.fvector <- function(x) attr(x, "range")
 
 print.fvector <- function(x) {
   cat(paste0("fvector[",length(x),"] on (", domain(x)[1], ",", 
-    domain(x)[2], ")"))
+    domain(x)[2], ")."))
   invisible(x)
 }
 print.feval_reg <- function(x) {
@@ -30,7 +53,7 @@ print.feval_irreg <- function(x) {
 
 #summary #define Arith-methods first.... 
 # c.feval_reg #???
-`[.feval` <- function(x, i, j, ..., raw = FALSE, interpolate = TRUE) {
+`[.feval` <- function(x, i, j, ..., raw = FALSE) {
   if (missing(i)) {
     i <- seq_along(x)
   } else {
@@ -51,11 +74,12 @@ print.feval_irreg <- function(x) {
   if (!is.list(argvals)) {
     argvals <- list(argvals)
   } else argvals <- argvals[i]  
-  if (!interpolate) {
+  if (inherits(j, "AsIs")) {
     new_argvals <- map2(list(j), argvals, ~ !(.x %in% .y))
     if (any(unlist(new_argvals))) {
-      warning("some <j> not part of argvals, returning NAs.")
-    }  
+      warning("no data for some of <j>, returning NAs.")
+    }
+    class(j) <- class(j)[-1]
   } else new_argvals <- list(FALSE)
   return_na <- map2(list(outside_domain), new_argvals, ~ .x | .y)
   ret <- pmap(list(.f = unclass(x)[i], .v = list(j), .na = return_na), 

@@ -3,3 +3,4 @@
 import(checkmate)
 import(dplyr)
 import(purrr)
+import(zoo)

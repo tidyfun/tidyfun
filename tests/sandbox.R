@@ -5,7 +5,7 @@ library(purrr)
 
 load_all(".")
 
-
+################################################################################
 n <- 5
 grid <-  seq(0, 1, l = 11)
 mat_reg <- t(replicate(n, dbeta(grid, runif(1, 2, 7), runif(1, 3, 12))))
@@ -21,6 +21,8 @@ expect_true(all(sapply(f_reg, is.function)))
 expect_true(length(f_reg) == n)
 
 str(argvals(f_reg), 1)
+domain(f_reg)
+interpolator(f_reg)
 
 f_irreg <- feval(mat_irreg)
 str(f_irreg, 1)
@@ -61,14 +63,20 @@ f_irreg[-3]
 
 # with j-arg & raw = FALSE --> return function evaluations in list of tibbles
 str(f_reg[1, seq(0, 1, l = 50)])
-str(f_reg[2:3, seq(0, 1, l = 50), interpolate = FALSE])
+plot(f_reg[1, seq(0, 1, l = 50)][[1]])
+lines(grid, mat_reg[1,], type = "b", col = 2)
 str(f_reg[, seq(-.1, .5, l = 6)])
 
 # with j-arg and raw = TRUE --> return function evaluations in matrix
 str(f_reg[, seq(0, 1, l = 50), raw = TRUE])
-str(f_reg[1, seq(0, 1, l = 50), raw = TRUE, interpolate = FALSE])
+matplot(seq(0, 1, l = 50), t(f_reg[, seq(0, 1, l = 50), raw = TRUE]), 
+  col = 1, type = "l", lty = 1)
+matlines(grid, t(mat_reg), col = 2, type = "l", lty = 2)
 
+# with I(j)-arg: don't interpolate, only use observed data
+str(f_reg[2:3, I(seq(0, 1, l = 21))])
 ################################################################################
+
 # in a tibble
 dti <- refund::DTI
 f_cca <- feval(dti$cca, argvals = seq(0, 1, l = 93))
