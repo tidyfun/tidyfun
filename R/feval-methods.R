@@ -14,7 +14,7 @@ evaluations.feval <- function(f) map(f, evaluations)
 n_evaluations <- function(f) UseMethod("n_evaluations")
 n_evaluations.default <- function(f) .NotYetImplemented()
 n_evaluations.feval_irreg <- function(f) {
-  unlist(map(x, ~ length(environment(.f)$.argvals)))
+  unlist(map(f, ~ length(environment(.x)$.argvals)))
 }
 n_evaluations.feval_reg <- function(f) {
   length(parent.env(environment(f[[1]]))$.argvals)
@@ -31,23 +31,25 @@ interpolator <- function(f) attr(f, "interpolator")
 
 #-------------------------------------------------------------------------------
 # new methods
-range.fvector <- function(x) attr(x, "range")
+range.fvector <- function(x, na.rm = FALSE) attr(x, "range")
 
 print.fvector <- function(x) {
   cat(paste0("fvector[",length(x),"] on (", domain(x)[1], ",", 
-    domain(x)[2], ")."))
+    domain(x)[2], ")"))
   invisible(x)
 }
 print.feval_reg <- function(x) {
   NextMethod()
-  cat(" based on", length(argvals(x)), "evaluations each.\n")
+  cat(" based on", length(argvals(x)), "evaluations each\n")
+  cat("interpolation by ", interpolator(x), "\n")
   invisible(x)
 }
 print.feval_irreg <- function(x) {
   NextMethod()
-  n_evals <- sapply(argvals(x), length)
+  n_evals <- n_evaluations(x)
   cat(paste0(" based on ", min(n_evals), " to ", max(n_evals)," (mean: ", 
-    round(mean(n_evals)),") evaluations each.\n"))
+    round(mean(n_evals)),") evaluations each\n"))
+  cat("interpolation by ", interpolator(x), "\n")
   invisible(x)
 }
 
@@ -63,9 +65,10 @@ print.feval_irreg <- function(x) {
   }  
   if (missing(j)) {
     ret <- unclass(x)[i]
-    attributes(ret) <- c(names = names(ret), 
-      attributes(x)[names(attributes(x)) != "names"])
+    attributes(ret) <- append(attributes(x)[names(attributes(x)) != "names"], 
+      list(names = names(ret)))
     return(ret)
+    
   }
   assert_numeric(j, any.missing = FALSE, finite = TRUE, min.len = 1)
   outside_domain <- j < domain(x)[1] | j > domain(x)[2]
@@ -93,7 +96,38 @@ print.feval_irreg <- function(x) {
   }
   ret
 } 
-#`[<-`  
+
+#'@export
+`[<-.feval` <- function(x, i, j, value) {
+  #if (missing(value)) stop("wtf...?")
+  if (missing(i)) {
+    i <- seq_along(x)
+  } else {
+    assert_integerish(i, lower = -length(x), 
+      any.missing = FALSE)
+    assert_true(all(sign(i) == sign(i)[1]))
+    if (sign(i)[1] < 0) {
+      i <- (1:length(x))[i]
+    }
+  }
+  if (missing(j)) {
+    stopifnot(inherits(value, class(x)[1]), 
+      all(domain(x) == domain(value)),
+      identical(interpolator(x), interpolator(value)),
+      length(value) %in% c(1, length(i)))
+    if (inherits(x, "feval_reg")) {
+      assert_true(identical(argvals(x), argvals(value)))
+    }
+    attr_x <- attributes(x)
+    attr_x$range <- range(range(x), range(value))
+    attr_x$names[i] <- names(value)
+    x <- unclass(x)
+    x[i] <- unclass(value)
+    attributes(x) <- attr_x
+    return(x)
+  } else .NotYetImplemented()
+  
+}
 # plot
 # length
 # deriv

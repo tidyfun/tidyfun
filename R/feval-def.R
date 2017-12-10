@@ -2,15 +2,15 @@
 #' @import dplyr
 feval <- function(data, ...) UseMethod("feval")
 
-new_feval <- function(argvals, datalist, regular, domain, range, interpolator) {
+new_feval <- function(argvals, datalist, regular, domain, range, interpolator, signif = 6) {
   if (!regular) {
-    argvals <- map2(datalist, argvals, ~ .y[!is.na(.x)])
+    argvals <- map2(datalist, argvals, ~ signif(.y, signif)[!is.na(.x)])
     datalist <- map(datalist, ~ .x[!is.na(.x)])
     class <- "feval_irreg"
   } 
-  ret <- map2(argvals, datalist, ~ make_f(.x, .y, interpolator))
+  ret <- map2(argvals, datalist, ~ make_f(.x, .y, interpolator, signif))
   if (regular) {
-    argval_env <- new.env(); argval_env$.argvals <- argvals[[1]]
+    argval_env <- new.env(); argval_env$.argvals <- signif(argvals[[1]], signif)
     ret <- map(ret, function(f) {
       rm(".argvals", envir = environment(f))
       parent.env(environment(f)) <- argval_env
@@ -25,6 +25,7 @@ new_feval <- function(argvals, datalist, regular, domain, range, interpolator) {
     domain = domain,
     range = range,
     interpolator = attr(interpolator, "label") %||% interpolator,
+    signif_digits_argvals = signif, #maybe turn this into a <global> option? 
     class = c(class, "feval", "fvector"))
 }
 

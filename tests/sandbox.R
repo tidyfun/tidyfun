@@ -10,11 +10,15 @@ n <- 5
 grid <-  seq(0, 1, l = 11)
 mat_reg <- t(replicate(n, dbeta(grid, runif(1, 2, 7), runif(1, 3, 12))))
 colnames(mat_reg) <- grid
+rownames(mat_reg) <- 1:n
+
 mat_irreg <- mat_reg
 mat_irreg[sample(1:length(mat_reg), length(mat_reg)/3)] <- NA
 
 ################################################################################
 # construct / convert
+
+# TODO: empty function / all NAs
 
 f_reg <- try(feval(mat_reg))
 expect_true(all(sapply(f_reg, is.function)))
@@ -34,8 +38,9 @@ as.data.frame(f_irreg)
 expect_equivalent(as.feval(as.data.frame(f_reg)), f_reg)
 expect_equivalent(as.feval(as.data.frame(f_irreg)), f_irreg)
 expect_equivalent(as.matrix(f_reg), mat_reg)
+# NB: this will break if mat_irreg has all-NA columns, which get dropped
+# in conversion ... feature or bug ... ?
 expect_equivalent(as.matrix(f_irreg), mat_irreg)
-
 
 list_reg <- as.list(as.data.frame(t(mat_reg))); names(list_reg) <- 1:n
 expect_equivalent(feval(list_reg, argvals = grid), f_reg)
@@ -56,7 +61,7 @@ f_reg
 f_irreg
 
 ################################################################################
-# [, [[, 
+# sub-indexing: [
 # no j-arg --> return subsetted fvector
 f_reg[1:2] # same as f_reg[1:2, ] 
 f_irreg[-3] 
@@ -76,8 +81,18 @@ matlines(grid, t(mat_reg), col = 2, type = "l", lty = 2)
 # with I(j)-arg: don't interpolate, only use observed data
 str(f_reg[2:3, I(seq(0, 1, l = 21))])
 ################################################################################
+# sub-assignment: [<-]
 
-# in a tibble
+load_all()
+f_reg <- try(feval(mat_reg))
+f_reg[2] <- feval(mat_reg[2,, drop = F])
+expect_equal(f_reg, feval(mat_reg))
+f_reg[-5] <- f_reg[4:1]
+expect_equal(names(f_reg), as.character(c(4:1,5)))
+
+################################################################################
+
+rm()# in a tibble
 dti <- refund::DTI
 f_cca <- feval(dti$cca, argvals = seq(0, 1, l = 93))
 test <- data_frame(id = dti$ID, sex = dti$sex, cca = f_cca)
