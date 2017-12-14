@@ -99,7 +99,7 @@ print.feval_irreg <- function(x) {
 
 #'@export
 `[<-.feval` <- function(x, i, j, value) {
-  #if (missing(value)) stop("wtf...?")
+  if (missing(value) | (missing(i) & missing(j))) stop("wtf...?")
   if (missing(i)) {
     i <- seq_along(x)
   } else {
@@ -111,9 +111,11 @@ print.feval_irreg <- function(x) {
     }
   }
   if (missing(j)) {
+    # TODO: allow array indices as for arrays, i.e. first dim is i, second j?
+    # TODO: allow named-list args where names are used for i and entries are j-vectors?
     stopifnot(inherits(value, class(x)[1]), 
       all(domain(x) == domain(value)),
-      identical(interpolator(x), interpolator(value)),
+      identical(interpolator(x), interpolator(value), ignore.environment = TRUE),
       length(value) %in% c(1, length(i)))
     if (inherits(x, "feval_reg")) {
       assert_true(identical(argvals(x), argvals(value)))
@@ -123,10 +125,22 @@ print.feval_irreg <- function(x) {
     attr_x$names[i] <- names(value)
     x <- unclass(x)
     x[i] <- unclass(value)
+    # if min(i) > length(x) fill up NULL entries with empty functions
+    null_entries <- which(sapply(x, is.null))
+    if (length(null_entries)) {
+      arg_null <- if (inherits(x, "feval_reg")) list(attr_x$argvals) else list(numeric(0))
+      x[null_entries] <- 
+        unclass(new_feval(arg_null, replicate(length(null_entries), NULL), 
+          regular = TRUE, NA, NA, function(v) rep(NA, length(v))))
+    }
     attributes(x) <- attr_x
     return(x)
-  } else .NotYetImplemented()
-  
+  } 
+  # TODO: asIs --> overwrite j-th evaluations with value
+  # TODO: if null entries, fill up with empty functions....
+  # new i -> create new fevals ( regularity; update domain, range,)
+  # old i -> join argvals with j, data with x, warn & overwrite for duplicate j
+  # (update regularity & warn; update domain, range,)
 }
 # plot
 # length
@@ -142,3 +156,4 @@ print.feval_irreg <- function(x) {
 
 ### new generics:
 # integrate
+
