@@ -20,7 +20,7 @@ new_feval <- function(argvals, datalist, regular, domain, range, interpolator, s
   }
   domain <- domain %||% range(argvals)
   range <- range %||% range(datalist, na.rm = TRUE)
-  names(ret) <- names(datalist) %||% seq_along(ret)
+  names(ret) <- make.names(names(datalist) %||% seq_along(ret), unique = TRUE)
   structure(ret, 
     domain = domain,
     range = range,
@@ -32,19 +32,20 @@ new_feval <- function(argvals, datalist, regular, domain, range, interpolator, s
 feval.matrix <- function(data, argvals = NULL, regular = NULL, domain = NULL, 
   range = NULL, interpolator = approx_linear, ...) {
   stopifnot(is.numeric(data))
-  
   argvals <- find_argvals(data, argvals) # either arg or numeric colnames or 1:ncol
-  datalist <- split(data, rownames(data) %||% seq_len(dim(data)[1]))
+  names <- make.names(rownames(data) %||% seq_len(dim(data)[1]), unique = TRUE)
+  datalist <- split(data, names)
   regular <- regular %||% !any(is.na(data))
   new_feval(argvals, datalist, regular, domain, range, interpolator)
 }
-# use first 3 columns of data for function information
+# default: use first 3 columns of <data> for function information
 feval.data.frame <- function(data, id = 1, argvals = 2, value = 3, domain = NULL, 
   range = NULL, interpolator = approx_linear, ...) {
   stopifnot(ncol(data) >= 3, is.numeric(data[[argvals]]), 
     is.numeric(data[[value]]))
-  datalist <- split(data[[value]], data[[id]])
-  argvals <- split(data[[argvals]], data[[id]])
+  id <- data[[id]]
+  datalist <- split(data[[value]], id)
+  argvals <- split(data[[argvals]], id)
   regular <- sum(duplicated(argvals)) == length(argvals) - 1
   new_feval(argvals, datalist, regular, domain, range, interpolator)
 }
@@ -70,10 +71,12 @@ feval.list <- function(data, argvals = NULL, regular = NULL, domain = NULL,
     dims <- map(data, dim)
     stopifnot(all(sapply(dims, length) == 2), all(map(dims, ~.x[2]) == 2),
       all(rapply(data, is.numeric)))
-    id <- names(data) %||% seq_along(data)
+    id <- make.names(names(data) %||% seq_along(data), unique = TRUE)
     argvals <- map(data, ~ unlist(.x[, 1]))
     data <- map(data, ~ unlist(.x[, 2]))
+    names(data) <- id
     regular <- regular %||% all(duplicated(argvals))
   }
   new_feval(argvals, data, regular, domain, range, interpolator)
 }
+
