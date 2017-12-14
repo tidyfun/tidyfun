@@ -28,8 +28,8 @@ find_argvals <- function(data, argvals) {
   list(argvals)
 }
 
-
 make_f <- function(.argvals, .data, interpolator, signif) {
+  #do this with local{}!!
   function(v) {
     v <- signif(v, signif)
     if (isTRUE(all.equal(v, .argvals))) return(.data)
@@ -40,6 +40,3 @@ make_f <- function(.argvals, .data, interpolator, signif) {
     coredata(interpolator(zoo(.data[v_arg_match], v_arg)))[requested]
   }
 }
-
-
-

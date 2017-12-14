@@ -1,21 +1,9 @@
 source("./tests/make_examples.R", echo = TRUE)
 
 ################################################################################
-# construct / convert
+# convert
 
 # TODO: empty function / all NAs
-
-f_reg <- try(feval(mat_reg))
-expect_true(all(sapply(f_reg, is.function)))
-expect_true(length(f_reg) == n)
-
-str(argvals(f_reg), 1)
-domain(f_reg)
-interpolator(f_reg)
-
-f_irreg <- feval(mat_irreg)
-str(f_irreg, 1)
-str(argvals(f_irreg), 1)
 
 as.data.frame(f_reg)
 as.data.frame(f_irreg)
