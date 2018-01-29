@@ -1,4 +1,5 @@
 #'@import checkmate
+
 #-------------------------------------------------------------------------------
 # new generics & methods 
 argvals <- function(f) UseMethod("argvals")
@@ -128,6 +129,7 @@ print.feval_irreg <- function(x) {
   } else .NotYetImplemented()
   
 }
+
 # plot
 # length
 # deriv

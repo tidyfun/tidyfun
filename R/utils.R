@@ -14,6 +14,7 @@ in_range <- function(x, r){
   r <- range(r, na.rm = TRUE)
   x >= r[1] & x <= r[2]
 }
+
 find_argvals <- function(data, argvals) {
   if (is.null(argvals)) {
     suppressWarnings(argvals <- as.numeric(dimnames(data)[[2]]))
@@ -41,5 +42,5 @@ make_f <- function(.argvals, .data, interpolator, signif) {
   }
 }
 
-
+is_fvector <- function(x) "fvector" %in% class(x)
 
