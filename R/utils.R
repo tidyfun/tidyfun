@@ -29,6 +29,50 @@ find_argvals <- function(data, argvals) {
   list(argvals)
 }
 
+#' @import checkmate
+check_argvals <- function(argvals, x){
+  if (is.list(argvals)) {
+    check_list(argvals, types = "numeric", len = length(x))
+    map(argvals, ~ check_argvals_vector(x, .))
+  } else {
+    check_argvals_vector(argvals, x)
+  }
+}
+check_argvals_vector <- function(argvals, x) {
+  check_numeric(argvals, any.missing = FALSE, 
+    lower = domain(x)[1], upper = domain(x)[2])
+}
+
+
+#TODO: write proper tests for this
+check_interpolation <- function(x, argvals){
+  UseMethod("check_interpolation")
+}
+check_interpolation.feval_reg <- function(x, argvals){
+  original <- argvals(x)
+  if (is.list(argvals)) {
+    map(argvals, ~ !(. %in% original))
+  } else {
+    !(argvals %in% original)
+  }
+}
+check_interpolation.feval_irreg <- function(x, argvals) {
+  original <- argvals(x)
+  if (is.list(argvals)) {
+    map2(argvals, original, ~ !(.x %in% .y))
+  } else {
+    map(original, ~ !(argvals %in% .x))
+  }
+}
+
+adjust_resolution <- function(argvals, x) {
+  signif <- attr(x, "signif_digits_argvals")
+  if (is.list(argvals)) {
+    map(argvals, ~ signif(., signif)) 
+  } else {
+    signif(argvals, signif)
+  }  
+}
 
 make_f <- function(.argvals, .data, interpolator, signif) {
   function(v) {
@@ -42,5 +86,8 @@ make_f <- function(.argvals, .data, interpolator, signif) {
   }
 }
 
-is_fvector <- function(x) "fvector" %in% class(x)
 
+#' @export
+is_fvector <- function(x) "fvector" %in% class(x)
+#' @export
+is_irreg <- function(x) "feval_irreg" %in% class(x)

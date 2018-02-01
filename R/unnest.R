@@ -1,13 +1,14 @@
 #' Unnest a `data.frame` with `fvector`-columns
 #' 
 #' This is a wrapper around [tidyr::unnest()] that extends the functionality
-#' provided for list-columns to `fvector`-columns, i.e., it creates new "long" 
-#' `data.frame` containing the function evaluations
+#' provided for list-columns to `fvector`-columns, i.e., it creates a new "long" 
+#' `data.frame` containing the function evaluations. Use `sep = "_"` to create
+#' column names that retain the names of the `fvector`-columns
 #' 
 #' @inheritParams tidyr::unnest
 #' @param argvals evaluation grid for fvector columns. Can be a named list giving one j-vector for 
 #'   each `fvector` to unlist. Used as the argument for the `as.data.frame`-method for the respective 
-#'   `fvector`-columns. NOT IMPLEMENTED YET
+#'   `fvector`-columns.
 #' @import tidyr rlang
 #' @export
 #' @md
@@ -29,7 +30,7 @@ unnest.data.frame <- function(data, ..., argvals = NULL, .drop = NA, .id = NULL,
   # convert them to lists of data.frames
   data <- mutate_if(data, names(data) %in% fvector_cols, 
     function(f) {
-      nest(as.data.frame(f), -id)$data
+      nest(as.data.frame(f, argvals), -id)$data
     })
   
   # send pre-unnested data on to tidyr::unnest

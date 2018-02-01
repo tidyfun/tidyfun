@@ -11,7 +11,10 @@ f_cca <- feval(dti$cca, argvals = seq(0, 1, l = 93))
 test <- data_frame(id = dti$ID, sex = dti$sex, cca = f_cca)
 
 tidyfun::unnest.data.frame(test)
-
+tidyfun::unnest.data.frame(test, .sep = "_")
+as.data.frame(test$cca,  argvals = seq(0, 1, l = 93)[1:5]) #!
+#FIXME:
+tidyfun::unnest.data.frame(test, argvals = seq(-.1, 1, l = 10)) #?!?
 
 ################################################################################
 n <- 5
