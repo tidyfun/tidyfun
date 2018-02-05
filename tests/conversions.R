@@ -6,7 +6,12 @@ source("./tests/make_examples.R", echo = TRUE)
 # TODO: empty function / all NAs
 
 as.data.frame(f_reg)
+expect_error(as.data.frame(f_reg, argvals = seq(-1, 1, l =10)))
+expect_error(as.data.frame(f_reg, argvals = seq(0, 1, l = 31)))
+as.data.frame(f_reg, argvals = seq(0, 1, l = 31), allow_interpolation = TRUE)
+
 as.data.frame(f_irreg)
+as.data.frame(f_irreg, argvals = seq(0, 1, l = 31))
 
 expect_equivalent(as.feval(as.data.frame(f_reg)), f_reg)
 expect_equivalent(as.feval(as.data.frame(f_irreg)), f_irreg)
@@ -30,5 +35,7 @@ expect_equivalent(feval(list_irreg_df), f_irreg)
 
 ################################################################################
 # print
+# FIXME: make print more informative/transparent
+
 f_reg
 f_irreg

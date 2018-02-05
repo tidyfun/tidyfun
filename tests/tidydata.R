@@ -14,3 +14,9 @@ test
 
 test %>% filter(cca[, .7, raw = TRUE] > .6)
 test %>% filter(apply(cca[, seq(.7, 1, l = 50), raw = TRUE], 1, max) > .8)
+
+#TODO: make unnest more efficient for easy case of one single fvector: 
+# -- dont unnest and renest and then call unnest again
+unnest(test)
+unnest(test, sep = "_")
+unnest(test, sep = "_", argvals = seq(0, 1, l = 93)[1:5])

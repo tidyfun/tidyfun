@@ -13,33 +13,33 @@ as.feval.list <- function(data, argvals = NULL, regular = NULL, domain = NULL,
   feval(data, argvals, value, domain, range, ...)
 }
 
-
-as.data.frame.feval <- function(x) {
-  #FIXME: add argvals
-  argvals <- argvals(x)
-  if (inherits(x, "feval_reg")) argvals <- list(argvals)
+as.data.frame.feval <- function(x, rownames = NULL, optional = FALSE, 
+  argvals = NULL, verbose = TRUE, allow_interpolation = is_irreg(x), ...) {
+  if (is.null(argvals)) {
+    argvals <- argvals(x)
+    if (!is_irreg(x)) argvals <- list(argvals)
+  } else {
+    assert(check_argvals(argvals, x))
+    argvals <- adjust_resolution(argvals, x)
+    if (verbose | !allow_interpolation) {
+      interpolation <- unlist(check_interpolation(x, argvals))
+      if (!allow_interpolation && any(interpolation)) {
+        stop("interpolated values requested.")
+        #FIXME: or just remove interpolation argvals?
+      }
+      if (verbose && any(interpolation)) {
+        message("interpolated values requested.")
+      }
+    }
+    if (!is.list(argvals)) argvals <- list(argvals)
+  }
   tmp <- list(id = names(x), argvals = argvals,  flist = x)
   bind_rows(pmap(tmp, ~ bind_cols(id = rep(..1, length(..2)),  argvals = ..2, 
     value = do.call(..3, list(..2)))))
 }
 
-as.matrix.feval_reg <- function(x, argvals = NULL) {
-  #FIXME: add argvals
-  argvals <- argvals(x)
-  ret <- do.call(rbind,  evaluations(x))
-  dimnames(ret) <- list(names(x), argvals)
-  structure(ret, argvals = argvals)
-}
-as.matrix.feval_irreg <- function(x) {
-  #FIXME: add argvals
-  argvals <- argvals(x)
-  grid <- sort(unique(unlist(argvals)))
-  ret <- do.call(rbind, 
-    pmap(list(x, argvals, list(grid)), function(.x, .a, .g) {
-      tmp <- rep(NA, length(.g))
-      tmp[.g %in% .a] <- evaluations(.x)
-      tmp
-    }))
-  dimnames(ret) <- list(names(x), grid)
-  structure(ret, argvals = grid)
+as.matrix.feval <- function(x, argvals = NULL, verbose = TRUE) {
+  df <- spread(as.data.frame(x, argvals, verbose), key = argvals, value = value)
+  ret <- as.matrix(select(df, -id))
+  structure(ret, argvals = as.numeric(colnames(ret)))
 }

@@ -1,4 +1,5 @@
 #'@import checkmate
+
 #-------------------------------------------------------------------------------
 # new generics & methods 
 argvals <- function(f) UseMethod("argvals")
@@ -142,6 +143,7 @@ print.feval_irreg <- function(x) {
   # old i -> join argvals with j, data with x, warn & overwrite for duplicate j
   # (update regularity & warn; update domain, range,)
 }
+
 # plot
 # length
 # deriv
