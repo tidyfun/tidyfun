@@ -36,6 +36,7 @@ will be duplicated in the same way as atomic vectors. This has
 }
 \description{
 This is a wrapper around \code{\link[tidyr:unnest]{tidyr::unnest()}} that extends the functionality
-provided for list-columns to \code{fvector}-columns, i.e., it creates new "long"
-\code{data.frame} containing the function evaluations
+provided for list-columns to \code{fvector}-columns, i.e., it creates a new "long"
+\code{data.frame} containing the function evaluations. Use \code{sep = "_"} to create
+column names that retain the names of the \code{fvector}-columns
 }

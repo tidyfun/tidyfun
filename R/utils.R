@@ -32,8 +32,8 @@ find_argvals <- function(data, argvals) {
 #' @import checkmate
 check_argvals <- function(argvals, x){
   if (is.list(argvals)) {
-    check_list(argvals, types = "numeric", len = length(x))
-    map(argvals, ~ check_argvals_vector(x, .))
+    c(check_list(argvals, types = "numeric", len = length(x)),
+      map(argvals, ~ check_argvals_vector(x, .)))
   } else {
     check_argvals_vector(argvals, x)
   }

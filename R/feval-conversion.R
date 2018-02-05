@@ -14,12 +14,12 @@ as.feval.list <- function(data, argvals = NULL, regular = NULL, domain = NULL,
 }
 
 as.data.frame.feval <- function(x, rownames = NULL, optional = FALSE, 
-  argvals = NULL, verbose = TRUE, allow_interpolation = TRUE, ...) {
+  argvals = NULL, verbose = TRUE, allow_interpolation = is_irreg(x), ...) {
   if (is.null(argvals)) {
     argvals <- argvals(x)
     if (!is_irreg(x)) argvals <- list(argvals)
   } else {
-    check_argvals(argvals, x)
+    assert(check_argvals(argvals, x))
     argvals <- adjust_resolution(argvals, x)
     if (verbose | !allow_interpolation) {
       interpolation <- unlist(check_interpolation(x, argvals))

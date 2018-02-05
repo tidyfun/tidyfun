@@ -30,7 +30,7 @@ unnest.data.frame <- function(data, ..., argvals = NULL, .drop = NA, .id = NULL,
   # convert them to lists of data.frames
   data <- mutate_if(data, names(data) %in% fvector_cols, 
     function(f) {
-      nest(as.data.frame(f, argvals), -id)$data
+      nest(as.data.frame(f, argvals = argvals), -id)$data
     })
   
   # send pre-unnested data on to tidyr::unnest

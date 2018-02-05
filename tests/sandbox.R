@@ -10,11 +10,10 @@ dti <- refund::DTI
 f_cca <- feval(dti$cca, argvals = seq(0, 1, l = 93))
 test <- data_frame(id = dti$ID, sex = dti$sex, cca = f_cca)
 
-tidyfun::unnest.data.frame(test)
-tidyfun::unnest.data.frame(test, .sep = "_")
-as.data.frame(test$cca,  argvals = seq(0, 1, l = 93)[1:5]) #!
+unnest(test)
+unnest(test, .sep = "_")
 #FIXME:
-tidyfun::unnest.data.frame(test, argvals = seq(-.1, 1, l = 10)) #?!?
+unnest(test, argvals = seq(-.1, 1, l = 10)) #?!?
 
 ################################################################################
 n <- 5
@@ -45,6 +44,9 @@ str(argvals(f_irreg), 1)
 
 as.data.frame(f_reg)
 as.data.frame(f_irreg)
+as.data.frame(test$cca,  argvals = seq(0, 1, l = 93)[1:5]) #!
+try(as.data.frame(test$cca,  argvals = seq(-1, 1, l = 3)))
+
 
 expect_equivalent(as.feval(as.data.frame(f_reg)), f_reg)
 expect_equivalent(as.feval(as.data.frame(f_irreg)), f_irreg)

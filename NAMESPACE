@@ -2,6 +2,8 @@
 
 S3method("[<-",feval)
 S3method(unnest,data.frame)
+export(is_fvector)
+export(is_irreg)
 import(checkmate)
 import(dplyr)
 import(purrr)
