@@ -34,36 +34,45 @@ interpolator <- function(f) attr(f, "interpolator")
 # new methods
 range.fvector <- function(x, na.rm = FALSE) attr(x, "range")
 
-print.fvector <- function(x) {
+print.fvector <- function(x, ...) {
   cat(paste0("fvector[",length(x),"] on (", domain(x)[1], ",", 
     domain(x)[2], ")"))
   invisible(x)
 }
-print.feval_reg <- function(x) {
+
+print.feval_reg <- function(x, ...) {
   NextMethod()
   cat(" based on", length(argvals(x)), "evaluations each\n")
   cat("interpolation by ", interpolator(x), "\n")
+  cat(format(x, ...))
   invisible(x)
 }
-print.feval_irreg <- function(x) {
+
+print.feval_irreg <- function(x, ...) {
   NextMethod()
   n_evals <- n_evaluations(x)
   cat(paste0(" based on ", min(n_evals), " to ", max(n_evals)," (mean: ", 
     round(mean(n_evals)),") evaluations each\n"))
   cat("interpolation by ", interpolator(x), "\n")
+  cat(format(x, ...))
   invisible(x)
 }
 
-# string_rep <- function(argvals, evaluations, digits = NULL) {
-#   if (is.null(digits)) {
-#     dig
-#   }
-# }
-# 
-# 
-# format.feval <- function(x, ...){
-#   
-# }
+string_rep_feval <- function(argvals, evaluations, use = 5, digits = NULL) {
+   digits <- digits %||% options()$digits
+   use <- min(use, length(argvals))
+   str <- paste(paste0("(", signif(argvals[1:use], digits), ", ",
+     signif(evaluations[1:use], digits), ")"), collapse =";")
+   if (use < length(argvals)) str <- paste0(str, "; ...")
+   paste(str, "\n")
+}
+
+format.feval <- function(x, ...){
+  argvals <- argvals(x) 
+  if (!is_irreg(x)) argvals <- list(argvals) 
+  str <- map2_chr(argvals, evaluations(x), string_rep_feval, ... = ...)
+  map2_chr(names(x)[1:length(str)], str, ~ paste0(.x,": ",.y))
+}
 
 
 #summary #define Arith-methods first.... 

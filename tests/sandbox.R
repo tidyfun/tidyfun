@@ -36,7 +36,3 @@ expect_equal(names(f_irreg), paste0("X",c(4:1,5)))
 
 f_reg[7] <- f_reg[1]
 expect_identical(f_reg[[6]], feval_NA)
-
-# print method more informative, closer to data
-# wrangling function: expand data_frame with fvector-columns
-

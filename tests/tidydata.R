@@ -14,6 +14,12 @@ f_cca
 
 test <- with(dti, data_frame(id = ID, sex = sex, cca = f_cca))
 test
+#FIXME: tibble does not use any standard method to print 
+#  (i.e., it never calls print or format on its columns, AFAICT)
+# instead it now does lots of weird shit using "pillar" -- 
+# see https://github.com/tidyverse/hms/pull/43 and the pillar README,
+# seems one now needs to write a pillar_shaft.feval method
+
 
 # select patient-visits with CCA-FA at location .7 greater than .6
 test %>% filter(cca[, .7, raw = TRUE] > .6)

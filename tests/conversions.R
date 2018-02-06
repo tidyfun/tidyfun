@@ -35,7 +35,10 @@ expect_equivalent(feval(list_irreg_df), f_irreg)
 
 ################################################################################
 # print
-# FIXME: make print more informative/transparent
 
 f_reg
+print(f_reg, digits = 3)
+print(f_reg, digits = 2, use = 11)
+
 f_irreg
+print(f_irreg, digits = 2, use = 6)

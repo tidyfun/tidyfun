@@ -1,3 +1,4 @@
+#FIXME: ugly hack, but seems necessary to avoid `:::``
 tidyr_unnestdf <- getFromNamespace("unnest.data.frame", ns = "tidyr")
 
 #' Unnest a `data.frame` with `fvector`-columns
