@@ -1,12 +1,21 @@
-library(devtools)
-library(testthat)
-library(tidyverse)
-#library(purrr)
+# `tidyfun`
 
-load_all(".")
+The goal of tidyfun is to provide a `tidyverse`-compliant way to handle functional data.
 
-################################################################################
+## Installation
 
+You can install tidyfun from github with:
+
+``` r
+# install.packages("devtools")
+devtools::install_github("fabian-s/tidyfun")
+```
+
+## Example
+
+This is a basic example which shows you how to solve a common problem:
+
+```{r}
 dti <- refund::DTI
 
 f_cca <- feval(dti$cca, argvals = seq(0, 1, l = 93))
@@ -22,3 +31,5 @@ test %>% filter(apply(cca[, seq(.7, 1, l = 50), raw = TRUE], 1, max) > .8)
 
 unnest(test, .sep = "_")
 unnest(test, .sep = "_", .argvals = seq(0, 1, l = 93)[1:5])
+
+```

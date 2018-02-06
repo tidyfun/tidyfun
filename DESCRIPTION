@@ -1,11 +1,11 @@
 Package: tidyfun
-Title: What the Package Does (one line, title case)
+Title: Tools for tidy functional data
 Version: 0.0.0.9000
-Authors@R: person("First", "Last", email = "first.last@example.com", role = c("aut", "cre"))
-Description: What the package does (one paragraph).
+Authors@R: c(person("Fabian", "Scheipl", email = "fabian.scheipl@googlemail.com", role = c("aut", "cre")))
+Description: Provides S3 classes and methods for working with functional data in the tidyverse way.
 Depends: R (>= 3.4.3)
-Imports: purrr, dplyr, checkmate
-License: What license is it under?
+Imports: purrr, dplyr, checkmate, rlang, tidyr, zoo, tidyselect
+License: CC0
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.0.1

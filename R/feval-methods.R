@@ -54,6 +54,18 @@ print.feval_irreg <- function(x) {
   invisible(x)
 }
 
+# string_rep <- function(argvals, evaluations, digits = NULL) {
+#   if (is.null(digits)) {
+#     dig
+#   }
+# }
+# 
+# 
+# format.feval <- function(x, ...){
+#   
+# }
+
+
 #summary #define Arith-methods first.... 
 # c.feval_reg #???
 `[.feval` <- function(x, i, j, ..., raw = FALSE) {

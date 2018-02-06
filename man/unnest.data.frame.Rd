@@ -4,7 +4,7 @@
 \alias{unnest.data.frame}
 \title{Unnest a \code{data.frame} with \code{fvector}-columns}
 \usage{
-\method{unnest}{data.frame}(data, ..., argvals = NULL, .drop = NA,
+\method{unnest}{data.frame}(data, ..., .argvals = NULL, .drop = NA,
   .id = NULL, .sep = NULL, .preserve = NULL)
 }
 \arguments{
@@ -13,9 +13,10 @@
 \item{...}{Specification of columns to nest. Use bare variable names or
 functions of variables. If omitted, defaults to all list-cols.}
 
-\item{argvals}{evaluation grid for fvector columns. Can be a named list giving one j-vector for
-each \code{fvector} to unlist. Used as the argument for the \code{as.data.frame}-method for the respective
-\code{fvector}-columns.}
+\item{.argvals}{evaluation grid for fvector columns. Can be a named list
+giving one j-vector for each \code{fvector} to unlist. Used as the \code{argvals}
+argument for the \href{tidyfun::as.data.frame.feval}{as.data.frame}-method for
+the respective \code{fvector}-columns.}
 
 \item{.drop}{Should additional list columns be dropped? By default,
 \code{unnest} will drop them if unnesting the specified columns requires

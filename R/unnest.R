@@ -1,3 +1,5 @@
+tidyr_unnestdf <- getFromNamespace("unnest.data.frame", ns = "tidyr")
+
 #' Unnest a `data.frame` with `fvector`-columns
 #' 
 #' This is a wrapper around [tidyr::unnest()] that extends the functionality
@@ -6,13 +8,15 @@
 #' column names that retain the names of the `fvector`-columns
 #' 
 #' @inheritParams tidyr::unnest
-#' @param argvals evaluation grid for fvector columns. Can be a named list giving one j-vector for 
-#'   each `fvector` to unlist. Used as the argument for the `as.data.frame`-method for the respective 
-#'   `fvector`-columns.
+#' @param .argvals evaluation grid for fvector columns. Can be a named list
+#'   giving one j-vector for each `fvector` to unlist. Used as the `argvals`
+#'   argument for the [as.data.frame](tidyfun::as.data.frame.feval)-method for
+#'   the respective `fvector`-columns.
 #' @import tidyr rlang
+#' @importFrom tidyselect vars_select
 #' @export
 #' @md
-unnest.data.frame <- function(data, ..., argvals = NULL, .drop = NA, .id = NULL,
+unnest.data.frame <- function(data, ..., .argvals = NULL, .drop = NA, .id = NULL,
   .sep = NULL, .preserve = NULL) {
   
   call <- match.call()
@@ -30,10 +34,10 @@ unnest.data.frame <- function(data, ..., argvals = NULL, .drop = NA, .id = NULL,
   # convert them to lists of data.frames
   data <- mutate_if(data, names(data) %in% fvector_cols, 
     function(f) {
-      nest(as.data.frame(f, argvals = argvals), -id)$data
+      nest(as.data.frame(f, argvals = .argvals), -id)$data
     })
   
   # send pre-unnested data on to tidyr::unnest
-  tidyr:::unnest.data.frame(data = data, ..., .drop = .drop, .id = .id,
+  tidyr_unnestdf(data = data, ..., .drop = .drop, .id = .id,
     .sep = .sep, .preserve = .preserve)
 }
