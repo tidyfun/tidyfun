@@ -44,7 +44,7 @@ print.feval_reg <- function(x, ...) {
   NextMethod()
   cat(" based on", length(argvals(x)), "evaluations each\n")
   cat("interpolation by ", interpolator(x), "\n")
-  cat(format(x, ...))
+  cat(format(x, ...), sep = "\n")
   invisible(x)
 }
 
@@ -54,19 +54,19 @@ print.feval_irreg <- function(x, ...) {
   cat(paste0(" based on ", min(n_evals), " to ", max(n_evals)," (mean: ", 
     round(mean(n_evals)),") evaluations each\n"))
   cat("interpolation by ", interpolator(x), "\n")
-  cat(format(x, ...))
+  cat(format(x, ...), sep = "\n")
   invisible(x)
 }
 
-string_rep_feval <- function(argvals, evaluations, use = 5, digits = NULL) {
+string_rep_feval <- function(argvals, evaluations, use = 5, digits = NULL, ...) {
    digits <- digits %||% options()$digits
    use <- min(use, length(argvals))
    str <- paste(paste0("(", signif(argvals[1:use], digits), ", ",
-     signif(evaluations[1:use], digits), ")"), collapse =";")
+     signif(evaluations[1:use], digits), ")"), collapse = ";")
    if (use < length(argvals)) str <- paste0(str, "; ...")
-   paste(str, "\n")
 }
 
+# FIXME: this needs proper width align etc arguments like format.default
 format.feval <- function(x, ...){
   argvals <- argvals(x) 
   if (!is_irreg(x)) argvals <- list(argvals) 

@@ -1,6 +1,6 @@
 # `tidyfun`
 
-The goal of tidyfun is to provide a `tidyverse`-compliant way to handle functional data.
+The goal of tidyfun is to provide a `tidyverse`-compliant, accessible and well-documented way to handle functional data during data wrangling and exploratory analysis.  
 
 ## Installation
 
@@ -13,7 +13,7 @@ devtools::install_github("fabian-s/tidyfun")
 
 ## Example
 
-This is a basic example which shows you how to solve a common problem:
+
 
 ```{r}
 dti <- refund::DTI
