@@ -25,6 +25,7 @@ evaluator <- function(f) attr(f, "evaluator")
 `evaluator<-` <- function(f, value) {
   stopifnot(inherits(f, "feval"), is.function(value))
   attr(f, "evaluator") <- substitute(value)
+  f
 }
 
 #-------------------------------------------------------------------------------
