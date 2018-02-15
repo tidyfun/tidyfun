@@ -4,8 +4,8 @@
 \alias{unnest.data.frame}
 \title{Unnest a \code{data.frame} with \code{fvector}-columns}
 \usage{
-\method{unnest}{data.frame}(data, ..., .argvals = NULL, .drop = NA,
-  .id = NULL, .sep = NULL, .preserve = NULL)
+unnest.data.frame(data, ..., .argvals = NULL, .drop = NA, .id = NULL,
+  .sep = NULL, .preserve = NULL)
 }
 \arguments{
 \item{data}{A data frame.}

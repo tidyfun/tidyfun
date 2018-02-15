@@ -1,14 +1,21 @@
 #'@import zoo
-approx_fill_extend <- structure(function(f) zoo::na.fill(f, fill = "extend"), 
-  label = "zoo::na.fill('extend')")
-approx_linear <- structure(function(f) zoo::na.approx(f, na.rm = FALSE), 
-  label = "zoo::na.approx (linear)")
-approx_spline <- structure(function(f) zoo::na.spline(f, na.rm = FALSE), 
-  label = "zoo::na.spline")
-approx_locf <- structure(function(f) zoo::na.locf(f, na.rm = FALSE), 
-  label = "zoo::na.locf")
-approx_nocb <- structure(function(f) zoo::na.locf(f, na.rm = FALSE, fromLast = TRUE), 
-  label = "zoo::na.locf(fromLast)")
+#'@import memoise
+zoo_wrapper <- function(f, ...){
+  dots <- list(...)
+  memoise(function(x, argvals, evaluations) {
+    x_arg <- sort(unique(c(x, argvals)))
+    x_arg_match <- match(x_arg, argvals, nomatch = length(argvals) + 1)
+    requested <-  x_arg %in% x
+    dots[[length(dots) + 1]] <- zoo(evaluations[x_arg_match], x_arg)
+    ret <- do.call(f, dots)
+    coredata(ret)[requested]
+  })
+}
+approx_linear <- zoo_wrapper(na.approx, na.rm = FALSE)
+approx_spline <- zoo_wrapper(na.spline, na.rm = FALSE)
+approx_fill_extend <- zoo_wrapper(na.fill, fill = "extend")
+approx_locf <- zoo_wrapper(na.locf, na.rm = FALSE)
+approx_nocb <- zoo_wrapper(na.locf, na.rm = FALSE, fromLast = TRUE)
 
 in_range <- function(x, r){
   r <- range(r, na.rm = TRUE)

@@ -4,74 +4,81 @@
 # new generics & methods 
 argvals <- function(f) UseMethod("argvals")
 argvals.default <- function(f) .NotYetImplemented()
-argvals.feval_irreg <- function(x) map(x, ~ environment(.x)$.argvals)
-argvals.feval_reg <- function(x) parent.env(environment(x[[1]]))$.argvals
+argvals.feval_irreg <- function(f) attr(f, "argvals")
+argvals.feval_reg <- function(f) attr(f, "argvals")[[1]]
 
 evaluations <- function(f) UseMethod("evaluations")
 evaluations.default <- function(f) .NotYetImplemented()
-evaluations.function <- function(f) environment(f)$.data
-evaluations.feval <- function(f) map(f, evaluations)
+evaluations.feval <- function(f) {
+  attributes(f) <- NULL
+  f
+}  
 
 n_evaluations <- function(f) UseMethod("n_evaluations")
 n_evaluations.default <- function(f) .NotYetImplemented()
-n_evaluations.feval_irreg <- function(f) {
-  unlist(map(f, ~ length(environment(.x)$.argvals)))
-}
-n_evaluations.feval_reg <- function(f) {
-  length(parent.env(environment(f[[1]]))$.argvals)
-}
+n_evaluations.feval_irreg <- function(f) map_int(evaluations(f), length)
+n_evaluations.feval_reg <- function(f) length(argvals(f))
 
 domain <- function(f) attr(f, "domain")
-interpolator <- function(f) attr(f, "interpolator")
+evaluator <- function(f) attr(f, "evaluator")
 
-`interpolator<-` <- function(f, value) {
+`evaluator<-` <- function(f, value) {
   stopifnot(inherits(f, "feval"), is.function(value))
-  f <- map(f, function(.f) environment(.f)$interpolator <- value)
-  attr(f, "interpolator") <- attr(value, "label") %||% substitute(value)
+  attr(f, "evaluator") <- substitute(value)
 }
 
 #-------------------------------------------------------------------------------
 # new methods
 range.fvector <- function(x, na.rm = FALSE) attr(x, "range")
 
-print.fvector <- function(x, ...) {
-  cat(paste0("fvector[",length(x),"] on (", domain(x)[1], ",", 
+print.fvector <- function(x, n  = 10, ...) {
+  cat(paste0("fvector[",length(x),"] on (", domain(x)[1], ",",
     domain(x)[2], ")"))
   invisible(x)
 }
 
-print.feval_reg <- function(x, ...) {
+print.feval_reg <- function(x, n = 10, ...) {
   NextMethod()
   cat(" based on", length(argvals(x)), "evaluations each\n")
-  cat("interpolation by ", interpolator(x), "\n")
-  cat(format(x, ...), sep = "\n")
+  cat("interpolation by", evaluator(x), "\n")
+  cat(format(x[1 : min(n, length(x))], ...), sep = "\n")
+  if (n < length(x)) 
+    cat(paste0("    [....]   (", length(x) - n, " not shown)\n"))
   invisible(x)
 }
 
-print.feval_irreg <- function(x, ...) {
+print.feval_irreg <- function(x, n = 10, ...) {
   NextMethod()
   n_evals <- n_evaluations(x)
-  cat(paste0(" based on ", min(n_evals), " to ", max(n_evals)," (mean: ", 
+  cat(paste0(" based on ", min(n_evals), " to ", max(n_evals)," (mean: ",
     round(mean(n_evals)),") evaluations each\n"))
-  cat("interpolation by ", interpolator(x), "\n")
-  cat(format(x, ...), sep = "\n")
+  cat("inter-/extrapolation by", evaluator(x), "\n")
+  cat(format(x[1 : min(n, length(x))], ...), sep = "\n")
+  if (n < length(x)) 
+    cat(paste0("    [....]   (", length(x) - n, " not shown)\n"))
   invisible(x)
 }
 
-string_rep_feval <- function(argvals, evaluations, use = 5, digits = NULL, ...) {
-   digits <- digits %||% options()$digits
-   use <- min(use, length(argvals))
-   str <- paste(paste0("(", signif(argvals[1:use], digits), ", ",
-     signif(evaluations[1:use], digits), ")"), collapse = ";")
-   if (use < length(argvals)) str <- paste0(str, "; ...")
+string_rep_feval <- function(argvals, evaluations, signif_argvals = NULL, show = 5, digits = NULL, ...) {
+   digits_eval <- digits %||% options()$digits
+   digits_argvals <- max(digits_eval, signif_argvals %||% digits_eval) 
+   show <- min(show, length(argvals))
+   str <- paste(
+     paste0("(", format(argvals[1:show], digits = digits_argvals, trim = TRUE, ...),
+       ",",
+     format(evaluations[1:show], digits = digits_eval, trim = TRUE, ...), ")"), 
+     collapse = ";")
+   if (show < length(argvals)) str <- paste0(str, "; ...")
+   str
 }
 
 # FIXME: this needs proper width align etc arguments like format.default
-format.feval <- function(x, ...){
-  argvals <- argvals(x) 
-  if (!is_irreg(x)) argvals <- list(argvals) 
-  str <- map2_chr(argvals, evaluations(x), string_rep_feval, ... = ...)
-  map2_chr(names(x)[1:length(str)], str, ~ paste0(.x,": ",.y))
+format.feval <- function(x, digits = 2, nsmall = 0, ...){
+   argvals <- attr(x, "argvals") 
+   str <- map2_chr(argvals, evaluations(x), string_rep_feval, 
+     signif_argvals = attr(x, "signif_argvals"), 
+     digits = digits, nsmall = nsmall, ... = ...)
+   map2_chr(names(x)[1:length(str)], str, ~ paste0(.x,": ",.y))
 }
 
 
@@ -87,6 +94,7 @@ format.feval <- function(x, ...){
   }  
   if (missing(j)) {
     ret <- unclass(x)[i]
+    if (is_irreg(x)) attr(x, "argvals") <-  attr(x, "argvals")[i]
     attributes(ret) <- append(attributes(x)[names(attributes(x)) != "names"], 
       list(names = names(ret)))
     return(ret)
