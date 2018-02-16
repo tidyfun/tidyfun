@@ -13,33 +13,21 @@ as.feval.list <- function(data, argvals = NULL, regular = NULL, domain = NULL,
   feval(data, argvals, value, domain, range, ...)
 }
 
+#' @importFrom tidyr unnest
 as.data.frame.feval <- function(x, rownames = NULL, optional = FALSE, 
-  argvals = NULL, verbose = TRUE, allow_interpolation = is_irreg(x), ...) {
+  argvals = NULL, interpolate = FALSE, ...) {
   if (is.null(argvals)) {
-    argvals <- argvals(x)
-    if (!is_irreg(x)) argvals <- list(argvals)
-  } else {
-    assert(check_argvals(argvals, x))
-    argvals <- adjust_resolution(argvals, x)
-    if (verbose | !allow_interpolation) {
-      interpolation <- unlist(check_interpolation(x, argvals))
-      if (!allow_interpolation && any(interpolation)) {
-        stop("interpolated values requested.")
-        #FIXME: or just remove interpolation argvals?
-      }
-      if (verbose && any(interpolation)) {
-        message("interpolated values requested.")
-      }
-    }
-    if (!is.list(argvals)) argvals <- list(argvals)
-  }
-  tmp <- list(id = names(x), argvals = argvals,  flist = x)
-  bind_rows(pmap(tmp, ~ bind_cols(id = rep(..1, length(..2)),  argvals = ..2, 
-    value = do.call(..3, list(..2)))))
+    argvals <- ensure_list(argvals(x))
+  } 
+  argvals <- adjust_resolution(argvals, x)
+  tmp <- x[, argvals, interpolate = interpolate]
+  tidyr::unnest(bind_rows(list(id = names(x), data = tmp)))
 }
 
-as.matrix.feval <- function(x, argvals = NULL, verbose = TRUE) {
-  df <- spread(as.data.frame(x, argvals, verbose), key = argvals, value = value)
+#' @importFrom tidyr spread
+as.matrix.feval <- function(x, argvals = NULL, interpolate = FALSE) {
+  df <- spread(as.data.frame(x, argvals, interpolate = interpolate), 
+    key = argvals, value = data)
   ret <- as.matrix(select(df, -id))
   structure(ret, argvals = as.numeric(colnames(ret)))
 }

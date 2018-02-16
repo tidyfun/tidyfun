@@ -1,3 +1,6 @@
+ensure_list <- function(x) if (!is.list(x)) list(x) else x
+
+
 #'@import zoo
 zoo_wrapper <- function(f, ...){
   dots <- list(...)
@@ -65,49 +68,35 @@ assert_argvals_vector <- function(argvals, x) {
 
 
 
-#TODO: write proper tests for this
-check_interpolation <- function(x, argvals){
-  UseMethod("check_interpolation")
-}
-check_interpolation.feval_reg <- function(x, argvals){
-  original <- argvals(x)
-  if (is.list(argvals)) {
-    map(argvals, ~ !(. %in% original))
-  } else {
-    !(argvals %in% original)
-  }
-}
-check_interpolation.feval_irreg <- function(x, argvals) {
-  original <- argvals(x)
-  if (is.list(argvals)) {
-    map2(argvals, original, ~ !(.x %in% .y))
-  } else {
-    map(original, ~ !(argvals %in% .x))
-  }
-}
+# #TODO: write proper tests for this
+# check_interpolation <- function(x, argvals){
+#   UseMethod("check_interpolation")
+# }
+# check_interpolation.feval_reg <- function(x, argvals){
+#   original <- argvals(x)
+#   if (is.list(argvals)) {
+#     map(argvals, ~ !(. %in% original))
+#   } else {
+#     !(argvals %in% original)
+#   }
+# }
+# check_interpolation.feval_irreg <- function(x, argvals) {
+#   original <- argvals(x)
+#   if (is.list(argvals)) {
+#     map2(argvals, original, ~ !(.x %in% .y))
+#   } else {
+#     map(original, ~ !(argvals %in% .x))
+#   }
+# }
 
 adjust_resolution <- function(argvals, x) {
-  signif <- attr(x, "signif_digits_argvals")
+  signif <- attr(x, "signif_argvals")
   if (is.list(argvals)) {
     map(argvals, ~ signif(., signif)) 
   } else {
     signif(argvals, signif)
   }  
 }
-
-make_f <- function(.argvals, .data, interpolator, signif) {
-  #do this with local{}!!
-  function(v) {
-    v <- signif(v, signif)
-    if (isTRUE(all.equal(v, .argvals))) return(.data)
-    stopifnot(all(!duplicated(v)))
-    v_arg <- sort(unique(c(v, .argvals)))
-    v_arg_match <- match(v_arg, .argvals, nomatch = length(.argvals) + 1)
-    requested <-  v_arg %in% v
-    coredata(interpolator(zoo(.data[v_arg_match], v_arg)))[requested]
-  }
-}
-
 
 #' @export
 is_fvector <- function(x) "fvector" %in% class(x)

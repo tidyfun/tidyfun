@@ -6,12 +6,13 @@ source("./tests/make_examples.R", echo = TRUE)
 # TODO: empty function / all NAs
 
 as.data.frame(f_reg)
-expect_error(as.data.frame(f_reg, argvals = seq(-1, 1, l =10)))
-expect_error(as.data.frame(f_reg, argvals = seq(0, 1, l = 31)))
-as.data.frame(f_reg, argvals = seq(0, 1, l = 31), allow_interpolation = TRUE)
+expect_error(as.data.frame(f_reg, argvals = seq(-1, 1, l = 10)))
+expect_warning(as.data.frame(f_reg, argvals = seq(0, 1, l = 31)))
+as.data.frame(f_reg, argvals = seq(0, 1, l = 31), interpolate = TRUE)
 
 as.data.frame(f_irreg)
-as.data.frame(f_irreg, argvals = seq(0, 1, l = 31))
+as.data.frame(f_irreg, argvals = seq(0, 1, l = 11))
+as.data.frame(f_irreg, argvals = seq(0, 1, l = 11), interpolate = TRUE)
 
 expect_equivalent(as.feval(as.data.frame(f_reg)), f_reg)
 expect_equivalent(as.feval(as.data.frame(f_irreg)), f_irreg)
@@ -38,7 +39,7 @@ expect_equivalent(feval(list_irreg_df), f_irreg)
 
 f_reg
 print(f_reg, digits = 3)
-print(f_reg, digits = 2, use = 11)
+print(f_reg, digits = 2, show = 11)
 
 f_irreg
-print(f_irreg, digits = 2, use = 6)
+print(f_irreg, digits = 2, n= 2, show = 6)

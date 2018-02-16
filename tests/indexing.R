@@ -1,0 +1,66 @@
+source("./tests/make_examples.R", echo = TRUE)
+
+# source("./tests/conversions.R", echo = TRUE)
+
+################################################################################
+# sub-indexing: [
+
+# no j-arg --> return subsetted fvector
+f_reg[1:2] # same as f_reg[1:2, ] 
+f_irreg[-3] 
+f_reg["X5"]
+f_reg[c(T,F,T,T,F)]
+
+new_grid <- seq(0, 1, l = 50)
+# with j-arg & matrix = FALSE (default) --> 
+# return (interpolated) function evaluations in named list of tibbles
+
+plot(f_reg[1, new_grid][[1]])
+lines(grid, mat_reg[1,], type = "b", col = 2)
+
+expect_error((f_reg[, seq(-.1, .5, l = 6)]), ">= 0")
+expect_error((f_reg[, seq(0, 1.5, l = 6)]), "<= 1")
+expect_data_frame(f_reg[1, argvals(f_reg)][[1]])
+expect_true(length(f_reg[, argvals(f_reg)]) == length(f_reg))
+expect_equal(names(f_reg[, argvals(f_reg)]), names(f_reg))
+
+# with j-arg and matrix = TRUE --> return function evaluations in matrix
+str(f_reg[, new_grid, matrix = TRUE])
+matplot(new_grid, t(f_reg[, new_grid, matrix = TRUE]), 
+  col = 1, type = "l", lty = 1)
+matlines(grid, t(mat_reg), col = 2, type = "l", lty = 2)
+
+matplot(new_grid, t(f_irreg[, new_grid, matrix = TRUE]), 
+  col = 1, type = "l", lty = 1)
+matlines(grid, t(mat_irreg), col = 2, type = "b", lty = 2, pch="x")
+
+
+expect_matrix(f_reg[, new_grid, matrix = TRUE], 
+  nrows = length(f_reg), ncols = 50)
+expect_equal(row.names(f_reg[, new_grid, matrix = TRUE]), names(f_reg)) 
+expect_equal(colnames(f_reg[, new_grid, matrix = TRUE]), 
+  as.character(adjust_resolution(new_grid, f_reg)))
+
+# with j-arg and interpolate = FALSE: return NA for argvals not in the original data
+expect_warning(f_reg[2:3, seq(0, 1, l = 21), interpolate = FALSE], "no evaluations")
+expect_identical(f_reg[1, argvals(f_reg)[1:5], interpolate = FALSE], 
+  f_reg[1, argvals(f_reg)[1:5]])
+expect_true(all(is.na(f_reg[2:3, 0.123, interpolate = FALSE, matrix=TRUE])))
+
+################################################################################
+
+# sub-assignment: [<-]
+f_reg[3] <- feval(mat_reg[2,, drop = F])
+f_irreg[-5] <- f_irreg[4:1]
+expect_equivalent(f_reg[1:3], feval(mat_reg[c(1,2,2),]))
+expect_equal(names(f_irreg), paste0("X",c(4:1,5)))
+
+
+#check <NA>-functions:
+f_reg[7] <- f_reg[1]
+# f_reg[6] is a "functional missing value"
+expect_identical(f_reg[[6]], rep(1*NA, n_evaluations(f_reg)))
+expect_scalar_na(unique(f_reg[6, argvals(f_reg)][[1]]$data))
+
+f_irreg[7] <- f_irreg[1]
+expect_scalar_na(unique(f_irreg[6, argvals(f_reg)][[1]]$data))

@@ -3,7 +3,7 @@ source("tests/prep_tests.R")
 ################################################################################
 n <- 5
 grid <-  seq(0, 1, l = 11)
-mat_reg <- t(replicate(n, dbeta(grid, runif(1, 2, 7), runif(1, 3, 12))))
+mat_reg <- t(replicate(n, 1 + dbeta(grid, runif(1, 2, 7), runif(1, 3, 12))))
 colnames(mat_reg) <- grid
 rownames(mat_reg) <- 1:n
 

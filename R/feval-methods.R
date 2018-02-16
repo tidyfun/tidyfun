@@ -43,7 +43,7 @@ print.feval_reg <- function(x, n = 10, ...) {
   NextMethod()
   cat(" based on", length(argvals(x)), "evaluations each\n")
   cat("interpolation by", attr(x, "evaluator_name"), "\n")
-  cat(format(x[1 : min(n, length(x))], ...), sep = "\n")
+  cat(format(x[1:min(n, length(x))], ...), sep = "\n")
   if (n < length(x)) 
     cat(paste0("    [....]   (", length(x) - n, " not shown)\n"))
   invisible(x)
@@ -51,11 +51,11 @@ print.feval_reg <- function(x, n = 10, ...) {
 
 print.feval_irreg <- function(x, n = 10, ...) {
   NextMethod()
-  n_evals <- n_evaluations(x)
+  n_evals <- n_evaluations(x[!is.na(names(x))])
   cat(paste0(" based on ", min(n_evals), " to ", max(n_evals)," (mean: ",
     round(mean(n_evals)),") evaluations each\n"))
   cat("inter-/extrapolation by", attr(x, "evaluator_name"), "\n")
-  cat(format(x[1 : min(n, length(x))], ...), sep = "\n")
+  cat(format(x[1:min(n, length(x))], ...), sep = "\n")
   if (n < length(x)) 
     cat(paste0("    [....]   (", length(x) - n, " not shown)\n"))
   invisible(x)
@@ -86,10 +86,20 @@ format.feval <- function(x, digits = 2, nsmall = 0, ...){
 
 #summary #define Arith-methods first.... 
 # c.feval_reg #???
-`[.feval` <- function(x, i, j, ..., raw = FALSE) {
+
+`[.feval` <- function(x, i, j, interpolate = TRUE, matrix = FALSE) {
   if (missing(i)) {
     i <- seq_along(x)
   } else {
+    assert_atomic(i)
+    if (is.logical(i)) {
+      assert_logical(i, any.missing = FALSE, len = length(x))
+      i <- which(i)
+    }
+    if (is.character(i)) {
+      assert_subset(i, names(x))
+      i <- match(i, names(x))
+    }
     assert_integerish(i, lower = -length(x), upper = length(x), 
       any.missing = FALSE)
     assert_true(all(sign(i) == sign(i)[1]))
@@ -100,33 +110,29 @@ format.feval <- function(x, digits = 2, nsmall = 0, ...){
     attributes(ret) <- append(attributes(x)[names(attributes(x)) != "names"], 
       list(names = names(ret)))
     return(ret)
-    
+  } 
+  if (matrix & is.list(j)) {
+    stop("need a single vector-valued <j> if matrix = TRUE")
   }
-  assert_numeric(j, any.missing = FALSE, finite = TRUE, min.len = 1)
-  outside_domain <- j < domain(x)[1] | j > domain(x)[2]
-  if (any(outside_domain)) warning("some <j> outside domain, returning NAs.")
-  argvals <- argvals(x)
-  if (!is.list(argvals)) {
-    argvals <- list(argvals)
-  } else argvals <- argvals[i]  
-  if (inherits(j, "AsIs")) {
-    new_argvals <- map2(list(j), argvals, ~ !(.x %in% .y))
-    if (any(unlist(new_argvals))) {
-      warning("no data for some of <j>, returning NAs.")
+  j <- adjust_resolution(ensure_list(j), x)
+  evals <- evaluate(x[i], argvals = j)
+  if (!interpolate) {
+    new_j <- map2(j, ensure_list(argvals(x)), ~ !(.x %in% .y))
+    if (any(unlist(new_j))) {
+      warning("interpolate = FALSE & no evaluations for some <j>: NAs created.")
     }
-    class(j) <- class(j)[-1]
-  } else new_argvals <- list(FALSE)
-  return_na <- map2(list(outside_domain), new_argvals, ~ .x | .y)
-  ret <- pmap(list(.f = unclass(x)[i], .v = list(j), .na = return_na), 
-    function(.f, .v, .na) {
-      fv <- .v; fv[.na] <- NA; fv[!.na] <- .f(.v[!.na])
-      bind_cols(argvals = .v, data = fv)
-  })
-  if (raw) {
-    ret <- structure(
-      do.call(rbind, map(ret, ~ unlist(.x$data))), argvals = j)
+    evals <- map2(evals, new_j, ~ ifelse(.y, NA, .x))
   }
-  ret
+  if (matrix) {
+    ret <- do.call(rbind, evals)
+    colnames(ret) <- unlist(j)
+    rownames(ret) <- names(x)[i]
+    structure(ret, argvals = unlist(j))
+  } else {
+    ret <- map2(j, evals, ~ bind_cols(argvals = .x, data = .y))
+    names(ret) <- names(x)[i]
+    ret
+  }
 } 
 
 #'@export
@@ -135,6 +141,15 @@ format.feval <- function(x, digits = 2, nsmall = 0, ...){
   if (missing(i)) {
     i <- seq_along(x)
   } else {
+    assert_atomic(i)
+    if (is.logical(i)) {
+      assert_logical(i, any.missing = FALSE, len = length(x))
+      i <- which(i)
+    }
+    if (is.character(i)) {
+      assert_subset(i, names(x))
+      i <- match(i, names(x))
+    }
     assert_integerish(i, lower = -length(x), 
       any.missing = FALSE)
     assert_true(all(sign(i) == sign(i)[1]))
@@ -147,7 +162,7 @@ format.feval <- function(x, digits = 2, nsmall = 0, ...){
     # TODO: allow named-list args where names are used for i and entries are j-vectors?
     stopifnot(inherits(value, class(x)[1]), 
       all(domain(x) == domain(value)),
-      identical(interpolator(x), interpolator(value), ignore.environment = TRUE),
+      identical(evaluator(x), evaluator(value), ignore.environment = TRUE),
       length(value) %in% c(1, length(i)))
     if (inherits(x, "feval_reg")) {
       assert_true(identical(argvals(x), argvals(value)))
@@ -155,28 +170,30 @@ format.feval <- function(x, digits = 2, nsmall = 0, ...){
     attr_x <- attributes(x)
     attr_x$range <- range(range(x), range(value))
     attr_x$names[i] <- names(value)
-    x <- unclass(x)
-    x[i] <- unclass(value)
-    # if min(i) > length(x) fill up NULL entries with empty functions
-    null_entries <- which(sapply(x, is.null))
-    if (length(null_entries)) {
-      arg_null <- if (inherits(x, "feval_reg")) list(attr_x$argvals) else list(numeric(0))
-      x[null_entries] <- 
-        unclass(new_feval(arg_null, replicate(length(null_entries), NULL), 
-          regular = TRUE, NA, NA, function(v) rep(NA, length(v))))
+    ret <- unclass(x)
+    ret[i] <- unclass(value)
+    if (is_irreg(x)) {
+      attr_x$argvals[i] <- argvals(value)
     }
-    attributes(x) <- attr_x
-    return(x)
-  } 
-  # TODO: asIs --> overwrite j-th evaluations with value
-  # TODO: if null entries, fill up with empty functions....
+    # fill up empty functions
+    na_entries <- which(sapply(ret, is.null))
+    if (length(na_entries)) {
+        na_length <- ifelse(is_irreg(x), 1, length(attr_x$argvals[[1]]))
+        ret[na_entries] <- replicate(length(na_entries), rep(1*NA, na_length), 
+          simplify = FALSE)
+        if (is_irreg(x)) attr_x$argvals[na_entries] <- 
+          replicate(length(na_entries), domain(x)[1], simplify = FALSE)
+    }
+    attributes(ret) <- attr_x
+    ret
+  } else stop("<j>-argument for '[<-.feval' not implemented yet.")
+  # TODO: 
   # new i -> create new fevals ( regularity; update domain, range,)
   # old i -> join argvals with j, data with x, warn & overwrite for duplicate j
   # (update regularity & warn; update domain, range,)
 }
 
 # plot
-# length
 # deriv
 # mean
 # quantile

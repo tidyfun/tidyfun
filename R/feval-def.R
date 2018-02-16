@@ -27,7 +27,7 @@ new_feval <- function(argvals, datalist, regular, domain, range, evaluator, sign
 }
 
 feval.matrix <- function(data, argvals = NULL, regular = NULL, domain = NULL, 
-  range = NULL, evaluator = approx_spline, ...) {
+  range = NULL, evaluator = approx_linear, ...) {
   stopifnot(is.numeric(data))
   argvals <- find_argvals(data, argvals) # either arg or numeric colnames or 1:ncol
   names <- make.names(rownames(data) %||% seq_len(dim(data)[1]), unique = TRUE)
@@ -37,7 +37,7 @@ feval.matrix <- function(data, argvals = NULL, regular = NULL, domain = NULL,
 }
 # default: use first 3 columns of <data> for function information
 feval.data.frame <- function(data, id = 1, argvals = 2, value = 3, domain = NULL, 
-  range = NULL, evaluator = approx_spline, ...) {
+  range = NULL, evaluator = approx_linear, ...) {
   stopifnot(ncol(data) >= 3, is.numeric(data[[argvals]]), 
     is.numeric(data[[value]]))
   id <- data[[id]]
@@ -49,14 +49,16 @@ feval.data.frame <- function(data, id = 1, argvals = 2, value = 3, domain = NULL
 # takes a list of vectors of identical lengths or a list of 2-column matrices/data.frames with 
 # argvals in the first and data in the second column
 feval.list <- function(data, argvals = NULL, regular = NULL, domain = NULL, 
-  range = NULL, evaluator = approx_spline, ...) {
+  range = NULL, evaluator = approx_linear, ...) {
   vectors <- sapply(data, is.vector)
   if (all(vectors)) {
     lengths <- sapply(data, length)
     if (all(lengths == lengths[1])) {
       data <- do.call(rbind, data)
       #dispatch to matrix method
-      return(feval(data, argvals, regular, domain, range, evaluator, ...))
+      args <- list(data, argvals, regular, domain, range, 
+        evaluator = substitute(evaluator))
+      return(do.call(feval, args))
     } else {
       stopifnot(!is.null(argvals), length(argvals) == length(data), 
         all(sapply(argvals, length) == lengths))
