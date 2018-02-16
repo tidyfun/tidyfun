@@ -1,9 +1,4 @@
-library(devtools)
-library(testthat)
-library(dplyr)
-library(purrr)
-
-load_all(".")
+source("tests/prep_tests.R")
 
 ################################################################################
 n <- 5

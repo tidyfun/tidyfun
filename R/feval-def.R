@@ -2,6 +2,7 @@
 #' @import dplyr
 feval <- function(data, ...) UseMethod("feval")
 
+#'@import memoise
 new_feval <- function(argvals, datalist, regular, domain, range, evaluator, signif = 4) {
   if (!regular) {
     argvals <- map2(datalist, argvals, ~ signif(.y, signif)[!is.na(.x)])
@@ -19,7 +20,8 @@ new_feval <- function(argvals, datalist, regular, domain, range, evaluator, sign
     argvals =  argvals,
     domain = domain,
     range = range,
-    evaluator = evaluator,
+    evaluator = memoise(eval(evaluator)),
+    evaluator_name = deparse(evaluator, width = 60)[1],
     signif_argvals = signif, #maybe turn this into a <global> option? 
     class = c(class, "feval", "fvector"))
 }
@@ -31,7 +33,7 @@ feval.matrix <- function(data, argvals = NULL, regular = NULL, domain = NULL,
   names <- make.names(rownames(data) %||% seq_len(dim(data)[1]), unique = TRUE)
   datalist <- split(data, names)
   regular <- regular %||% !any(is.na(data))
-  new_feval(argvals, datalist, regular, domain, range, evaluator)
+  new_feval(argvals, datalist, regular, domain, range, substitute(evaluator))
 }
 # default: use first 3 columns of <data> for function information
 feval.data.frame <- function(data, id = 1, argvals = 2, value = 3, domain = NULL, 
@@ -42,7 +44,7 @@ feval.data.frame <- function(data, id = 1, argvals = 2, value = 3, domain = NULL
   datalist <- split(data[[value]], id)
   argvals <- split(data[[argvals]], id)
   regular <- sum(duplicated(argvals)) == length(argvals) - 1
-  new_feval(argvals, datalist, regular, domain, range, evaluator)
+  new_feval(argvals, datalist, regular, domain, range, substitute(evaluator))
 }
 # takes a list of vectors of identical lengths or a list of 2-column matrices/data.frames with 
 # argvals in the first and data in the second column
@@ -72,6 +74,6 @@ feval.list <- function(data, argvals = NULL, regular = NULL, domain = NULL,
     names(data) <- id
     regular <- regular %||% all(duplicated(argvals))
   }
-  new_feval(argvals, data, regular, domain, range, evaluator)
+  new_feval(argvals, data, regular, domain, range, substitute(evaluator))
 }
 

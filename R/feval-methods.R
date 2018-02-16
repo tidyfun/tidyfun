@@ -22,10 +22,11 @@ n_evaluations.feval_reg <- function(f) length(argvals(f))
 domain <- function(f) attr(f, "domain")
 evaluator <- function(f) attr(f, "evaluator")
 
-`evaluator<-` <- function(f, value) {
-  stopifnot(inherits(f, "feval"), is.function(value))
-  attr(f, "evaluator") <- substitute(value)
-  f
+`evaluator<-` <- function(x, value) {
+  stopifnot(inherits(x, "feval"), is.function(value))
+  attr(x, "evaluator_name") <- deparse(value, width = 60)[1]
+  attr(x, "evaluator") <- memoise(eval(value))
+  x
 }
 
 #-------------------------------------------------------------------------------
@@ -41,7 +42,7 @@ print.fvector <- function(x, n  = 10, ...) {
 print.feval_reg <- function(x, n = 10, ...) {
   NextMethod()
   cat(" based on", length(argvals(x)), "evaluations each\n")
-  cat("interpolation by", evaluator(x), "\n")
+  cat("interpolation by", attr(x, "evaluator_name"), "\n")
   cat(format(x[1 : min(n, length(x))], ...), sep = "\n")
   if (n < length(x)) 
     cat(paste0("    [....]   (", length(x) - n, " not shown)\n"))
@@ -53,7 +54,7 @@ print.feval_irreg <- function(x, n = 10, ...) {
   n_evals <- n_evaluations(x)
   cat(paste0(" based on ", min(n_evals), " to ", max(n_evals)," (mean: ",
     round(mean(n_evals)),") evaluations each\n"))
-  cat("inter-/extrapolation by", evaluator(x), "\n")
+  cat("inter-/extrapolation by", attr(x, "evaluator_name"), "\n")
   cat(format(x[1 : min(n, length(x))], ...), sep = "\n")
   if (n < length(x)) 
     cat(paste0("    [....]   (", length(x) - n, " not shown)\n"))

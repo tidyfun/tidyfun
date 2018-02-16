@@ -1,15 +1,14 @@
 #'@import zoo
-#'@import memoise
 zoo_wrapper <- function(f, ...){
   dots <- list(...)
-  memoise(function(x, argvals, evaluations) {
-    x_arg <- sort(unique(c(x, argvals)))
-    x_arg_match <- match(x_arg, argvals, nomatch = length(argvals) + 1)
-    requested <-  x_arg %in% x
-    dots[[length(dots) + 1]] <- zoo(evaluations[x_arg_match], x_arg)
-    ret <- do.call(f, dots)
-    coredata(ret)[requested]
-  })
+  function(x, argvals, evaluations) {
+      x_arg <- sort(unique(c(x, argvals)))
+      x_arg_match <- match(x_arg, argvals, nomatch = length(argvals) + 1)
+      requested <-  x_arg %in% x
+      dots[[length(dots) + 1]] <- zoo(evaluations[x_arg_match], x_arg)
+      ret <- do.call(f, dots)
+      coredata(ret)[requested]
+  }
 }
 approx_linear <- zoo_wrapper(na.approx, na.rm = FALSE)
 approx_spline <- zoo_wrapper(na.spline, na.rm = FALSE)
@@ -36,19 +35,34 @@ find_argvals <- function(data, argvals) {
   list(argvals)
 }
 
+#' #' @import checkmate
+#' check_argvals <- function(argvals, x){
+#'   if (is.list(argvals)) {
+#'     check_choice(length(argvals), c(1, length(x))) #return if !TRUE
+#'     map(argvals, ~ check_argvals_vector(., x = x))
+#'   } else {
+#'     check_argvals_vector(argvals, x)
+#'   }
+#' }
+#' check_argvals_vector <- function(argvals, x) {
+#'   check_numeric(argvals, any.missing = FALSE, unique = TRUE,
+#'     lower = domain(x)[1], upper = domain(x)[2])
+#' }
+
 #' @import checkmate
-check_argvals <- function(argvals, x){
+assert_argvals <- function(argvals, x){
   if (is.list(argvals)) {
-    c(check_list(argvals, types = "numeric", len = length(x)),
-      map(argvals, ~ check_argvals_vector(x, .)))
+    assert_true(length(argvals) %in% c(1, length(x)))
+    map(argvals, ~ assert_argvals_vector(., x = x))
   } else {
-    check_argvals_vector(argvals, x)
+    assert_argvals_vector(argvals, x)
   }
 }
-check_argvals_vector <- function(argvals, x) {
-  check_numeric(argvals, any.missing = FALSE, 
+assert_argvals_vector <- function(argvals, x) {
+  assert_numeric(argvals, any.missing = FALSE, unique = TRUE,
     lower = domain(x)[1], upper = domain(x)[2])
 }
+
 
 
 #TODO: write proper tests for this
