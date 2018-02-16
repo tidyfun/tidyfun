@@ -1,8 +1,4 @@
-library(devtools)
-library(testthat)
-library(tidyverse)
-
-load_all(".")
+source("tests/prep_tests.R")
 
 ################################################################################
 
@@ -27,10 +23,19 @@ test %>% filter(apply(cca[, seq(.7, 1, l = 50)], 1, max) > .8)
 
 unnest(test, .sep = "_")
 unnest(test, .sep = "_", .argvals = seq(0, 1, l = 93)[1:5])
-glimpse(test)
+# glimpse(test) #?!?
 
 test_df <-  with(dti, data.frame(id = ID, sex = sex))
 # direct specification of data.frame(id = ID, sex = sex, cca = f_cca) throws errors
 # because data.frame calls as.data.frame on columns ....
 test_df$cca <- f_cca
 head(test_df)
+str(subset(test_df, cca[, .7, matrix = TRUE] > .6))
+
+
+# library(data.table)
+test_dt <- data.table(test_df)
+#! does not work because this does not use the correct subsetting-method:
+str(test_dt[drop(cca[, .7, matrix = TRUE] > .6), ]) 
+
+# TODO: write more tests: merging, summarizing, mutating etc
