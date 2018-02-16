@@ -1,4 +1,4 @@
-source("tests/prep_tests.R")
+source(system.file("tests/prep_tests.R", package = "tidyfun"))
 
 ################################################################################
 n <- 5

@@ -21,7 +21,7 @@ new_feval <- function(argvals, datalist, regular, domain, range, evaluator, sign
     domain = domain,
     range = range,
     evaluator = memoise(eval(evaluator)),
-    evaluator_name = deparse(evaluator, width = 60)[1],
+    evaluator_name = deparse(evaluator, width.cutoff = 60)[1],
     signif_argvals = signif, #maybe turn this into a <global> option? 
     class = c(class, "feval", "fvector"))
 }

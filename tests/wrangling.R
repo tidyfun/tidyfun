@@ -1,4 +1,4 @@
-source("tests/prep_tests.R")
+source(system.file("tests/prep_tests.R", package = "tidyfun"))
 
 ################################################################################
 
@@ -21,8 +21,8 @@ test %>% filter(cca[, .7, matrix = TRUE] > .6)
 # select patient-visits with maximal CCA-FA over location interval [.7, 1]  greater than .8
 test %>% filter(apply(cca[, seq(.7, 1, l = 50)], 1, max) > .8)
 
-unnest(test, .sep = "_")
-unnest(test, .sep = "_", .argvals = seq(0, 1, l = 93)[1:5])
+tidyr::unnest(test, .sep = "_")
+tidyr::unnest(test, .sep = "_", .argvals = seq(0, 1, l = 93)[1:5])
 # glimpse(test) #?!?
 
 test_df <-  with(dti, data.frame(id = ID, sex = sex))
@@ -33,7 +33,7 @@ head(test_df)
 str(subset(test_df, cca[, .7, matrix = TRUE] > .6))
 
 
-# library(data.table)
+library(data.table)
 test_dt <- data.table(test_df)
 #! does not work because this does not use the correct subsetting-method:
 str(test_dt[drop(cca[, .7, matrix = TRUE] > .6), ]) 

@@ -1,4 +1,4 @@
-source("./tests/make_examples.R", echo = TRUE)
+source(system.file("tests/make_examples.R", package = "tidyfun"), echo = TRUE)
 
 ################################################################################
 # convert
@@ -33,3 +33,4 @@ list_irreg_mat <- map2(argvals(f_irreg), evaluations(f_irreg), ~ cbind(.x, .y))
 expect_equivalent(feval(list_irreg_mat), f_irreg)
 list_irreg_df <- map2(argvals(f_irreg), evaluations(f_irreg), ~ bind_cols(x=.x, y=.y))
 expect_equivalent(feval(list_irreg_df), f_irreg)
+

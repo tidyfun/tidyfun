@@ -10,7 +10,7 @@ as.feval.data.frame <- function(data, id = 1, argvals = 2, value = 3, domain = N
 }
 as.feval.list <- function(data, argvals = NULL, regular = NULL, domain = NULL, 
     range = NULL, ...) {
-  feval(data, argvals, value, domain, range, ...)
+  feval(data, argvals, domain = domain, range = range, ...)
 }
 
 #' @importFrom tidyr unnest

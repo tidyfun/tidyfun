@@ -24,7 +24,7 @@ evaluator <- function(f) attr(f, "evaluator")
 
 `evaluator<-` <- function(x, value) {
   stopifnot(inherits(x, "feval"), is.function(value))
-  attr(x, "evaluator_name") <- deparse(value, width = 60)[1]
+  attr(x, "evaluator_name") <- deparse(value, width.cutoff = 60)[1]
   attr(x, "evaluator") <- memoise(eval(value))
   x
 }

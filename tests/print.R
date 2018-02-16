@@ -1,4 +1,4 @@
-source("./tests/make_examples.R", echo = TRUE)
+source(system.file("tests/make_examples.R", package = "tidyfun"), echo = TRUE)
 
 # print & format
 
