@@ -20,7 +20,7 @@ as.data.frame.feval <- function(x, rownames = NULL, optional = FALSE,
     argvals <- ensure_list(argvals(x))
   } 
   argvals <- adjust_resolution(argvals, x)
-  tmp <- x[, argvals, interpolate = interpolate]
+  tmp <- x[, argvals, interpolate = interpolate, matrix = FALSE]
   tidyr::unnest(bind_rows(list(id = names(x), data = tmp)))
 }
 

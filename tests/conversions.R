@@ -33,13 +33,3 @@ list_irreg_mat <- map2(argvals(f_irreg), evaluations(f_irreg), ~ cbind(.x, .y))
 expect_equivalent(feval(list_irreg_mat), f_irreg)
 list_irreg_df <- map2(argvals(f_irreg), evaluations(f_irreg), ~ bind_cols(x=.x, y=.y))
 expect_equivalent(feval(list_irreg_df), f_irreg)
-
-################################################################################
-# print
-
-f_reg
-print(f_reg, digits = 3)
-print(f_reg, digits = 2, show = 11)
-
-f_irreg
-print(f_irreg, digits = 2, n= 2, show = 6)

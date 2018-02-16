@@ -87,7 +87,7 @@ format.feval <- function(x, digits = 2, nsmall = 0, ...){
 #summary #define Arith-methods first.... 
 # c.feval_reg #???
 
-`[.feval` <- function(x, i, j, interpolate = TRUE, matrix = FALSE) {
+`[.feval` <- function(x, i, j, interpolate = TRUE, matrix = TRUE) {
   if (missing(i)) {
     i <- seq_along(x)
   } else {

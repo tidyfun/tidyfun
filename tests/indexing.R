@@ -12,34 +12,37 @@ f_reg["X5"]
 f_reg[c(T,F,T,T,F)]
 
 new_grid <- seq(0, 1, l = 50)
-# with j-arg & matrix = FALSE (default) --> 
-# return (interpolated) function evaluations in named list of tibbles
 
-plot(f_reg[1, new_grid][[1]])
-lines(grid, mat_reg[1,], type = "b", col = 2)
-
-expect_error((f_reg[, seq(-.1, .5, l = 6)]), ">= 0")
-expect_error((f_reg[, seq(0, 1.5, l = 6)]), "<= 1")
-expect_data_frame(f_reg[1, argvals(f_reg)][[1]])
-expect_true(length(f_reg[, argvals(f_reg)]) == length(f_reg))
-expect_equal(names(f_reg[, argvals(f_reg)]), names(f_reg))
-
-# with j-arg and matrix = TRUE --> return function evaluations in matrix
-str(f_reg[, new_grid, matrix = TRUE])
-matplot(new_grid, t(f_reg[, new_grid, matrix = TRUE]), 
+# with j-arg and matrix = TRUE (default)  --> return function evaluations in matrix
+str(f_reg[, new_grid])
+matplot(new_grid, t(f_reg[, new_grid]), 
   col = 1, type = "l", lty = 1)
 matlines(grid, t(mat_reg), col = 2, type = "l", lty = 2)
 
-matplot(new_grid, t(f_irreg[, new_grid, matrix = TRUE]), 
+matplot(new_grid, t(f_irreg[, new_grid]), 
   col = 1, type = "l", lty = 1)
 matlines(grid, t(mat_irreg), col = 2, type = "b", lty = 2, pch="x")
 
 
-expect_matrix(f_reg[, new_grid, matrix = TRUE], 
+expect_matrix(f_reg[, new_grid], 
   nrows = length(f_reg), ncols = 50)
-expect_equal(row.names(f_reg[, new_grid, matrix = TRUE]), names(f_reg)) 
-expect_equal(colnames(f_reg[, new_grid, matrix = TRUE]), 
+expect_equal(row.names(f_reg[, new_grid]), names(f_reg)) 
+expect_equal(colnames(f_reg[, new_grid]), 
   as.character(adjust_resolution(new_grid, f_reg)))
+
+# with j-arg & matrix = FALSE (default) --> 
+# return (interpolated) function evaluations in named list of tibbles
+
+plot(f_reg[1, new_grid, matrix = FALSE][[1]])
+lines(grid, mat_reg[1,], type = "b", col = 2)
+
+expect_error((f_reg[, seq(-.1, .5, l = 6), matrix = FALSE]), ">= 0")
+expect_error((f_reg[, seq(0, 1.5, l = 6), matrix = FALSE]), "<= 1")
+expect_data_frame(f_reg[1, argvals(f_reg), matrix = FALSE][[1]])
+expect_true(length(f_reg[, argvals(f_reg), matrix = FALSE]) == length(f_reg))
+expect_equal(names(f_reg[, argvals(f_reg), matrix = FALSE]), names(f_reg))
+
+
 
 # with j-arg and interpolate = FALSE: return NA for argvals not in the original data
 expect_warning(f_reg[2:3, seq(0, 1, l = 21), interpolate = FALSE], "no evaluations")
@@ -60,7 +63,7 @@ expect_equal(names(f_irreg), paste0("X",c(4:1,5)))
 f_reg[7] <- f_reg[1]
 # f_reg[6] is a "functional missing value"
 expect_identical(f_reg[[6]], rep(1*NA, n_evaluations(f_reg)))
-expect_scalar_na(unique(f_reg[6, argvals(f_reg)][[1]]$data))
+expect_scalar_na(unique(f_reg[6, argvals(f_reg)][1,]))
 
 f_irreg[7] <- f_irreg[1]
-expect_scalar_na(unique(f_irreg[6, argvals(f_reg)][[1]]$data))
+expect_scalar_na(unique(f_irreg[6, argvals(f_reg)][1,]))

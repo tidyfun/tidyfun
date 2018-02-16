@@ -21,9 +21,9 @@ test
 
 
 # select patient-visits with CCA-FA at location .7 greater than .6
-test %>% filter(cca[, .7, raw = TRUE] > .6)
+test %>% filter(cca[, .7, matrix = TRUE] > .6)
 # select patient-visits with maximal CCA-FA over location interval [.7, 1]  greater than .8
-test %>% filter(apply(cca[, seq(.7, 1, l = 50), raw = TRUE], 1, max) > .8)
+test %>% filter(apply(cca[, seq(.7, 1, l = 50)], 1, max) > .8)
 
 unnest(test, .sep = "_")
 unnest(test, .sep = "_", .argvals = seq(0, 1, l = 93)[1:5])
