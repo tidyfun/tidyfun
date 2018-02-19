@@ -1,3 +1,6 @@
+library(devtools)
+load_all(".")
+
 source(system.file("tests/prep_tests.R", package = "tidyfun"))
 
 ################################################################################
@@ -5,10 +8,12 @@ source(system.file("tests/prep_tests.R", package = "tidyfun"))
 dti <- refund::DTI
 
 f_cca <- feval(dti$cca, argvals = seq(0, 1, l = 93))
+f_rcst <- feval(dti$rcst, argvals = seq(0, 1, l = 55))
 head(f_cca)
+head(f_rcst)
 
-test <- with(dti, data_frame(id = ID, sex = sex, cca = f_cca))
-test
+test_tbl <- with(dti, data_frame(id = ID, sex = sex,  cca = f_cca, rcst = f_rcst))
+test_tbl
 #FIXME: tibble does not use any standard method to print 
 #  (i.e., it never calls print or format on its columns, AFAICT)
 # instead it now does lots of weird shit using "pillar" -- 
@@ -17,13 +22,19 @@ test
 
 
 # select patient-visits with CCA-FA at location .7 greater than .6
-test %>% filter(cca[, .7, matrix = TRUE] > .6)
+test_tbl %>% filter(cca[, .7, matrix = TRUE] > .6)
 # select patient-visits with maximal CCA-FA over location interval [.7, 1]  greater than .8
-test %>% filter(apply(cca[, seq(.7, 1, l = 50)], 1, max) > .8)
+test_tbl %>% filter(apply(rcst[, seq(.7, 1, l = 50)], 1, max) > .8)
 
-tidyr::unnest(test, .sep = "_")
-tidyr::unnest(test, .sep = "_", .argvals = seq(0, 1, l = 93)[1:5])
-# glimpse(test) #?!?
+evaluate(test_tbl)
+evaluate(test_tbl, argvals = seq(0,1, l = 12))
+evaluate(test_tbl, argvals = seq(0,1, l = 12), cca)
+
+tidyr::unnest(evaluate(test_tbl, argvals = seq(0,1, l = 12)), .preserve = rcst, 
+  .sep = "_")
+# glimpse(test_tbl) #?!?
+
+#-------------------------------------------------------------------------------
 
 test_df <-  with(dti, data.frame(id = ID, sex = sex))
 # direct specification of data.frame(id = ID, sex = sex, cca = f_cca) throws errors
@@ -31,7 +42,9 @@ test_df <-  with(dti, data.frame(id = ID, sex = sex))
 test_df$cca <- f_cca
 head(test_df)
 str(subset(test_df, cca[, .7, matrix = TRUE] > .6))
+str(evaluate(test_df))
 
+#-------------------------------------------------------------------------------
 
 library(data.table)
 test_dt <- data.table(test_df)
