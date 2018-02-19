@@ -1,11 +1,9 @@
-source("tests/prep_tests.R")
-
-grid <- round(seq(0, 1, l=21), 3)
+grid <- round(seq(0, 1, l = 21), 3)
 lin <- 2*grid
 curve <- sin(3*pi*grid)
 
-(f_lin <- feval(data.frame(1, grid, lin)))
-(f_curve <- feval(data.frame(1, grid, curve)))
+f_lin <- feval(data.frame(1, grid, lin))
+f_curve <- feval(data.frame(1, grid, curve))
 
 new_grid <- round(seq(0, 1, l = 41), 3)
 
@@ -28,7 +26,7 @@ test_that("evaluator approx_linear works", {
     evaluator(f_curve)(grid, argvals = grid, evaluations = curve))
   expect_equal(sin(3*pi*new_grid), 
     evaluator(f_curve)(new_grid, argvals = grid, evaluations = curve), 
-    tolerance = 1e-3)
+    tolerance = 1e-1)
   expect_equal(curve, evaluate(f_curve, new_grid)[[1]][new_grid %in% grid])
 })
 
@@ -38,7 +36,7 @@ test_that("re-assigning & extracting evaluator works", {
   expect_equivalent(body(environment(evaluator(f_lin))[["_f"]]), 
     body(approx_spline))
   expect_equivalent(body(environment(evaluator(f_lin))[["_f"]]), 
-    body(environment(evaluator(f_lin))[["_f"]]))
+    body(environment(evaluator(f_curve))[["_f"]]))
 })
 
 evaluator(f_lin) <- approx_spline

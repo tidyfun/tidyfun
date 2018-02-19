@@ -1,12 +1,19 @@
-#'@import checkmate
-
-#-------------------------------------------------------------------------------
 # new generics & methods 
+
+#' Utility functions for `fvector`-objects
+#' 
+#' A bunch of methods that do what they say.
+#' @param f an `fvector` object
+#' 
+#' @rdname fvectormethods
+#' @export
 argvals <- function(f) UseMethod("argvals")
 argvals.default <- function(f) .NotYetImplemented()
 argvals.feval_irreg <- function(f) attr(f, "argvals")
 argvals.feval_reg <- function(f) attr(f, "argvals")[[1]]
 
+#' @rdname fvectormethods
+#' @export
 evaluations <- function(f) UseMethod("evaluations")
 evaluations.default <- function(f) .NotYetImplemented()
 evaluations.feval <- function(f) {
@@ -14,14 +21,25 @@ evaluations.feval <- function(f) {
   f
 }  
 
+#' @rdname fvectormethods
+#' @export
 n_evaluations <- function(f) UseMethod("n_evaluations")
 n_evaluations.default <- function(f) .NotYetImplemented()
 n_evaluations.feval_irreg <- function(f) map_int(evaluations(f), length)
 n_evaluations.feval_reg <- function(f) length(argvals(f))
 
+#' @rdname fvectormethods
+#' @export
 domain <- function(f) attr(f, "domain")
+#' @rdname fvectormethods
+#' @export
 evaluator <- function(f) attr(f, "evaluator")
 
+#' @rdname fvectormethods
+#' @param value a function that can be used to interpolate an `feval`. Needs to
+#'   accept vector arguments `x`, `argvals`, `evaluations` and return
+#'   evaluations of the function defined by `argvals`, `evaluations` at `x`
+#' @export
 `evaluator<-` <- function(x, value) {
   stopifnot(inherits(x, "feval"), is.function(value))
   attr(x, "evaluator_name") <- deparse(value, width.cutoff = 60)[1]
@@ -31,14 +49,30 @@ evaluator <- function(f) attr(f, "evaluator")
 
 #-------------------------------------------------------------------------------
 # new methods
-range.fvector <- function(x, na.rm = FALSE) attr(x, "range")
+#' @rdname fvectormethods
+#' @param ... dots
+#' @param na.rm as usual
+#' @export
+range.fvector <- function(..., na.rm = FALSE) {
+  d <- list(...) 
+  stopifnot(length(d) == 1)
+  attr(d[[1]], "range")
+}
 
+#' Pretty printing and formatting for functional data
+#' 
+#' Print/format `fvector`-objects.
+#' 
+#' @rdname fvectordisplay
+#' @param n how many elements of `x` to print out
 print.fvector <- function(x, n  = 10, ...) {
   cat(paste0("fvector[",length(x),"] on (", domain(x)[1], ",",
     domain(x)[2], ")"))
   invisible(x)
 }
 
+#' @rdname fvectordisplay
+#' @export
 print.feval_reg <- function(x, n = 10, ...) {
   NextMethod()
   cat(" based on", length(argvals(x)), "evaluations each\n")
@@ -49,6 +83,8 @@ print.feval_reg <- function(x, n = 10, ...) {
   invisible(x)
 }
 
+#' @rdname fvectordisplay
+#' @export
 print.feval_irreg <- function(x, n = 10, ...) {
   NextMethod()
   n_evals <- n_evaluations(x[!is.na(names(x))])
@@ -75,6 +111,9 @@ string_rep_feval <- function(argvals, evaluations, signif_argvals = NULL, show =
 }
 
 # FIXME: this needs proper width align etc arguments like format.default
+#' @rdname fvectordisplay
+#' @inheritParams base::format.default
+#' @export
 format.feval <- function(x, digits = 2, nsmall = 0, ...){
    argvals <- attr(x, "argvals") 
    str <- map2_chr(argvals, evaluations(x), string_rep_feval, 
@@ -87,6 +126,7 @@ format.feval <- function(x, digits = 2, nsmall = 0, ...){
 #summary #define Arith-methods first.... 
 # c.feval_reg #???
 
+#' @import checkmate
 `[.feval` <- function(x, i, j, interpolate = TRUE, matrix = TRUE) {
   if (missing(i)) {
     i <- seq_along(x)

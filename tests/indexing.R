@@ -1,6 +1,14 @@
-source(system.file("tests/make_examples.R", package = "tidyfun"), echo =TRUE)
+load <- require(tidyfun)
+if (!load) {
+  library(devtools)
+  load_all(".")
+  library(testthat)
+  library(checkmate)
+  library(dplyr)
+  library(purrr)
+}  
 
-# source("./tests/conversions.R", echo = TRUE)
+source(system.file("tests/make_examples.R", package = "tidyfun"), echo =TRUE)
 
 ################################################################################
 # sub-indexing: [

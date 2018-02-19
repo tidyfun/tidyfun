@@ -33,6 +33,7 @@ evaluate_feval_once <- function(x, argvals, evaluations, evaluator) {
 #' @param ... optional: names of the `fvector`-columns to unnest 
 #' @import tidyr
 #' @importFrom tidyselect vars_select quos
+#' @importFrom rlang quo_text
 #' @export
 #' @md
 evaluate.data.frame <- function(object, argvals, ...) {
@@ -40,7 +41,7 @@ evaluate.data.frame <- function(object, argvals, ...) {
   # figure out which fvector columns to evaluate
   fvector_cols <- names(object)[map_lgl(object, is_fvector)]
   if (!is_empty(quos)) {
-    fvector_cols <- intersect(fvector_cols, map_chr(quos, quo_text))
+    fvector_cols <- intersect(fvector_cols, map_chr(quos, rlang::quo_text))
   }
   if (!length(fvector_cols)) {
     warning("No fvectors to evaluate. Returning unchanged object.")

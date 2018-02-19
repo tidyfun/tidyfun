@@ -1,7 +1,12 @@
-library(devtools)
-load_all(".")
-
-source(system.file("tests/prep_tests.R", package = "tidyfun"))
+load <- require(tidyfun)
+if (!load) {
+  library(devtools)
+  load_all(".")
+  library(testthat)
+  library(checkmate)
+  library(dplyr)
+  library(purrr)
+}  
 
 ################################################################################
 
@@ -42,7 +47,7 @@ test_df <-  with(dti, data.frame(id = ID, sex = sex))
 test_df$cca <- f_cca
 head(test_df)
 str(subset(test_df, cca[, .7, matrix = TRUE] > .6))
-str(evaluate(test_df))
+str(evaluate(test_df[1:4, ]))
 
 #-------------------------------------------------------------------------------
 

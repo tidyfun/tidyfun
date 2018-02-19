@@ -1,3 +1,13 @@
+load <- require(tidyfun)
+if (!load) {
+  library(devtools)
+  load_all(".")
+  library(testthat)
+  library(checkmate)
+  library(dplyr)
+  library(purrr)
+}  
+
 source(system.file("tests/make_examples.R", package = "tidyfun"), echo = TRUE)
 
 # print & format

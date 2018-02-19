@@ -4,9 +4,10 @@ Version: 0.0.0.9000
 Authors@R: c(person("Fabian", "Scheipl", email = "fabian.scheipl@googlemail.com", role = c("aut", "cre")))
 Description: Provides S3 classes and methods for working with functional data in the tidyverse way.
 Depends: R (>= 3.4.3)
-Imports: purrr, dplyr, checkmate, rlang, tidyr, zoo, tidyselect, memoise
+Imports: purrr, dplyr, checkmate, tidyr, zoo, tidyselect, memoise,rlang
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.0.1
-Suggests: testthat
+Suggests: testthat, data.table, refund
+Roxygen: list(markdown = TRUE)

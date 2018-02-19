@@ -1,6 +1,3 @@
-source(system.file("tests/prep_tests.R", package = "tidyfun"))
-
-################################################################################
 n <- 5
 grid <-  seq(0, 1, l = 11)
 mat_reg <- t(replicate(n, 1 + dbeta(grid, runif(1, 2, 7), runif(1, 3, 12))))
