@@ -1,6 +1,5 @@
 ensure_list <- function(x) if (!is.list(x)) list(x) else x
 
-
 #'@import zoo
 zoo_wrapper <- function(f, ...){
   dots <- list(...)
@@ -22,6 +21,10 @@ approx_nocb <- zoo_wrapper(na.locf, na.rm = FALSE, fromLast = TRUE)
 in_range <- function(x, r){
   r <- range(r, na.rm = TRUE)
   x >= r[1] & x <= r[2]
+}
+na_to_0 <- function(x) {
+  x[is.na(x)] <- 0
+  x
 }
 
 find_argvals <- function(data, argvals) {
@@ -90,12 +93,17 @@ assert_argvals_vector <- function(argvals, x) {
 
 adjust_resolution <- function(argvals, x) {
   signif <- attr(x, "signif_argvals")
+  .adjust_resolution(argvals, signif)
+}
+
+.adjust_resolution <- function(argvals, signif){
   if (is.list(argvals)) {
     map(argvals, ~ signif(., signif)) 
   } else {
     signif(argvals, signif)
   }  
 }
+
 
 #' @export
 is_fvector <- function(x) "fvector" %in% class(x)

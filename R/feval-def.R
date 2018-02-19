@@ -5,7 +5,7 @@ feval <- function(data, ...) UseMethod("feval")
 #'@import memoise
 new_feval <- function(argvals, datalist, regular, domain, range, evaluator, signif = 4) {
   if (!regular) {
-    argvals <- map2(datalist, argvals, ~ signif(.y, signif)[!is.na(.x)])
+    argvals <- map2(datalist, argvals, ~ signif(.y[!is.na(.x)], signif))
     ret <- map(datalist, ~ .x[!is.na(.x)])
     class <- "feval_irreg"
   } else {
