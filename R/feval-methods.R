@@ -1,12 +1,19 @@
-#'@import checkmate
-
-#-------------------------------------------------------------------------------
 # new generics & methods 
+
+#' Utility functions for `fvector`-objects
+#' 
+#' A bunch of methods that do what they say.
+#' @param f an `fvector` object
+#' 
+#' @rdname fvectormethods
+#' @export
 argvals <- function(f) UseMethod("argvals")
 argvals.default <- function(f) .NotYetImplemented()
 argvals.feval_irreg <- function(f) attr(f, "argvals")
 argvals.feval_reg <- function(f) attr(f, "argvals")[[1]]
 
+#' @rdname fvectormethods
+#' @export
 evaluations <- function(f) UseMethod("evaluations")
 evaluations.default <- function(f) .NotYetImplemented()
 evaluations.feval <- function(f) {
@@ -14,14 +21,20 @@ evaluations.feval <- function(f) {
   f
 }  
 
+#' @rdname fvectormethods
+#' @export
 n_evaluations <- function(f) UseMethod("n_evaluations")
 n_evaluations.default <- function(f) .NotYetImplemented()
 n_evaluations.feval_irreg <- function(f) map_int(evaluations(f), length)
 n_evaluations.feval_reg <- function(f) length(argvals(f))
 
+#' @export
 domain <- function(f) attr(f, "domain")
+#' @export
 evaluator <- function(f) attr(f, "evaluator")
 
+#' @rdname fvectormethods
+#' @export
 `evaluator<-` <- function(x, value) {
   stopifnot(inherits(x, "feval"), is.function(value))
   attr(x, "evaluator_name") <- deparse(value, width.cutoff = 60)[1]
@@ -31,6 +44,8 @@ evaluator <- function(f) attr(f, "evaluator")
 
 #-------------------------------------------------------------------------------
 # new methods
+#' @rdname fvectormethods
+#' @export
 range.fvector <- function(x, na.rm = FALSE) attr(x, "range")
 
 print.fvector <- function(x, n  = 10, ...) {
@@ -87,6 +102,7 @@ format.feval <- function(x, digits = 2, nsmall = 0, ...){
 #summary #define Arith-methods first.... 
 # c.feval_reg #???
 
+#' @import checkmate
 `[.feval` <- function(x, i, j, interpolate = TRUE, matrix = TRUE) {
   if (missing(i)) {
     i <- seq_along(x)
