@@ -1,44 +1,48 @@
 #' @import mgcv
 smooth_spec_wrapper <- function(spec) {
   function(argvals) {
-    mgcv::PredictMat(object = spec, data = data.frame(argvals = argvals))
+    mgcv::Predict.matrix(object = spec, data = data.frame(argvals = argvals))
   }
 } 
 
 fbase <- function(data, ...) UseMethod("fbase")
 
-
-new_fbase <- function(argvals, evaluations, basis = "ps", domain = NULL, range = NULL, 
+new_fbase <- function(data, regular, basis = "ps", domain = NULL, range = NULL, 
     penalized = FALSE, signif = 4, ...) {
-  argvals <- .adjust_resolution(argvals, signif)
-  argvals_u <- mgcv::uniquecombs(unlist(argvals))
-  s_call <- as.call(list(quote(s), quote(argvals), bs = basis, ...))
+  browser()
+  data$argvals <- .adjust_resolution(data$argvals, signif)
+  argvals_u <- mgcv::uniquecombs(data$argvals, ordered = TRUE)
+  s_args <- list(...)[names(list(...)) %in% names(formals(mgcv::s))]
+  gam_args <- list(...)[names(list(...)) %in% names(formals(mgcv::gam))]
+  s_call <- as.call(c(quote(s), quote(argvals), flatten(list(bs = basis, s_args))))
   spec_object <- smooth.construct(eval(s_call), 
     data = data.frame(argvals = argvals_u$x), knots = NULL)
-  regular <- length(argvals) == 1
+  n_evaluations <- table(data$id)
+  underdet <- n_evaluations < spec_object$bs.dim
   if (!penalized) {
-    n_evaluations <- map(argvals, length)
-    underdet <- unlist(n_evaluations) < spec_object$bs.dim
     if (any(underdet)) {
       warning("More basis functions than evaluations.", 
         " Interpolation will be unreliable.")
     }
-    #regular inputs --> use qr once
+    eval_list <- split(data$data, data$id)
     if (regular) {
       coef_list <- qr.coef(qr = qr(spec_object$X), 
-        y = do.call(cbind, ensure_list(evaluations)))
+        y = do.call(cbind, eval_list))
       coef_list <- split(coef_list, col(coef_list))
     } else {
-      id <- unlist(map2(1:length(argvals), map(argvals, length), 
-        ~ rep(.x, each = .y)))
-      index_list <- split(attr(argvals_u, "index"), id)
-      coef_list <- map2(index_list, evaluations, 
+      index_list <- split(attr(argvals_u, "index"), data$id)
+      coef_list <- map2(index_list, eval_list, 
         ~ qr.coef(qr=qr(spec_object$X[.x,]), y = .y))
     }
     # need to remove NAs if dim(basis) > length(argvals)
     coef_list[underdet] <- map(coef_list[underdet], na_to_0) 
-  } else stop("Not implemented yet.")
-  
+  } else {
+    # CONTINUE HERE #
+    # split(cbind(data$data, index = attr(argvals_u, "index")), id) %>%
+      
+    
+    
+  }
   #TODO: check reconstruction error & warn !!
 
   domain <- domain %||% range(argvals)

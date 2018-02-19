@@ -1,4 +1,5 @@
 devtools::load_all()
+library(testthat)
 n <- 5
 grid <-  seq(0, 1, l = 11)
 mat_reg <- t(replicate(n, 1 + dbeta(grid, runif(1, 2, 7), runif(1, 3, 12))))
@@ -14,8 +15,8 @@ f_irreg <- feval(mat_irreg)
 data <- as.data.frame(f_reg)
 basis <- "cr"
 
-fb <- new_fbase(argvals = argvals(f_irreg), 
-  evaluations = evaluations(f_irreg), 
-  basis = "ps", k = 10, m = c(2,2))
+fb <- new_fbase(data, regular = TRUE,  basis = "ps", k = 10, m = c(2,2))
 
-# all.equal(attr(fb, "basis")(grid), attr(fb, "basis_matrix"))
+#
+expect_equivalent(attr(fb, "basis")(grid), 
+  attr(fb, "basis_matrix"))
