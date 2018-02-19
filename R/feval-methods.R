@@ -31,7 +31,6 @@ n_evaluations.feval_reg <- function(f) length(argvals(f))
 #' @rdname fvectormethods
 #' @export
 domain <- function(f) attr(f, "domain")
-#' @rdname fvectormethods
 #' @export
 evaluator <- function(f) attr(f, "evaluator")
 

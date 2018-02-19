@@ -5,7 +5,6 @@
 \alias{evaluations}
 \alias{n_evaluations}
 \alias{domain}
-\alias{evaluator}
 \alias{evaluator<-}
 \alias{range.fvector}
 \title{Utility functions for \code{fvector}-objects}
@@ -17,8 +16,6 @@ evaluations(f)
 n_evaluations(f)
 
 domain(f)
-
-evaluator(f)
 
 evaluator(x) <- value
 
