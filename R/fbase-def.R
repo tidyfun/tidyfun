@@ -6,7 +6,7 @@ smooth_spec_wrapper <- function(spec) {
 } 
 
 new_fbase <- function(data, regular, basis = 'ps', domain = NULL, range = NULL, 
-    penalized = FALSE, signif = 4, ...) {
+    penalized = TRUE, signif = 4, ...) {
   data$argvals <- .adjust_resolution(data$argvals, signif, unique = FALSE)
   argvals_u <- mgcv::uniquecombs(data$argvals, ordered = TRUE)
   s_args <- list(...)[names(list(...)) %in% names(formals(mgcv::s))]
@@ -78,7 +78,7 @@ fbase <- function(data, ...) UseMethod("fbase")
 
 #' @export
 fbase.data.frame <- function(data, id = 1, argvals = 2, value = 3, basis = 'ps', 
-    domain = NULL, range = NULL, penalized = FALSE, signif = 4, ...) {
+    domain = NULL, range = NULL, penalized = TRUE, signif = 4, ...) {
   data <- na.omit(data[, c(id, argvals, value)])
   colnames(data) <- c("id", "argvals", "data")
   stopifnot(nrow(data) > 0, 
@@ -91,7 +91,7 @@ fbase.data.frame <- function(data, id = 1, argvals = 2, value = 3, basis = 'ps',
 
 #' @export
 fbase.matrix <- function(data, argvals = NULL, basis = 'ps', 
-  domain = NULL, range = NULL, penalized = FALSE, signif = 4, ...) {
+  domain = NULL, range = NULL, penalized = TRUE, signif = 4, ...) {
   stopifnot(is.numeric(data))
   argvals <- unlist(find_argvals(data, argvals))
   id <- make.unique(rownames(data) %||% seq_len(dim(data)[1]))
@@ -104,7 +104,7 @@ fbase.matrix <- function(data, argvals = NULL, basis = 'ps',
 
 #' @export
 fbase.list <- function(data, argvals = NULL, basis = 'ps', 
-  domain = NULL, range = NULL, penalized = FALSE, signif = 4, ...) {
+  domain = NULL, range = NULL, penalized = TRUE, signif = 4, ...) {
   vectors <- sapply(data, is.numeric)
   stopifnot(all(vectors) | !any(vectors))
   if (all(vectors)) {
