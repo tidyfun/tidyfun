@@ -8,31 +8,60 @@
 #' @rdname fvectormethods
 #' @export
 argvals <- function(f) UseMethod("argvals")
+#' @export
 argvals.default <- function(f) .NotYetImplemented()
+#' @export
 argvals.feval_irreg <- function(f) attr(f, "argvals")
+#' @export
 argvals.feval_reg <- function(f) attr(f, "argvals")[[1]]
+#' @export
+argvals.fbase <- function(f) attr(f, "argvals")
 
 #' @rdname fvectormethods
 #' @export
 evaluations <- function(f) UseMethod("evaluations")
+#' @export
 evaluations.default <- function(f) .NotYetImplemented()
+#' @export
 evaluations.feval <- function(f) {
   attributes(f) <- NULL
   f
 }  
+#' @export
+evaluations.fbase <- function(f) {
+  map(f, ~ drop(attr(f, "basis_matrix") %*% .))
+} 
+
 
 #' @rdname fvectormethods
 #' @export
 n_evaluations <- function(f) UseMethod("n_evaluations")
+#' @export
 n_evaluations.default <- function(f) .NotYetImplemented()
+#' @export
 n_evaluations.feval_irreg <- function(f) map_int(evaluations(f), length)
+#' @export
 n_evaluations.feval_reg <- function(f) length(argvals(f))
 
 #' @rdname fvectormethods
 #' @export
-domain <- function(f) attr(f, "domain")
+domain <- function(f) {
+  stopifnot(inherits(f, "fvector"))
+  attr(f, "domain")
+}
+  
 #' @export
-evaluator <- function(f) attr(f, "evaluator")
+evaluator <- function(f) {
+  stopifnot(inherits(f, "feval"))
+  attr(f, "evaluator")
+}
+
+#' @export
+basis <- function(f) {
+  stopifnot(inherits(f, "fbase"))
+  attr(f, "basis")
+}
+
 
 #' @rdname fvectormethods
 #' @param value a function that can be used to interpolate an `feval`. Needs to
@@ -57,6 +86,13 @@ range.fvector <- function(..., na.rm = FALSE) {
   stopifnot(length(d) == 1)
   attr(d[[1]], "range")
 }
+
+#' @export
+coef.fbase <- function(object, ....) {
+  attributes(object) <- NULL
+  object
+}
+
 
 #' Pretty printing and formatting for functional data
 #' 
@@ -96,37 +132,41 @@ print.feval_irreg <- function(x, n = 10, ...) {
   invisible(x)
 }
 
-string_rep_feval <- function(argvals, evaluations, signif_argvals = NULL, show = 5, digits = NULL, ...) {
-   digits_eval <- digits %||% options()$digits
-   digits_argvals <- max(digits_eval, signif_argvals %||% digits_eval) 
-   show <- min(show, length(argvals))
-   str <- paste(
-     paste0("(", format(argvals[1:show], digits = digits_argvals, trim = TRUE, ...),
-       ",",
-     format(evaluations[1:show], digits = digits_eval, trim = TRUE, ...), ")"), 
-     collapse = ";")
-   if (show < length(argvals)) str <- paste0(str, "; ...")
-   str
+#' @rdname fvectordisplay
+#' @export
+print.fbase <- function(x, n = 10, ...) {
+  NextMethod()
+  cat(" in basis representation:\n basis call: ", attr(x, "basis_label"), "\n")
+  cat(format(x[1:min(n, length(x))], ...), sep = "\n")
+  if (n < length(x)) 
+    cat(paste0("    [....]   (", length(x) - n, " not shown)\n"))
+  invisible(x)
 }
 
 # FIXME: this needs proper width align etc arguments like format.default
 #' @rdname fvectordisplay
 #' @inheritParams base::format.default
 #' @export
-format.feval <- function(x, digits = 2, nsmall = 0, ...){
-   argvals <- attr(x, "argvals") 
-   str <- map2_chr(argvals, evaluations(x), string_rep_feval, 
+format.fvector <- function(x, digits = 2, nsmall = 0, ...){
+   argvals <- ensure_list(attr(x, "argvals"))
+   str <- map2_chr(argvals, evaluations(x), string_rep_fvector, 
      signif_argvals = attr(x, "signif_argvals"), 
      digits = digits, nsmall = nsmall, ... = ...)
    map2_chr(names(x)[1:length(str)], str, ~ paste0(.x,": ",.y))
 }
 
 
+
 #summary #define Arith-methods first.... 
 # c.feval_reg #???
 
 #' @import checkmate
-`[.feval` <- function(x, i, j, interpolate = TRUE, matrix = TRUE) {
+#' @export
+`[.fvector` <- function(x, i, j, interpolate = TRUE, matrix = TRUE) {
+  if (!interpolate & inherits(x, "fbase")) {
+    interpolate <- TRUE
+    message("interpolate argument ignored for data in basis representation")
+  }
   if (missing(i)) {
     i <- seq_along(x)
   } else {
@@ -231,6 +271,76 @@ format.feval <- function(x, digits = 2, nsmall = 0, ...){
   # old i -> join argvals with j, data with x, warn & overwrite for duplicate j
   # (update regularity & warn; update domain, range,)
 }
+
+#'@export
+`[<-.fvector` <- function(x, i, j, value) {
+  if (missing(value) | (missing(i) & missing(j))) stop("wtf...?")
+  if (missing(i)) {
+    i <- seq_along(x)
+  } else {
+    assert_atomic(i)
+    if (is.logical(i)) {
+      assert_logical(i, any.missing = FALSE, len = length(x))
+      i <- which(i)
+    }
+    if (is.character(i)) {
+      assert_subset(i, names(x))
+      i <- match(i, names(x))
+    }
+    assert_integerish(i, lower = -length(x), 
+      any.missing = FALSE)
+    assert_true(all(sign(i) == sign(i)[1]))
+    if (sign(i)[1] < 0) {
+      i <- (1:length(x))[i]
+    }
+  }
+  if (missing(j)) {
+    # TODO: allow array indices as for arrays, i.e. first dim is i, second j?
+    # TODO: allow named-list args where names are used for i and entries are j-vectors?
+    stopifnot(inherits(value, class(x)[1]), 
+      all(domain(x) == domain(value)),
+      length(value) %in% c(1, length(i)))
+    if (inherits(x, "feval_reg") | inherits(x, "fbase")) {
+      assert_true(identical(argvals(x), argvals(value)))
+    }
+    if (is_feval(x)) {
+      assert_true(
+        identical(evaluator(x), evaluator(value), ignore.environment = TRUE))
+    } else {
+      assert_true(
+        identical(basis(x), basis(value), ignore.environment = TRUE))
+      assert_true(
+        all.equal(attr(x, "basis_matrix"), attr(value, "basis_matrix")))
+    }
+    
+    attr_x <- attributes(x)
+    attr_x$range <- range(range(x), range(value))
+    attr_x$names[i] <- names(value)
+    ret <- unclass(x)
+    ret[i] <- unclass(value)
+    if (is_irreg(x)) {
+      attr_x$argvals[i] <- argvals(value)
+    }
+    # fill up empty functions
+    na_entries <- which(sapply(ret, is.null))
+    if (length(na_entries)) {
+      na_length <- if (is_feval(x)) {
+        ifelse(is_irreg(x), 1, length(attr_x$argvals[[1]]))
+      } else length(x[[1]])
+      ret[na_entries] <- replicate(length(na_entries), rep(1*NA, na_length), 
+        simplify = FALSE)
+      if (is_irreg(x)) attr_x$argvals[na_entries] <- 
+        replicate(length(na_entries), domain(x)[1], simplify = FALSE)
+    }
+    attributes(ret) <- attr_x
+    ret
+  } else stop("<j>-argument not implemented yet.")
+  # TODO: 
+  # new i -> create new fevals ( regularity; update domain, range,)
+  # old i -> join argvals with j, data with x, warn & overwrite for duplicate j
+  # (update regularity & warn; update domain, range,)
+}
+
 
 # plot
 # deriv

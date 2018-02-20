@@ -3,12 +3,15 @@
 \name{evaluate}
 \alias{evaluate}
 \alias{evaluate.feval}
+\alias{evaluate.fbase}
 \alias{evaluate.data.frame}
-\title{Evaluate \code{fvector}s of a \code{data.frame}}
+\title{Evaluate \code{fvector}s, both inside or outside a \code{data.frame}}
 \usage{
 evaluate(object, argvals, ...)
 
-\method{evaluate}{feval}(object, argvals, ...)
+\method{evaluate}{feval}(object, argvals)
+
+\method{evaluate}{fbase}(object, argvals)
 
 \method{evaluate}{data.frame}(object, argvals, ...)
 }

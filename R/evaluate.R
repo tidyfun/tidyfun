@@ -1,4 +1,4 @@
-#' Evaluate `fvector`s of a `data.frame`
+#' Evaluate `fvector`s, both inside or outside a `data.frame`
 #' 
 #' The `data.frame` method evaluates `fvector`-columns into list columns of 
 #' smaller `data.frames` containing the functions' argvals and evaluations. 
@@ -8,16 +8,16 @@
 #' @param object an `fvector` or a `data.frame`-like object with `fvector` columns
 #' @param argvals optional evaluation grid, defaults to `argvals(object)`. 
 #' @export
-#' @md
 evaluate <- function(object, argvals, ...) UseMethod("evaluate")
 
-evaluate.default <- function(object, argvals, ...) .NotYetImplemented()
+#' @export
+evaluate.default <- function(object, argvals) .NotYetImplemented()
 
 #' @export
 #' @rdname evaluate
-evaluate.feval <- function(object, argvals, ...) {
+evaluate.feval <- function(object, argvals) {
   if (missing(argvals) | is.null(argvals)) argvals <- tidyfun::argvals(object)
-  if (!is.list(argvals)) argvals <- list(argvals)
+  argvals <- ensure_list(argvals)
   assert_argvals(argvals, object)
   pmap(list(argvals, attr(object, "argvals"), evaluations(object)), 
     ~ evaluate_feval_once(x = ..1, argvals = ..2, evaluations = ..3, 
@@ -28,6 +28,41 @@ evaluate_feval_once <- function(x, argvals, evaluations, evaluator) {
   if (isTRUE(all.equal(x, argvals))) return(evaluations)
   evaluator(x, argvals = argvals, evaluations = evaluations)
 }
+
+#' @export
+#' @rdname evaluate
+evaluate.fbase <- function(object, argvals) {
+  if (missing(argvals) | is.null(argvals)) argvals <- tidyfun::argvals(object)
+  argvals <- ensure_list(argvals)
+  assert_argvals(argvals, object)
+  if (length(argvals) == 1) {
+    argvals <- unlist(argvals)
+    evals <- evaluate_fbase_once(x = argvals, 
+      argvals = attr(object, "argvals"), 
+      coefs = do.call(cbind, coef(object)),
+      basis = attr(object, "basis"),
+      X = attr(object, "basis_matrix"))
+    ret <- split(evals, col(evals))
+  } else {
+    ret <- pmap(list(argvals, attr(object, "argvals"), coef(object)),
+      ~ evaluate_fbase_once(x = ..1, argvals = ..2, coefs = ..3, 
+        basis = attr(object, "basis"), X = attr(object, "basis_matrix")))
+  }
+  names(ret) <- names(object)
+  ret
+}  
+
+evaluate_fbase_once <- function(x, argvals, coefs, basis, X) {
+  dejavu <- match(x, argvals)
+  dejavu_index <- na.omit(dejavu)
+  dejavu <- !is.na(dejavu)
+  if (all(dejavu)) return(X[dejavu_index, ,drop = FALSE] %*% coefs)
+  Xnew <- X[rep(1, length(x)),]
+  if (any(dejavu)) Xnew[dejavu,] <- X[dejavu_index, ,drop = FALSE]
+  Xnew[!dejavu,] <- basis(x[!dejavu])
+  Xnew %*% coefs
+}
+
 
 #' @rdname evaluate
 #' @param ... optional: names of the `fvector`-columns to unnest 

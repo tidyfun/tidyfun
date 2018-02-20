@@ -91,21 +91,40 @@ assert_argvals_vector <- function(argvals, x) {
 #   }
 # }
 
-adjust_resolution <- function(argvals, x) {
-  signif <- attr(x, "signif_argvals")
+adjust_resolution <- function(argvals, f) {
+  signif <- attr(f, "signif_argvals")
   .adjust_resolution(argvals, signif)
 }
 
-.adjust_resolution <- function(argvals, signif){
+.adjust_resolution <- function(argvals, signif, unique = TRUE){
+  u <- if (unique) base::unique else function(x) x
   if (is.list(argvals)) {
-    map(argvals, ~ signif(., signif)) 
+    map(argvals, ~ u(signif(., signif)))
   } else {
-    signif(argvals, signif)
+    u(signif(argvals, signif))
   }  
 }
+
+string_rep_fvector <- function(argvals, evaluations, signif_argvals = NULL, show = 5, digits = NULL, ...) {
+  digits_eval <- digits %||% options()$digits
+  digits_argvals <- max(digits_eval, signif_argvals %||% digits_eval) 
+  show <- min(show, length(argvals))
+  str <- paste(
+    paste0("(", format(argvals[1:show], digits = digits_argvals, trim = TRUE, ...),
+      ",",
+      format(evaluations[1:show], digits = digits_eval, trim = TRUE, ...), ")"), 
+    collapse = ";")
+  if (show < length(argvals)) str <- paste0(str, "; ...")
+  str
+}
+
 
 
 #' @export
 is_fvector <- function(x) "fvector" %in% class(x)
 #' @export
 is_irreg <- function(x) "feval_irreg" %in% class(x)
+#' @export
+is_feval <- function(x) "feval" %in% class(x)
+#' @export
+is_fbase <- function(x) "fbase" %in% class(x)

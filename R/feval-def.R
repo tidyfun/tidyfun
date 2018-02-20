@@ -1,8 +1,6 @@
+#' @import memoise
 #' @import purrr
 #' @import dplyr
-feval <- function(data, ...) UseMethod("feval")
-
-#'@import memoise
 new_feval <- function(argvals, datalist, regular, domain, range, evaluator, signif = 4) {
   if (!regular) {
     argvals <- map2(datalist, argvals, ~ signif(.y[!is.na(.x)], signif))
@@ -26,31 +24,52 @@ new_feval <- function(argvals, datalist, regular, domain, range, evaluator, sign
     class = c(class, "feval", "fvector"))
 }
 
+#------------------------------------------------------------------------------
+
+#' Constructors for functional data evaluated on grids of argument values
+#' 
+#' Various constructor methods
+#' 
+#' @param data a `matrix`, `data.frame` or `list` of suitable shape.
+#' @param ... not used
+#' @return an `feval`-object
+#' @export
+feval <- function(data, ...) UseMethod("feval")
+
+#' @export
+#' @rdname feval
 feval.matrix <- function(data, argvals = NULL, regular = NULL, domain = NULL, 
   range = NULL, evaluator = approx_linear, ...) {
   stopifnot(is.numeric(data))
   argvals <- find_argvals(data, argvals) # either arg or numeric colnames or 1:ncol
-  names <- make.names(rownames(data) %||% seq_len(dim(data)[1]), unique = TRUE)
+  names <- make.unique(rownames(data) %||% seq_len(dim(data)[1]))
   datalist <- split(data, names)
   regular <- regular %||% !any(is.na(data))
   new_feval(argvals, datalist, regular, domain, range, substitute(evaluator))
 }
 # default: use first 3 columns of <data> for function information
+
+#' @export
+#' @rdname feval
 feval.data.frame <- function(data, id = 1, argvals = 2, value = 3, domain = NULL, 
   range = NULL, evaluator = approx_linear, ...) {
-  stopifnot(ncol(data) >= 3, is.numeric(data[[argvals]]), 
-    is.numeric(data[[value]]))
-  id <- data[[id]]
-  datalist <- split(data[[value]], id)
-  argvals <- split(data[[argvals]], id)
+  data <- na.omit(data[, c(id, argvals, value)])
+  stopifnot(is.numeric(data[[2]]), 
+    is.numeric(data[[3]]))
+  id <- data[[1]]
+  datalist <- split(data[[3]], id)
+  argvals <- split(data[[2]], id)
   regular <- sum(duplicated(argvals)) == length(argvals) - 1
   new_feval(argvals, datalist, regular, domain, range, substitute(evaluator))
 }
+
 # takes a list of vectors of identical lengths or a list of 2-column matrices/data.frames with 
 # argvals in the first and data in the second column
+#' @export
+#' @rdname feval
 feval.list <- function(data, argvals = NULL, regular = NULL, domain = NULL, 
   range = NULL, evaluator = approx_linear, ...) {
-  vectors <- sapply(data, is.vector)
+  vectors <- sapply(data, is.numeric)
   if (all(vectors)) {
     lengths <- sapply(data, length)
     if (all(lengths == lengths[1])) {
@@ -70,7 +89,7 @@ feval.list <- function(data, argvals = NULL, regular = NULL, domain = NULL,
     dims <- map(data, dim)
     stopifnot(all(sapply(dims, length) == 2), all(map(dims, ~.x[2]) == 2),
       all(rapply(data, is.numeric)))
-    id <- make.names(names(data) %||% seq_along(data), unique = TRUE)
+    id <- make.unique(names(data) %||% seq_along(data))
     argvals <- map(data, ~ unlist(.x[, 1]))
     data <- map(data, ~ unlist(.x[, 2]))
     names(data) <- id
