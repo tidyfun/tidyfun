@@ -74,10 +74,46 @@ magic_smooth_coef <- function(evaluations, index, spec_object, magic_args) {
 }
 
 #-------------------------------------------------------------------------------
-
+#' Constructors for (smoothed) functional data in basis representation
+#' 
+#' Various constructor and conversion methods.
+#'
+#' `fbase` takes the data it is supplied with and tries to represent them as linear
+#' combinations of a set of common spline basis functions identical for all
+#' observations with coefficient vectors estimated for each observation. The
+#' basis used is set up via a call to [mgcv::s()] and all the spline bases
+#' discussed in [mgcv::smooth.terms] are available, in principle. Depending on
+#' the value of the `penalized`-flag, the coefficient vectors for each
+#' observation are then estimated via fitting a small GAM for each observation
+#' via [mgcv::magic()] or via simple ordinary least squares.
+#'
+#' After the "smoothed" representation is computed, the amount of smoothing that
+#' was performed is reported in terms of the "percentage of variance preserved",
+#' which is the variance of the smoothed function values divided by the variance
+#' of the original values. The `...` arguments supplies arguments to both the
+#' spline basis set up (via [mgcv::s()]) and the estimation (via
+#' [mgcv::magic()]), most important are probably how many basis functions `k`
+#' the spline basis should have and/or manually setting the smoothing parameter
+#' `sp`. The latter can also be used to enforce the same amount of penalization
+#' for all functional observations.
+#' 
+#' @param data a `matrix`, `data.frame` or `list` of suitable shape.
+#' @param ... not used
+#' @return an `fbase`-object (or a `data.frame`/`matrix` for the conversion functions, obviously.)
+#' @rdname fbase
 #' @export
 fbase <- function(data, ...) UseMethod("fbase")
 
+
+#' @export
+#' @inheritParams feval.data.frame
+#' @param penalized should the coefficients of the basis representation be estimated
+#'   via [mgcv::magic()] (default) or ordinary least squares.
+#' @param basis which type of spline basis to use, defaults to cubic regression splines. See details.
+#' @param ... further arguments to the calls to [mgcv::s()] setting up the basis and 
+#'  [mgcv::magic()] (if `penalized` is TRUE). Most importantly: how many basis functions `k`
+#'  the spline basis should have should probably be set manually....
+#' @rdname fbase
 #' @export
 fbase.data.frame <- function(data, id = 1, argvals = 2, value = 3, basis = 'cr', 
     domain = NULL, range = NULL, penalized = TRUE, signif = 4, ...) {
@@ -91,6 +127,7 @@ fbase.data.frame <- function(data, id = 1, argvals = 2, value = 3, basis = 'cr',
     penalized = penalized, signif = signif, ...)
 }
 
+#' @rdname fbase
 #' @export
 fbase.matrix <- function(data, argvals = NULL, basis = 'cr', 
   domain = NULL, range = NULL, penalized = TRUE, signif = 4, ...) {
@@ -104,6 +141,7 @@ fbase.matrix <- function(data, argvals = NULL, basis = 'cr',
     penalized = penalized, signif = signif, ...)
 }  
 
+#' @rdname fbase
 #' @export
 fbase.list <- function(data, argvals = NULL, basis = 'cr', 
   domain = NULL, range = NULL, penalized = TRUE, signif = 4, ...) {
@@ -133,6 +171,7 @@ fbase.list <- function(data, argvals = NULL, basis = 'cr',
     penalized = penalized, signif = signif, ...)
 }
 
+#' @rdname fbase
 #' @export
 fbase.feval <- function(data, argvals = NULL, basis = 'cr', 
   domain = NULL, range = NULL, penalized = TRUE, signif = 4, ...) {

@@ -30,17 +30,46 @@ new_feval <- function(argvals, datalist, regular, domain, range, evaluator, sign
 
 #' Constructors for functional data evaluated on grids of argument values
 #' 
-#' Various constructor methods
+#' Various constructor and conversion methods.
+#' 
+#' **`evaluator`**: must be a `function(x, argvals, evaluations)` that returns
+#' the function's (approximated/interpolated) values at locations `x` based on
+#' the `evaluations` available at locations `argvals`. 
+#' Available `evaluator`-functions: 
+#' 
+#' - `approx_linear` for linear interpolation without extrapolation (i.e.,
+#' [zoo::na.approx()] with `na.rm = FALSE`),
+#' - `approx_spline` for cubic spline interpolation, (i.e., [zoo::na.spline()]
+#' with `na.rm = FALSE`),
+#' - `approx_fill_extend` for linear interpolation and constant extrapolation
+#' (i.e., [zoo::na.fill()] with `fill = "extend"`)
+#' - `approx_locf` for "last observation carried forward"  (i.e.,
+#' [zoo::na.locf()] with `na.rm = FALSE` and
+#' - `approx_nocb` for "next observation carried backward" (i.e.,
+#' [zoo::na.locf()] with `na.rm = FALSE, fromLast = TRUE`).
+#' 
+#' See `tidyfun:::zoo_wrapper` and `tidyfun:::approx_linear`, which is simply
+#' `zoo_wrapper(zoo::na.approx, na.rm = FALSE)`, for examples of implementations of
+#' this. 
+#' 
+#' 
+#' **`signif`**: `argvals` that are equivalent to this significant digit are 
+#' treated as identical. E.g., if an evaluation of f(t) is available at t=1 and a function
+#' value is requested at t = 1.001, f(1) will be returned if `signif` < 4.
 #' 
 #' @param data a `matrix`, `data.frame` or `list` of suitable shape.
 #' @param ... not used
-#' @return an `feval`-object
+#' @return an `feval`-object (or a `data.frame`/`matrix` for the conversion functions, obviously.)
 #' @export
 feval <- function(data, ...) UseMethod("feval")
 
 #' @export
 #' @rdname feval
-#' @param argvals 
+#' @param argvals the evaluation grid. See Details.
+#' @param domain range of the `argvals`. 
+#' @param range range of the function values.
+#' @param evaluator a function accepting arguments `x, argvals, evaluations`. See details.
+#' @param signif significant digits of the "resolution" of the evaluation grid.  See details. 
 feval.matrix <- function(data, argvals = NULL, regular = NULL, domain = NULL, 
   range = NULL, evaluator = approx_linear, signif = 4, ...) {
   stopifnot(is.numeric(data))
@@ -54,6 +83,8 @@ feval.matrix <- function(data, argvals = NULL, regular = NULL, domain = NULL,
 # default: use first 3 columns of <data> for function information
 #' @export
 #' @rdname feval
+#' @param id The name/number of the column defining which data belong to which function.
+#' @param value The name/number of the column containing the function evaluations.
 feval.data.frame <- function(data, id = 1, argvals = 2, value = 3, domain = NULL, 
   range = NULL, evaluator = approx_linear, signif = 4, ...) {
   data <- na.omit(data[, c(id, argvals, value)])

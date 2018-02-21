@@ -1,18 +1,41 @@
-# conversions to/from data.frame, matrix
+#' @rdname feval
+#' @export 
 as.feval <- function(data, ...) UseMethod("as.feval")
+
+#' @rdname feval
+#' @export 
 as.feval.matrix  <- function(data, argvals = NULL, regular = NULL, domain = NULL, 
     range = NULL, ...) {
   feval(data, argvals, regular, domain, range, ...)
 }
+
+#' @rdname feval
+#' @export 
 as.feval.data.frame <- function(data, id = 1, argvals = 2, value = 3, domain = NULL, 
     range = NULL, ...) {
   feval(data, id, argvals, value, domain, range, ...)
 }
+
+#' @rdname feval
+#' @export 
 as.feval.list <- function(data, argvals = NULL, regular = NULL, domain = NULL, 
     range = NULL, ...) {
-  feval(data, argvals, domain = domain, range = range, ...)
+  feval(data, argvals, regular = regular, domain = domain, range = range, ...)
 }
 
+#' @rdname feval
+#' @export 
+as.feval.fbase <- function(data, argvals = NULL, regular = NULL, domain = NULL, 
+  range = NULL, ...) {
+  feval(data, argvals, regular = regular, domain = domain, range = range, ...)
+}
+
+#' @rdname feval
+#' @param rownames not used
+#' @param optional not used
+#' @param x an `feval` object
+#' @inheritParams `[.fvector`
+#' @export 
 as.data.frame.feval <- function(x, rownames = NULL, optional = FALSE, 
   argvals = NULL, interpolate = FALSE, ...) {
   if (is.null(argvals)) {
@@ -23,7 +46,8 @@ as.data.frame.feval <- function(x, rownames = NULL, optional = FALSE,
   tidyr::unnest(bind_rows(list(id = names(x), data = tmp)))
 }
 
-
+#' @rdname feval
+#' @export
 as.matrix.feval <- function(x, argvals = NULL, interpolate = FALSE) {
   ret <- as.data.frame(x, argvals = argvals, interpolate = interpolate)  %>% 
     arrange(argvals) %>% 
@@ -35,25 +59,47 @@ as.matrix.feval <- function(x, argvals = NULL, interpolate = FALSE) {
 
 #-------------------------------------------------------------------------------
 
-# conversions to/from data.frame, matrix
+#' @rdname fbase
+#' @export 
 as.fbase <- function(data, ...) UseMethod("as.fbase")
 
+#' @rdname fbase
+#' @export 
 as.fbase.matrix  <- function(data, argvals = NULL, basis = 'cr', 
   domain = NULL, range = NULL, penalized = TRUE, signif = 4, ...) {
   fbase(data, basis = basis, domain = domain, range = range, 
     penalized = penalized, signif = signif, ...)
 }
+
+#' @rdname fbase
+#' @export 
 as.fbase.data.frame <- function(data, id = 1, argvals = 2, value = 3, basis = 'cr', 
   domain = NULL, range = NULL, penalized = TRUE, signif = 4, ...) {
   fbase(data, id, argvals, value, basis = basis, domain = domain, range = range,
     penalized = penalized, signif = signif, ...)
 }
+
+#' @rdname fbase
+#' @export 
 as.fbase.list <- function(data, argvals = NULL, basis = 'cr', 
   domain = NULL, range = NULL, penalized = TRUE, signif = 4, ...) {
-  fbase(data, basis = basis, domain = domain, range = range, 
+  fbase(data, argvals, basis = basis, domain = domain, range = range, 
     penalized = penalized, signif = signif, ...)
 }
 
+#' @rdname fbase
+#' @export 
+as.fbase.feval <- function(data, argvals = NULL, basis = 'cr', 
+  domain = NULL, range = NULL, penalized = TRUE, signif = 4, ...) {
+  fbase(data, argvals, basis = basis, domain = domain, range = range, 
+    penalized = penalized, signif = signif, ...)
+}
+
+#' @rdname fbase
+#' @param rownames not used
+#' @param optional not used
+#' @param x an `fbase` object
+#' @export 
 as.data.frame.fbase <- function(x, rownames = NULL, optional = FALSE, 
   argvals = NULL, ...) {
   if (is.null(argvals)) {
@@ -64,7 +110,7 @@ as.data.frame.fbase <- function(x, rownames = NULL, optional = FALSE,
   tidyr::unnest(bind_rows(list(id = names(x), data = tmp)))
 }
 
-
+#' @rdname fbase
 as.matrix.fbase <- function(x, argvals = NULL) {
   ret <- as.data.frame(x, argvals = argvals)  %>% 
     arrange(argvals) %>% 
