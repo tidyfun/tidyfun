@@ -47,8 +47,9 @@ new_fbase <- function(data, regular, basis = 'cr', domain = NULL, range = NULL,
     pve <- unlist(map(coef_list, 2))
     coef_list <- map(coef_list, 1)
   }
-  message("Percentage of input data variance preserved (per functional observation, approx.):")
-  print(summary(pve, digits = 3))
+  message("Percentage of raw input data variance preserved after smoothing\n", 
+    "(per functional observation, approx.):")
+  print(summary(round(100 * pve, 1)))
 
   domain <- domain %||% range(argvals_u)
   range <- range %||% range(data$data, na.rm = TRUE) #FIXME: should be range(X%*%coef)?

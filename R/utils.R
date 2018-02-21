@@ -41,19 +41,6 @@ find_argvals <- function(data, argvals) {
   list(argvals)
 }
 
-# check_argvals <- function(argvals, x){
-#   if (is.list(argvals)) {
-#     check_choice(length(argvals), c(1, length(x))) #return if !TRUE
-#     map(argvals, ~ check_argvals_vector(., x = x))
-#   } else {
-#     check_argvals_vector(argvals, x)
-#   }
-# }
-# check_argvals_vector <- function(argvals, x) {
-#   check_numeric(argvals, any.missing = FALSE, unique = TRUE,
-#     lower = domain(x)[1], upper = domain(x)[2])
-# }
-
 #' @import checkmate
 assert_argvals <- function(argvals, x){
   if (is.list(argvals)) {

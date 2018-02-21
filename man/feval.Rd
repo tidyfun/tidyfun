@@ -10,18 +10,22 @@
 feval(data, ...)
 
 \method{feval}{matrix}(data, argvals = NULL, regular = NULL,
-  domain = NULL, range = NULL, evaluator = approx_linear, ...)
+  domain = NULL, range = NULL, evaluator = approx_linear, signif = 4,
+  ...)
 
 \method{feval}{data.frame}(data, id = 1, argvals = 2, value = 3,
-  domain = NULL, range = NULL, evaluator = approx_linear, ...)
+  domain = NULL, range = NULL, evaluator = approx_linear, signif = 4,
+  ...)
 
 \method{feval}{list}(data, argvals = NULL, regular = NULL, domain = NULL,
-  range = NULL, evaluator = approx_linear, ...)
+  range = NULL, evaluator = approx_linear, signif = 4, ...)
 }
 \arguments{
 \item{data}{a \code{matrix}, \code{data.frame} or \code{list} of suitable shape.}
 
 \item{...}{not used}
+
+\item{argvals}{}
 }
 \value{
 an \code{feval}-object

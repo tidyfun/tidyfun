@@ -9,9 +9,9 @@
 \usage{
 evaluate(object, argvals, ...)
 
-\method{evaluate}{feval}(object, argvals)
+\method{evaluate}{feval}(object, argvals, ...)
 
-\method{evaluate}{fbase}(object, argvals)
+\method{evaluate}{fbase}(object, argvals, ...)
 
 \method{evaluate}{data.frame}(object, argvals, ...)
 }

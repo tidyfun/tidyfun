@@ -88,7 +88,7 @@ range.fvector <- function(..., na.rm = FALSE) {
 }
 
 #' @export
-coef.fbase <- function(object, ....) {
+coef.fbase <- function(object, ...) {
   attributes(object) <- NULL
   object
 }

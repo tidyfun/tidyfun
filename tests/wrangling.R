@@ -1,4 +1,4 @@
-load <- require(tidyfun)
+#load <- require(tidyfun)
 if (!load) {
   library(devtools)
   load_all(".")
@@ -12,10 +12,17 @@ if (!load) {
 
 dti <- refund::DTI
 
-f_cca <- feval(dti$cca, argvals = seq(0, 1, l = 93))
+f_cca <- feval(dti$cca, argvals = seq(0, 1, l = 93), signif = 2)
 f_rcst <- feval(dti$rcst, argvals = seq(0, 1, l = 55))
-head(f_cca)
-head(f_rcst)
+f_cca
+f_rcst
+
+fb_cca <- fbase(dti$cca, k = 25, argvals = seq(0, 1, l = 93))
+
+fb_cca 
+
+plot(fb_cca[1:5])
+lines(f_cca[1:5], col = 2, lty = 3)
 
 test_tbl <- with(dti, data_frame(id = ID, sex = sex,  cca = f_cca, rcst = f_rcst))
 test_tbl

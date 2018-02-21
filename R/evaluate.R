@@ -11,11 +11,11 @@
 evaluate <- function(object, argvals, ...) UseMethod("evaluate")
 
 #' @export
-evaluate.default <- function(object, argvals) .NotYetImplemented()
+evaluate.default <- function(object, argvals, ...) .NotYetImplemented()
 
 #' @export
 #' @rdname evaluate
-evaluate.feval <- function(object, argvals) {
+evaluate.feval <- function(object, argvals, ...) {
   if (missing(argvals) | is.null(argvals)) argvals <- tidyfun::argvals(object)
   argvals <- ensure_list(argvals)
   assert_argvals(argvals, object)
@@ -31,7 +31,7 @@ evaluate_feval_once <- function(x, argvals, evaluations, evaluator) {
 
 #' @export
 #' @rdname evaluate
-evaluate.fbase <- function(object, argvals) {
+evaluate.fbase <- function(object, argvals, ...) {
   if (missing(argvals) | is.null(argvals)) argvals <- tidyfun::argvals(object)
   argvals <- ensure_list(argvals)
   assert_argvals(argvals, object)
@@ -44,7 +44,7 @@ evaluate.fbase <- function(object, argvals) {
       X = attr(object, "basis_matrix"))
     ret <- split(evals, col(evals))
   } else {
-    ret <- pmap(list(argvals, attr(object, "argvals"), coef(object)),
+    ret <- pmap(list(argvals, list(attr(object, "argvals")), coef(object)),
       ~ evaluate_fbase_once(x = ..1, argvals = ..2, coefs = ..3, 
         basis = attr(object, "basis"), X = attr(object, "basis_matrix")))
   }
