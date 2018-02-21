@@ -38,17 +38,17 @@ as.matrix.feval <- function(x, argvals = NULL, interpolate = FALSE) {
 # conversions to/from data.frame, matrix
 as.fbase <- function(data, ...) UseMethod("as.fbase")
 
-as.fbase.matrix  <- function(data, argvals = NULL, basis = 'ps', 
+as.fbase.matrix  <- function(data, argvals = NULL, basis = 'cr', 
   domain = NULL, range = NULL, penalized = TRUE, signif = 4, ...) {
   fbase(data, basis = basis, domain = domain, range = range, 
     penalized = penalized, signif = signif, ...)
 }
-as.fbase.data.frame <- function(data, id = 1, argvals = 2, value = 3, basis = 'ps', 
+as.fbase.data.frame <- function(data, id = 1, argvals = 2, value = 3, basis = 'cr', 
   domain = NULL, range = NULL, penalized = TRUE, signif = 4, ...) {
   fbase(data, id, argvals, value, basis = basis, domain = domain, range = range,
     penalized = penalized, signif = signif, ...)
 }
-as.fbase.list <- function(data, argvals = NULL, basis = 'ps', 
+as.fbase.list <- function(data, argvals = NULL, basis = 'cr', 
   domain = NULL, range = NULL, penalized = TRUE, signif = 4, ...) {
   fbase(data, basis = basis, domain = domain, range = range, 
     penalized = penalized, signif = signif, ...)

@@ -5,7 +5,8 @@ smooth_spec_wrapper <- function(spec) {
   }
 } 
 
-new_fbase <- function(data, regular, basis = 'ps', domain = NULL, range = NULL, 
+#' @importFrom stats var na.omit median
+new_fbase <- function(data, regular, basis = 'cr', domain = NULL, range = NULL, 
     penalized = TRUE, signif = 4, ...) {
   data$argvals <- .adjust_resolution(data$argvals, signif, unique = FALSE)
   argvals_u <- mgcv::uniquecombs(data$argvals, ordered = TRUE)
@@ -77,7 +78,7 @@ magic_smooth_coef <- function(evaluations, index, spec_object, magic_args) {
 fbase <- function(data, ...) UseMethod("fbase")
 
 #' @export
-fbase.data.frame <- function(data, id = 1, argvals = 2, value = 3, basis = 'ps', 
+fbase.data.frame <- function(data, id = 1, argvals = 2, value = 3, basis = 'cr', 
     domain = NULL, range = NULL, penalized = TRUE, signif = 4, ...) {
   data <- na.omit(data[, c(id, argvals, value)])
   colnames(data) <- c("id", "argvals", "data")
@@ -90,12 +91,12 @@ fbase.data.frame <- function(data, id = 1, argvals = 2, value = 3, basis = 'ps',
 }
 
 #' @export
-fbase.matrix <- function(data, argvals = NULL, basis = 'ps', 
+fbase.matrix <- function(data, argvals = NULL, basis = 'cr', 
   domain = NULL, range = NULL, penalized = TRUE, signif = 4, ...) {
   stopifnot(is.numeric(data))
   argvals <- unlist(find_argvals(data, argvals))
   id <- make.unique(rownames(data) %||% seq_len(dim(data)[1]))
-  data <- na.omit(tibble::data_frame(id = id[row(data)], argvals = argvals[col(data)], 
+  data <- na.omit(data_frame(id = id[row(data)], argvals = argvals[col(data)], 
     data = as.vector(data)))
   regular <- length(unique(table(data[[1]]))) == 1
   new_fbase(data, regular, basis = basis, domain = domain, range = range, 
@@ -103,7 +104,7 @@ fbase.matrix <- function(data, argvals = NULL, basis = 'ps',
 }  
 
 #' @export
-fbase.list <- function(data, argvals = NULL, basis = 'ps', 
+fbase.list <- function(data, argvals = NULL, basis = 'cr', 
   domain = NULL, range = NULL, penalized = TRUE, signif = 4, ...) {
   vectors <- sapply(data, is.numeric)
   stopifnot(all(vectors) | !any(vectors))
@@ -127,6 +128,17 @@ fbase.list <- function(data, argvals = NULL, basis = 'ps',
   data <- data_frame(id = make.unique(names(data) %||% seq_along(data)), 
       funs = data) %>% tidyr::unnest
   #dispatch to data.frame method
+  fbase(data, basis = basis, domain = domain, range = range, 
+    penalized = penalized, signif = signif, ...)
+}
+
+#' @export
+fbase.feval <- function(data, argvals = NULL, basis = 'cr', 
+  domain = NULL, range = NULL, penalized = TRUE, signif = 4, ...) {
+  argvals <- argvals %||% argvals(data)
+  domain <- domain %||% domain(data)
+  range <- range %||% range(data)
+  data <- as.data.frame(data, argvals)
   fbase(data, basis = basis, domain = domain, range = range, 
     penalized = penalized, signif = signif, ...)
 }
