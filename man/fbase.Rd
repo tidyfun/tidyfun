@@ -5,7 +5,7 @@
 \alias{fbase.data.frame}
 \alias{fbase.matrix}
 \alias{fbase.list}
-\alias{fbase.feval}
+\alias{fbase.fvector}
 \alias{as.fbase}
 \alias{as.fbase.matrix}
 \alias{as.fbase.data.frame}
@@ -27,7 +27,7 @@ fbase(data, ...)
 \method{fbase}{list}(data, argvals = NULL, basis = "cr", domain = NULL,
   range = NULL, penalized = TRUE, signif = 4, ...)
 
-\method{fbase}{feval}(data, argvals = NULL, basis = "cr", domain = NULL,
+\method{fbase}{fvector}(data, argvals = NULL, basis = "cr", domain = NULL,
   range = NULL, penalized = TRUE, signif = 4, ...)
 
 as.fbase(data, ...)
@@ -48,16 +48,18 @@ as.fbase(data, ...)
 \method{as.data.frame}{fbase}(x, rownames = NULL, optional = FALSE,
   argvals = NULL, ...)
 
-\method{as.matrix}{fbase}(x, argvals = NULL)
+\method{as.matrix}{fbase}(x, argvals = NULL, ...)
 }
 \arguments{
-\item{data}{a \code{matrix}, \code{data.frame} or \code{list} of suitable shape.}
+\item{data}{a \code{matrix}, \code{data.frame} or \code{list} of suitable shape, or another \code{fvector}-object.}
 
-\item{...}{not used}
+\item{...}{further arguments to the calls to \code{\link[mgcv:s]{mgcv::s()}} setting up the basis and
+\code{\link[mgcv:magic]{mgcv::magic()}} (if \code{penalized} is TRUE). Most importantly: how many basis functions \code{k}
+the spline basis should have should probably be set manually....}
 
 \item{id}{The name/number of the column defining which data belong to which function.}
 
-\item{argvals}{the evaluation grid. See Details.}
+\item{argvals}{\code{numeric}, or list of \code{numeric}s. The evaluation grid. See Details.}
 
 \item{value}{The name/number of the column containing the function evaluations.}
 
@@ -77,10 +79,6 @@ via \code{\link[mgcv:magic]{mgcv::magic()}} (default) or ordinary least squares.
 \item{rownames}{not used}
 
 \item{optional}{not used}
-
-\item{...}{further arguments to the calls to \code{\link[mgcv:s]{mgcv::s()}} setting up the basis and
-\code{\link[mgcv:magic]{mgcv::magic()}} (if \code{penalized} is TRUE). Most importantly: how many basis functions \code{k}
-the spline basis should have should probably be set manually....}
 }
 \value{
 an \code{fbase}-object (or a \code{data.frame}/\code{matrix} for the conversion functions, obviously.)

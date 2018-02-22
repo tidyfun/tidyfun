@@ -119,7 +119,7 @@ plot.fvector <- function(x, y, n_grid = 50, points = is_feval(x),
 }
 
 #' @importFrom graphics matlines
-linespoints_fvector <- function(x, argvals, n_grid, points, alpha) {
+linespoints_fvector <- function(x, argvals, n_grid, points, alpha, ...) {
   assert_number(n_grid, na.ok = TRUE)
   if (missing(argvals)) {
     argvals <- prep_plotting_argvals(x, n_grid)

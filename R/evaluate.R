@@ -1,12 +1,14 @@
 #' Evaluate `fvector`s, both inside or outside a `data.frame`
 #' 
-#' The `data.frame` method evaluates `fvector`-columns into list columns of 
-#' smaller `data.frames` containing the functions' argvals and evaluations. 
-#' For the  `data.frame` method, `argvals` can be a list of `argvals`-vector 
+#' 
+#' The `evaluate.data.frame` method evaluates `fvector`-columns inside a `data.frame`
+#' into list columns of smaller `data.frames` containing the functions' argvals and 
+#' evaluations. Its `argvals`-argument can be a list of `argvals`-vector 
 #' used as the `argvals` argument for the [evaluate()]-method for the respective
 #' `fvector`-columns in `object`.
 #' @param object an `fvector` or a `data.frame`-like object with `fvector` columns
 #' @param argvals optional evaluation grid, defaults to `argvals(object)`. 
+#' @seealso \code{?`[.fvector`}
 #' @export
 evaluate <- function(object, argvals, ...) UseMethod("evaluate")
 
@@ -89,6 +91,6 @@ evaluate.data.frame <- function(object, argvals, ...) {
   }
   # convert them to list-columns of data.frames
   object[fvector_cols] <- map2(object[fvector_cols], argvals, 
-    ~.x[, .y, matrix=FALSE])
+    ~.x[, .y, matrix = FALSE])
   object
 }

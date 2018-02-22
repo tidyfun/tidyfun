@@ -47,7 +47,7 @@ new_fbase <- function(data, regular, basis = 'cr', domain = NULL, range = NULL,
     pve <- unlist(map(coef_list, 2))
     coef_list <- map(coef_list, 1)
   }
-  message("Percentage of raw input data variance preserved after smoothing\n", 
+  message("Percentage of raw input data variance preserved in basis representation:\n", 
     "(per functional observation, approx.):")
   print(summary(round(100 * pve, 1)))
 
@@ -97,8 +97,7 @@ magic_smooth_coef <- function(evaluations, index, spec_object, magic_args) {
 #' `sp`. The latter can also be used to enforce the same amount of penalization
 #' for all functional observations.
 #' 
-#' @param data a `matrix`, `data.frame` or `list` of suitable shape.
-#' @param ... not used
+#' @param data a `matrix`, `data.frame` or `list` of suitable shape, or another `fvector`-object.
 #' @return an `fbase`-object (or a `data.frame`/`matrix` for the conversion functions, obviously.)
 #' @rdname fbase
 #' @export
@@ -173,7 +172,7 @@ fbase.list <- function(data, argvals = NULL, basis = 'cr',
 
 #' @rdname fbase
 #' @export
-fbase.feval <- function(data, argvals = NULL, basis = 'cr', 
+fbase.fvector <- function(data, argvals = NULL, basis = 'cr', 
   domain = NULL, range = NULL, penalized = TRUE, signif = 4, ...) {
   argvals <- argvals %||% argvals(data)
   domain <- domain %||% domain(data)

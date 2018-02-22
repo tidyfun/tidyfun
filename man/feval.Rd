@@ -44,14 +44,16 @@ as.feval(data, ...)
 \method{as.data.frame}{feval}(x, rownames = NULL, optional = FALSE,
   argvals = NULL, interpolate = FALSE, ...)
 
-\method{as.matrix}{feval}(x, argvals = NULL, interpolate = FALSE)
+\method{as.matrix}{feval}(x, argvals = NULL, interpolate = FALSE, ...)
 }
 \arguments{
-\item{data}{a \code{matrix}, \code{data.frame} or \code{list} of suitable shape.}
+\item{data}{a \code{matrix}, \code{data.frame} or \code{list} of suitable shape, or another \code{fvector}-object.}
 
 \item{...}{not used}
 
-\item{argvals}{the evaluation grid. See Details.}
+\item{argvals}{\code{numeric}, or list of \code{numeric}s. The evaluation grid. See Details.}
+
+\item{regular}{\code{logical} assume a regular or iregular grid}
 
 \item{domain}{range of the \code{argvals}.}
 
@@ -70,6 +72,10 @@ as.feval(data, ...)
 \item{rownames}{not used}
 
 \item{optional}{not used}
+
+\item{interpolate}{should functions be evaluated (i.e., inter-/extrapolated)
+for \code{argvals} for which no original data is available? Only relevant for
+\code{feval}, defaults to TRUE.}
 }
 \value{
 an \code{feval}-object (or a \code{data.frame}/\code{matrix} for the conversion functions, obviously.)

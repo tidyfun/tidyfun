@@ -57,7 +57,7 @@ new_feval <- function(argvals, datalist, regular, domain, range, evaluator, sign
 #' treated as identical. E.g., if an evaluation of f(t) is available at t=1 and a function
 #' value is requested at t = 1.001, f(1) will be returned if `signif` < 4.
 #' 
-#' @param data a `matrix`, `data.frame` or `list` of suitable shape.
+#' @param data a `matrix`, `data.frame` or `list` of suitable shape, or another `fvector`-object.
 #' @param ... not used
 #' @return an `feval`-object (or a `data.frame`/`matrix` for the conversion functions, obviously.)
 #' @export
@@ -65,7 +65,8 @@ feval <- function(data, ...) UseMethod("feval")
 
 #' @export
 #' @rdname feval
-#' @param argvals the evaluation grid. See Details.
+#' @param argvals `numeric`, or list of `numeric`s. The evaluation grid. See Details.
+#' @param regular `logical` assume a regular or iregular grid
 #' @param domain range of the `argvals`. 
 #' @param range range of the function values.
 #' @param evaluator a function accepting arguments `x, argvals, evaluations`. See details.
@@ -133,7 +134,7 @@ feval.list <- function(data, argvals = NULL, regular = NULL, domain = NULL,
 }
 
 #' @export
-feval.fbase <- function(data, argvals = NULL, regular = NULL, domain = NULL, 
+feval.fvector <- function(data, argvals = NULL, regular = NULL, domain = NULL, 
   range = NULL, evaluator = approx_linear, signif = 4, ...) {
   argvals <- ensure_list(argvals %||% argvals(data))
   evaluations <- evaluate(data, argvals)

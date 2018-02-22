@@ -18,13 +18,13 @@ f_irreg2 <- feval(mat_irreg, evaluator = approx_fill_extend)
 
 
 fb_reg <- new_fbase(as.data.frame(f_reg), regular = TRUE, 
-  basis = "ps", k = 10, m = c(2,2), penalized = FALSE)
+  basis = "cr", k = 10, m = c(2,2), penalized = FALSE)
 fb_irreg <- new_fbase(as.data.frame(f_irreg), regular = FALSE, 
-  basis = "ps", k = 10, m = c(2,2), penalized = FALSE)
+  basis = "tp", k = 10, m = c(2,2), penalized = FALSE)
 fbp_reg <- new_fbase(as.data.frame(f_reg), regular = TRUE, 
-  basis = "ps", k = 30, m = c(2,2), penalized = TRUE)
+  basis = "tp", k = 30, m = c(2,2), penalized = TRUE)
 fbp_irreg <- new_fbase(as.data.frame(f_irreg), regular = FALSE, 
-  basis = "ps", k = 30, m = c(2,2), penalized = TRUE)
+  basis = "tp", k = 30, m = c(2,2), penalized = TRUE)
 
 
 #

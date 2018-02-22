@@ -34,7 +34,7 @@ as.feval.fbase <- function(data, argvals = NULL, regular = NULL, domain = NULL,
 #' @param rownames not used
 #' @param optional not used
 #' @param x an `feval` object
-#' @inheritParams `[.fvector`
+#' @inheritParams [.fvector
 #' @export 
 as.data.frame.feval <- function(x, rownames = NULL, optional = FALSE, 
   argvals = NULL, interpolate = FALSE, ...) {
@@ -48,7 +48,7 @@ as.data.frame.feval <- function(x, rownames = NULL, optional = FALSE,
 
 #' @rdname feval
 #' @export
-as.matrix.feval <- function(x, argvals = NULL, interpolate = FALSE) {
+as.matrix.feval <- function(x, argvals = NULL, interpolate = FALSE, ...) {
   ret <- as.data.frame(x, argvals = argvals, interpolate = interpolate)  %>% 
     arrange(argvals) %>% 
     tidyr::spread(key = argvals, value = data) %>% 
@@ -111,7 +111,7 @@ as.data.frame.fbase <- function(x, rownames = NULL, optional = FALSE,
 }
 
 #' @rdname fbase
-as.matrix.fbase <- function(x, argvals = NULL) {
+as.matrix.fbase <- function(x, argvals = NULL, ...) {
   ret <- as.data.frame(x, argvals = argvals)  %>% 
     arrange(argvals) %>% 
     tidyr::spread(key = argvals, value = data) %>% 

@@ -23,9 +23,12 @@ evaluate(object, argvals, ...)
 \item{...}{optional: names of the \code{fvector}-columns to unnest}
 }
 \description{
-The \code{data.frame} method evaluates \code{fvector}-columns into list columns of
-smaller \code{data.frames} containing the functions' argvals and evaluations.
-For the  \code{data.frame} method, \code{argvals} can be a list of \code{argvals}-vector
+The \code{evaluate.data.frame} method evaluates \code{fvector}-columns inside a \code{data.frame}
+into list columns of smaller \code{data.frames} containing the functions' argvals and
+evaluations. Its \code{argvals}-argument can be a list of \code{argvals}-vector
 used as the \code{argvals} argument for the \code{\link[=evaluate]{evaluate()}}-method for the respective
 \code{fvector}-columns in \code{object}.
+}
+\seealso{
+\code{?`[.fvector`}
 }
