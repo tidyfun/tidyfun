@@ -28,6 +28,8 @@ prep_plotting_argvals <- function(f, n_grid) {
 #' @param points should the original evaluation points be marked by points?
 #'   Defaults to `TRUE` for `feval`- and FALSE for `fbase`-objects
 #' @param type "spaghetti": line plots, "lasagna": heat maps.
+#' @param alpha [alpha-value](grDevices::rgb()) for noodle transparency. 
+#'   Defaults to 2/(no. of observations). Lower is more transparent.
 #' @return for `funplot`: the `ggplot`-object for further modification. For the 
 #'  others: the plotted `fvector`-object, invisibly.
 #' @import ggplot2
@@ -35,7 +37,7 @@ prep_plotting_argvals <- function(f, n_grid) {
 #' @export
 #' @rdname fvectorviz
 funplot <- function(f, argvals, n_grid = 50, points = is_feval(f), 
-  type = c("spaghetti", "lasagna")) {
+  type = c("spaghetti", "lasagna"), alpha =  min(1, max(.05, 2/length(f)))) {
   assert_class(f, "fvector")
   assert_number(n_grid, na.ok = TRUE)
   assert_flag(points)
@@ -51,10 +53,10 @@ funplot <- function(f, argvals, n_grid = 50, points = is_feval(f),
   
   if (type == "spaghetti") {
     p <- ggplot(d, aes(x = argvals, y = data, group = id)) + 
-      geom_line(alpha = max(.05, 2/length(f)))
+      geom_line(alpha = alpha)
     if (points) {
-      p <- p + geom_point(data = as.data.frame(f, argvals = argvals(f)),
-        alpha = max(.05, 2/length(f)))
+      p <- p + 
+        geom_point(data = as.data.frame(f, argvals = argvals(f)), alpha = alpha)
     } 
   } 
   if (type == "lasagna") {
@@ -83,7 +85,7 @@ funplot <- function(f, argvals, n_grid = 50, points = is_feval(f),
 #' @references Swihart, B. J., Caffo, B., James, B. D., Strand, M., Schwartz, B. S., & Punjabi, N. M. (2010). 
 #' Lasagna plots: a saucy alternative to spaghetti plots. *Epidemiology (Cambridge, Mass.)*, **21**(5), 621-625.
 plot.fvector <- function(x, y, n_grid = 50, points = is_feval(x), 
-  type = c("spaghetti", "lasagna"), ...) {
+  type = c("spaghetti", "lasagna"), alpha = min(1, max(.05, 2/length(x))), ...) {
   type <- match.arg(type)
   assert_logical(points)
   assert_number(n_grid, na.ok = TRUE)
@@ -100,7 +102,7 @@ plot.fvector <- function(x, y, n_grid = 50, points = is_feval(x),
     args <- modifyList(
       list(x = drop(attr(m, "argvals")), y = t(m), type = ifelse(points, "b", "l"), 
         ylab = deparse(substitute(x)), xlab = "", lty = 1,
-        col = rgb(0,0,0, max(.05, 2/length(f))), pch = 19), 
+        col = rgb(0,0,0, alpha), pch = 19), 
       list(...))
     do.call(matplot, args)
   }  
@@ -116,7 +118,8 @@ plot.fvector <- function(x, y, n_grid = 50, points = is_feval(x),
   invisible(f)
 }
 
-linespoints_fvector <- function(x, argvals, n_grid = 50, points = FALSE, ...) {
+#' @importFrom graphics matlines
+linespoints_fvector <- function(x, argvals, n_grid, points, alpha) {
   assert_number(n_grid, na.ok = TRUE)
   if (missing(argvals)) {
     argvals <- prep_plotting_argvals(x, n_grid)
@@ -126,21 +129,23 @@ linespoints_fvector <- function(x, argvals, n_grid = 50, points = FALSE, ...) {
   } else as.matrix(x, argvals = argvals)
   args <- modifyList(
     list(x = drop(attr(m, "argvals")), y = t(m), type = ifelse(points, "p", "l"), 
-      lty = 1, col = rgb(0,0,0, max(.05, 2/length(x))), pch = 19), 
+      lty = 1, col = rgb(0,0,0, alpha), pch = 19), 
     list(...))
   do.call(matlines, args)
 }
 
 #' @export
 #' @rdname fvectorviz
-lines.fvector <- function(x, argvals, n_grid = 50, ...) {
+lines.fvector <- function(x, argvals, n_grid = 50, 
+  alpha = min(1, max(.05, 2/length(x))), ...) {
   args <- c(as.list(match.call())[-1], points = FALSE)
   do.call(linespoints_fvector, args)
   invisible(x)
 }
 #' @export
 #' @rdname fvectorviz
-points.fvector <- function(x, argvals, n_grid = 50, ...) {
+points.fvector <- function(x, argvals, n_grid = 50, 
+    alpha = min(1, max(.05, 2/length(x))), ...) {
   args <- c(as.list(match.call())[-1], points = TRUE)
   do.call(linespoints_fvector, args)
   invisible(x)

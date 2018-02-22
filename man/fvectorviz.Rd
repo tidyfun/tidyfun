@@ -8,14 +8,17 @@
 \title{Visualization functions for \code{fvector}s}
 \usage{
 funplot(f, argvals, n_grid = 50, points = is_feval(f),
-  type = c("spaghetti", "lasagna"))
+  type = c("spaghetti", "lasagna"), alpha = min(1, max(0.05, 2/length(f))))
 
 \method{plot}{fvector}(x, y, n_grid = 50, points = is_feval(x),
-  type = c("spaghetti", "lasagna"), ...)
+  type = c("spaghetti", "lasagna"), alpha = min(1, max(0.05, 2/length(x))),
+  ...)
 
-\method{lines}{fvector}(x, argvals, n_grid = 50, ...)
+\method{lines}{fvector}(x, argvals, n_grid = 50, alpha = min(1, max(0.05,
+  2/length(x))), ...)
 
-\method{points}{fvector}(x, argvals, n_grid = 50, ...)
+\method{points}{fvector}(x, argvals, n_grid = 50, alpha = min(1, max(0.05,
+  2/length(x))), ...)
 }
 \arguments{
 \item{f}{an \code{fvector} object}
@@ -29,6 +32,9 @@ defaults to 50. See details.}
 Defaults to \code{TRUE} for \code{feval}- and FALSE for \code{fbase}-objects}
 
 \item{type}{"spaghetti": line plots, "lasagna": heat maps.}
+
+\item{alpha}{\href{grDevices::rgb()}{alpha-value} for noodle transparency.
+Defaults to 2/(no. of observations). Lower is more transparent.}
 
 \item{x}{an \code{fvector} object}
 
