@@ -79,10 +79,7 @@ Ops.fvector <- function(e1, e2) {
   if (!same) return(rep(FALSE, max(length(e1), length(e2))))
   unlist(map2(e1, e2, ~ isTRUE(all.equal(.x, .y))))
 }
-`!=.feval` <- function(e1, e2) {
-  !(e1 == e2)
-}
-
+`!=.feval` <- function(e1, e2) !(e1 == e2)
 #need to copy instead of defining fvector-method s.t. dispatch in Ops works
 `==.fbase` <- eval(`==.feval`)
 `!=.fbase` <- eval(`!=.feval`)
@@ -93,8 +90,9 @@ Ops.feval <- function(e1, e2) {
     if (is_feval(e1) && is_feval(e2)) {
       if (.Generic == "^") {
         stop("^ not defined for \"feval\" objects")
+      } else {
+        return(fun_op(e1, e2, .Generic))
       }
-      return(fun_op(e1, e2, .Generic))
     }
     if (is_feval(e1) && is.numeric(e2)) {
       return(fun_op(e1, e2, .Generic, numeric = 2))

@@ -180,6 +180,17 @@ fbase.feval <- function(data, argvals = NULL,
   argvals <- argvals %||% argvals(data)
   domain <- domain %||% domain(data)
   data <- as.data.frame(data, argvals)
+  fbase(data, basis = basis, domain = domain,   
+    penalized = penalized, signif = signif, ...)
+}
+
+#' @rdname fbase
+#' @export
+fbase.fbase <- function(data, argvals = NULL, 
+  domain = NULL, penalized = TRUE, signif = 4, ...) {
+  argvals <- argvals %||% argvals(data)
+  domain <- domain %||% domain(data)
+  data <- as.data.frame(data, argvals)
   fbase(data, domain = domain,   
     penalized = penalized, signif = signif, ...)
 }

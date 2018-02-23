@@ -32,9 +32,10 @@ fbase(feval(fbase(freg))) == fbase(freg)
 purrr::map2(coef(fbase(feval(fbase(freg)))), coef(fbase(freg)), 
   ~all(.x == .y))
 
-
 +fb == fb
 -fb == fb - 2*fb
 
 fb * fb == fb^2
 2^fb
+
+log(exp(fb)) == fb
