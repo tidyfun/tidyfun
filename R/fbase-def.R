@@ -172,10 +172,22 @@ fbase.list <- function(data, argvals = NULL, basis = 'cr',
 
 #' @rdname fbase
 #' @export
-fbase.fvector <- function(data, argvals = NULL, basis = 'cr', 
-  domain = NULL,   penalized = TRUE, signif = 4, ...) {
+fbase.feval <- function(data, argvals = NULL, basis = 'cr', 
+  domain = NULL, penalized = TRUE, signif = 4, ...) {
   argvals <- argvals %||% argvals(data)
   domain <- domain %||% domain(data)
+  data <- as.data.frame(data, argvals)
+  fbase(data, basis = basis, domain = domain,   
+    penalized = penalized, signif = signif, ...)
+}
+
+#' @rdname fbase
+#' @export
+fbase.fbase <- function(data, argvals = NULL, basis = NULL, 
+  domain = NULL, penalized = TRUE, signif = 4, ...) {
+  argvals <- argvals %||% argvals(data)
+  domain <- domain %||% domain(data)
+  basis <- basis %||% attr(data, "basis_args")$bs %||% 'cr'
   data <- as.data.frame(data, argvals)
   fbase(data, basis = basis, domain = domain,   
     penalized = penalized, signif = signif, ...)

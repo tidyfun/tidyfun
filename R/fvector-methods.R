@@ -136,7 +136,7 @@ print.feval_irreg <- function(x, n = 10, ...) {
 #' @export
 print.fbase <- function(x, n = 10, ...) {
   NextMethod()
-  cat(" in basis representation:\n basis call: ", attr(x, "basis_label"), "\n")
+  cat(" in basis representation:\n using basis ", attr(x, "basis_label"), "\n")
   cat(format(x[1:min(n, length(x))], ...), sep = "\n")
   if (n < length(x)) 
     cat(paste0("    [....]   (", length(x) - n, " not shown)\n"))
