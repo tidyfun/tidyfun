@@ -6,12 +6,13 @@ smooth_spec_wrapper <- function(spec) {
 } 
 
 #' @importFrom stats var na.omit median
-new_fbase <- function(data, regular, basis = 'cr', domain = NULL,   
-    penalized = TRUE, signif = 4, ...) {
+new_fbase <- function(data, regular, domain = NULL,   
+    penalized = TRUE, signif = 4, verbose = TRUE, ...) {
   data$argvals <- .adjust_resolution(data$argvals, signif, unique = FALSE)
   argvals_u <- mgcv::uniquecombs(data$argvals, ordered = TRUE)
   s_args <- list(...)[names(list(...)) %in% names(formals(mgcv::s))]
-  s_args <- flatten(list(bs = basis, s_args))
+  if (!("bs" %in% names(s_args))) s_args$bs <- "cr"
+  if (!("k" %in% names(s_args))) s_args$k <- 15
   magic_args <- list(...)[names(list(...)) %in% names(formals(mgcv::magic))]
   if (!("sp" %in% names(magic_args))) magic_args$sp <- -1
   s_call <- as.call(c(quote(s), quote(argvals), s_args))
@@ -21,7 +22,7 @@ new_fbase <- function(data, regular, basis = 'cr', domain = NULL,
   underdet <- n_evaluations < spec_object$bs.dim
   eval_list <- split(data$data, data$id)
   if (!penalized) {
-    if (any(underdet)) {
+    if (any(underdet) & verbose) {
       warning("More basis functions than evaluations.", 
         " Interpolation will be unreliable.")
     }
@@ -48,10 +49,11 @@ new_fbase <- function(data, regular, basis = 'cr', domain = NULL,
     pve <- unlist(map(coef_list, 2))
     coef_list <- map(coef_list, 1)
   }
-  message("Percentage of raw input data variance preserved in basis representation:\n", 
-    "(per functional observation, approx.):")
-  print(summary(round(100 * pve, 1)))
-
+  if (verbose) {
+    message("Percentage of raw input data variance preserved in basis representation:\n", 
+      "(per functional observation, approx.):")
+    print(summary(round(100 * pve, 1)))
+  }
   domain <- domain %||% range(argvals_u)
   names(coef_list) <- names(coef_list) %||% seq_along(coef_list)
   basis_constructor <- smooth_spec_wrapper(spec_object)
@@ -108,13 +110,14 @@ fbase <- function(data, ...) UseMethod("fbase")
 #' @inheritParams feval.data.frame
 #' @param penalized should the coefficients of the basis representation be estimated
 #'   via [mgcv::magic()] (default) or ordinary least squares.
-#' @param basis which type of spline basis to use, defaults to cubic regression splines. See details.
-#' @param ... further arguments to the calls to [mgcv::s()] setting up the basis and 
-#'  [mgcv::magic()] (if `penalized` is TRUE). Most importantly: how many basis functions `k`
-#'  the spline basis should have should probably be set manually....
+#' @param ... arguments to the calls to [mgcv::s()] setting up the basis and
+#'   [mgcv::magic()] (if `penalized` is TRUE). If not user-specified here,
+#'   `tidyfun` uses `k=15` cubic regression spline basis functions (i.e., `bs =
+#'   "cr"`) by default, but at least how many basis functions `k` the spline
+#'   basis should have probably needs to be set manually ....
 #' @rdname fbase
 #' @export
-fbase.data.frame <- function(data, id = 1, argvals = 2, value = 3, basis = 'cr', 
+fbase.data.frame <- function(data, id = 1, argvals = 2, value = 3,  
     domain = NULL,   penalized = TRUE, signif = 4, ...) {
   data <- na.omit(data[, c(id, argvals, value)])
   colnames(data) <- c("id", "argvals", "data")
@@ -122,13 +125,13 @@ fbase.data.frame <- function(data, id = 1, argvals = 2, value = 3, basis = 'cr',
     is.numeric(data[[2]]), 
     is.numeric(data[[3]]))
   regular <- length(unique(table(data[[1]]))) == 1
-  new_fbase(data, regular, basis = basis, domain = domain,   
+  new_fbase(data, regular, domain = domain,   
     penalized = penalized, signif = signif, ...)
 }
 
 #' @rdname fbase
 #' @export
-fbase.matrix <- function(data, argvals = NULL, basis = 'cr', 
+fbase.matrix <- function(data, argvals = NULL, 
   domain = NULL,   penalized = TRUE, signif = 4, ...) {
   stopifnot(is.numeric(data))
   argvals <- unlist(find_argvals(data, argvals))
@@ -136,13 +139,13 @@ fbase.matrix <- function(data, argvals = NULL, basis = 'cr',
   data <- na.omit(data_frame(id = id[row(data)], argvals = argvals[col(data)], 
     data = as.vector(data)))
   regular <- length(unique(table(data[[1]]))) == 1
-  new_fbase(data, regular, basis = basis, domain = domain,   
+  new_fbase(data, regular,  domain = domain,   
     penalized = penalized, signif = signif, ...)
 }  
 
 #' @rdname fbase
 #' @export
-fbase.list <- function(data, argvals = NULL, basis = 'cr', 
+fbase.list <- function(data, argvals = NULL,  
   domain = NULL,   penalized = TRUE, signif = 4, ...) {
   vectors <- sapply(data, is.numeric)
   stopifnot(all(vectors) | !any(vectors))
@@ -151,7 +154,7 @@ fbase.list <- function(data, argvals = NULL, basis = 'cr',
     if (all(lengths == lengths[1])) {
       data <- do.call(rbind, data)
       #dispatch to matrix method
-      args <- list(data, argvals, basis = basis, domain = domain,   
+      args <- list(data, argvals,  domain = domain,   
         penalized = penalized, signif = signif, ...)
       return(do.call(fbase, args))
     } else {
@@ -172,11 +175,24 @@ fbase.list <- function(data, argvals = NULL, basis = 'cr',
 
 #' @rdname fbase
 #' @export
-fbase.fvector <- function(data, argvals = NULL, basis = 'cr', 
-  domain = NULL,   penalized = TRUE, signif = 4, ...) {
+fbase.feval <- function(data, argvals = NULL, 
+  domain = NULL, penalized = TRUE, signif = 4, ...) {
   argvals <- argvals %||% argvals(data)
   domain <- domain %||% domain(data)
   data <- as.data.frame(data, argvals)
-  fbase(data, basis = basis, domain = domain,   
+  fbase(data, domain = domain,   
     penalized = penalized, signif = signif, ...)
+}
+
+#' @rdname fbase
+#' @export
+fbase.fbase <- function(data, argvals = NULL,  
+  domain = NULL, penalized = TRUE, signif = 4, ...) {
+  argvals <- argvals %||% argvals(data)
+  domain <- domain %||% domain(data)
+  s_args <- modifyList(attr(data, "basis_args"),  
+    list(...)[names(list(...)) %in% names(formals(mgcv::s))])
+  data <- as.data.frame(data, argvals)
+  do.call("fbase", c(list(data), basis = basis, domain = domain,   
+    penalized = penalized, signif = signif, s_args))
 }

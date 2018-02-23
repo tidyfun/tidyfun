@@ -5,7 +5,8 @@
 \alias{fbase.data.frame}
 \alias{fbase.matrix}
 \alias{fbase.list}
-\alias{fbase.fvector}
+\alias{fbase.feval}
+\alias{fbase.fbase}
 \alias{as.fbase}
 \alias{as.fbase.matrix}
 \alias{as.fbase.data.frame}
@@ -18,30 +19,33 @@
 fbase(data, ...)
 
 \method{fbase}{data.frame}(data, id = 1, argvals = 2, value = 3,
-  basis = "cr", domain = NULL, penalized = TRUE, signif = 4, ...)
+  domain = NULL, penalized = TRUE, signif = 4, ...)
 
-\method{fbase}{matrix}(data, argvals = NULL, basis = "cr", domain = NULL,
+\method{fbase}{matrix}(data, argvals = NULL, domain = NULL,
   penalized = TRUE, signif = 4, ...)
 
-\method{fbase}{list}(data, argvals = NULL, basis = "cr", domain = NULL,
+\method{fbase}{list}(data, argvals = NULL, domain = NULL,
   penalized = TRUE, signif = 4, ...)
 
-\method{fbase}{fvector}(data, argvals = NULL, basis = "cr", domain = NULL,
+\method{fbase}{feval}(data, argvals = NULL, domain = NULL,
+  penalized = TRUE, signif = 4, ...)
+
+\method{fbase}{fbase}(data, argvals = NULL, domain = NULL,
   penalized = TRUE, signif = 4, ...)
 
 as.fbase(data, ...)
 
-\method{as.fbase}{matrix}(data, argvals = NULL, basis = "cr",
-  domain = NULL, penalized = TRUE, signif = 4, ...)
-
-\method{as.fbase}{data.frame}(data, id = 1, argvals = 2, value = 3,
-  basis = "cr", domain = NULL, penalized = TRUE, signif = 4, ...)
-
-\method{as.fbase}{list}(data, argvals = NULL, basis = "cr", domain = NULL,
+\method{as.fbase}{matrix}(data, argvals = NULL, domain = NULL,
   penalized = TRUE, signif = 4, ...)
 
-\method{as.fbase}{feval}(data, argvals = NULL, basis = "cr",
+\method{as.fbase}{data.frame}(data, id = 1, argvals = 2, value = 3,
   domain = NULL, penalized = TRUE, signif = 4, ...)
+
+\method{as.fbase}{list}(data, argvals = NULL, domain = NULL,
+  penalized = TRUE, signif = 4, ...)
+
+\method{as.fbase}{feval}(data, argvals = NULL, domain = NULL,
+  penalized = TRUE, signif = 4, ...)
 
 \method{as.data.frame}{fbase}(x, rownames = NULL, optional = FALSE,
   argvals = NULL, ...)
@@ -51,17 +55,16 @@ as.fbase(data, ...)
 \arguments{
 \item{data}{a \code{matrix}, \code{data.frame} or \code{list} of suitable shape, or another \code{fvector}-object.}
 
-\item{...}{further arguments to the calls to \code{\link[mgcv:s]{mgcv::s()}} setting up the basis and
-\code{\link[mgcv:magic]{mgcv::magic()}} (if \code{penalized} is TRUE). Most importantly: how many basis functions \code{k}
-the spline basis should have should probably be set manually....}
+\item{...}{arguments to the calls to \code{\link[mgcv:s]{mgcv::s()}} setting up the basis and
+\code{\link[mgcv:magic]{mgcv::magic()}} (if \code{penalized} is TRUE). If not user-specified here,
+\code{tidyfun} uses \code{k=15} cubic regression spline basis functions (i.e., \code{bs = "cr"}) by default, but at least how many basis functions \code{k} the spline
+basis should have probably needs to be set manually ....}
 
 \item{id}{The name/number of the column defining which data belong to which function.}
 
 \item{argvals}{\code{numeric}, or list of \code{numeric}s. The evaluation grid. See Details.}
 
 \item{value}{The name/number of the column containing the function evaluations.}
-
-\item{basis}{which type of spline basis to use, defaults to cubic regression splines. See details.}
 
 \item{domain}{range of the \code{argvals}.}
 

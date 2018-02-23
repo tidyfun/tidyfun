@@ -65,33 +65,33 @@ as.fbase <- function(data, ...) UseMethod("as.fbase")
 
 #' @rdname fbase
 #' @export 
-as.fbase.matrix  <- function(data, argvals = NULL, basis = 'cr', 
+as.fbase.matrix  <- function(data, argvals = NULL, 
   domain = NULL,   penalized = TRUE, signif = 4, ...) {
-  fbase(data, basis = basis, domain = domain,   
+  fbase(data,  domain = domain,   
     penalized = penalized, signif = signif, ...)
 }
 
 #' @rdname fbase
 #' @export 
-as.fbase.data.frame <- function(data, id = 1, argvals = 2, value = 3, basis = 'cr', 
+as.fbase.data.frame <- function(data, id = 1, argvals = 2, value = 3, 
   domain = NULL,   penalized = TRUE, signif = 4, ...) {
-  fbase(data, id, argvals, value, basis = basis, domain = domain,  
+  fbase(data, id, argvals, value, domain = domain,  
     penalized = penalized, signif = signif, ...)
 }
 
 #' @rdname fbase
 #' @export 
-as.fbase.list <- function(data, argvals = NULL, basis = 'cr', 
+as.fbase.list <- function(data, argvals = NULL, 
   domain = NULL,   penalized = TRUE, signif = 4, ...) {
-  fbase(data, argvals, basis = basis, domain = domain,   
+  fbase(data, argvals, domain = domain,   
     penalized = penalized, signif = signif, ...)
 }
 
 #' @rdname fbase
 #' @export 
-as.fbase.feval <- function(data, argvals = NULL, basis = 'cr', 
+as.fbase.feval <- function(data, argvals = NULL, 
   domain = NULL,   penalized = TRUE, signif = 4, ...) {
-  fbase(data, argvals, basis = basis, domain = domain,   
+  fbase(data, argvals, domain = domain,   
     penalized = penalized, signif = signif, ...)
 }
 
