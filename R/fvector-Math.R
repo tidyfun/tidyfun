@@ -45,15 +45,16 @@ Summary.fvector <- function(...) {
   if (not_defined) 
     stop(sprintf("%s not defined for \"fvector\" objects", .Generic))
 }  
+# TODO: need c()-method first.
 
 fun_summary <- function(f, op){
-  attr_ret <- attributes(f)
-  m <- as.matrix(f)
-  ret <- apply(m, 2, op)
-  if (is_feval(f)) {
-    forget(attr_ret$evaluator)
-  }  
-  return(list(ret, list(attr_ret))
+   attr_ret <- attributes(f)
+   m <- as.matrix(f)
+   ret <- apply(m, 2, op)
+   if (is_feval(f)) {
+     forget(attr_ret$evaluator)
+   }  
+   return(list(ret, list(attr_ret)))
 }
 
 

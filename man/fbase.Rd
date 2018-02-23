@@ -7,6 +7,7 @@
 \alias{fbase.list}
 \alias{fbase.feval}
 \alias{fbase.fbase}
+\alias{fbase.fbase}
 \alias{as.fbase}
 \alias{as.fbase.matrix}
 \alias{as.fbase.data.frame}
@@ -28,6 +29,9 @@ fbase(data, ...)
   penalized = TRUE, signif = 4, ...)
 
 \method{fbase}{feval}(data, argvals = NULL, domain = NULL,
+  penalized = TRUE, signif = 4, ...)
+
+\method{fbase}{fbase}(data, argvals = NULL, domain = NULL,
   penalized = TRUE, signif = 4, ...)
 
 \method{fbase}{fbase}(data, argvals = NULL, domain = NULL,

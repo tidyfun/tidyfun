@@ -105,6 +105,37 @@ string_rep_fvector <- function(argvals, evaluations, signif_argvals = NULL, show
   str
 }
 
+compare_fvector_attribs <- function(e1, e2, names = FALSE) {
+# TODO: if comparing evaluator/basis functions is not feasible anyway
+    a1 <- attributes(e1)
+  a2 <- attributes(e2)
+  attribs <- union(names(a1), names(a2))
+  if (!names) attribs <- attribs[attribs != "names"]
+  .compare <- function(a, b) {
+    if (is.null(a) != is.null(b)) return(FALSE)
+    suppressWarnings(
+      if (is.function(a)) {
+        #FIXME: this is not reliable/useful but prob. impossible to solve
+        #generally: would need to know which (functional) objects in the enclosure
+        #of these functions are relevant for comparison -- comparing all is too
+        #strict but comparing none is rather dangerous. Riight now the function
+        #bodies all look the same since they share a common wrapper.... Fingers
+        #crossed relevant differences get picked up by differences in the label or
+        #basis attributes...
+        if (is.memoised(a)) {
+          identical(environment(a)[["_f"]], environment(b)[["_f"]], 
+            ignore.environment = TRUE)
+        } else identical(a, b, ignore.environment = TRUE)
+      } else {
+        if (is.list(a)) {
+          all(unlist(map2(a, ensure_list(b), .compare)))
+        } else all(a == b)
+      })
+  }  
+  ret <- map(attribs, ~.compare(a1[[.]], a2[[.]]))
+  names(ret) <- attribs
+  unlist(ret)
+}
 
 
 #' @export
