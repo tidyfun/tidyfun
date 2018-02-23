@@ -11,9 +11,10 @@ new_fbase <- function(data, regular, basis = 'cr', domain = NULL,
   data$argvals <- .adjust_resolution(data$argvals, signif, unique = FALSE)
   argvals_u <- mgcv::uniquecombs(data$argvals, ordered = TRUE)
   s_args <- list(...)[names(list(...)) %in% names(formals(mgcv::s))]
+  s_args <- flatten(list(bs = basis, s_args))
   magic_args <- list(...)[names(list(...)) %in% names(formals(mgcv::magic))]
   if (!("sp" %in% names(magic_args))) magic_args$sp <- -1
-  s_call <- as.call(c(quote(s), quote(argvals), flatten(list(bs = basis, s_args))))
+  s_call <- as.call(c(quote(s), quote(argvals), s_args))
   spec_object <- smooth.construct(eval(s_call), 
     data = data.frame(argvals = argvals_u$x), knots = NULL)
   n_evaluations <- table(data$id)
@@ -56,9 +57,9 @@ new_fbase <- function(data, regular, basis = 'cr', domain = NULL,
   basis_constructor <- smooth_spec_wrapper(spec_object)
   structure(coef_list, 
     domain = domain,
-     
     basis = memoise(basis_constructor),
     basis_label = deparse(s_call, width.cutoff = 60)[1],
+    basis_args = s_args,
     basis_matrix = spec_object$X,
     argvals = argvals_u$x,
     signif_argvals = signif, 
