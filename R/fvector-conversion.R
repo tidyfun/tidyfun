@@ -5,29 +5,29 @@ as.feval <- function(data, ...) UseMethod("as.feval")
 #' @rdname feval
 #' @export 
 as.feval.matrix  <- function(data, argvals = NULL, regular = NULL, domain = NULL, 
-    range = NULL, ...) {
-  feval(data, argvals, regular, domain, range, ...)
+      ...) {
+  feval(data, argvals, regular, domain,   ...)
 }
 
 #' @rdname feval
 #' @export 
 as.feval.data.frame <- function(data, id = 1, argvals = 2, value = 3, domain = NULL, 
-    range = NULL, ...) {
-  feval(data, id, argvals, value, domain, range, ...)
+      ...) {
+  feval(data, id, argvals, value, domain,   ...)
 }
 
 #' @rdname feval
 #' @export 
 as.feval.list <- function(data, argvals = NULL, regular = NULL, domain = NULL, 
-    range = NULL, ...) {
-  feval(data, argvals, regular = regular, domain = domain, range = range, ...)
+      ...) {
+  feval(data, argvals, regular = regular, domain = domain,   ...)
 }
 
 #' @rdname feval
 #' @export 
 as.feval.fbase <- function(data, argvals = NULL, regular = NULL, domain = NULL, 
-  range = NULL, ...) {
-  feval(data, argvals, regular = regular, domain = domain, range = range, ...)
+    ...) {
+  feval(data, argvals, regular = regular, domain = domain,   ...)
 }
 
 #' @rdname feval
@@ -66,32 +66,32 @@ as.fbase <- function(data, ...) UseMethod("as.fbase")
 #' @rdname fbase
 #' @export 
 as.fbase.matrix  <- function(data, argvals = NULL, basis = 'cr', 
-  domain = NULL, range = NULL, penalized = TRUE, signif = 4, ...) {
-  fbase(data, basis = basis, domain = domain, range = range, 
+  domain = NULL,   penalized = TRUE, signif = 4, ...) {
+  fbase(data, basis = basis, domain = domain,   
     penalized = penalized, signif = signif, ...)
 }
 
 #' @rdname fbase
 #' @export 
 as.fbase.data.frame <- function(data, id = 1, argvals = 2, value = 3, basis = 'cr', 
-  domain = NULL, range = NULL, penalized = TRUE, signif = 4, ...) {
-  fbase(data, id, argvals, value, basis = basis, domain = domain, range = range,
+  domain = NULL,   penalized = TRUE, signif = 4, ...) {
+  fbase(data, id, argvals, value, basis = basis, domain = domain,  
     penalized = penalized, signif = signif, ...)
 }
 
 #' @rdname fbase
 #' @export 
 as.fbase.list <- function(data, argvals = NULL, basis = 'cr', 
-  domain = NULL, range = NULL, penalized = TRUE, signif = 4, ...) {
-  fbase(data, argvals, basis = basis, domain = domain, range = range, 
+  domain = NULL,   penalized = TRUE, signif = 4, ...) {
+  fbase(data, argvals, basis = basis, domain = domain,   
     penalized = penalized, signif = signif, ...)
 }
 
 #' @rdname fbase
 #' @export 
 as.fbase.feval <- function(data, argvals = NULL, basis = 'cr', 
-  domain = NULL, range = NULL, penalized = TRUE, signif = 4, ...) {
-  fbase(data, argvals, basis = basis, domain = domain, range = range, 
+  domain = NULL,   penalized = TRUE, signif = 4, ...) {
+  fbase(data, argvals, basis = basis, domain = domain,   
     penalized = penalized, signif = signif, ...)
 }
 

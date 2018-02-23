@@ -6,7 +6,7 @@ smooth_spec_wrapper <- function(spec) {
 } 
 
 #' @importFrom stats var na.omit median
-new_fbase <- function(data, regular, basis = 'cr', domain = NULL, range = NULL, 
+new_fbase <- function(data, regular, basis = 'cr', domain = NULL,   
     penalized = TRUE, signif = 4, ...) {
   data$argvals <- .adjust_resolution(data$argvals, signif, unique = FALSE)
   argvals_u <- mgcv::uniquecombs(data$argvals, ordered = TRUE)
@@ -52,12 +52,11 @@ new_fbase <- function(data, regular, basis = 'cr', domain = NULL, range = NULL,
   print(summary(round(100 * pve, 1)))
 
   domain <- domain %||% range(argvals_u)
-  range <- range %||% range(data$data, na.rm = TRUE) #FIXME: should be range(X%*%coef)?
   names(coef_list) <- names(coef_list) %||% seq_along(coef_list)
   basis_constructor <- smooth_spec_wrapper(spec_object)
   structure(coef_list, 
     domain = domain,
-    range = range,
+     
     basis = memoise(basis_constructor),
     basis_label = deparse(s_call, width.cutoff = 60)[1],
     basis_matrix = spec_object$X,
@@ -115,35 +114,35 @@ fbase <- function(data, ...) UseMethod("fbase")
 #' @rdname fbase
 #' @export
 fbase.data.frame <- function(data, id = 1, argvals = 2, value = 3, basis = 'cr', 
-    domain = NULL, range = NULL, penalized = TRUE, signif = 4, ...) {
+    domain = NULL,   penalized = TRUE, signif = 4, ...) {
   data <- na.omit(data[, c(id, argvals, value)])
   colnames(data) <- c("id", "argvals", "data")
   stopifnot(nrow(data) > 0, 
     is.numeric(data[[2]]), 
     is.numeric(data[[3]]))
   regular <- length(unique(table(data[[1]]))) == 1
-  new_fbase(data, regular, basis = basis, domain = domain, range = range, 
+  new_fbase(data, regular, basis = basis, domain = domain,   
     penalized = penalized, signif = signif, ...)
 }
 
 #' @rdname fbase
 #' @export
 fbase.matrix <- function(data, argvals = NULL, basis = 'cr', 
-  domain = NULL, range = NULL, penalized = TRUE, signif = 4, ...) {
+  domain = NULL,   penalized = TRUE, signif = 4, ...) {
   stopifnot(is.numeric(data))
   argvals <- unlist(find_argvals(data, argvals))
   id <- make.unique(rownames(data) %||% seq_len(dim(data)[1]))
   data <- na.omit(data_frame(id = id[row(data)], argvals = argvals[col(data)], 
     data = as.vector(data)))
   regular <- length(unique(table(data[[1]]))) == 1
-  new_fbase(data, regular, basis = basis, domain = domain, range = range, 
+  new_fbase(data, regular, basis = basis, domain = domain,   
     penalized = penalized, signif = signif, ...)
 }  
 
 #' @rdname fbase
 #' @export
 fbase.list <- function(data, argvals = NULL, basis = 'cr', 
-  domain = NULL, range = NULL, penalized = TRUE, signif = 4, ...) {
+  domain = NULL,   penalized = TRUE, signif = 4, ...) {
   vectors <- sapply(data, is.numeric)
   stopifnot(all(vectors) | !any(vectors))
   if (all(vectors)) {
@@ -151,7 +150,7 @@ fbase.list <- function(data, argvals = NULL, basis = 'cr',
     if (all(lengths == lengths[1])) {
       data <- do.call(rbind, data)
       #dispatch to matrix method
-      args <- list(data, argvals, basis = basis, domain = domain, range = range, 
+      args <- list(data, argvals, basis = basis, domain = domain,   
         penalized = penalized, signif = signif, ...)
       return(do.call(fbase, args))
     } else {
@@ -166,18 +165,17 @@ fbase.list <- function(data, argvals = NULL, basis = 'cr',
   data <- data_frame(id = make.unique(names(data) %||% seq_along(data)), 
       funs = data) %>% tidyr::unnest
   #dispatch to data.frame method
-  fbase(data, basis = basis, domain = domain, range = range, 
+  fbase(data, basis = basis, domain = domain,   
     penalized = penalized, signif = signif, ...)
 }
 
 #' @rdname fbase
 #' @export
 fbase.fvector <- function(data, argvals = NULL, basis = 'cr', 
-  domain = NULL, range = NULL, penalized = TRUE, signif = 4, ...) {
+  domain = NULL,   penalized = TRUE, signif = 4, ...) {
   argvals <- argvals %||% argvals(data)
   domain <- domain %||% domain(data)
-  range <- range %||% range(data)
   data <- as.data.frame(data, argvals)
-  fbase(data, basis = basis, domain = domain, range = range, 
+  fbase(data, basis = basis, domain = domain,   
     penalized = penalized, signif = signif, ...)
 }

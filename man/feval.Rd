@@ -17,29 +17,27 @@
 feval(data, ...)
 
 \method{feval}{matrix}(data, argvals = NULL, regular = NULL,
-  domain = NULL, range = NULL, evaluator = approx_linear, signif = 4,
-  ...)
+  domain = NULL, evaluator = approx_linear, signif = 4, ...)
 
 \method{feval}{data.frame}(data, id = 1, argvals = 2, value = 3,
-  domain = NULL, range = NULL, evaluator = approx_linear, signif = 4,
-  ...)
+  domain = NULL, evaluator = approx_linear, signif = 4, ...)
 
 \method{feval}{list}(data, argvals = NULL, regular = NULL, domain = NULL,
-  range = NULL, evaluator = approx_linear, signif = 4, ...)
+  evaluator = approx_linear, signif = 4, ...)
 
 as.feval(data, ...)
 
 \method{as.feval}{matrix}(data, argvals = NULL, regular = NULL,
-  domain = NULL, range = NULL, ...)
+  domain = NULL, ...)
 
 \method{as.feval}{data.frame}(data, id = 1, argvals = 2, value = 3,
-  domain = NULL, range = NULL, ...)
+  domain = NULL, ...)
 
 \method{as.feval}{list}(data, argvals = NULL, regular = NULL,
-  domain = NULL, range = NULL, ...)
+  domain = NULL, ...)
 
 \method{as.feval}{fbase}(data, argvals = NULL, regular = NULL,
-  domain = NULL, range = NULL, ...)
+  domain = NULL, ...)
 
 \method{as.data.frame}{feval}(x, rownames = NULL, optional = FALSE,
   argvals = NULL, interpolate = FALSE, ...)
@@ -56,8 +54,6 @@ as.feval(data, ...)
 \item{regular}{\code{logical} assume a regular or iregular grid}
 
 \item{domain}{range of the \code{argvals}.}
-
-\item{range}{range of the function values.}
 
 \item{evaluator}{a function accepting arguments \code{x, argvals, evaluations}. See details.}
 

@@ -84,7 +84,7 @@ basis <- function(f) {
 range.fvector <- function(..., na.rm = FALSE) {
   d <- list(...) 
   stopifnot(length(d) == 1)
-  attr(d[[1]], "range")
+  range(unlist(evaluations(d[[1]])))
 }
 
 #' @export
@@ -282,7 +282,6 @@ format.fvector <- function(x, digits = 2, nsmall = 0, ...){
   }
   
   attr_x <- attributes(x)
-  attr_x$range <- range(range(x), range(value))
   attr_x$names[i] <- names(value)
   ret <- unclass(x)
   ret[i] <- unclass(value)

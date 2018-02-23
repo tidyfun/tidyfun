@@ -18,32 +18,30 @@
 fbase(data, ...)
 
 \method{fbase}{data.frame}(data, id = 1, argvals = 2, value = 3,
-  basis = "cr", domain = NULL, range = NULL, penalized = TRUE,
-  signif = 4, ...)
+  basis = "cr", domain = NULL, penalized = TRUE, signif = 4, ...)
 
 \method{fbase}{matrix}(data, argvals = NULL, basis = "cr", domain = NULL,
-  range = NULL, penalized = TRUE, signif = 4, ...)
+  penalized = TRUE, signif = 4, ...)
 
 \method{fbase}{list}(data, argvals = NULL, basis = "cr", domain = NULL,
-  range = NULL, penalized = TRUE, signif = 4, ...)
+  penalized = TRUE, signif = 4, ...)
 
 \method{fbase}{fvector}(data, argvals = NULL, basis = "cr", domain = NULL,
-  range = NULL, penalized = TRUE, signif = 4, ...)
+  penalized = TRUE, signif = 4, ...)
 
 as.fbase(data, ...)
 
 \method{as.fbase}{matrix}(data, argvals = NULL, basis = "cr",
-  domain = NULL, range = NULL, penalized = TRUE, signif = 4, ...)
+  domain = NULL, penalized = TRUE, signif = 4, ...)
 
 \method{as.fbase}{data.frame}(data, id = 1, argvals = 2, value = 3,
-  basis = "cr", domain = NULL, range = NULL, penalized = TRUE,
-  signif = 4, ...)
+  basis = "cr", domain = NULL, penalized = TRUE, signif = 4, ...)
 
 \method{as.fbase}{list}(data, argvals = NULL, basis = "cr", domain = NULL,
-  range = NULL, penalized = TRUE, signif = 4, ...)
+  penalized = TRUE, signif = 4, ...)
 
 \method{as.fbase}{feval}(data, argvals = NULL, basis = "cr",
-  domain = NULL, range = NULL, penalized = TRUE, signif = 4, ...)
+  domain = NULL, penalized = TRUE, signif = 4, ...)
 
 \method{as.data.frame}{fbase}(x, rownames = NULL, optional = FALSE,
   argvals = NULL, ...)
@@ -66,8 +64,6 @@ the spline basis should have should probably be set manually....}
 \item{basis}{which type of spline basis to use, defaults to cubic regression splines. See details.}
 
 \item{domain}{range of the \code{argvals}.}
-
-\item{range}{range of the function values.}
 
 \item{penalized}{should the coefficients of the basis representation be estimated
 via \code{\link[mgcv:magic]{mgcv::magic()}} (default) or ordinary least squares.}
