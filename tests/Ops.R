@@ -17,6 +17,7 @@ mat_irreg[sample(1:length(mat_reg), length(mat_reg)/3)] <- NA
 freg <-  feval(mat_reg, evaluator = approx_spline)
 firreg <- feval(mat_irreg, evaluator = approx_linear)
 
+
 freg == +freg
 freg - 2 * freg == -freg
 freg + freg == freg * 2
@@ -38,4 +39,6 @@ purrr::map2(coef(fbase(feval(fbase(freg)))), coef(fbase(freg)),
 fb * fb == fb^2
 2^fb
 
-log(exp(fb)) == fb
+all.equal(log(exp(fb)), fb, tol = 1e-3)
+all.equal(sinh(sin(fb)), fb, tol = 1e-3)
+

@@ -16,7 +16,6 @@ new_feval <- function(argvals, datalist, regular, domain,   evaluator, signif = 
   ret <- structure(ret, 
     argvals =  argvals,
     domain = domain,
-     
     evaluator = memoise(eval(evaluator)),
     evaluator_name = deparse(evaluator, width.cutoff = 60)[1],
     signif_argvals = signif, #maybe turn this into a <global> option? 

@@ -155,11 +155,6 @@ format.fvector <- function(x, digits = 2, nsmall = 0, ...){
    map2_chr(names(x)[1:length(str)], str, ~ paste0(.x,": ",.y))
 }
 
-
-
-#summary #define Arith-methods first.... 
-# c.feval_reg #???
-
 #' Accessing/evaluating, subsetting and subassigning `fvectors`
 #' 
 #' These functions access, subset, replace and evaluate `fvectors`. 
@@ -303,6 +298,39 @@ format.fvector <- function(x, digits = 2, nsmall = 0, ...){
   ret
 }
 
+c.feval <- function(...) {
+  funs <- list(...)
+  if (length(funs) == 1) return(funs[[1]])
+  stopifnot(length(unique(map_chr(funs, ~class(.)[1]))) == 1)
+  irreg <- is_irreg(funs[[1]])
+  compatible <- do.call(rbind, map(funs, 
+    ~ compare_fvector_attribs(funs[[1]], .)))
+  stopifnot(all(compatible[, "domain"]))
+  if (!irreg & !all(compatible[, "argvals"])) {
+    warning("re-evaluating arguments ", 
+      paste(which(!compatible[, "argvals"]), collapse =", "), 
+      " on argvals of argument 1")
+    modify_at(funs, which(!compatible[, "argvals"]), 
+      ~feval(., argvals = argvals(funs[[1])))
+    ## continue here
+  }    
+  if (!all(compatible[, "evaluator_name"])) {
+    warning("inputs have different evaluators, result has ", 
+      attr(funs[[1]], "evaluator_name"))
+  }
+  if (!all(compatible[, "signif_argvals"])) {
+    warning("inputs have different resolutions, result has ", 
+      "signif_argvals =", attr(funs[[1]], "signif_argvals"))
+  }
+  attr_ret <- attributes(funs[[1]])
+  if (irreg) {
+    attr_ret$argvals <- flatten(map(funs, argvals))
+  }
+  ret <- flatten(funs)
+  attributes(ret) <- attr_ret
+  forget(attr(ret, "evaluator"))
+  ret
+}
 
 # plot
 # deriv
@@ -314,6 +342,8 @@ format.fvector <- function(x, digits = 2, nsmall = 0, ...){
 # cor
 # max
 # min
+#summary #define Arith-methods first.... 
+
 
 ### new generics:
 # integrate
