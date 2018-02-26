@@ -10,13 +10,17 @@ new_fbase <- function(data, regular, domain = NULL,
     penalized = TRUE, signif = 4, verbose = TRUE, ...) {
   data$argvals <- .adjust_resolution(data$argvals, signif, unique = FALSE)
   argvals_u <- mgcv::uniquecombs(data$argvals, ordered = TRUE)
+  domain <- domain %||% range(argvals_u)
   s_args <- list(...)[names(list(...)) %in% names(formals(mgcv::s))]
   if (!("bs" %in% names(s_args))) s_args$bs <- "cr"
-  if (!("k" %in% names(s_args))) s_args$k <- 15
+  if (!("k" %in% names(s_args))) s_args$k <- min(15, nrow(argvals_u))
   magic_args <- list(...)[names(list(...)) %in% names(formals(mgcv::magic))]
   if (!("sp" %in% names(magic_args))) magic_args$sp <- -1
   s_call <- as.call(c(quote(s), quote(argvals), s_args))
-  spec_object <- smooth.construct(eval(s_call), 
+  s_spec <- eval(s_call)
+  if ("deriv" %in% names(list(...))) s_spec$deriv <- list(...)$deriv
+  if ("mono" %in% names(list(...))) s_spec$mono <- list(...)$mono
+  spec_object <- smooth.construct(s_spec, 
     data = data.frame(argvals = argvals_u$x), knots = NULL)
   n_evaluations <- table(data$id)
   underdet <- n_evaluations < spec_object$bs.dim
@@ -28,10 +32,10 @@ new_fbase <- function(data, regular, domain = NULL,
     }
     if (regular) {
       eval_matrix <- do.call(cbind, eval_list)
-      coef_list <- qr.coef(qr = qr(spec_object$X), 
-        y = eval_matrix)
+      qr_basis <- qr(spec_object$X)
+      coef_list <- qr.coef(qr = qr_basis, y = eval_matrix)
       coef_list <- split(coef_list, col(coef_list))
-      pve <- 1 - apply(qr.resid(qr = qr(spec_object$X), 
+      pve <- 1 - apply(qr.resid(qr = qr_basis, 
         y = eval_matrix), 2, var)/apply(eval_matrix, 2, var)
     } else {
       index_list <- split(attr(argvals_u, "index"), data$id)
@@ -54,7 +58,6 @@ new_fbase <- function(data, regular, domain = NULL,
       "(per functional observation, approx.):")
     print(summary(round(100 * pve, 1)))
   }
-  domain <- domain %||% range(argvals_u)
   names(coef_list) <- names(coef_list) %||% seq_along(coef_list)
   basis_constructor <- smooth_spec_wrapper(spec_object)
   structure(coef_list, 
@@ -124,7 +127,7 @@ fbase.data.frame <- function(data, id = 1, argvals = 2, value = 3,
   stopifnot(nrow(data) > 0, 
     is.numeric(data[[2]]), 
     is.numeric(data[[3]]))
-  regular <- length(unique(table(data[[1]]))) == 1
+  regular <- n_distinct(table(data[[1]])) == 1
   new_fbase(data, regular, domain = domain,   
     penalized = penalized, signif = signif, ...)
 }
@@ -135,13 +138,22 @@ fbase.matrix <- function(data, argvals = NULL,
   domain = NULL,   penalized = TRUE, signif = 4, ...) {
   stopifnot(is.numeric(data))
   argvals <- unlist(find_argvals(data, argvals))
-  id <- make.unique(rownames(data) %||% seq_len(dim(data)[1]))
+  id <- make.unique(rownames(data) %||% as.character(seq_len(dim(data)[1])))
   data <- na.omit(data_frame(id = id[row(data)], argvals = argvals[col(data)], 
     data = as.vector(data)))
-  regular <- length(unique(table(data[[1]]))) == 1
+  regular <- n_distinct(table(data[[1]])) == 1
   new_fbase(data, regular,  domain = domain,   
     penalized = penalized, signif = signif, ...)
-}  
+}
+#' @rdname fbase
+#' @export
+fbase.numeric <- function(data, argvals = NULL, 
+  domain = NULL,   penalized = TRUE, signif = 4, ...) {
+  data <- t(as.matrix(data))
+  fbase(data = data, argvals = argvals, domain = domain, penalized = penalized,
+    signif = signif, ...)
+}
+
 
 #' @rdname fbase
 #' @export
@@ -186,24 +198,13 @@ fbase.feval <- function(data, argvals = NULL,
 
 #' @rdname fbase
 #' @export
-fbase.fbase <- function(data, argvals = NULL, 
+fbase.fbase <- function(data, argvals = NULL,
   domain = NULL, penalized = TRUE, signif = 4, ...) {
   argvals <- argvals %||% argvals(data)
   domain <- domain %||% domain(data)
-  data <- as.data.frame(data, argvals)
-  fbase(data, domain = domain,   
-    penalized = penalized, signif = signif, ...)
-}
-
-#' @rdname fbase
-#' @export
-fbase.fbase <- function(data, argvals = NULL,  
-  domain = NULL, penalized = TRUE, signif = 4, ...) {
-  argvals <- argvals %||% argvals(data)
-  domain <- domain %||% domain(data)
-  s_args <- modifyList(attr(data, "basis_args"),  
+  s_args <- modifyList(attr(data, "basis_args"),
     list(...)[names(list(...)) %in% names(formals(mgcv::s))])
-  data <- as.data.frame(data, argvals)
-  do.call("fbase", c(list(data), basis = basis, domain = domain,   
+  data <- as.data.frame(data, argvals = argvals)
+  do.call("fbase", c(list(data), basis = basis, domain = domain,
     penalized = penalized, signif = signif, s_args))
 }

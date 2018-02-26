@@ -129,7 +129,7 @@ compare_fvector_attribs <- function(e1, e2, ignore = "names") {
       } else {
         if (is.list(a)) {
           all(unlist(map2(a, ensure_list(b), .compare)))
-        } else all(a == b)
+        } else isTRUE(all.equal(a, b))
       })
   }  
   ret <- map(attribs, ~.compare(a1[[.]], a2[[.]]))
