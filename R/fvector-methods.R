@@ -235,6 +235,10 @@ format.fvector <- function(x, digits = 2, nsmall = 0, ...){
   }
 } 
 
+rev.fvector <- function(x) {
+  x[rev(seq_along(x))]
+}
+
 #' @param value `fvector` object for subassignment. This is (currently) very strictly typed,
 #'  i.e. only objects that are of the same class and have compatible `argvals` can be 
 #'  subassigned.
@@ -310,9 +314,12 @@ format.fvector <- function(x, digits = 2, nsmall = 0, ...){
 #' `c.feval` will use the `evaluator` of its first argument for all remaining arguments as well.
 #' If `feval_reg`-objects to be concatenated are not on the same grid of `argvals`, they will 
 #' be evaluated on the `argvals` of the first argument. 
-#' @param ... a bunch of `fvector`-objects on the same domain and of the same class
-#' @return a new and longer `fvector`-object of the same class and with the same attributes as the
-#'   the first argument
+#' 
+#' This means that `c(f1, f2) == rev(c(f2, f1))` is not necessarily all true!
+#' 
+#' @param ... for `c()`: a bunch of `fvector`-objects on the same domain and of the same class. Not used for `merge`.
+#' @return an `fvector`-object containing all the arguments, of the same class and with the same attributes as the
+#'   the first argument.
 #' @rdname fvectorconcat
 #' @export
 c.fvector <- function(...) {
@@ -395,8 +402,13 @@ c.fbase <- function(...) {
   attributes(ret) <- attr_ret
   ret
 }
-
-
+#' @param x `fvector`-object 
+#' @param y `fvector`-object
+#' @rdname fvectorconcat
+#' @export
+merge.fvector <- function(x, y, ....) {
+  c(x, y)
+}
 
 # plot
 # deriv

@@ -4,6 +4,7 @@
 \alias{c.fvector}
 \alias{c.feval}
 \alias{c.fbase}
+\alias{merge.fvector}
 \title{Concatenate \code{fvector}-objects}
 \usage{
 \method{c}{fvector}(...)
@@ -11,19 +12,30 @@
 \method{c}{feval}(...)
 
 \method{c}{fbase}(...)
+
+\method{merge}{fvector}(x, y, ....)
 }
 \arguments{
-\item{...}{a bunch of \code{fvector}-objects on the same domain and of the same class}
+\item{...}{for \code{c()}: a bunch of \code{fvector}-objects on the same domain and of the same class. Not used for \code{merge}.}
+
+\item{x}{\code{fvector}-object}
+
+\item{y}{\code{fvector}-object}
 }
 \value{
-a new and longer \code{fvector}-object of the same class and with the same attributes as the
-the first argument
+an \code{fvector}-object containing all the arguments, of the same class and with the same attributes as the
+the first argument.
 }
 \description{
 Functions to concatenate multiple vectors of functional data.
 }
 \details{
-Currently only allows concatenation of very similar functions (same class, same domain).
-\code{c.fbase} will use the basis of its first argument for representing all remaining arguments.
+Currently only allows concatenation of very similar functions (same class, same domain).\cr
+\code{c.fbase} will use the basis of its first argument for representing all remaining arguments
+and refit them accordingly if necessary.\cr
 \code{c.feval} will use the \code{evaluator} of its first argument for all remaining arguments as well.
+If \code{feval_reg}-objects to be concatenated are not on the same grid of \code{argvals}, they will
+be evaluated on the \code{argvals} of the first argument.
+
+This means that \code{c(f1, f2) == rev(c(f2, f1))} is not necessarily all true!
 }
