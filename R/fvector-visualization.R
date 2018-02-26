@@ -2,9 +2,9 @@ prep_plotting_argvals <- function(f, n_grid) {
   if (!isTRUE(n_grid > 1)) {
     tidyfun::argvals(f)
   }  else {
-    map2(list(modelr::seq_range(domain(f), n = n_grid)), 
-      ensure_list(tidyfun::argvals(f)), union) %>% 
-      adjust_resolution(f) %>% map(sort)
+    union(modelr::seq_range(domain(f), n = n_grid), 
+      unlist(tidyfun::argvals(f))) %>% 
+      adjust_resolution(f) %>% sort
   }
 }
 
@@ -100,11 +100,18 @@ plot.fvector <- function(x, y, n_grid = 50, points = is_feval(x),
   } else as.matrix(f, argvals = argvals)
   if (type == "spaghetti") {
     args <- modifyList(
-      list(x = drop(attr(m, "argvals")), y = t(m), type = ifelse(points, "b", "l"), 
+      list(x = drop(attr(m, "argvals")), y = t(m), type = "l", 
         ylab = deparse(substitute(x)), xlab = "", lty = 1,
-        col = rgb(0,0,0, alpha), pch = 19), 
+        col = rgb(0,0,0, alpha)), 
       list(...))
     do.call(matplot, args)
+    if (points) {
+      pointsargs <- modifyList(
+        list(x = x, n_grid = NA, points = TRUE, interpolate = FALSE,
+          pch = 19, ol = rgb(0,0,0, alpha)), 
+        list(...))
+      do.call(linespoints_fvector, pointsargs)
+    }
   }  
   if (type == "lasagna") {
     args <- modifyList(
@@ -120,13 +127,13 @@ plot.fvector <- function(x, y, n_grid = 50, points = is_feval(x),
 
 #' @importFrom graphics matlines
 linespoints_fvector <- function(x, argvals, n_grid = 50, points = TRUE, 
-  alpha = min(1, max(.05, 2/length(x))), ...) {
+  alpha = min(1, max(.05, 2/length(x))), interpolate = TRUE, ...) {
   assert_number(n_grid, na.ok = TRUE)
   if (missing(argvals)) {
     argvals <- prep_plotting_argvals(x, n_grid)
   }
   m <- if (is_feval(x)) {
-    as.matrix(x, argvals = argvals, interpolate = TRUE) 
+    as.matrix(x, argvals = argvals, interpolate = interpolate) 
   } else as.matrix(x, argvals = argvals)
   args <- modifyList(
     list(x = drop(attr(m, "argvals")), y = t(m), type = ifelse(points, "p", "l"), 
