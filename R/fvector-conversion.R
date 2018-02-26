@@ -4,30 +4,28 @@ as.feval <- function(data, ...) UseMethod("as.feval")
 
 #' @rdname feval
 #' @export 
-as.feval.matrix  <- function(data, argvals = NULL, regular = NULL, domain = NULL, 
+as.feval.matrix  <- function(data, argvals = NULL, domain = NULL, 
       ...) {
-  feval(data, argvals, regular, domain,   ...)
+  feval(data, argvals = argvals, domain = domain,   ...)
 }
 
 #' @rdname feval
 #' @export 
 as.feval.data.frame <- function(data, id = 1, argvals = 2, value = 3, domain = NULL, 
       ...) {
-  feval(data, id, argvals, value, domain,   ...)
+  feval(data, id = id, argvals = argvals, value = value, domain = domain,   ...)
 }
 
 #' @rdname feval
 #' @export 
-as.feval.list <- function(data, argvals = NULL, regular = NULL, domain = NULL, 
-      ...) {
-  feval(data, argvals, regular = regular, domain = domain,   ...)
+as.feval.list <- function(data, argvals = NULL, domain = NULL, ...) {
+  feval(data, argvals = argvals, domain = domain,   ...)
 }
 
 #' @rdname feval
 #' @export 
-as.feval.fbase <- function(data, argvals = NULL, regular = NULL, domain = NULL, 
-    ...) {
-  feval(data, argvals, regular = regular, domain = domain,   ...)
+as.feval.fbase <- function(data, argvals = NULL, domain = NULL, ...) {
+  feval(data, argvals = argvals, domain = domain,   ...)
 }
 
 #' @rdname feval

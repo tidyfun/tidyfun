@@ -1,7 +1,7 @@
 #' @import memoise
 #' @import purrr
 #' @import dplyr
-new_feval <- function(argvals, datalist, regular, domain,   evaluator, signif = 4) {
+new_feval <- function(argvals, datalist, regular, domain, evaluator, signif = 4) {
   if (!regular) {
     argvals <- map2(datalist, argvals, ~ signif(.y[!is.na(.x)], signif))
     ret <- map(datalist, ~ .x[!is.na(.x)])
@@ -64,18 +64,27 @@ feval <- function(data, ...) UseMethod("feval")
 #' @export
 #' @rdname feval
 #' @param argvals `numeric`, or list of `numeric`s. The evaluation grid. See Details.
-#' @param regular `logical` assume a regular or iregular grid
 #' @param domain range of the `argvals`. 
 #' @param evaluator a function accepting arguments `x, argvals, evaluations`. See details.
 #' @param signif significant digits of the "resolution" of the evaluation grid.  See details. 
-feval.matrix <- function(data, argvals = NULL, regular = NULL, domain = NULL, 
+feval.matrix <- function(data, argvals = NULL, domain = NULL, 
     evaluator = approx_linear, signif = 4, ...) {
   stopifnot(is.numeric(data))
   argvals <- find_argvals(data, argvals) # either arg or numeric colnames or 1:ncol
-  names <- make.unique(rownames(data) %||% seq_len(dim(data)[1]))
+  names <- make.unique(rownames(data) %||% as.character(seq_len(dim(data)[1])))
   datalist <- split(data, names)
-  regular <- regular %||% !any(is.na(data))
-  new_feval(argvals, datalist, regular, domain,   substitute(evaluator), signif)
+  regular <- !any(is.na(data))
+  new_feval(argvals, datalist, regular, domain, substitute(evaluator), signif)
+}
+#' @rdname fbase
+#' @export
+feval.numeric <- function(data, argvals = NULL, 
+    domain = NULL, evaluator = approx_linear, signif = 4, ...) {
+  data <- t(as.matrix(data))
+  #dispatch to matrix method
+  args <- list(data, argvals = argvals, domain = domain,   
+    evaluator = substitute(evaluator), signif = signif)
+  return(do.call(feval, args))
 }
 
 # default: use first 3 columns of <data> for function information
@@ -91,15 +100,15 @@ feval.data.frame <- function(data, id = 1, argvals = 2, value = 3, domain = NULL
   id <- data[[1]]
   datalist <- split(data[[3]], id)
   argvals <- split(data[[2]], id)
-  regular <- sum(duplicated(argvals)) == length(argvals) - 1
-  new_feval(argvals, datalist, regular, domain,   substitute(evaluator), signif)
+  regular <- length(argvals) == 1 | all(duplicated(argvals)[-1])
+  new_feval(argvals, datalist, regular, domain, substitute(evaluator), signif)
 }
 
 # takes a list of vectors of identical lengths or a list of 2-column matrices/data.frames with 
 # argvals in the first and data in the second column
 #' @export
 #' @rdname feval
-feval.list <- function(data, argvals = NULL, regular = NULL, domain = NULL, 
+feval.list <- function(data, argvals = NULL, domain = NULL, 
     evaluator = approx_linear, signif = 4, ...) {
   vectors <- sapply(data, is.numeric)
   if (all(vectors)) {
@@ -107,8 +116,8 @@ feval.list <- function(data, argvals = NULL, regular = NULL, domain = NULL,
     if (all(lengths == lengths[1])) {
       data <- do.call(rbind, data)
       #dispatch to matrix method
-      args <- list(data, argvals, regular, domain,   
-        evaluator = substitute(evaluator), signif)
+      args <- list(data, argvals = argvals, domain = domain,   
+        evaluator = substitute(evaluator), signif = signif)
       return(do.call(feval, args))
     } else {
       stopifnot(!is.null(argvals), length(argvals) == length(data), 
@@ -125,9 +134,10 @@ feval.list <- function(data, argvals = NULL, regular = NULL, domain = NULL,
     argvals <- map(data, ~ unlist(.x[, 1]))
     data <- map(data, ~ unlist(.x[, 2]))
     names(data) <- id
-    regular <- regular %||% all(duplicated(argvals))
+    regular <- regular %||% (length(id) == 1 | all(duplicated(argvals)[-1])) 
   }
-  new_feval(argvals, data, regular, domain,   substitute(evaluator), signif)
+  new_feval(argvals, data, regular = regular, domain = domain, 
+    evaluator = substitute(evaluator), signif = signif)
 }
 
 #' @export
@@ -137,7 +147,7 @@ feval.fvector <- function(data, argvals = NULL, regular = NULL, domain = NULL,
   evaluations <- evaluate(data, argvals)
   domain <- domain %||% domain(data)
   data <- as.data.frame(data, argvals)
-  new_feval(argvals, evaluations, regular = length(argvals) == 1,
-    domain = domain,   evaluator = substitute(evaluator), 
+  new_feval(argvals, evaluations, regular = (length(argvals) == 1),
+    domain = domain, evaluator = substitute(evaluator), 
     signif = signif)
 }
