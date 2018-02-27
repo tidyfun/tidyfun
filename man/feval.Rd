@@ -11,7 +11,7 @@
 \alias{as.feval.data.frame}
 \alias{as.feval.list}
 \alias{as.feval.fbase}
-\alias{as.feval_irreg.feval_reg}
+\alias{as.feval_irreg}
 \alias{as.data.frame.feval}
 \alias{as.matrix.feval}
 \title{Constructors for functional data evaluated on grids of argument values}
@@ -41,7 +41,7 @@ as.feval(data, ...)
 
 \method{as.feval}{fbase}(data, argvals = NULL, domain = NULL, ...)
 
-as.feval_irreg.feval_reg(data, argvals = NULL, domain = NULL, ...)
+as.feval_irreg(data, signif = NULL, ...)
 
 \method{as.data.frame}{feval}(x, rownames = NULL, optional = FALSE,
   argvals = NULL, interpolate = FALSE, ...)

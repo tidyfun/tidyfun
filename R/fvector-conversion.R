@@ -28,13 +28,35 @@ as.feval.fbase <- function(data, argvals = NULL, domain = NULL, ...) {
   feval(data, argvals = argvals, domain = domain,   ...)
 }
 
+# TODO: this ignores argvals, domain for now, only needed internally in c.feval
 #' @rdname feval
-#' @export 
-as.feval_irreg.feval_reg <- function(data, argvals = NULL, domain = NULL, ...) {
+as.feval_irreg <- function(data, signif = NULL, ...) UseMethod("as.feval_irreg")
+
+as.feval_irreg.feval_reg <- function(data, signif = NULL, ...) {
   class(data)[1] <- "feval_irreg"
-  attr(data, "argvals") <- replicate(length(data), attr(data, "argvals"))
+  argvals <- attr(data, "argvals")
+  if (!is.null(signif)) {
+    argvals <- .adjust_resolution(argvals, signif = signif, unique = TRUE)
+    if (length(argvals[[1]]) != length(attr(data, "argvals")[[1]])) {
+      stop("Can't convert data to lower resolution: creates non-unique argvals.")
+    }
+  }
+  attr(data, "argvals") <- replicate(length(data), argvals)
   data
 }
+# TODO: this ignores argvals, domain for now.....
+as.feval_irreg.feval_irreg <- function(data, signif = 4, ...) {
+  argvals <- attr(data, "argvals")
+  if (!is.null(signif)) {
+    argvals <- .adjust_resolution(argvals, signif = signif, unique = TRUE)
+    if (any(rapply(argvals, length) != rapply(attr(data, "argvals"), length))) {
+      stop("Can't convert data to lower resolution: creates non-unique argvals.")
+    }
+  }
+  attr(data, "argvals") <- argvals
+  data
+}
+
 
 
 
