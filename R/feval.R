@@ -149,7 +149,9 @@ feval.list <- function(data, argvals = NULL, domain = NULL,
 #' @export
 #' @examples 
 #' #turn irregular to regular feval
-#' #TODO
+#' #TODO: add extra function/verb for this
+#' (f <- c(rgp(1, grid = seq(0,1,l=11)), rgp(1, grid = seq(0,1,l=21))))
+#' feval(f, interpolate = TRUE, argvals = seq(0,1,l=21))
 #' @rdname feval
 feval.fvector <- function(data, argvals = NULL, domain = NULL, 
     evaluator = approx_linear, signif = 4, ...) {

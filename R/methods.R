@@ -79,29 +79,37 @@ basis <- function(f) {
 #' @param object as usual
 #' @param ... dots
 #' @export
+#' @importFrom stats coef
 coef.fbase <- function(object, ...) {
   attributes(object) <- NULL
   object
 }
 
-
-
+#' @export
+#' @rdname fvectormethods
 rev.fvector <- function(x) {
   x[rev(seq_along(x))]
 }
+
 #' @export
+#' @rdname fvectormethods
 mean.fvector <- function(x, ...){
   summarize_fvector(x, op = "mean", eval  = is_feval(x))
 }
 
+#' @importFrom stats median
 #' @export
+#' @rdname fvectormethods
 median.fvector <- function(x, na.rm = FALSE, ...){
   #FIXME
   warning("only pointwise, non-functional median implemented for fvectors.")
   summarize_fvector(x, na.rm = na.rm, op = "median", eval  = is_feval(x))
 }
 
+#' @importFrom stats quantile
+#' @inheritParams stats::quantile
 #' @export
+#' @rdname fvectormethods
 quantile.fvector <- function(x, probs = seq(0, 1, 0.25), na.rm = FALSE,
   names = TRUE, type = 7, ...){
   #FIXME
@@ -111,22 +119,35 @@ quantile.fvector <- function(x, probs = seq(0, 1, 0.25), na.rm = FALSE,
 }
 
 
+
+#' @inheritParams stats::sd
 #' @export
-sd <- function(x, na.rm = FALSE, ...) UseMethod("sd")
-#' @export
+#' @rdname fvectormethods
+sd <- function(x, na.rm = FALSE) UseMethod("sd")
+
 #' @importFrom stats sd
+#' @rdname fvectormethods
 sd.default <- stats::sd
-sd.fvector <- function(x, na.rm = FALSE, ...){
+
+#' @export
+#' @rdname fvectormethods
+sd.fvector <- function(x, na.rm = FALSE){
   summarize_fvector(x, na.rm = na.rm, op = "sd", eval  = is_feval(x))
 } 
 
+#' @inheritParams stats::var
 #' @export
-var <- function(x, y = NULL, na.rm = FALSE, use, ...) UseMethod("var")
+#' @rdname fvectormethods
+var <- function(x, y = NULL, na.rm = FALSE, use) UseMethod("var")
+
 #' @export
 #' @importFrom stats sd
+#' @rdname fvectormethods
 var.default <- stats::var
+
 #' @export
-var.fvector <- function(x, y = NULL, na.rm = FALSE, use, ...){
+#' @rdname fvectormethods
+var.fvector <- function(x, y = NULL, na.rm = FALSE, use){
   summarize_fvector(x, na.rm = na.rm, op = "sd", eval  = is_feval(x))
 } 
 

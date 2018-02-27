@@ -28,6 +28,7 @@ fun_op <- function(x, y, op, numeric = NA){
   return(ret)
 }
 
+#' @rdname fvectorgroupgenerics
 Ops.fvector <- function(e1, e2) {
   not_defined <- switch(.Generic, 
     `%%` = , `%/%` = ,
@@ -39,6 +40,8 @@ Ops.fvector <- function(e1, e2) {
     return(fun_op(0, e1, .Generic, numeric = 1))
   }
 }
+
+#' @rdname fvectorgroupgenerics
 `==.feval` <- function(e1, e2) {
   # no "recycling" of args
   stopifnot((length(e1) %in% c(1, length(e2))) | 
@@ -48,11 +51,15 @@ Ops.fvector <- function(e1, e2) {
   if (!same) return(rep(FALSE, max(length(e1), length(e2))))
   unlist(map2(e1, e2, ~ isTRUE(all.equal(.x, .y))))
 }
+#' @rdname fvectorgroupgenerics
 `!=.feval` <- function(e1, e2) !(e1 == e2)
 #need to copy instead of defining fvector-method s.t. dispatch in Ops works
+#' @rdname fvectorgroupgenerics
 `==.fbase` <- eval(`==.feval`)
+#' @rdname fvectorgroupgenerics
 `!=.fbase` <- eval(`!=.feval`)
 
+#' @rdname fvectorgroupgenerics
 Ops.feval <- function(e1, e2) {
   ret <- NextMethod()
   if (nargs() != 1) {
@@ -74,7 +81,7 @@ Ops.feval <- function(e1, e2) {
   }
   ret
 }
-
+#' @rdname fvectorgroupgenerics
 Ops.fbase <- function(e1, e2) {
   ret <- NextMethod()
   if (nargs() != 1) {

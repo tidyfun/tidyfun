@@ -13,30 +13,31 @@
 
 \method{c}{fbase}(...)
 
-\method{merge}{fvector}(x, y, ....)
+\method{merge}{fvector}(x, y, ...)
 }
 \arguments{
-\item{...}{for \code{c()}: a bunch of \code{fvector}-objects on the same domain and of the same class. Not used for \code{merge}.}
+\item{...}{for \code{c()}: a bunch of \code{fvector}-objects on the same domain and of
+the same class. Not used for \code{merge}.}
 
 \item{x}{\code{fvector}-object}
 
 \item{y}{\code{fvector}-object}
 }
 \value{
-an \code{fvector}-object containing all the arguments with the same attributes as the
-the first argument (see Details).
+an \code{fvector}-object containing all the arguments with the same
+attributes as the the first argument (see Details).
 }
 \description{
 Functions to concatenate multiple vectors of functional data.
 }
 \details{
-Only allows concatenation of functions with the same domain and similar represenation,
-i.e., \code{fbase} cannot be concatenated to \code{feval} and vice versa.\cr
-\code{c.fbase} will use the basis of its first argument for representing all remaining arguments
-and refit them accordingly if necessary.\cr
-\code{c.feval} will use the \code{evaluator} of its first argument for all remaining arguments as well.
-If \code{feval_reg}-objects to be concatenated are not on the same grid of \code{argvals}, or if both
-\code{feval_reg} and \code{feval_irreg} objects are concatenated, a \code{feval_irreg}-object is returned.
-
-This means that \code{c(f1, f2) == rev(c(f2, f1))} is not necessarily all true!
+Only allows concatenation of functions with the same domain and similar
+represenation, i.e., \code{fbase} cannot be concatenated to \code{feval} and vice
+versa. If \code{feval_reg}-objects to be concatenated are not on the same grid of
+\code{argvals}, or if both \code{feval_reg} and \code{feval_irreg} objects are concatenated,
+a \code{feval_irreg}-object is returned. \cr \code{c.fbase} will use the basis of its
+first argument for representing all remaining arguments and refit them
+accordingly if necessary.\cr \code{c.feval} will use the \code{evaluator} of its first
+argument for all remaining arguments as well.\cr This means that \code{c(f1, f2)}
+is not necessarily the same as \code{rev(c(f2, f1))}.
 }

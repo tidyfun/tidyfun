@@ -1,23 +1,21 @@
-
-#-------------------------------------------------------------------------------
-
 #' Concatenate `fvector`-objects
 #' 
 #' Functions to concatenate multiple vectors of functional data.
 #' 
-#' Only allows concatenation of functions with the same domain and similar represenation,
-#' i.e., `fbase` cannot be concatenated to `feval` and vice versa. 
-#' If `feval_reg`-objects to be concatenated are not on the same grid of `argvals`, or if both
-#' `feval_reg` and `feval_irreg` objects are concatenated, a `feval_irreg`-object is returned.
-#' \cr
-#' `c.fbase` will use the basis of its first argument for representing all remaining arguments
-#'    and refit them accordingly if necessary.\cr
-#' `c.feval` will use the `evaluator` of its first argument for all remaining arguments as well.\cr
-#' This means that `c(f1, f2)` is not necessarily the same as `rev(c(f2, f1))`.
+#' Only allows concatenation of functions with the same domain and similar
+#' represenation, i.e., `fbase` cannot be concatenated to `feval` and vice
+#' versa. If `feval_reg`-objects to be concatenated are not on the same grid of
+#' `argvals`, or if both `feval_reg` and `feval_irreg` objects are concatenated,
+#' a `feval_irreg`-object is returned. \cr `c.fbase` will use the basis of its
+#' first argument for representing all remaining arguments and refit them
+#' accordingly if necessary.\cr `c.feval` will use the `evaluator` of its first
+#' argument for all remaining arguments as well.\cr This means that `c(f1, f2)`
+#' is not necessarily the same as `rev(c(f2, f1))`.
 #' 
-#' @param ... for `c()`: a bunch of `fvector`-objects on the same domain and of the same class. Not used for `merge`.
-#' @return an `fvector`-object containing all the arguments with the same attributes as the
-#'   the first argument (see Details).
+#' @param ... for `c()`: a bunch of `fvector`-objects on the same domain and of
+#'   the same class. Not used for `merge`.
+#' @return an `fvector`-object containing all the arguments with the same
+#'   attributes as the the first argument (see Details).
 #' @rdname fvectorconcat
 c.fvector <- function(...) {
   funs <- list(...)
@@ -108,6 +106,6 @@ c.fbase <- function(...) {
 #' @param y `fvector`-object
 #' @rdname fvectorconcat
 #' @export
-merge.fvector <- function(x, y, ....) {
+merge.fvector <- function(x, y, ...) {
   c(x, y)
 }
