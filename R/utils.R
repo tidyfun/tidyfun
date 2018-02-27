@@ -1,5 +1,7 @@
 ensure_list <- function(x) if (!is.list(x)) list(x) else x
 
+unique_id <- function(x) if (is.character(x)) make.unique(x) else x
+
 #'@import zoo
 zoo_wrapper <- function(f, ...){
   dots <- list(...)
@@ -146,3 +148,40 @@ is_irreg <- function(x) "feval_irreg" %in% class(x)
 is_feval <- function(x) "feval" %in% class(x)
 #' @export
 is_fbase <- function(x) "fbase" %in% class(x)
+
+
+# used for Summary grup generics and stats-methods...
+# op has to be a string!
+summarize_fvector <- function(..., op = NULL, eval = FALSE) {
+  dots <- list(...)
+  funs <- map_lgl(dots, is_fvector)
+  op_args <- dots[!funs]
+  funs <- dots[funs]
+  op_call <- function(x) do.call(op, c(list(x), op_args))
+  funs <- do.call(c, funs)
+  attr_ret <- attributes(funs)
+  m <- as.matrix(funs)
+  ret <- apply(m, 2, op_call)
+  argvals <- as.numeric(colnames(m))
+  args <- c(list(ret), argvals = list(argvals),
+    domain = list(domain(funs)), 
+    signif = attr(funs, "signif_argvals"))
+  if (eval) {
+    return(do.call(feval, c(args, evaluator = as.name(attr(funs, "evaluator_name")))))
+  } else {
+    return(do.call(fbase, c(args, penalized = FALSE, attr(funs, "basis_args"))))
+  }
+}
+
+#' @importFrom mvtnorm rmvnorm
+rgp <- function(n, grid = seq(0, 1, l = 51), scale = diff(range(grid))/10, 
+  cor = c("squareexp", "wiener"), nugget = scale/200) {
+  cor <- match.arg(cor)
+  f_cov <- switch(cor, "wiener" = function(s, t) scale * pmin(s, t),
+    "squareexp" = function(s,t) exp(-(s - t)^2/scale))
+  cov <- outer(grid, grid, f_cov) + diag(0*grid + nugget)
+  y <- rmvnorm(n, mean = 0 * grid, sigma = cov)
+  feval(y, argvals = grid)
+}
+
+

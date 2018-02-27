@@ -29,6 +29,16 @@ as.feval.fbase <- function(data, argvals = NULL, domain = NULL, ...) {
 }
 
 #' @rdname feval
+#' @export 
+as.feval_irreg.feval_reg <- function(data, argvals = NULL, domain = NULL, ...) {
+  class(data)[1] <- "feval_irreg"
+  attr(data, "argvals") <- replicate(length(data), attr(data, "argvals"))
+  data
+}
+
+
+
+#' @rdname feval
 #' @param rownames not used
 #' @param optional not used
 #' @param x an `feval` object

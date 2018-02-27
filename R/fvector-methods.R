@@ -78,15 +78,8 @@ basis <- function(f) {
 #-------------------------------------------------------------------------------
 # new methods
 #' @rdname fvectormethods
+#' @param object as usual
 #' @param ... dots
-#' @param na.rm as usual
-#' @export
-range.fvector <- function(..., na.rm = FALSE) {
-  d <- list(...) 
-  stopifnot(length(d) == 1)
-  range(unlist(evaluations(d[[1]])))
-}
-
 #' @export
 coef.fbase <- function(object, ...) {
   attributes(object) <- NULL
@@ -410,16 +403,53 @@ merge.fvector <- function(x, y, ....) {
   c(x, y)
 }
 
-# plot
+#-------------------------------------------------------------------------------
+
+#' @export
+mean.fvector <- function(x, ...){
+  summarize_fvector(x, op = "mean", eval  = is_feval(x))
+}
+
+#' @export
+median.fvector <- function(x, na.rm = FALSE, ...){
+  #FIXME
+  warning("only pointwise, non-functional median implemented for fvectors.")
+  summarize_fvector(x, na.rm = na.rm, op = "median", eval  = is_feval(x))
+}
+#' @export
+quantile.fvector <- function(x, probs = seq(0, 1, 0.25), na.rm = FALSE,
+  names = TRUE, type = 7, ...){
+  #FIXME
+  warning("only pointwise, non-functional quantiles implemented for fvectors.")
+  summarize_fvector(x, probs = probs, na.rm = na.rm,
+    names = names, type = type, op = "quantile", eval  = is_feval(x))
+}
+
+
+#' @export
+sd <- function(x, na.rm = FALSE, ...) UseMethod("sd")
+#' @export
+#' @importFrom stats sd
+sd.default <- stats::sd
+sd.fvector <- function(x, na.rm = FALSE, ...){
+  summarize_fvector(x, na.rm = na.rm, op = "sd", eval  = is_feval(x))
+} 
+
+#' @export
+var <- function(x, y = NULL, na.rm = FALSE, use, ...) UseMethod("var")
+#' @export
+#' @importFrom stats sd
+var.default <- stats::var
+#' @export
+var.fvector <- function(x, y = NULL, na.rm = FALSE, use, ...){
+  summarize_fvector(x, na.rm = na.rm, op = "sd", eval  = is_feval(x))
+} 
+
+
 # deriv
-# mean
 # quantile
-# var
-# sd
 # cov
 # cor
-# max
-# min
 #summary #define Arith-methods first.... 
 
 

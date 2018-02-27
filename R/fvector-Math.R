@@ -7,35 +7,43 @@ fun_math <- function(x, op){
   }  
   return(ret)
 }
-
-Math.fvector <- function(x) {
-  not_defined <- switch(.Generic, 
-    `cumprod` = , `cumsum` = TRUE, FALSE)
-  if (not_defined) 
-    stop(sprintf("%s not defined for \"fvector\" objects", .Generic))
-}  
 Math.feval <- function(x) {
-  NextMethod()
   fun_math(x, .Generic)
 }  
 Math.fbase <- function(x) {
-  #TODO cummin, cummax should yield monotonous
   basis_args <- attr(x, "basis_args")
   eval <- fun_math(feval(x), .Generic)
   do.call("fbase", 
     c(list(eval), basis_args, penalized = FALSE, verbose = FALSE))
 }  
-Math2.feval <- function(x) {
-  NextMethod()
-  fun_math(x, .Generic)
-}  
-Math2.fbase <- function(x) {
-  #TODO cummin, cummax should yield monotonous
-  basis_args <- attr(x, "basis_args")
-  eval <- fun_math(feval(x), .Generic)
-  do.call("fbase", 
-    c(list(eval), basis_args, penalized = FALSE, verbose = FALSE))
-}  
+
+cummax.feval <- function(...) {
+  summarize_fvector(..., op = "cummax", eval  = TRUE)
+}
+cummin.feval <- function(...) {
+  summarize_fvector(..., op = "cummin", eval  = TRUE)
+}
+cumsum.feval <- function(...) {
+  summarize_fvector(..., op = "cumsum", eval  = TRUE)
+}
+cumprod.feval <- function(...) {
+  summarize_fvector(..., op = "cumprod", eval  = TRUE)
+}
+
+cummax.fbase <- function(...) {
+  summarize_fvector(..., op = "cummax", eval  = FALSE)
+}
+cummin.fbase <- function(...) {
+  summarize_fvector(..., op = "cummin", eval  = FALSE)
+}
+cumsum.fbase <- function(...) {
+  summarize_fvector(..., op = "cumsum", eval  = FALSE)
+}
+cumprod.fbase <- function(...) {
+  summarize_fvector(..., op = "cumprod", eval  = FALSE)
+}
+
+
 
 #-------------------------------------------------------------------------------
 
@@ -44,17 +52,18 @@ Summary.fvector <- function(...) {
     `all` = , `any` = TRUE, FALSE)
   if (not_defined) 
     stop(sprintf("%s not defined for \"fvector\" objects", .Generic))
+  summarize_fvector(..., op = .Generic, eval  = is_feval(list(...)[[1]]))
 }  
-# TODO: need c()-method first.
 
-fun_summary <- function(f, op){
-   attr_ret <- attributes(f)
-   m <- as.matrix(f)
-   ret <- apply(m, 2, op)
-   if (is_feval(f)) {
-     forget(attr_ret$evaluator)
-   }  
-   return(list(ret, list(attr_ret)))
-}
+#-------------------------------------------------------------------------------
+# TODO:
+# inner product ?
+#`%*%.default` = .Primitive("%*%") # assign default as current definition
+#`%*%` = function(x,...){ #make S3
+#  UseMethod("%*%",x)
+#}
+# `%*%.fvector(x, y) = [int x_i(t)*y_i(t) dt] 
+
+
 
 

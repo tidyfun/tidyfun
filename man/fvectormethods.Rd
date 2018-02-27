@@ -6,7 +6,7 @@
 \alias{n_evaluations}
 \alias{domain}
 \alias{evaluator<-}
-\alias{range.fvector}
+\alias{coef.fbase}
 \title{Utility functions for \code{fvector}-objects}
 \usage{
 argvals(f)
@@ -19,7 +19,7 @@ domain(f)
 
 evaluator(x) <- value
 
-\method{range}{fvector}(..., na.rm = FALSE)
+\method{coef}{fbase}(object, ...)
 }
 \arguments{
 \item{f}{an \code{fvector} object}
@@ -28,9 +28,9 @@ evaluator(x) <- value
 accept vector arguments \code{x}, \code{argvals}, \code{evaluations} and return
 evaluations of the function defined by \code{argvals}, \code{evaluations} at \code{x}}
 
-\item{...}{dots}
+\item{object}{as usual}
 
-\item{na.rm}{as usual}
+\item{...}{dots}
 }
 \description{
 A bunch of methods that do what they say.
