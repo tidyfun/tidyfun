@@ -5,11 +5,13 @@
 \alias{feval.matrix}
 \alias{feval.data.frame}
 \alias{feval.list}
+\alias{feval.fvector}
 \alias{as.feval}
 \alias{as.feval.matrix}
 \alias{as.feval.data.frame}
 \alias{as.feval.list}
 \alias{as.feval.fbase}
+\alias{as.feval_irreg.feval_reg}
 \alias{as.data.frame.feval}
 \alias{as.matrix.feval}
 \title{Constructors for functional data evaluated on grids of argument values}
@@ -25,6 +27,9 @@ feval(data, ...)
 \method{feval}{list}(data, argvals = NULL, domain = NULL,
   evaluator = approx_linear, signif = 4, ...)
 
+\method{feval}{fvector}(data, argvals = NULL, domain = NULL,
+  evaluator = approx_linear, signif = 4, ...)
+
 as.feval(data, ...)
 
 \method{as.feval}{matrix}(data, argvals = NULL, domain = NULL, ...)
@@ -36,6 +41,8 @@ as.feval(data, ...)
 
 \method{as.feval}{fbase}(data, argvals = NULL, domain = NULL, ...)
 
+as.feval_irreg.feval_reg(data, argvals = NULL, domain = NULL, ...)
+
 \method{as.data.frame}{feval}(x, rownames = NULL, optional = FALSE,
   argvals = NULL, interpolate = FALSE, ...)
 
@@ -44,7 +51,8 @@ as.feval(data, ...)
 \arguments{
 \item{data}{a \code{matrix}, \code{data.frame} or \code{list} of suitable shape, or another \code{fvector}-object.}
 
-\item{...}{not used}
+\item{...}{not used, except for \code{feval.fvector} -- specify \code{argvals} and \code{ìnterpolate = TRUE} to
+turn an irregular \code{feval} into a regular one, see examples...}
 
 \item{argvals}{\code{numeric}, or list of \code{numeric}s. The evaluation grid. See Details.}
 
@@ -99,4 +107,8 @@ this.
 \strong{\code{signif}}: \code{argvals} that are equivalent to this significant digit are
 treated as identical. E.g., if an evaluation of f(t) is available at t=1 and a function
 value is requested at t = 1.001, f(1) will be returned if \code{signif} < 4.
+}
+\examples{
+#turn irregular to regular feval
+#TODO
 }

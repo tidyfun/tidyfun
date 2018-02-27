@@ -11,6 +11,9 @@ new_feval <- function(argvals, datalist, regular, domain, evaluator, signif = 4)
     ret <- datalist
     class <- "feval_reg"
   }
+  argvals_o <- map(argvals, order)
+  argvals <- map2(argvals, argvals_o, ~.x[.y])
+  datalist <- map2(datalist, argvals_o, ~.x[.y])
   domain <- domain %||% range(argvals)
   names(ret) <- names(ret) %||% seq_along(ret)
   ret <- structure(ret, 
@@ -56,7 +59,8 @@ new_feval <- function(argvals, datalist, regular, domain, evaluator, signif = 4)
 #' value is requested at t = 1.001, f(1) will be returned if `signif` < 4.
 #' 
 #' @param data a `matrix`, `data.frame` or `list` of suitable shape, or another `fvector`-object.
-#' @param ... not used
+#' @param ... not used, except for `feval.fvector` -- specify `argvals` and `ìnterpolate = TRUE` to 
+#'   turn an irregular `feval` into a regular one, see examples...
 #' @return an `feval`-object (or a `data.frame`/`matrix` for the conversion functions, obviously.)
 #' @export
 feval <- function(data, ...) UseMethod("feval")
@@ -71,8 +75,9 @@ feval.matrix <- function(data, argvals = NULL, domain = NULL,
     evaluator = approx_linear, signif = 4, ...) {
   stopifnot(is.numeric(data))
   argvals <- find_argvals(data, argvals) # either arg or numeric colnames or 1:ncol
-  names <- make.unique(rownames(data) %||% as.character(seq_len(dim(data)[1])))
-  datalist <- split(data, names)
+  names <- unique_id(rownames(data) %||% seq_len(dim(data)[1]))
+  # make factor conversion explicit to avoid reordering
+  datalist <- split(data, factor(names, unique(as.character(names))))
   regular <- !any(is.na(data))
   new_feval(argvals, datalist, regular, domain, substitute(evaluator), signif)
 }
@@ -97,7 +102,8 @@ feval.data.frame <- function(data, id = 1, argvals = 2, value = 3, domain = NULL
   data <- na.omit(data[, c(id, argvals, value)])
   stopifnot(is.numeric(data[[2]]), 
     is.numeric(data[[3]]))
-  id <- data[[1]]
+  # make factor conversion explicit to avoid reordering
+  id <- factor(data[[1]], levels = as.factor(unique(data[[1]])))
   datalist <- split(data[[3]], id)
   argvals <- split(data[[2]], id)
   regular <- length(argvals) == 1 | all(duplicated(argvals)[-1])
@@ -130,7 +136,7 @@ feval.list <- function(data, argvals = NULL, domain = NULL,
     dims <- map(data, dim)
     stopifnot(all(sapply(dims, length) == 2), all(map(dims, ~.x[2]) == 2),
       all(rapply(data, is.numeric)))
-    id <- make.unique(names(data) %||% seq_along(data))
+    id <- unique_id(names(data) %||% seq_along(data))
     argvals <- map(data, ~ unlist(.x[, 1]))
     data <- map(data, ~ unlist(.x[, 2]))
     names(data) <- id
@@ -141,12 +147,16 @@ feval.list <- function(data, argvals = NULL, domain = NULL,
 }
 
 #' @export
-feval.fvector <- function(data, argvals = NULL, regular = NULL, domain = NULL, 
+#' @examples 
+#' #turn irregular to regular feval
+#' #TODO
+#' @rdname feval
+feval.fvector <- function(data, argvals = NULL, domain = NULL, 
     evaluator = approx_linear, signif = 4, ...) {
   argvals <- ensure_list(argvals %||% argvals(data))
   evaluations <- evaluate(data, argvals)
   domain <- domain %||% domain(data)
-  data <- as.data.frame(data, argvals)
+  data <- as.data.frame(data, argvals, ...)
   new_feval(argvals, evaluations, regular = (length(argvals) == 1),
     domain = domain, evaluator = substitute(evaluator), 
     signif = signif)

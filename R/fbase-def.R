@@ -13,7 +13,7 @@ new_fbase <- function(data, regular, domain = NULL,
   domain <- domain %||% range(argvals_u)
   s_args <- list(...)[names(list(...)) %in% names(formals(mgcv::s))]
   if (!("bs" %in% names(s_args))) s_args$bs <- "cr"
-  if (!("k" %in% names(s_args))) s_args$k <- min(15, nrow(argvals_u))
+  if (!("k" %in% names(s_args))) s_args$k <- min(25, nrow(argvals_u))
   magic_args <- list(...)[names(list(...)) %in% names(formals(mgcv::magic))]
   if (!("sp" %in% names(magic_args))) magic_args$sp <- -1
   s_call <- as.call(c(quote(s), quote(argvals), s_args))
@@ -24,6 +24,8 @@ new_fbase <- function(data, regular, domain = NULL,
     data = data.frame(argvals = argvals_u$x), knots = NULL)
   n_evaluations <- table(data$id)
   underdet <- n_evaluations < spec_object$bs.dim
+  # explicit factor-conversion to avoid reordering
+  data$id <- factor(data$id, levels = unique(as.character(data$id)))
   eval_list <- split(data$data, data$id)
   if (!penalized) {
     if (any(underdet) & verbose) {
@@ -58,7 +60,7 @@ new_fbase <- function(data, regular, domain = NULL,
       "(per functional observation, approx.):")
     print(summary(round(100 * pve, 1)))
   }
-  names(coef_list) <- names(coef_list) %||% seq_along(coef_list)
+  names(coef_list) <- levels(data$id)
   basis_constructor <- smooth_spec_wrapper(spec_object)
   structure(coef_list, 
     domain = domain,
@@ -83,13 +85,13 @@ magic_smooth_coef <- function(evaluations, index, spec_object, magic_args) {
 #' 
 #' Various constructor and conversion methods.
 #'
-#' `fbase` takes the data it is supplied with and tries to represent them as linear
+#' `fbase` tries to represent the input data as linear
 #' combinations of a set of common spline basis functions identical for all
-#' observations with coefficient vectors estimated for each observation. The
+#' observations and coefficient vectors estimated for each observation. The
 #' basis used is set up via a call to [mgcv::s()] and all the spline bases
 #' discussed in [mgcv::smooth.terms] are available, in principle. Depending on
 #' the value of the `penalized`-flag, the coefficient vectors for each
-#' observation are then estimated via fitting a small GAM for each observation
+#' observation are then estimated via fitting a (small) GAM for each observation
 #' via [mgcv::magic()] or via simple ordinary least squares.
 #'
 #' After the "smoothed" representation is computed, the amount of smoothing that
@@ -97,13 +99,13 @@ magic_smooth_coef <- function(evaluations, index, spec_object, magic_args) {
 #' which is the variance of the smoothed function values divided by the variance
 #' of the original values. The `...` arguments supplies arguments to both the
 #' spline basis set up (via [mgcv::s()]) and the estimation (via
-#' [mgcv::magic()]), most important are probably how many basis functions `k`
-#' the spline basis should have and/or manually setting the smoothing parameter
-#' `sp`. The latter can also be used to enforce the same amount of penalization
-#' for all functional observations.
+#' [mgcv::magic()]), most important: how many basis functions `k` the spline
+#' basis should have, the default is 25.
 #' 
-#' @param data a `matrix`, `data.frame` or `list` of suitable shape, or another `fvector`-object.
-#' @return an `fbase`-object (or a `data.frame`/`matrix` for the conversion functions, obviously.)
+#' @param data a `matrix`, `data.frame` or `list` of suitable shape, or another
+#'   `fvector`-object.
+#' @return an `fbase`-object (or a `data.frame`/`matrix` for the conversion
+#'   functions, obviously.)
 #' @rdname fbase
 #' @export
 fbase <- function(data, ...) UseMethod("fbase")
@@ -138,7 +140,7 @@ fbase.matrix <- function(data, argvals = NULL,
   domain = NULL,   penalized = TRUE, signif = 4, ...) {
   stopifnot(is.numeric(data))
   argvals <- unlist(find_argvals(data, argvals))
-  id <- make.unique(rownames(data) %||% as.character(seq_len(dim(data)[1])))
+  id <- unique_id(rownames(data) %||% seq_len(dim(data)[1]))
   data <- na.omit(data_frame(id = id[row(data)], argvals = argvals[col(data)], 
     data = as.vector(data)))
   regular <- n_distinct(table(data[[1]])) == 1
@@ -178,7 +180,7 @@ fbase.list <- function(data, argvals = NULL,
   dims <- map(data, dim)
   stopifnot(all(sapply(dims, length) == 2), all(map(dims, ~.x[2]) == 2),
     all(rapply(data, is.numeric)))
-  data <- data_frame(id = make.unique(names(data) %||% seq_along(data)), 
+  data <- data_frame(id = unique_id(names(data) %||% seq_along(data)), 
       funs = data) %>% tidyr::unnest
   #dispatch to data.frame method
   fbase(data, basis = basis, domain = domain,   

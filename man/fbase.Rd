@@ -62,7 +62,8 @@ as.fbase(data, ...)
 \method{as.matrix}{fbase}(x, argvals = NULL, ...)
 }
 \arguments{
-\item{data}{a \code{matrix}, \code{data.frame} or \code{list} of suitable shape, or another \code{fvector}-object.}
+\item{data}{a \code{matrix}, \code{data.frame} or \code{list} of suitable shape, or another
+\code{fvector}-object.}
 
 \item{...}{arguments to the calls to \code{\link[mgcv:s]{mgcv::s()}} setting up the basis and
 \code{\link[mgcv:magic]{mgcv::magic()}} (if \code{penalized} is TRUE). If not user-specified here,
@@ -91,19 +92,20 @@ via \code{\link[mgcv:magic]{mgcv::magic()}} (default) or ordinary least squares.
 \item{optional}{not used}
 }
 \value{
-an \code{fbase}-object (or a \code{data.frame}/\code{matrix} for the conversion functions, obviously.)
+an \code{fbase}-object (or a \code{data.frame}/\code{matrix} for the conversion
+functions, obviously.)
 }
 \description{
 Various constructor and conversion methods.
 }
 \details{
-\code{fbase} takes the data it is supplied with and tries to represent them as linear
+\code{fbase} tries to represent the input data as linear
 combinations of a set of common spline basis functions identical for all
-observations with coefficient vectors estimated for each observation. The
+observations and coefficient vectors estimated for each observation. The
 basis used is set up via a call to \code{\link[mgcv:s]{mgcv::s()}} and all the spline bases
 discussed in \link[mgcv:smooth.terms]{mgcv::smooth.terms} are available, in principle. Depending on
 the value of the \code{penalized}-flag, the coefficient vectors for each
-observation are then estimated via fitting a small GAM for each observation
+observation are then estimated via fitting a (small) GAM for each observation
 via \code{\link[mgcv:magic]{mgcv::magic()}} or via simple ordinary least squares.
 
 After the "smoothed" representation is computed, the amount of smoothing that
@@ -111,8 +113,6 @@ was performed is reported in terms of the "percentage of variance preserved",
 which is the variance of the smoothed function values divided by the variance
 of the original values. The \code{...} arguments supplies arguments to both the
 spline basis set up (via \code{\link[mgcv:s]{mgcv::s()}}) and the estimation (via
-\code{\link[mgcv:magic]{mgcv::magic()}}), most important are probably how many basis functions \code{k}
-the spline basis should have and/or manually setting the smoothing parameter
-\code{sp}. The latter can also be used to enforce the same amount of penalization
-for all functional observations.
+\code{\link[mgcv:magic]{mgcv::magic()}}), most important: how many basis functions \code{k} the spline
+basis should have, the default is 25.
 }
