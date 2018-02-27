@@ -63,7 +63,7 @@ c.feval <- function(...) {
       attr(funs[[1]], "evaluator_name"))
   }
   attr_ret <- attributes(funs[[1]])
-  if (any(irreg)) {
+  if (any(irreg | make_irreg)) {
     attr_ret$argvals <- flatten(map(funs, argvals))
   }
   attr_ret$names <- unique_id(unlist(flatten(map(funs, names))))
