@@ -2,10 +2,6 @@
 % Please edit documentation in R/convert.R, R/feval.R
 \name{as.feval}
 \alias{as.feval}
-\alias{as.feval.matrix}
-\alias{as.feval.data.frame}
-\alias{as.feval.list}
-\alias{as.feval.fbase}
 \alias{as.feval_irreg}
 \alias{as.data.frame.feval}
 \alias{as.matrix.feval}
@@ -17,15 +13,6 @@
 \title{Constructors for functional data evaluated on grids of argument values}
 \usage{
 as.feval(data, ...)
-
-\method{as.feval}{matrix}(data, argvals = NULL, domain = NULL, ...)
-
-\method{as.feval}{data.frame}(data, id = 1, argvals = 2, value = 3,
-  domain = NULL, ...)
-
-\method{as.feval}{list}(data, argvals = NULL, domain = NULL, ...)
-
-\method{as.feval}{fbase}(data, argvals = NULL, domain = NULL, ...)
 
 as.feval_irreg(data, signif = NULL, ...)
 
@@ -51,16 +38,7 @@ feval(data, ...)
 \arguments{
 \item{data}{a \code{matrix}, \code{data.frame} or \code{list} of suitable shape, or another \code{fvector}-object.}
 
-\item{...}{not used, except for \code{feval.fvector} -- specify \code{argvals} and \code{ìnterpolate = TRUE} to
-turn an irregular \code{feval} into a regular one, see examples...}
-
-\item{argvals}{\code{numeric}, or list of \code{numeric}s. The evaluation grid. See Details.}
-
-\item{domain}{range of the \code{argvals}.}
-
-\item{id}{The name/number of the column defining which data belong to which function.}
-
-\item{value}{The name/number of the column containing the function evaluations.}
+\item{...}{arguments for \code{\link[=feval]{feval()}}}
 
 \item{signif}{significant digits of the "resolution" of the evaluation grid.  See details.}
 
@@ -70,11 +48,23 @@ turn an irregular \code{feval} into a regular one, see examples...}
 
 \item{optional}{not used}
 
+\item{argvals}{\code{numeric}, or list of \code{numeric}s. The evaluation grid. See Details.
+For the \code{data.frame}-methods: the name/number of the column defining the evaluation grid.}
+
 \item{interpolate}{should functions be evaluated (i.e., inter-/extrapolated)
 for \code{argvals} for which no original data is available? Only relevant for
 \code{feval}, defaults to TRUE.}
 
+\item{domain}{range of the \code{argvals}.}
+
 \item{evaluator}{a function accepting arguments \code{x, argvals, evaluations}. See details.}
+
+\item{id}{The name/number of the column defining which data belong to which function.}
+
+\item{value}{The name/number of the column containing the function evaluations.}
+
+\item{...}{not used, except for \code{feval.fvector} -- specify \code{argvals} and \code{ìnterpolate = TRUE} to
+turn an irregular \code{feval} into a regular one, see examples...}
 }
 \value{
 an \code{feval}-object (or a \code{data.frame}/\code{matrix} for the conversion functions, obviously.)

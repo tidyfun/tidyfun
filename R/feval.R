@@ -68,6 +68,7 @@ feval <- function(data, ...) UseMethod("feval")
 #' @export
 #' @rdname feval
 #' @param argvals `numeric`, or list of `numeric`s. The evaluation grid. See Details.
+#'  For the `data.frame`-methods: the name/number of the column defining the evaluation grid.
 #' @param domain range of the `argvals`. 
 #' @param evaluator a function accepting arguments `x, argvals, evaluations`. See details.
 #' @param signif significant digits of the "resolution" of the evaluation grid.  See details. 

@@ -2,10 +2,6 @@
 % Please edit documentation in R/convert.R, R/fbase.R, R/feval.R
 \name{as.fbase}
 \alias{as.fbase}
-\alias{as.fbase.matrix}
-\alias{as.fbase.data.frame}
-\alias{as.fbase.list}
-\alias{as.fbase.feval}
 \alias{as.data.frame.fbase}
 \alias{as.matrix.fbase}
 \alias{fbase}
@@ -18,19 +14,7 @@
 \alias{feval.numeric}
 \title{Constructors for (smoothed) functional data in basis representation}
 \usage{
-as.fbase(data, ...)
-
-\method{as.fbase}{matrix}(data, argvals = NULL, domain = NULL,
-  penalized = TRUE, signif = 4, ...)
-
-\method{as.fbase}{data.frame}(data, id = 1, argvals = 2, value = 3,
-  domain = NULL, penalized = TRUE, signif = 4, ...)
-
-\method{as.fbase}{list}(data, argvals = NULL, domain = NULL,
-  penalized = TRUE, signif = 4, ...)
-
-\method{as.fbase}{feval}(data, argvals = NULL, domain = NULL,
-  penalized = TRUE, signif = 4, ...)
+as.fbase(data, basis = c("mgcv", "fpc"), ...)
 
 \method{as.data.frame}{fbase}(x, rownames = NULL, optional = FALSE,
   argvals = NULL, ...)
@@ -64,12 +48,23 @@ fbase(data, ...)
 \item{data}{a \code{matrix}, \code{data.frame} or \code{list} of suitable shape, or another
 \code{fvector}-object.}
 
-\item{...}{arguments to the calls to \code{\link[mgcv:s]{mgcv::s()}} setting up the basis and
-\code{\link[mgcv:magic]{mgcv::magic()}} (if \code{penalized} is TRUE). If not user-specified here,
-\code{tidyfun} uses \code{k=15} cubic regression spline basis functions (i.e., \code{bs = "cr"}) by default, but at least how many basis functions \code{k} the spline
-basis should have probably needs to be set manually ....}
+\item{basis}{either "mgcv" to call \code{\link[=fbase]{fbase()}} which uses \code{mgcv}-type spline basis functions
+or "fpc" to call \code{\link[=fpcbase]{fpcbase()}} which uses a (smoothed) functional principal component basis.}
 
-\item{argvals}{\code{numeric}, or list of \code{numeric}s. The evaluation grid. See Details.}
+\item{...}{arguments to \code{\link[=fbase]{fbase()}} or \code{\link[=fpcbase]{fpcbase()}}}
+
+\item{x}{an \code{fbase} object}
+
+\item{rownames}{not used}
+
+\item{optional}{not used}
+
+\item{argvals}{\code{numeric}, or list of \code{numeric}s. The evaluation grid. See Details.
+For the \code{data.frame}-methods: the name/number of the column defining the evaluation grid.}
+
+\item{id}{The name/number of the column defining which data belong to which function.}
+
+\item{value}{The name/number of the column containing the function evaluations.}
 
 \item{domain}{range of the \code{argvals}.}
 
@@ -78,17 +73,12 @@ via \code{\link[mgcv:magic]{mgcv::magic()}} (default) or ordinary least squares.
 
 \item{signif}{significant digits of the "resolution" of the evaluation grid.  See details.}
 
-\item{id}{The name/number of the column defining which data belong to which function.}
-
-\item{value}{The name/number of the column containing the function evaluations.}
-
-\item{x}{an \code{fbase} object}
-
-\item{rownames}{not used}
-
-\item{optional}{not used}
-
 \item{evaluator}{a function accepting arguments \code{x, argvals, evaluations}. See details.}
+
+\item{...}{arguments to the calls to \code{\link[mgcv:s]{mgcv::s()}} setting up the basis and
+\code{\link[mgcv:magic]{mgcv::magic()}} (if \code{penalized} is TRUE). If not user-specified here,
+\code{tidyfun} uses \code{k=15} cubic regression spline basis functions (i.e., \code{bs = "cr"}) by default, but at least how many basis functions \code{k} the spline
+basis should have probably needs to be set manually ....}
 }
 \value{
 an \code{fbase}-object (or a \code{data.frame}/\code{matrix} for the conversion
@@ -114,4 +104,10 @@ of the original values. The \code{...} arguments supplies arguments to both the
 spline basis set up (via \code{\link[mgcv:s]{mgcv::s()}}) and the estimation (via
 \code{\link[mgcv:magic]{mgcv::magic()}}), most important: how many basis functions \code{k} the spline
 basis should have, the default is 25.
+
+See \code{\link[=fpcbase]{fpcbase()}} for using an FPC representation with an orthogonal basis estimated from the
+data instead.
+}
+\seealso{
+\code{\link[=fpcbase]{fpcbase()}}
 }

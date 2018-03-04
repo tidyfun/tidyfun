@@ -1,3 +1,20 @@
+# input homogenizers
+df_2_df <- function(data, id, argvals, value) {
+  data <- na.omit(data[, c(id, argvals, value)])
+  colnames(data) <- c("id", "argvals", "data")
+  stopifnot(nrow(data) > 0, 
+    is.numeric(data[[2]]), 
+    is.numeric(data[[3]]))
+  data
+}
+mat_2_df <- function(data) {
+  stopifnot(is.numeric(data))
+  id <- unique_id(rownames(data) %||% seq_len(dim(data)[1]))
+  data <- na.omit(data_frame(id = id[row(data)], argvals = argvals[col(data)], 
+    data = as.vector(data)))
+}
+  
+
 #' @import mgcv
 smooth_spec_wrapper <- function(spec) {
   function(argvals) {
@@ -6,7 +23,7 @@ smooth_spec_wrapper <- function(spec) {
 } 
 
 #' @importFrom stats var na.omit median
-new_fbase <- function(data, regular, domain = NULL,   
+mgcv_fbase <- function(data, regular, domain = NULL,   
     penalized = TRUE, signif = 4, verbose = TRUE, ...) {
   data$argvals <- .adjust_resolution(data$argvals, signif, unique = FALSE)
   argvals_u <- mgcv::uniquecombs(data$argvals, ordered = TRUE)
@@ -100,13 +117,17 @@ magic_smooth_coef <- function(evaluations, index, spec_object, magic_args) {
 #' of the original values. The `...` arguments supplies arguments to both the
 #' spline basis set up (via [mgcv::s()]) and the estimation (via
 #' [mgcv::magic()]), most important: how many basis functions `k` the spline
-#' basis should have, the default is 25.
+#' basis should have, the default is 25. 
+#' 
+#' See [fpcbase()] for using an FPC representation with an orthogonal basis estimated from the
+#' data instead.
 #' 
 #' @param data a `matrix`, `data.frame` or `list` of suitable shape, or another
 #'   `fvector`-object.
 #' @return an `fbase`-object (or a `data.frame`/`matrix` for the conversion
 #'   functions, obviously.)
 #' @rdname fbase
+#' @seealso [fpcbase()]
 #' @export
 fbase <- function(data, ...) UseMethod("fbase")
 
@@ -123,14 +144,10 @@ fbase <- function(data, ...) UseMethod("fbase")
 #' @rdname fbase
 #' @export
 fbase.data.frame <- function(data, id = 1, argvals = 2, value = 3,  
-    domain = NULL,   penalized = TRUE, signif = 4, ...) {
-  data <- na.omit(data[, c(id, argvals, value)])
-  colnames(data) <- c("id", "argvals", "data")
-  stopifnot(nrow(data) > 0, 
-    is.numeric(data[[2]]), 
-    is.numeric(data[[3]]))
+    domain = NULL, penalized = TRUE, signif = 4, ...) {
+  data <- df_2_df(data, id, argvals, value)
   regular <- n_distinct(table(data[[1]])) == 1
-  new_fbase(data, regular, domain = domain,   
+  mgcv_fbase(data, regular, domain = domain,   
     penalized = penalized, signif = signif, ...)
 }
 
@@ -138,13 +155,10 @@ fbase.data.frame <- function(data, id = 1, argvals = 2, value = 3,
 #' @export
 fbase.matrix <- function(data, argvals = NULL, 
   domain = NULL,   penalized = TRUE, signif = 4, ...) {
-  stopifnot(is.numeric(data))
   argvals <- unlist(find_argvals(data, argvals))
-  id <- unique_id(rownames(data) %||% seq_len(dim(data)[1]))
-  data <- na.omit(data_frame(id = id[row(data)], argvals = argvals[col(data)], 
-    data = as.vector(data)))
+  data <- mat_2_df(data)
   regular <- n_distinct(table(data[[1]])) == 1
-  new_fbase(data, regular,  domain = domain,   
+  mgcv_fbase(data, regular, domain = domain,   
     penalized = penalized, signif = signif, ...)
 }
 #' @rdname fbase
@@ -155,7 +169,6 @@ fbase.numeric <- function(data, argvals = NULL,
   fbase(data = data, argvals = argvals, domain = domain, penalized = penalized,
     signif = signif, ...)
 }
-
 
 #' @rdname fbase
 #' @export

@@ -1,31 +1,9 @@
 #' @rdname feval
+#' @param ... arguments for [feval()]
 #' @export 
 as.feval <- function(data, ...) UseMethod("as.feval")
-
-#' @rdname feval
-#' @export 
-as.feval.matrix  <- function(data, argvals = NULL, domain = NULL, 
-      ...) {
-  feval(data, argvals = argvals, domain = domain,   ...)
-}
-
-#' @rdname feval
-#' @export 
-as.feval.data.frame <- function(data, id = 1, argvals = 2, value = 3, domain = NULL, 
-      ...) {
-  feval(data, id = id, argvals = argvals, value = value, domain = domain,   ...)
-}
-
-#' @rdname feval
-#' @export 
-as.feval.list <- function(data, argvals = NULL, domain = NULL, ...) {
-  feval(data, argvals = argvals, domain = domain,   ...)
-}
-
-#' @rdname feval
-#' @export 
-as.feval.fbase <- function(data, argvals = NULL, domain = NULL, ...) {
-  feval(data, argvals = argvals, domain = domain,   ...)
+as.feval.default <- function(data, ...) {
+  feval(data,  ...)
 }
 
 # TODO: this ignores argvals, domain for now, only needed internally in c.feval
@@ -90,39 +68,15 @@ as.matrix.feval <- function(x, argvals = NULL, interpolate = FALSE, ...) {
 #-------------------------------------------------------------------------------
 
 #' @rdname fbase
+#' @param basis either "mgcv" to call [fbase()] which uses `mgcv`-type spline basis functions
+#'   or "fpc" to call [fpcbase()] which uses a (smoothed) functional principal component basis. 
+#' @param ... arguments to [fbase()] or [fpcbase()]
 #' @export 
-as.fbase <- function(data, ...) UseMethod("as.fbase")
-
-#' @rdname fbase
-#' @export 
-as.fbase.matrix  <- function(data, argvals = NULL, 
-  domain = NULL,   penalized = TRUE, signif = 4, ...) {
-  fbase(data,  domain = domain,   
-    penalized = penalized, signif = signif, ...)
-}
-
-#' @rdname fbase
-#' @export 
-as.fbase.data.frame <- function(data, id = 1, argvals = 2, value = 3, 
-  domain = NULL,   penalized = TRUE, signif = 4, ...) {
-  fbase(data, id, argvals, value, domain = domain,  
-    penalized = penalized, signif = signif, ...)
-}
-
-#' @rdname fbase
-#' @export 
-as.fbase.list <- function(data, argvals = NULL, 
-  domain = NULL,   penalized = TRUE, signif = 4, ...) {
-  fbase(data, argvals, domain = domain,   
-    penalized = penalized, signif = signif, ...)
-}
-
-#' @rdname fbase
-#' @export 
-as.fbase.feval <- function(data, argvals = NULL, 
-  domain = NULL,   penalized = TRUE, signif = 4, ...) {
-  fbase(data, argvals, domain = domain,   
-    penalized = penalized, signif = signif, ...)
+as.fbase <- function(data, basis = c("mgcv", "fpc"), ...) UseMethod("as.fbase")
+as.fbase.default <- function(data, basis = c("mgcv", "fpc"), ...) {
+  basis <- match.arg(basis)
+  fbase_maker <- switch(basis, "mgcv" = fbase, "fpc" = fpcbase)
+  fbase_maker(data, ...)
 }
 
 #' @rdname fbase

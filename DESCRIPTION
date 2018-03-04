@@ -5,7 +5,7 @@ Authors@R: c(person("Fabian", "Scheipl", email = "fabian.scheipl@googlemail.com"
 Description: Provides S3 classes and methods for working with functional data in the tidyverse way.
 Depends: R (>= 3.4.3)
 Imports: 
-  checkmate, dplyr, ggplot2, memoise, mvtnorm, mgcv, modelr, purrr, rlang,
+  checkmate, dplyr, ggplot2, memoise, mvtnorm, mgcv, modelr, purrr, refund, rlang,
   stats, tidyselect, tidyr, zoo  
 License: GPL-3
 Encoding: UTF-8

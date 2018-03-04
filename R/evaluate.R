@@ -60,7 +60,7 @@ evaluate_fbase_once <- function(x, argvals, coefs, basis, X) {
   dejavu <- !is.na(dejavu)
   if (all(dejavu)) return(X[dejavu_index, ,drop = FALSE] %*% coefs)
   Xnew <- X[rep(1, length(x)),]
-  if (any(dejavu)) Xnew[dejavu,] <- X[dejavu_index, ,drop = FALSE]
+  if (any(dejavu)) Xnew[dejavu,] <- X[dejavu_index, , drop = FALSE]
   Xnew[!dejavu,] <- basis(x[!dejavu])
   Xnew %*% coefs
 }
