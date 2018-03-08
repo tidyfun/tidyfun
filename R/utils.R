@@ -94,7 +94,7 @@ adjust_resolution <- function(argvals, f) {
   }  
 }
 
-string_rep_fvector <- function(argvals, evaluations, signif_argvals = NULL, show = 5, digits = NULL, ...) {
+string_rep_fvector <- function(argvals, evaluations, signif_argvals = NULL, show = 3, digits = NULL, ...) {
   digits_eval <- digits %||% options()$digits
   digits_argvals <- max(digits_eval, signif_argvals %||% digits_eval) 
   show <- min(show, length(argvals))

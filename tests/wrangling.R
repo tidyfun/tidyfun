@@ -61,7 +61,7 @@ test_df %>% group_by(sex) %>% summarize(mean_cca = mean(cca), sd_cca = sd(cca))
 # FIXME:
 test <- test_df$cca[1:10]
 test[1:2] <- test[c(3,4)]
-mean(test)
+mean(test) # not working if names are not unique.... 
 
 #-------------------------------------------------------------------------------
 
