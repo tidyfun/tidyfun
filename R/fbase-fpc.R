@@ -77,7 +77,7 @@ fpc_fbase <- function(data, domain = NULL, smooth = TRUE, signif = 4, ...) {
 #' @seealso fbase
 #' @rdname fpcbase
 #' @export
-fpcbase <- function(data, ...) UseMethod("fbase")
+fpcbase <- function(data, ...) UseMethod("fpcbase")
 
 #' @rdname fpcbase
 #' @export
@@ -91,7 +91,7 @@ fpcbase.data.frame <- function(data, id = 1, argvals = 2, value = 3,
 #' @export
 fpcbase.matrix <- function(data, argvals = NULL, domain = NULL, smooth = TRUE, signif = 4, ...) {
   argvals <- unlist(find_argvals(data, argvals))
-  data <- mat_2_df(data)
+  data <- mat_2_df(data, argvals)
   fpc_fbase(data, domain = domain, smooth = smooth, signif = signif, ...)
 }
 
@@ -110,9 +110,9 @@ fpcbase.numeric <- function(data, argvals = NULL, domain = NULL, smooth = TRUE, 
 #' @rdname fpcbase
 #' @export
 fpcbase.fvector <- function(data, argvals = NULL, smooth = TRUE, ...) {
-   #TODO: majpr computational shortcuts possible here for fbase: reduced rank,
+   #TODO: major computational shortcuts possible here for fbase: reduced rank,
   #   direct inner prods of basis functions etc...
   argvals <- argvals %||% argvals(data)
-  fpcbase(data[, argvals, matrix = TRUE], smooth = smooth, 
+  fpcbase(as.data.frame(data, argvals = argvals), smooth = smooth, 
     signif = attr(data, "signif_argvals"),  ...)
 }

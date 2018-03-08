@@ -26,7 +26,7 @@ prep_plotting_argvals <- function(f, n_grid) {
 #' @param n_grid minimal size of equidistant grid used for plotting, 
 #'   defaults to 50. See details.
 #' @param points should the original evaluation points be marked by points?
-#'   Defaults to `TRUE` for `feval`- and FALSE for `fbase`-objects
+#'   Defaults to `TRUE` for irregular `feval` and FALSE for all others
 #' @param type "spaghetti": line plots, "lasagna": heat maps.
 #' @param alpha [alpha-value](grDevices::rgb()) for noodle transparency. 
 #'   Defaults to 2/(no. of observations). Lower is more transparent.
@@ -36,7 +36,7 @@ prep_plotting_argvals <- function(f, n_grid) {
 #' @importFrom modelr seq_range
 #' @export
 #' @rdname fvectorviz
-funplot <- function(f, argvals, n_grid = 50, points = is_feval(f), 
+funplot <- function(f, argvals, n_grid = 50, points = is_irreg(f), 
   type = c("spaghetti", "lasagna"), alpha =  min(1, max(.05, 2/length(f)))) {
   assert_class(f, "fvector")
   assert_number(n_grid, na.ok = TRUE)
@@ -84,7 +84,7 @@ funplot <- function(f, argvals, n_grid = 50, points = is_feval(f),
 #' @rdname fvectorviz
 #' @references Swihart, B. J., Caffo, B., James, B. D., Strand, M., Schwartz, B. S., & Punjabi, N. M. (2010). 
 #' Lasagna plots: a saucy alternative to spaghetti plots. *Epidemiology (Cambridge, Mass.)*, **21**(5), 621-625.
-plot.fvector <- function(x, y, n_grid = 50, points = is_feval(x), 
+plot.fvector <- function(x, y, n_grid = 50, points = is_irreg(x), 
   type = c("spaghetti", "lasagna"), alpha = min(1, max(.05, 2/length(x))), ...) {
   type <- match.arg(type)
   assert_logical(points)

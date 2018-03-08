@@ -60,7 +60,7 @@
   j <- adjust_resolution(ensure_list(j), x)
   evals <- evaluate(x[i], argvals = j)
   if (!interpolate) {
-    new_j <- map2(j, ensure_list(argvals(x)), ~ !(.x %in% .y))
+    new_j <- map2(j, ensure_list(argvals(x[i])), ~ !(.x %in% .y))
     if (any(unlist(new_j))) {
       warning("interpolate = FALSE & no evaluations for some <j>: NAs created.")
     }

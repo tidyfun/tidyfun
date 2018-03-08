@@ -7,11 +7,11 @@ df_2_df <- function(data, id, argvals, value) {
     is.numeric(data[[3]]))
   data
 }
-mat_2_df <- function(data) {
-  stopifnot(is.numeric(data))
-  id <- unique_id(rownames(data) %||% seq_len(dim(data)[1]))
-  data <- na.omit(data_frame(id = id[row(data)], argvals = argvals[col(data)], 
-    data = as.vector(data)))
+mat_2_df <- function(x, argvals) {
+  stopifnot(is.numeric(x))
+  id <- unique_id(rownames(x) %||% seq_len(dim(x)[1]))
+  na.omit(data_frame(id = id[row(x)], argvals = argvals[col(x)], 
+    data = as.vector(x)))
 }
   
 
@@ -156,7 +156,7 @@ fbase.data.frame <- function(data, id = 1, argvals = 2, value = 3,
 fbase.matrix <- function(data, argvals = NULL, 
   domain = NULL,   penalized = TRUE, signif = 4, ...) {
   argvals <- unlist(find_argvals(data, argvals))
-  data <- mat_2_df(data)
+  data <- mat_2_df(data, argvals)
   regular <- n_distinct(table(data[[1]])) == 1
   mgcv_fbase(data, regular, domain = domain,   
     penalized = penalized, signif = signif, ...)
