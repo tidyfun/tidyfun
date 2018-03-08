@@ -56,6 +56,13 @@ head(test_df)
 str(subset(test_df, cca[, .7, matrix = TRUE] > .6))
 str(evaluate(test_df[1:4, ]))
 
+# FIXME:
+test_df %>% group_by(sex) %>% summarize(mean_cca = mean(cca), sd_cca = sd(cca))
+# FIXME:
+test <- test_df$cca[1:10]
+test[1:2] <- test[c(3,4)]
+mean(test)
+
 #-------------------------------------------------------------------------------
 
 library(data.table)

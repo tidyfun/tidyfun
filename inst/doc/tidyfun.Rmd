@@ -1,0 +1,202 @@
+---
+title: "`tidyfun`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, cache = TRUE, warning = TRUE, error = TRUE)
+options(digits = 3)
+library(devtools)
+library(refund)
+library(FDboost)
+library(tidyverse)
+load_all("~/Work/fda/tidyfun")
+dti <- with(refund::DTI, data.frame(id = ID, sex = sex))
+dti$cca <- feval(DTI$cca, seq(0,1, l = 93), signif = 3)
+dti$rcst <- feval(DTI$rcst, seq(0,1, l = 55), signif = 3)
+set.seed(1221)
+```
+
+# `tidyfun`
+
+The goal of tidyfun is to provide a `tidyverse`-compliant, accessible and well-documented way to handle functional data during data wrangling and exploratory analysis.
+
+```{r, data}
+head(dti)
+dim(dti)
+nrow(dti %>%  filter(rcst[, .7] > .8))
+
+plot(dti$cca, points = FALSE)
+lines(mean(dti$cca), col = "red")
+lines(mean(dti$cca) + sd(dti$cca), col = "blue", lty = 2)
+lines(mean(dti$cca) - sd(dti$cca), col = "blue", lty = 2)
+
+plot(dti$rcst, type = "lasagna")
+funplot(dti$rcst, type = "lasagna")
+funplot(dti$rcst) + theme_minimal()
+
+# to come:
+# dti %>% group_by(sex) %>% mutate(mean_cca = mean(cca), sd_cca = sd(cca))
+```
+
+
+# `fvector`-class
+
+`tidyfun` defines a new type of vector data type for functional data: `fvector`
+
+* basically a `list` of numeric vectors
+* with additional attributes that help define *function-like* behavior:
+    * mostly how to **evaluate** the functional data on new argument values
+    * their domain
+    * the resolution of the argument values
+
+## Operations on `fvector`-objects
+
+### Subset & subassign:
+```{r}
+test <- dti$cca[1:5]
+test[1:2] <- test[2:1]
+test
+```
+
+### Evaluation
+
+```{r}
+test[1:2]
+test[1:2, seq(0,1, l = 11)]
+test[1:2, seq(0,1, l = 11), matrix = FALSE]
+test[1:2, seq(0,1, l = 11), interpolate = FALSE]
+```
+
+### Compare, compute & summarize:
+
+```{r}
+test[1] + test[1] == 2 * test[1]
+log(exp(test[2])) == test[2]
+test - 1 != test 
+mean(test)
+sd(test)
+median(test) 
+# to come: MBD-based median and quantiles
+```
+
+## Convert & construct
+
+- convert to & from `list`, `matrix`, 
+`data.frame` with columns for `"id"`, `"argvals"`, `"data"`
+
+```{r}
+str(m_test <- as.matrix(test))
+str(df_test <- as.data.frame(test))
+feval(m_test)
+feval(df_test)
+```
+
+- convert to & from raw functional data to basis representation (more later):
+
+```{r}
+fbase(test)
+# as.matrix(fbase(test)) 
+# as.data.frame(fbase(test))
+fbase(m_test)
+fbase(df_test)
+feval(fbase(test))
+```
+
+### Visualize (already shown)
+
+both for `base` and `ggplot2`, either spaghettis (line plots) or lasagna (heat map)
+
+### Derivatives & Integrals: 
+
+*not yet implemented, working on it...*
+
+
+## `fvector` subclass: `feval` 
+
+Functional data sometimes needs to be kept in raw format: `feval` objects
+
+ - keep a list of `evaluations` and corresponding `argvals`
+ - have an associated `evaluator` function that defines how to inter-/extrapolate
+ - (internal) subclasses: regular and irregular `feval`
+
+```{r}
+x <- seq(-pi, pi, l = 21)
+y1 <- sin(2 * x); y2 <- sin(3 * x)
+f <- feval(argvals = x, rbind(y1, y2))
+f
+str(f)
+
+argvals(f)
+domain(f)
+evaluations(f)
+evaluator(f)
+f_spline <- f; evaluator(f_spline) <- approx_spline
+
+plot(f, points = FALSE); lines(f_spline, col = "red")
+```
+
+##### Irregular:
+
+```{r}
+dti$rcst
+str(dti$rcst[1:5])
+```
+
+## `fvector` subclass: `fbase`
+
+Functional data in basis representation: `fbase` objects
+
+ - keep a list of `coefficients` and a corresponding `basis_matrix` of basis function evaluations
+ - have an associated `basis` function that defines how to compute basis for new `argvals`
+ - (internal) flavors: `mgcv`'s spline bases and `fpc`-bases (*TODO: wavelet bases*)
+ 
+#### spline-based `fbase`
+
+- accept all arguments of `mgcv`'s `s()`-syntax (univariate only, currently....)
+- either do a penalized fit to given data with obs.-specific smoothing or unpenalized (*TODO: global smoothing*)
+
+```{r}
+test_b <-fbase(test) 
+str(test_b)
+```
+
+```{r}
+fbase(test, bs = "tp", k = 55)
+fbase(test, penalized = FALSE, k = 60)
+plot(test, pch = ".", alpha = 1)
+lines(fbase(test), col = 2, lty = 3)
+lines(fbase(test, penalized = FALSE, k = 60), col = "cyan", lty = 3)
+```
+
+#### fpc-based `fbase`
+
+- uses either simple unregularized SVD of the data matrix 
+(i.e., not available/sensible for irregular ATM) or `fpca.sc`
+- corresponding FPC basis (and mean function) are simply saved as an `feval`-object
+
+```{r}
+fpcbase(test, smooth = FALSE, pve = .999)
+(test_fpc <- fpcbase(test, pve = .95))
+str(test_fpc)
+
+plot(test, pch = ".")
+lines(test_fpc, col = 2, lty = 3)
+lines(fpcbase(test, smooth = FALSE, pve = .999), col = "cyan", lty = 3)
+```
+
+## TODOs: 
+
+  - derivatives: might be fairly easy for `fbase` since `mgcv` offers derivatives of its bases
+  - registering/warping should be mostly easy, just overwrite `argvals` (or wrap warping around `evaluator`...?)
+  - intensive testing with diverse use-cases
+  - extensions for multivariate and image data (will be hard)
+  - integration with renovated `refund` for modeling etc.
+
+## ISSUES:
+
+  - lots of `tibblyverse` adjustments still needed (no grouped operations possible ATM, no pretty printing)
+  - is `signif_argvals` reasonable?
+  - no `S4` means no multiple inheritance for orthogonal implementation of aspects "representation" and "function properties" like monotonous or strictly positive functions in basis or raw data representation.
+  - more issues: [https://github.com/fabian-s/tidyfun/issues]
+  
