@@ -1,3 +1,4 @@
+
 #' Pretty printing and formatting for functional data
 #' 
 #' Print/format `fvector`-objects.
@@ -56,5 +57,9 @@ format.fvector <- function(x, digits = 2, nsmall = 0, ...){
   str <- map2_chr(argvals, evaluations(x), string_rep_fvector, 
     signif_argvals = attr(x, "signif_argvals"), 
     digits = digits, nsmall = nsmall, ... = ...)
-  map2_chr(names(x)[1:length(str)], str, ~ paste0(.x,": ",.y))
+  if (is.null(names(x))) {
+    str
+  } else {
+    map2_chr(names(x)[1:length(str)], str, ~ paste0(.x,": ",.y))
+  }  
 }
