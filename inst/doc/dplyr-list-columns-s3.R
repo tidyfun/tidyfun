@@ -32,14 +32,30 @@ d %>% group_by(g) %>%  mutate(cs = cumsum(x)) %$% cs
 library(devtools)
 load_all()
 
-test_df <-  with(refund::DTI, 
-  data_frame(id = ID, sex = sex, 
-    fi_cca = feval(cca, argvals = seq(0, 1, l = 93)))) %>% 
-  mutate(
-    f_cca = feval(fi_cca, interpolate = TRUE, argvals = seq(0,1, l = 51)), 
-    fb_cca = fbase(f_cca, k = 35))
+data_irreg <- data.frame(id = rep(1:4, each = 21),
+  argvals = round(rep(seq(0, 1, l = 21), times = 4) + runif(84, -.1, .1), 4),
+  data = dbeta(rep(seq(0, 1, l = 21), times = 4), 3, 7))
+fi <- feval(data_irreg, evaluator = approx_fill_extend)
+test_df <- data_frame(id = 1:4, g = gl(2, 2), 
+  fi = fi, f = feval(fi, interpolate = TRUE, argvals = seq(0,1, l = 21)),
+  fb = fbase(fi, k = 10))
 
-# slice drops names: don't rely on fvectors being named!
-slice <- test_df %>% group_by(sex) %>% slice(n())
-slice$fi_cca
-slice$fb_cca 
+means <- test_df %>% group_by(g) %>% mutate(mf = mean(f), mfb = mean(fb))
+plot(test_df$fi, col = as.numeric(test_df$g))
+lines(means$mfb, col = as.numeric(means$g), lwd = 4)
+
+test_df <-  with(refund::DTI,  
+  data_frame(id = ID, sex = sex, pasat = pasat,
+    fi_rcst = feval(rcst, argvals = seq(0, 1, l = 55)))) %>% 
+  mutate(
+    f_rcst = feval(fi_rcst, interpolate = TRUE, argvals = seq(0,1, l = 31)), 
+    fb_rcst = fbase(f_rcst, k = 25))
+test_df %<>% filter(!is.na(pasat)) %>% group_by(sex) %>%  arrange(pasat) %>% 
+  mutate(m=cumsum(f_rcst))
+
+means <- test_df %>% group_by(sex) %>% mutate(mf = mean(f_r), mfb = mean(fb_cca))
+plot(test_df$m)
+lines(means$mfb, col = as.numeric(means$sex), lwd = 4)
+
+
+
