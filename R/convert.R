@@ -51,7 +51,8 @@ as.data.frame.feval <- function(x, rownames = NULL, optional = FALSE,
   } 
   argvals <- adjust_resolution(argvals, x)
   tmp <- x[, argvals, interpolate = interpolate, matrix = FALSE]
-  tidyr::unnest(bind_rows(list(id = names(x), data = tmp)))
+  id <- unique_id(names(x)) %||% seq_along(x)
+  tidyr::unnest(bind_rows(list(id = id, data = tmp))) 
 }
 
 #' @rdname feval
@@ -91,7 +92,8 @@ as.data.frame.fbase <- function(x, rownames = NULL, optional = FALSE,
   } 
   argvals <- adjust_resolution(argvals, x)
   tmp <- x[, argvals, matrix = FALSE]
-  tidyr::unnest(bind_rows(list(id = names(x), data = tmp)))
+  id <- unique_id(names(x)) %||% seq_along(x)
+  tidyr::unnest(bind_rows(list(id = id, data = tmp)))
 }
 
 #' @rdname fbase

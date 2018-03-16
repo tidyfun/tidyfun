@@ -64,7 +64,11 @@ c.feval <- function(...) {
   if (any(irreg | make_irreg)) {
     attr_ret$argvals <- flatten(map(funs, argvals))
   }
-  attr_ret$names <- unique_id(unlist(flatten(map(funs, names))))
+  attr_ret$names <- {
+    tmp <- unlist(flatten(map(funs, 
+      function(x) names(x) %||% rep("", length(x)))))
+    if (all(tmp == "")) NULL else tmp
+  }
   ret <- flatten(funs)
   attributes(ret) <- attr_ret
   forget(attr(ret, "evaluator"))
@@ -97,11 +101,16 @@ c.fbase <- function(...) {
       "signif_argvals =", attr(funs[[1]], "signif_argvals"))
   }
   attr_ret <- attributes(funs[[1]])
-  attr_ret$names <- make.unique(unlist(flatten(map(funs, names))))
+  attr_ret$names <- {
+    tmp <- unlist(flatten(map(funs, 
+      function(x) names(x) %||% rep("", length(x)))))
+    if (all(tmp == "")) NULL else tmp
+  }  
   ret <- flatten(funs)
   attributes(ret) <- attr_ret
   ret
 }
+
 #' @param x `fvector`-object 
 #' @param y `fvector`-object
 #' @rdname fvectorconcat

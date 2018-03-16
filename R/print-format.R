@@ -27,7 +27,8 @@ print.feval_reg <- function(x, n = 10, ...) {
 #' @export
 print.feval_irreg <- function(x, n = 10, ...) {
   NextMethod()
-  n_evals <- n_evaluations(x[!is.na(names(x))])
+  nas <- map_lgl(evaluations(x), ~length(.)==1 && all(is.na(.)))
+  n_evals <- n_evaluations(x[!nas])
   cat(paste0(" based on ", min(n_evals), " to ", max(n_evals)," (mean: ",
     round(mean(n_evals)),") evaluations each\n"))
   cat("inter-/extrapolation by", attr(x, "evaluator_name"), "\n")
