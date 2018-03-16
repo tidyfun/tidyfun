@@ -46,7 +46,8 @@ fb * fb == fb^2
 2^fb
 
 all.equal(log(exp(fb)), fb, tol = 1e-3)
-all.equal(sinh(sin(fb)), fb, tol = 1e-3)
+all.equal(sinh(sin(fbase(seq(0,1,l = 20)))), 
+  fbase(seq(0,1,l = 20)), tol = 1e-3)
 
 f1 <- fbase(dbeta(seq(0, 1, l = 21), 7, 3), argvals = seq(0, 1, l = 21))
 f2 <- fbase(dbeta(seq(0, 1, l = 13), 2, 3), argvals = seq(0, 1, l = 13), 
@@ -55,8 +56,9 @@ f3 <- c(f1, f2)
 f4 <- c(f2, f1) 
 
 data_irreg <- data.frame(id = rep(1:3, each = 21), 
-  argvals = rep(seq(0, 1, l = 21), times = 3) + runif(63, -.3, .3),
-  data = dbeta(rep(seq(0, 1, l = 21), times = 3), 3, 7))
+  argvals = round(rep(seq(0, 1, l = 21), times = 3) + runif(63, -.1, .1), 4),
+  data = dbeta(rep(seq(0, 1, l = 21), times = 3), 3, 7))  #%>% 
+  #group_by(id) %>%  arrange(argvals, .by_group = TRUE) %>%  ungroup()
 firreg <- feval(data_irreg)
 
 data_reg <- data.frame(id = rep(1:3, each = 21), 
@@ -66,5 +68,11 @@ data_reg <- data.frame(id = rep(1:3, each = 21),
 freg <- feval(data_reg)
 range(freg)
 
-fb <- fbase(firreg)
+fb <- fbase(firreg, k = 10)
+fb2 <- fbase(data_irreg, k = 10)
+
 range(fb)
+plot(fb)
+lines(range(fb), col = 2) 
+
+fb <- fbase(data_irreg, k = 10)
