@@ -4,19 +4,17 @@
 new_feval <- function(argvals, datalist, regular, domain, evaluator, signif = 4) {
   if (!regular) {
     argvals <- map2(datalist, argvals, ~ signif(.y[!is.na(.x)], signif))
-    ret <- map(datalist, ~ .x[!is.na(.x)])
+    datalist <- map(datalist, ~ .x[!is.na(.x)])
     class <- "feval_irreg"
   } else {
     argvals <- list(signif(argvals[[1]], signif))
-    ret <- datalist
     class <- "feval_reg"
   }
   argvals_o <- map(argvals, order)
   argvals <- map2(argvals, argvals_o, ~.x[.y])
   datalist <- map2(datalist, argvals_o, ~.x[.y])
   domain <- domain %||% range(argvals)
-  names(ret) <- names(ret) %||% seq_along(ret)
-  ret <- structure(ret, 
+  ret <- structure(datalist, 
     argvals =  argvals,
     domain = domain,
     evaluator = memoise(eval(evaluator)),
@@ -76,7 +74,7 @@ feval.matrix <- function(data, argvals = NULL, domain = NULL,
     evaluator = approx_linear, signif = 4, ...) {
   stopifnot(is.numeric(data))
   argvals <- find_argvals(data, argvals) # either arg or numeric colnames or 1:ncol
-  names <- unique_id(rownames(data) %||% seq_len(dim(data)[1]))
+  names <- unique_id(rownames(data)) %||% seq_len(dim(data)[1])
   # make factor conversion explicit to avoid reordering
   datalist <- split(data, factor(names, unique(as.character(names))))
   regular <- !any(is.na(data))
@@ -113,11 +111,12 @@ feval.data.frame <- function(data, id = 1, argvals = 2, value = 3, domain = NULL
 
 # takes a list of vectors of identical lengths or a list of 2-column matrices/data.frames with 
 # argvals in the first and data in the second column
+# TODO #MV this will break for multivariate data!
 #' @export
 #' @rdname feval
 feval.list <- function(data, argvals = NULL, domain = NULL, 
     evaluator = approx_linear, signif = 4, ...) {
-  vectors <- sapply(data, is.numeric)
+  vectors <- map_lgl(data, ~ is.numeric(.) & !is.array(.)) 
   if (all(vectors)) {
     lengths <- sapply(data, length)
     if (all(lengths == lengths[1])) {
@@ -129,7 +128,6 @@ feval.list <- function(data, argvals = NULL, domain = NULL,
     } else {
       stopifnot(!is.null(argvals), length(argvals) == length(data), 
         all(sapply(argvals, length) == lengths))
-      if (!is.null(regular) && regular) warning("data is not regular.")
       regular <- FALSE
     }
   }
@@ -137,11 +135,11 @@ feval.list <- function(data, argvals = NULL, domain = NULL,
     dims <- map(data, dim)
     stopifnot(all(sapply(dims, length) == 2), all(map(dims, ~.x[2]) == 2),
       all(rapply(data, is.numeric)))
-    id <- unique_id(names(data) %||% seq_along(data))
+    id <- unique_id(names(data)) %||% seq_along(data)
     argvals <- map(data, ~ unlist(.x[, 1]))
     data <- map(data, ~ unlist(.x[, 2]))
     names(data) <- id
-    regular <- regular %||% (length(id) == 1 | all(duplicated(argvals)[-1])) 
+    regular <- (length(id) == 1 | all(duplicated(argvals)[-1])) 
   }
   new_feval(argvals, data, regular = regular, domain = domain, 
     evaluator = substitute(evaluator), signif = signif)

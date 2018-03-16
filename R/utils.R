@@ -1,6 +1,8 @@
 ensure_list <- function(x) if (!is.list(x)) list(x) else x
 
-unique_id <- function(x) if (is.character(x)) make.unique(x) else x
+unique_id <- function(x) if (is.character(x)) {
+  make.unique(sub("$^", "?", x))
+} else x
 
 #'@import zoo
 zoo_wrapper <- function(f, ...){
