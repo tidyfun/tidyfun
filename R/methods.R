@@ -94,7 +94,7 @@ rev.fvector <- function(x) {
 #' @export
 #' @rdname fvectormethods
 mean.fvector <- function(x, ...){
-  summarize_fvector(x, op = "mean", eval  = is_feval(x))
+  summarize_fvector(x, op = "mean", eval  = is_feval(x), ...)
 }
 
 #' @importFrom stats median
@@ -103,7 +103,7 @@ mean.fvector <- function(x, ...){
 median.fvector <- function(x, na.rm = FALSE, ...){
   #FIXME
   warning("only pointwise, non-functional median implemented for fvectors.")
-  summarize_fvector(x, na.rm = na.rm, op = "median", eval  = is_feval(x))
+  summarize_fvector(x, na.rm = na.rm, op = "median", eval  = is_feval(x), ...)
 }
 
 #' @importFrom stats quantile
@@ -115,7 +115,7 @@ quantile.fvector <- function(x, probs = seq(0, 1, 0.25), na.rm = FALSE,
   #FIXME
   warning("only pointwise, non-functional quantiles implemented for fvectors.")
   summarize_fvector(x, probs = probs, na.rm = na.rm,
-    names = names, type = type, op = "quantile", eval  = is_feval(x))
+    names = names, type = type, op = "quantile", eval  = is_feval(x), ...)
 }
 
 
