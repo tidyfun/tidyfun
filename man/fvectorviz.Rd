@@ -7,18 +7,18 @@
 \alias{points.fvector}
 \title{Visualization functions for \code{fvector}s}
 \usage{
-funplot(f, argvals, n_grid = 50, points = is_feval(f),
+funplot(f, argvals, n_grid = 50, points = is_irreg(f),
   type = c("spaghetti", "lasagna"), alpha = min(1, max(0.05, 2/length(f))))
 
-\method{plot}{fvector}(x, y, n_grid = 50, points = is_feval(x),
+\method{plot}{fvector}(x, y, n_grid = 50, points = is_irreg(x),
   type = c("spaghetti", "lasagna"), alpha = min(1, max(0.05, 2/length(x))),
   ...)
 
 \method{lines}{fvector}(x, argvals, n_grid = 50, alpha = min(1, max(0.05,
   2/length(x))), ...)
 
-\method{points}{fvector}(x, argvals, n_grid = 50, alpha = min(1, max(0.05,
-  2/length(x))), ...)
+\method{points}{fvector}(x, argvals, n_grid = NA, alpha = min(1, max(0.05,
+  2/length(x))), interpolate = FALSE, ...)
 }
 \arguments{
 \item{f}{an \code{fvector} object}
@@ -29,7 +29,7 @@ funplot(f, argvals, n_grid = 50, points = is_feval(f),
 defaults to 50. See details.}
 
 \item{points}{should the original evaluation points be marked by points?
-Defaults to \code{TRUE} for \code{feval}- and FALSE for \code{fbase}-objects}
+Defaults to \code{TRUE} for irregular \code{feval} and FALSE for all others}
 
 \item{type}{"spaghetti": line plots, "lasagna": heat maps.}
 

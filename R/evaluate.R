@@ -21,7 +21,7 @@ evaluate.feval <- function(object, argvals, ...) {
   if (missing(argvals) | is.null(argvals)) argvals <- tidyfun::argvals(object)
   argvals <- ensure_list(argvals)
   assert_argvals(argvals, object)
-  pmap(list(argvals, attr(object, "argvals"), evaluations(object)), 
+  pmap(list(argvals, ensure_list(argvals(object)), evaluations(object)), 
     ~ evaluate_feval_once(x = ..1, argvals = ..2, evaluations = ..3, 
         evaluator = attr(object, "evaluator")))
 }  
@@ -46,7 +46,7 @@ evaluate.fbase <- function(object, argvals, ...) {
       X = attr(object, "basis_matrix"))
     ret <- split(evals, col(evals))
   } else {
-    ret <- pmap(list(argvals, list(attr(object, "argvals")), coef(object)),
+    ret <- pmap(list(argvals, ensure_list(argvals(object)), coef(object)),
       ~ evaluate_fbase_once(x = ..1, argvals = ..2, coefs = ..3, 
         basis = attr(object, "basis"), X = attr(object, "basis_matrix")))
   }

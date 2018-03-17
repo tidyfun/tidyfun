@@ -12,26 +12,26 @@ as.feval_irreg <- function(data, signif = NULL, ...) UseMethod("as.feval_irreg")
 
 as.feval_irreg.feval_reg <- function(data, signif = NULL, ...) {
   class(data)[1] <- "feval_irreg"
-  argvals <- attr(data, "argvals")
+  argvals <- argvals(data)
   if (!is.null(signif)) {
     argvals <- .adjust_resolution(argvals, signif = signif, unique = TRUE)
     if (length(argvals[[1]]) != length(attr(data, "argvals")[[1]])) {
-      stop("Can't convert data to lower resolution: creates non-unique argvals.")
+      stop("Converting 'data' to lower resolution would create non-unique argvals.")
     }
   }
-  attr(data, "argvals") <- replicate(length(data), argvals)
+  argvals(data) <- replicate(length(data), argvals)
   data
 }
 # TODO: this ignores argvals, domain for now.....
 as.feval_irreg.feval_irreg <- function(data, signif = 4, ...) {
-  argvals <- attr(data, "argvals")
+  argvals <- argvals(data)
   if (!is.null(signif)) {
     argvals <- .adjust_resolution(argvals, signif = signif, unique = TRUE)
     if (any(rapply(argvals, length) != rapply(attr(data, "argvals"), length))) {
       stop("Can't convert data to lower resolution: creates non-unique argvals.")
     }
   }
-  attr(data, "argvals") <- argvals
+  argvals(data) <- argvals
   data
 }
 

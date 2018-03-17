@@ -77,3 +77,4 @@ checkmate::expect_scalar_na(unique(f_reg[6, argvals(f_reg)][1,]))
 
 f_irreg[7] <- f_irreg[1]
 checkmate::expect_scalar_na(unique(f_irreg[6, argvals(f_reg)][1,]))
+

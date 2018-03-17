@@ -7,6 +7,7 @@
 \alias{as.matrix.feval}
 \alias{feval}
 \alias{feval.matrix}
+\alias{feval.numeric}
 \alias{feval.data.frame}
 \alias{feval.list}
 \alias{feval.fvector}
@@ -24,6 +25,9 @@ as.feval_irreg(data, signif = NULL, ...)
 feval(data, ...)
 
 \method{feval}{matrix}(data, argvals = NULL, domain = NULL,
+  evaluator = approx_linear, signif = 4, ...)
+
+\method{feval}{numeric}(data, argvals = NULL, domain = NULL,
   evaluator = approx_linear, signif = 4, ...)
 
 \method{feval}{data.frame}(data, id = 1, argvals = 2, value = 3,

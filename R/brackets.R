@@ -49,8 +49,6 @@
   }  
   if (missing(j)) {
     ret <- unclass(x)[i]
-    # TODO: reclass first, then use `argvals<-`
-    if (is_irreg(x)) attr(x, "argvals") <-  attr(x, "argvals")[i]
     attributes(ret) <- append(attributes(x)[names(attributes(x)) != "names"], 
       list(names = names(ret)))
     return(ret)

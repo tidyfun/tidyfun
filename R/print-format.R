@@ -1,3 +1,18 @@
+string_rep_fvector <- function(argvals, evaluations, signif_argvals = NULL, 
+    show = 3, digits = NULL, ...) {
+  digits_eval <- digits %||% options()$digits
+  digits_argvals <- max(digits_eval, signif_argvals %||% digits_eval) 
+  show <- min(show, length(argvals))
+  str <- paste(
+    paste0("(", format(argvals[1:show], digits = digits_argvals, trim = TRUE, ...),
+      ",",
+      format(evaluations[1:show], digits = digits_eval, trim = TRUE, ...), ")"), 
+    collapse = ";")
+  if (show < length(argvals)) str <- paste0(str, "; ...")
+  str
+}
+
+#-------------------------------------------------------------------------------
 
 #' Pretty printing and formatting for functional data
 #' 
@@ -54,8 +69,7 @@ print.fbase <- function(x, n = 10, ...) {
 #' @inheritParams base::format.default
 #' @export
 format.fvector <- function(x, digits = 2, nsmall = 0, ...){
-  argvals <- ensure_list(attr(x, "argvals"))
-  str <- map2_chr(argvals, evaluations(x), string_rep_fvector, 
+  str <- map2_chr(ensure_list(argvals(x)), evaluations(x), string_rep_fvector, 
     signif_argvals = attr(x, "signif_argvals"), 
     digits = digits, nsmall = nsmall, ... = ...)
   if (is.null(names(x))) {

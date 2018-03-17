@@ -7,7 +7,7 @@ fe <- rgp(5, grid = seq(0, 1, l = 21))
 plot(fe, p = FALSE)
 lines(cummax(fe), col = 1:5)
 fm <- feval(apply(as.matrix(fe), 2, cummax))
-lines(fm, col = 1:5, lty = 2)
+plot(fm, col = 1:5, lty = 2)
 
 set.seed(2211)
 n <- 5
@@ -30,6 +30,14 @@ freg + freg == freg * 2
 freg^2 == freg * freg
 2^freg
 freg == freg[2]
+
+firreg == +firreg
+firreg - 2 * firreg == -firreg
+firreg + firreg == firreg * 2
+firreg^2 == firreg * firreg
+2^firreg
+firreg == firreg[2]
+
 
 fb <- fbase(freg, k = 25)
 # NB:
@@ -71,6 +79,7 @@ range(freg)
 fb <- fbase(firreg, k = 10)
 fb2 <- fbase(data_irreg, k = 10)
 
+#THIS is brokem
 range(fb)
 plot(fb)
 lines(range(fb), col = 2) 

@@ -9,7 +9,7 @@ argvals <- function(f) UseMethod("argvals")
 #' @export
 argvals.default <- function(f) .NotYetImplemented()
 #' @export
-argvals.feval_irreg <- function(f) attr(f, "argvals")
+argvals.feval_irreg <- function(f) map(f, "argvals")
 #' @export
 argvals.feval_reg <- function(f) attr(f, "argvals")[[1]]
 #' @export
@@ -21,10 +21,14 @@ evaluations <- function(f) UseMethod("evaluations")
 #' @export
 evaluations.default <- function(f) .NotYetImplemented()
 #' @export
-evaluations.feval <- function(f) {
+evaluations.feval_reg <- function(f) {
   attributes(f) <- NULL
   f
-}  
+}
+#' @export
+evaluations.feval_irreg <- function(f) {
+  map(f, "data")
+}
 #' @export
 evaluations.fbase <- function(f) {
   map(f, ~ drop(attr(f, "basis_matrix") %*% .))
@@ -60,11 +64,11 @@ basis <- function(f) {
   attr(f, "basis")
 }
 
-
 #' @rdname fvectormethods
-#' @param value a function that can be used to interpolate an `feval`. Needs to
+#' @param value for `evaluator<-`: a function that can be used to interpolate an `feval`. Needs to
 #'   accept vector arguments `x`, `argvals`, `evaluations` and return
 #'   evaluations of the function defined by `argvals`, `evaluations` at `x`
+#'   for `argvals<-`: a list of grid points, for internal use only.
 #' @export
 `evaluator<-` <- function(x, value) {
   stopifnot(inherits(x, "feval"), is.function(value))
@@ -72,6 +76,18 @@ basis <- function(f) {
   attr(x, "evaluator") <- memoise(eval(value))
   x
 }
+# this only used internally in feval_irreg conversion functions.
+#' @rdname fvectormethods
+`argvals<-` <- function(x, value) {
+  stopifnot(inherits(x, "feval_irreg"))
+  value <- map(value, ~signif(.x, attr(x, "signif_argvals")))
+  assert_argvals(value, x)
+  attr_ret <- attributes(x)
+  ret <- map2(evaluations(x), value, ~list(argvals = .y, data = .x))
+  attributes(ret) <- attr_ret
+  ret
+}
+  
 
 #-------------------------------------------------------------------------------
 
@@ -117,8 +133,6 @@ quantile.fvector <- function(x, probs = seq(0, 1, 0.25), na.rm = FALSE,
   summarize_fvector(x, probs = probs, na.rm = na.rm,
     names = names, type = type, op = "quantile", eval  = is_feval(x), ...)
 }
-
-
 
 #' @inheritParams stats::sd
 #' @export

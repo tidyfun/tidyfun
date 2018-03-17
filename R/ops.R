@@ -7,6 +7,7 @@ fun_op <- function(x, y, op, numeric = NA){
     # no "recycling" of args -- breaking a crappy R convention, proudly so. 
     stopifnot(length(num) %in% c(1, length(f)))
     attr_ret <- attributes(f)
+    argvals_ret <- argvals(f)
   } else {
     stopifnot(
       # no "recycling" of args
@@ -14,18 +15,28 @@ fun_op <- function(x, y, op, numeric = NA){
       all.equal(domain(x), domain(y)),
       all.equal(argvals(x), argvals(y)))
     attr_ret <- attributes(y)
+    argvals_ret <- argvals(y)
   }
-  ret <- map2(x, y, ~ do.call(op, list(e1 = .x, e2 = .y)))
-  attributes(ret) <- attr_ret
-  if (is_feval(ret)) {
+  if (is_fbase(x)) x_ <- coef(x)
+  if (is_feval(x)) x_ <- evaluations(x)
+  if (isTRUE(numeric == 1)) x_ <- x
+  if (is_fbase(y)) y_ <- coef(y)
+  if (is_feval(y)) y_ <- evaluations(y)
+  if (isTRUE(numeric == 2)) y_ <- y
+  ret <- map2(x_, y_, ~ do.call(op, list(e1 = .x, e2 = .y)))
+  if ("feval" %in% attr_ret$class) {
     if (is.na(numeric) && 
         (attr(x, "evaluator_name") != attr(y, "evaluator_name"))) {
       warning("inputs have different evaluators, result has ", 
-        attr(ret, "evaluator_name"))
+        attr_ret$evaluator_name)
     }
-    forget(attr(ret, "evaluator"))
+    forget(attr_ret$evaluator)
+    if ("feval_irreg" %in% attr_ret$class) {
+      ret <- map2(argvals_ret, ret, ~ list(argvals = .x, data = .y))
+    }
   }  
-  return(ret)
+  attributes(ret) <- attr_ret
+  ret
 }
 
 #' @rdname fvectorgroupgenerics

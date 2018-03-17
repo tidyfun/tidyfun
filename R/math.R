@@ -1,12 +1,38 @@
+# utility function for linear operations that can be done on coefs or evaluations directly.
 fun_math <- function(x, op){
   attr_ret <- attributes(x)
-  ret <- map(x, ~ do.call(op, list(x = .x)))
+  ret <- map(evaluations(x), ~ do.call(op, list(x = .x)))
+  forget(attr_ret$evaluator)
+  if (is_irreg(x)) {
+    ret <- map2(argvals(x), ret, ~ list(argvals = .x, data = .y))
+  } 
   attributes(ret) <- attr_ret
-  if (is_feval(ret)) {
-    forget(attr(ret, "evaluator"))
-  }  
-  return(ret)
+  ret
 }
+#-------------------------------------------------------------------------------
+# used for Summary grup generics and stats-methods...
+# op has to be a string!
+summarize_fvector <- function(..., op = NULL, eval = FALSE) {
+  dots <- list(...)
+  funs <- map_lgl(dots, is_fvector)
+  op_args <- dots[!funs]
+  funs <- dots[funs]
+  op_call <- function(x) do.call(op, c(list(x), op_args))
+  funs <- do.call(c, funs)
+  attr_ret <- attributes(funs)
+  m <- as.matrix(funs)
+  ret <- apply(m, 2, op_call)
+  argvals <- as.numeric(colnames(m))
+  args <- c(list(ret), argvals = list(argvals),
+    domain = list(domain(funs)), 
+    signif = attr(funs, "signif_argvals"))
+  if (eval) {
+    return(do.call(feval, c(args, evaluator = as.name(attr(funs, "evaluator_name")))))
+  } else {
+    return(do.call(fbase, c(args, penalized = FALSE, attr(funs, "basis_args"))))
+  }
+}
+#------------------------------------------------------------------------------
 
 #' Math, Summary and Ops Methods for `fvector`
 #' 

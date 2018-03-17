@@ -96,19 +96,6 @@ adjust_resolution <- function(argvals, f) {
   }  
 }
 
-string_rep_fvector <- function(argvals, evaluations, signif_argvals = NULL, show = 3, digits = NULL, ...) {
-  digits_eval <- digits %||% options()$digits
-  digits_argvals <- max(digits_eval, signif_argvals %||% digits_eval) 
-  show <- min(show, length(argvals))
-  str <- paste(
-    paste0("(", format(argvals[1:show], digits = digits_argvals, trim = TRUE, ...),
-      ",",
-      format(evaluations[1:show], digits = digits_eval, trim = TRUE, ...), ")"), 
-    collapse = ";")
-  if (show < length(argvals)) str <- paste0(str, "; ...")
-  str
-}
-
 compare_fvector_attribs <- function(e1, e2, ignore = "names") {
 # TODO: better way to check evaluator/basis functions?
   a1 <- attributes(e1)
@@ -151,29 +138,6 @@ is_feval <- function(x) "feval" %in% class(x)
 #' @export
 is_fbase <- function(x) "fbase" %in% class(x)
 
-
-# used for Summary grup generics and stats-methods...
-# op has to be a string!
-summarize_fvector <- function(..., op = NULL, eval = FALSE) {
-  dots <- list(...)
-  funs <- map_lgl(dots, is_fvector)
-  op_args <- dots[!funs]
-  funs <- dots[funs]
-  op_call <- function(x) do.call(op, c(list(x), op_args))
-  funs <- do.call(c, funs)
-  attr_ret <- attributes(funs)
-  m <- as.matrix(funs)
-  ret <- apply(m, 2, op_call)
-  argvals <- as.numeric(colnames(m))
-  args <- c(list(ret), argvals = list(argvals),
-    domain = list(domain(funs)), 
-    signif = attr(funs, "signif_argvals"))
-  if (eval) {
-    return(do.call(feval, c(args, evaluator = as.name(attr(funs, "evaluator_name")))))
-  } else {
-    return(do.call(fbase, c(args, penalized = FALSE, attr(funs, "basis_args"))))
-  }
-}
 
 #' Random generator for Gaussian Processes
 #' 

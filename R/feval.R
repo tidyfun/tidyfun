@@ -2,18 +2,19 @@
 #' @import purrr
 #' @import dplyr
 new_feval <- function(argvals, datalist, regular, domain, evaluator, signif = 4) {
+  argvals_o <- map(argvals, order)
+  argvals <- map2(argvals, argvals_o, ~.x[.y])
+  datalist <- map2(datalist, argvals_o, ~.x[.y])
+  domain <- signif(domain %||% range(argvals, na.rm = TRUE), signif)
   if (!regular) {
-    argvals <- map2(datalist, argvals, ~ signif(.y[!is.na(.x)], signif))
-    datalist <- map(datalist, ~ .x[!is.na(.x)])
+    datalist <- map2(datalist, argvals, 
+      ~ list(argvals = signif(.y[!is.na(.x)], signif), data = .x[!is.na(.x)]))
+    argvals <- numeric(0)
     class <- "feval_irreg"
   } else {
     argvals <- list(signif(argvals[[1]], signif))
     class <- "feval_reg"
   }
-  argvals_o <- map(argvals, order)
-  argvals <- map2(argvals, argvals_o, ~.x[.y])
-  datalist <- map2(datalist, argvals_o, ~.x[.y])
-  domain <- domain %||% range(argvals)
   ret <- structure(datalist, 
     argvals =  argvals,
     domain = domain,
@@ -80,7 +81,7 @@ feval.matrix <- function(data, argvals = NULL, domain = NULL,
   regular <- !any(is.na(data))
   new_feval(argvals, datalist, regular, domain, substitute(evaluator), signif)
 }
-#' @rdname fbase
+#' @rdname feval
 #' @export
 feval.numeric <- function(data, argvals = NULL, 
     domain = NULL, evaluator = approx_linear, signif = 4, ...) {
