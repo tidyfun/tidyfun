@@ -79,7 +79,6 @@ range(freg)
 fb <- fbase(firreg, k = 10)
 fb2 <- fbase(data_irreg, k = 10)
 
-#THIS is brokem
 range(fb)
 plot(fb)
 lines(range(fb), col = 2) 

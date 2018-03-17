@@ -48,7 +48,7 @@ tidyr::unnest(evaluate(test_tbl, argvals = seq(0,1, l = 12)), .preserve = rcst,
 
 #-------------------------------------------------------------------------------
 
-test_df <-  with(dti, data.frame(id = ID, sex = sex))
+test_df <-  with(dti, data.frame(id = ID, sex = sex, pasat = pasat))
 # direct specification of data.frame(id = ID, sex = sex, cca = f_cca) throws errors
 # because data.frame calls as.data.frame on columns ....
 test_df$cca <- f_cca

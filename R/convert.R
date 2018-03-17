@@ -35,9 +35,6 @@ as.feval_irreg.feval_irreg <- function(data, signif = 4, ...) {
   data
 }
 
-
-
-
 #' @rdname feval
 #' @param rownames not used
 #' @param optional not used
@@ -52,17 +49,18 @@ as.data.frame.feval <- function(x, rownames = NULL, optional = FALSE,
   argvals <- adjust_resolution(argvals, x)
   tmp <- x[, argvals, interpolate = interpolate, matrix = FALSE]
   id <- unique_id(names(x)) %||% seq_along(x)
+  id <- ordered(id, levels = id) # don't reshuffle 
   tidyr::unnest(bind_rows(list(id = id, data = tmp))) 
 }
 
 #' @rdname feval
 #' @export
 as.matrix.feval <- function(x, argvals = NULL, interpolate = FALSE, ...) {
-  ret <- as.data.frame(x, argvals = argvals, interpolate = interpolate)  %>% 
-    arrange(argvals) %>% 
-    tidyr::spread(key = argvals, value = data) %>% 
-    select(-id) %>% 
-    as.matrix
+  if (is.null(argvals)) {
+    argvals <- sort(unlist(argvals(x)))
+  } 
+  argvals <- adjust_resolution(argvals, x)
+  ret <- x[, argvals, interpolate = interpolate, matrix = TRUE]
   structure(ret, argvals = as.numeric(colnames(ret)))
 }
 
@@ -93,6 +91,7 @@ as.data.frame.fbase <- function(x, rownames = NULL, optional = FALSE,
   argvals <- adjust_resolution(argvals, x)
   tmp <- x[, argvals, matrix = FALSE]
   id <- unique_id(names(x)) %||% seq_along(x)
+  id <- ordered(id, levels = id) # don't reshuffle 
   tidyr::unnest(bind_rows(list(id = id, data = tmp)))
 }
 

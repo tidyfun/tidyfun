@@ -40,7 +40,8 @@ test_df <- data_frame(id = 1:4, g = gl(2, 2),
   fi = fi, f = feval(fi, interpolate = TRUE, argvals = seq(0,1, l = 21)),
   fb = fbase(fi, k = 10))
 
-means <- test_df %>% group_by(g) %>% mutate(mf = mean(f), mfb = mean(fb))
+means <- test_df %>% group_by(g) %>% mutate(mf = mean(f), mfb = mean(fb), 
+  mfi = mean(fi, na.rm = TRUE))
 plot(test_df$fi, col = as.numeric(test_df$g))
 lines(means$mfb, col = as.numeric(means$g), lwd = 4)
 
@@ -51,7 +52,7 @@ test_df <-  with(refund::DTI,
     f_rcst = feval(fi_rcst, interpolate = TRUE, argvals = seq(0,1, l = 31)), 
     fb_rcst = fbase(f_rcst, k = 25))
 test_df %<>% filter(!is.na(pasat)) %>% group_by(sex) %>%  arrange(pasat) %>% 
-  mutate(m=cumsum(f_rcst))
+  mutate(m = cumsum(f_rcst))
 
 means <- test_df %>% group_by(sex) %>% mutate(mf = mean(f_r), mfb = mean(fb_cca))
 plot(test_df$m)
