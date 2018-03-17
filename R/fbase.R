@@ -1,16 +1,17 @@
 # input homogenizers
-df_2_df <- function(data, id, argvals, value) {
+df_2_df <- function(data, id = 1, argvals = 2, value = 3) {
   data <- na.omit(data[, c(id, argvals, value)])
   colnames(data) <- c("id", "argvals", "data")
   stopifnot(nrow(data) > 0, 
     is.numeric(data[[2]]), 
     is.numeric(data[[3]]))
-  data
+  data 
 }
+
 mat_2_df <- function(x, argvals) {
   stopifnot(is.numeric(x))
-  id <- unique_id(rownames(x) %||% seq_len(dim(x)[1]))
-  na.omit(data_frame(id = id[row(x)], argvals = argvals[col(x)], 
+  id <- unique_id(rownames(x)) %||% seq_len(dim(x)[1])
+  df_2_df(data_frame(id = id[row(x)], argvals = argvals[col(x)], 
     data = as.vector(x)))
 }
   
@@ -193,7 +194,7 @@ fbase.list <- function(data, argvals = NULL,
   dims <- map(data, dim)
   stopifnot(all(sapply(dims, length) == 2), all(map(dims, ~.x[2]) == 2),
     all(rapply(data, is.numeric)))
-  data <- data_frame(id = unique_id(names(data) %||% seq_along(data)), 
+  data <- data_frame(id = unique_id(names(data)) %||% seq_along(data), 
       funs = data) %>% tidyr::unnest
   #dispatch to data.frame method
   fbase(data, basis = basis, domain = domain,   

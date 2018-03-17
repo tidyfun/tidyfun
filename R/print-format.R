@@ -1,3 +1,4 @@
+
 #' Pretty printing and formatting for functional data
 #' 
 #' Print/format `fvector`-objects.
@@ -26,7 +27,8 @@ print.feval_reg <- function(x, n = 10, ...) {
 #' @export
 print.feval_irreg <- function(x, n = 10, ...) {
   NextMethod()
-  n_evals <- n_evaluations(x[!is.na(names(x))])
+  nas <- map_lgl(evaluations(x), ~length(.)==1 && all(is.na(.)))
+  n_evals <- n_evaluations(x[!nas])
   cat(paste0(" based on ", min(n_evals), " to ", max(n_evals)," (mean: ",
     round(mean(n_evals)),") evaluations each\n"))
   cat("inter-/extrapolation by", attr(x, "evaluator_name"), "\n")
@@ -56,5 +58,9 @@ format.fvector <- function(x, digits = 2, nsmall = 0, ...){
   str <- map2_chr(argvals, evaluations(x), string_rep_fvector, 
     signif_argvals = attr(x, "signif_argvals"), 
     digits = digits, nsmall = nsmall, ... = ...)
-  map2_chr(names(x)[1:length(str)], str, ~ paste0(.x,": ",.y))
+  if (is.null(names(x))) {
+    str
+  } else {
+    map2_chr(names(x)[1:length(str)], str, ~ paste0(.x,": ",.y))
+  }  
 }

@@ -120,7 +120,7 @@ plot.fvector <- function(x, y, n_grid = 50, points = is_irreg(x),
         ylab = "id", xlab = "", yaxt = "n"), 
       list(...))
     do.call(image, args)
-    axis(2, at = seq_len(nrow(m)), labels = names(f))
+    axis(2, at = seq_len(nrow(m)), labels = names(f) %||% seq_len(nrow(m)))
   }
   invisible(f)
 }
@@ -146,15 +146,17 @@ linespoints_fvector <- function(x, argvals, n_grid = 50, points = TRUE,
 #' @rdname fvectorviz
 lines.fvector <- function(x, argvals, n_grid = 50, 
   alpha = min(1, max(.05, 2/length(x))), ...) {
-  args <- c(as.list(match.call())[-1], points = FALSE)
+  args <- c(modifyList(head(formals(lines.fvector), -1),
+    as.list(match.call())[-1]), points = FALSE)
   do.call(linespoints_fvector, args)
   invisible(x)
 }
 #' @export
 #' @rdname fvectorviz
-points.fvector <- function(x, argvals, n_grid = 50, 
-    alpha = min(1, max(.05, 2/length(x))), ...) {
-  args <- c(as.list(match.call())[-1], points = TRUE)
+points.fvector <- function(x, argvals, n_grid = NA, 
+    alpha = min(1, max(.05, 2/length(x))), interpolate = FALSE, ...) {
+  args <- c(modifyList(head(formals(points.fvector), -1),
+    as.list(match.call())[-1]), points = TRUE)
   do.call(linespoints_fvector, args)
   invisible(x)
 }
