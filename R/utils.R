@@ -151,25 +151,25 @@ is_fbase <- function(x) "fbase" %in% class(x)
 #' n.
 #'
 #' @param n how many realizations to draw
-#' @param grid vector of evaluation points (`argvals` of the return object).
+#' @param argvals vector of evaluation points (`argvals` of the return object).
 #'   Defaults to (0, 0.02, 0.04, ..., 1).
 #' @param scale scale parameter (see Description). Defaults to the width of the
 #'   domain divided by 10.
 #' @param cor type of correlation structure to use. Currently available:
-#'   "squareexp" or "wiener".
+#'   `"squareexp"` or `"wiener"`, see Description.
 #' @param nugget nugget effect for additional white error noise. Defaults to
-#'   `scale/200`
+#'   `scale/200` (so: very little noise)
 #' @return an `feval`-vector of length `n`
 #' @importFrom mvtnorm rmvnorm
 #' @export
-rgp <- function(n, grid = seq(0, 1, l = 51), scale = diff(range(grid))/10, 
+rgp <- function(n, argvals = seq(0, 1, l = 51), scale = diff(range(argvals))/10, 
   cor = c("squareexp", "wiener"), nugget = scale/200) {
   cor <- match.arg(cor)
   f_cov <- switch(cor, "wiener" = function(s, t) pmin(s, t)/scale,
     "squareexp" = function(s,t) exp(-(s - t)^2/scale))
-  cov <- outer(grid, grid, f_cov) + diag(0*grid + nugget)
-  y <- rmvnorm(n, mean = 0 * grid, sigma = cov)
-  feval(y, argvals = grid)
+  cov <- outer(argvals, argvals, f_cov) + diag(0*argvals + nugget)
+  y <- rmvnorm(n, mean = 0 * argvals, sigma = cov)
+  feval(y, argvals = argvals)
 }
 
 

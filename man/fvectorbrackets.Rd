@@ -43,5 +43,15 @@ represents one \code{argval} as given in argument \code{j}, with an attribute
 \description{
 These functions access, subset, replace and evaluate \code{fvectors}.
 For more information on creating \code{fvector}s and converting them to/from
-\code{list}, \code{data.frame} or \code{matrix}, see \code{\link[=feval]{feval()}} and \code{\link[=fbase]{fbase()}}.
+\code{list}, \code{data.frame} or \code{matrix}, see \code{\link[=feval]{feval()}} and \code{\link[=fbase]{fbase()}}. \cr
+Note that these break certain R conventions for vector-like objects:\cr
+\itemize{
+\item no argument recycling,
+\item no indexing with \code{NA}, names not present in \code{x} or integers \code{> length(x)}
+}
+}
+\details{
+Both of these will yield errors. Subassigning new elements to positions
+beyond the original length of the object will still fill up the vector with \code{NAs},
+though.
 }
