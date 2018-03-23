@@ -2,6 +2,9 @@
 #' @import purrr
 #' @import dplyr
 new_feval <- function(argvals, datalist, regular, domain, evaluator, signif = 4) {
+  assert_function(eval(evaluator))
+  assert_set_equal(names(formals(eval(evaluator))), 
+    c("x", "argvals", "evaluations")) 
   argvals_o <- map(argvals, order)
   argvals <- map2(argvals, argvals_o, ~.x[.y])
   datalist <- map2(datalist, argvals_o, ~.x[.y])
