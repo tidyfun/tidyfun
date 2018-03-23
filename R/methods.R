@@ -91,6 +91,12 @@ basis <- function(f) {
 
 #-------------------------------------------------------------------------------
 
+is.na.fvector <- function(x) {
+  map_lgl(unclass(x), ~ any(is.na(.x)))
+}
+
+#-------------------------------------------------------------------------------
+
 #' @rdname fvectormethods
 #' @param object as usual
 #' @param ... dots

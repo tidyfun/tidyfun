@@ -32,9 +32,11 @@ print.feval_reg <- function(x, n = 10, ...) {
   NextMethod()
   cat(" based on", length(argvals(x)), "evaluations each\n")
   cat("interpolation by", attr(x, "evaluator_name"), "\n")
-  cat(format(x[1:min(n, length(x))], ...), sep = "\n")
-  if (n < length(x)) 
-    cat(paste0("    [....]   (", length(x) - n, " not shown)\n"))
+  if (length(x)) {
+    cat(format(x[1:min(n, length(x))], ...), sep = "\n")
+    if (n < length(x)) 
+      cat(paste0("    [....]   (", length(x) - n, " not shown)\n"))
+  }
   invisible(x)
 }
 
@@ -47,9 +49,11 @@ print.feval_irreg <- function(x, n = 10, ...) {
   cat(paste0(" based on ", min(n_evals), " to ", max(n_evals)," (mean: ",
     round(mean(n_evals)),") evaluations each\n"))
   cat("inter-/extrapolation by", attr(x, "evaluator_name"), "\n")
-  cat(format(x[1:min(n, length(x))], ...), sep = "\n")
-  if (n < length(x)) 
-    cat(paste0("    [....]   (", length(x) - n, " not shown)\n"))
+  if (length(x)) {
+    cat(format(x[1:min(n, length(x))], ...), sep = "\n")
+    if (n < length(x)) 
+      cat(paste0("    [....]   (", length(x) - n, " not shown)\n"))
+  }  
   invisible(x)
 }
 
@@ -58,10 +62,12 @@ print.feval_irreg <- function(x, n = 10, ...) {
 print.fbase <- function(x, n = 10, ...) {
   NextMethod()
   cat(" in basis representation:\n using basis ", attr(x, "basis_label"), "\n")
-  cat(format(x[1:min(n, length(x))], ...), sep = "\n")
-  if (n < length(x)) 
-    cat(paste0("    [....]   (", length(x) - n, " not shown)\n"))
-  invisible(x)
+  if (length(x)) {
+    cat(format(x[1:min(n, length(x))], ...), sep = "\n")
+    if (n < length(x)) 
+      cat(paste0("    [....]   (", length(x) - n, " not shown)\n"))
+    invisible(x)
+  }  
 }
 
 # FIXME: this needs proper width align etc arguments like format.default

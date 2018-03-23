@@ -5,7 +5,9 @@ fun_op <- function(x, y, op, numeric = NA){
     f <- list(x, y)[[3 - numeric]]
     assert_numeric(num)
     # no "recycling" of args -- breaking a crappy R convention, proudly so. 
-    stopifnot(length(num) %in% c(1, length(f)))
+    stopifnot(
+      (length(num) > 0 & length(f) == 1) |
+      length(num) %in% c(1, length(f)))
     attr_ret <- attributes(f)
     argvals_ret <- argvals(f)
   } else {
@@ -81,6 +83,8 @@ Ops.feval <- function(e1, e2) {
         return(fun_op(e1, e2, .Generic))
       }
     }
+    if (is.logical(e1)) e1 <- as.numeric(e1)
+    if (is.logical(e2)) e2 <- as.numeric(e2)
     if (is_feval(e1) && is.numeric(e2)) {
       return(fun_op(e1, e2, .Generic, numeric = 2))
     }
@@ -112,6 +116,8 @@ Ops.fbase <- function(e1, e2) {
         basis_args <- attr(e1, "basis_args")
         eval <- fun_op(feval(e1), feval(e2), .Generic)
       }
+      if (is.logical(e1)) e1 <- as.numeric(e1)
+      if (is.logical(e2)) e2 <- as.numeric(e2)
       if (is_fbase(e1) && is.numeric(e2)) {
         basis_args <- attr(e1, "basis_args")
         eval <- fun_op(feval(e1), e2, .Generic, numeric = 2)

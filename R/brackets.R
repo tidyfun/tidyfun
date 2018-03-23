@@ -2,7 +2,16 @@
 #' 
 #' These functions access, subset, replace and evaluate `fvectors`. 
 #' For more information on creating `fvector`s and converting them to/from 
-#' `list`, `data.frame` or `matrix`, see [feval()] and [fbase()].
+#' `list`, `data.frame` or `matrix`, see [feval()] and [fbase()]. \cr
+#' Note that these break certain R conventions for vector-like objects:\cr
+#'  
+#' - no argument recycling,
+#' - no indexing with `NA`, names not present in `x` or integers `> length(x)`
+#' 
+#' Both of these will yield errors. Subassigning new elements to positions
+#' beyond the original length of the object will still fill up the vector with `NAs`, 
+#' though. 
+#' 
 #' 
 #' @param x an `fvector`
 #' @param i index of the observations (`integer`ish, `character` or `logical`,

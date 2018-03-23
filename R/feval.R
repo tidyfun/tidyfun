@@ -75,7 +75,7 @@ feval.matrix <- function(data, argvals = NULL, domain = NULL,
     evaluator = approx_linear, signif = 4, ...) {
   stopifnot(is.numeric(data))
   argvals <- find_argvals(data, argvals) # either arg or numeric colnames or 1:ncol
-  names <- unique_id(rownames(data)) %||% seq_len(dim(data)[1])
+  names <- unique_id(rownames(data) %||% seq_len(dim(data)[1]))
   # make factor conversion explicit to avoid reordering
   datalist <- split(data, factor(names, unique(as.character(names))))
   regular <- !any(is.na(data))
@@ -136,7 +136,7 @@ feval.list <- function(data, argvals = NULL, domain = NULL,
     dims <- map(data, dim)
     stopifnot(all(sapply(dims, length) == 2), all(map(dims, ~.x[2]) == 2),
       all(rapply(data, is.numeric)))
-    id <- unique_id(names(data)) %||% seq_along(data)
+    id <- unique_id(names(data) %||% seq_along(data))
     argvals <- map(data, ~ unlist(.x[, 1]))
     data <- map(data, ~ unlist(.x[, 2]))
     names(data) <- id
