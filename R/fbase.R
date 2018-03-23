@@ -157,11 +157,12 @@ fbase.data.frame <- function(data, id = 1, argvals = 2, value = 3,
 fbase.matrix <- function(data, argvals = NULL, 
   domain = NULL,   penalized = TRUE, signif = 4, ...) {
   argvals <- unlist(find_argvals(data, argvals))
+  data_names <- rownames(data)
   data <- mat_2_df(data, argvals)
   regular <- n_distinct(table(data[[1]])) == 1
   ret <- mgcv_fbase(data, regular, domain = domain,   
     penalized = penalized, signif = signif, ...)
-  names(ret) <- rownames(data)
+  names(ret) <- data_names
   ret
 }
 #' @rdname fbase
