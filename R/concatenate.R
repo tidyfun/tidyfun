@@ -1,3 +1,16 @@
+c_names <- function(funs) {
+  fnames <- as.list(names(funs) %||% rep("", length(funs)))
+  elnames <- map(funs, ~ names(.x) %||% vector(length(.x)))
+  # always use argnames 
+  # argnames replace elementnames if elments have length 1
+  # else paste with "."
+  map2(fnames, elnames, function(.x, .y) {
+    if (.x == "") return(.y)
+    if (all(.y == "") | length(.y) == 1) return(rep(.x, length(.y)))
+    paste(.x, .y, sep = ".")  
+  })  %>% unlist
+}
+
 #' Concatenate `fvector`-objects
 #' 
 #' Functions to concatenate multiple vectors of functional data.
@@ -71,6 +84,7 @@ c.feval <- function(...) {
   }
   ret <- flatten(funs)
   attributes(ret) <- attr_ret
+  names(ret) <- c_names(funs)
   forget(attr(ret, "evaluator"))
   ret
 }
@@ -108,6 +122,7 @@ c.fbase <- function(...) {
   }  
   ret <- flatten(funs)
   attributes(ret) <- attr_ret
+  names(ret) <- c_names(funs)
   ret
 }
 
