@@ -6,17 +6,20 @@
 \alias{depth.fvector}
 \title{Data Depth}
 \usage{
-depth(x, depth = "MBD", ...)
+depth(x, depth = "MBD", na.rm = TRUE, ...)
 
-\method{depth}{matrix}(x, depth = "MBD", argvals = seq_len(ncol(x)), ...)
+\method{depth}{matrix}(x, depth = "MBD", na.rm = TRUE,
+  argvals = unlist(find_argvals(x, NULL)), ...)
 
-\method{depth}{fvector}(x, depth = "MBD", argvals = tidyfun::argvals(x),
+\method{depth}{fvector}(x, depth = "MBD", na.rm = TRUE, argvals = NULL,
   ...)
 }
 \arguments{
 \item{x}{\code{fvector} (or a matrix of evaluations)}
 
 \item{depth}{currently available: "MBD", i.e. modified band depth}
+
+\item{na.rm}{TRUE remove missing observations?}
 
 \item{argvals}{grid of evaluation points}
 }

@@ -5,7 +5,7 @@
 #' @param x `fvector` (or a matrix of evaluations)
 #' @param depth currently available: "MBD", i.e. modified band depth
 #' @param argvals grid of evaluation points
-#'
+#' @param na.rm TRUE remove missing observations? 
 #' @return vector of depth values
 #' @references Sun, Y., Genton, M. G., & Nychka, D. W. (2012). 
 #'   Exact fast computation of band depth for large functional datasets: 
@@ -15,26 +15,34 @@
 #'   *Journal of the American Statistical Association*, **104**, 718-734.
 #' @export
 #' @rdname depth
-depth <- function(x, depth = "MBD", ...) {
+depth <- function(x, depth = "MBD", na.rm = TRUE, ...) {
   UseMethod("depth")
 }
 #' @export
 #' @rdname depth
-depth.matrix <- function(x, depth = "MBD", argvals = seq_len(ncol(x)), ...) {
+depth.matrix <- function(x, depth = "MBD", na.rm = TRUE, 
+  argvals = unlist(find_argvals(x, NULL)), ...) {
   depth <- match.arg(depth)
+  #TODO: this ignores na.rm -- should it?
   switch(depth,
     "MBD" = mbd(x, argvals, ...))
 }
 #' @export
 #' @rdname depth
-depth.fvector <- function(x, depth = "MBD", argvals = tidyfun::argvals(x), ...) {
-  depth(as.matrix(x, argvals = argvals, interpolate = TRUE), argvals = argvals, 
-    depth = depth)
+depth.fvector <- function(x, depth = "MBD", na.rm = TRUE, argvals = NULL, ...) {
+  if (!missing(argvals)) assert_argvals_vector(argvals, x)
+  # TODO: warn if irreg?
+  if (na.rm) x <- x[!is.na(x)]
+  depth(as.matrix(x, argvals = argvals, interpolate = TRUE), depth = depth, 
+    na.rm = na.rm, ...)
 }  
+
+#-------------------------------------------------------------------------------
+
 # modified band depth:
 mbd <- function(x, argvals = seq_len(ncol(x)), ...) {
   # algorithm of Sun/Genton/Nychka (2012)
-  ranks <- apply(x, 2, rank, na.last = NA, ...)
+  ranks <- apply(x, 2, rank, na.last = "keep", ...)
   weights <- {
     #assign half interval length to 2nd/nxt-to-last points to 1st and last point
     #assign other half intervals to intermediate points
@@ -42,7 +50,7 @@ mbd <- function(x, argvals = seq_len(ncol(x)), ...) {
     (c(lengths, 0) + c(0, lengths)) / diff(range(argvals))
   }
   n <- nrow(ranks)
-  tmp <- colSums(t((n - ranks ) * (ranks - 1)) * weights)
+  tmp <- colSums(t((n - ranks ) * (ranks - 1)) * weights, na.rm = TRUE)
   (tmp + n - 1)/choose(n, 2) 
 } 
 

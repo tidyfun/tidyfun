@@ -135,7 +135,14 @@ median.fvector <- function(x, na.rm = FALSE, depth = c("MBD", "pointwise"), ...)
     summarize_fvector(x, na.rm = na.rm, op = "median", eval  = is_feval(x), ...)
   } else {
     depths <- depth(x, depth = depth)
-    x[depths == max(depths)]
+    med <- x[depths == max(depths)]
+    if (length(med) == 1) {
+      med
+    } else {
+      warning(length(med), 
+        " observations with maximal depth, returning their mean.")
+      mean(med)
+    }  
   }
 }
 
@@ -184,7 +191,6 @@ var.fvector <- function(x, y = NULL, na.rm = FALSE, use){
   summarize_fvector(x, na.rm = na.rm, op = "sd", eval  = is_feval(x))
 } 
 
-# deriv
 # cov / cor # needs image class/fpca methods
 
 #summary 
@@ -196,7 +202,3 @@ summary.fvector <- function(object, ...) {
     median = object[which.max(depths)], 
     central_half = range(object[central]))
 }
-
-### new generics:
-# integrate
-
