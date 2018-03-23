@@ -131,20 +131,18 @@
   attr_x$names[i] <- names(value)
   ret <- unclass(x)
   ret[i] <- unclass(value)
-  if (is_irreg(x)) {
-    attr_x$argvals[i] <- argvals(value)
-  }
   # fill up empty functions
   na_entries <- which(sapply(ret, is.null))
   if (length(na_entries)) {
-    na_length <- if (is_feval(x)) {
-      ifelse(is_irreg(x), 1, length(attr_x$argvals[[1]]))
-    } else length(x[[1]])
-    ret[na_entries] <- replicate(length(na_entries), rep(1*NA, na_length), 
-      simplify = FALSE)
-    if (is_irreg(x)) attr_x$argvals[na_entries] <- 
-      replicate(length(na_entries), domain(x)[1], simplify = FALSE)
+    nas <- if (is_irreg(x)) {
+      replicate(length(na_entries), list(argvals = attr_x$domain[1], data = NA),
+        simplify = FALSE) 
+    } else {
+      replicate(length(na_entries), rep(NA, length(x[[1]]))) 
+    }  
+    ret[na_entries] <- nas
   }
   attributes(ret) <- attr_x
+  names(ret)[is.na(names(ret))] <- ""
   ret
 }
