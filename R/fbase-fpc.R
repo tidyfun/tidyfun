@@ -91,8 +91,11 @@ fpcbase.data.frame <- function(data, id = 1, argvals = 2, value = 3,
 #' @export
 fpcbase.matrix <- function(data, argvals = NULL, domain = NULL, smooth = TRUE, signif = 4, ...) {
   argvals <- unlist(find_argvals(data, argvals))
+  names_data <- rownames(data)
   data <- mat_2_df(data, argvals)
-  fpc_fbase(data, domain = domain, smooth = smooth, signif = signif, ...)
+  ret <- fpc_fbase(data, domain = domain, smooth = smooth, signif = signif, ...)
+  names(ret) <- names_data
+  ret
 }
 
 #' @rdname fpcbase
@@ -113,6 +116,9 @@ fpcbase.fvector <- function(data, argvals = NULL, smooth = TRUE, ...) {
    #TODO: major computational shortcuts possible here for fbase: reduced rank,
   #   direct inner prods of basis functions etc...
   argvals <- argvals %||% argvals(data)
-  fpcbase(as.data.frame(data, argvals = argvals), smooth = smooth, 
+  names_data <- names(data)
+  ret <- fpcbase(as.data.frame(data, argvals = argvals), smooth = smooth, 
     signif = attr(data, "signif_argvals"),  ...)
+  names(ret) <- names_data
+  ret
 }

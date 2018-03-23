@@ -102,5 +102,6 @@ as.matrix.fbase <- function(x, argvals = NULL, ...) {
     tidyr::spread(key = argvals, value = data) %>% 
     select(-id) %>% 
     as.matrix
+  rownames(ret) <- names(x)
   structure(ret, argvals = as.numeric(colnames(ret)))
 }

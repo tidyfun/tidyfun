@@ -159,8 +159,10 @@ fbase.matrix <- function(data, argvals = NULL,
   argvals <- unlist(find_argvals(data, argvals))
   data <- mat_2_df(data, argvals)
   regular <- n_distinct(table(data[[1]])) == 1
-  mgcv_fbase(data, regular, domain = domain,   
+  ret <- mgcv_fbase(data, regular, domain = domain,   
     penalized = penalized, signif = signif, ...)
+  names(ret) <- rownames(data)
+  ret
 }
 #' @rdname fbase
 #' @export
@@ -177,6 +179,7 @@ fbase.list <- function(data, argvals = NULL,
   domain = NULL,   penalized = TRUE, signif = 4, ...) {
   vectors <- sapply(data, is.numeric)
   stopifnot(all(vectors) | !any(vectors))
+  names_data <- names(data)
   if (all(vectors)) {
     lengths <- sapply(data, length)
     if (all(lengths == lengths[1])) {
@@ -197,8 +200,10 @@ fbase.list <- function(data, argvals = NULL,
   data <- data_frame(id = unique_id(names(data)) %||% seq_along(data), 
       funs = data) %>% tidyr::unnest
   #dispatch to data.frame method
-  fbase(data, basis = basis, domain = domain,   
+  ret <- fbase(data, basis = basis, domain = domain,   
     penalized = penalized, signif = signif, ...)
+  names(ret) <- names_data
+  ret
 }
 
 #' @rdname fbase
@@ -220,7 +225,10 @@ fbase.fbase <- function(data, argvals = NULL,
   domain <- domain %||% domain(data)
   s_args <- modifyList(attr(data, "basis_args"),
     list(...)[names(list(...)) %in% names(formals(mgcv::s))])
+  names_data <- names(data)
   data <- as.data.frame(data, argvals = argvals)
-  do.call("fbase", c(list(data), basis = basis, domain = domain,
+  ret <- do.call("fbase", c(list(data), basis = basis, domain = domain,
     penalized = penalized, signif = signif, s_args))
+  names(ret) <- names_data
+  ret
 }

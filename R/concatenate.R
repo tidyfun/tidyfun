@@ -1,14 +1,15 @@
 c_names <- function(funs) {
   fnames <- as.list(names(funs) %||% rep("", length(funs)))
-  elnames <- map(funs, ~ names(.x) %||% vector(length(.x)))
+  elnames <- map(funs, ~ names(.x) %||% rep("", length(.x)))
   # always use argnames 
   # argnames replace elementnames if elments have length 1
   # else paste with "."
-  map2(fnames, elnames, function(.x, .y) {
+  names <- map2(fnames, elnames, function(.x, .y) {
     if (.x == "") return(.y)
     if (all(.y == "") | length(.y) == 1) return(rep(.x, length(.y)))
     paste(.x, .y, sep = ".")  
   })  %>% unlist
+  if (all(names == "")) NULL else names
 }
 
 #' Concatenate `fvector`-objects
