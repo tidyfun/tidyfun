@@ -106,8 +106,9 @@ plot.fvector <- function(x, y, n_grid = 50, points = is_irreg(x),
       list(...))
     do.call(matplot, args)
     if (points) {
-      pointsargs <- modifyList(
-        list(x = x, n_grid = NA, points = TRUE, interpolate = FALSE,
+       pointsargs <- modifyList(
+        list(x = x, argvals = NULL,
+          n_grid = NA, points = TRUE, interpolate = FALSE,
           pch = 19, ol = rgb(0,0,0, alpha)), 
         list(...))
       do.call(linespoints_fvector, pointsargs)
@@ -133,7 +134,8 @@ linespoints_fvector <- function(x, argvals, n_grid = 50, points = TRUE,
     argvals <- prep_plotting_argvals(x, n_grid)
   }
   m <- if (is_feval(x)) {
-    as.matrix(x, argvals = argvals, interpolate = interpolate) 
+    suppressWarnings(
+      as.matrix(x, argvals = argvals, interpolate = interpolate))
   } else as.matrix(x, argvals = argvals)
   args <- modifyList(
     list(x = drop(attr(m, "argvals")), y = t(m), type = ifelse(points, "p", "l"), 
