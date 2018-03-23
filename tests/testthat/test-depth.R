@@ -1,0 +1,24 @@
+grid <- round(seq(0, 10, l = 11), 3)
+lin <- -3:3 * feval(.1 * grid, grid)
+parallel <- -3:3 + feval(0*grid, grid)
+
+spike_regular <- c(parallel, feval(100 * (grid == 10), grid))
+spike_irregular <- c(-3:3 + feval(c(0*grid, 0), c(grid, 20)), 
+  feval(100 * (c(grid, 20) == 20), c(grid, 20)))
+na <- 1*NA + lin[1]
+
+test_that("MBD works", {
+  expect_equivalent(rank(depth(lin, depth = "MBD")), c(1.5, 3.5, 5.5, 7, 5.5, 3.5, 1.5))
+  expect_equivalent(rank(depth(parallel)), c(1.5, 3.5, 5.5, 7, 5.5, 3.5, 1.5))
+  # weighting by interval length : increases importance of last point -> lower depth
+  expect_true(tail(depth(spike_regular), 1) > tail(depth(spike_irregular), 1))
+})
+
+test_that("median works", {
+  expect_true(median(lin, depth = "MBD") == lin[4])
+  expect_true(median(parallel, depth = "MBD") == parallel[4])
+  expect_true(is.na(median(c(na, lin))))
+  expect_true(median(c(na, lin), na.rm = TRUE) == median(lin))
+  expect_true(median(lin, depth = "pointwise") == median(lin))
+})
+

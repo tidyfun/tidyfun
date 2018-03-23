@@ -38,7 +38,8 @@ argvals(x) <- value
 
 \method{mean}{fvector}(x, ...)
 
-\method{median}{fvector}(x, na.rm = FALSE, ...)
+\method{median}{fvector}(x, na.rm = FALSE, depth = c("MBD", "pointwise"),
+  ...)
 
 \method{quantile}{fvector}(x, probs = seq(0, 1, 0.25), na.rm = FALSE,
   names = TRUE, type = 7, ...)
@@ -74,6 +75,10 @@ for \code{argvals<-}: a list of grid points, for internal use only.}
 
 \item{na.rm}{logical; if true, any \code{\link{NA}} and \code{NaN}'s
     are removed from \code{x} before the quantiles are computed.}
+
+\item{depth}{method used to determine the most central element in \code{x}, i.e., the median.
+One of the functional data depths available via \code{\link[=depth]{depth()}} or \code{"pointwise"} for
+a pointwise median function.}
 
 \item{probs}{numeric vector of probabilities with values in
     \eqn{[0,1]}.  (Values up to \samp{2e-14} outside that

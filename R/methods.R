@@ -87,7 +87,6 @@ basis <- function(f) {
   attributes(ret) <- attr_ret
   ret
 }
-  
 
 #-------------------------------------------------------------------------------
 
@@ -119,13 +118,25 @@ mean.fvector <- function(x, ...){
   summarize_fvector(x, op = "mean", eval  = is_feval(x), ...)
 }
 
+#' @param depth method used to determine the most central element in `x`, i.e., the median.
+#'  One of the functional data depths available via [depth()] or `"pointwise"` for
+#'  a pointwise median function. 
 #' @importFrom stats median
 #' @export
 #' @rdname fvectormethods
-median.fvector <- function(x, na.rm = FALSE, ...){
-  #FIXME
-  warning("only pointwise, non-functional median implemented for fvectors.")
-  summarize_fvector(x, na.rm = na.rm, op = "median", eval  = is_feval(x), ...)
+median.fvector <- function(x, na.rm = FALSE, depth = c("MBD", "pointwise"), ...){
+  if (!na.rm) {
+    if (any(is.na(x))) return(1 * NA * x[1])
+  } else {
+    x <- x[!is.na(x)]
+  }
+  depth  <- match.arg(depth)
+  if (depth == "pointwise") {
+    summarize_fvector(x, na.rm = na.rm, op = "median", eval  = is_feval(x), ...)
+  } else {
+    depths <- depth(x, depth = depth)
+    x[depths == max(depths)]
+  }
 }
 
 #' @importFrom stats quantile
@@ -134,7 +145,9 @@ median.fvector <- function(x, na.rm = FALSE, ...){
 #' @rdname fvectormethods
 quantile.fvector <- function(x, probs = seq(0, 1, 0.25), na.rm = FALSE,
   names = TRUE, type = 7, ...){
-  #FIXME
+  #TODO: functional quantiles will need (a lot) more thought, 
+  # cf. Serfling, R., & Wijesuriya, U. (2017). 
+  # Depth-based nonparametric description of functional data, with emphasis on use of spatial depth.
   warning("only pointwise, non-functional quantiles implemented for fvectors.")
   summarize_fvector(x, probs = probs, na.rm = na.rm,
     names = names, type = type, op = "quantile", eval  = is_feval(x), ...)
@@ -174,8 +187,15 @@ var.fvector <- function(x, y = NULL, na.rm = FALSE, use){
 # deriv
 # cov / cor # needs image class/fpca methods
 
-#summary #define Arith-methods first.... 
-
+#summary 
+#' @export
+summary.fvector <- function(object, ...) {
+  depths <- depth(object, ...)
+  central <- which(depths <= median(depths))
+  c(mean = mean(object), var = var(object),
+    median = object[which.max(depths)], 
+    central_half = range(object[central]))
+}
 
 ### new generics:
 # integrate
