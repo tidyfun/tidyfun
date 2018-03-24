@@ -65,15 +65,18 @@ basis <- function(f) {
 }
 
 #' @rdname fvectormethods
-#' @param value for `evaluator<-`: a function that can be used to interpolate an `feval`. Needs to
+#' @param value for `evaluator<-`: name pf a function that can be used to interpolate an `feval`. Needs to
 #'   accept vector arguments `x`, `argvals`, `evaluations` and return
 #'   evaluations of the function defined by `argvals`, `evaluations` at `x`
 #'   for `argvals<-`: a list of grid points, for internal use only.
 #' @export
 `evaluator<-` <- function(x, value) {
-  stopifnot(inherits(x, "feval"), is.function(value))
-  attr(x, "evaluator_name") <- deparse(value, width.cutoff = 60)[1]
-  attr(x, "evaluator") <- memoise(eval(value))
+  evaluator <- get(value, mode = "function")
+  stopifnot(inherits(x, "feval"), is.function(evaluator))
+  assert_set_equal(names(formals(evaluator)), 
+    c("x", "argvals", "evaluations")) 
+  attr(x, "evaluator_name") <- value
+  attr(x, "evaluator") <- memoise(evaluator)
   x
 }
 # this only used internally in feval_irreg conversion functions.

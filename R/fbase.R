@@ -17,9 +17,27 @@ mat_2_df <- function(x, argvals) {
   
 
 #' @import mgcv
-smooth_spec_wrapper <- function(spec) {
-  function(argvals) {
-    mgcv::Predict.matrix(object = spec, data = data.frame(argvals = argvals))
+smooth_spec_wrapper <- function(spec, deriv = 0, eps = 1e-6) {
+  stopifnot(deriv %in% c(0, 1, 2), isTRUE(eps > 0))
+  if (deriv == 0) {
+    return(function(argvals) {
+      mgcv::Predict.matrix(object = spec, data = data.frame(argvals = argvals))
+    })  
+  } 
+  if (deriv == 1) {
+    return(function(argvals) {
+        X <- mgcv::Predict.matrix(object = spec, 
+          data = data.frame(argvals = c(argvals + eps, argvals - eps)))
+        (X[1:length(argvals), ] - X[-(1:length(argvals)), ]) / (2 * eps)
+      })
+  }
+  if (deriv == 2) {
+    return(function(argvals) {
+      g <- length(argvals)
+      X <- mgcv::Predict.matrix(object = spec, 
+        data = data.frame(argvals = c(argvals + eps, argvals, argvals - eps)))
+      (X[1:g, ] - (2 * X[(g + 1):(2 * g),]) + X[-(1:(2 * g)), ]) / eps^2
+    })
   }
 } 
 
@@ -36,8 +54,8 @@ mgcv_fbase <- function(data, regular, domain = NULL,
   if (!("sp" %in% names(magic_args))) magic_args$sp <- -1
   s_call <- as.call(c(quote(s), quote(argvals), s_args))
   s_spec <- eval(s_call)
-  if ("deriv" %in% names(list(...))) s_spec$deriv <- list(...)$deriv
-  if ("mono" %in% names(list(...))) s_spec$mono <- list(...)$mono
+  #if ("deriv" %in% names(list(...))) s_spec$deriv <- list(...)$deriv
+  #if ("mono" %in% names(list(...))) s_spec$mono <- list(...)$mono
   spec_object <- smooth.construct(s_spec, 
     data = data.frame(argvals = argvals_u$x), knots = NULL)
   n_evaluations <- table(data$id)

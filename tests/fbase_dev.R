@@ -3,7 +3,7 @@ library(devtools)
 document()
 load_all()
 n <- 5
-grid <-  seq(0, 1, l = 31)
+grid <-  seq(0, 1, l = 41)
 mat_reg <- t(replicate(n, 1 + dbeta(grid, runif(1, 2, 7), runif(1, 3, 12)) + 
     .5 * rnorm(length(grid))))
 colnames(mat_reg) <- grid
@@ -16,14 +16,10 @@ freg <-  feval(mat_reg, evaluator = approx_spline)
 firreg <- feval(mat_irreg, evaluator = approx_linear)
 firreg2 <- feval(mat_irreg, evaluator = approx_fill_extend)
 
-fbreg <- new_fbase(as.data.frame(f_reg), regular = TRUE, 
-  basis = "cr", k = 10, m = c(2,2), penalized = FALSE)
-fbirreg <- new_fbase(as.data.frame(f_irreg), regular = FALSE, 
-  basis = "tp", k = 10, m = c(2,2), penalized = FALSE)
-fbpreg <- new_fbase(as.data.frame(f_reg), regular = TRUE, 
-  basis = "tp", k = 30, m = c(2,2), penalized = TRUE)
-fbpirreg <- new_fbase(as.data.frame(f_irreg), regular = FALSE, 
-  basis = "tp", k = 30, m = c(2,2), penalized = TRUE)
+fbreg <- fbase(as.data.frame(freg))
+fbirreg <- fbase(as.matrix(firreg), basis = "tp", k = 10, m = c(2,2), penalized = FALSE)
+fbpreg <- fbase(freg, basis = "tp", k = 30, m = c(2,2), penalized = TRUE)
+fbpirreg <- fbase(as.matrix(firreg), basis = "tp", k = 30, m = c(2,2), penalized = TRUE)
 
 
 #
