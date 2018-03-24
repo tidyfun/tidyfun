@@ -66,7 +66,7 @@ expect_true(all(is.na(f_reg[2:3, 0.123, interpolate = FALSE, matrix = TRUE])))
 f_reg[3] <- feval(mat_reg[2,, drop = F])
 f_irreg[-5] <- f_irreg[4:1]
 expect_equivalent(f_reg[1:3], feval(mat_reg[c(1,2,2),]))
-expect_equal(names(f_irreg), as.character(c(4:1,5)))
+expect_equal(names(f_irreg), as.character(c(2:5,1)))
 
 
 #check <NA>-functions:
