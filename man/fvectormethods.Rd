@@ -64,7 +64,7 @@ var(x, y = NULL, na.rm = FALSE, use)
     \sQuote{details}). \code{\link{NA}} and \code{NaN} values are not
     allowed in numeric vectors unless \code{na.rm} is \code{TRUE}.}
 
-\item{value}{for \code{evaluator<-}: a function that can be used to interpolate an \code{feval}. Needs to
+\item{value}{for \code{evaluator<-}: name pf a function that can be used to interpolate an \code{feval}. Needs to
 accept vector arguments \code{x}, \code{argvals}, \code{evaluations} and return
 evaluations of the function defined by \code{argvals}, \code{evaluations} at \code{x}
 for \code{argvals<-}: a list of grid points, for internal use only.}

@@ -105,3 +105,10 @@ as.matrix.fbase <- function(x, argvals = NULL, ...) {
   rownames(ret) <- names(x)
   structure(ret, argvals = as.numeric(colnames(ret)))
 }
+
+#-------------------------------------------------------------------------------
+#' @export 
+as.function.fvector <- function(f, vectorize = FALSE, ...) {
+  if (vectorize) function(argvals) as.numeric(f[, argvals, ...])
+  else function(argvals) f[, argvals, ...]
+}
