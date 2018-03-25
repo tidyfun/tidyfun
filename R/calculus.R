@@ -36,14 +36,19 @@ deriv_fbase_fpc <- function(expr, order = 1, ...) {
   expr
 }
 
+quad_trapez <- function(evaluations, argvals) {
+  0.5 * diff(argvals) * (evaluations[-1] + head(evaluations, -1))
+}
+
 #-------------------------------------------------------------------------------
 
 #' Derivatives and integrals of functional data
 #'
 #' Derivatives of `fvectors` use finite differences of the evaluations 
 #' for `feval` and finite differences of the basis functions for `fbase`. 
-#' For many types of bases, the latter seems to become rather unreliable
-#' at the outer limits of the functions' domain, for some reason...
+#' Note that second derivatives for the latter will produce artefacts at the 
+#' outer limits of the functions' domain due to boundary constraints for 
+#' some spline bases like `"cr"` or `"tp"` which always end linearly. 
 #'
 #' @param expr an `fvector`
 #' @param order order of differentiation. Maximally 2 for `fbase` with `mgcv`-spline bases.
@@ -83,12 +88,25 @@ deriv.fbase <- function(expr, order = 1, ...) {
 integrate <- function(f, lower, upper, ...) {
   UseMethod("integrate")
 }
+
 integrate.default <- function(f, lower, upper, ...) .NotYetImplemented()
 integrate.function <- stats::integrate
-integrate.fvector <- 
-  function(f, lower = domain(f)[1], upper = domain(f)[2], ...) {
-    # turn into functions, return definite integrals
-    map(f, ~ possibly(stats::integrate, list(value = NA))(
-      Vectorize(as.function(.x)), lower = lower, upper = upper, ....)) %>% 
-      map("value")  
-  }  
+integrate.fvector <- function(f, lower = domain(f)[1], upper = domain(f)[2], 
+  definite = TRUE, argvals, ...) {
+  if (missing(argvals)) {
+    argvals <- ensure_list(argvals(f))
+  } else assert_argvals(argvals, f)
+  limits <- adjust_resolution(c(lower, upper), f)
+  argvals <- map(argvals, 
+    ~ c(limits[1], .x[.x > limits[1] & .x < limits[2]], limits[2]))
+  evaluations <- evaluate(f, argvals)
+  quads <- map2(argvals, evaluations, ~ quad_trapez(.x, .y))
+  if (definite) {
+    return(map(quads, sum) %>% unlist)
+  }
+  # this is too slow:
+  # turn into functions, return definite integrals
+  #map(f, ~ possibly(stats::integrate, list(value = NA))(
+  #  Vectorize(as.function(.x)), lower = lower, upper = upper, ....)) %>% 
+  #map("value") 
+}

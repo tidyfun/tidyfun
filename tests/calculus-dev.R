@@ -7,7 +7,7 @@ set.seed(12)
 grid <- seq(-3.5, 3.5, l = 201)
 expr <- f <- 3:-3 * feval(grid^3, grid) #rgp(3, nugget = 0, argvals = seq(0, 1, l = 101))
 
-plot(fb <- fbase(f, k = 45, bs = "cr"))
+plot(fb <- fbase(f, k = 45, bs = "bs"))
 plot(fpc <- fpcbase(f, smooth = FALSE))
 
 layout(1:3)
