@@ -37,7 +37,11 @@ deriv_fbase_fpc <- function(expr, order = 1, ...) {
 }
 
 quad_trapez <- function(evaluations, argvals) {
+<<<<<<< HEAD
   c(0, 0.5 * diff(argvals) * (evaluations[-1] + head(evaluations, -1)))
+=======
+  0.5 * diff(argvals) * (evaluations[-1] + head(evaluations, -1))
+>>>>>>> a20562fd176dc2019420ad522aa2367f486f31fa
 }
 
 #-------------------------------------------------------------------------------
@@ -101,10 +105,11 @@ integrate.fvector <- function(f, lower = domain(f)[1], upper = domain(f)[2],
   stopifnot(length(lower) %in% c(1, length(f)), 
     length(upper) %in% c(1, length(f)))
   limits <- cbind(lower, upper)
+  if (nrow(limits) > 1 & !definite) .NotYetImplemented() #needs vd-data
   limits <- adjust_resolution(limits, f) %>% split(1:nrow(limits))
   argvals <- map2(argvals, limits,
     ~ c(.y[1], .x[.x > .y[1] & .x < .y[2]], .y[2]))
-  evaluations <- evaluate(f, argvals)
+ evaluations <- evaluate(f, argvals)
   quads <- map2(argvals, evaluations, ~ quad_trapez(.x, .y))
   if (definite) {
     return(map(quads, sum) %>% unlist)
