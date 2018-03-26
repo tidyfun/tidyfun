@@ -108,7 +108,6 @@ as.matrix.fbase <- function(x, argvals = NULL, ...) {
 
 #-------------------------------------------------------------------------------
 #' @export 
-as.function.fvector <- function(f, vectorize = FALSE, ...) {
-  if (vectorize) function(argvals) as.numeric(f[, argvals, ...])
-  else function(argvals) f[, argvals, ...]
+as.function.fvector <- function(.f) {
+  function(argvals) unlist(evaluate(object = .f, argvals = argvals))
 }

@@ -18,7 +18,7 @@ mat_2_df <- function(x, argvals) {
 
 #' @import mgcv
 smooth_spec_wrapper <- function(spec, deriv = 0, eps = 1e-6) {
-  stopifnot(deriv %in% c(0, 1, 2), isTRUE(eps > 0))
+  stopifnot(deriv %in% c(-1, 0, 1, 2), isTRUE(eps > 0))
   if (deriv == 0) {
     return(function(argvals) {
       mgcv::Predict.matrix(object = spec, data = data.frame(argvals = argvals))
@@ -37,6 +37,14 @@ smooth_spec_wrapper <- function(spec, deriv = 0, eps = 1e-6) {
       X <- mgcv::Predict.matrix(object = spec, 
         data = data.frame(argvals = c(argvals + eps, argvals, argvals - eps)))
       (X[1:g, ] - (2 * X[(g + 1):(2 * g),]) + X[-(1:(2 * g)), ]) / eps^2
+    })
+  }
+  if (deriv == -1) {
+    return(function(argvals) {
+      X <- mgcv::Predict.matrix(object = spec, 
+        data = data.frame(argvals = argvals))
+      apply(X, 2, function(x, argvals) cumsum(quad_trapez(x, argvals)), 
+        argvals = argvals)
     })
   }
 } 

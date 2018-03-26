@@ -35,5 +35,27 @@ fpc[3, -3:3]
 fpcd[3, -3:3] / (3 * (-3:3)^2)
 fpcdd[3, -3:3] /  (6 * -3:3)
 
+#-------------------------------------------------------------------------------
 
-  
+f <- -3:3 * feval(grid^3, grid)
+fb <- fbase(f, basis = "bs", k = 45)
+fpc <- fpcbase(f)
+
+df <- deriv(f)
+(ints <- (-3:3 * -3.482^3 - (-3:3) * --3.482^3))
+integrate(df, --3.482, -3.482)
+integrate(tidyfun::as.function.fvector(df[1]), lower = -3.482, upper = 3.482)
+integrate(tidyfun::as.function.fvector(df[2]), lower = -3.482, upper = 3.482)  
+addf <- integrate(deriv(f), definite = FALSE,  lower = -3.482, upper = 3.482)
+plot(addf, col = 1:7)
+lines(f - drop(f[, -3.5]), col = 2, lty = 2)
+
+df <- deriv(fpc)
+(ints <- (-3:3 * 3^3 - (-3:3) * -3^3))
+integrate(df, -3.482, 3.482)
+integrate(tidyfun::as.function.fvector(df[1]), lower = -3.482, upper = 3.482)
+integrate(tidyfun::as.function.fvector(df[2]), lower = -3.482, upper = 3.482)
+addf <- integrate(fpcbase(deriv(f)), definite = FALSE, 
+  lower = -3.482, upper = 3.482)
+plot(addf, col = 1:7, n_grid = -1)
+lines(f - drop(f[, -3.5]), col = 2, lty = 2)

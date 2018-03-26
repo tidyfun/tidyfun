@@ -4,6 +4,9 @@
 \alias{deriv.feval}
 \alias{deriv.fbase}
 \alias{integrate}
+\alias{integrate.function}
+\alias{integrate.feval}
+\alias{integrate.fbase}
 \title{Derivatives and integrals of functional data}
 \usage{
 \method{deriv}{feval}(expr, order = 1, argvals = NULL, ...)
@@ -11,15 +14,34 @@
 \method{deriv}{fbase}(expr, order = 1, ...)
 
 integrate(f, lower, upper, ...)
+
+\method{integrate}{function}(f, lower, upper, ..., subdivisions = 100L,
+  rel.tol = .Machine$double.eps^0.25, abs.tol = rel.tol,
+  stop.on.error = TRUE, keep.xy = FALSE, aux = NULL)
+
+\method{integrate}{feval}(f, lower = domain(f)[1], upper = domain(f)[2],
+  definite = TRUE, argvals, ...)
+
+\method{integrate}{fbase}(f, lower = domain(f)[1], upper = domain(f)[2],
+  definite = TRUE, argvals, ...)
 }
 \arguments{
 \item{expr}{an \code{fvector}}
 
 \item{order}{order of differentiation. Maximally 2 for \code{fbase} with \code{mgcv}-spline bases.}
 
-\item{argvals}{grid to use for the differentiation. Not the \code{argvals} of the returned object.}
+\item{argvals}{grid to use for the differentiation/integration. Not the \code{argvals} of the returned object.}
 
 \item{...}{not used}
+
+\item{lower}{lower limits of the integration range. For \code{definite=TRUE}, this can be
+a vector of the same length as \code{f}.}
+
+\item{upper}{upper limits of the integration range (but see \code{definite} arg / Description).
+For \code{definite=TRUE}, this can be a vector of the same length as \code{f}.}
+
+\item{definite}{should the definite integral  be returned (default)
+or the antiderivative. See Description.}
 }
 \value{
 an \code{fvector} with (slightly) different \code{argvals} (and \code{basis})
@@ -27,6 +49,18 @@ an \code{fvector} with (slightly) different \code{argvals} (and \code{basis})
 \description{
 Derivatives of \code{fvectors} use finite differences of the evaluations
 for \code{feval} and finite differences of the basis functions for \code{fbase}.
-For many types of bases, the latter seems to become rather unreliable
-at the outer limits of the functions' domain, for some reason...
+Note that, for some spline bases like \code{"cr"} or \code{"tp"} which always begin/end linearly,
+computing second derivatives will produce artefacts at the outer limits
+of the functions' domain due to these boundary constraints. Basis \code{"bs"} does
+not have this problem, but tends to yield slightly less stable fits.
+
+Integration of \code{fvectors} is done by quadrature (trapezoid rule, specifically).
+By default the scalar definite integral \eqn{\int^{upper}_{lower}f(s)ds} is returned
+(option \code{definite = TRUE}), alternatively for \code{definite = FALSE} something
+like the \emph{anti-derivative} on \code{[lower, upper]}, e.g. an \code{feval} object
+representing \eqn{F(t) = \int^{t}_{lower}f(s)ds}, for \eqn{t \in}\code{[lower, upper]},
+is returned.
+}
+\details{
+\code{integrate.function} is simply a wrapper for \code{\link[stats:integrate]{stats::integrate()}}.
 }

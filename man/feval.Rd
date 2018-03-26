@@ -83,7 +83,7 @@ the \code{evaluations} available at locations \code{argvals}.
 Available \code{evaluator}-functions:
 \itemize{
 \item \code{approx_linear} for linear interpolation without extrapolation (i.e.,
-\code{\link[zoo:na.approx]{zoo::na.approx()}} with \code{na.rm = FALSE}),
+\code{\link[zoo:na.approx]{zoo::na.approx()}} with \code{na.rm = FALSE})  -- this is the default,
 \item \code{approx_spline} for cubic spline interpolation, (i.e., \code{\link[zoo:na.spline]{zoo::na.spline()}}
 with \code{na.rm = FALSE}),
 \item \code{approx_fill_extend} for linear interpolation and constant extrapolation

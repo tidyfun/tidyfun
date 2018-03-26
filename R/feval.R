@@ -41,7 +41,7 @@ new_feval <- function(argvals, datalist, regular, domain, evaluator, signif = 4)
 #' Available `evaluator`-functions: 
 #' 
 #' - `approx_linear` for linear interpolation without extrapolation (i.e.,
-#' [zoo::na.approx()] with `na.rm = FALSE`),
+#' [zoo::na.approx()] with `na.rm = FALSE`)  -- this is the default,
 #' - `approx_spline` for cubic spline interpolation, (i.e., [zoo::na.spline()]
 #' with `na.rm = FALSE`),
 #' - `approx_fill_extend` for linear interpolation and constant extrapolation
