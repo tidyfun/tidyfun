@@ -9,7 +9,6 @@ deriv_matrix <- function(data, argvals, order) {
 
 deriv_fbase_mgcv <- function(expr, order = 1, argvals = tidyfun::argvals(expr)) {
   #TODO: make this work for iterated application deriv(deriv(fb)) 
-  #these_argvals <- eval(argvals)
   stopifnot(is.null(attr(expr, "basis_deriv")))
   s_args <- attr(expr, "basis_args")
   s_call <- as.call(c(quote(s), quote(argvals), s_args))
@@ -44,8 +43,8 @@ deriv_fbase_fpc <- function(expr, order = 1, lower, upper,
   expr
 }
 
-quad_trapez <- function(evaluations, argvals) {
-  c(0, 0.25 * diff(argvals) * (evaluations[-1] + head(evaluations, -1)))
+quad_trapez <- function(argvals, evaluations) {
+  c(0, 0.5 * diff(argvals) * (head(evaluations, -1) + evaluations[-1]))
 }
 
 #-------------------------------------------------------------------------------
@@ -141,7 +140,7 @@ integrate.feval <- function(f, lower = domain(f)[1], upper = domain(f)[2],
   argvals <- map2(argvals, ensure_list(limits),
     ~ c(.y[1], .x[.x > .y[1] & .x < .y[2]], .y[2]))
   evaluations <- evaluate(f, argvals)
-  quads <- map2(argvals, evaluations, ~ quad_trapez(.x, .y))
+  quads <- map2(argvals, evaluations, ~ quad_trapez(argvals = .x, evaluations = .y))
   if (definite) {
     return(map(quads, sum) %>% unlist)
   } else {

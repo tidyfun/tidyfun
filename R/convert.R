@@ -11,17 +11,20 @@ as.feval.default <- function(data, ...) {
 as.feval_irreg <- function(data, signif = NULL, ...) UseMethod("as.feval_irreg")
 
 as.feval_irreg.feval_reg <- function(data, signif = NULL, ...) {
-  class(data)[1] <- "feval_irreg"
-  argvals <- argvals(data)
+  argvals <- ensure_list(argvals(data))
   if (!is.null(signif)) {
     argvals <- .adjust_resolution(argvals, signif = signif, unique = TRUE)
-    if (length(argvals[[1]]) != length(attr(data, "argvals")[[1]])) {
+    if (length(argvals[[1]]) != length(argvals(data))) {
       stop("Converting 'data' to lower resolution would create non-unique argvals.")
     }
   }
-  argvals(data) <- replicate(length(data), argvals)
-  data
+  ret <- map2(evaluations(data), argvals, ~ list(argvals = .y, data = .x))
+  attributes(ret) <- attributes(data)
+  attr(ret, "argvals") <- numeric(0)
+  class(ret)[1] <- "feval_irreg"
+  ret
 }
+
 # TODO: this ignores argvals, domain for now.....
 as.feval_irreg.feval_irreg <- function(data, signif = 4, ...) {
   argvals <- argvals(data)

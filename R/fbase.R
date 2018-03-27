@@ -43,7 +43,7 @@ smooth_spec_wrapper <- function(spec, deriv = 0, eps = 1e-6) {
     return(function(argvals) {
       X <- mgcv::Predict.matrix(object = spec, 
         data = data.frame(argvals = argvals))
-      apply(X, 2, function(x, argvals) cumsum(quad_trapez(x, argvals)), 
+      apply(X, 2, function(argvals, x) cumsum(quad_trapez(argvals, x)), 
         argvals = argvals)
     })
   }

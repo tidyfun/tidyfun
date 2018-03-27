@@ -114,9 +114,10 @@ feval.data.frame <- function(data, id = 1, argvals = 2, value = 3, domain = NULL
   new_feval(argvals, datalist, regular, domain, substitute(evaluator), signif)
 }
 
-# takes a list of vectors of identical lengths or a list of 2-column matrices/data.frames with 
-# argvals in the first and data in the second column
-# TODO #MV this will break for multivariate data!
+# TODO this will break for multivariate data!
+#' @description `feval.list` accepts a list of vectors of identical lengths 
+#' containing evaluations or a list of 2-column matrices/data.frames with 
+#' `argvals` in the first and evaluations in the second column
 #' @export
 #' @rdname feval
 feval.list <- function(data, argvals = NULL, domain = NULL, 

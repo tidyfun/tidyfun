@@ -173,4 +173,16 @@ rgp <- function(n, argvals = seq(0, 1, l = 51), scale = diff(range(argvals))/10,
   feval(y, argvals = argvals)
 }
 
+jiggle <- function(f, ...) {
+  stopifnot(is_feval(f), !is_irreg(f))
+  f <- as.feval_irreg(f)
+  jiggle_args <- function(argvals) {
+    diffs <- diff(argvals)
+    n <- length(argvals)
+    jiggle <- runif(n-2, -.49, +.49) * diffs[-(n - 1)]
+    c(argvals[1], argvals[-c(1, n - 1)] + jiggle, argvals[n])
+  } 
+  new_args <- replicate(length(f), jiggle_args(argvals(f)), simplify = FALSE)
+  feval(map2(new_args, evaluations(f), cbind))
+}
 

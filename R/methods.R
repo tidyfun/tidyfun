@@ -85,9 +85,8 @@ basis <- function(f) {
   stopifnot(inherits(x, "feval_irreg"))
   value <- map(value, ~signif(.x, attr(x, "signif_argvals")))
   assert_argvals(value, x)
-  attr_ret <- attributes(x)
   ret <- map2(evaluations(x), value, ~list(argvals = .y, data = .x))
-  attributes(ret) <- attr_ret
+  attributes(ret) <- attributes(x)
   ret
 }
 
