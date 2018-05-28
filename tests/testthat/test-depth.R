@@ -1,3 +1,5 @@
+context("depth measures:")
+
 grid <- round(seq(0, 10, l = 11), 3)
 lin <- -3:3 * feval(.1 * grid, grid)
 parallel <- -3:3 + feval(0*grid, grid)
