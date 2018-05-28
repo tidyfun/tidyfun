@@ -41,10 +41,15 @@ smooth_spec_wrapper <- function(spec, deriv = 0, eps = 1e-6) {
   }
   if (deriv == -1) {
     return(function(argvals) {
+      #make sure quadrature runs over entire range up to the new argvals
+      # --> have to re-use original grid
+      argvals_orig <- spec$Xu[spec$Xu <= max(argvals)]
+      argvals_interleave <- sort(unique(c(argvals_orig, argvals)))
+      new_args <- which(argvals_interleave %in% argvals)
       X <- mgcv::Predict.matrix(object = spec, 
-        data = data.frame(argvals = argvals))
+        data = data.frame(argvals = argvals_interleave))
       apply(X, 2, function(argvals, x) cumsum(quad_trapez(argvals, x)), 
-        argvals = argvals)
+        argvals = argvals_interleave)[new_args, ]
     })
   }
 } 

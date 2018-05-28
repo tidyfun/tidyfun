@@ -166,3 +166,4 @@ feval.fvector <- function(data, argvals = NULL, domain = NULL,
     domain = domain, evaluator = substitute(evaluator), 
     signif = signif)
 }
+

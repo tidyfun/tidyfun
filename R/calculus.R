@@ -1,3 +1,5 @@
+# compute derivatives of data rows by finite differences. 
+# returns derivaitves at interval midpoints
 deriv_matrix <- function(data, argvals, order) {
   for (i in 1:order) {
     delta <- diff(argvals)
@@ -7,9 +9,15 @@ deriv_matrix <- function(data, argvals, order) {
   list(data = data, argvals = argvals)
 }
 
+#trapezoidal quadrature
+quad_trapez <- function(argvals, evaluations) {
+  c(0, 0.5 * diff(argvals) * (head(evaluations, -1) + evaluations[-1]))
+}
+
 deriv_fbase_mgcv <- function(expr, order = 1, argvals = tidyfun::argvals(expr)) {
   #TODO: make this work for iterated application deriv(deriv(fb)) 
-  stopifnot(is.null(attr(expr, "basis_deriv")))
+  if (!is.null(attr(expr, "basis_deriv"))) 
+    stop("Can't derive or integrate previously derived/integrated fvector in basis representation")
   s_args <- attr(expr, "basis_args")
   s_call <- as.call(c(quote(s), quote(argvals), s_args))
   s_spec <- eval(s_call)
@@ -43,9 +51,7 @@ deriv_fbase_fpc <- function(expr, order = 1, lower, upper,
   expr
 }
 
-quad_trapez <- function(argvals, evaluations) {
-  c(0, 0.5 * diff(argvals) * (head(evaluations, -1) + evaluations[-1]))
-}
+
 
 #-------------------------------------------------------------------------------
 
