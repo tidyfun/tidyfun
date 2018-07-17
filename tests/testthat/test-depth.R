@@ -15,7 +15,7 @@ lin_irreg <- {
   as.feval(m, evaluator = approx_linear)
 }
 
-lin_b <- fbase(lin)
+lin_b <- fbase(lin, verbose = FALSE)
 
 test_that("MBD works", {
   ranks <- c(1.5, 3.5, 5.5, 7, 5.5, 3.5, 1.5)

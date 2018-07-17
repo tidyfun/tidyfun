@@ -132,12 +132,27 @@ compare_fvector_attribs <- function(e1, e2, ignore = "names") {
   unlist(ret)
 }
 
+#-------------------------------------------------------------------------------
 
+#' @rdname fvectormethods
 #' @export
 is_fvector <- function(x) "fvector" %in% class(x)
+
+#' @rdname fvectormethods
 #' @export
 is_irreg <- function(x) "feval_irreg" %in% class(x)
+
+#' @rdname fvectormethods
 #' @export
 is_feval <- function(x) "feval" %in% class(x)
+
+#' @rdname fvectormethods
 #' @export
 is_fbase <- function(x) "fbase" %in% class(x)
+
+#-------------------------------------------------------------------------------
+
+#' @rdname fvectormethods
+is.na.fvector <- function(x) {
+  map_lgl(unclass(x), ~ any(is.na(.x)))
+}

@@ -37,7 +37,8 @@ summarize_fvector <- function(..., op = NULL, eval = FALSE) {
 #' Math, Summary and Ops Methods for `fvector`
 #' 
 #' These define methods and operators that mostly work `argval`-wise on
-#' `fvector` objects. See [?Math], [?Summary], [?Ops].
+#' `fvector` objects, see `?groupGeneric` for implementation details.
+#' 
 #' See examples below. Equality checks of functional objects are rather iffy and
 #' not very reliable at this point. Note that `max` and `min` are not guaranteed 
 #' to be maximal/minmal over the entire domain, only on the evaluation grid used for

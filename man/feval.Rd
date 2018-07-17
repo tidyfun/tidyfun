@@ -17,7 +17,7 @@ as.feval(data, ...)
 
 as.feval_irreg(data, signif = NULL, ...)
 
-\method{as.data.frame}{feval}(x, rownames = NULL, optional = FALSE,
+\method{as.data.frame}{feval}(x, row.names = NULL, optional = FALSE,
   argvals = NULL, interpolate = FALSE, ...)
 
 \method{as.matrix}{feval}(x, argvals = NULL, interpolate = FALSE, ...)
@@ -48,8 +48,6 @@ feval(data, ...)
 
 \item{x}{an \code{feval} object}
 
-\item{rownames}{not used}
-
 \item{optional}{not used}
 
 \item{argvals}{\code{numeric}, or list of \code{numeric}s. The evaluation grid. See Details.
@@ -66,6 +64,8 @@ for \code{argvals} for which no original data is available? Only relevant for
 \item{id}{The name/number of the column defining which data belong to which function.}
 
 \item{value}{The name/number of the column containing the function evaluations.}
+
+\item{rownames}{not used}
 
 \item{...}{not used, except for \code{feval.fvector} -- specify \code{argvals} and \code{ìnterpolate = TRUE} to
 turn an irregular \code{feval} into a regular one, see examples...}
@@ -109,6 +109,6 @@ value is requested at t = 1.001, f(1) will be returned if \code{signif} < 4.
 \examples{
 #turn irregular to regular feval
 #TODO: add extra function/verb for this
-(f <- c(rgp(1, grid = seq(0,1,l=11)), rgp(1, grid = seq(0,1,l=21))))
+(f <- c(rgp(1, argvals = seq(0,1,l=11)), rgp(1, argvals = seq(0,1,l=21))))
 feval(f, interpolate = TRUE, argvals = seq(0,1,l=21))
 }

@@ -10,6 +10,7 @@ deriv_matrix <- function(data, argvals, order) {
 }
 
 #trapezoidal quadrature
+#' @importFrom utils head
 quad_trapez <- function(argvals, evaluations) {
   c(0, 0.5 * diff(argvals) * (head(evaluations, -1) + evaluations[-1]))
 }

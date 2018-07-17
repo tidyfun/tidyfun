@@ -68,7 +68,9 @@
 }
 \description{
 These define methods and operators that mostly work \code{argval}-wise on
-\code{fvector} objects. See \link{?Math}, \link{?Summary}, \link{?Ops}.
+\code{fvector} objects, see \code{?groupGeneric} for implementation details.
+}
+\details{
 See examples below. Equality checks of functional objects are rather iffy and
 not very reliable at this point. Note that \code{max} and \code{min} are not guaranteed
 to be maximal/minmal over the entire domain, only on the evaluation grid used for

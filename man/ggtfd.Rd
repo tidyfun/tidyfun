@@ -82,7 +82,7 @@ All of this is a hack using \code{stat_tfd} and subject to change.
 }
 \section{\code{tfd} aesthetic}{
 
-Mandantory. Used to designate a column of class \code{tfd} to be visualized.
+Mandatory. Used to designate a column of class \code{tfd} to be visualized.
 }
 
 \section{\code{order} aesthetic}{
@@ -100,8 +100,8 @@ data$fb = fbase(data$f)
 
 ggplot(data, aes(tfd = f, color = depth(f))) + geom_spaghetti() + 
   annotate("text", x = 1.05, y = drop(data$f[, 1]), label = 1:nrow(data))
-ggplot(data, aes(tfd = f, shape = col, color = col)) + geom_meatballs()
-ggplot(data, aes(tfd = f)) + geom_meatballs(spaghetti = FALSE) + 
+ggplot(data, aes(tfd = fi, shape = col, color = col)) + geom_meatballs()
+ggplot(data, aes(tfd = fi)) + geom_meatballs(spaghetti = FALSE) + 
   facet_wrap(~col)
 
 # geom_lasagna is a hack of geom_line because geom_tile won't accept the 

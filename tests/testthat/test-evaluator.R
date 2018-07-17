@@ -1,3 +1,5 @@
+context("evaluator")
+
 grid <- round(seq(0, 1, l = 21), 3)
 lin <- 2*grid
 curve <- sin(3*pi*grid)

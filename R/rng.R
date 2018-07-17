@@ -28,6 +28,7 @@ rgp <- function(n, argvals = seq(0, 1, l = 51), scale = diff(range(argvals))/10,
   feval(y, argvals = argvals)
 }
 
+#' @importFrom stats runif
 jiggle <- function(f, ...) {
   stopifnot(is_feval(f))
   f <- as.feval_irreg(f)

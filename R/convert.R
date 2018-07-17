@@ -44,7 +44,7 @@ as.feval_irreg.feval_irreg <- function(data, signif = 4, ...) {
 #' @param x an `feval` object
 #' @inheritParams [.fvector
 #' @export 
-as.data.frame.feval <- function(x, rownames = NULL, optional = FALSE, 
+as.data.frame.feval <- function(x, row.names = NULL, optional = FALSE, 
   argvals = NULL, interpolate = FALSE, ...) {
   if (is.null(argvals)) {
     argvals <- ensure_list(argvals(x))
@@ -86,7 +86,7 @@ as.fbase.default <- function(data, basis = c("mgcv", "fpc"), ...) {
 #' @param optional not used
 #' @param x an `fbase` object
 #' @export 
-as.data.frame.fbase <- function(x, rownames = NULL, optional = FALSE, 
+as.data.frame.fbase <- function(x, row.names = NULL, optional = FALSE, 
   argvals = NULL, ...) {
   if (is.null(argvals)) {
     argvals <- ensure_list(argvals(x))
@@ -111,6 +111,6 @@ as.matrix.fbase <- function(x, argvals = NULL, ...) {
 
 #-------------------------------------------------------------------------------
 #' @export 
-as.function.fvector <- function(.f) {
-  function(argvals) unlist(evaluate(object = .f, argvals = argvals))
+as.function.fvector <- function(x, ...) {
+  function(argvals) unlist(evaluate(object = x, argvals = argvals))
 }
