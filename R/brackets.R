@@ -66,6 +66,9 @@
     stop("need a single vector-valued <j> if matrix = TRUE")
   }
   j <- adjust_resolution(ensure_list(j), x)
+  if (!(length(j) %in% c(1, length(i)))) {
+    stop("wrong length for <j>")
+  } 
   evals <- evaluate(x[i], argvals = j)
   if (!interpolate) {
     new_j <- map2(j, ensure_list(argvals(x[i])), ~ !(.x %in% .y))

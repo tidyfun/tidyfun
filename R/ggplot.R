@@ -1,12 +1,60 @@
-# cf. https://github.com/tidyverse/ggplot2/blob/69dfc4bc62828ecc3d1cda3dea4d0a664c4ea12c/R/sf.R
-rm(list = ls())
-devtools::load_all("~/fda/tidyfun")
+#' Geoms for `tfd` objects
+#' 
+#' Defines spaghetti and lasagna plot geoms for `tfd`-objects.  
+#' `geom_spaghetti` does spaghetti plots, `geom_meatballs` does spaghetti plots
+#' with points for the actual evaluations, `geom_lasagna` does lasagna plots. 
+#' All of this is a hack using `stat_tfd` and subject to change.
+#' 
+#' @section `tfd` aesthetic:
+#'   Mandatory. Used to designate a column of class `tfd` to be visualized. 
+#' @section `order` aesthetic:
+#'   optional. Used to designate a variable that defines the (low-to-high) ordering of the
+#'   functions in the lasagna plot. See also: `order_by`
+#' @examples
+#' set.seed(1221)
+#' data = data.frame(col = sample(gl(5, 2)))
+#' data$f = rgp(10)
+#' data$fi = jiggle(data$f)
+#' data$fb = fbase(data$f)
+#' 
+#' ggplot(data, aes(tfd = f, color = depth(f))) + geom_spaghetti() + 
+#'   annotate("text", x = 1.05, y = drop(data$f[, 1]), label = 1:nrow(data))
+#' ggplot(data, aes(tfd = fi, shape = col, color = col)) + geom_meatballs()
+#' ggplot(data, aes(tfd = fi)) + geom_meatballs(spaghetti = FALSE) + 
+#'   facet_wrap(~col)
+#' 
+#' # geom_lasagna is a hack of geom_line because geom_tile won't accept the 
+#' # id-factor as a vertical axis -- adjust line width ("size") to get a proper 
+#' # lasagna without gaps just like nonna used to make back in the old country:
+#' ggplot(data, aes(tfd = fb, order = col)) + geom_lasagna(size = 8)
+#' ggplot(data, aes(tfd = fb, order = col)) + geom_lasagna(size = 12)
+#' 
+#' # use the order-aesthetic to define the vertical ordering of the functions 
+#' # (low values - low positions)
+#' ggplot(data, aes(tfd = f, order = -depth(f))) + geom_lasagna(size = 8)
+#' # or use order_by to define an ordering computed directly 
+#' # on each function's evaluations:
+#' ggplot(data, aes(tfd = f)) + geom_lasagna(order_by = mean)
+#' ggplot(data, aes(tfd = f)) + geom_lasagna(order_by = min)
+#' ggplot(data, aes(tfd = f)) + geom_lasagna(order_by = function(f) f[1])
+#' # last one same as this:
+#' ggplot(data, aes(tfd = f, order = drop(f[, 0]))) + geom_lasagna()
+#' # combine the two: 
+#' ggplot(data, aes(tfd = f, order = col)) + geom_lasagna(order_by = function(f) f[1]) 
+#' # .. but facetting is broken for lasagna:
+#' ggplot(data, aes(tfd = f, order = col)) + 
+#'   geom_lasagna(order_by = function(f) f[1])  + facet_wrap(~ col)   
+#' @name ggtfd
+NULL
+
 is.finite.feval <- function(x) map(evaluations(x), ~ all(is.finite(x)))
 scale_type.fvector <- function(x) "identity"
-library(magrittr)
-library(tidyverse)
 
-#' @importFrom ggplot2 ggproto Stat Geom 
+#' @export
+#' @importFrom ggplot2 ggproto Stat Geom
+#' @rdname ggtfd
+#' @usage NULL
+#' @format NULL
 StatTfd <- ggproto("StatTfd", Stat,
   required_aes = "tfd",
   default_aes = aes(x = stat(.arg), y = stat(.value), group = stat(.id), 
@@ -20,6 +68,7 @@ StatTfd <- ggproto("StatTfd", Stat,
     params
   },
   compute_layer = function(self, data, params, layout) {
+    stopifnot(is.fvector(pull(data, tfd)))
     tfd_eval <- evaluate(object = data, argvals = params$argvals, tfd) %>%
       select(-group) %>% 
       unnest(.id = ".id") %>% 
@@ -54,6 +103,10 @@ StatTfd <- ggproto("StatTfd", Stat,
     Stat$compute_panel(self, data, scales)
   }  
 )
+
+#' @export
+#' @rdname ggtfd
+#' @inheritParams ggplot2::stat_identity
 stat_tfd <- function(mapping = NULL, data = NULL, geom = "line",
   position = "identity", na.rm = FALSE, show.legend = NA, 
   inherit.aes = TRUE, argvals = NULL, ...) {
@@ -64,6 +117,12 @@ stat_tfd <- function(mapping = NULL, data = NULL, geom = "line",
   )
 }
 
+# geom --------------------------------------------------------------------
+
+#' @export
+#' @rdname ggtfd
+#' @format NULL
+#' @param argvals where to evaluate `tfd` -- defaults to the default ;)
 geom_spaghetti <- function(mapping = NULL, data = NULL,
   position = "identity", na.rm = FALSE, show.legend = NA, 
   inherit.aes = TRUE, argvals = NULL, ...) {
@@ -73,6 +132,10 @@ geom_spaghetti <- function(mapping = NULL, data = NULL,
     params = list(na.rm = na.rm, argvals = argvals, ...)
   )
 }
+#' @export
+#' @rdname ggtfd
+#' @format NULL
+#' @param spaghetti plot noodles along with meatballs? defaults to true.
 geom_meatballs <- function(mapping = NULL, data = NULL,
   position = "identity", na.rm = FALSE, show.legend = NA, 
   inherit.aes = TRUE, argvals = NULL, spaghetti = TRUE, ...) {
@@ -88,6 +151,11 @@ geom_meatballs <- function(mapping = NULL, data = NULL,
         params = list(na.rm = na.rm, argvals = argvals, ...))
     } else NULL) 
 }
+#' @export
+#' @rdname ggtfd
+#' @format NULL
+#' @param order_by a function that returns a single value when applied to a numeric vector,
+#'  used to define the vertical ordering of the functions in the plot (see Examples)
 geom_lasagna <- function(mapping = list(), 
   data = NULL,  position = "identity", na.rm = FALSE, show.legend = NA, 
   inherit.aes = TRUE, argvals = NULL, order_by = NULL, size = 4, ...) {
@@ -102,42 +170,8 @@ geom_lasagna <- function(mapping = list(),
   ) 
 }
 
-set.seed(1221)
-data = data.frame(col = sample(gl(5, 1)))
-data$f = rgp(5)
-data$fi = jiggle(data$f)
-data$fb = fbase(data$f)
-
-ggplot(data, aes(tfd = f, color = depth(f))) + geom_spaghetti() + 
-  annotate("text", x = 1.05, y = drop(data$f[, 1]), label = 1:nrow(data))
-ggplot(data, aes(tfd = f, shape = col, color = col)) + geom_meatballs()
-ggplot(data, aes(tfd = f)) + geom_meatballs(spaghetti = FALSE) + 
-  facet_wrap(~col)
-
-# geom_lasagna is a hack of geom_line because geom_tile won't accept the 
-# id-factor as a vertical axis -- adjust line width ("size") to get a proper 
-# lasagna without gaps just like nonna used to make back in the old country:
-ggplot(data, aes(tfd = fb, order = col)) + geom_lasagna(size = 8)
-ggplot(data, aes(tfd = fb)) + geom_lasagna() + facet_wrap(~ col, scales = "free")
-
-# use the order-aesthetic to define the vertical ordering of the functions 
-# (low values - low positions)
-ggplot(data, aes(tfd = f, order = -depth(f))) + geom_lasagna(size = 8)
-# or use order_by to define an ordering computed directly 
-# on each function's evaluations:
-ggplot(data, aes(tfd = f)) + geom_lasagna(order_by = mean)
-ggplot(data, aes(tfd = f)) + geom_lasagna(order_by = min)
-ggplot(data, aes(tfd = f)) + geom_lasagna(order_by = function(f) f[1])
-# last one same as this:
-ggplot(data, aes(tfd = f, order = drop(f[, 0]))) + geom_lasagna()
-
-#can even combine the two: 
-ggplot(data, aes(tfd = f, order = col)) + geom_lasagna(order_by = function(f) f[1]) + 
-  facet_wrap(col ~ ., scales = "free")
 
 
-
-# look at GeomSf: https://github.com/tidyverse/ggplot2/blob/17b45f906c3a55d187915f4f3010836a804051ae/R/sf.R
 
    
    

@@ -75,6 +75,10 @@ an \code{feval}-object (or a \code{data.frame}/\code{matrix} for the conversion 
 }
 \description{
 Various constructor and conversion methods.
+
+\code{feval.list} accepts a list of vectors of identical lengths
+containing evaluations or a list of 2-column matrices/data.frames with
+\code{argvals} in the first and evaluations in the second column
 }
 \details{
 \strong{\code{evaluator}}: must be a \code{function(x, argvals, evaluations)} that returns

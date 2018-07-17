@@ -74,7 +74,8 @@ evaluate_fbase_once <- function(x, argvals, coefs, basis, X) {
 #' @export
 #' @md
 evaluate.data.frame <- function(object, argvals, ...) {
-  quos <- quos(...)
+#FIXME this does not really work for object with mutiple tfd's
+    quos <- quos(...)
   # figure out which fvector columns to evaluate
   fvector_cols <- names(object)[map_lgl(object, is_fvector)]
   if (!is_empty(quos)) {
@@ -90,7 +91,8 @@ evaluate.data.frame <- function(object, argvals, ...) {
     argvals <- map(object[fvector_cols], ~tidyfun::argvals(.))
   }
   # convert them to list-columns of data.frames
-  object[fvector_cols] <- map2(object[fvector_cols], argvals, 
-    ~.x[, .y, matrix = FALSE])
+  for (f in fvector_cols) {
+    object[[f]] <- object[[f]][, argvals, matrix = FALSE]
+  }
   object
 }
