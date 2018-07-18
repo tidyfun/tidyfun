@@ -23,7 +23,7 @@ domain divided by 10.}
 \code{scale/200} (so: very little noise)}
 }
 \value{
-an \code{feval}-vector of length \code{n}
+an \code{tfd}-vector of length \code{n}
 }
 \description{
 The function generates \code{n} realizations of Gaussian processes , either with

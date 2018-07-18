@@ -9,9 +9,9 @@ argvals <- function(f) UseMethod("argvals")
 #' @export
 argvals.default <- function(f) .NotYetImplemented()
 #' @export
-argvals.feval_irreg <- function(f) map(f, "argvals")
+argvals.tfd_irreg <- function(f) map(f, "argvals")
 #' @export
-argvals.feval_reg <- function(f) attr(f, "argvals")[[1]]
+argvals.tfd_reg <- function(f) attr(f, "argvals")[[1]]
 #' @export
 argvals.fbase <- function(f) attr(f, "argvals")
 
@@ -21,12 +21,12 @@ evaluations <- function(f) UseMethod("evaluations")
 #' @export
 evaluations.default <- function(f) .NotYetImplemented()
 #' @export
-evaluations.feval_reg <- function(f) {
+evaluations.tfd_reg <- function(f) {
   attributes(f) <- NULL
   f
 }
 #' @export
-evaluations.feval_irreg <- function(f) {
+evaluations.tfd_irreg <- function(f) {
   map(f, "data")
 }
 #' @export
@@ -41,9 +41,9 @@ n_evaluations <- function(f) UseMethod("n_evaluations")
 #' @export
 n_evaluations.default <- function(f) .NotYetImplemented()
 #' @export
-n_evaluations.feval_irreg <- function(f) map_int(evaluations(f), length)
+n_evaluations.tfd_irreg <- function(f) map_int(evaluations(f), length)
 #' @export
-n_evaluations.feval_reg <- function(f) length(argvals(f))
+n_evaluations.tfd_reg <- function(f) length(argvals(f))
 
 #' @rdname tfmethods
 #' @export
@@ -55,7 +55,7 @@ domain <- function(f) {
 #' @rdname tfmethods
 #' @export
 evaluator <- function(f) {
-  stopifnot(inherits(f, "feval"))
+  stopifnot(inherits(f, "tfd"))
   attr(f, "evaluator")
 }
 
@@ -67,7 +67,7 @@ basis <- function(f) {
 }
 
 #' @rdname tfmethods
-#' @param value for `evaluator<-`: name of a function that can be used to interpolate an `feval`. Needs to
+#' @param value for `evaluator<-`: name of a function that can be used to interpolate an `tfd`. Needs to
 #'   accept vector arguments `x`, `argvals`, `evaluations` and return
 #'   evaluations of the function defined by `argvals`, `evaluations` at `x`
 #'   for `argvals<-`: a list of grid points, for internal use only.
@@ -75,17 +75,17 @@ basis <- function(f) {
 `evaluator<-` <- function(x, value) {
   evaluator <- 
     if (is.character(value))  get(value, mode = "function") else value
-  stopifnot(inherits(x, "feval"), is.function(evaluator))
+  stopifnot(inherits(x, "tfd"), is.function(evaluator))
   assert_set_equal(names(formals(evaluator)), 
     c("x", "argvals", "evaluations")) 
   attr(x, "evaluator_name") <- deparse(substitute(value))
   attr(x, "evaluator") <- memoise(evaluator)
   x
 }
-# this only used internally in feval_irreg conversion functions.
+# this only used internally in tfd_irreg conversion functions.
 #' @rdname tfmethods
 `argvals<-` <- function(x, value) {
-  stopifnot(inherits(x, "feval_irreg"))
+  stopifnot(inherits(x, "tfd_irreg"))
   value <- map(value, ~signif(.x, attr(x, "signif_argvals")))
   assert_argvals(value, x)
   ret <- map2(evaluations(x), value, ~list(argvals = .y, data = .x))

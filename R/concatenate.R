@@ -17,12 +17,12 @@ c_names <- function(funs) {
 #' Functions to concatenate multiple vectors of functional data.
 #' 
 #' Only allows concatenation of functions with the same domain and similar
-#' represenation, i.e., `fbase` cannot be concatenated to `feval` and vice
-#' versa. If `feval_reg`-objects to be concatenated are not on the same grid of
-#' `argvals`, or if both `feval_reg` and `feval_irreg` objects are concatenated,
-#' a `feval_irreg`-object is returned. \cr `c.fbase` will use the basis of its
+#' represenation, i.e., `fbase` cannot be concatenated to `tfd` and vice
+#' versa. If `tfd_reg`-objects to be concatenated are not on the same grid of
+#' `argvals`, or if both `tfd_reg` and `tfd_irreg` objects are concatenated,
+#' a `tfd_irreg`-object is returned. \cr `c.fbase` will use the basis of its
 #' first argument for representing all remaining arguments and refit them
-#' accordingly if necessary.\cr `c.feval` will use the `evaluator` of its first
+#' accordingly if necessary.\cr `c.tfd` will use the `evaluator` of its first
 #' argument for all remaining arguments as well.\cr This means that `c(f1, f2)`
 #' is not necessarily the same as `rev(c(f2, f1))`.
 #' 
@@ -33,15 +33,15 @@ c_names <- function(funs) {
 #' @rdname tfconcat
 c.tf <- function(...) {
   funs <- list(...)
-  compatible <- all(map_lgl(funs, is_feval)) | all(map_lgl(funs, is_fbase))
+  compatible <- all(map_lgl(funs, is_tfd)) | all(map_lgl(funs, is_fbase))
   if (!compatible) {
-    stop("Can't concatenate fbase & feval objects.")
+    stop("Can't concatenate fbase & tfd objects.")
   }
 }
 
 #' @rdname tfconcat
 #' @export
-c.feval <- function(...) {
+c.tfd <- function(...) {
   funs <- list(...)
   if (length(funs) == 1) {
     return(funs[[1]])
@@ -68,7 +68,7 @@ c.feval <- function(...) {
   }
   if (any(make_irreg)) {
     funs <- map_at(funs, which(make_irreg), 
-      ~ as.feval_irreg(., signif = new_signif))
+      ~ as.tfd_irreg(., signif = new_signif))
   }
   if (!all(compatible[, "evaluator_name"])) {
     warning("inputs have different evaluators, result has ", 

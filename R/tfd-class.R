@@ -1,7 +1,7 @@
 #' @import memoise
 #' @import purrr
 #' @import dplyr
-new_feval <- function(argvals, datalist, regular, domain, evaluator, signif = 4) {
+new_tfd <- function(argvals, datalist, regular, domain, evaluator, signif = 4) {
   assert_function(eval(evaluator))
   assert_set_equal(names(formals(eval(evaluator))), 
     c("x", "argvals", "evaluations")) 
@@ -13,10 +13,10 @@ new_feval <- function(argvals, datalist, regular, domain, evaluator, signif = 4)
     datalist <- map2(datalist, argvals, 
       ~ list(argvals = signif(.y[!is.na(.x)], signif), data = .x[!is.na(.x)]))
     argvals <- numeric(0)
-    class <- "feval_irreg"
+    class <- "tfd_irreg"
   } else {
     argvals <- list(signif(argvals[[1]], signif))
-    class <- "feval_reg"
+    class <- "tfd_reg"
   }
   ret <- structure(datalist, 
     argvals =  argvals,
@@ -24,7 +24,7 @@ new_feval <- function(argvals, datalist, regular, domain, evaluator, signif = 4)
     evaluator = memoise(eval(evaluator)),
     evaluator_name = deparse(evaluator, width.cutoff = 60)[1],
     signif_argvals = signif, #maybe turn this into a <global> option? 
-    class = c(class, "feval", "tf"))
+    class = c(class, "tfd", "tf"))
   assert_argvals(argvals, ret)
   ret
 }
@@ -61,20 +61,20 @@ new_feval <- function(argvals, datalist, regular, domain, evaluator, signif = 4)
 #' value is requested at t = 1.001, f(1) will be returned if `signif` < 4.
 #' 
 #' @param data a `matrix`, `data.frame` or `list` of suitable shape, or another `tf`-object.
-#' @param ... not used in `feval`, except for `feval.tf` -- specify `argvals` and `ìnterpolate = TRUE` to 
-#'   turn an irregular `feval` into a regular one, see examples. 
-#' @return an `feval`-object (or a `data.frame`/`matrix` for the conversion functions, obviously.)
+#' @param ... not used in `tfd`, except for `tfd.tf` -- specify `argvals` and `ìnterpolate = TRUE` to 
+#'   turn an irregular `tfd` into a regular one, see examples. 
+#' @return an `tfd`-object (or a `data.frame`/`matrix` for the conversion functions, obviously.)
 #' @export
-feval <- function(data, ...) UseMethod("feval")
+tfd <- function(data, ...) UseMethod("tfd")
 
 #' @export
-#' @rdname feval
+#' @rdname tfd
 #' @param argvals `numeric`, or list of `numeric`s. The evaluation grid. See Details.
 #'  For the `data.frame`-methods: the name/number of the column defining the evaluation grid.
 #' @param domain range of the `argvals`. 
 #' @param evaluator a function accepting arguments `x, argvals, evaluations`. See details.
 #' @param signif significant digits of the "resolution" of the evaluation grid.  See details. 
-feval.matrix <- function(data, argvals = NULL, domain = NULL, 
+tfd.matrix <- function(data, argvals = NULL, domain = NULL, 
     evaluator = approx_linear, signif = 4, ...) {
   stopifnot(is.numeric(data))
   argvals <- find_argvals(data, argvals) # either arg or numeric colnames or 1:ncol
@@ -83,25 +83,25 @@ feval.matrix <- function(data, argvals = NULL, domain = NULL,
   datalist <- split(data, factor(id, unique(as.character(id))))
   names(datalist) <- rownames(data)
   regular <- !any(is.na(data))
-  new_feval(argvals, datalist, regular, domain, substitute(evaluator), signif)
+  new_tfd(argvals, datalist, regular, domain, substitute(evaluator), signif)
 }
-#' @rdname feval
+#' @rdname tfd
 #' @export
-feval.numeric <- function(data, argvals = NULL, 
+tfd.numeric <- function(data, argvals = NULL, 
     domain = NULL, evaluator = approx_linear, signif = 4, ...) {
   data <- t(as.matrix(data))
   #dispatch to matrix method
   args <- list(data, argvals = argvals, domain = domain,   
     evaluator = substitute(evaluator), signif = signif)
-  return(do.call(feval, args))
+  return(do.call(tfd, args))
 }
 
 # default: use first 3 columns of <data> for function information
 #' @export
-#' @rdname feval
+#' @rdname tfd
 #' @param id The name/number of the column defining which data belong to which function.
 #' @param value The name/number of the column containing the function evaluations.
-feval.data.frame <- function(data, id = 1, argvals = 2, value = 3, domain = NULL, 
+tfd.data.frame <- function(data, id = 1, argvals = 2, value = 3, domain = NULL, 
     evaluator = approx_linear, signif = 4, ...) {
   data <- na.omit(data[, c(id, argvals, value)])
   stopifnot(is.numeric(data[[2]]), 
@@ -111,16 +111,16 @@ feval.data.frame <- function(data, id = 1, argvals = 2, value = 3, domain = NULL
   datalist <- split(data[[3]], id)
   argvals <- split(data[[2]], id)
   regular <- length(argvals) == 1 | all(duplicated(argvals)[-1])
-  new_feval(argvals, datalist, regular, domain, substitute(evaluator), signif)
+  new_tfd(argvals, datalist, regular, domain, substitute(evaluator), signif)
 }
 
 # TODO this will break for multivariate data!
-#' @description `feval.list` accepts a list of vectors of identical lengths 
+#' @description `tfd.list` accepts a list of vectors of identical lengths 
 #' containing evaluations or a list of 2-column matrices/data.frames with 
 #' `argvals` in the first and evaluations in the second column
 #' @export
-#' @rdname feval
-feval.list <- function(data, argvals = NULL, domain = NULL, 
+#' @rdname tfd
+tfd.list <- function(data, argvals = NULL, domain = NULL, 
     evaluator = approx_linear, signif = 4, ...) {
   vectors <- map_lgl(data, ~ is.numeric(.) & !is.array(.)) 
   if (all(vectors)) {
@@ -130,7 +130,7 @@ feval.list <- function(data, argvals = NULL, domain = NULL,
       #dispatch to matrix method
       args <- list(data, argvals = argvals, domain = domain,   
         evaluator = substitute(evaluator), signif = signif)
-      return(do.call(feval, args))
+      return(do.call(tfd, args))
     } else {
       stopifnot(!is.null(argvals), length(argvals) == length(data), 
         all(sapply(argvals, length) == lengths))
@@ -145,24 +145,24 @@ feval.list <- function(data, argvals = NULL, domain = NULL,
     data <- map(data, ~ unlist(.x[, 2]))
     regular <- (length(data) == 1 | all(duplicated(argvals)[-1])) 
   }
-  new_feval(argvals, data, regular = regular, domain = domain, 
+  new_tfd(argvals, data, regular = regular, domain = domain, 
     evaluator = substitute(evaluator), signif = signif)
 }
 
 #' @export
 #' @examples 
-#' #turn irregular to regular feval
+#' #turn irregular to regular tfd
 #' #TODO: add extra function/verb for this
 #' (f <- c(rgp(1, argvals = seq(0,1,l=11)), rgp(1, argvals = seq(0,1,l=21))))
-#' feval(f, interpolate = TRUE, argvals = seq(0,1,l=21))
-#' @rdname feval
-feval.tf <- function(data, argvals = NULL, domain = NULL, 
+#' tfd(f, interpolate = TRUE, argvals = seq(0,1,l=21))
+#' @rdname tfd
+tfd.tf <- function(data, argvals = NULL, domain = NULL, 
     evaluator = approx_linear, signif = 4, ...) {
   argvals <- ensure_list(argvals %||% argvals(data))
   evaluations <- evaluate(data, argvals)
   domain <- domain %||% domain(data)
   data <- as.data.frame(data, argvals, ...)
-  new_feval(argvals, evaluations, regular = (length(argvals) == 1),
+  new_tfd(argvals, evaluations, regular = (length(argvals) == 1),
     domain = domain, evaluator = substitute(evaluator), 
     signif = signif)
 }

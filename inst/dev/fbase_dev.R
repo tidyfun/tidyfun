@@ -12,9 +12,9 @@ rownames(mat_reg) <- 1:n
 mat_irreg <- mat_reg
 mat_irreg[sample(1:length(mat_reg), length(mat_reg)/3)] <- NA
 
-freg <-  feval(mat_reg, evaluator = approx_spline)
-firreg <- feval(mat_irreg, evaluator = approx_linear)
-firreg2 <- feval(mat_irreg, evaluator = approx_fill_extend)
+freg <-  tfd(mat_reg, evaluator = approx_spline)
+firreg <- tfd(mat_irreg, evaluator = approx_linear)
+firreg2 <- tfd(mat_irreg, evaluator = approx_fill_extend)
 
 fbreg <- fbase(as.data.frame(freg))
 fbirreg <- fbase(as.matrix(firreg), basis = "tp", k = 10, m = c(2,2), penalized = FALSE)

@@ -40,7 +40,7 @@ fpc_fbase <- function(data, domain = NULL, smooth = TRUE, signif = 4, ...) {
   coef_list <- split(cbind(1, fpc_spec$scores), row(cbind(1, fpc_spec$scores)))
   names(coef_list) <- levels(as.factor(data$.id))
   fpc <- rbind(fpc_spec$mu, t(fpc_spec$efunctions))
-  fpc_basis <- feval(fpc, argvals = argvals, evaluator = approx_spline)
+  fpc_basis <- tfd(fpc, argvals = argvals, evaluator = approx_spline)
   fpc_constructor <- fpc_wrapper(fpc_basis)
   structure(coef_list, 
     domain = domain %||% range(argvals),
@@ -67,7 +67,7 @@ fpc_fbase <- function(data, domain = NULL, smooth = TRUE, signif = 4, ...) {
 #'   for irregular / non-equidistant grids and does not work for 
 #'   incomplete/irregular data.
 #' @export
-#' @inheritParams feval.data.frame
+#' @inheritParams tfd.data.frame
 #' @param smooth use smoothed mean function and smoothed covariance surface estimates
 #'   from [refund::fpca.sc()] or simply perform a (truncated) PCA of the data? See Details.
 #' @param ... arguments to the call to [refund::fpca.sc()] that computes the

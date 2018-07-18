@@ -4,8 +4,8 @@ grid <- round(seq(0, 1, l = 21), 3)
 lin <- 2*grid
 curve <- sin(3*pi*grid)
 
-f_lin <- feval(data.frame(1, grid, lin))
-f_curve <- feval(data.frame(1, grid, curve))
+f_lin <- tfd(data.frame(1, grid, lin))
+f_curve <- tfd(data.frame(1, grid, curve))
 
 new_grid <- round(seq(0, 1, l = 41), 3)
 

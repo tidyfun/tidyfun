@@ -47,7 +47,7 @@
 #' @name ggtf
 NULL
 
-is.finite.feval <- function(x) map(evaluations(x), ~ all(is.finite(x)))
+is.finite.tfd <- function(x) map(evaluations(x), ~ all(is.finite(x)))
 scale_type.tf <- function(x) "identity"
 
 #' @export

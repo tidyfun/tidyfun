@@ -69,7 +69,7 @@ assert_argvals_vector <- function(argvals, x) {
 # check_interpolation <- function(x, argvals){
 #   UseMethod("check_interpolation")
 # }
-# check_interpolation.feval_reg <- function(x, argvals){
+# check_interpolation.tfd_reg <- function(x, argvals){
 #   original <- argvals(x)
 #   if (is.list(argvals)) {
 #     map(argvals, ~ !(. %in% original))
@@ -77,7 +77,7 @@ assert_argvals_vector <- function(argvals, x) {
 #     !(argvals %in% original)
 #   }
 # }
-# check_interpolation.feval_irreg <- function(x, argvals) {
+# check_interpolation.tfd_irreg <- function(x, argvals) {
 #   original <- argvals(x)
 #   if (is.list(argvals)) {
 #     map2(argvals, original, ~ !(.x %in% .y))
@@ -140,11 +140,11 @@ is_tf <- function(x) "tf" %in% class(x)
 
 #' @rdname tfmethods
 #' @export
-is_irreg <- function(x) "feval_irreg" %in% class(x)
+is_irreg <- function(x) "tfd_irreg" %in% class(x)
 
 #' @rdname tfmethods
 #' @export
-is_feval <- function(x) "feval" %in% class(x)
+is_tfd <- function(x) "tfd" %in% class(x)
 
 #' @rdname tfmethods
 #' @export

@@ -13,7 +13,7 @@
 \alias{rev.tf}
 \alias{is_tf}
 \alias{is_irreg}
-\alias{is_feval}
+\alias{is_tfd}
 \alias{is_fbase}
 \alias{is.na.tf}
 \title{Utility functions for \code{tf}-objects}
@@ -42,7 +42,7 @@ is_tf(x)
 
 is_irreg(x)
 
-is_feval(x)
+is_tfd(x)
 
 is_fbase(x)
 
@@ -53,7 +53,7 @@ is_fbase(x)
 
 \item{x}{an \code{tf} object}
 
-\item{value}{for \code{evaluator<-}: name of a function that can be used to interpolate an \code{feval}. Needs to
+\item{value}{for \code{evaluator<-}: name of a function that can be used to interpolate an \code{tfd}. Needs to
 accept vector arguments \code{x}, \code{argvals}, \code{evaluations} and return
 evaluations of the function defined by \code{argvals}, \code{evaluations} at \code{x}
 for \code{argvals<-}: a list of grid points, for internal use only.}

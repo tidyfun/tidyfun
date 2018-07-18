@@ -27,7 +27,7 @@ summarize_tf <- function(..., op = NULL, eval = FALSE) {
     domain = list(domain(funs)), 
     signif = attr(funs, "signif_argvals"))
   if (eval) {
-    return(do.call(feval, c(args, evaluator = as.name(attr(funs, "evaluator_name")))))
+    return(do.call(tfd, c(args, evaluator = as.name(attr(funs, "evaluator_name")))))
   } else {
     return(do.call(fbase, c(args, penalized = FALSE, attr(funs, "basis_args"))))
   }
@@ -72,36 +72,36 @@ summarize_tf <- function(..., op = NULL, eval = FALSE) {
 #' plot(log(exp(f3))); lines(f3, lty = 2, col = 2) # still reasonable
 #' @export
 #' 
-Math.feval <- function(x, ...) {
+Math.tfd <- function(x, ...) {
   fun_math(x, .Generic)
 } 
 #' @rdname tfgroupgenerics
 #' @export
 Math.fbase <- function(x, ...) {
   basis_args <- attr(x, "basis_args")
-  eval <- fun_math(feval(x), .Generic)
+  eval <- fun_math(tfd(x), .Generic)
   do.call("fbase", 
     c(list(eval), basis_args, penalized = FALSE, verbose = FALSE))
 }  
 
 #' @rdname tfgroupgenerics
 #' @export
-cummax.feval <- function(...) {
+cummax.tfd <- function(...) {
   summarize_tf(..., op = "cummax", eval  = TRUE)
 }
 #' @rdname tfgroupgenerics
 #' @export
-cummin.feval <- function(...) {
+cummin.tfd <- function(...) {
   summarize_tf(..., op = "cummin", eval  = TRUE)
 }
 #' @rdname tfgroupgenerics
 #' @export
-cumsum.feval <- function(...) {
+cumsum.tfd <- function(...) {
   summarize_tf(..., op = "cumsum", eval  = TRUE)
 }
 #' @rdname tfgroupgenerics
 #' @export
-cumprod.feval <- function(...) {
+cumprod.tfd <- function(...) {
   summarize_tf(..., op = "cumprod", eval  = TRUE)
 }
 #' @rdname tfgroupgenerics
@@ -134,7 +134,7 @@ Summary.tf <- function(...) {
     `all` = , `any` = TRUE, FALSE)
   if (not_defined) 
     stop(sprintf("%s not defined for \"tf\" objects", .Generic))
-  summarize_tf(..., op = .Generic, eval  = is_feval(list(...)[[1]]))
+  summarize_tf(..., op = .Generic, eval  = is_tfd(list(...)[[1]]))
 }  
 
 #-------------------------------------------------------------------------------

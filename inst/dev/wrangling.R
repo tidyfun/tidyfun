@@ -12,8 +12,8 @@ if (!load) {
 
 dti <- refund::DTI
 
-f_cca <- feval(dti$cca, argvals = seq(0, 1, l = 93), signif = 2)
-f_rcst <- feval(dti$rcst, argvals = seq(0, 1, l = 55))
+f_cca <- tfd(dti$cca, argvals = seq(0, 1, l = 93), signif = 2)
+f_rcst <- tfd(dti$rcst, argvals = seq(0, 1, l = 55))
 f_cca
 f_rcst
 
@@ -30,7 +30,7 @@ test_tbl
 #  (i.e., it never calls print or format on its columns, AFAICT)
 # instead it now does lots of weird shit using "pillar" -- 
 # see https://github.com/tidyverse/hms/pull/43 and the pillar README,
-# seems one now needs to write a pillar_shaft.feval method
+# seems one now needs to write a pillar_shaft.tfd method
 
 
 # select patient-visits with CCA-FA at location .7 greater than .6

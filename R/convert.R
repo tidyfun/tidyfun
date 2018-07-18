@@ -1,15 +1,15 @@
-#' @rdname feval
+#' @rdname tfd
 #' @export 
-as.feval <- function(data, ...) UseMethod("as.feval")
-as.feval.default <- function(data, ...) {
-  feval(data,  ...)
+as.tfd <- function(data, ...) UseMethod("as.tfd")
+as.tfd.default <- function(data, ...) {
+  tfd(data,  ...)
 }
 
-# TODO: this ignores argvals, domain for now, only needed internally in c.feval
-#' @rdname feval
-as.feval_irreg <- function(data, signif = NULL, ...) UseMethod("as.feval_irreg")
+# TODO: this ignores argvals, domain for now, only needed internally in c.tfd
+#' @rdname tfd
+as.tfd_irreg <- function(data, signif = NULL, ...) UseMethod("as.tfd_irreg")
 
-as.feval_irreg.feval_reg <- function(data, signif = NULL, ...) {
+as.tfd_irreg.tfd_reg <- function(data, signif = NULL, ...) {
   argvals <- ensure_list(argvals(data))
   if (!is.null(signif)) {
     argvals <- .adjust_resolution(argvals, signif = signif, unique = TRUE)
@@ -20,12 +20,12 @@ as.feval_irreg.feval_reg <- function(data, signif = NULL, ...) {
   ret <- map2(evaluations(data), argvals, ~ list(argvals = .y, data = .x))
   attributes(ret) <- attributes(data)
   attr(ret, "argvals") <- numeric(0)
-  class(ret)[1] <- "feval_irreg"
+  class(ret)[1] <- "tfd_irreg"
   ret
 }
 
 # TODO: this ignores argvals, domain for now.....
-as.feval_irreg.feval_irreg <- function(data, signif = 4, ...) {
+as.tfd_irreg.tfd_irreg <- function(data, signif = 4, ...) {
   argvals <- argvals(data)
   if (!is.null(signif)) {
     argvals <- .adjust_resolution(argvals, signif = signif, unique = TRUE)
@@ -37,13 +37,13 @@ as.feval_irreg.feval_irreg <- function(data, signif = 4, ...) {
   data
 }
 
-#' @rdname feval
+#' @rdname tfd
 #' @param row.names not used
 #' @param optional not used
-#' @param x an `feval` object
+#' @param x an `tfd` object
 #' @inheritParams [.tf
 #' @export 
-as.data.frame.feval <- function(x, row.names = NULL, optional = FALSE, 
+as.data.frame.tfd <- function(x, row.names = NULL, optional = FALSE, 
   argvals = NULL, interpolate = FALSE, ...) {
   if (is.null(argvals)) {
     argvals <- ensure_list(argvals(x))
@@ -55,9 +55,9 @@ as.data.frame.feval <- function(x, row.names = NULL, optional = FALSE,
   tidyr::unnest(bind_rows(list(id = id, data = tmp))) 
 }
 
-#' @rdname feval
+#' @rdname tfd
 #' @export
-as.matrix.feval <- function(x, argvals = NULL, interpolate = FALSE, ...) {
+as.matrix.tfd <- function(x, argvals = NULL, interpolate = FALSE, ...) {
   if (is.null(argvals)) {
     argvals <- sort(unlist(argvals(x)))
   } 

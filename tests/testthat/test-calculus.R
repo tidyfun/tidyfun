@@ -11,12 +11,12 @@ dgrid <- seq(from + 0.5, to - 0.5, l = 50)
 eval_irreg <- function(expression, g, domain) {
   args <- unique(round(sort(runif(g, domain[1],  domain[2])), 3))
   f <- eval(expression, list(x = args))
-  feval(f, argvals = args)
+  tfd(f, argvals = args)
 }
 
-cubic <- feval(grid^3, grid) 
-square <- 3 * feval(grid^2, grid)
-lin <- 6 * feval(grid, grid)
+cubic <- tfd(grid^3, grid) 
+square <- 3 * tfd(grid^2, grid)
+lin <- 6 * tfd(grid, grid)
 cubic_irreg <- eval_irreg(expression(x^3), g, domain)
 cubic_b <- fbase(cubic, k = 45, bs = "tp", verbose = FALSE)
 square_irreg <- eval_irreg(expression(3 * x^2), g, domain)

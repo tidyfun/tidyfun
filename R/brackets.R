@@ -2,7 +2,7 @@
 #' 
 #' These functions access, subset, replace and evaluate `tfs`. 
 #' For more information on creating `tf`s and converting them to/from 
-#' `list`, `data.frame` or `matrix`, see [feval()] and [fbase()]. \cr
+#' `list`, `data.frame` or `matrix`, see [tfd()] and [fbase()]. \cr
 #' Note that these break certain R conventions for vector-like objects:\cr
 #'  
 #' - no argument recycling,
@@ -20,7 +20,7 @@
 #'   vectors.
 #' @param interpolate should functions be evaluated (i.e., inter-/extrapolated)
 #'   for `argvals` for which no original data is available? Only relevant for
-#'   `feval`, defaults to TRUE.
+#'   `tfd`, defaults to TRUE.
 #' @param matrix should the result be returned as a `matrix` or as a list of
 #'   `data.frame`s? If TRUE, `j` has to be a (list of a) single vector of
 #'   `argvals`. See return value.
@@ -117,10 +117,10 @@
   stopifnot(inherits(value, class(x)[1]), 
     all(domain(x) == domain(value)),
     length(value) %in% c(1, length(i)))
-  if (inherits(x, "feval_reg") | inherits(x, "fbase")) {
+  if (inherits(x, "tfd_reg") | inherits(x, "fbase")) {
     assert_true(identical(argvals(x), argvals(value)))
   }
-  if (is_feval(x)) {
+  if (is_tfd(x)) {
     assert_true(
       identical(evaluator(x), evaluator(value), ignore.environment = TRUE))
   } else {

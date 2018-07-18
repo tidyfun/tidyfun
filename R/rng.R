@@ -15,7 +15,7 @@
 #'   `"squareexp"` or `"wiener"`, see Description.
 #' @param nugget nugget effect for additional white error noise. Defaults to
 #'   `scale/200` (so: very little noise)
-#' @return an `feval`-vector of length `n`
+#' @return an `tfd`-vector of length `n`
 #' @importFrom mvtnorm rmvnorm
 #' @export
 rgp <- function(n, argvals = seq(0, 1, l = 51), scale = diff(range(argvals))/10, 
@@ -25,13 +25,13 @@ rgp <- function(n, argvals = seq(0, 1, l = 51), scale = diff(range(argvals))/10,
     "squareexp" = function(s,t) exp(-(s - t)^2/scale))
   cov <- outer(argvals, argvals, f_cov) + diag(0*argvals + nugget)
   y <- rmvnorm(n, mean = 0 * argvals, sigma = cov)
-  feval(y, argvals = argvals)
+  tfd(y, argvals = argvals)
 }
 
 #' @importFrom stats runif
 jiggle <- function(f, ...) {
-  stopifnot(is_feval(f))
-  f <- as.feval_irreg(f)
+  stopifnot(is_tfd(f))
+  f <- as.tfd_irreg(f)
   jiggle_args <- function(argvals) {
     diffs <- diff(argvals)
     n <- length(argvals)
@@ -41,5 +41,5 @@ jiggle <- function(f, ...) {
       runif(1, new_args[n - 2], argvals[n]))
   } 
   new_args <- map(argvals(f), jiggle_args)
-  feval(map2(new_args, evaluations(f), cbind), domain = domain(f))
+  tfd(map2(new_args, evaluations(f), cbind), domain = domain(f))
 }

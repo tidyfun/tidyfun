@@ -9,7 +9,7 @@
 \alias{fbase.matrix}
 \alias{fbase.numeric}
 \alias{fbase.list}
-\alias{fbase.feval}
+\alias{fbase.tfd}
 \alias{fbase.fbase}
 \title{Constructors for (smoothed) functional data in basis representation}
 \usage{
@@ -34,8 +34,8 @@ fbase(data, ...)
 \method{fbase}{list}(data, argvals = NULL, domain = NULL,
   penalized = TRUE, signif = 4, ...)
 
-\method{fbase}{feval}(data, argvals = NULL, domain = NULL,
-  penalized = TRUE, signif = 4, ...)
+\method{fbase}{tfd}(data, argvals = NULL, domain = NULL, penalized = TRUE,
+  signif = 4, ...)
 
 \method{fbase}{fbase}(data, argvals = NULL, domain = NULL,
   penalized = TRUE, signif = 4, ...)

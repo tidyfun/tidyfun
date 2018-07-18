@@ -1,7 +1,7 @@
 # cf. https://github.com/tidyverse/ggplot2/blob/69dfc4bc62828ecc3d1cda3dea4d0a664c4ea12c/R/sf.R
 rm(list = ls())
 devtools::load_all("~/fda/tidyfun")
-is.finite.feval <- function(x) map(evaluations(x), ~ all(is.finite(x)))
+is.finite.tfd <- function(x) map(evaluations(x), ~ all(is.finite(x)))
 scale_type.tf <- function(x) "identity"
 library(magrittr)
 library(tidyverse)

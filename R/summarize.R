@@ -14,7 +14,7 @@ NULL
 #' @export 
 #' @rdname tfsummaries
 mean.tf <- function(x, ...){
-  summarize_tf(x, op = "mean", eval  = is_feval(x), ...)
+  summarize_tf(x, op = "mean", eval  = is_tfd(x), ...)
 }
 
 #' @param depth method used to determine the most central element in `x`, i.e., the median.
@@ -31,7 +31,7 @@ median.tf <- function(x, na.rm = FALSE, depth = c("MBD", "pointwise"), ...){
   }
   depth  <- match.arg(depth)
   if (depth == "pointwise") {
-    summarize_tf(x, na.rm = na.rm, op = "median", eval  = is_feval(x), ...)
+    summarize_tf(x, na.rm = na.rm, op = "median", eval  = is_tfd(x), ...)
   } else {
     depths <- depth(x, depth = depth)
     med <- x[depths == max(depths)]
@@ -56,7 +56,7 @@ quantile.tf <- function(x, probs = seq(0, 1, 0.25), na.rm = FALSE,
   # Depth-based nonparametric description of functional data, with emphasis on use of spatial depth.
   warning("only pointwise, non-functional quantiles implemented for tfs.")
   summarize_tf(x, probs = probs, na.rm = na.rm,
-    names = names, type = type, op = "quantile", eval  = is_feval(x), ...)
+    names = names, type = type, op = "quantile", eval  = is_tfd(x), ...)
 }
 
 #' @inheritParams stats::sd
@@ -71,7 +71,7 @@ sd.default <- stats::sd
 #' @export
 #' @rdname tfsummaries
 sd.tf <- function(x, na.rm = FALSE){
-  summarize_tf(x, na.rm = na.rm, op = "sd", eval  = is_feval(x))
+  summarize_tf(x, na.rm = na.rm, op = "sd", eval  = is_tfd(x))
 } 
 
 #' @inheritParams stats::var
@@ -87,7 +87,7 @@ var.default <- stats::var
 #' @export
 #' @rdname tfsummaries
 var.tf <- function(x, y = NULL, na.rm = FALSE, use){
-  summarize_tf(x, na.rm = na.rm, op = "sd", eval  = is_feval(x))
+  summarize_tf(x, na.rm = na.rm, op = "sd", eval  = is_tfd(x))
 } 
 
 # cov / cor # needs image class/fpca methods

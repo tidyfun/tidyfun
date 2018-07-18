@@ -165,7 +165,7 @@ fbase <- function(data, ...) UseMethod("fbase")
 
 
 #' @export
-#' @inheritParams feval.data.frame
+#' @inheritParams tfd.data.frame
 #' @param penalized should the coefficients of the basis representation be estimated
 #'   via [mgcv::magic()] (default) or ordinary least squares.
 #' @param ... arguments to the calls to [mgcv::s()] setting up the basis and
@@ -240,7 +240,7 @@ fbase.list <- function(data, argvals = NULL,
 
 #' @rdname fbase
 #' @export
-fbase.feval <- function(data, argvals = NULL, 
+fbase.tfd <- function(data, argvals = NULL, 
   domain = NULL, penalized = TRUE, signif = 4, ...) {
   argvals <- argvals %||% argvals(data)
   domain <- domain %||% domain(data)

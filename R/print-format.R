@@ -28,7 +28,7 @@ print.tf <- function(x, n  = 10, ...) {
 
 #' @rdname tfdisplay
 #' @export
-print.feval_reg <- function(x, n = 10, ...) {
+print.tfd_reg <- function(x, n = 10, ...) {
   NextMethod()
   cat(" based on", length(argvals(x)), "evaluations each\n")
   cat("interpolation by", attr(x, "evaluator_name"), "\n")
@@ -42,7 +42,7 @@ print.feval_reg <- function(x, n = 10, ...) {
 
 #' @rdname tfdisplay
 #' @export
-print.feval_irreg <- function(x, n = 10, ...) {
+print.tfd_irreg <- function(x, n = 10, ...) {
   NextMethod()
   nas <- map_lgl(evaluations(x), ~length(.)==1 && all(is.na(.)))
   n_evals <- n_evaluations(x[!nas])

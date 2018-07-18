@@ -2,14 +2,14 @@
 % Please edit documentation in R/evaluate.R
 \name{evaluate}
 \alias{evaluate}
-\alias{evaluate.feval}
+\alias{evaluate.tfd}
 \alias{evaluate.fbase}
 \alias{evaluate.data.frame}
 \title{Evaluate \code{tf}s, both inside or outside a \code{data.frame}}
 \usage{
 evaluate(object, argvals, ...)
 
-\method{evaluate}{feval}(object, argvals, ...)
+\method{evaluate}{tfd}(object, argvals, ...)
 
 \method{evaluate}{fbase}(object, argvals, ...)
 

@@ -29,7 +29,7 @@ funplot(f, argvals, n_grid = 50, points = is_irreg(f),
 defaults to 50. See details.}
 
 \item{points}{should the original evaluation points be marked by points?
-Defaults to \code{TRUE} for irregular \code{feval} and FALSE for all others}
+Defaults to \code{TRUE} for irregular \code{tfd} and FALSE for all others}
 
 \item{type}{"spaghetti": line plots, "lasagna": heat maps.}
 
@@ -44,7 +44,7 @@ Defaults to 2/(no. of observations). Lower is more transparent.}
 
 \item{interpolate}{should functions be evaluated (i.e., inter-/extrapolated)
 for argvals for which no original data is available? Only relevant for
-feval, defaults to FALSE}
+tfd, defaults to FALSE}
 }
 \value{
 for \code{funplot}: the \code{ggplot}-object for further modification. For the
@@ -60,7 +60,7 @@ spaghetti- (i.e., line plots) and lasagna- (i.e., heat map) flavors.
 If no \code{argvals} are provided, evaluation points (\code{argvals}) for the functions
 are given by the union of the \code{tf}'s \code{argvals} and an equidistant grid
 over its domain with \code{n_grid} points. If you want to only see the original
-data for \code{feval}-objects without inter-/extrapolation, use \code{n_grid < 1} or
+data for \code{tfd}-objects without inter-/extrapolation, use \code{n_grid < 1} or
 \code{n_grid = NA}.
 }
 \references{

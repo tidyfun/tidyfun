@@ -6,7 +6,7 @@ load_all()
 fe <- rgp(5, grid = seq(0, 1, l = 21))
 plot(fe, p = FALSE)
 lines(cummax(fe), col = 1:5)
-fm <- feval(apply(as.matrix(fe), 2, cummax))
+fm <- tfd(apply(as.matrix(fe), 2, cummax))
 plot(fm, col = 1:5, lty = 2)
 
 set.seed(2211)
@@ -20,8 +20,8 @@ rownames(mat_reg) <- 1:n
 mat_irreg <- mat_reg
 mat_irreg[sample(1:length(mat_reg), length(mat_reg)/3)] <- NA
 
-freg <-  feval(mat_reg, evaluator = approx_spline)
-firreg <- feval(mat_irreg, evaluator = approx_linear)
+freg <-  tfd(mat_reg, evaluator = approx_spline)
+firreg <- tfd(mat_irreg, evaluator = approx_linear)
 
 
 freg == +freg
@@ -41,10 +41,10 @@ firreg == firreg[2]
 
 fb <- fbase(freg, k = 25)
 # NB:
-all.equal(coef(fbase(feval(fbase(freg)))), coef(fbase(freg)))
-fbase(feval(fbase(freg))) == fbase(freg)
+all.equal(coef(fbase(tfd(fbase(freg)))), coef(fbase(freg)))
+fbase(tfd(fbase(freg))) == fbase(freg)
 # but:
-purrr::map2(coef(fbase(feval(fbase(freg)))), coef(fbase(freg)), 
+purrr::map2(coef(fbase(tfd(fbase(freg)))), coef(fbase(freg)), 
   ~all(.x == .y))
 
 +fb == fb
@@ -67,13 +67,13 @@ data_irreg <- data.frame(id = rep(1:3, each = 21),
   argvals = round(rep(seq(0, 1, l = 21), times = 3) + runif(63, -.1, .1), 4),
   data = dbeta(rep(seq(0, 1, l = 21), times = 3), 3, 7))  #%>% 
   #group_by(id) %>%  arrange(argvals, .by_group = TRUE) %>%  ungroup()
-firreg <- feval(data_irreg)
+firreg <- tfd(data_irreg)
 
 data_reg <- data.frame(id = rep(1:3, each = 21), 
   argvals = rep(seq(0, 1, l = 21), times = 3),
   data = as.vector(replicate(3, dbeta(seq(0, 1, l = 21), 
     runif(1, 2, 5), runif(1, 3, 9)))))
-freg <- feval(data_reg)
+freg <- tfd(data_reg)
 range(freg)
 
 fb <- fbase(firreg, k = 10)

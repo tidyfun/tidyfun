@@ -18,7 +18,7 @@ prep_plotting_argvals <- function(f, n_grid) {
 #' If no `argvals` are provided, evaluation points (`argvals`) for the functions 
 #' are given by the union of the `tf`'s `argvals` and an equidistant grid 
 #' over its domain with `n_grid` points. If you want to only see the original 
-#' data for `feval`-objects without inter-/extrapolation, use `n_grid < 1` or 
+#' data for `tfd`-objects without inter-/extrapolation, use `n_grid < 1` or 
 #' `n_grid = NA`.
 #'    
 #' @param f an `tf` object
@@ -26,7 +26,7 @@ prep_plotting_argvals <- function(f, n_grid) {
 #' @param n_grid minimal size of equidistant grid used for plotting, 
 #'   defaults to 50. See details.
 #' @param points should the original evaluation points be marked by points?
-#'   Defaults to `TRUE` for irregular `feval` and FALSE for all others
+#'   Defaults to `TRUE` for irregular `tfd` and FALSE for all others
 #' @param type "spaghetti": line plots, "lasagna": heat maps.
 #' @param alpha [alpha-value](grDevices::rgb()) for noodle transparency. 
 #'   Defaults to 2/(no. of observations). Lower is more transparent.
@@ -45,7 +45,7 @@ funplot <- function(f, argvals, n_grid = 50, points = is_irreg(f),
   if (missing(argvals)) {
     argvals <- prep_plotting_argvals(f, n_grid)
   }
-  d <- if (is_feval(f)) {
+  d <- if (is_tfd(f)) {
     as.data.frame(f, argvals = argvals, interpolate = TRUE) 
   } else {
     as.data.frame(f, argvals = argvals)
@@ -95,7 +95,7 @@ plot.tf <- function(x, y, n_grid = 50, points = is_irreg(x),
   } else {
     argvals <- y
   }  
-  m <- if (is_feval(f)) {
+  m <- if (is_tfd(f)) {
     as.matrix(f, argvals = argvals, interpolate = TRUE) 
   } else as.matrix(f, argvals = argvals)
   if (type == "spaghetti") {
@@ -133,7 +133,7 @@ linespoints_tf <- function(x, argvals, n_grid = 50, points = TRUE,
   if (missing(argvals)) {
     argvals <- prep_plotting_argvals(x, n_grid)
   }
-  m <- if (is_feval(x)) {
+  m <- if (is_tfd(x)) {
     suppressWarnings(
       as.matrix(x, argvals = argvals, interpolate = interpolate))
   } else as.matrix(x, argvals = argvals)
@@ -157,7 +157,7 @@ lines.tf <- function(x, argvals, n_grid = 50,
 #' @rdname tfviz
 #' @param interpolate should functions be evaluated (i.e., inter-/extrapolated)
 #'   for argvals for which no original data is available? Only relevant for
-#'   feval, defaults to FALSE
+#'   tfd, defaults to FALSE
 points.tf <- function(x, argvals, n_grid = NA, 
     alpha = min(1, max(.05, 2/length(x))), interpolate = FALSE, ...) {
   args <- c(modifyList(head(formals(points.tf), -1),

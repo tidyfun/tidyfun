@@ -59,7 +59,7 @@ deriv_fbase_fpc <- function(expr, order = 1, lower, upper,
 #' Derivatives and integrals of functional data
 #'
 #' Derivatives of `tf`s use finite differences of the evaluations 
-#' for `feval` and finite differences of the basis functions for `fbase`. 
+#' for `tfd` and finite differences of the basis functions for `fbase`. 
 #' Note that, for some spline bases like `"cr"` or `"tp"` which always begin/end linearly,
 #' computing second derivatives will produce artefacts at the outer limits 
 #' of the functions' domain due to these boundary constraints. Basis `"bs"` does 
@@ -74,14 +74,14 @@ deriv_fbase_fpc <- function(expr, order = 1, lower, upper,
 #' @export
 #' @importFrom stats deriv
 #' @rdname tfcalculus
-deriv.feval <- function(expr, order = 1, argvals = NULL, ...) {
+deriv.tfd <- function(expr, order = 1, argvals = NULL, ...) {
   #TODO: should this interpolate back to the original grid?
   # shortens the domain (slightly), for now.
   if (is_irreg(expr)) warning("differentiating irregular data could be sketchy.")
   data <- as.matrix(expr, argvals = argvals, interpolate = TRUE)
   argvals <- as.numeric(colnames(data))
   derived <- deriv_matrix(data, argvals, order)
-  ret <- feval(derived$data, derived$argvals, 
+  ret <- tfd(derived$data, derived$argvals, 
     domain = range(derived$argvals), #!! shorter
     signif = attr(expr, "signif_argvals"))
   evaluator(ret) <- attr(expr, "evaluator_name")
@@ -104,7 +104,7 @@ deriv.fbase <- function(expr, order = 1, ...) {
 #' @description Integration of `tf`s is done by quadrature (trapezoid rule, specifically). 
 #'  By default the scalar definite integral \eqn{\int^{upper}_{lower}f(s)ds} is returned 
 #'  (option `definite = TRUE`), alternatively for `definite = FALSE` something 
-#'  like the *anti-derivative* on `[lower, upper]`, e.g. an `feval` object
+#'  like the *anti-derivative* on `[lower, upper]`, e.g. an `tfd` object
 #'  representing \eqn{F(t) = \int^{t}_{lower}f(s)ds}, for \eqn{t \in}`[lower, upper]`,
 #'  is returned.
 #' @export
@@ -128,7 +128,7 @@ integrate.function <- stats::integrate
 #' @param definite should the definite integral  be returned (default)
 #'   or the antiderivative. See Description.
 #' @export
-integrate.feval <- function(f, lower = domain(f)[1], upper = domain(f)[2], 
+integrate.tfd <- function(f, lower = domain(f)[1], upper = domain(f)[2], 
   definite = TRUE, argvals, ...) {
   if (missing(argvals)) {
     argvals <- tidyfun::argvals(f)
@@ -152,7 +152,7 @@ integrate.feval <- function(f, lower = domain(f)[1], upper = domain(f)[2],
   if (definite) {
     return(map(quads, sum) %>% unlist)
   } else {
-    feval(data = map(quads, cumsum), argvals = unlist(argvals), domain = limits, 
+    tfd(data = map(quads, cumsum), argvals = unlist(argvals), domain = limits, 
       signif = attr(f, "signif_argvals"), evaluator = approx_linear)
   }
   # this is too slow:
@@ -176,7 +176,7 @@ integrate.fbase <- function(f, lower = domain(f)[1], upper = domain(f)[2],
   stopifnot(length(lower) %in% c(1, length(f)), 
     length(upper) %in% c(1, length(f)))
   if (definite) {
-    return(integrate(feval(f, argvals = argvals), lower = lower, upper = upper, 
+    return(integrate(tfd(f, argvals = argvals), lower = lower, upper = upper, 
       argvals = argvals))
   }
   limits <- cbind(lower, upper)

@@ -20,7 +20,7 @@ vectors.}
 
 \item{interpolate}{should functions be evaluated (i.e., inter-/extrapolated)
 for \code{argvals} for which no original data is available? Only relevant for
-\code{feval}, defaults to TRUE.}
+\code{tfd}, defaults to TRUE.}
 
 \item{matrix}{should the result be returned as a \code{matrix} or as a list of
 \code{data.frame}s? If TRUE, \code{j} has to be a (list of a) single vector of
@@ -43,7 +43,7 @@ represents one \code{argval} as given in argument \code{j}, with an attribute
 \description{
 These functions access, subset, replace and evaluate \code{tfs}.
 For more information on creating \code{tf}s and converting them to/from
-\code{list}, \code{data.frame} or \code{matrix}, see \code{\link[=feval]{feval()}} and \code{\link[=fbase]{fbase()}}. \cr
+\code{list}, \code{data.frame} or \code{matrix}, see \code{\link[=tfd]{tfd()}} and \code{\link[=fbase]{fbase()}}. \cr
 Note that these break certain R conventions for vector-like objects:\cr
 \itemize{
 \item no argument recycling,

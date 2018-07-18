@@ -2,17 +2,17 @@
 % Please edit documentation in R/print-format.R
 \name{print.tf}
 \alias{print.tf}
-\alias{print.feval_reg}
-\alias{print.feval_irreg}
+\alias{print.tfd_reg}
+\alias{print.tfd_irreg}
 \alias{print.fbase}
 \alias{format.tf}
 \title{Pretty printing and formatting for functional data}
 \usage{
 \method{print}{tf}(x, n = 10, ...)
 
-\method{print}{feval_reg}(x, n = 10, ...)
+\method{print}{tfd_reg}(x, n = 10, ...)
 
-\method{print}{feval_irreg}(x, n = 10, ...)
+\method{print}{tfd_irreg}(x, n = 10, ...)
 
 \method{print}{fbase}(x, n = 10, ...)
 

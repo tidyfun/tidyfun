@@ -2,14 +2,14 @@
 % Please edit documentation in R/concatenate.R
 \name{c.tf}
 \alias{c.tf}
-\alias{c.feval}
+\alias{c.tfd}
 \alias{c.fbase}
 \alias{merge.tf}
 \title{Concatenate \code{tf}-objects}
 \usage{
 \method{c}{tf}(...)
 
-\method{c}{feval}(...)
+\method{c}{tfd}(...)
 
 \method{c}{fbase}(...)
 
@@ -32,12 +32,12 @@ Functions to concatenate multiple vectors of functional data.
 }
 \details{
 Only allows concatenation of functions with the same domain and similar
-represenation, i.e., \code{fbase} cannot be concatenated to \code{feval} and vice
-versa. If \code{feval_reg}-objects to be concatenated are not on the same grid of
-\code{argvals}, or if both \code{feval_reg} and \code{feval_irreg} objects are concatenated,
-a \code{feval_irreg}-object is returned. \cr \code{c.fbase} will use the basis of its
+represenation, i.e., \code{fbase} cannot be concatenated to \code{tfd} and vice
+versa. If \code{tfd_reg}-objects to be concatenated are not on the same grid of
+\code{argvals}, or if both \code{tfd_reg} and \code{tfd_irreg} objects are concatenated,
+a \code{tfd_irreg}-object is returned. \cr \code{c.fbase} will use the basis of its
 first argument for representing all remaining arguments and refit them
-accordingly if necessary.\cr \code{c.feval} will use the \code{evaluator} of its first
+accordingly if necessary.\cr \code{c.tfd} will use the \code{evaluator} of its first
 argument for all remaining arguments as well.\cr This means that \code{c(f1, f2)}
 is not necessarily the same as \code{rev(c(f2, f1))}.
 }

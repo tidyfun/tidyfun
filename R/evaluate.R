@@ -17,16 +17,16 @@ evaluate.default <- function(object, argvals, ...) .NotYetImplemented()
 
 #' @export
 #' @rdname evaluate
-evaluate.feval <- function(object, argvals, ...) {
+evaluate.tfd <- function(object, argvals, ...) {
   if (missing(argvals) | is.null(argvals)) argvals <- tidyfun::argvals(object)
   argvals <- ensure_list(argvals)
   assert_argvals(argvals, object)
   pmap(list(argvals, ensure_list(argvals(object)), evaluations(object)), 
-    ~ evaluate_feval_once(x = ..1, argvals = ..2, evaluations = ..3, 
+    ~ evaluate_tfd_once(x = ..1, argvals = ..2, evaluations = ..3, 
         evaluator = attr(object, "evaluator")))
 }  
 
-evaluate_feval_once <- function(x, argvals, evaluations, evaluator) {
+evaluate_tfd_once <- function(x, argvals, evaluations, evaluator) {
   if (isTRUE(all.equal(x, argvals))) return(evaluations)
   evaluator(x, argvals = argvals, evaluations = evaluations)
 }
