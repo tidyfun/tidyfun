@@ -70,11 +70,13 @@ summarize_fvector <- function(..., op = NULL, eval = FALSE) {
 #' f3 <- fbase(rgp(5, scale = 0.01), k = 50)
 #' log(exp(f3)) == f3 #!!
 #' plot(log(exp(f3))); lines(f3, lty = 2, col = 2) # still reasonable
+#' @export
 #' 
 Math.feval <- function(x) {
   fun_math(x, .Generic)
 } 
 #' @rdname fvectorgroupgenerics
+#' @export
 Math.fbase <- function(x) {
   basis_args <- attr(x, "basis_args")
   eval <- fun_math(feval(x), .Generic)
@@ -83,35 +85,42 @@ Math.fbase <- function(x) {
 }  
 
 #' @rdname fvectorgroupgenerics
+#' @export
 cummax.feval <- function(...) {
   summarize_fvector(..., op = "cummax", eval  = TRUE)
 }
 #' @rdname fvectorgroupgenerics
+#' @export
 cummin.feval <- function(...) {
   summarize_fvector(..., op = "cummin", eval  = TRUE)
 }
 #' @rdname fvectorgroupgenerics
+#' @export
 cumsum.feval <- function(...) {
   summarize_fvector(..., op = "cumsum", eval  = TRUE)
 }
 #' @rdname fvectorgroupgenerics
+#' @export
 cumprod.feval <- function(...) {
   summarize_fvector(..., op = "cumprod", eval  = TRUE)
 }
-
 #' @rdname fvectorgroupgenerics
+#' @export
 cummax.fbase <- function(...) {
   summarize_fvector(..., op = "cummax", eval  = FALSE)
 }
 #' @rdname fvectorgroupgenerics
+#' @export
 cummin.fbase <- function(...) {
   summarize_fvector(..., op = "cummin", eval  = FALSE)
 }
 #' @rdname fvectorgroupgenerics
+#' @export
 cumsum.fbase <- function(...) {
   summarize_fvector(..., op = "cumsum", eval  = FALSE)
 }
 #' @rdname fvectorgroupgenerics
+#' @export
 cumprod.fbase <- function(...) {
   summarize_fvector(..., op = "cumprod", eval  = FALSE)
 }
@@ -119,6 +128,7 @@ cumprod.fbase <- function(...) {
 #-------------------------------------------------------------------------------
 
 #' @rdname fvectorgroupgenerics
+#' @export
 Summary.fvector <- function(...) {
   not_defined <- switch(.Generic, 
     `all` = , `any` = TRUE, FALSE)

@@ -95,5 +95,4 @@ layout(t(1:2)); plot(f2, col = 1:5); plot(cummax(f2), col = 1:5); lines(f2)
 f3 <- fbase(rgp(5, scale = 0.01), k = 50)
 log(exp(f3)) == f3 #!!
 plot(log(exp(f3))); lines(f3, lty = 2, col = 2) # still reasonable
-
 }
