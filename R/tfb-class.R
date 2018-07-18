@@ -151,7 +151,7 @@ magic_smooth_coef <- function(evaluations, index, spec_object, magic_args) {
 #' [mgcv::magic()]), most important: how many basis functions `k` the spline
 #' basis should have, the default is 25. 
 #' 
-#' See [fpcbase()] for using an FPC representation with an orthogonal basis estimated from the
+#' See [tfb_fpc()] for using an FPC representation with an orthogonal basis estimated from the
 #' data instead.
 #' 
 #' @param data a `matrix`, `data.frame` or `list` of suitable shape, or another
@@ -159,7 +159,7 @@ magic_smooth_coef <- function(evaluations, index, spec_object, magic_args) {
 #' @return an `tfb`-object (or a `data.frame`/`matrix` for the conversion
 #'   functions, obviously.)
 #' @rdname tfb
-#' @seealso [fpcbase()]
+#' @seealso [tfb_fpc()]
 #' @export
 tfb <- function(data, ...) UseMethod("tfb")
 

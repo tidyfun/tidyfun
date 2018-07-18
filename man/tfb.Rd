@@ -45,9 +45,9 @@ tfb(data, ...)
 \code{tf}-object.}
 
 \item{basis}{either "mgcv" to call \code{\link[=tfb]{tfb()}} which uses \code{mgcv}-type spline basis functions
-or "fpc" to call \code{\link[=fpcbase]{fpcbase()}} which uses a (smoothed) functional principal component basis.}
+or "fpc" to call \code{\link[=tfb_fpc]{tfb_fpc()}} which uses a (smoothed) functional principal component basis.}
 
-\item{...}{arguments to \code{\link[=tfb]{tfb()}} or \code{\link[=fpcbase]{fpcbase()}}}
+\item{...}{arguments to \code{\link[=tfb]{tfb()}} or \code{\link[=tfb_fpc]{tfb_fpc()}}}
 
 \item{x}{an \code{tfb} object}
 
@@ -99,9 +99,9 @@ spline basis set up (via \code{\link[mgcv:s]{mgcv::s()}}) and the estimation (vi
 \code{\link[mgcv:magic]{mgcv::magic()}}), most important: how many basis functions \code{k} the spline
 basis should have, the default is 25.
 
-See \code{\link[=fpcbase]{fpcbase()}} for using an FPC representation with an orthogonal basis estimated from the
+See \code{\link[=tfb_fpc]{tfb_fpc()}} for using an FPC representation with an orthogonal basis estimated from the
 data instead.
 }
 \seealso{
-\code{\link[=fpcbase]{fpcbase()}}
+\code{\link[=tfb_fpc]{tfb_fpc()}}
 }

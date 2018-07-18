@@ -3,7 +3,7 @@
 \name{[.tf}
 \alias{[.tf}
 \alias{[<-.tf}
-\title{Accessing/evaluating, subsetting and subassigning \code{tfs}}
+\title{Accessing/evaluating, subsetting and subassigning \code{tf}s}
 \usage{
 \method{[}{tf}(x, i, j, interpolate = TRUE, matrix = TRUE)
 
@@ -19,11 +19,11 @@ usual R rules apply)}
 vectors.}
 
 \item{interpolate}{should functions be evaluated (i.e., inter-/extrapolated)
-for \code{arg} for which no original data is available? Only relevant for
-\code{tfd}, defaults to TRUE.}
+for values in \code{arg} for which no original data is available? Only relevant for
+\code{tfd}, defaults to \code{TRUE}.}
 
 \item{matrix}{should the result be returned as a \code{matrix} or as a list of
-\code{data.frame}s? If TRUE, \code{j} has to be a (list of a) single vector of
+\code{data.frame}s? If \code{TRUE}, \code{j} has to be a (list of a) single vector of
 \code{arg}. See return value.}
 
 \item{value}{\code{tf} object for subassignment. This is (currently) very strictly typed,
@@ -37,21 +37,23 @@ evaluations in which each row represents one function and each column
 represents one \code{argval} as given in argument \code{j}, with an attribute
 \code{arg}=\code{j} and row- and column-names derived from \code{x[i]} and \code{j}.\cr If
 \code{j} is given and \code{matrix == FALSE}, a list of \code{tbl_df}s with columns
-\code{arg} = \code{j} and \code{data} = evaluations at \code{j} for each observation in
+\code{arg} = \code{j} and \code{value} = evaluations at \code{j} for each observation in
 \code{i}.
 }
 \description{
-These functions access, subset, replace and evaluate \code{tfs}.
+These functions access, subset, replace and evaluate \code{tf}s.
 For more information on creating \code{tf}s and converting them to/from
 \code{list}, \code{data.frame} or \code{matrix}, see \code{\link[=tfd]{tfd()}} and \code{\link[=tfb]{tfb()}}. \cr
-Note that these break certain R conventions for vector-like objects:\cr
+Note that these break certain (terrible) R conventions for vector-like objects:\cr
 \itemize{
 \item no argument recycling,
-\item no indexing with \code{NA}, names not present in \code{x} or integers \code{> length(x)}
+\item no indexing with \code{NA},
+\item no indexing with names not present in \code{x},
+\item no indexing with integers \code{> length(x)}
 }
 }
 \details{
-Both of these will yield errors. Subassigning new elements to positions
+All of these will trigger errors. Subassigning new elements to positions
 beyond the original length of the object will still fill up the vector with \code{NAs},
-though.
+though. I'm a fickle, rainbow-colored unicorn.
 }

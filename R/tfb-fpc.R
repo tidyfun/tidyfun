@@ -1,4 +1,4 @@
-# data -> FPC decomp: mean, efuns, scores, values, (pve/remainder) -> fpcbase representation
+# data -> FPC decomp: mean, efuns, scores, values, (pve/remainder) -> tfb_fpc representation
 pc_truncated <- function(data, pve = .995) {
   mean <- colMeans(data)
   data_c <- t(t(data) - mean)
@@ -19,7 +19,7 @@ fpc_wrapper <- function(efunctions) {
 } 
 
 #' @importFrom refund fpca.sc
-fpc_tfb <- function(data, domain = NULL, smooth = TRUE, signif = 4, ...) {
+make_tfb_fpc <- function(data, domain = NULL, smooth = TRUE, signif = 4, ...) {
   #FIXME: rm renaming once we've cleaned up fpca.sc etc
   #FIXME: warn if domain != range(arg), can't extrapolate FPCs
   data$arg <- .adjust_resolution(data$arg, signif, unique = FALSE)
@@ -75,49 +75,49 @@ fpc_tfb <- function(data, domain = NULL, smooth = TRUE, signif = 4, ...) {
 #'  determine the truncation levels and uses `bs = 15` basis functions for 
 #'  the mean function and the marginal bases for the covariance surface.
 #' @seealso tfb
-#' @rdname fpcbase
+#' @rdname tfb_fpc
 #' @export
-fpcbase <- function(data, ...) UseMethod("fpcbase")
+tfb_fpc <- function(data, ...) UseMethod("tfb_fpc")
 
-#' @rdname fpcbase
+#' @rdname tfb_fpc
 #' @export
-fpcbase.data.frame <- function(data, id = 1, arg = 2, value = 3,  
+tfb_fpc.data.frame <- function(data, id = 1, arg = 2, value = 3,  
   domain = NULL, smooth = TRUE, signif = 4, ...) {
   data <- df_2_df(data, id, arg, value)
-  fpc_tfb(data, domain = domain, signif = signif, ...)
+  make_tfb_fpc(data, domain = domain, signif = signif, ...)
 }
 
-#' @rdname fpcbase
+#' @rdname tfb_fpc
 #' @export
-fpcbase.matrix <- function(data, arg = NULL, domain = NULL, smooth = TRUE, signif = 4, ...) {
+tfb_fpc.matrix <- function(data, arg = NULL, domain = NULL, smooth = TRUE, signif = 4, ...) {
   arg <- unlist(find_arg(data, arg))
   names_data <- rownames(data)
   data <- mat_2_df(data, arg)
-  ret <- fpc_tfb(data, domain = domain, smooth = smooth, signif = signif, ...)
+  ret <- make_tfb_fpc(data, domain = domain, smooth = smooth, signif = signif, ...)
   names(ret) <- names_data
   ret
 }
 
-#' @rdname fpcbase
+#' @rdname tfb_fpc
 #' @export
-fpcbase.numeric <- function(data, arg = NULL, domain = NULL, smooth = TRUE, signif = 4, ...) {
+tfb_fpc.numeric <- function(data, arg = NULL, domain = NULL, smooth = TRUE, signif = 4, ...) {
   data <- t(as.matrix(data))
-  fpcbase(data = data, arg = arg, domain = domain, smooth = smooth, signif = signif, ...)
+  tfb_fpc(data = data, arg = arg, domain = domain, smooth = smooth, signif = signif, ...)
 }
 
-# #' @rdname fpcbase
+# #' @rdname tfb_fpc
 # #' @export
-# fpcbase.list <- function(data, arg = NULL, domain = NULL, smooth = TRUE, 
+# tfb_fpc.list <- function(data, arg = NULL, domain = NULL, smooth = TRUE, 
 # TODO
 
-#' @rdname fpcbase
+#' @rdname tfb_fpc
 #' @export
-fpcbase.tf <- function(data, arg = NULL, smooth = TRUE, ...) {
+tfb_fpc.tf <- function(data, arg = NULL, smooth = TRUE, ...) {
    #TODO: major computational shortcuts possible here for tfb: reduced rank,
   #   direct inner prods of basis functions etc...
   arg <- arg %||% arg(data)
   names_data <- names(data)
-  ret <- fpcbase(as.data.frame(data, arg = arg), smooth = smooth, 
+  ret <- tfb_fpc(as.data.frame(data, arg = arg), smooth = smooth, 
     signif = attr(data, "signif_arg"),  ...)
   names(ret) <- names_data
   ret

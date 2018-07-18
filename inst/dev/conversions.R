@@ -8,7 +8,7 @@ if (!load) {
   library(purrr)
 }
 
-source(system.file("tests/make_examples.R", package = "tidyfun"), echo = TRUE)
+source(system.file("inst/dev/make_examples.R", package = "tidyfun"), echo = TRUE)
 
 ################################################################################
 # convert

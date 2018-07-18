@@ -57,8 +57,8 @@ turn an irregular \code{tfd} into a regular one, see examples.}
 For the \code{data.frame}-methods: the name/number of the column defining the evaluation grid.}
 
 \item{interpolate}{should functions be evaluated (i.e., inter-/extrapolated)
-for \code{arg} for which no original data is available? Only relevant for
-\code{tfd}, defaults to TRUE.}
+for values in \code{arg} for which no original data is available? Only relevant for
+\code{tfd}, defaults to \code{TRUE}.}
 
 \item{domain}{range of the \code{arg}.}
 
