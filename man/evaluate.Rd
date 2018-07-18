@@ -3,7 +3,7 @@
 \name{evaluate}
 \alias{evaluate}
 \alias{evaluate.tfd}
-\alias{evaluate.fbase}
+\alias{evaluate.tfb}
 \alias{evaluate.data.frame}
 \title{Evaluate \code{tf}s, both inside or outside a \code{data.frame}}
 \usage{
@@ -11,7 +11,7 @@ evaluate(object, argvals, ...)
 
 \method{evaluate}{tfd}(object, argvals, ...)
 
-\method{evaluate}{fbase}(object, argvals, ...)
+\method{evaluate}{tfb}(object, argvals, ...)
 
 \method{evaluate}{data.frame}(object, argvals, ...)
 }

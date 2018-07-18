@@ -13,7 +13,7 @@ argvals.tfd_irreg <- function(f) map(f, "argvals")
 #' @export
 argvals.tfd_reg <- function(f) attr(f, "argvals")[[1]]
 #' @export
-argvals.fbase <- function(f) attr(f, "argvals")
+argvals.tfb <- function(f) attr(f, "argvals")
 
 #' @rdname tfmethods
 #' @export
@@ -30,7 +30,7 @@ evaluations.tfd_irreg <- function(f) {
   map(f, "data")
 }
 #' @export
-evaluations.fbase <- function(f) {
+evaluations.tfb <- function(f) {
   map(f, ~ drop(attr(f, "basis_matrix") %*% .))
 } 
 
@@ -62,7 +62,7 @@ evaluator <- function(f) {
 #' @rdname tfmethods
 #' @export
 basis <- function(f) {
-  stopifnot(inherits(f, "fbase"))
+  stopifnot(inherits(f, "tfb"))
   attr(f, "basis")
 }
 
@@ -100,7 +100,7 @@ basis <- function(f) {
 #' @param ... dots
 #' @export
 #' @importFrom stats coef
-coef.fbase <- function(object, ...) {
+coef.tfb <- function(object, ...) {
   attributes(object) <- NULL
   object
 }

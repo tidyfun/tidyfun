@@ -17,10 +17,10 @@ c_names <- function(funs) {
 #' Functions to concatenate multiple vectors of functional data.
 #' 
 #' Only allows concatenation of functions with the same domain and similar
-#' represenation, i.e., `fbase` cannot be concatenated to `tfd` and vice
+#' represenation, i.e., `tfb` cannot be concatenated to `tfd` and vice
 #' versa. If `tfd_reg`-objects to be concatenated are not on the same grid of
 #' `argvals`, or if both `tfd_reg` and `tfd_irreg` objects are concatenated,
-#' a `tfd_irreg`-object is returned. \cr `c.fbase` will use the basis of its
+#' a `tfd_irreg`-object is returned. \cr `c.tfb` will use the basis of its
 #' first argument for representing all remaining arguments and refit them
 #' accordingly if necessary.\cr `c.tfd` will use the `evaluator` of its first
 #' argument for all remaining arguments as well.\cr This means that `c(f1, f2)`
@@ -33,9 +33,9 @@ c_names <- function(funs) {
 #' @rdname tfconcat
 c.tf <- function(...) {
   funs <- list(...)
-  compatible <- all(map_lgl(funs, is_tfd)) | all(map_lgl(funs, is_fbase))
+  compatible <- all(map_lgl(funs, is_tfd)) | all(map_lgl(funs, is_tfb))
   if (!compatible) {
-    stop("Can't concatenate fbase & tfd objects.")
+    stop("Can't concatenate tfb & tfd objects.")
   }
 }
 
@@ -92,7 +92,7 @@ c.tfd <- function(...) {
 
 #' @rdname tfconcat
 #' @export
-c.fbase <- function(...) {
+c.tfb <- function(...) {
   funs <- list(...)
   if (length(funs) == 1) {
     return(funs[[1]])
@@ -107,7 +107,7 @@ c.fbase <- function(...) {
     warning("re-evaluating ", paste(fun_names[re_evals], collapse = ", "), 
       " using basis and argvals of ", fun_names[1])
     funs <- map_at(funs,re_evals, 
-      ~do.call(fbase, 
+      ~do.call(tfb, 
         flatten(list(list(.), argvals = list(argvals(funs[[1]])), 
           attr(funs[[1]], "basis_args")))))
   }    

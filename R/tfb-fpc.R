@@ -19,7 +19,7 @@ fpc_wrapper <- function(efunctions) {
 } 
 
 #' @importFrom refund fpca.sc
-fpc_fbase <- function(data, domain = NULL, smooth = TRUE, signif = 4, ...) {
+fpc_tfb <- function(data, domain = NULL, smooth = TRUE, signif = 4, ...) {
   #FIXME: rm renaming once we've cleaned up fpca.sc etc
   #FIXME: warn if domain != range(argvals), can't extrapolate FPCs
   data$argvals <- .adjust_resolution(data$argvals, signif, unique = FALSE)
@@ -49,7 +49,7 @@ fpc_fbase <- function(data, domain = NULL, smooth = TRUE, signif = 4, ...) {
     basis_matrix = t(fpc),
     argvals = argvals,
     signif_argvals = signif, 
-    class = c("fbase", "tf"))
+    class = c("tfb", "tf"))
 }
 
 #-------------------------------------------------------------------------------
@@ -57,7 +57,7 @@ fpc_fbase <- function(data, domain = NULL, smooth = TRUE, signif = 4, ...) {
 #' Constructors/converters for functional data in FPC-basis representation
 #' 
 #' These functions perform a (functional) principal component analysis of the
-#' input data and return an `fbase` `tf`-object that uses the empirical 
+#' input data and return an `tfb` `tf`-object that uses the empirical 
 #' eigenfunctions as basis functions for representing the data. By default, a
 #' `smooth`ed FPCA via [refund::fpca.sc()] is used to compute eigenfunctions and 
 #' scores based on the smoothed empirical covariance. 
@@ -74,7 +74,7 @@ fpc_fbase <- function(data, domain = NULL, smooth = TRUE, signif = 4, ...) {
 #'  (regularized/smoothed) FPCA. Unless set by the user `tidyfun` uses `pve = .995` to 
 #'  determine the truncation levels and uses `bs = 15` basis functions for 
 #'  the mean function and the marginal bases for the covariance surface.
-#' @seealso fbase
+#' @seealso tfb
 #' @rdname fpcbase
 #' @export
 fpcbase <- function(data, ...) UseMethod("fpcbase")
@@ -84,7 +84,7 @@ fpcbase <- function(data, ...) UseMethod("fpcbase")
 fpcbase.data.frame <- function(data, id = 1, argvals = 2, value = 3,  
   domain = NULL, smooth = TRUE, signif = 4, ...) {
   data <- df_2_df(data, id, argvals, value)
-  fpc_fbase(data, domain = domain, signif = signif, ...)
+  fpc_tfb(data, domain = domain, signif = signif, ...)
 }
 
 #' @rdname fpcbase
@@ -93,7 +93,7 @@ fpcbase.matrix <- function(data, argvals = NULL, domain = NULL, smooth = TRUE, s
   argvals <- unlist(find_argvals(data, argvals))
   names_data <- rownames(data)
   data <- mat_2_df(data, argvals)
-  ret <- fpc_fbase(data, domain = domain, smooth = smooth, signif = signif, ...)
+  ret <- fpc_tfb(data, domain = domain, smooth = smooth, signif = signif, ...)
   names(ret) <- names_data
   ret
 }
@@ -113,7 +113,7 @@ fpcbase.numeric <- function(data, argvals = NULL, domain = NULL, smooth = TRUE, 
 #' @rdname fpcbase
 #' @export
 fpcbase.tf <- function(data, argvals = NULL, smooth = TRUE, ...) {
-   #TODO: major computational shortcuts possible here for fbase: reduced rank,
+   #TODO: major computational shortcuts possible here for tfb: reduced rank,
   #   direct inner prods of basis functions etc...
   argvals <- argvals %||% argvals(data)
   names_data <- names(data)

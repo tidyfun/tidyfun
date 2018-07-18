@@ -68,24 +68,24 @@ as.matrix.tfd <- function(x, argvals = NULL, interpolate = FALSE, ...) {
 
 #-------------------------------------------------------------------------------
 
-#' @rdname fbase
-#' @param basis either "mgcv" to call [fbase()] which uses `mgcv`-type spline basis functions
+#' @rdname tfb
+#' @param basis either "mgcv" to call [tfb()] which uses `mgcv`-type spline basis functions
 #'   or "fpc" to call [fpcbase()] which uses a (smoothed) functional principal component basis. 
-#' @param ... arguments to [fbase()] or [fpcbase()]
+#' @param ... arguments to [tfb()] or [fpcbase()]
 #' @export 
-as.fbase <- function(data, basis = c("mgcv", "fpc"), ...) UseMethod("as.fbase")
-as.fbase.default <- function(data, basis = c("mgcv", "fpc"), ...) {
+as.tfb <- function(data, basis = c("mgcv", "fpc"), ...) UseMethod("as.tfb")
+as.tfb.default <- function(data, basis = c("mgcv", "fpc"), ...) {
   basis <- match.arg(basis)
-  fbase_maker <- switch(basis, "mgcv" = fbase, "fpc" = fpcbase)
-  fbase_maker(data, ...)
+  tfb_maker <- switch(basis, "mgcv" = tfb, "fpc" = fpcbase)
+  tfb_maker(data, ...)
 }
 
-#' @rdname fbase
+#' @rdname tfb
 #' @param row.names not used
 #' @param optional not used
-#' @param x an `fbase` object
+#' @param x an `tfb` object
 #' @export 
-as.data.frame.fbase <- function(x, row.names = NULL, optional = FALSE, 
+as.data.frame.tfb <- function(x, row.names = NULL, optional = FALSE, 
   argvals = NULL, ...) {
   if (is.null(argvals)) {
     argvals <- ensure_list(argvals(x))
@@ -97,8 +97,8 @@ as.data.frame.fbase <- function(x, row.names = NULL, optional = FALSE,
   tidyr::unnest(bind_rows(list(id = id, data = tmp)))
 }
 
-#' @rdname fbase
-as.matrix.fbase <- function(x, argvals = NULL, ...) {
+#' @rdname tfb
+as.matrix.tfb <- function(x, argvals = NULL, ...) {
   ret <- as.data.frame(x, argvals = argvals)  %>% 
     arrange(argvals) %>% 
     tidyr::spread(key = argvals, value = data) %>% 

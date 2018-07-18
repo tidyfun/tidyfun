@@ -33,13 +33,13 @@ evaluate_tfd_once <- function(x, argvals, evaluations, evaluator) {
 
 #' @export
 #' @rdname evaluate
-evaluate.fbase <- function(object, argvals, ...) {
+evaluate.tfb <- function(object, argvals, ...) {
   if (missing(argvals) | is.null(argvals)) argvals <- tidyfun::argvals(object)
   argvals <- ensure_list(argvals)
   assert_argvals(argvals, object)
   if (length(argvals) == 1) {
     argvals <- unlist(argvals)
-    evals <- evaluate_fbase_once(x = argvals, 
+    evals <- evaluate_tfb_once(x = argvals, 
       argvals = attr(object, "argvals"), 
       coefs = do.call(cbind, coef(object)),
       basis = attr(object, "basis"),
@@ -47,14 +47,14 @@ evaluate.fbase <- function(object, argvals, ...) {
     ret <- split(evals, col(evals))
   } else {
     ret <- pmap(list(argvals, ensure_list(argvals(object)), coef(object)),
-      ~ evaluate_fbase_once(x = ..1, argvals = ..2, coefs = ..3, 
+      ~ evaluate_tfb_once(x = ..1, argvals = ..2, coefs = ..3, 
         basis = attr(object, "basis"), X = attr(object, "basis_matrix")))
   }
   names(ret) <- names(object)
   ret
 }  
 
-evaluate_fbase_once <- function(x, argvals, coefs, basis, X) {
+evaluate_tfb_once <- function(x, argvals, coefs, basis, X) {
   dejavu <- match(x, argvals)
   dejavu_index <- na.omit(dejavu)
   dejavu <- !is.na(dejavu)

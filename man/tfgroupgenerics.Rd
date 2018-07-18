@@ -2,28 +2,28 @@
 % Please edit documentation in R/math.R, R/ops.R
 \name{Math.tfd}
 \alias{Math.tfd}
-\alias{Math.fbase}
+\alias{Math.tfb}
 \alias{cummax.tfd}
 \alias{cummin.tfd}
 \alias{cumsum.tfd}
 \alias{cumprod.tfd}
-\alias{cummax.fbase}
-\alias{cummin.fbase}
-\alias{cumsum.fbase}
-\alias{cumprod.fbase}
+\alias{cummax.tfb}
+\alias{cummin.tfb}
+\alias{cumsum.tfb}
+\alias{cumprod.tfb}
 \alias{Summary.tf}
 \alias{Ops.tf}
 \alias{==.tfd}
 \alias{!=.tfd}
-\alias{==.fbase}
-\alias{!=.fbase}
+\alias{==.tfb}
+\alias{!=.tfb}
 \alias{Ops.tfd}
-\alias{Ops.fbase}
+\alias{Ops.tfb}
 \title{Math, Summary and Ops Methods for \code{tf}}
 \usage{
 \method{Math}{tfd}(x, ...)
 
-\method{Math}{fbase}(x, ...)
+\method{Math}{tfb}(x, ...)
 
 \method{cummax}{tfd}(...)
 
@@ -33,13 +33,13 @@
 
 \method{cumprod}{tfd}(...)
 
-\method{cummax}{fbase}(...)
+\method{cummax}{tfb}(...)
 
-\method{cummin}{fbase}(...)
+\method{cummin}{tfb}(...)
 
-\method{cumsum}{fbase}(...)
+\method{cumsum}{tfb}(...)
 
-\method{cumprod}{fbase}(...)
+\method{cumprod}{tfb}(...)
 
 \method{Summary}{tf}(...)
 
@@ -49,13 +49,13 @@
 
 \method{!=}{tfd}(e1, e2)
 
-\method{==}{fbase}(e1, e2)
+\method{==}{tfb}(e1, e2)
 
-\method{!=}{fbase}(e1, e2)
+\method{!=}{tfb}(e1, e2)
 
 \method{Ops}{tfd}(e1, e2)
 
-\method{Ops}{fbase}(e1, e2)
+\method{Ops}{tfb}(e1, e2)
 }
 \arguments{
 \item{x}{an \code{tf}}
@@ -75,8 +75,8 @@ See examples below. Equality checks of functional objects are rather iffy and
 not very reliable at this point. Note that \code{max} and \code{min} are not guaranteed
 to be maximal/minmal over the entire domain, only on the evaluation grid used for
 computation. With the exception of addition and multiplication,
-operations on \code{fbase}-objects first evaluate them over their \code{argvals},
-perform computations on these evaluations and then convert back to an \code{fbase}-
+operations on \code{tfb}-objects first evaluate them over their \code{argvals},
+perform computations on these evaluations and then convert back to an \code{tfb}-
 object, so a loss of precision should be expected, especially so if bases are small
 or data is very wiggly.
 }
@@ -88,11 +88,11 @@ sum(f) == f[1] + f[2] + f[3] + f[4]
 log(exp(f)) == f 
 plot(f, points = FALSE); lines(range(f), col = 2, lty = 2)
 
-f2 <- fbase(rgp(5), k = 50)
+f2 <- tfb(rgp(5), k = 50)
 layout(t(1:2)); plot(f2, col = 1:5); plot(cummax(f2), col = 1:5); lines(f2)
 
 # loss of precision:
-f3 <- fbase(rgp(5, scale = 0.01), k = 50)
+f3 <- tfb(rgp(5, scale = 0.01), k = 50)
 log(exp(f3)) == f3 #!!
 plot(log(exp(f3))); lines(f3, lty = 2, col = 2) # still reasonable
 }

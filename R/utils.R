@@ -148,7 +148,7 @@ is_tfd <- function(x) "tfd" %in% class(x)
 
 #' @rdname tfmethods
 #' @export
-is_fbase <- function(x) "fbase" %in% class(x)
+is_tfb <- function(x) "tfb" %in% class(x)
 
 #-------------------------------------------------------------------------------
 

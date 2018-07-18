@@ -3,7 +3,7 @@
 \name{c.tf}
 \alias{c.tf}
 \alias{c.tfd}
-\alias{c.fbase}
+\alias{c.tfb}
 \alias{merge.tf}
 \title{Concatenate \code{tf}-objects}
 \usage{
@@ -11,7 +11,7 @@
 
 \method{c}{tfd}(...)
 
-\method{c}{fbase}(...)
+\method{c}{tfb}(...)
 
 \method{merge}{tf}(x, y, ...)
 }
@@ -32,10 +32,10 @@ Functions to concatenate multiple vectors of functional data.
 }
 \details{
 Only allows concatenation of functions with the same domain and similar
-represenation, i.e., \code{fbase} cannot be concatenated to \code{tfd} and vice
+represenation, i.e., \code{tfb} cannot be concatenated to \code{tfd} and vice
 versa. If \code{tfd_reg}-objects to be concatenated are not on the same grid of
 \code{argvals}, or if both \code{tfd_reg} and \code{tfd_irreg} objects are concatenated,
-a \code{tfd_irreg}-object is returned. \cr \code{c.fbase} will use the basis of its
+a \code{tfd_irreg}-object is returned. \cr \code{c.tfb} will use the basis of its
 first argument for representing all remaining arguments and refit them
 accordingly if necessary.\cr \code{c.tfd} will use the \code{evaluator} of its first
 argument for all remaining arguments as well.\cr This means that \code{c(f1, f2)}

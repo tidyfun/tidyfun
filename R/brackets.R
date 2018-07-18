@@ -2,7 +2,7 @@
 #' 
 #' These functions access, subset, replace and evaluate `tfs`. 
 #' For more information on creating `tf`s and converting them to/from 
-#' `list`, `data.frame` or `matrix`, see [tfd()] and [fbase()]. \cr
+#' `list`, `data.frame` or `matrix`, see [tfd()] and [tfb()]. \cr
 #' Note that these break certain R conventions for vector-like objects:\cr
 #'  
 #' - no argument recycling,
@@ -36,7 +36,7 @@
 #' @rdname tfbrackets
 #' @export
 `[.tf` <- function(x, i, j, interpolate = TRUE, matrix = TRUE) {
-  if (!interpolate & inherits(x, "fbase")) {
+  if (!interpolate & inherits(x, "tfb")) {
     interpolate <- TRUE
     message("interpolate argument ignored for data in basis representation")
   }
@@ -117,7 +117,7 @@
   stopifnot(inherits(value, class(x)[1]), 
     all(domain(x) == domain(value)),
     length(value) %in% c(1, length(i)))
-  if (inherits(x, "tfd_reg") | inherits(x, "fbase")) {
+  if (inherits(x, "tfd_reg") | inherits(x, "tfb")) {
     assert_true(identical(argvals(x), argvals(value)))
   }
   if (is_tfd(x)) {

@@ -39,12 +39,12 @@ firreg^2 == firreg * firreg
 firreg == firreg[2]
 
 
-fb <- fbase(freg, k = 25)
+fb <- tfb(freg, k = 25)
 # NB:
-all.equal(coef(fbase(tfd(fbase(freg)))), coef(fbase(freg)))
-fbase(tfd(fbase(freg))) == fbase(freg)
+all.equal(coef(tfb(tfd(tfb(freg)))), coef(tfb(freg)))
+tfb(tfd(tfb(freg))) == tfb(freg)
 # but:
-purrr::map2(coef(fbase(tfd(fbase(freg)))), coef(fbase(freg)), 
+purrr::map2(coef(tfb(tfd(tfb(freg)))), coef(tfb(freg)), 
   ~all(.x == .y))
 
 +fb == fb
@@ -54,11 +54,11 @@ fb * fb == fb^2
 2^fb
 
 all.equal(log(exp(fb)), fb, tol = 1e-3)
-all.equal(sinh(sin(fbase(seq(0,1,l = 20)))), 
-  fbase(seq(0,1,l = 20)), tol = 1e-3)
+all.equal(sinh(sin(tfb(seq(0,1,l = 20)))), 
+  tfb(seq(0,1,l = 20)), tol = 1e-3)
 
-f1 <- fbase(dbeta(seq(0, 1, l = 21), 7, 3), argvals = seq(0, 1, l = 21))
-f2 <- fbase(dbeta(seq(0, 1, l = 13), 2, 3), argvals = seq(0, 1, l = 13), 
+f1 <- tfb(dbeta(seq(0, 1, l = 21), 7, 3), argvals = seq(0, 1, l = 21))
+f2 <- tfb(dbeta(seq(0, 1, l = 13), 2, 3), argvals = seq(0, 1, l = 13), 
   domain = c(0,1))
 f3 <- c(f1, f2)  
 f4 <- c(f2, f1) 
@@ -76,11 +76,11 @@ data_reg <- data.frame(id = rep(1:3, each = 21),
 freg <- tfd(data_reg)
 range(freg)
 
-fb <- fbase(firreg, k = 10)
-fb2 <- fbase(data_irreg, k = 10)
+fb <- tfb(firreg, k = 10)
+fb2 <- tfb(data_irreg, k = 10)
 
 range(fb)
 plot(fb)
 lines(range(fb), col = 2) 
 
-fb <- fbase(data_irreg, k = 10)
+fb <- tfb(data_irreg, k = 10)

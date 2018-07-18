@@ -43,7 +43,7 @@ represents one \code{argval} as given in argument \code{j}, with an attribute
 \description{
 These functions access, subset, replace and evaluate \code{tfs}.
 For more information on creating \code{tf}s and converting them to/from
-\code{list}, \code{data.frame} or \code{matrix}, see \code{\link[=tfd]{tfd()}} and \code{\link[=fbase]{fbase()}}. \cr
+\code{list}, \code{data.frame} or \code{matrix}, see \code{\link[=tfd]{tfd()}} and \code{\link[=tfb]{tfb()}}. \cr
 Note that these break certain R conventions for vector-like objects:\cr
 \itemize{
 \item no argument recycling,

@@ -17,7 +17,7 @@ f_rcst <- tfd(dti$rcst, argvals = seq(0, 1, l = 55))
 f_cca
 f_rcst
 
-fb_cca <- fbase(dti$cca, k = 25, argvals = seq(0, 1, l = 93))
+fb_cca <- tfb(dti$cca, k = 25, argvals = seq(0, 1, l = 93))
 
 fb_cca 
 

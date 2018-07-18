@@ -16,10 +16,10 @@ freg <-  tfd(mat_reg, evaluator = approx_spline)
 firreg <- tfd(mat_irreg, evaluator = approx_linear)
 firreg2 <- tfd(mat_irreg, evaluator = approx_fill_extend)
 
-fbreg <- fbase(as.data.frame(freg))
-fbirreg <- fbase(as.matrix(firreg), basis = "tp", k = 10, m = c(2,2), penalized = FALSE)
-fbpreg <- fbase(freg, basis = "tp", k = 30, m = c(2,2), penalized = TRUE)
-fbpirreg <- fbase(as.matrix(firreg), basis = "tp", k = 30, m = c(2,2), penalized = TRUE)
+fbreg <- tfb(as.data.frame(freg))
+fbirreg <- tfb(as.matrix(firreg), basis = "tp", k = 10, m = c(2,2), penalized = FALSE)
+fbpreg <- tfb(freg, basis = "tp", k = 30, m = c(2,2), penalized = TRUE)
+fbpirreg <- tfb(as.matrix(firreg), basis = "tp", k = 30, m = c(2,2), penalized = TRUE)
 
 
 #

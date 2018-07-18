@@ -18,9 +18,9 @@ cubic <- tfd(grid^3, grid)
 square <- 3 * tfd(grid^2, grid)
 lin <- 6 * tfd(grid, grid)
 cubic_irreg <- eval_irreg(expression(x^3), g, domain)
-cubic_b <- fbase(cubic, k = 45, bs = "tp", verbose = FALSE)
+cubic_b <- tfb(cubic, k = 45, bs = "tp", verbose = FALSE)
 square_irreg <- eval_irreg(expression(3 * x^2), g, domain)
-square_b <- fbase(square, k = 45, bs = "tp", verbose = FALSE)
+square_b <- tfb(square, k = 45, bs = "tp", verbose = FALSE)
 
 test_that("basic derivatives work", {
   dgrid <- seq(from + 0.5, to - 0.5, l = 50)
@@ -58,7 +58,7 @@ test_that("deriv & integrate are reversible (approximately)", {
   expect_equivalent(f[,dgrid], f3[,dgrid], tolerance = .1)
   #plot(f); lines(f2, col = 2, lty =2); lines(f3, col = 3, lty = 3)
 
-  expect_error(integrate(deriv(fbase(f, verbose = FALSE)), definite = FALSE), 
+  expect_error(integrate(deriv(tfb(f, verbose = FALSE)), definite = FALSE), 
     "previously")
   
   f_pc <- fpcbase(f, smooth = FALSE, verbose = FALSE)

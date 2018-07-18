@@ -59,7 +59,7 @@ print.tfd_irreg <- function(x, n = 10, ...) {
 
 #' @rdname tfdisplay
 #' @export
-print.fbase <- function(x, n = 10, ...) {
+print.tfb <- function(x, n = 10, ...) {
   NextMethod()
   cat(" in basis representation:\n using basis ", attr(x, "basis_label"), "\n")
   if (length(x)) {

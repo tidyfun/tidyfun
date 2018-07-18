@@ -19,10 +19,10 @@ fun_op <- function(x, y, op, numeric = NA){
     attr_ret <- attributes(y)
     argvals_ret <- argvals(y)
   }
-  if (is_fbase(x)) x_ <- coef(x)
+  if (is_tfb(x)) x_ <- coef(x)
   if (is_tfd(x)) x_ <- evaluations(x)
   if (isTRUE(numeric == 1)) x_ <- x
-  if (is_fbase(y)) y_ <- coef(y)
+  if (is_tfb(y)) y_ <- coef(y)
   if (is_tfd(y)) y_ <- evaluations(y)
   if (isTRUE(numeric == 2)) y_ <- y
   ret <- map2(x_, y_, ~ do.call(op, list(e1 = .x, e2 = .y)))
@@ -68,9 +68,9 @@ Ops.tf <- function(e1, e2) {
 `!=.tfd` <- function(e1, e2) !(e1 == e2)
 #need to copy instead of defining tf-method s.t. dispatch in Ops works
 #' @rdname tfgroupgenerics
-`==.fbase` <- eval(`==.tfd`)
+`==.tfb` <- eval(`==.tfd`)
 #' @rdname tfgroupgenerics
-`!=.fbase` <- eval(`!=.tfd`)
+`!=.tfb` <- eval(`!=.tfd`)
 
 #' @rdname tfgroupgenerics
 Ops.tfd <- function(e1, e2) {
@@ -97,13 +97,13 @@ Ops.tfd <- function(e1, e2) {
   ret
 }
 #' @rdname tfgroupgenerics
-Ops.fbase <- function(e1, e2) {
+Ops.tfb <- function(e1, e2) {
   ret <- NextMethod()
   if (nargs() != 1) {
-    both_funs <- is_fbase(e1) & is_fbase(e2)
+    both_funs <- is_tfb(e1) & is_tfb(e2)
     if (both_funs) {
       if (.Generic == "^") {
-        stop("^ not defined for \"fbase\" objects")
+        stop("^ not defined for \"tfb\" objects")
       }
       stopifnot(all(compare_tf_attribs(e1, e2)))
     }
@@ -118,15 +118,15 @@ Ops.fbase <- function(e1, e2) {
       }
       if (is.logical(e1)) e1 <- as.numeric(e1)
       if (is.logical(e2)) e2 <- as.numeric(e2)
-      if (is_fbase(e1) && is.numeric(e2)) {
+      if (is_tfb(e1) && is.numeric(e2)) {
         basis_args <- attr(e1, "basis_args")
         eval <- fun_op(tfd(e1), e2, .Generic, numeric = 2)
       }
-      if (is_fbase(e2) && is.numeric(e1)) {
+      if (is_tfb(e2) && is.numeric(e1)) {
         basis_args <- attr(e2, "basis_args")
         eval <- fun_op(e1, tfd(e2), .Generic, numeric = 1)
       }
-      return(do.call("fbase", 
+      return(do.call("tfb", 
         c(list(eval), basis_args, penalized = FALSE, verbose = FALSE)))
     }
   }   

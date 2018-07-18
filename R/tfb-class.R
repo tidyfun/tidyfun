@@ -55,7 +55,7 @@ smooth_spec_wrapper <- function(spec, deriv = 0, eps = 1e-6) {
 } 
 
 #' @importFrom stats var na.omit median
-mgcv_fbase <- function(data, regular, domain = NULL,   
+mgcv_tfb <- function(data, regular, domain = NULL,   
     penalized = TRUE, signif = 4, verbose = TRUE, ...) {
   data$argvals <- .adjust_resolution(data$argvals, signif, unique = FALSE)
   argvals_u <- mgcv::uniquecombs(data$argvals, ordered = TRUE)
@@ -119,7 +119,7 @@ mgcv_fbase <- function(data, regular, domain = NULL,
     basis_matrix = spec_object$X,
     argvals = argvals_u$x,
     signif_argvals = signif, 
-    class = c("fbase", "tf"))
+    class = c("tfb", "tf"))
 }
 
 magic_smooth_coef <- function(evaluations, index, spec_object, magic_args) {
@@ -134,7 +134,7 @@ magic_smooth_coef <- function(evaluations, index, spec_object, magic_args) {
 #' 
 #' Various constructor and conversion methods.
 #'
-#' `fbase` tries to represent the input data as linear
+#' `tfb` tries to represent the input data as linear
 #' combinations of a set of common spline basis functions identical for all
 #' observations and coefficient vectors estimated for each observation. The
 #' basis used is set up via a call to [mgcv::s()] and all the spline bases
@@ -156,12 +156,12 @@ magic_smooth_coef <- function(evaluations, index, spec_object, magic_args) {
 #' 
 #' @param data a `matrix`, `data.frame` or `list` of suitable shape, or another
 #'   `tf`-object.
-#' @return an `fbase`-object (or a `data.frame`/`matrix` for the conversion
+#' @return an `tfb`-object (or a `data.frame`/`matrix` for the conversion
 #'   functions, obviously.)
-#' @rdname fbase
+#' @rdname tfb
 #' @seealso [fpcbase()]
 #' @export
-fbase <- function(data, ...) UseMethod("fbase")
+tfb <- function(data, ...) UseMethod("tfb")
 
 
 #' @export
@@ -173,41 +173,41 @@ fbase <- function(data, ...) UseMethod("fbase")
 #'   `tidyfun` uses `k=15` cubic regression spline basis functions (i.e., `bs =
 #'   "cr"`) by default, but at least how many basis functions `k` the spline
 #'   basis should have probably needs to be set manually ....
-#' @rdname fbase
+#' @rdname tfb
 #' @export
-fbase.data.frame <- function(data, id = 1, argvals = 2, value = 3,  
+tfb.data.frame <- function(data, id = 1, argvals = 2, value = 3,  
     domain = NULL, penalized = TRUE, signif = 4, ...) {
   data <- df_2_df(data, id, argvals, value)
   regular <- n_distinct(table(data[[1]])) == 1
-  mgcv_fbase(data, regular, domain = domain,   
+  mgcv_tfb(data, regular, domain = domain,   
     penalized = penalized, signif = signif, ...)
 }
 
-#' @rdname fbase
+#' @rdname tfb
 #' @export
-fbase.matrix <- function(data, argvals = NULL, 
+tfb.matrix <- function(data, argvals = NULL, 
   domain = NULL,   penalized = TRUE, signif = 4, ...) {
   argvals <- unlist(find_argvals(data, argvals))
   data_names <- rownames(data)
   data <- mat_2_df(data, argvals)
   regular <- n_distinct(table(data[[1]])) == 1
-  ret <- mgcv_fbase(data, regular, domain = domain,   
+  ret <- mgcv_tfb(data, regular, domain = domain,   
     penalized = penalized, signif = signif, ...)
   names(ret) <- data_names
   ret
 }
-#' @rdname fbase
+#' @rdname tfb
 #' @export
-fbase.numeric <- function(data, argvals = NULL, 
+tfb.numeric <- function(data, argvals = NULL, 
   domain = NULL,   penalized = TRUE, signif = 4, ...) {
   data <- t(as.matrix(data))
-  fbase(data = data, argvals = argvals, domain = domain, penalized = penalized,
+  tfb(data = data, argvals = argvals, domain = domain, penalized = penalized,
     signif = signif, ...)
 }
 
-#' @rdname fbase
+#' @rdname tfb
 #' @export
-fbase.list <- function(data, argvals = NULL,  
+tfb.list <- function(data, argvals = NULL,  
   domain = NULL,   penalized = TRUE, signif = 4, ...) {
   vectors <- sapply(data, is.numeric)
   stopifnot(all(vectors) | !any(vectors))
@@ -219,7 +219,7 @@ fbase.list <- function(data, argvals = NULL,
       #dispatch to matrix method
       args <- list(data, argvals,  domain = domain,   
         penalized = penalized, signif = signif, ...)
-      return(do.call(fbase, args))
+      return(do.call(tfb, args))
     } else {
       stopifnot(!is.null(argvals), length(argvals) == length(data), 
         all(sapply(argvals, length) == lengths))
@@ -232,26 +232,26 @@ fbase.list <- function(data, argvals = NULL,
   data <- data_frame(id = unique_id(names(data)) %||% seq_along(data), 
       funs = data) %>% tidyr::unnest
   #dispatch to data.frame method
-  ret <- fbase(data, basis = basis, domain = domain,   
+  ret <- tfb(data, basis = basis, domain = domain,   
     penalized = penalized, signif = signif, ...)
   names(ret) <- names_data
   ret
 }
 
-#' @rdname fbase
+#' @rdname tfb
 #' @export
-fbase.tfd <- function(data, argvals = NULL, 
+tfb.tfd <- function(data, argvals = NULL, 
   domain = NULL, penalized = TRUE, signif = 4, ...) {
   argvals <- argvals %||% argvals(data)
   domain <- domain %||% domain(data)
   data <- as.data.frame(data, argvals)
-  fbase(data, basis = basis, domain = domain,   
+  tfb(data, basis = basis, domain = domain,   
     penalized = penalized, signif = signif, ...)
 }
 
-#' @rdname fbase
+#' @rdname tfb
 #' @export
-fbase.fbase <- function(data, argvals = NULL,
+tfb.tfb <- function(data, argvals = NULL,
   domain = NULL, penalized = TRUE, signif = 4, ...) {
   argvals <- argvals %||% argvals(data)
   domain <- domain %||% domain(data)
@@ -259,7 +259,7 @@ fbase.fbase <- function(data, argvals = NULL,
     list(...)[names(list(...)) %in% names(formals(mgcv::s))])
   names_data <- names(data)
   data <- as.data.frame(data, argvals = argvals)
-  ret <- do.call("fbase", c(list(data), basis = basis, domain = domain,
+  ret <- do.call("tfb", c(list(data), basis = basis, domain = domain,
     penalized = penalized, signif = signif, s_args))
   names(ret) <- names_data
   ret

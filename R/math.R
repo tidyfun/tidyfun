@@ -29,7 +29,7 @@ summarize_tf <- function(..., op = NULL, eval = FALSE) {
   if (eval) {
     return(do.call(tfd, c(args, evaluator = as.name(attr(funs, "evaluator_name")))))
   } else {
-    return(do.call(fbase, c(args, penalized = FALSE, attr(funs, "basis_args"))))
+    return(do.call(tfb, c(args, penalized = FALSE, attr(funs, "basis_args"))))
   }
 }
 #------------------------------------------------------------------------------
@@ -43,8 +43,8 @@ summarize_tf <- function(..., op = NULL, eval = FALSE) {
 #' not very reliable at this point. Note that `max` and `min` are not guaranteed 
 #' to be maximal/minmal over the entire domain, only on the evaluation grid used for
 #' computation. With the exception of addition and multiplication, 
-#' operations on `fbase`-objects first evaluate them over their `argvals`,
-#' perform computations on these evaluations and then convert back to an `fbase`-
+#' operations on `tfb`-objects first evaluate them over their `argvals`,
+#' perform computations on these evaluations and then convert back to an `tfb`-
 #' object, so a loss of precision should be expected, especially so if bases are small
 #' or data is very wiggly.
 #' 
@@ -63,11 +63,11 @@ summarize_tf <- function(..., op = NULL, eval = FALSE) {
 #' log(exp(f)) == f 
 #' plot(f, points = FALSE); lines(range(f), col = 2, lty = 2)
 #' 
-#' f2 <- fbase(rgp(5), k = 50)
+#' f2 <- tfb(rgp(5), k = 50)
 #' layout(t(1:2)); plot(f2, col = 1:5); plot(cummax(f2), col = 1:5); lines(f2)
 #' 
 #' # loss of precision:
-#' f3 <- fbase(rgp(5, scale = 0.01), k = 50)
+#' f3 <- tfb(rgp(5, scale = 0.01), k = 50)
 #' log(exp(f3)) == f3 #!!
 #' plot(log(exp(f3))); lines(f3, lty = 2, col = 2) # still reasonable
 #' @export
@@ -77,10 +77,10 @@ Math.tfd <- function(x, ...) {
 } 
 #' @rdname tfgroupgenerics
 #' @export
-Math.fbase <- function(x, ...) {
+Math.tfb <- function(x, ...) {
   basis_args <- attr(x, "basis_args")
   eval <- fun_math(tfd(x), .Generic)
-  do.call("fbase", 
+  do.call("tfb", 
     c(list(eval), basis_args, penalized = FALSE, verbose = FALSE))
 }  
 
@@ -106,22 +106,22 @@ cumprod.tfd <- function(...) {
 }
 #' @rdname tfgroupgenerics
 #' @export
-cummax.fbase <- function(...) {
+cummax.tfb <- function(...) {
   summarize_tf(..., op = "cummax", eval  = FALSE)
 }
 #' @rdname tfgroupgenerics
 #' @export
-cummin.fbase <- function(...) {
+cummin.tfb <- function(...) {
   summarize_tf(..., op = "cummin", eval  = FALSE)
 }
 #' @rdname tfgroupgenerics
 #' @export
-cumsum.fbase <- function(...) {
+cumsum.tfb <- function(...) {
   summarize_tf(..., op = "cumsum", eval  = FALSE)
 }
 #' @rdname tfgroupgenerics
 #' @export
-cumprod.fbase <- function(...) {
+cumprod.tfb <- function(...) {
   summarize_tf(..., op = "cumprod", eval  = FALSE)
 }
 

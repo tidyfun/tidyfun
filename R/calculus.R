@@ -15,7 +15,7 @@ quad_trapez <- function(argvals, evaluations) {
   c(0, 0.5 * diff(argvals) * (head(evaluations, -1) + evaluations[-1]))
 }
 
-deriv_fbase_mgcv <- function(expr, order = 1, argvals = tidyfun::argvals(expr)) {
+deriv_tfb_mgcv <- function(expr, order = 1, argvals = tidyfun::argvals(expr)) {
   #TODO: make this work for iterated application deriv(deriv(fb)) 
   if (!is.null(attr(expr, "basis_deriv"))) 
     stop("Can't derive or integrate previously derived/integrated tf in basis representation")
@@ -35,7 +35,7 @@ deriv_fbase_mgcv <- function(expr, order = 1, argvals = tidyfun::argvals(expr)) 
   expr
 }
 
-deriv_fbase_fpc <- function(expr, order = 1, lower, upper, 
+deriv_tfb_fpc <- function(expr, order = 1, lower, upper, 
   argvals = tidyfun::argvals(expr)) {
   efunctions <- environment(attr(expr, "basis"))$efunctions
   environment(attr(expr, "basis")) <- new.env()
@@ -59,14 +59,14 @@ deriv_fbase_fpc <- function(expr, order = 1, lower, upper,
 #' Derivatives and integrals of functional data
 #'
 #' Derivatives of `tf`s use finite differences of the evaluations 
-#' for `tfd` and finite differences of the basis functions for `fbase`. 
+#' for `tfd` and finite differences of the basis functions for `tfb`. 
 #' Note that, for some spline bases like `"cr"` or `"tp"` which always begin/end linearly,
 #' computing second derivatives will produce artefacts at the outer limits 
 #' of the functions' domain due to these boundary constraints. Basis `"bs"` does 
 #' not have this problem, but tends to yield slightly less stable fits.
 #'
 #' @param expr a `tf`
-#' @param order order of differentiation. Maximally 2 for `fbase` with `mgcv`-spline bases.
+#' @param order order of differentiation. Maximally 2 for `tfb` with `mgcv`-spline bases.
 #' @param argvals grid to use for the differentiation/integration. Not the `argvals` of the returned object.
 #' @param ... not used
 #'
@@ -89,12 +89,12 @@ deriv.tfd <- function(expr, order = 1, argvals = NULL, ...) {
 }
 #' @export
 #' @rdname tfcalculus
-deriv.fbase <- function(expr, order = 1, ...) {
+deriv.tfb <- function(expr, order = 1, ...) {
   if (grepl("s\\(argvals", attr(expr, "basis_label"))) {
-    return(deriv_fbase_mgcv(expr, order = order))
+    return(deriv_tfb_mgcv(expr, order = order))
   }
   if (grepl("FPC", attr(expr, "basis_label"))) {
-    return(deriv_fbase_fpc(expr, order = order))
+    return(deriv_tfb_fpc(expr, order = order))
   }
 }
 
@@ -164,7 +164,7 @@ integrate.tfd <- function(f, lower = domain(f)[1], upper = domain(f)[2],
 }
 #' @rdname tfcalculus
 #' @export
-integrate.fbase <- function(f, lower = domain(f)[1], upper = domain(f)[2], 
+integrate.tfb <- function(f, lower = domain(f)[1], upper = domain(f)[2], 
   definite = TRUE, argvals, ...) {
   if (missing(argvals)) {
     argvals <- tidyfun::argvals(f)
@@ -185,10 +185,10 @@ integrate.fbase <- function(f, lower = domain(f)[1], upper = domain(f)[2],
   argvals <- c(limits[1], argvals[argvals > limits[1] & argvals < limits[2]], 
     limits[2])
   if (grepl("s\\(argvals", attr(f, "basis_label"))) {
-    return(deriv_fbase_mgcv(f, order = -1, argvals = argvals))
+    return(deriv_tfb_mgcv(f, order = -1, argvals = argvals))
   }
   if (grepl("FPC", attr(f, "basis_label"))) {
-    return(deriv_fbase_fpc(f, order = -1, argvals = argvals, lower = lower, 
+    return(deriv_tfb_fpc(f, order = -1, argvals = argvals, lower = lower, 
       upper = upper))
   }
 }

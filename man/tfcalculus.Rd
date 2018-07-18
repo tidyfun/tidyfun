@@ -2,16 +2,16 @@
 % Please edit documentation in R/calculus.R
 \name{deriv.tfd}
 \alias{deriv.tfd}
-\alias{deriv.fbase}
+\alias{deriv.tfb}
 \alias{integrate}
 \alias{integrate.function}
 \alias{integrate.tfd}
-\alias{integrate.fbase}
+\alias{integrate.tfb}
 \title{Derivatives and integrals of functional data}
 \usage{
 \method{deriv}{tfd}(expr, order = 1, argvals = NULL, ...)
 
-\method{deriv}{fbase}(expr, order = 1, ...)
+\method{deriv}{tfb}(expr, order = 1, ...)
 
 integrate(f, lower, upper, ...)
 
@@ -22,13 +22,13 @@ integrate(f, lower, upper, ...)
 \method{integrate}{tfd}(f, lower = domain(f)[1], upper = domain(f)[2],
   definite = TRUE, argvals, ...)
 
-\method{integrate}{fbase}(f, lower = domain(f)[1], upper = domain(f)[2],
+\method{integrate}{tfb}(f, lower = domain(f)[1], upper = domain(f)[2],
   definite = TRUE, argvals, ...)
 }
 \arguments{
 \item{expr}{a \code{tf}}
 
-\item{order}{order of differentiation. Maximally 2 for \code{fbase} with \code{mgcv}-spline bases.}
+\item{order}{order of differentiation. Maximally 2 for \code{tfb} with \code{mgcv}-spline bases.}
 
 \item{argvals}{grid to use for the differentiation/integration. Not the \code{argvals} of the returned object.}
 
@@ -66,7 +66,7 @@ a \code{tf} with (slightly) different \code{argvals} (and \code{basis})
 }
 \description{
 Derivatives of \code{tf}s use finite differences of the evaluations
-for \code{tfd} and finite differences of the basis functions for \code{fbase}.
+for \code{tfd} and finite differences of the basis functions for \code{tfb}.
 Note that, for some spline bases like \code{"cr"} or \code{"tp"} which always begin/end linearly,
 computing second derivatives will produce artefacts at the outer limits
 of the functions' domain due to these boundary constraints. Basis \code{"bs"} does

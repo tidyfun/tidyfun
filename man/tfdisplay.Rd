@@ -4,7 +4,7 @@
 \alias{print.tf}
 \alias{print.tfd_reg}
 \alias{print.tfd_irreg}
-\alias{print.fbase}
+\alias{print.tfb}
 \alias{format.tf}
 \title{Pretty printing and formatting for functional data}
 \usage{
@@ -14,7 +14,7 @@
 
 \method{print}{tfd_irreg}(x, n = 10, ...)
 
-\method{print}{fbase}(x, n = 10, ...)
+\method{print}{tfb}(x, n = 10, ...)
 
 \method{format}{tf}(x, digits = 2, nsmall = 0, ...)
 }

@@ -100,7 +100,7 @@ set.seed(1221)
 data = data.frame(col = sample(gl(5, 2)))
 data$f = rgp(10)
 data$fi = jiggle(data$f)
-data$fb = fbase(data$f)
+data$fb = tfb(data$f)
 library(ggplot2)
 ggplot(data, aes(tf = f, color = depth(f))) + geom_spaghetti() + 
   annotate("text", x = 1.05, y = drop(data$f[, 1]), label = 1:nrow(data))

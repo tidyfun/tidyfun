@@ -9,12 +9,12 @@
 \alias{basis}
 \alias{evaluator<-}
 \alias{argvals<-}
-\alias{coef.fbase}
+\alias{coef.tfb}
 \alias{rev.tf}
 \alias{is_tf}
 \alias{is_irreg}
 \alias{is_tfd}
-\alias{is_fbase}
+\alias{is_tfb}
 \alias{is.na.tf}
 \title{Utility functions for \code{tf}-objects}
 \usage{
@@ -34,7 +34,7 @@ evaluator(x) <- value
 
 argvals(x) <- value
 
-\method{coef}{fbase}(object, ...)
+\method{coef}{tfb}(object, ...)
 
 \method{rev}{tf}(x)
 
@@ -44,7 +44,7 @@ is_irreg(x)
 
 is_tfd(x)
 
-is_fbase(x)
+is_tfb(x)
 
 \method{is.na}{tf}(x)
 }
