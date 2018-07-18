@@ -1,11 +1,12 @@
 #' Data Depth
 #' 
-#' Data depth for functional data. Currently implemented: Modified Band Depth
+#' Data depth for functional data. Currently implemented: Modified Band-2 Depth
 #' 
 #' @param x `fvector` (or a matrix of evaluations)
 #' @param depth currently available: "MBD", i.e. modified band depth
 #' @param argvals grid of evaluation points
-#' @param na.rm TRUE remove missing observations? 
+#' @param na.rm TRUE remove missing observations?
+#' @param ... further arguments handed to the function computing the respective depth.
 #' @return vector of depth values
 #' @references Sun, Y., Genton, M. G., & Nychka, D. W. (2012). 
 #'   Exact fast computation of band depth for large functional datasets: 
@@ -39,7 +40,7 @@ depth.fvector <- function(x, depth = "MBD", na.rm = TRUE, argvals = NULL, ...) {
 
 #-------------------------------------------------------------------------------
 
-# modified band depth:
+# modified band-2 depth:
 mbd <- function(x, argvals = seq_len(ncol(x)), ...) {
   # algorithm of Sun/Genton/Nychka (2012)
   ranks <- apply(x, 2, rank, na.last = "keep", ...)

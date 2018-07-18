@@ -11,19 +11,19 @@
 \title{Geoms for \code{tf} objects}
 \usage{
 stat_tf(mapping = NULL, data = NULL, geom = "line",
-  position = "identity", na.rm = FALSE, show.legend = NA,
+  position = "identity", na.rm = TRUE, show.legend = NA,
   inherit.aes = TRUE, argvals = NULL, ...)
 
 geom_spaghetti(mapping = NULL, data = NULL, position = "identity",
-  na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, argvals = NULL,
+  na.rm = TRUE, show.legend = NA, inherit.aes = TRUE, argvals = NULL,
   ...)
 
 geom_meatballs(mapping = NULL, data = NULL, position = "identity",
-  na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, argvals = NULL,
+  na.rm = TRUE, show.legend = NA, inherit.aes = TRUE, argvals = NULL,
   spaghetti = TRUE, ...)
 
 geom_lasagna(mapping = list(), data = NULL, position = "identity",
-  na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, argvals = NULL,
+  na.rm = TRUE, show.legend = NA, inherit.aes = TRUE, argvals = NULL,
   order_by = NULL, size = 4, ...)
 }
 \arguments{
@@ -51,6 +51,8 @@ will be used as the layer data.}
 \item{position}{Position adjustment, either as a string, or the result of
 a call to a position adjustment function.}
 
+\item{na.rm}{remove NAs? defaults to \code{TRUE}}
+
 \item{show.legend}{logical. Should this layer be included in the legends?
 \code{NA}, the default, includes if any aesthetics are mapped.
 \code{FALSE} never includes, and \code{TRUE} always includes.
@@ -73,6 +75,8 @@ to the paired geom/stat.}
 
 \item{order_by}{a function that returns a single value when applied to a numeric vector,
 used to define the vertical ordering of the functions in the plot (see Examples)}
+
+\item{size}{width for lasagna layers. You will need to set this manually, sorry.}
 }
 \description{
 Defines spaghetti and lasagna plot geoms for \code{tf}-objects.

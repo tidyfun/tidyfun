@@ -155,6 +155,9 @@ lines.fvector <- function(x, argvals, n_grid = 50,
 }
 #' @export
 #' @rdname fvectorviz
+#' @param interpolate should functions be evaluated (i.e., inter-/extrapolated)
+#'   for argvals for which no original data is available? Only relevant for
+#'   feval, defaults to FALSE
 points.fvector <- function(x, argvals, n_grid = NA, 
     alpha = min(1, max(.05, 2/length(x))), interpolate = FALSE, ...) {
   args <- c(modifyList(head(formals(points.fvector), -1),

@@ -42,11 +42,14 @@ feval(data, ...)
 \arguments{
 \item{data}{a \code{matrix}, \code{data.frame} or \code{list} of suitable shape, or another \code{fvector}-object.}
 
-\item{...}{arguments for \code{\link[=feval]{feval()}}}
+\item{...}{not used in \code{feval}, except for \code{feval.fvector} -- specify \code{argvals} and \code{ìnterpolate = TRUE} to
+turn an irregular \code{feval} into a regular one, see examples.}
 
 \item{signif}{significant digits of the "resolution" of the evaluation grid.  See details.}
 
 \item{x}{an \code{feval} object}
+
+\item{row.names}{not used}
 
 \item{optional}{not used}
 
@@ -64,11 +67,6 @@ for \code{argvals} for which no original data is available? Only relevant for
 \item{id}{The name/number of the column defining which data belong to which function.}
 
 \item{value}{The name/number of the column containing the function evaluations.}
-
-\item{rownames}{not used}
-
-\item{...}{not used, except for \code{feval.fvector} -- specify \code{argvals} and \code{ìnterpolate = TRUE} to
-turn an irregular \code{feval} into a regular one, see examples...}
 }
 \value{
 an \code{feval}-object (or a \code{data.frame}/\code{matrix} for the conversion functions, obviously.)

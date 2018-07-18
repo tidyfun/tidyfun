@@ -51,6 +51,8 @@ or "fpc" to call \code{\link[=fpcbase]{fpcbase()}} which uses a (smoothed) funct
 
 \item{x}{an \code{fbase} object}
 
+\item{row.names}{not used}
+
 \item{optional}{not used}
 
 \item{argvals}{\code{numeric}, or list of \code{numeric}s. The evaluation grid. See Details.
@@ -66,8 +68,6 @@ For the \code{data.frame}-methods: the name/number of the column defining the ev
 via \code{\link[mgcv:magic]{mgcv::magic()}} (default) or ordinary least squares.}
 
 \item{signif}{significant digits of the "resolution" of the evaluation grid.  See details.}
-
-\item{rownames}{not used}
 
 \item{...}{arguments to the calls to \code{\link[mgcv:s]{mgcv::s()}} setting up the basis and
 \code{\link[mgcv:magic]{mgcv::magic()}} (if \code{penalized} is TRUE). If not user-specified here,

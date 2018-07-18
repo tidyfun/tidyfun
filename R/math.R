@@ -50,7 +50,7 @@ summarize_fvector <- function(..., op = NULL, eval = FALSE) {
 #' 
 #' 
 #' @param x an `fvector`
-#' @param ... `fvector`-objects
+#' @param ... `fvector`-objects (not used for `Math` group generic)
 #' @param e1 an `fvector` or a numeric vector
 #' @param e2 an `fvector` or a numeric vector
 #' 
@@ -72,12 +72,12 @@ summarize_fvector <- function(..., op = NULL, eval = FALSE) {
 #' plot(log(exp(f3))); lines(f3, lty = 2, col = 2) # still reasonable
 #' @export
 #' 
-Math.feval <- function(x) {
+Math.feval <- function(x, ...) {
   fun_math(x, .Generic)
 } 
 #' @rdname fvectorgroupgenerics
 #' @export
-Math.fbase <- function(x) {
+Math.fbase <- function(x, ...) {
   basis_args <- attr(x, "basis_args")
   eval <- fun_math(feval(x), .Generic)
   do.call("fbase", 

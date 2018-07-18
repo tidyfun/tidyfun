@@ -116,6 +116,7 @@ integrate.default <- function(f, lower, upper, ...) .NotYetImplemented()
 
 #' @rdname fvectorcalculus
 #' @details `integrate.function` is simply a wrapper for [stats::integrate()].
+#' @inheritParams stats::integrate
 #' @export
 integrate.function <- stats::integrate
 

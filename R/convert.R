@@ -1,5 +1,4 @@
 #' @rdname feval
-#' @param ... arguments for [feval()]
 #' @export 
 as.feval <- function(data, ...) UseMethod("as.feval")
 as.feval.default <- function(data, ...) {
@@ -39,7 +38,7 @@ as.feval_irreg.feval_irreg <- function(data, signif = 4, ...) {
 }
 
 #' @rdname feval
-#' @param rownames not used
+#' @param row.names not used
 #' @param optional not used
 #' @param x an `feval` object
 #' @inheritParams [.fvector
@@ -82,7 +81,7 @@ as.fbase.default <- function(data, basis = c("mgcv", "fpc"), ...) {
 }
 
 #' @rdname fbase
-#' @param rownames not used
+#' @param row.names not used
 #' @param optional not used
 #' @param x an `fbase` object
 #' @export 

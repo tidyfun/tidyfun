@@ -61,8 +61,8 @@ new_feval <- function(argvals, datalist, regular, domain, evaluator, signif = 4)
 #' value is requested at t = 1.001, f(1) will be returned if `signif` < 4.
 #' 
 #' @param data a `matrix`, `data.frame` or `list` of suitable shape, or another `fvector`-object.
-#' @param ... not used, except for `feval.fvector` -- specify `argvals` and `ìnterpolate = TRUE` to 
-#'   turn an irregular `feval` into a regular one, see examples...
+#' @param ... not used in `feval`, except for `feval.fvector` -- specify `argvals` and `ìnterpolate = TRUE` to 
+#'   turn an irregular `feval` into a regular one, see examples. 
 #' @return an `feval`-object (or a `data.frame`/`matrix` for the conversion functions, obviously.)
 #' @export
 feval <- function(data, ...) UseMethod("feval")

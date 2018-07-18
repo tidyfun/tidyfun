@@ -21,9 +21,9 @@
 \alias{Ops.fbase}
 \title{Math, Summary and Ops Methods for \code{fvector}}
 \usage{
-\method{Math}{feval}(x)
+\method{Math}{feval}(x, ...)
 
-\method{Math}{fbase}(x)
+\method{Math}{fbase}(x, ...)
 
 \method{cummax}{feval}(...)
 
@@ -60,7 +60,7 @@
 \arguments{
 \item{x}{an \code{fvector}}
 
-\item{...}{\code{fvector}-objects}
+\item{...}{\code{fvector}-objects (not used for \code{Math} group generic)}
 
 \item{e1}{an \code{fvector} or a numeric vector}
 

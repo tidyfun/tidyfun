@@ -34,11 +34,29 @@ integrate(f, lower, upper, ...)
 
 \item{...}{not used}
 
+\item{f}{an \R function taking a numeric first argument and returning
+    a numeric vector of the same length.  Returning a non-finite element will
+    generate an error.}
+
 \item{lower}{lower limits of the integration range. For \code{definite=TRUE}, this can be
 a vector of the same length as \code{f}.}
 
 \item{upper}{upper limits of the integration range (but see \code{definite} arg / Description).
 For \code{definite=TRUE}, this can be a vector of the same length as \code{f}.}
+
+\item{subdivisions}{the maximum number of subintervals.}
+
+\item{rel.tol}{relative accuracy requested.}
+
+\item{abs.tol}{absolute accuracy requested.}
+
+\item{stop.on.error}{logical. If true (the default) an error stops the
+    function.  If false some errors will give a result with a warning in
+    the \code{message} component.}
+
+\item{keep.xy}{unused.  For compatibility with S.}
+
+\item{aux}{unused.  For compatibility with S.}
 
 \item{definite}{should the definite integral  be returned (default)
 or the antiderivative. See Description.}

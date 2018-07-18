@@ -21,13 +21,15 @@ depth(x, depth = "MBD", na.rm = TRUE, ...)
 
 \item{na.rm}{TRUE remove missing observations?}
 
+\item{...}{further arguments handed to the function computing the respective depth.}
+
 \item{argvals}{grid of evaluation points}
 }
 \value{
 vector of depth values
 }
 \description{
-Data depth for functional data. Currently implemented: Modified Band Depth
+Data depth for functional data. Currently implemented: Modified Band-2 Depth
 }
 \references{
 Sun, Y., Genton, M. G., & Nychka, D. W. (2012).

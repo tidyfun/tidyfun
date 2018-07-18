@@ -107,8 +107,9 @@ StatTf <- ggproto("StatTf", Stat,
 #' @export
 #' @rdname ggtf
 #' @inheritParams ggplot2::stat_identity
+#' @param na.rm remove NAs? defaults to `TRUE`
 stat_tf <- function(mapping = NULL, data = NULL, geom = "line",
-  position = "identity", na.rm = FALSE, show.legend = NA, 
+  position = "identity", na.rm = TRUE, show.legend = NA, 
   inherit.aes = TRUE, argvals = NULL, ...) {
   layer(
     stat = StatTf, data = data, mapping = mapping, geom = geom, 
@@ -124,7 +125,7 @@ stat_tf <- function(mapping = NULL, data = NULL, geom = "line",
 #' @format NULL
 #' @param argvals where to evaluate `tf` -- defaults to the default ;)
 geom_spaghetti <- function(mapping = NULL, data = NULL,
-  position = "identity", na.rm = FALSE, show.legend = NA, 
+  position = "identity", na.rm = TRUE, show.legend = NA, 
   inherit.aes = TRUE, argvals = NULL, ...) {
   layer(
     stat = StatTf, data = data, mapping = mapping, geom = "line", 
@@ -137,7 +138,7 @@ geom_spaghetti <- function(mapping = NULL, data = NULL,
 #' @format NULL
 #' @param spaghetti plot noodles along with meatballs? defaults to true.
 geom_meatballs <- function(mapping = NULL, data = NULL,
-  position = "identity", na.rm = FALSE, show.legend = NA, 
+  position = "identity", na.rm = TRUE, show.legend = NA, 
   inherit.aes = TRUE, argvals = NULL, spaghetti = TRUE, ...) {
   list(
     layer(
@@ -156,8 +157,9 @@ geom_meatballs <- function(mapping = NULL, data = NULL,
 #' @format NULL
 #' @param order_by a function that returns a single value when applied to a numeric vector,
 #'  used to define the vertical ordering of the functions in the plot (see Examples)
+#' @param size width for lasagna layers. You will need to set this manually, sorry.
 geom_lasagna <- function(mapping = list(), 
-  data = NULL,  position = "identity", na.rm = FALSE, show.legend = NA, 
+  data = NULL,  position = "identity", na.rm = TRUE, show.legend = NA, 
   inherit.aes = TRUE, argvals = NULL, order_by = NULL, size = 4, ...) {
   default_mapping <- 
     aes(x = stat(.arg), y = stat(.id), colour = stat(.value))

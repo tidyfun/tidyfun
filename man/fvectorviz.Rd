@@ -41,6 +41,10 @@ Defaults to 2/(no. of observations). Lower is more transparent.}
 \item{y}{(optional) numeric vector to be used as \code{argvals} (i.e., for the \strong{x}-axis...!)}
 
 \item{...}{additional arguments for \code{\link[=matplot]{matplot()}} ("spaghetti") or \code{\link[=image]{image()}} ("lasagna")}
+
+\item{interpolate}{should functions be evaluated (i.e., inter-/extrapolated)
+for argvals for which no original data is available? Only relevant for
+feval, defaults to FALSE}
 }
 \value{
 for \code{funplot}: the \code{ggplot}-object for further modification. For the
