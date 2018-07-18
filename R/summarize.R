@@ -1,11 +1,11 @@
-#' Functions that summarize `tfd` objects
+#' Functions that summarize `tf` objects
 #' 
-#' These will return a `tfd` object containing the respective functional statistic.
+#' These will return a `tf` object containing the respective functional statistic.
 #' `summary` returns a vector with the mean function, the variance function, and the 
 #' functional range of the central half of the functions, as defined by the functional 
-#' depth that was used. 
+#' depth that was usedb (i.e., the band defined by the 50% deepest functions). 
 #' 
-#' @param x a `tfd` object
+#' @param x a `tf` object
 #' @param ... additional arguments to the respective (pointwise or depth) 
 #'   functions, see source code.
 #' @name fvectorsummaries

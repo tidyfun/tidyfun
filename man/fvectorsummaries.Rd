@@ -12,7 +12,7 @@
 \alias{var.default}
 \alias{var.fvector}
 \alias{summary.fvector}
-\title{Functions that summarize \code{tfd} objects}
+\title{Functions that summarize \code{tf} objects}
 \usage{
 \method{mean}{fvector}(x, ...)
 
@@ -37,7 +37,7 @@ var(x, y = NULL, na.rm = FALSE, use)
 \method{summary}{fvector}(object, ...)
 }
 \arguments{
-\item{x}{a \code{tfd} object}
+\item{x}{a \code{tf} object}
 
 \item{...}{additional arguments to the respective (pointwise or depth)
 functions, see source code.}
@@ -72,8 +72,8 @@ a pointwise median function.}
 \item{object}{a \code{tfd} object}
 }
 \description{
-These will return a \code{tfd} object containing the respective functional statistic.
+These will return a \code{tf} object containing the respective functional statistic.
 \code{summary} returns a vector with the mean function, the variance function, and the
 functional range of the central half of the functions, as defined by the functional
-depth that was used.
+depth that was usedb (i.e., the band defined by the 50% deepest functions).
 }
