@@ -47,7 +47,11 @@ tfb(data, ...)
 \item{basis}{either "mgcv" to call \code{\link[=tfb]{tfb()}} which uses \code{mgcv}-type spline basis functions
 or "fpc" to call \code{\link[=tfb_fpc]{tfb_fpc()}} which uses a (smoothed) functional principal component basis.}
 
-\item{...}{arguments to \code{\link[=tfb]{tfb()}} or \code{\link[=tfb_fpc]{tfb_fpc()}}}
+\item{...}{\strong{for \code{tfb}}: arguments to the calls to \code{\link[mgcv:s]{mgcv::s()}} setting up the basis and
+\code{\link[mgcv:magic]{mgcv::magic()}} (if \code{penalized} is TRUE). If not user-specified here,
+\code{tidyfun} uses \code{k=15} cubic regression spline basis functions (i.e., \code{bs = "cr"}) by default, but at least how many basis functions \code{k} the spline
+basis should have probably needs to be set manually.\cr
+\strong{for \code{as.tfb}-methods:} use this to give arguments to \code{\link[=tfb]{tfb()}} or \code{\link[=tfb_fpc]{tfb_fpc()}}.}
 
 \item{x}{an \code{tfb} object}
 
@@ -68,11 +72,6 @@ For the \code{data.frame}-methods: the name/number of the column defining the ev
 via \code{\link[mgcv:magic]{mgcv::magic()}} (default) or ordinary least squares.}
 
 \item{signif}{significant digits of the "resolution" of the evaluation grid.  See details.}
-
-\item{...}{arguments to the calls to \code{\link[mgcv:s]{mgcv::s()}} setting up the basis and
-\code{\link[mgcv:magic]{mgcv::magic()}} (if \code{penalized} is TRUE). If not user-specified here,
-\code{tidyfun} uses \code{k=15} cubic regression spline basis functions (i.e., \code{bs = "cr"}) by default, but at least how many basis functions \code{k} the spline
-basis should have probably needs to be set manually ....}
 }
 \value{
 an \code{tfb}-object (or a \code{data.frame}/\code{matrix} for the conversion

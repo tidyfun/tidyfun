@@ -168,11 +168,12 @@ tfb <- function(data, ...) UseMethod("tfb")
 #' @inheritParams tfd.data.frame
 #' @param penalized should the coefficients of the basis representation be estimated
 #'   via [mgcv::magic()] (default) or ordinary least squares.
-#' @param ... arguments to the calls to [mgcv::s()] setting up the basis and
+#' @param ... **for `tfb`**: arguments to the calls to [mgcv::s()] setting up the basis and
 #'   [mgcv::magic()] (if `penalized` is TRUE). If not user-specified here,
 #'   `tidyfun` uses `k=15` cubic regression spline basis functions (i.e., `bs =
 #'   "cr"`) by default, but at least how many basis functions `k` the spline
-#'   basis should have probably needs to be set manually ....
+#'   basis should have probably needs to be set manually.\cr
+#'   **for `as.tfb`:** use this to give arguments to [tfb()] or [tfb_fpc()].
 #' @rdname tfb
 #' @export
 tfb.data.frame <- function(data, id = 1, arg = 2, value = 3,  

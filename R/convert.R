@@ -71,7 +71,6 @@ as.matrix.tfd <- function(x, arg = NULL, interpolate = FALSE, ...) {
 #' @rdname tfb
 #' @param basis either "mgcv" to call [tfb()] which uses `mgcv`-type spline basis functions
 #'   or "fpc" to call [tfb_fpc()] which uses a (smoothed) functional principal component basis. 
-#' @param ... arguments to [tfb()] or [tfb_fpc()]
 #' @export 
 as.tfb <- function(data, basis = c("mgcv", "fpc"), ...) UseMethod("as.tfb")
 as.tfb.default <- function(data, basis = c("mgcv", "fpc"), ...) {
