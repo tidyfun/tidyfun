@@ -3,6 +3,7 @@
 \name{deriv.tfd}
 \alias{deriv.tfd}
 \alias{deriv.tfb}
+\alias{deriv.tfb_fpc}
 \alias{integrate}
 \alias{integrate.function}
 \alias{integrate.tfd}
@@ -12,6 +13,8 @@
 \method{deriv}{tfd}(expr, order = 1, arg = NULL, ...)
 
 \method{deriv}{tfb}(expr, order = 1, ...)
+
+\method{deriv}{tfb_fpc}(expr, order = 1, ...)
 
 integrate(f, lower, upper, ...)
 

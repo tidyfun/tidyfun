@@ -11,7 +11,6 @@ pc_truncated <- function(data, pve = .995) {
     scores = scores, npc = use)
 }
 
-
 fpc_wrapper <- function(efunctions) {
   function(arg) {
     t(efunctions[, arg, interpolate = TRUE, matrix = TRUE])
@@ -49,7 +48,7 @@ make_tfb_fpc <- function(data, domain = NULL, smooth = TRUE, signif = 4, ...) {
     basis_matrix = t(fpc),
     arg = arg,
     signif_arg = signif, 
-    class = c("tfb", "tf"))
+    class = c("tfb_fpc", "tfb", "tf"))
 }
 
 #-------------------------------------------------------------------------------

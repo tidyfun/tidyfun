@@ -90,12 +90,12 @@ deriv.tfd <- function(expr, order = 1, arg = NULL, ...) {
 #' @export
 #' @rdname tfcalculus
 deriv.tfb <- function(expr, order = 1, ...) {
-  if (grepl("s\\(arg", attr(expr, "basis_label"))) {
-    return(deriv_tfb_mgcv(expr, order = order))
-  }
-  if (grepl("FPC", attr(expr, "basis_label"))) {
-    return(deriv_tfb_fpc(expr, order = order))
-  }
+  deriv_tfb_mgcv(expr, order = order)
+}
+#' @export
+#' @rdname tfcalculus
+deriv.tfb_fpc <- function(expr, order = 1, ...) {
+  deriv_tfb_fpc(expr, order = order)
 }
 
 #-------------------------------------------------------------------------------
