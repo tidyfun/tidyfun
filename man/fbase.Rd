@@ -42,7 +42,7 @@ fbase(data, ...)
 }
 \arguments{
 \item{data}{a \code{matrix}, \code{data.frame} or \code{list} of suitable shape, or another
-\code{fvector}-object.}
+\code{tf}-object.}
 
 \item{basis}{either "mgcv" to call \code{\link[=fbase]{fbase()}} which uses \code{mgcv}-type spline basis functions
 or "fpc" to call \code{\link[=fpcbase]{fpcbase()}} which uses a (smoothed) functional principal component basis.}

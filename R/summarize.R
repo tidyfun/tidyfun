@@ -8,13 +8,13 @@
 #' @param x a `tf` object
 #' @param ... additional arguments to the respective (pointwise or depth) 
 #'   functions, see source code.
-#' @name fvectorsummaries
+#' @name tfsummaries
 NULL
 
 #' @export 
-#' @rdname fvectorsummaries
-mean.fvector <- function(x, ...){
-  summarize_fvector(x, op = "mean", eval  = is_feval(x), ...)
+#' @rdname tfsummaries
+mean.tf <- function(x, ...){
+  summarize_tf(x, op = "mean", eval  = is_feval(x), ...)
 }
 
 #' @param depth method used to determine the most central element in `x`, i.e., the median.
@@ -22,8 +22,8 @@ mean.fvector <- function(x, ...){
 #'  a pointwise median function. 
 #' @importFrom stats median
 #' @export
-#' @rdname fvectorsummaries
-median.fvector <- function(x, na.rm = FALSE, depth = c("MBD", "pointwise"), ...){
+#' @rdname tfsummaries
+median.tf <- function(x, na.rm = FALSE, depth = c("MBD", "pointwise"), ...){
   if (!na.rm) {
     if (any(is.na(x))) return(1 * NA * x[1])
   } else {
@@ -31,7 +31,7 @@ median.fvector <- function(x, na.rm = FALSE, depth = c("MBD", "pointwise"), ...)
   }
   depth  <- match.arg(depth)
   if (depth == "pointwise") {
-    summarize_fvector(x, na.rm = na.rm, op = "median", eval  = is_feval(x), ...)
+    summarize_tf(x, na.rm = na.rm, op = "median", eval  = is_feval(x), ...)
   } else {
     depths <- depth(x, depth = depth)
     med <- x[depths == max(depths)]
@@ -48,54 +48,54 @@ median.fvector <- function(x, na.rm = FALSE, depth = c("MBD", "pointwise"), ...)
 #' @importFrom stats quantile
 #' @inheritParams stats::quantile
 #' @export
-#' @rdname fvectorsummaries
-quantile.fvector <- function(x, probs = seq(0, 1, 0.25), na.rm = FALSE,
+#' @rdname tfsummaries
+quantile.tf <- function(x, probs = seq(0, 1, 0.25), na.rm = FALSE,
   names = TRUE, type = 7, ...){
   #TODO: functional quantiles will need (a lot) more thought, 
   # cf. Serfling, R., & Wijesuriya, U. (2017). 
   # Depth-based nonparametric description of functional data, with emphasis on use of spatial depth.
-  warning("only pointwise, non-functional quantiles implemented for fvectors.")
-  summarize_fvector(x, probs = probs, na.rm = na.rm,
+  warning("only pointwise, non-functional quantiles implemented for tfs.")
+  summarize_tf(x, probs = probs, na.rm = na.rm,
     names = names, type = type, op = "quantile", eval  = is_feval(x), ...)
 }
 
 #' @inheritParams stats::sd
 #' @export
-#' @rdname fvectorsummaries
+#' @rdname tfsummaries
 sd <- function(x, na.rm = FALSE) UseMethod("sd")
 
 #' @importFrom stats sd
-#' @rdname fvectorsummaries
+#' @rdname tfsummaries
 sd.default <- stats::sd
 
 #' @export
-#' @rdname fvectorsummaries
-sd.fvector <- function(x, na.rm = FALSE){
-  summarize_fvector(x, na.rm = na.rm, op = "sd", eval  = is_feval(x))
+#' @rdname tfsummaries
+sd.tf <- function(x, na.rm = FALSE){
+  summarize_tf(x, na.rm = na.rm, op = "sd", eval  = is_feval(x))
 } 
 
 #' @inheritParams stats::var
 #' @export
-#' @rdname fvectorsummaries
+#' @rdname tfsummaries
 var <- function(x, y = NULL, na.rm = FALSE, use) UseMethod("var")
 
 #' @export
 #' @importFrom stats sd
-#' @rdname fvectorsummaries
+#' @rdname tfsummaries
 var.default <- stats::var
 
 #' @export
-#' @rdname fvectorsummaries
-var.fvector <- function(x, y = NULL, na.rm = FALSE, use){
-  summarize_fvector(x, na.rm = na.rm, op = "sd", eval  = is_feval(x))
+#' @rdname tfsummaries
+var.tf <- function(x, y = NULL, na.rm = FALSE, use){
+  summarize_tf(x, na.rm = na.rm, op = "sd", eval  = is_feval(x))
 } 
 
 # cov / cor # needs image class/fpca methods
 
 #' @param object a `tfd` object
 #' @export
-#' @rdname fvectorsummaries
-summary.fvector <- function(object, ...) {
+#' @rdname tfsummaries
+summary.tf <- function(object, ...) {
   depths <- depth(object, ...)
   central <- which(depths <= median(depths))
   c(mean = mean(object), var = var(object),

@@ -12,9 +12,9 @@ fun_math <- function(x, op){
 #-------------------------------------------------------------------------------
 # used for Summary grup generics and stats-methods...
 # op has to be a string!
-summarize_fvector <- function(..., op = NULL, eval = FALSE) {
+summarize_tf <- function(..., op = NULL, eval = FALSE) {
   dots <- list(...)
-  funs <- map_lgl(dots, is_fvector)
+  funs <- map_lgl(dots, is_tf)
   op_args <- dots[!funs]
   funs <- dots[funs]
   op_call <- function(x) do.call(op, c(list(x), op_args))
@@ -34,10 +34,10 @@ summarize_fvector <- function(..., op = NULL, eval = FALSE) {
 }
 #------------------------------------------------------------------------------
 
-#' Math, Summary and Ops Methods for `fvector`
+#' Math, Summary and Ops Methods for `tf`
 #' 
 #' These define methods and operators that mostly work `argval`-wise on
-#' `fvector` objects, see `?groupGeneric` for implementation details.
+#' `tf` objects, see `?groupGeneric` for implementation details.
 #' 
 #' See examples below. Equality checks of functional objects are rather iffy and
 #' not very reliable at this point. Note that `max` and `min` are not guaranteed 
@@ -49,12 +49,12 @@ summarize_fvector <- function(..., op = NULL, eval = FALSE) {
 #' or data is very wiggly.
 #' 
 #' 
-#' @param x an `fvector`
-#' @param ... `fvector`-objects (not used for `Math` group generic)
-#' @param e1 an `fvector` or a numeric vector
-#' @param e2 an `fvector` or a numeric vector
+#' @param x an `tf`
+#' @param ... `tf`-objects (not used for `Math` group generic)
+#' @param e1 an `tf` or a numeric vector
+#' @param e2 an `tf` or a numeric vector
 #' 
-#' @rdname fvectorgroupgenerics
+#' @rdname tfgroupgenerics
 #' @examples 
 #' set.seed(1859)
 #' f <- rgp(4)
@@ -75,7 +75,7 @@ summarize_fvector <- function(..., op = NULL, eval = FALSE) {
 Math.feval <- function(x, ...) {
   fun_math(x, .Generic)
 } 
-#' @rdname fvectorgroupgenerics
+#' @rdname tfgroupgenerics
 #' @export
 Math.fbase <- function(x, ...) {
   basis_args <- attr(x, "basis_args")
@@ -84,57 +84,57 @@ Math.fbase <- function(x, ...) {
     c(list(eval), basis_args, penalized = FALSE, verbose = FALSE))
 }  
 
-#' @rdname fvectorgroupgenerics
+#' @rdname tfgroupgenerics
 #' @export
 cummax.feval <- function(...) {
-  summarize_fvector(..., op = "cummax", eval  = TRUE)
+  summarize_tf(..., op = "cummax", eval  = TRUE)
 }
-#' @rdname fvectorgroupgenerics
+#' @rdname tfgroupgenerics
 #' @export
 cummin.feval <- function(...) {
-  summarize_fvector(..., op = "cummin", eval  = TRUE)
+  summarize_tf(..., op = "cummin", eval  = TRUE)
 }
-#' @rdname fvectorgroupgenerics
+#' @rdname tfgroupgenerics
 #' @export
 cumsum.feval <- function(...) {
-  summarize_fvector(..., op = "cumsum", eval  = TRUE)
+  summarize_tf(..., op = "cumsum", eval  = TRUE)
 }
-#' @rdname fvectorgroupgenerics
+#' @rdname tfgroupgenerics
 #' @export
 cumprod.feval <- function(...) {
-  summarize_fvector(..., op = "cumprod", eval  = TRUE)
+  summarize_tf(..., op = "cumprod", eval  = TRUE)
 }
-#' @rdname fvectorgroupgenerics
+#' @rdname tfgroupgenerics
 #' @export
 cummax.fbase <- function(...) {
-  summarize_fvector(..., op = "cummax", eval  = FALSE)
+  summarize_tf(..., op = "cummax", eval  = FALSE)
 }
-#' @rdname fvectorgroupgenerics
+#' @rdname tfgroupgenerics
 #' @export
 cummin.fbase <- function(...) {
-  summarize_fvector(..., op = "cummin", eval  = FALSE)
+  summarize_tf(..., op = "cummin", eval  = FALSE)
 }
-#' @rdname fvectorgroupgenerics
+#' @rdname tfgroupgenerics
 #' @export
 cumsum.fbase <- function(...) {
-  summarize_fvector(..., op = "cumsum", eval  = FALSE)
+  summarize_tf(..., op = "cumsum", eval  = FALSE)
 }
-#' @rdname fvectorgroupgenerics
+#' @rdname tfgroupgenerics
 #' @export
 cumprod.fbase <- function(...) {
-  summarize_fvector(..., op = "cumprod", eval  = FALSE)
+  summarize_tf(..., op = "cumprod", eval  = FALSE)
 }
 
 #-------------------------------------------------------------------------------
 
-#' @rdname fvectorgroupgenerics
+#' @rdname tfgroupgenerics
 #' @export
-Summary.fvector <- function(...) {
+Summary.tf <- function(...) {
   not_defined <- switch(.Generic, 
     `all` = , `any` = TRUE, FALSE)
   if (not_defined) 
-    stop(sprintf("%s not defined for \"fvector\" objects", .Generic))
-  summarize_fvector(..., op = .Generic, eval  = is_feval(list(...)[[1]]))
+    stop(sprintf("%s not defined for \"tf\" objects", .Generic))
+  summarize_tf(..., op = .Generic, eval  = is_feval(list(...)[[1]]))
 }  
 
 #-------------------------------------------------------------------------------
@@ -144,7 +144,7 @@ Summary.fvector <- function(...) {
 #`%*%` = function(x,...){ #make S3
 #  UseMethod("%*%",x)
 #}
-# `%*%.fvector(x, y) = [int x_i(t)*y_i(t) dt] 
+# `%*%.tf(x, y) = [int x_i(t)*y_i(t) dt] 
 
 
 

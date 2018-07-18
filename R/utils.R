@@ -100,7 +100,7 @@ adjust_resolution <- function(argvals, f) {
   }  
 }
 
-compare_fvector_attribs <- function(e1, e2, ignore = "names") {
+compare_tf_attribs <- function(e1, e2, ignore = "names") {
 # TODO: better way to check evaluator/basis functions?
   a1 <- attributes(e1)
   a2 <- attributes(e2)
@@ -134,25 +134,25 @@ compare_fvector_attribs <- function(e1, e2, ignore = "names") {
 
 #-------------------------------------------------------------------------------
 
-#' @rdname fvectormethods
+#' @rdname tfmethods
 #' @export
-is_fvector <- function(x) "fvector" %in% class(x)
+is_tf <- function(x) "tf" %in% class(x)
 
-#' @rdname fvectormethods
+#' @rdname tfmethods
 #' @export
 is_irreg <- function(x) "feval_irreg" %in% class(x)
 
-#' @rdname fvectormethods
+#' @rdname tfmethods
 #' @export
 is_feval <- function(x) "feval" %in% class(x)
 
-#' @rdname fvectormethods
+#' @rdname tfmethods
 #' @export
 is_fbase <- function(x) "fbase" %in% class(x)
 
 #-------------------------------------------------------------------------------
 
-#' @rdname fvectormethods
-is.na.fvector <- function(x) {
+#' @rdname tfmethods
+is.na.tf <- function(x) {
   map_lgl(unclass(x), ~ any(is.na(.x)))
 }

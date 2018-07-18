@@ -48,7 +48,7 @@
 NULL
 
 is.finite.feval <- function(x) map(evaluations(x), ~ all(is.finite(x)))
-scale_type.fvector <- function(x) "identity"
+scale_type.tf <- function(x) "identity"
 
 #' @export
 #' @importFrom ggplot2 ggproto Stat Geom
@@ -68,7 +68,7 @@ StatTf <- ggproto("StatTf", Stat,
     params
   },
   compute_layer = function(self, data, params, layout) {
-    stopifnot(is_fvector(pull(data, tf)))
+    stopifnot(is_tf(pull(data, tf)))
     tf_eval <- evaluate(object = data, argvals = params$argvals, tf) %>%
       select(-group) %>% 
       unnest(.id = ".id") %>% 

@@ -2,7 +2,7 @@
 rm(list = ls())
 devtools::load_all("~/fda/tidyfun")
 is.finite.feval <- function(x) map(evaluations(x), ~ all(is.finite(x)))
-scale_type.fvector <- function(x) "identity"
+scale_type.tf <- function(x) "identity"
 library(magrittr)
 library(tidyverse)
 

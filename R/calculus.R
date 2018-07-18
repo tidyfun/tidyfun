@@ -1,5 +1,5 @@
 # compute derivatives of data rows by finite differences. 
-# returns derivaitves at interval midpoints
+# returns derivatives at interval midpoints
 deriv_matrix <- function(data, argvals, order) {
   for (i in 1:order) {
     delta <- diff(argvals)
@@ -18,7 +18,7 @@ quad_trapez <- function(argvals, evaluations) {
 deriv_fbase_mgcv <- function(expr, order = 1, argvals = tidyfun::argvals(expr)) {
   #TODO: make this work for iterated application deriv(deriv(fb)) 
   if (!is.null(attr(expr, "basis_deriv"))) 
-    stop("Can't derive or integrate previously derived/integrated fvector in basis representation")
+    stop("Can't derive or integrate previously derived/integrated tf in basis representation")
   s_args <- attr(expr, "basis_args")
   s_call <- as.call(c(quote(s), quote(argvals), s_args))
   s_spec <- eval(s_call)
@@ -58,22 +58,22 @@ deriv_fbase_fpc <- function(expr, order = 1, lower, upper,
 
 #' Derivatives and integrals of functional data
 #'
-#' Derivatives of `fvectors` use finite differences of the evaluations 
+#' Derivatives of `tf`s use finite differences of the evaluations 
 #' for `feval` and finite differences of the basis functions for `fbase`. 
 #' Note that, for some spline bases like `"cr"` or `"tp"` which always begin/end linearly,
 #' computing second derivatives will produce artefacts at the outer limits 
 #' of the functions' domain due to these boundary constraints. Basis `"bs"` does 
 #' not have this problem, but tends to yield slightly less stable fits.
 #'
-#' @param expr an `fvector`
+#' @param expr a `tf`
 #' @param order order of differentiation. Maximally 2 for `fbase` with `mgcv`-spline bases.
 #' @param argvals grid to use for the differentiation/integration. Not the `argvals` of the returned object.
 #' @param ... not used
 #'
-#' @return an `fvector` with (slightly) different `argvals` (and `basis`)
+#' @return a `tf` with (slightly) different `argvals` (and `basis`)
 #' @export
 #' @importFrom stats deriv
-#' @rdname fvectorcalculus
+#' @rdname tfcalculus
 deriv.feval <- function(expr, order = 1, argvals = NULL, ...) {
   #TODO: should this interpolate back to the original grid?
   # shortens the domain (slightly), for now.
@@ -88,7 +88,7 @@ deriv.feval <- function(expr, order = 1, argvals = NULL, ...) {
   ret
 }
 #' @export
-#' @rdname fvectorcalculus
+#' @rdname tfcalculus
 deriv.fbase <- function(expr, order = 1, ...) {
   if (grepl("s\\(argvals", attr(expr, "basis_label"))) {
     return(deriv_fbase_mgcv(expr, order = order))
@@ -100,8 +100,8 @@ deriv.fbase <- function(expr, order = 1, ...) {
 
 #-------------------------------------------------------------------------------
 
-#' @rdname fvectorcalculus
-#' @description Integration of `fvectors` is done by quadrature (trapezoid rule, specifically). 
+#' @rdname tfcalculus
+#' @description Integration of `tf`s is done by quadrature (trapezoid rule, specifically). 
 #'  By default the scalar definite integral \eqn{\int^{upper}_{lower}f(s)ds} is returned 
 #'  (option `definite = TRUE`), alternatively for `definite = FALSE` something 
 #'  like the *anti-derivative* on `[lower, upper]`, e.g. an `feval` object
@@ -114,13 +114,13 @@ integrate <- function(f, lower, upper, ...) {
 
 integrate.default <- function(f, lower, upper, ...) .NotYetImplemented()
 
-#' @rdname fvectorcalculus
+#' @rdname tfcalculus
 #' @details `integrate.function` is simply a wrapper for [stats::integrate()].
 #' @inheritParams stats::integrate
 #' @export
 integrate.function <- stats::integrate
 
-#' @rdname fvectorcalculus
+#' @rdname tfcalculus
 #' @param lower lower limits of the integration range. For `definite=TRUE`, this can be
 #'  a vector of the same length as `f`.
 #' @param upper upper limits of the integration range (but see `definite` arg / Description).
@@ -162,7 +162,7 @@ integrate.feval <- function(f, lower = domain(f)[1], upper = domain(f)[2],
   #  Vectorize(as.function(.x)), lower = lower, upper = upper, ...)) %>% 
   #map("value") 
 }
-#' @rdname fvectorcalculus
+#' @rdname tfcalculus
 #' @export
 integrate.fbase <- function(f, lower = domain(f)[1], upper = domain(f)[2], 
   definite = TRUE, argvals, ...) {

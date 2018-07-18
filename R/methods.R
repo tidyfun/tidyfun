@@ -1,9 +1,9 @@
-#' Utility functions for `fvector`-objects
+#' Utility functions for `tf`-objects
 #' 
 #' A bunch of methods & utilities that do what they say.
-#' @param f an `fvector` object
-#' @param x an `fvector` object
-#' @rdname fvectormethods
+#' @param f an `tf` object
+#' @param x an `tf` object
+#' @rdname tfmethods
 #' @export
 argvals <- function(f) UseMethod("argvals")
 #' @export
@@ -15,7 +15,7 @@ argvals.feval_reg <- function(f) attr(f, "argvals")[[1]]
 #' @export
 argvals.fbase <- function(f) attr(f, "argvals")
 
-#' @rdname fvectormethods
+#' @rdname tfmethods
 #' @export
 evaluations <- function(f) UseMethod("evaluations")
 #' @export
@@ -35,7 +35,7 @@ evaluations.fbase <- function(f) {
 } 
 
 
-#' @rdname fvectormethods
+#' @rdname tfmethods
 #' @export
 n_evaluations <- function(f) UseMethod("n_evaluations")
 #' @export
@@ -45,28 +45,28 @@ n_evaluations.feval_irreg <- function(f) map_int(evaluations(f), length)
 #' @export
 n_evaluations.feval_reg <- function(f) length(argvals(f))
 
-#' @rdname fvectormethods
+#' @rdname tfmethods
 #' @export
 domain <- function(f) {
-  stopifnot(inherits(f, "fvector"))
+  stopifnot(inherits(f, "tf"))
   attr(f, "domain")
 }
 
-#' @rdname fvectormethods
+#' @rdname tfmethods
 #' @export
 evaluator <- function(f) {
   stopifnot(inherits(f, "feval"))
   attr(f, "evaluator")
 }
 
-#' @rdname fvectormethods
+#' @rdname tfmethods
 #' @export
 basis <- function(f) {
   stopifnot(inherits(f, "fbase"))
   attr(f, "basis")
 }
 
-#' @rdname fvectormethods
+#' @rdname tfmethods
 #' @param value for `evaluator<-`: name of a function that can be used to interpolate an `feval`. Needs to
 #'   accept vector arguments `x`, `argvals`, `evaluations` and return
 #'   evaluations of the function defined by `argvals`, `evaluations` at `x`
@@ -83,7 +83,7 @@ basis <- function(f) {
   x
 }
 # this only used internally in feval_irreg conversion functions.
-#' @rdname fvectormethods
+#' @rdname tfmethods
 `argvals<-` <- function(x, value) {
   stopifnot(inherits(x, "feval_irreg"))
   value <- map(value, ~signif(.x, attr(x, "signif_argvals")))
@@ -95,7 +95,7 @@ basis <- function(f) {
 
 #-------------------------------------------------------------------------------
 
-#' @rdname fvectormethods
+#' @rdname tfmethods
 #' @param object as usual
 #' @param ... dots
 #' @export
@@ -106,8 +106,8 @@ coef.fbase <- function(object, ...) {
 }
 
 #' @export
-#' @rdname fvectormethods
-rev.fvector <- function(x) {
+#' @rdname tfmethods
+rev.tf <- function(x) {
   x[rev(seq_along(x))]
 }
 

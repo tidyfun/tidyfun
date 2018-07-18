@@ -119,7 +119,7 @@ mgcv_fbase <- function(data, regular, domain = NULL,
     basis_matrix = spec_object$X,
     argvals = argvals_u$x,
     signif_argvals = signif, 
-    class = c("fbase", "fvector"))
+    class = c("fbase", "tf"))
 }
 
 magic_smooth_coef <- function(evaluations, index, spec_object, magic_args) {
@@ -155,7 +155,7 @@ magic_smooth_coef <- function(evaluations, index, spec_object, magic_args) {
 #' data instead.
 #' 
 #' @param data a `matrix`, `data.frame` or `list` of suitable shape, or another
-#'   `fvector`-object.
+#'   `tf`-object.
 #' @return an `fbase`-object (or a `data.frame`/`matrix` for the conversion
 #'   functions, obviously.)
 #' @rdname fbase

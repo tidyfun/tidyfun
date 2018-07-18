@@ -10,13 +10,13 @@
 \alias{evaluator<-}
 \alias{argvals<-}
 \alias{coef.fbase}
-\alias{rev.fvector}
-\alias{is_fvector}
+\alias{rev.tf}
+\alias{is_tf}
 \alias{is_irreg}
 \alias{is_feval}
 \alias{is_fbase}
-\alias{is.na.fvector}
-\title{Utility functions for \code{fvector}-objects}
+\alias{is.na.tf}
+\title{Utility functions for \code{tf}-objects}
 \usage{
 argvals(f)
 
@@ -36,9 +36,9 @@ argvals(x) <- value
 
 \method{coef}{fbase}(object, ...)
 
-\method{rev}{fvector}(x)
+\method{rev}{tf}(x)
 
-is_fvector(x)
+is_tf(x)
 
 is_irreg(x)
 
@@ -46,12 +46,12 @@ is_feval(x)
 
 is_fbase(x)
 
-\method{is.na}{fvector}(x)
+\method{is.na}{tf}(x)
 }
 \arguments{
-\item{f}{an \code{fvector} object}
+\item{f}{an \code{tf} object}
 
-\item{x}{an \code{fvector} object}
+\item{x}{an \code{tf} object}
 
 \item{value}{for \code{evaluator<-}: name of a function that can be used to interpolate an \code{feval}. Needs to
 accept vector arguments \code{x}, \code{argvals}, \code{evaluations} and return

@@ -49,7 +49,7 @@ fpc_fbase <- function(data, domain = NULL, smooth = TRUE, signif = 4, ...) {
     basis_matrix = t(fpc),
     argvals = argvals,
     signif_argvals = signif, 
-    class = c("fbase", "fvector"))
+    class = c("fbase", "tf"))
 }
 
 #-------------------------------------------------------------------------------
@@ -57,7 +57,7 @@ fpc_fbase <- function(data, domain = NULL, smooth = TRUE, signif = 4, ...) {
 #' Constructors/converters for functional data in FPC-basis representation
 #' 
 #' These functions perform a (functional) principal component analysis of the
-#' input data and return an `fbase` `fvector`-object that uses the empirical 
+#' input data and return an `fbase` `tf`-object that uses the empirical 
 #' eigenfunctions as basis functions for representing the data. By default, a
 #' `smooth`ed FPCA via [refund::fpca.sc()] is used to compute eigenfunctions and 
 #' scores based on the smoothed empirical covariance. 
@@ -112,7 +112,7 @@ fpcbase.numeric <- function(data, argvals = NULL, domain = NULL, smooth = TRUE, 
 
 #' @rdname fpcbase
 #' @export
-fpcbase.fvector <- function(data, argvals = NULL, smooth = TRUE, ...) {
+fpcbase.tf <- function(data, argvals = NULL, smooth = TRUE, ...) {
    #TODO: major computational shortcuts possible here for fbase: reduced rank,
   #   direct inner prods of basis functions etc...
   argvals <- argvals %||% argvals(data)

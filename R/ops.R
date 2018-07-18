@@ -1,4 +1,4 @@
-# *, / for fvectors; and +, -, ^ for fevals
+# *, / for tfs; and +, -, ^ for fevals
 fun_op <- function(x, y, op, numeric = NA){
   if (!is.na(numeric)) {
     num <- list(x, y)[[numeric]]
@@ -41,38 +41,38 @@ fun_op <- function(x, y, op, numeric = NA){
   ret
 }
 
-#' @rdname fvectorgroupgenerics
-Ops.fvector <- function(e1, e2) {
+#' @rdname tfgroupgenerics
+Ops.tf <- function(e1, e2) {
   not_defined <- switch(.Generic, 
     `%%` = , `%/%` = ,
     `&` = , `|` = , `!` = , 
     `<` = , `<=` = , `>=` = , `>` = TRUE, FALSE)
   if (not_defined) 
-    stop(sprintf("%s not defined for \"fvector\" objects", .Generic))
+    stop(sprintf("%s not defined for \"tf\" objects", .Generic))
   if (nargs() == 1) {
     return(fun_op(0, e1, .Generic, numeric = 1))
   }
 }
 
-#' @rdname fvectorgroupgenerics
+#' @rdname tfgroupgenerics
 `==.feval` <- function(e1, e2) {
   # no "recycling" of args
   stopifnot((length(e1) %in% c(1, length(e2))) | 
       (length(e2) %in% c(1, length(e1))))
   # not comparing names, as per convention...
-  same <- all(compare_fvector_attribs(e1, e2))
+  same <- all(compare_tf_attribs(e1, e2))
   if (!same) return(rep(FALSE, max(length(e1), length(e2))))
   unlist(map2(e1, e2, ~ isTRUE(all.equal(.x, .y))))
 }
-#' @rdname fvectorgroupgenerics
+#' @rdname tfgroupgenerics
 `!=.feval` <- function(e1, e2) !(e1 == e2)
-#need to copy instead of defining fvector-method s.t. dispatch in Ops works
-#' @rdname fvectorgroupgenerics
+#need to copy instead of defining tf-method s.t. dispatch in Ops works
+#' @rdname tfgroupgenerics
 `==.fbase` <- eval(`==.feval`)
-#' @rdname fvectorgroupgenerics
+#' @rdname tfgroupgenerics
 `!=.fbase` <- eval(`!=.feval`)
 
-#' @rdname fvectorgroupgenerics
+#' @rdname tfgroupgenerics
 Ops.feval <- function(e1, e2) {
   ret <- NextMethod()
   if (nargs() != 1) {
@@ -96,7 +96,7 @@ Ops.feval <- function(e1, e2) {
   }
   ret
 }
-#' @rdname fvectorgroupgenerics
+#' @rdname tfgroupgenerics
 Ops.fbase <- function(e1, e2) {
   ret <- NextMethod()
   if (nargs() != 1) {
@@ -105,7 +105,7 @@ Ops.fbase <- function(e1, e2) {
       if (.Generic == "^") {
         stop("^ not defined for \"fbase\" objects")
       }
-      stopifnot(all(compare_fvector_attribs(e1, e2)))
+      stopifnot(all(compare_tf_attribs(e1, e2)))
     }
     if (both_funs & .Generic %in% c("+", "-")) {
       # just add/subtract coefs for identical bass

@@ -26,7 +26,7 @@ integrate(f, lower, upper, ...)
   definite = TRUE, argvals, ...)
 }
 \arguments{
-\item{expr}{an \code{fvector}}
+\item{expr}{a \code{tf}}
 
 \item{order}{order of differentiation. Maximally 2 for \code{fbase} with \code{mgcv}-spline bases.}
 
@@ -62,17 +62,17 @@ For \code{definite=TRUE}, this can be a vector of the same length as \code{f}.}
 or the antiderivative. See Description.}
 }
 \value{
-an \code{fvector} with (slightly) different \code{argvals} (and \code{basis})
+a \code{tf} with (slightly) different \code{argvals} (and \code{basis})
 }
 \description{
-Derivatives of \code{fvectors} use finite differences of the evaluations
+Derivatives of \code{tf}s use finite differences of the evaluations
 for \code{feval} and finite differences of the basis functions for \code{fbase}.
 Note that, for some spline bases like \code{"cr"} or \code{"tp"} which always begin/end linearly,
 computing second derivatives will produce artefacts at the outer limits
 of the functions' domain due to these boundary constraints. Basis \code{"bs"} does
 not have this problem, but tends to yield slightly less stable fits.
 
-Integration of \code{fvectors} is done by quadrature (trapezoid rule, specifically).
+Integration of \code{tf}s is done by quadrature (trapezoid rule, specifically).
 By default the scalar definite integral \eqn{\int^{upper}_{lower}f(s)ds} is returned
 (option \code{definite = TRUE}), alternatively for \code{definite = FALSE} something
 like the \emph{anti-derivative} on \code{[lower, upper]}, e.g. an \code{feval} object

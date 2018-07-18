@@ -10,7 +10,7 @@
 \alias{feval.numeric}
 \alias{feval.data.frame}
 \alias{feval.list}
-\alias{feval.fvector}
+\alias{feval.tf}
 \title{Constructors for functional data evaluated on grids of argument values}
 \usage{
 as.feval(data, ...)
@@ -36,13 +36,13 @@ feval(data, ...)
 \method{feval}{list}(data, argvals = NULL, domain = NULL,
   evaluator = approx_linear, signif = 4, ...)
 
-\method{feval}{fvector}(data, argvals = NULL, domain = NULL,
+\method{feval}{tf}(data, argvals = NULL, domain = NULL,
   evaluator = approx_linear, signif = 4, ...)
 }
 \arguments{
-\item{data}{a \code{matrix}, \code{data.frame} or \code{list} of suitable shape, or another \code{fvector}-object.}
+\item{data}{a \code{matrix}, \code{data.frame} or \code{list} of suitable shape, or another \code{tf}-object.}
 
-\item{...}{not used in \code{feval}, except for \code{feval.fvector} -- specify \code{argvals} and \code{ìnterpolate = TRUE} to
+\item{...}{not used in \code{feval}, except for \code{feval.tf} -- specify \code{argvals} and \code{ìnterpolate = TRUE} to
 turn an irregular \code{feval} into a regular one, see examples.}
 
 \item{signif}{significant digits of the "resolution" of the evaluation grid.  See details.}

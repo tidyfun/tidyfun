@@ -5,7 +5,7 @@
 \alias{evaluate.feval}
 \alias{evaluate.fbase}
 \alias{evaluate.data.frame}
-\title{Evaluate \code{fvector}s, both inside or outside a \code{data.frame}}
+\title{Evaluate \code{tf}s, both inside or outside a \code{data.frame}}
 \usage{
 evaluate(object, argvals, ...)
 
@@ -16,19 +16,19 @@ evaluate(object, argvals, ...)
 \method{evaluate}{data.frame}(object, argvals, ...)
 }
 \arguments{
-\item{object}{an \code{fvector} or a \code{data.frame}-like object with \code{fvector} columns}
+\item{object}{an \code{tf} or a \code{data.frame}-like object with \code{tf} columns}
 
 \item{argvals}{optional evaluation grid, defaults to \code{argvals(object)}.}
 
-\item{...}{optional: names of the \code{fvector}-columns to unnest}
+\item{...}{optional: names of the \code{tf}-columns to unnest}
 }
 \description{
-The \code{evaluate.data.frame} method evaluates \code{fvector}-columns inside a \code{data.frame}
+The \code{evaluate.data.frame} method evaluates \code{tf}-columns inside a \code{data.frame}
 into list columns of smaller \code{data.frames} containing the functions' argvals and
 evaluations. Its \code{argvals}-argument can be a list of \code{argvals}-vector
 used as the \code{argvals} argument for the \code{\link[=evaluate]{evaluate()}}-method for the respective
-\code{fvector}-columns in \code{object}.
+\code{tf}-columns in \code{object}.
 }
 \seealso{
-\code{?`[.fvector`}
+\code{?`[.tf`}
 }

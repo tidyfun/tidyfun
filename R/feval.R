@@ -24,7 +24,7 @@ new_feval <- function(argvals, datalist, regular, domain, evaluator, signif = 4)
     evaluator = memoise(eval(evaluator)),
     evaluator_name = deparse(evaluator, width.cutoff = 60)[1],
     signif_argvals = signif, #maybe turn this into a <global> option? 
-    class = c(class, "feval", "fvector"))
+    class = c(class, "feval", "tf"))
   assert_argvals(argvals, ret)
   ret
 }
@@ -60,8 +60,8 @@ new_feval <- function(argvals, datalist, regular, domain, evaluator, signif = 4)
 #' treated as identical. E.g., if an evaluation of f(t) is available at t=1 and a function
 #' value is requested at t = 1.001, f(1) will be returned if `signif` < 4.
 #' 
-#' @param data a `matrix`, `data.frame` or `list` of suitable shape, or another `fvector`-object.
-#' @param ... not used in `feval`, except for `feval.fvector` -- specify `argvals` and `ìnterpolate = TRUE` to 
+#' @param data a `matrix`, `data.frame` or `list` of suitable shape, or another `tf`-object.
+#' @param ... not used in `feval`, except for `feval.tf` -- specify `argvals` and `ìnterpolate = TRUE` to 
 #'   turn an irregular `feval` into a regular one, see examples. 
 #' @return an `feval`-object (or a `data.frame`/`matrix` for the conversion functions, obviously.)
 #' @export
@@ -156,7 +156,7 @@ feval.list <- function(data, argvals = NULL, domain = NULL,
 #' (f <- c(rgp(1, argvals = seq(0,1,l=11)), rgp(1, argvals = seq(0,1,l=21))))
 #' feval(f, interpolate = TRUE, argvals = seq(0,1,l=21))
 #' @rdname feval
-feval.fvector <- function(data, argvals = NULL, domain = NULL, 
+feval.tf <- function(data, argvals = NULL, domain = NULL, 
     evaluator = approx_linear, signif = 4, ...) {
   argvals <- ensure_list(argvals %||% argvals(data))
   evaluations <- evaluate(data, argvals)

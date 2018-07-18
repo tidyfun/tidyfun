@@ -12,7 +12,7 @@ c_names <- function(funs) {
   if (all(names == "")) NULL else names
 }
 
-#' Concatenate `fvector`-objects
+#' Concatenate `tf`-objects
 #' 
 #' Functions to concatenate multiple vectors of functional data.
 #' 
@@ -26,12 +26,12 @@ c_names <- function(funs) {
 #' argument for all remaining arguments as well.\cr This means that `c(f1, f2)`
 #' is not necessarily the same as `rev(c(f2, f1))`.
 #' 
-#' @param ... for `c()`: a bunch of `fvector`-objects on the same domain and of
+#' @param ... for `c()`: a bunch of `tf`-objects on the same domain and of
 #'   the same class. Not used for `merge`.
-#' @return an `fvector`-object containing all the arguments with the same
+#' @return an `tf`-object containing all the arguments with the same
 #'   attributes as the the first argument (see Details).
-#' @rdname fvectorconcat
-c.fvector <- function(...) {
+#' @rdname tfconcat
+c.tf <- function(...) {
   funs <- list(...)
   compatible <- all(map_lgl(funs, is_feval)) | all(map_lgl(funs, is_fbase))
   if (!compatible) {
@@ -39,7 +39,7 @@ c.fvector <- function(...) {
   }
 }
 
-#' @rdname fvectorconcat
+#' @rdname tfconcat
 #' @export
 c.feval <- function(...) {
   funs <- list(...)
@@ -47,7 +47,7 @@ c.feval <- function(...) {
     return(funs[[1]])
   } else NextMethod()  
   compatible <- do.call(rbind, map(funs, 
-    ~ compare_fvector_attribs(funs[[1]], .)))
+    ~ compare_tf_attribs(funs[[1]], .)))
   stopifnot(all(compatible[, "domain"]))
   make_irreg <- rep(FALSE, length(funs))
   irreg <- map_lgl(funs, is_irreg)
@@ -90,7 +90,7 @@ c.feval <- function(...) {
   ret
 }
 
-#' @rdname fvectorconcat
+#' @rdname tfconcat
 #' @export
 c.fbase <- function(...) {
   funs <- list(...)
@@ -98,7 +98,7 @@ c.fbase <- function(...) {
     return(funs[[1]])
   } else NextMethod()  
   compatible <- do.call(rbind, map(funs, 
-    ~ compare_fvector_attribs(funs[[1]], .)))
+    ~ compare_tf_attribs(funs[[1]], .)))
   stopifnot(all(compatible[, "domain"]))
   re_evals <- which(!compatible[, "argvals"] | 
       !compatible[, "basis_args"])
@@ -127,10 +127,10 @@ c.fbase <- function(...) {
   ret
 }
 
-#' @param x `fvector`-object 
-#' @param y `fvector`-object
-#' @rdname fvectorconcat
+#' @param x `tf`-object 
+#' @param y `tf`-object
+#' @rdname tfconcat
 #' @export
-merge.fvector <- function(x, y, ...) {
+merge.tf <- function(x, y, ...) {
   c(x, y)
 }

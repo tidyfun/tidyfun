@@ -2,26 +2,26 @@
 % Please edit documentation in R/graphics.R
 \name{funplot}
 \alias{funplot}
-\alias{plot.fvector}
-\alias{lines.fvector}
-\alias{points.fvector}
-\title{Visualization functions for \code{fvector}s}
+\alias{plot.tf}
+\alias{lines.tf}
+\alias{points.tf}
+\title{Visualization functions for \code{tf}s}
 \usage{
 funplot(f, argvals, n_grid = 50, points = is_irreg(f),
   type = c("spaghetti", "lasagna"), alpha = min(1, max(0.05, 2/length(f))))
 
-\method{plot}{fvector}(x, y, n_grid = 50, points = is_irreg(x),
+\method{plot}{tf}(x, y, n_grid = 50, points = is_irreg(x),
   type = c("spaghetti", "lasagna"), alpha = min(1, max(0.05, 2/length(x))),
   ...)
 
-\method{lines}{fvector}(x, argvals, n_grid = 50, alpha = min(1, max(0.05,
+\method{lines}{tf}(x, argvals, n_grid = 50, alpha = min(1, max(0.05,
   2/length(x))), ...)
 
-\method{points}{fvector}(x, argvals, n_grid = NA, alpha = min(1, max(0.05,
+\method{points}{tf}(x, argvals, n_grid = NA, alpha = min(1, max(0.05,
   2/length(x))), interpolate = FALSE, ...)
 }
 \arguments{
-\item{f}{an \code{fvector} object}
+\item{f}{an \code{tf} object}
 
 \item{argvals}{(optional) numeric vector to be used as \code{argvals}. See details.}
 
@@ -36,7 +36,7 @@ Defaults to \code{TRUE} for irregular \code{feval} and FALSE for all others}
 \item{alpha}{\href{grDevices::rgb()}{alpha-value} for noodle transparency.
 Defaults to 2/(no. of observations). Lower is more transparent.}
 
-\item{x}{an \code{fvector} object}
+\item{x}{an \code{tf} object}
 
 \item{y}{(optional) numeric vector to be used as \code{argvals} (i.e., for the \strong{x}-axis...!)}
 
@@ -48,7 +48,7 @@ feval, defaults to FALSE}
 }
 \value{
 for \code{funplot}: the \code{ggplot}-object for further modification. For the
-others: the plotted \code{fvector}-object, invisibly.
+others: the plotted \code{tf}-object, invisibly.
 }
 \description{
 Some \code{base} and \code{ggplot}-functions for displaying functional data in
@@ -58,7 +58,7 @@ spaghetti- (i.e., line plots) and lasagna- (i.e., heat map) flavors.
 \code{funplot} uses \code{ggplot2}, the others use the \code{base}-system.
 
 If no \code{argvals} are provided, evaluation points (\code{argvals}) for the functions
-are given by the union of the \code{fvector}'s \code{argvals} and an equidistant grid
+are given by the union of the \code{tf}'s \code{argvals} and an equidistant grid
 over its domain with \code{n_grid} points. If you want to only see the original
 data for \code{feval}-objects without inter-/extrapolation, use \code{n_grid < 1} or
 \code{n_grid = NA}.

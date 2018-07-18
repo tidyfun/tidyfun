@@ -3,7 +3,7 @@
 \name{depth}
 \alias{depth}
 \alias{depth.matrix}
-\alias{depth.fvector}
+\alias{depth.tf}
 \title{Data Depth}
 \usage{
 depth(x, depth = "MBD", na.rm = TRUE, ...)
@@ -11,11 +11,10 @@ depth(x, depth = "MBD", na.rm = TRUE, ...)
 \method{depth}{matrix}(x, depth = "MBD", na.rm = TRUE,
   argvals = unlist(find_argvals(x, NULL)), ...)
 
-\method{depth}{fvector}(x, depth = "MBD", na.rm = TRUE, argvals = NULL,
-  ...)
+\method{depth}{tf}(x, depth = "MBD", na.rm = TRUE, argvals = NULL, ...)
 }
 \arguments{
-\item{x}{\code{fvector} (or a matrix of evaluations)}
+\item{x}{\code{tf} (or a matrix of evaluations)}
 
 \item{depth}{currently available: "MBD", i.e. modified band depth}
 

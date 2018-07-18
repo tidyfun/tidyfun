@@ -1,4 +1,4 @@
-string_rep_fvector <- function(argvals, evaluations, signif_argvals = NULL, 
+string_rep_tf <- function(argvals, evaluations, signif_argvals = NULL, 
     show = 3, digits = NULL, ...) {
   digits_eval <- digits %||% options()$digits
   digits_argvals <- max(digits_eval, signif_argvals %||% digits_eval) 
@@ -16,17 +16,17 @@ string_rep_fvector <- function(argvals, evaluations, signif_argvals = NULL,
 
 #' Pretty printing and formatting for functional data
 #' 
-#' Print/format `fvector`-objects.
+#' Print/format `tf`-objects.
 #' 
-#' @rdname fvectordisplay
+#' @rdname tfdisplay
 #' @param n how many elements of `x` to print out
-print.fvector <- function(x, n  = 10, ...) {
-  cat(paste0("fvector[",length(x),"] on (", domain(x)[1], ",",
+print.tf <- function(x, n  = 10, ...) {
+  cat(paste0("tf[",length(x),"] on (", domain(x)[1], ",",
     domain(x)[2], ")"))
   invisible(x)
 }
 
-#' @rdname fvectordisplay
+#' @rdname tfdisplay
 #' @export
 print.feval_reg <- function(x, n = 10, ...) {
   NextMethod()
@@ -40,7 +40,7 @@ print.feval_reg <- function(x, n = 10, ...) {
   invisible(x)
 }
 
-#' @rdname fvectordisplay
+#' @rdname tfdisplay
 #' @export
 print.feval_irreg <- function(x, n = 10, ...) {
   NextMethod()
@@ -57,7 +57,7 @@ print.feval_irreg <- function(x, n = 10, ...) {
   invisible(x)
 }
 
-#' @rdname fvectordisplay
+#' @rdname tfdisplay
 #' @export
 print.fbase <- function(x, n = 10, ...) {
   NextMethod()
@@ -71,11 +71,11 @@ print.fbase <- function(x, n = 10, ...) {
 }
 
 # FIXME: this needs proper width align etc arguments like format.default
-#' @rdname fvectordisplay
+#' @rdname tfdisplay
 #' @inheritParams base::format.default
 #' @export
-format.fvector <- function(x, digits = 2, nsmall = 0, ...){
-  str <- map2_chr(ensure_list(argvals(x)), evaluations(x), string_rep_fvector, 
+format.tf <- function(x, digits = 2, nsmall = 0, ...){
+  str <- map2_chr(ensure_list(argvals(x)), evaluations(x), string_rep_tf, 
     signif_argvals = attr(x, "signif_argvals"), 
     digits = digits, nsmall = nsmall, ... = ...)
   if (is.null(names(x))) {

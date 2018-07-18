@@ -5,7 +5,7 @@
 \alias{fpcbase.data.frame}
 \alias{fpcbase.matrix}
 \alias{fpcbase.numeric}
-\alias{fpcbase.fvector}
+\alias{fpcbase.tf}
 \title{Constructors/converters for functional data in FPC-basis representation}
 \usage{
 fpcbase(data, ...)
@@ -19,10 +19,10 @@ fpcbase(data, ...)
 \method{fpcbase}{numeric}(data, argvals = NULL, domain = NULL,
   smooth = TRUE, signif = 4, ...)
 
-\method{fpcbase}{fvector}(data, argvals = NULL, smooth = TRUE, ...)
+\method{fpcbase}{tf}(data, argvals = NULL, smooth = TRUE, ...)
 }
 \arguments{
-\item{data}{a \code{matrix}, \code{data.frame} or \code{list} of suitable shape, or another \code{fvector}-object.}
+\item{data}{a \code{matrix}, \code{data.frame} or \code{list} of suitable shape, or another \code{tf}-object.}
 
 \item{...}{arguments to the call to \code{\link[refund:fpca.sc]{refund::fpca.sc()}} that computes the
 (regularized/smoothed) FPCA. Unless set by the user \code{tidyfun} uses \code{pve = .995} to
@@ -45,7 +45,7 @@ from \code{\link[refund:fpca.sc]{refund::fpca.sc()}} or simply perform a (trunca
 }
 \description{
 These functions perform a (functional) principal component analysis of the
-input data and return an \code{fbase} \code{fvector}-object that uses the empirical
+input data and return an \code{fbase} \code{tf}-object that uses the empirical
 eigenfunctions as basis functions for representing the data. By default, a
 \code{smooth}ed FPCA via \code{\link[refund:fpca.sc]{refund::fpca.sc()}} is used to compute eigenfunctions and
 scores based on the smoothed empirical covariance.

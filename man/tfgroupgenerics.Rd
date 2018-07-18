@@ -11,15 +11,15 @@
 \alias{cummin.fbase}
 \alias{cumsum.fbase}
 \alias{cumprod.fbase}
-\alias{Summary.fvector}
-\alias{Ops.fvector}
+\alias{Summary.tf}
+\alias{Ops.tf}
 \alias{==.feval}
 \alias{!=.feval}
 \alias{==.fbase}
 \alias{!=.fbase}
 \alias{Ops.feval}
 \alias{Ops.fbase}
-\title{Math, Summary and Ops Methods for \code{fvector}}
+\title{Math, Summary and Ops Methods for \code{tf}}
 \usage{
 \method{Math}{feval}(x, ...)
 
@@ -41,9 +41,9 @@
 
 \method{cumprod}{fbase}(...)
 
-\method{Summary}{fvector}(...)
+\method{Summary}{tf}(...)
 
-\method{Ops}{fvector}(e1, e2)
+\method{Ops}{tf}(e1, e2)
 
 \method{==}{feval}(e1, e2)
 
@@ -58,17 +58,17 @@
 \method{Ops}{fbase}(e1, e2)
 }
 \arguments{
-\item{x}{an \code{fvector}}
+\item{x}{an \code{tf}}
 
-\item{...}{\code{fvector}-objects (not used for \code{Math} group generic)}
+\item{...}{\code{tf}-objects (not used for \code{Math} group generic)}
 
-\item{e1}{an \code{fvector} or a numeric vector}
+\item{e1}{an \code{tf} or a numeric vector}
 
-\item{e2}{an \code{fvector} or a numeric vector}
+\item{e2}{an \code{tf} or a numeric vector}
 }
 \description{
 These define methods and operators that mostly work \code{argval}-wise on
-\code{fvector} objects, see \code{?groupGeneric} for implementation details.
+\code{tf} objects, see \code{?groupGeneric} for implementation details.
 }
 \details{
 See examples below. Equality checks of functional objects are rather iffy and

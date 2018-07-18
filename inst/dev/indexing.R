@@ -13,7 +13,7 @@ source(system.file("tests/make_examples.R", package = "tidyfun"), echo =TRUE)
 ################################################################################
 # sub-indexing: [
 
-# no j-arg --> return subsetted fvector
+# no j-arg --> return subsetted tf
 f_reg[1:2] # same as f_reg[1:2, ] 
 f_reg[1:2, ] 
 f_irreg[-3] 

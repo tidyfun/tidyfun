@@ -1,7 +1,7 @@
-#' Accessing/evaluating, subsetting and subassigning `fvectors`
+#' Accessing/evaluating, subsetting and subassigning `tfs`
 #' 
-#' These functions access, subset, replace and evaluate `fvectors`. 
-#' For more information on creating `fvector`s and converting them to/from 
+#' These functions access, subset, replace and evaluate `tfs`. 
+#' For more information on creating `tf`s and converting them to/from 
 #' `list`, `data.frame` or `matrix`, see [feval()] and [fbase()]. \cr
 #' Note that these break certain R conventions for vector-like objects:\cr
 #'  
@@ -13,7 +13,7 @@
 #' though. 
 #' 
 #' 
-#' @param x an `fvector`
+#' @param x an `tf`
 #' @param i index of the observations (`integer`ish, `character` or `logical`,
 #'   usual R rules apply)
 #' @param j The `argvals` used to evaluate the functions. A (list of) `numeric`
@@ -33,9 +33,9 @@
 #'   `argvals` = `j` and `data` = evaluations at `j` for each observation in
 #'   `i`.
 #' @import checkmate
-#' @rdname fvectorbrackets
+#' @rdname tfbrackets
 #' @export
-`[.fvector` <- function(x, i, j, interpolate = TRUE, matrix = TRUE) {
+`[.tf` <- function(x, i, j, interpolate = TRUE, matrix = TRUE) {
   if (!interpolate & inherits(x, "fbase")) {
     interpolate <- TRUE
     message("interpolate argument ignored for data in basis representation")
@@ -89,12 +89,12 @@
   }
 } 
 
-#' @param value `fvector` object for subassignment. This is (currently) very strictly typed,
+#' @param value `tf` object for subassignment. This is (currently) very strictly typed,
 #'  i.e. only objects that are of the same class and have compatible `argvals` can be 
 #'  subassigned.
-#' @rdname fvectorbrackets
+#' @rdname tfbrackets
 #' @export
-`[<-.fvector` <- function(x, i, value) {
+`[<-.tf` <- function(x, i, value) {
   if (missing(i)) {
     i <- seq_along(x)
   } else {

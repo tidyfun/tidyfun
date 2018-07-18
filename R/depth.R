@@ -2,7 +2,7 @@
 #' 
 #' Data depth for functional data. Currently implemented: Modified Band-2 Depth
 #' 
-#' @param x `fvector` (or a matrix of evaluations)
+#' @param x `tf` (or a matrix of evaluations)
 #' @param depth currently available: "MBD", i.e. modified band depth
 #' @param argvals grid of evaluation points
 #' @param na.rm TRUE remove missing observations?
@@ -30,7 +30,7 @@ depth.matrix <- function(x, depth = "MBD", na.rm = TRUE,
 }
 #' @export
 #' @rdname depth
-depth.fvector <- function(x, depth = "MBD", na.rm = TRUE, argvals = NULL, ...) {
+depth.tf <- function(x, depth = "MBD", na.rm = TRUE, argvals = NULL, ...) {
   if (!missing(argvals)) assert_argvals_vector(argvals, x)
   # TODO: warn if irreg?
   if (na.rm) x <- x[!is.na(x)]

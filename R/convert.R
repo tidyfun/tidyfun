@@ -41,7 +41,7 @@ as.feval_irreg.feval_irreg <- function(data, signif = 4, ...) {
 #' @param row.names not used
 #' @param optional not used
 #' @param x an `feval` object
-#' @inheritParams [.fvector
+#' @inheritParams [.tf
 #' @export 
 as.data.frame.feval <- function(x, row.names = NULL, optional = FALSE, 
   argvals = NULL, interpolate = FALSE, ...) {
@@ -110,6 +110,6 @@ as.matrix.fbase <- function(x, argvals = NULL, ...) {
 
 #-------------------------------------------------------------------------------
 #' @export 
-as.function.fvector <- function(x, ...) {
+as.function.tf <- function(x, ...) {
   function(argvals) unlist(evaluate(object = x, argvals = argvals))
 }

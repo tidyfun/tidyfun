@@ -1,14 +1,14 @@
-#' Evaluate `fvector`s, both inside or outside a `data.frame`
+#' Evaluate `tf`s, both inside or outside a `data.frame`
 #' 
 #' 
-#' The `evaluate.data.frame` method evaluates `fvector`-columns inside a `data.frame`
+#' The `evaluate.data.frame` method evaluates `tf`-columns inside a `data.frame`
 #' into list columns of smaller `data.frames` containing the functions' argvals and 
 #' evaluations. Its `argvals`-argument can be a list of `argvals`-vector 
 #' used as the `argvals` argument for the [evaluate()]-method for the respective
-#' `fvector`-columns in `object`.
-#' @param object an `fvector` or a `data.frame`-like object with `fvector` columns
+#' `tf`-columns in `object`.
+#' @param object an `tf` or a `data.frame`-like object with `tf` columns
 #' @param argvals optional evaluation grid, defaults to `argvals(object)`. 
-#' @seealso \code{?`[.fvector`}
+#' @seealso \code{?`[.tf`}
 #' @export
 evaluate <- function(object, argvals, ...) UseMethod("evaluate")
 
@@ -67,7 +67,7 @@ evaluate_fbase_once <- function(x, argvals, coefs, basis, X) {
 
 
 #' @rdname evaluate
-#' @param ... optional: names of the `fvector`-columns to unnest 
+#' @param ... optional: names of the `tf`-columns to unnest 
 #' @import tidyr
 #' @importFrom tidyselect vars_select quos
 #' @importFrom rlang quo_text
@@ -76,22 +76,22 @@ evaluate_fbase_once <- function(x, argvals, coefs, basis, X) {
 evaluate.data.frame <- function(object, argvals, ...) {
 #FIXME this does not really work for object with mutiple tfd's
     quos <- quos(...)
-  # figure out which fvector columns to evaluate
-  fvector_cols <- names(object)[map_lgl(object, is_fvector)]
+  # figure out which tf columns to evaluate
+  tf_cols <- names(object)[map_lgl(object, is_tf)]
   if (!is_empty(quos)) {
-    fvector_cols <- intersect(fvector_cols, map_chr(quos, rlang::quo_text))
+    tf_cols <- intersect(tf_cols, map_chr(quos, rlang::quo_text))
   }
-  if (!length(fvector_cols)) {
-    warning("No fvectors to evaluate. Returning unchanged object.")
+  if (!length(tf_cols)) {
+    warning("No tfs to evaluate. Returning unchanged object.")
     return(object)
   }
   if (!missing(argvals)) {
     argvals <- ensure_list(argvals) 
   } else {
-    argvals <- map(object[fvector_cols], ~tidyfun::argvals(.))
+    argvals <- map(object[tf_cols], ~tidyfun::argvals(.))
   }
   # convert them to list-columns of data.frames
-  for (f in fvector_cols) {
+  for (f in tf_cols) {
     object[[f]] <- object[[f]][, argvals, matrix = FALSE]
   }
   object
