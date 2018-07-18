@@ -9,15 +9,15 @@ fun_op <- function(x, y, op, numeric = NA){
       (length(num) > 0 & length(f) == 1) |
       length(num) %in% c(1, length(f)))
     attr_ret <- attributes(f)
-    argvals_ret <- argvals(f)
+    arg_ret <- arg(f)
   } else {
     stopifnot(
       # no "recycling" of args
       (length(x) %in% c(1, length(y))) | (length(y) %in% c(1, length(x))),
       all.equal(domain(x), domain(y)),
-      all.equal(argvals(x), argvals(y)))
+      all.equal(arg(x), arg(y)))
     attr_ret <- attributes(y)
-    argvals_ret <- argvals(y)
+    arg_ret <- arg(y)
   }
   if (is_tfb(x)) x_ <- coef(x)
   if (is_tfd(x)) x_ <- evaluations(x)
@@ -34,7 +34,7 @@ fun_op <- function(x, y, op, numeric = NA){
     }
     forget(attr_ret$evaluator)
     if ("tfd_irreg" %in% attr_ret$class) {
-      ret <- map2(argvals_ret, ret, ~ list(argvals = .x, data = .y))
+      ret <- map2(arg_ret, ret, ~ list(arg = .x, value = .y))
     }
   }  
   attributes(ret) <- attr_ret

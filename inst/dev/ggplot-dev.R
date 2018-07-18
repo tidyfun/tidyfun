@@ -12,18 +12,18 @@ StatTfd <- ggproto("StatTfd", Stat,
   default_aes = aes(x = stat(.arg), y = stat(.value), group = stat(.id), 
     order = NULL),
   setup_params = function(data, params) {
-    if (!is.null(params$argvals))
+    if (!is.null(params$arg))
       return(params)
-    params$argvals <- argvals(pull(data, tfd))
+    params$arg <- arg(pull(data, tfd))
     if (!is.null(params$order_by)) 
       stopifnot(is.function(params$order_by))
     params
   },
   compute_layer = function(self, data, params, layout) {
-    tfd_eval <- evaluate(object = data, argvals = params$argvals, tfd) %>%
+    tfd_eval <- evaluate(object = data, arg = params$arg, tfd) %>%
       select(-group) %>% 
       unnest(.id = ".id") %>% 
-      rename(.arg = argvals, .value = data) 
+      rename(.arg = arg, .value = data) 
     if (is.null(data$order) & is.null(params$order_by)) {
       ordered_id <- tfd_eval %>% pull(.id) %>% unique
     } 
@@ -47,57 +47,57 @@ StatTfd <- ggproto("StatTfd", Stat,
     tfd_eval <- mutate(tfd_eval, .id = ordered(.id, ordered_id))
     tfd_eval
   },
-  # need this so argvals, order_by gets recognized as valid parameters
+  # need this so arg, order_by gets recognized as valid parameters
   # because layer() only checks compute_panel & compute_group
-  compute_panel = function(self, data, scales, argvals, order_by) {
+  compute_panel = function(self, data, scales, arg, order_by) {
     browser()
     Stat$compute_panel(self, data, scales)
   }  
 )
 stat_tfd <- function(mapping = NULL, data = NULL, geom = "line",
   position = "identity", na.rm = FALSE, show.legend = NA, 
-  inherit.aes = TRUE, argvals = NULL, ...) {
+  inherit.aes = TRUE, arg = NULL, ...) {
   layer(
     stat = StatTfd, data = data, mapping = mapping, geom = geom, 
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
-    params = list(na.rm = na.rm, argvals = argvals, ...)
+    params = list(na.rm = na.rm, arg = arg, ...)
   )
 }
 
 geom_spaghetti <- function(mapping = NULL, data = NULL,
   position = "identity", na.rm = FALSE, show.legend = NA, 
-  inherit.aes = TRUE, argvals = NULL, ...) {
+  inherit.aes = TRUE, arg = NULL, ...) {
   layer(
     stat = StatTfd, data = data, mapping = mapping, geom = "line", 
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
-    params = list(na.rm = na.rm, argvals = argvals, ...)
+    params = list(na.rm = na.rm, arg = arg, ...)
   )
 }
 geom_meatballs <- function(mapping = NULL, data = NULL,
   position = "identity", na.rm = FALSE, show.legend = NA, 
-  inherit.aes = TRUE, argvals = NULL, spaghetti = TRUE, ...) {
+  inherit.aes = TRUE, arg = NULL, spaghetti = TRUE, ...) {
   list(
     layer(
     stat = StatTfd, data = data, mapping = mapping, geom = "point", 
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
-    params = list(na.rm = na.rm, argvals = argvals, ...)),
+    params = list(na.rm = na.rm, arg = arg, ...)),
     if (spaghetti) {
       layer(
         stat = StatTfd, data = data, mapping = mapping, geom = "line", 
         position = position, show.legend = show.legend, inherit.aes = inherit.aes,
-        params = list(na.rm = na.rm, argvals = argvals, ...))
+        params = list(na.rm = na.rm, arg = arg, ...))
     } else NULL) 
 }
 geom_lasagna <- function(mapping = list(), 
   data = NULL,  position = "identity", na.rm = FALSE, show.legend = NA, 
-  inherit.aes = TRUE, argvals = NULL, order_by = NULL, size = 4, ...) {
+  inherit.aes = TRUE, arg = NULL, order_by = NULL, size = 4, ...) {
   default_mapping <- 
     aes(x = stat(.arg), y = stat(.id), colour = stat(.value))
   mapping <- structure(modifyList(mapping, default_mapping), class = "uneval")
   layer(
     stat = StatTfd, data = data, mapping = mapping, geom = "line",
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
-    params = list(na.rm = na.rm, argvals = argvals, size = size, 
+    params = list(na.rm = na.rm, arg = arg, size = size, 
       order_by = order_by)
   ) 
 }

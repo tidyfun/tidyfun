@@ -7,23 +7,23 @@
 \alias{points.tf}
 \title{Visualization functions for \code{tf}s}
 \usage{
-funplot(f, argvals, n_grid = 50, points = is_irreg(f),
-  type = c("spaghetti", "lasagna"), alpha = min(1, max(0.05, 2/length(f))))
+funplot(f, arg, n_grid = 50, points = is_irreg(f), type = c("spaghetti",
+  "lasagna"), alpha = min(1, max(0.05, 2/length(f))))
 
 \method{plot}{tf}(x, y, n_grid = 50, points = is_irreg(x),
   type = c("spaghetti", "lasagna"), alpha = min(1, max(0.05, 2/length(x))),
   ...)
 
-\method{lines}{tf}(x, argvals, n_grid = 50, alpha = min(1, max(0.05,
+\method{lines}{tf}(x, arg, n_grid = 50, alpha = min(1, max(0.05,
   2/length(x))), ...)
 
-\method{points}{tf}(x, argvals, n_grid = NA, alpha = min(1, max(0.05,
+\method{points}{tf}(x, arg, n_grid = NA, alpha = min(1, max(0.05,
   2/length(x))), interpolate = FALSE, ...)
 }
 \arguments{
 \item{f}{an \code{tf} object}
 
-\item{argvals}{(optional) numeric vector to be used as \code{argvals}. See details.}
+\item{arg}{(optional) numeric vector to be used as \code{arg}. See details.}
 
 \item{n_grid}{minimal size of equidistant grid used for plotting,
 defaults to 50. See details.}
@@ -38,12 +38,12 @@ Defaults to 2/(no. of observations). Lower is more transparent.}
 
 \item{x}{an \code{tf} object}
 
-\item{y}{(optional) numeric vector to be used as \code{argvals} (i.e., for the \strong{x}-axis...!)}
+\item{y}{(optional) numeric vector to be used as \code{arg} (i.e., for the \strong{x}-axis...!)}
 
 \item{...}{additional arguments for \code{\link[=matplot]{matplot()}} ("spaghetti") or \code{\link[=image]{image()}} ("lasagna")}
 
 \item{interpolate}{should functions be evaluated (i.e., inter-/extrapolated)
-for argvals for which no original data is available? Only relevant for
+for arg for which no original data is available? Only relevant for
 tfd, defaults to FALSE}
 }
 \value{
@@ -57,8 +57,8 @@ spaghetti- (i.e., line plots) and lasagna- (i.e., heat map) flavors.
 \details{
 \code{funplot} uses \code{ggplot2}, the others use the \code{base}-system.
 
-If no \code{argvals} are provided, evaluation points (\code{argvals}) for the functions
-are given by the union of the \code{tf}'s \code{argvals} and an equidistant grid
+If no \code{arg} are provided, evaluation points (\code{arg}) for the functions
+are given by the union of the \code{tf}'s \code{arg} and an equidistant grid
 over its domain with \code{n_grid} points. If you want to only see the original
 data for \code{tfd}-objects without inter-/extrapolation, use \code{n_grid < 1} or
 \code{n_grid = NA}.

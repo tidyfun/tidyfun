@@ -4,7 +4,7 @@ fun_math <- function(x, op){
   ret <- map(evaluations(x), ~ do.call(op, list(x = .x)))
   forget(attr_ret$evaluator)
   if (is_irreg(x)) {
-    ret <- map2(argvals(x), ret, ~ list(argvals = .x, data = .y))
+    ret <- map2(arg(x), ret, ~ list(arg = .x, data = .y))
   } 
   attributes(ret) <- attr_ret
   ret
@@ -22,10 +22,10 @@ summarize_tf <- function(..., op = NULL, eval = FALSE) {
   attr_ret <- attributes(funs)
   m <- as.matrix(funs)
   ret <- apply(m, 2, op_call)
-  argvals <- as.numeric(colnames(m))
-  args <- c(list(ret), argvals = list(argvals),
+  arg <- as.numeric(colnames(m))
+  args <- c(list(ret), arg = list(arg),
     domain = list(domain(funs)), 
-    signif = attr(funs, "signif_argvals"))
+    signif = attr(funs, "signif_arg"))
   if (eval) {
     return(do.call(tfd, c(args, evaluator = as.name(attr(funs, "evaluator_name")))))
   } else {
@@ -43,7 +43,7 @@ summarize_tf <- function(..., op = NULL, eval = FALSE) {
 #' not very reliable at this point. Note that `max` and `min` are not guaranteed 
 #' to be maximal/minmal over the entire domain, only on the evaluation grid used for
 #' computation. With the exception of addition and multiplication, 
-#' operations on `tfb`-objects first evaluate them over their `argvals`,
+#' operations on `tfb`-objects first evaluate them over their `arg`,
 #' perform computations on these evaluations and then convert back to an `tfb`-
 #' object, so a loss of precision should be expected, especially so if bases are small
 #' or data is very wiggly.

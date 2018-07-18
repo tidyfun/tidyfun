@@ -19,7 +19,7 @@ c_names <- function(funs) {
 #' Only allows concatenation of functions with the same domain and similar
 #' represenation, i.e., `tfb` cannot be concatenated to `tfd` and vice
 #' versa. If `tfd_reg`-objects to be concatenated are not on the same grid of
-#' `argvals`, or if both `tfd_reg` and `tfd_irreg` objects are concatenated,
+#' `arg`, or if both `tfd_reg` and `tfd_irreg` objects are concatenated,
 #' a `tfd_irreg`-object is returned. \cr `c.tfb` will use the basis of its
 #' first argument for representing all remaining arguments and refit them
 #' accordingly if necessary.\cr `c.tfd` will use the `evaluator` of its first
@@ -51,7 +51,7 @@ c.tfd <- function(...) {
   stopifnot(all(compatible[, "domain"]))
   make_irreg <- rep(FALSE, length(funs))
   irreg <- map_lgl(funs, is_irreg)
-  if (!any(irreg) & !all(compatible[, "argvals"])) {
+  if (!any(irreg) & !all(compatible[, "arg"])) {
     warning("concatenating functions on different grids.")
     make_irreg <- rep(TRUE, length(funs))
   }
@@ -60,11 +60,11 @@ c.tfd <- function(...) {
     make_irreg[!irreg] <- TRUE
   }
   new_signif <- NULL
-  if (!all(compatible[, "signif_argvals"])) {
-    new_signif <- attr(funs[[1]], "signif_argvals")
+  if (!all(compatible[, "signif_arg"])) {
+    new_signif <- attr(funs[[1]], "signif_arg")
     warning("inputs have different resolutions, result has ", 
-      "signif_argvals =", new_signif)
-    make_irreg[!compatible[, "signif_argvals"]] <- TRUE
+      "signif_arg =", new_signif)
+    make_irreg[!compatible[, "signif_arg"]] <- TRUE
   }
   if (any(make_irreg)) {
     funs <- map_at(funs, which(make_irreg), 
@@ -76,7 +76,7 @@ c.tfd <- function(...) {
   }
   attr_ret <- attributes(funs[[1]])
   if (any(irreg | make_irreg)) {
-    attr_ret$argvals <- flatten(map(funs, argvals))
+    attr_ret$arg <- flatten(map(funs, arg))
   }
   attr_ret$names <- {
     tmp <- unlist(flatten(map(funs, 
@@ -100,20 +100,20 @@ c.tfb <- function(...) {
   compatible <- do.call(rbind, map(funs, 
     ~ compare_tf_attribs(funs[[1]], .)))
   stopifnot(all(compatible[, "domain"]))
-  re_evals <- which(!compatible[, "argvals"] | 
+  re_evals <- which(!compatible[, "arg"] | 
       !compatible[, "basis_args"])
   if (length(re_evals)) {
     fun_names <- map(as.list(match.call())[-1], ~deparse(.)[1])
     warning("re-evaluating ", paste(fun_names[re_evals], collapse = ", "), 
-      " using basis and argvals of ", fun_names[1])
+      " using basis and arg of ", fun_names[1])
     funs <- map_at(funs,re_evals, 
       ~do.call(tfb, 
-        flatten(list(list(.), argvals = list(argvals(funs[[1]])), 
+        flatten(list(list(.), arg = list(arg(funs[[1]])), 
           attr(funs[[1]], "basis_args")))))
   }    
-  if (!all(compatible[, "signif_argvals"])) {
+  if (!all(compatible[, "signif_arg"])) {
     warning("inputs have different resolutions, result has ", 
-      "signif_argvals =", attr(funs[[1]], "signif_argvals"))
+      "signif_arg =", attr(funs[[1]], "signif_arg"))
   }
   attr_ret <- attributes(funs[[1]])
   attr_ret$names <- {

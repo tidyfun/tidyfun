@@ -7,26 +7,26 @@
 \alias{evaluate.data.frame}
 \title{Evaluate \code{tf}s, both inside or outside a \code{data.frame}}
 \usage{
-evaluate(object, argvals, ...)
+evaluate(object, arg, ...)
 
-\method{evaluate}{tfd}(object, argvals, ...)
+\method{evaluate}{tfd}(object, arg, ...)
 
-\method{evaluate}{tfb}(object, argvals, ...)
+\method{evaluate}{tfb}(object, arg, ...)
 
-\method{evaluate}{data.frame}(object, argvals, ...)
+\method{evaluate}{data.frame}(object, arg, ...)
 }
 \arguments{
 \item{object}{an \code{tf} or a \code{data.frame}-like object with \code{tf} columns}
 
-\item{argvals}{optional evaluation grid, defaults to \code{argvals(object)}.}
+\item{arg}{optional evaluation grid, defaults to \code{arg(object)}.}
 
 \item{...}{optional: names of the \code{tf}-columns to unnest}
 }
 \description{
 The \code{evaluate.data.frame} method evaluates \code{tf}-columns inside a \code{data.frame}
-into list columns of smaller \code{data.frames} containing the functions' argvals and
-evaluations. Its \code{argvals}-argument can be a list of \code{argvals}-vector
-used as the \code{argvals} argument for the \code{\link[=evaluate]{evaluate()}}-method for the respective
+into list columns of smaller \code{data.frames} containing the functions' arguments
+(\code{arg}) and evaluations (\code{value}). Its \code{arg}-argument can be a list of \code{arg}-vectors
+used as the \code{arg} argument for the \code{\link[=evaluate]{evaluate()}}-method for the respective
 \code{tf}-columns in \code{object}.
 }
 \seealso{

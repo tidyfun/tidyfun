@@ -9,9 +9,9 @@
 depth(x, depth = "MBD", na.rm = TRUE, ...)
 
 \method{depth}{matrix}(x, depth = "MBD", na.rm = TRUE,
-  argvals = unlist(find_argvals(x, NULL)), ...)
+  arg = unlist(find_arg(x, NULL)), ...)
 
-\method{depth}{tf}(x, depth = "MBD", na.rm = TRUE, argvals = NULL, ...)
+\method{depth}{tf}(x, depth = "MBD", na.rm = TRUE, arg = NULL, ...)
 }
 \arguments{
 \item{x}{\code{tf} (or a matrix of evaluations)}
@@ -22,7 +22,7 @@ depth(x, depth = "MBD", na.rm = TRUE, ...)
 
 \item{...}{further arguments handed to the function computing the respective depth.}
 
-\item{argvals}{grid of evaluation points}
+\item{arg}{grid of evaluation points}
 }
 \value{
 vector of depth values

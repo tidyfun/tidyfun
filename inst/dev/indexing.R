@@ -48,16 +48,16 @@ lines(grid, mat_reg[1,], type = "b", col = 2)
 
 expect_error((f_reg[, seq(-.1, .5, l = 6), matrix = FALSE]), ">= 0")
 expect_error((f_reg[, seq(0, 1.5, l = 6), matrix = FALSE]), "<= 1")
-checkmate::expect_data_frame(f_reg[1, argvals(f_reg), matrix = FALSE][[1]])
-expect_true(length(f_reg[, argvals(f_reg), matrix = FALSE]) == length(f_reg))
-expect_equal(names(f_reg[, argvals(f_reg), matrix = FALSE]), names(f_reg))
+checkmate::expect_data_frame(f_reg[1, arg(f_reg), matrix = FALSE][[1]])
+expect_true(length(f_reg[, arg(f_reg), matrix = FALSE]) == length(f_reg))
+expect_equal(names(f_reg[, arg(f_reg), matrix = FALSE]), names(f_reg))
 
 
 
-# with j-arg and interpolate = FALSE: return NA for argvals not in the original data
+# with j-arg and interpolate = FALSE: return NA for arg not in the original data
 expect_warning(f_reg[2:3, seq(0, 1, l = 21), interpolate = FALSE], "no evaluations")
-expect_identical(f_reg[1, argvals(f_reg)[1:5], interpolate = FALSE], 
-  f_reg[1, argvals(f_reg)[1:5]])
+expect_identical(f_reg[1, arg(f_reg)[1:5], interpolate = FALSE], 
+  f_reg[1, arg(f_reg)[1:5]])
 expect_true(all(is.na(f_reg[2:3, 0.123, interpolate = FALSE, matrix = TRUE])))
 
 ################################################################################
@@ -73,8 +73,8 @@ expect_equal(names(f_irreg), as.character(c(2:5,1)))
 f_reg[7] <- f_reg[1]
 # f_reg[6] is a "functional missing value"
 expect_identical(f_reg[[6]], NA)
-checkmate::expect_scalar_na(unique(f_reg[6, argvals(f_reg)][1,]))
+checkmate::expect_scalar_na(unique(f_reg[6, arg(f_reg)][1,]))
 
 f_irreg[7] <- f_irreg[1]
-checkmate::expect_scalar_na(unique(f_irreg[6, argvals(f_reg)][1,]))
+checkmate::expect_scalar_na(unique(f_irreg[6, arg(f_reg)][1,]))
 

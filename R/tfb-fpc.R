@@ -13,17 +13,17 @@ pc_truncated <- function(data, pve = .995) {
 
 
 fpc_wrapper <- function(efunctions) {
-  function(argvals) {
-    t(efunctions[, argvals, interpolate = TRUE, matrix = TRUE])
+  function(arg) {
+    t(efunctions[, arg, interpolate = TRUE, matrix = TRUE])
   }
 } 
 
 #' @importFrom refund fpca.sc
 fpc_tfb <- function(data, domain = NULL, smooth = TRUE, signif = 4, ...) {
   #FIXME: rm renaming once we've cleaned up fpca.sc etc
-  #FIXME: warn if domain != range(argvals), can't extrapolate FPCs
-  data$argvals <- .adjust_resolution(data$argvals, signif, unique = FALSE)
-  argvals <- sort(unique(data$argvals))
+  #FIXME: warn if domain != range(arg), can't extrapolate FPCs
+  data$arg <- .adjust_resolution(data$arg, signif, unique = FALSE)
+  arg <- sort(unique(data$arg))
   names(data) <- c(".id", ".index", ".value")
   if (smooth) {
     fpca_args <- 
@@ -40,15 +40,15 @@ fpc_tfb <- function(data, domain = NULL, smooth = TRUE, signif = 4, ...) {
   coef_list <- split(cbind(1, fpc_spec$scores), row(cbind(1, fpc_spec$scores)))
   names(coef_list) <- levels(as.factor(data$.id))
   fpc <- rbind(fpc_spec$mu, t(fpc_spec$efunctions))
-  fpc_basis <- tfd(fpc, argvals = argvals, evaluator = approx_spline)
+  fpc_basis <- tfd(fpc, arg = arg, evaluator = approx_spline)
   fpc_constructor <- fpc_wrapper(fpc_basis)
   structure(coef_list, 
-    domain = domain %||% range(argvals),
+    domain = domain %||% range(arg),
     basis = fpc_constructor,
     basis_label = paste0("FPC: ", fpc_spec$npc, " components."),
     basis_matrix = t(fpc),
-    argvals = argvals,
-    signif_argvals = signif, 
+    arg = arg,
+    signif_arg = signif, 
     class = c("tfb", "tf"))
 }
 
@@ -81,18 +81,18 @@ fpcbase <- function(data, ...) UseMethod("fpcbase")
 
 #' @rdname fpcbase
 #' @export
-fpcbase.data.frame <- function(data, id = 1, argvals = 2, value = 3,  
+fpcbase.data.frame <- function(data, id = 1, arg = 2, value = 3,  
   domain = NULL, smooth = TRUE, signif = 4, ...) {
-  data <- df_2_df(data, id, argvals, value)
+  data <- df_2_df(data, id, arg, value)
   fpc_tfb(data, domain = domain, signif = signif, ...)
 }
 
 #' @rdname fpcbase
 #' @export
-fpcbase.matrix <- function(data, argvals = NULL, domain = NULL, smooth = TRUE, signif = 4, ...) {
-  argvals <- unlist(find_argvals(data, argvals))
+fpcbase.matrix <- function(data, arg = NULL, domain = NULL, smooth = TRUE, signif = 4, ...) {
+  arg <- unlist(find_arg(data, arg))
   names_data <- rownames(data)
-  data <- mat_2_df(data, argvals)
+  data <- mat_2_df(data, arg)
   ret <- fpc_tfb(data, domain = domain, smooth = smooth, signif = signif, ...)
   names(ret) <- names_data
   ret
@@ -100,25 +100,25 @@ fpcbase.matrix <- function(data, argvals = NULL, domain = NULL, smooth = TRUE, s
 
 #' @rdname fpcbase
 #' @export
-fpcbase.numeric <- function(data, argvals = NULL, domain = NULL, smooth = TRUE, signif = 4, ...) {
+fpcbase.numeric <- function(data, arg = NULL, domain = NULL, smooth = TRUE, signif = 4, ...) {
   data <- t(as.matrix(data))
-  fpcbase(data = data, argvals = argvals, domain = domain, smooth = smooth, signif = signif, ...)
+  fpcbase(data = data, arg = arg, domain = domain, smooth = smooth, signif = signif, ...)
 }
 
 # #' @rdname fpcbase
 # #' @export
-# fpcbase.list <- function(data, argvals = NULL, domain = NULL, smooth = TRUE, 
+# fpcbase.list <- function(data, arg = NULL, domain = NULL, smooth = TRUE, 
 # TODO
 
 #' @rdname fpcbase
 #' @export
-fpcbase.tf <- function(data, argvals = NULL, smooth = TRUE, ...) {
+fpcbase.tf <- function(data, arg = NULL, smooth = TRUE, ...) {
    #TODO: major computational shortcuts possible here for tfb: reduced rank,
   #   direct inner prods of basis functions etc...
-  argvals <- argvals %||% argvals(data)
+  arg <- arg %||% arg(data)
   names_data <- names(data)
-  ret <- fpcbase(as.data.frame(data, argvals = argvals), smooth = smooth, 
-    signif = attr(data, "signif_argvals"),  ...)
+  ret <- fpcbase(as.data.frame(data, arg = arg), smooth = smooth, 
+    signif = attr(data, "signif_arg"),  ...)
   names(ret) <- names_data
   ret
 }

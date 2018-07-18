@@ -4,7 +4,7 @@
 #' 
 #' @param x `tf` (or a matrix of evaluations)
 #' @param depth currently available: "MBD", i.e. modified band depth
-#' @param argvals grid of evaluation points
+#' @param arg grid of evaluation points
 #' @param na.rm TRUE remove missing observations?
 #' @param ... further arguments handed to the function computing the respective depth.
 #' @return vector of depth values
@@ -22,33 +22,33 @@ depth <- function(x, depth = "MBD", na.rm = TRUE, ...) {
 #' @export
 #' @rdname depth
 depth.matrix <- function(x, depth = "MBD", na.rm = TRUE, 
-  argvals = unlist(find_argvals(x, NULL)), ...) {
+  arg = unlist(find_arg(x, NULL)), ...) {
   depth <- match.arg(depth)
   #TODO: this ignores na.rm -- should it?
   switch(depth,
-    "MBD" = mbd(x, argvals, ...))
+    "MBD" = mbd(x, arg, ...))
 }
 #' @export
 #' @rdname depth
-depth.tf <- function(x, depth = "MBD", na.rm = TRUE, argvals = NULL, ...) {
-  if (!missing(argvals)) assert_argvals_vector(argvals, x)
+depth.tf <- function(x, depth = "MBD", na.rm = TRUE, arg = NULL, ...) {
+  if (!missing(arg)) assert_arg_vector(arg, x)
   # TODO: warn if irreg?
   if (na.rm) x <- x[!is.na(x)]
-  depth(as.matrix(x, argvals = argvals, interpolate = TRUE), depth = depth, 
+  depth(as.matrix(x, arg = arg, interpolate = TRUE), depth = depth, 
     na.rm = na.rm, ...)
 }  
 
 #-------------------------------------------------------------------------------
 
 # modified band-2 depth:
-mbd <- function(x, argvals = seq_len(ncol(x)), ...) {
+mbd <- function(x, arg = seq_len(ncol(x)), ...) {
   # algorithm of Sun/Genton/Nychka (2012)
   ranks <- apply(x, 2, rank, na.last = "keep", ...)
   weights <- {
     #assign half interval length to 2nd/nxt-to-last points to 1st and last point
     #assign other half intervals to intermediate points
-    lengths <- diff(argvals)/2
-    (c(lengths, 0) + c(0, lengths)) / diff(range(argvals))
+    lengths <- diff(arg)/2
+    (c(lengths, 0) + c(0, lengths)) / diff(range(arg))
   }
   n <- nrow(ranks)
   tmp <- colSums(t((n - ranks ) * (ranks - 1)) * weights, na.rm = TRUE)

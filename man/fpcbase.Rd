@@ -10,16 +10,16 @@
 \usage{
 fpcbase(data, ...)
 
-\method{fpcbase}{data.frame}(data, id = 1, argvals = 2, value = 3,
+\method{fpcbase}{data.frame}(data, id = 1, arg = 2, value = 3,
   domain = NULL, smooth = TRUE, signif = 4, ...)
 
-\method{fpcbase}{matrix}(data, argvals = NULL, domain = NULL,
-  smooth = TRUE, signif = 4, ...)
+\method{fpcbase}{matrix}(data, arg = NULL, domain = NULL, smooth = TRUE,
+  signif = 4, ...)
 
-\method{fpcbase}{numeric}(data, argvals = NULL, domain = NULL,
-  smooth = TRUE, signif = 4, ...)
+\method{fpcbase}{numeric}(data, arg = NULL, domain = NULL, smooth = TRUE,
+  signif = 4, ...)
 
-\method{fpcbase}{tf}(data, argvals = NULL, smooth = TRUE, ...)
+\method{fpcbase}{tf}(data, arg = NULL, smooth = TRUE, ...)
 }
 \arguments{
 \item{data}{a \code{matrix}, \code{data.frame} or \code{list} of suitable shape, or another \code{tf}-object.}
@@ -31,12 +31,12 @@ the mean function and the marginal bases for the covariance surface.}
 
 \item{id}{The name/number of the column defining which data belong to which function.}
 
-\item{argvals}{\code{numeric}, or list of \code{numeric}s. The evaluation grid. See Details.
+\item{arg}{\code{numeric}, or list of \code{numeric}s. The evaluation grid. See Details.
 For the \code{data.frame}-methods: the name/number of the column defining the evaluation grid.}
 
 \item{value}{The name/number of the column containing the function evaluations.}
 
-\item{domain}{range of the \code{argvals}.}
+\item{domain}{range of the \code{arg}.}
 
 \item{smooth}{use smoothed mean function and smoothed covariance surface estimates
 from \code{\link[refund:fpca.sc]{refund::fpca.sc()}} or simply perform a (truncated) PCA of the data? See Details.}

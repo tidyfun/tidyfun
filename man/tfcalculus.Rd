@@ -9,7 +9,7 @@
 \alias{integrate.tfb}
 \title{Derivatives and integrals of functional data}
 \usage{
-\method{deriv}{tfd}(expr, order = 1, argvals = NULL, ...)
+\method{deriv}{tfd}(expr, order = 1, arg = NULL, ...)
 
 \method{deriv}{tfb}(expr, order = 1, ...)
 
@@ -20,17 +20,17 @@ integrate(f, lower, upper, ...)
   stop.on.error = TRUE, keep.xy = FALSE, aux = NULL)
 
 \method{integrate}{tfd}(f, lower = domain(f)[1], upper = domain(f)[2],
-  definite = TRUE, argvals, ...)
+  definite = TRUE, arg, ...)
 
 \method{integrate}{tfb}(f, lower = domain(f)[1], upper = domain(f)[2],
-  definite = TRUE, argvals, ...)
+  definite = TRUE, arg, ...)
 }
 \arguments{
 \item{expr}{a \code{tf}}
 
 \item{order}{order of differentiation. Maximally 2 for \code{tfb} with \code{mgcv}-spline bases.}
 
-\item{argvals}{grid to use for the differentiation/integration. Not the \code{argvals} of the returned object.}
+\item{arg}{grid to use for the differentiation/integration. Not the \code{arg} of the returned object.}
 
 \item{...}{not used}
 
@@ -62,7 +62,7 @@ For \code{definite=TRUE}, this can be a vector of the same length as \code{f}.}
 or the antiderivative. See Description.}
 }
 \value{
-a \code{tf} with (slightly) different \code{argvals} (and \code{basis})
+a \code{tf} with (slightly) different \code{arg} (and \code{basis})
 }
 \description{
 Derivatives of \code{tf}s use finite differences of the evaluations

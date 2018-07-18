@@ -7,7 +7,7 @@
 #' n.
 #'
 #' @param n how many realizations to draw
-#' @param argvals vector of evaluation points (`argvals` of the return object).
+#' @param arg vector of evaluation points (`arg` of the return object).
 #'   Defaults to (0, 0.02, 0.04, ..., 1).
 #' @param scale scale parameter (see Description). Defaults to the width of the
 #'   domain divided by 10.
@@ -18,28 +18,34 @@
 #' @return an `tfd`-vector of length `n`
 #' @importFrom mvtnorm rmvnorm
 #' @export
-rgp <- function(n, argvals = seq(0, 1, l = 51), scale = diff(range(argvals))/10, 
+rgp <- function(n, arg = seq(0, 1, l = 51), scale = diff(range(arg))/10, 
   cor = c("squareexp", "wiener"), nugget = scale/200) {
   cor <- match.arg(cor)
   f_cov <- switch(cor, "wiener" = function(s, t) pmin(s, t)/scale,
     "squareexp" = function(s,t) exp(-(s - t)^2/scale))
-  cov <- outer(argvals, argvals, f_cov) + diag(0*argvals + nugget)
-  y <- rmvnorm(n, mean = 0 * argvals, sigma = cov)
-  tfd(y, argvals = argvals)
+  cov <- outer(arg, arg, f_cov) + diag(0*arg + nugget)
+  y <- rmvnorm(n, mean = 0 * arg, sigma = cov)
+  tfd(y, arg = arg)
 }
 
+#' Make a `tfd` function (more) irregular
+#' 
+#' ... by moving around its `arg`-values.
+#' @param f a `tfd` object
+#' @param .. not used currently
 #' @importFrom stats runif
+#' @export
 jiggle <- function(f, ...) {
   stopifnot(is_tfd(f))
   f <- as.tfd_irreg(f)
-  jiggle_args <- function(argvals) {
-    diffs <- diff(argvals)
-    n <- length(argvals)
+  jiggle_args <- function(arg) {
+    diffs <- diff(arg)
+    n <- length(arg)
     jiggle <- runif(n - 2, -.49, +.49) * diffs[2 : (n - 1)]
-    new_args <- argvals[2 : (n - 1)] + jiggle
-    c(runif(1, argvals[1], new_args[1]), new_args, 
-      runif(1, new_args[n - 2], argvals[n]))
+    new_args <- arg[2 : (n - 1)] + jiggle
+    c(runif(1, arg[1], new_args[1]), new_args, 
+      runif(1, new_args[n - 2], arg[n]))
   } 
-  new_args <- map(argvals(f), jiggle_args)
+  new_args <- map(arg(f), jiggle_args)
   tfd(map2(new_args, evaluations(f), cbind), domain = domain(f))
 }

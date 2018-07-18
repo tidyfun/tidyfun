@@ -1,14 +1,14 @@
-string_rep_tf <- function(argvals, evaluations, signif_argvals = NULL, 
+string_rep_tf <- function(arg, evaluations, signif_arg = NULL, 
     show = 3, digits = NULL, ...) {
   digits_eval <- digits %||% options()$digits
-  digits_argvals <- max(digits_eval, signif_argvals %||% digits_eval) 
-  show <- min(show, length(argvals))
+  digits_arg <- max(digits_eval, signif_arg %||% digits_eval) 
+  show <- min(show, length(arg))
   str <- paste(
-    paste0("(", format(argvals[1:show], digits = digits_argvals, trim = TRUE, ...),
+    paste0("(", format(arg[1:show], digits = digits_arg, trim = TRUE, ...),
       ",",
       format(evaluations[1:show], digits = digits_eval, trim = TRUE, ...), ")"), 
     collapse = ";")
-  if (show < length(argvals)) str <- paste0(str, "; ...")
+  if (show < length(arg)) str <- paste0(str, "; ...")
   str
 }
 
@@ -30,7 +30,7 @@ print.tf <- function(x, n  = 10, ...) {
 #' @export
 print.tfd_reg <- function(x, n = 10, ...) {
   NextMethod()
-  cat(" based on", length(argvals(x)), "evaluations each\n")
+  cat(" based on", length(arg(x)), "evaluations each\n")
   cat("interpolation by", attr(x, "evaluator_name"), "\n")
   if (length(x)) {
     cat(format(x[1:min(n, length(x))], ...), sep = "\n")
@@ -75,8 +75,8 @@ print.tfb <- function(x, n = 10, ...) {
 #' @inheritParams base::format.default
 #' @export
 format.tf <- function(x, digits = 2, nsmall = 0, ...){
-  str <- map2_chr(ensure_list(argvals(x)), evaluations(x), string_rep_tf, 
-    signif_argvals = attr(x, "signif_argvals"), 
+  str <- map2_chr(ensure_list(arg(x)), evaluations(x), string_rep_tf, 
+    signif_arg = attr(x, "signif_arg"), 
     digits = digits, nsmall = nsmall, ... = ...)
   if (is.null(names(x))) {
     str

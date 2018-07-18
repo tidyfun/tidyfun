@@ -10,11 +10,11 @@ mat_irreg[sample(1:length(mat_reg), length(mat_reg)/3)] <- NA
 f_reg <- try(tfd(mat_reg))
 expect_true(length(f_reg) == n)
 
-str(argvals(f_reg), 1)
+str(arg(f_reg), 1)
 domain(f_reg)
 evaluator(f_reg)
 
 f_irreg <- tfd(mat_irreg)
 str(f_irreg, 1)
-str(argvals(f_irreg), 1)
+str(arg(f_irreg), 1)
 

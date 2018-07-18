@@ -1,54 +1,54 @@
 # compute derivatives of data rows by finite differences. 
 # returns derivatives at interval midpoints
-deriv_matrix <- function(data, argvals, order) {
+deriv_matrix <- function(data, arg, order) {
   for (i in 1:order) {
-    delta <- diff(argvals)
+    delta <- diff(arg)
     data <- t(diff(t(data))/delta)
-    argvals <- (argvals[-1] + head(argvals,-1))/2
+    arg <- (arg[-1] + head(arg,-1))/2
   }
-  list(data = data, argvals = argvals)
+  list(data = data, arg = arg)
 }
 
 #trapezoidal quadrature
 #' @importFrom utils head
-quad_trapez <- function(argvals, evaluations) {
-  c(0, 0.5 * diff(argvals) * (head(evaluations, -1) + evaluations[-1]))
+quad_trapez <- function(arg, evaluations) {
+  c(0, 0.5 * diff(arg) * (head(evaluations, -1) + evaluations[-1]))
 }
 
-deriv_tfb_mgcv <- function(expr, order = 1, argvals = tidyfun::argvals(expr)) {
+deriv_tfb_mgcv <- function(expr, order = 1, arg = tidyfun::arg(expr)) {
   #TODO: make this work for iterated application deriv(deriv(fb)) 
   if (!is.null(attr(expr, "basis_deriv"))) 
     stop("Can't derive or integrate previously derived/integrated tf in basis representation")
   s_args <- attr(expr, "basis_args")
-  s_call <- as.call(c(quote(s), quote(argvals), s_args))
+  s_call <- as.call(c(quote(s), quote(arg), s_args))
   s_spec <- eval(s_call)
   spec_object <- smooth.construct(s_spec, 
-    data = data.frame(argvals =  argvals), knots = NULL)
-  eps <- min(diff(argvals)) / 1000
+    data = data.frame(arg =  arg), knots = NULL)
+  eps <- min(diff(arg)) / 1000
   basis_constructor <- smooth_spec_wrapper(spec_object, deriv = order, eps = eps)
   attr(expr, "basis") <- memoise::memoise(basis_constructor)
   attr(expr, "basis_label") <- deparse(s_call, width.cutoff = 60)[1]
   attr(expr, "basis_args") <- s_args
-  attr(expr, "basis_matrix") <- basis_constructor(argvals)
+  attr(expr, "basis_matrix") <- basis_constructor(arg)
   attr(expr, "basis_deriv") <- order
-  attr(expr, "domain") <- range(argvals)
+  attr(expr, "domain") <- range(arg)
   expr
 }
 
 deriv_tfb_fpc <- function(expr, order = 1, lower, upper, 
-  argvals = tidyfun::argvals(expr)) {
+  arg = tidyfun::arg(expr)) {
   efunctions <- environment(attr(expr, "basis"))$efunctions
   environment(attr(expr, "basis")) <- new.env()
   new_basis <- if (order > 0) {
     deriv(efunctions, order = order)
   } else {
     integrate(efunctions, lower = lower, upper = upper, definite = FALSE, 
-      argvals = argvals)
+      arg = arg)
   }  
   environment(attr(expr, "basis"))$efunctions <- new_basis
   attr(expr, "basis_matrix") <- t(as.matrix(new_basis))
-  attr(expr, "argvals") <- argvals(new_basis)
-  attr(expr, "domain") <- range(argvals(new_basis))
+  attr(expr, "arg") <- arg(new_basis)
+  attr(expr, "domain") <- range(arg(new_basis))
   expr
 }
 
@@ -67,30 +67,30 @@ deriv_tfb_fpc <- function(expr, order = 1, lower, upper,
 #'
 #' @param expr a `tf`
 #' @param order order of differentiation. Maximally 2 for `tfb` with `mgcv`-spline bases.
-#' @param argvals grid to use for the differentiation/integration. Not the `argvals` of the returned object.
+#' @param arg grid to use for the differentiation/integration. Not the `arg` of the returned object.
 #' @param ... not used
 #'
-#' @return a `tf` with (slightly) different `argvals` (and `basis`)
+#' @return a `tf` with (slightly) different `arg` (and `basis`)
 #' @export
 #' @importFrom stats deriv
 #' @rdname tfcalculus
-deriv.tfd <- function(expr, order = 1, argvals = NULL, ...) {
+deriv.tfd <- function(expr, order = 1, arg = NULL, ...) {
   #TODO: should this interpolate back to the original grid?
   # shortens the domain (slightly), for now.
   if (is_irreg(expr)) warning("differentiating irregular data could be sketchy.")
-  data <- as.matrix(expr, argvals = argvals, interpolate = TRUE)
-  argvals <- as.numeric(colnames(data))
-  derived <- deriv_matrix(data, argvals, order)
-  ret <- tfd(derived$data, derived$argvals, 
-    domain = range(derived$argvals), #!! shorter
-    signif = attr(expr, "signif_argvals"))
+  data <- as.matrix(expr, arg = arg, interpolate = TRUE)
+  arg <- as.numeric(colnames(data))
+  derived <- deriv_matrix(data, arg, order)
+  ret <- tfd(derived$data, derived$arg, 
+    domain = range(derived$arg), #!! shorter
+    signif = attr(expr, "signif_arg"))
   evaluator(ret) <- attr(expr, "evaluator_name")
   ret
 }
 #' @export
 #' @rdname tfcalculus
 deriv.tfb <- function(expr, order = 1, ...) {
-  if (grepl("s\\(argvals", attr(expr, "basis_label"))) {
+  if (grepl("s\\(arg", attr(expr, "basis_label"))) {
     return(deriv_tfb_mgcv(expr, order = order))
   }
   if (grepl("FPC", attr(expr, "basis_label"))) {
@@ -129,11 +129,11 @@ integrate.function <- stats::integrate
 #'   or the antiderivative. See Description.
 #' @export
 integrate.tfd <- function(f, lower = domain(f)[1], upper = domain(f)[2], 
-  definite = TRUE, argvals, ...) {
-  if (missing(argvals)) {
-    argvals <- tidyfun::argvals(f)
-  } else assert_argvals(argvals, f)
-  argvals <- ensure_list(argvals)
+  definite = TRUE, arg, ...) {
+  if (missing(arg)) {
+    arg <- tidyfun::arg(f)
+  } else assert_arg(arg, f)
+  arg <- ensure_list(arg)
   assert_numeric(lower, lower = domain(f)[1], upper =  domain(f)[2], 
     any.missing = FALSE)
   assert_numeric(upper,  lower = domain(f)[1], upper =  domain(f)[2], 
@@ -145,15 +145,15 @@ integrate.tfd <- function(f, lower = domain(f)[1], upper = domain(f)[2],
     if (!definite) .NotYetImplemented() #needs vd-data
     limits <- adjust_resolution(limits, f) %>% split(1:nrow(limits))
   }
-  argvals <- map2(argvals, ensure_list(limits),
+  arg <- map2(arg, ensure_list(limits),
     ~ c(.y[1], .x[.x > .y[1] & .x < .y[2]], .y[2]))
-  evaluations <- evaluate(f, argvals)
-  quads <- map2(argvals, evaluations, ~ quad_trapez(argvals = .x, evaluations = .y))
+  evaluations <- evaluate(f, arg)
+  quads <- map2(arg, evaluations, ~ quad_trapez(arg = .x, evaluations = .y))
   if (definite) {
     return(map(quads, sum) %>% unlist)
   } else {
-    tfd(data = map(quads, cumsum), argvals = unlist(argvals), domain = limits, 
-      signif = attr(f, "signif_argvals"), evaluator = approx_linear)
+    tfd(data = map(quads, cumsum), arg = unlist(arg), domain = limits, 
+      signif = attr(f, "signif_arg"), evaluator = approx_linear)
   }
   # this is too slow:
   # turn into functions, return definite integrals
@@ -165,10 +165,10 @@ integrate.tfd <- function(f, lower = domain(f)[1], upper = domain(f)[2],
 #' @rdname tfcalculus
 #' @export
 integrate.tfb <- function(f, lower = domain(f)[1], upper = domain(f)[2], 
-  definite = TRUE, argvals, ...) {
-  if (missing(argvals)) {
-    argvals <- tidyfun::argvals(f)
-  } else assert_argvals(argvals, f)
+  definite = TRUE, arg, ...) {
+  if (missing(arg)) {
+    arg <- tidyfun::arg(f)
+  } else assert_arg(arg, f)
   assert_numeric(lower, lower = domain(f)[1], upper =  domain(f)[2], 
     any.missing = FALSE)
   assert_numeric(upper,  lower = domain(f)[1], upper =  domain(f)[2], 
@@ -176,19 +176,19 @@ integrate.tfb <- function(f, lower = domain(f)[1], upper = domain(f)[2],
   stopifnot(length(lower) %in% c(1, length(f)), 
     length(upper) %in% c(1, length(f)))
   if (definite) {
-    return(integrate(tfd(f, argvals = argvals), lower = lower, upper = upper, 
-      argvals = argvals))
+    return(integrate(tfd(f, arg = arg), lower = lower, upper = upper, 
+      arg = arg))
   }
   limits <- cbind(lower, upper)
   if (nrow(limits) > 1) .NotYetImplemented() #needs vd-data
   limits <- adjust_resolution(limits, f)
-  argvals <- c(limits[1], argvals[argvals > limits[1] & argvals < limits[2]], 
+  arg <- c(limits[1], arg[arg > limits[1] & arg < limits[2]], 
     limits[2])
-  if (grepl("s\\(argvals", attr(f, "basis_label"))) {
-    return(deriv_tfb_mgcv(f, order = -1, argvals = argvals))
+  if (grepl("s\\(arg", attr(f, "basis_label"))) {
+    return(deriv_tfb_mgcv(f, order = -1, arg = arg))
   }
   if (grepl("FPC", attr(f, "basis_label"))) {
-    return(deriv_tfb_fpc(f, order = -1, argvals = argvals, lower = lower, 
+    return(deriv_tfb_fpc(f, order = -1, arg = arg, lower = lower, 
       upper = upper))
   }
 }

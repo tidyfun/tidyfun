@@ -4,13 +4,13 @@
 \alias{rgp}
 \title{Random generator for Gaussian Processes}
 \usage{
-rgp(n, argvals = seq(0, 1, l = 51), scale = diff(range(argvals))/10,
+rgp(n, arg = seq(0, 1, l = 51), scale = diff(range(arg))/10,
   cor = c("squareexp", "wiener"), nugget = scale/200)
 }
 \arguments{
 \item{n}{how many realizations to draw}
 
-\item{argvals}{vector of evaluation points (\code{argvals} of the return object).
+\item{arg}{vector of evaluation points (\code{arg} of the return object).
 Defaults to (0, 0.02, 0.04, ..., 1).}
 
 \item{scale}{scale parameter (see Description). Defaults to the width of the

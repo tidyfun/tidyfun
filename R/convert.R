@@ -5,35 +5,35 @@ as.tfd.default <- function(data, ...) {
   tfd(data,  ...)
 }
 
-# TODO: this ignores argvals, domain for now, only needed internally in c.tfd
+# TODO: this ignores arg, domain for now, only needed internally in c.tfd
 #' @rdname tfd
 as.tfd_irreg <- function(data, signif = NULL, ...) UseMethod("as.tfd_irreg")
 
 as.tfd_irreg.tfd_reg <- function(data, signif = NULL, ...) {
-  argvals <- ensure_list(argvals(data))
+  arg <- ensure_list(arg(data))
   if (!is.null(signif)) {
-    argvals <- .adjust_resolution(argvals, signif = signif, unique = TRUE)
-    if (length(argvals[[1]]) != length(argvals(data))) {
-      stop("Converting 'data' to lower resolution would create non-unique argvals.")
+    arg <- .adjust_resolution(arg, signif = signif, unique = TRUE)
+    if (length(arg[[1]]) != length(arg(data))) {
+      stop("Converting 'data' to lower resolution would create non-unique arg.")
     }
   }
-  ret <- map2(evaluations(data), argvals, ~ list(argvals = .y, data = .x))
+  ret <- map2(evaluations(data), arg, ~ list(arg = .y, value = .x))
   attributes(ret) <- attributes(data)
-  attr(ret, "argvals") <- numeric(0)
+  attr(ret, "arg") <- numeric(0)
   class(ret)[1] <- "tfd_irreg"
   ret
 }
 
-# TODO: this ignores argvals, domain for now.....
+# TODO: this ignores arg, domain for now.....
 as.tfd_irreg.tfd_irreg <- function(data, signif = 4, ...) {
-  argvals <- argvals(data)
+  arg <- arg(data)
   if (!is.null(signif)) {
-    argvals <- .adjust_resolution(argvals, signif = signif, unique = TRUE)
-    if (any(rapply(argvals, length) != rapply(attr(data, "argvals"), length))) {
-      stop("Can't convert data to lower resolution: creates non-unique argvals.")
+    arg <- .adjust_resolution(arg, signif = signif, unique = TRUE)
+    if (any(rapply(arg, length) != rapply(attr(data, "arg"), length))) {
+      stop("Can't convert data to lower resolution: creates non-unique arg.")
     }
   }
-  argvals(data) <- argvals
+  arg(data) <- arg
   data
 }
 
@@ -44,12 +44,12 @@ as.tfd_irreg.tfd_irreg <- function(data, signif = 4, ...) {
 #' @inheritParams [.tf
 #' @export 
 as.data.frame.tfd <- function(x, row.names = NULL, optional = FALSE, 
-  argvals = NULL, interpolate = FALSE, ...) {
-  if (is.null(argvals)) {
-    argvals <- ensure_list(argvals(x))
+  arg = NULL, interpolate = FALSE, ...) {
+  if (is.null(arg)) {
+    arg <- ensure_list(arg(x))
   } 
-  argvals <- adjust_resolution(argvals, x)
-  tmp <- x[, argvals, interpolate = interpolate, matrix = FALSE]
+  arg <- adjust_resolution(arg, x)
+  tmp <- x[, arg, interpolate = interpolate, matrix = FALSE]
   id <- unique_id(names(x)) %||% seq_along(x)
   id <- ordered(id, levels = id) # don't reshuffle 
   tidyr::unnest(bind_rows(list(id = id, data = tmp))) 
@@ -57,13 +57,13 @@ as.data.frame.tfd <- function(x, row.names = NULL, optional = FALSE,
 
 #' @rdname tfd
 #' @export
-as.matrix.tfd <- function(x, argvals = NULL, interpolate = FALSE, ...) {
-  if (is.null(argvals)) {
-    argvals <- sort(unlist(argvals(x)))
+as.matrix.tfd <- function(x, arg = NULL, interpolate = FALSE, ...) {
+  if (is.null(arg)) {
+    arg <- sort(unlist(arg(x)))
   } 
-  argvals <- adjust_resolution(argvals, x)
-  ret <- x[, argvals, interpolate = interpolate, matrix = TRUE]
-  structure(ret, argvals = as.numeric(colnames(ret)))
+  arg <- adjust_resolution(arg, x)
+  ret <- x[, arg, interpolate = interpolate, matrix = TRUE]
+  structure(ret, arg = as.numeric(colnames(ret)))
 }
 
 #-------------------------------------------------------------------------------
@@ -86,30 +86,30 @@ as.tfb.default <- function(data, basis = c("mgcv", "fpc"), ...) {
 #' @param x an `tfb` object
 #' @export 
 as.data.frame.tfb <- function(x, row.names = NULL, optional = FALSE, 
-  argvals = NULL, ...) {
-  if (is.null(argvals)) {
-    argvals <- ensure_list(argvals(x))
+  arg = NULL, ...) {
+  if (is.null(arg)) {
+    arg <- ensure_list(arg(x))
   } 
-  argvals <- adjust_resolution(argvals, x)
-  tmp <- x[, argvals, matrix = FALSE]
+  arg <- adjust_resolution(arg, x)
+  tmp <- x[, arg, matrix = FALSE]
   id <- unique_id(names(x)) %||% seq_along(x)
   id <- ordered(id, levels = id) # don't reshuffle 
   tidyr::unnest(bind_rows(list(id = id, data = tmp)))
 }
 
 #' @rdname tfb
-as.matrix.tfb <- function(x, argvals = NULL, ...) {
-  ret <- as.data.frame(x, argvals = argvals)  %>% 
-    arrange(argvals) %>% 
-    tidyr::spread(key = argvals, value = data) %>% 
+as.matrix.tfb <- function(x, arg = NULL, ...) {
+  ret <- as.data.frame(x, arg = arg)  %>% 
+    arrange(arg) %>% 
+    tidyr::spread(key = arg, value = value) %>% 
     select(-id) %>% 
     as.matrix
   rownames(ret) <- names(x)
-  structure(ret, argvals = as.numeric(colnames(ret)))
+  structure(ret, arg = as.numeric(colnames(ret)))
 }
 
 #-------------------------------------------------------------------------------
 #' @export 
 as.function.tf <- function(x, ...) {
-  function(argvals) unlist(evaluate(object = x, argvals = argvals))
+  function(arg) unlist(evaluate(object = x, arg = arg))
 }

@@ -12,12 +12,12 @@ if (!load) {
 
 dti <- refund::DTI
 
-f_cca <- tfd(dti$cca, argvals = seq(0, 1, l = 93), signif = 2)
-f_rcst <- tfd(dti$rcst, argvals = seq(0, 1, l = 55))
+f_cca <- tfd(dti$cca, arg = seq(0, 1, l = 93), signif = 2)
+f_rcst <- tfd(dti$rcst, arg = seq(0, 1, l = 55))
 f_cca
 f_rcst
 
-fb_cca <- tfb(dti$cca, k = 25, argvals = seq(0, 1, l = 93))
+fb_cca <- tfb(dti$cca, k = 25, arg = seq(0, 1, l = 93))
 
 fb_cca 
 
@@ -39,10 +39,10 @@ test_tbl %>% filter(cca[, .7, matrix = TRUE] > .6)
 test_tbl %>% filter(apply(rcst[, seq(.7, 1, l = 50)], 1, max) > .8)
 
 evaluate(test_tbl)
-evaluate(test_tbl, argvals = seq(0,1, l = 12))
-evaluate(test_tbl, argvals = seq(0,1, l = 12), cca)
+evaluate(test_tbl, arg = seq(0,1, l = 12))
+evaluate(test_tbl, arg = seq(0,1, l = 12), cca)
 
-tidyr::unnest(evaluate(test_tbl, argvals = seq(0,1, l = 12)), .preserve = rcst, 
+tidyr::unnest(evaluate(test_tbl, arg = seq(0,1, l = 12)), .preserve = rcst, 
   .sep = "_")
 # glimpse(test_tbl) #?!?
 

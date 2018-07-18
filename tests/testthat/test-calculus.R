@@ -11,7 +11,7 @@ dgrid <- seq(from + 0.5, to - 0.5, l = 50)
 eval_irreg <- function(expression, g, domain) {
   args <- unique(round(sort(runif(g, domain[1],  domain[2])), 3))
   f <- eval(expression, list(x = args))
-  tfd(f, argvals = args)
+  tfd(f, arg = args)
 }
 
 cubic <- tfd(grid^3, grid) 
@@ -50,7 +50,7 @@ test_that("basic antiderivatives work", {
 
 test_that("deriv & integrate are reversible (approximately)", {
   set.seed(1337)
-  f <- rgp(10, argvals = grid, nugget = 0)
+  f <- rgp(10, arg = grid, nugget = 0)
   f <- f - f[, grid[1]] # start at  0
   f2 <- integrate(deriv(f), definite = FALSE)
   f3 <- deriv(integrate(f, definite = FALSE))

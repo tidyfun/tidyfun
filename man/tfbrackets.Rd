@@ -15,19 +15,19 @@
 \item{i}{index of the observations (\code{integer}ish, \code{character} or \code{logical},
 usual R rules apply)}
 
-\item{j}{The \code{argvals} used to evaluate the functions. A (list of) \code{numeric}
+\item{j}{The \code{arg} used to evaluate the functions. A (list of) \code{numeric}
 vectors.}
 
 \item{interpolate}{should functions be evaluated (i.e., inter-/extrapolated)
-for \code{argvals} for which no original data is available? Only relevant for
+for \code{arg} for which no original data is available? Only relevant for
 \code{tfd}, defaults to TRUE.}
 
 \item{matrix}{should the result be returned as a \code{matrix} or as a list of
 \code{data.frame}s? If TRUE, \code{j} has to be a (list of a) single vector of
-\code{argvals}. See return value.}
+\code{arg}. See return value.}
 
 \item{value}{\code{tf} object for subassignment. This is (currently) very strictly typed,
-i.e. only objects that are of the same class and have compatible \code{argvals} can be
+i.e. only objects that are of the same class and have compatible \code{arg} can be
 subassigned.}
 }
 \value{
@@ -35,9 +35,9 @@ If \code{j} is missing, a subset of the functions in \code{x} as given by
 \code{i}.\cr If \code{j} is given and \code{matrix == TRUE}, a numeric matrix of function
 evaluations in which each row represents one function and each column
 represents one \code{argval} as given in argument \code{j}, with an attribute
-\code{argvals}=\code{j} and row- and column-names derived from \code{x[i]} and \code{j}.\cr If
+\code{arg}=\code{j} and row- and column-names derived from \code{x[i]} and \code{j}.\cr If
 \code{j} is given and \code{matrix == FALSE}, a list of \code{tbl_df}s with columns
-\code{argvals} = \code{j} and \code{data} = evaluations at \code{j} for each observation in
+\code{arg} = \code{j} and \code{data} = evaluations at \code{j} for each observation in
 \code{i}.
 }
 \description{

@@ -60,19 +60,19 @@ StatTf <- ggproto("StatTf", Stat,
   default_aes = aes(x = stat(.arg), y = stat(.value), group = stat(.id), 
     order = NULL),
   setup_params = function(data, params) {
-    if (!is.null(params$argvals))
+    if (!is.null(params$arg))
       return(params)
-    params$argvals <- argvals(pull(data, tf))
+    params$arg <- arg(pull(data, tf))
     if (!is.null(params$order_by)) 
       stopifnot(is.function(params$order_by))
     params
   },
   compute_layer = function(self, data, params, layout) {
     stopifnot(is_tf(pull(data, tf)))
-    tf_eval <- evaluate(object = data, argvals = params$argvals, tf) %>%
+    tf_eval <- evaluate(object = data, arg = params$arg, tf) %>%
       select(-group) %>% 
       unnest(.id = ".id") %>% 
-      rename(.arg = argvals, .value = data) 
+      rename(.arg = arg, .value = value) 
     if (is.null(data$order) & is.null(params$order_by)) {
       ordered_id <- tf_eval %>% pull(.id) %>% unique
     } 
@@ -96,9 +96,9 @@ StatTf <- ggproto("StatTf", Stat,
     tf_eval <- mutate(tf_eval, .id = ordered(.id, ordered_id))
     tf_eval
   },
-  # need this so argvals, order_by gets recognized as valid parameters
+  # need this so arg, order_by gets recognized as valid parameters
   # because layer() only checks compute_panel & compute_group
-  compute_panel = function(self, data, scales, argvals, order_by) {
+  compute_panel = function(self, data, scales, arg, order_by) {
     browser()
     Stat$compute_panel(self, data, scales)
   }  
@@ -110,11 +110,11 @@ StatTf <- ggproto("StatTf", Stat,
 #' @param na.rm remove NAs? defaults to `TRUE`
 stat_tf <- function(mapping = NULL, data = NULL, geom = "line",
   position = "identity", na.rm = TRUE, show.legend = NA, 
-  inherit.aes = TRUE, argvals = NULL, ...) {
+  inherit.aes = TRUE, arg = NULL, ...) {
   layer(
     stat = StatTf, data = data, mapping = mapping, geom = geom, 
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
-    params = list(na.rm = na.rm, argvals = argvals, ...)
+    params = list(na.rm = na.rm, arg = arg, ...)
   )
 }
 
@@ -123,14 +123,14 @@ stat_tf <- function(mapping = NULL, data = NULL, geom = "line",
 #' @export
 #' @rdname ggtf
 #' @format NULL
-#' @param argvals where to evaluate `tf` -- defaults to the default ;)
+#' @param arg where to evaluate `tf` -- defaults to the default ;)
 geom_spaghetti <- function(mapping = NULL, data = NULL,
   position = "identity", na.rm = TRUE, show.legend = NA, 
-  inherit.aes = TRUE, argvals = NULL, ...) {
+  inherit.aes = TRUE, arg = NULL, ...) {
   layer(
     stat = StatTf, data = data, mapping = mapping, geom = "line", 
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
-    params = list(na.rm = na.rm, argvals = argvals, ...)
+    params = list(na.rm = na.rm, arg = arg, ...)
   )
 }
 #' @export
@@ -139,17 +139,17 @@ geom_spaghetti <- function(mapping = NULL, data = NULL,
 #' @param spaghetti plot noodles along with meatballs? defaults to true.
 geom_meatballs <- function(mapping = NULL, data = NULL,
   position = "identity", na.rm = TRUE, show.legend = NA, 
-  inherit.aes = TRUE, argvals = NULL, spaghetti = TRUE, ...) {
+  inherit.aes = TRUE, arg = NULL, spaghetti = TRUE, ...) {
   list(
     layer(
     stat = StatTf, data = data, mapping = mapping, geom = "point", 
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
-    params = list(na.rm = na.rm, argvals = argvals, ...)),
+    params = list(na.rm = na.rm, arg = arg, ...)),
     if (spaghetti) {
       layer(
         stat = StatTf, data = data, mapping = mapping, geom = "line", 
         position = position, show.legend = show.legend, inherit.aes = inherit.aes,
-        params = list(na.rm = na.rm, argvals = argvals, ...))
+        params = list(na.rm = na.rm, arg = arg, ...))
     } else NULL) 
 }
 #' @export
@@ -160,14 +160,14 @@ geom_meatballs <- function(mapping = NULL, data = NULL,
 #' @param size width for lasagna layers. You will need to set this manually, sorry.
 geom_lasagna <- function(mapping = list(), 
   data = NULL,  position = "identity", na.rm = TRUE, show.legend = NA, 
-  inherit.aes = TRUE, argvals = NULL, order_by = NULL, size = 4, ...) {
+  inherit.aes = TRUE, arg = NULL, order_by = NULL, size = 4, ...) {
   default_mapping <- 
     aes(x = stat(.arg), y = stat(.id), colour = stat(.value))
   mapping <- structure(modifyList(mapping, default_mapping), class = "uneval")
   layer(
     stat = StatTf, data = data, mapping = mapping, geom = "line",
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
-    params = list(na.rm = na.rm, argvals = argvals, size = size, 
+    params = list(na.rm = na.rm, arg = arg, size = size, 
       order_by = order_by)
   ) 
 }

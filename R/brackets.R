@@ -1,36 +1,38 @@
-#' Accessing/evaluating, subsetting and subassigning `tfs`
+#' Accessing/evaluating, subsetting and subassigning `tf`s
 #' 
-#' These functions access, subset, replace and evaluate `tfs`. 
+#' These functions access, subset, replace and evaluate `tf`s. 
 #' For more information on creating `tf`s and converting them to/from 
 #' `list`, `data.frame` or `matrix`, see [tfd()] and [tfb()]. \cr
-#' Note that these break certain R conventions for vector-like objects:\cr
+#' Note that these break certain (terrible) R conventions for vector-like objects:\cr
 #'  
 #' - no argument recycling,
-#' - no indexing with `NA`, names not present in `x` or integers `> length(x)`
+#' - no indexing with `NA`,
+#' - no indexing with names not present in `x`,
+#' - no indexing with integers `> length(x)`
 #' 
-#' Both of these will yield errors. Subassigning new elements to positions
+#' All of these will trigger errors. Subassigning new elements to positions
 #' beyond the original length of the object will still fill up the vector with `NAs`, 
-#' though. 
+#' though. I'm a fickle, rainbow-colored unicorn.
 #' 
 #' 
 #' @param x an `tf`
 #' @param i index of the observations (`integer`ish, `character` or `logical`,
 #'   usual R rules apply)
-#' @param j The `argvals` used to evaluate the functions. A (list of) `numeric`
+#' @param j The `arg` used to evaluate the functions. A (list of) `numeric`
 #'   vectors.
 #' @param interpolate should functions be evaluated (i.e., inter-/extrapolated)
-#'   for `argvals` for which no original data is available? Only relevant for
-#'   `tfd`, defaults to TRUE.
+#'   for values in `arg` for which no original data is available? Only relevant for
+#'   `tfd`, defaults to `TRUE`.
 #' @param matrix should the result be returned as a `matrix` or as a list of
-#'   `data.frame`s? If TRUE, `j` has to be a (list of a) single vector of
-#'   `argvals`. See return value.
+#'   `data.frame`s? If `TRUE`, `j` has to be a (list of a) single vector of
+#'   `arg`. See return value.
 #' @return If `j` is missing, a subset of the functions in `x` as given by
 #'   `i`.\cr If `j` is given and `matrix == TRUE`, a numeric matrix of function
 #'   evaluations in which each row represents one function and each column
 #'   represents one `argval` as given in argument `j`, with an attribute
-#'   `argvals`=`j` and row- and column-names derived from `x[i]` and `j`.\cr If
+#'   `arg`=`j` and row- and column-names derived from `x[i]` and `j`.\cr If
 #'   `j` is given and `matrix == FALSE`, a list of `tbl_df`s with columns
-#'   `argvals` = `j` and `data` = evaluations at `j` for each observation in
+#'   `arg` = `j` and `value` = evaluations at `j` for each observation in
 #'   `i`.
 #' @import checkmate
 #' @rdname tfbrackets
@@ -69,9 +71,9 @@
   if (!(length(j) %in% c(1, length(i)))) {
     stop("wrong length for <j>")
   } 
-  evals <- evaluate(x[i], argvals = j)
+  evals <- evaluate(x[i], arg = j)
   if (!interpolate) {
-    new_j <- map2(j, ensure_list(argvals(x[i])), ~ !(.x %in% .y))
+    new_j <- map2(j, ensure_list(arg(x[i])), ~ !(.x %in% .y))
     if (any(unlist(new_j))) {
       warning("interpolate = FALSE & no evaluations for some <j>: NAs created.")
     }
@@ -81,16 +83,16 @@
     ret <- do.call(rbind, evals)
     colnames(ret) <- unlist(j)
     rownames(ret) <- names(x)[i]
-    structure(ret, argvals = unlist(j))
+    structure(ret, arg = unlist(j))
   } else {
-    ret <- map2(j, evals, ~ bind_cols(argvals = .x, data = .y))
+    ret <- map2(j, evals, ~ bind_cols(arg = .x, value = .y))
     names(ret) <- names(x)[i]
     ret
   }
 } 
 
 #' @param value `tf` object for subassignment. This is (currently) very strictly typed,
-#'  i.e. only objects that are of the same class and have compatible `argvals` can be 
+#'  i.e. only objects that are of the same class and have compatible `arg` can be 
 #'  subassigned.
 #' @rdname tfbrackets
 #' @export
@@ -118,7 +120,7 @@
     all(domain(x) == domain(value)),
     length(value) %in% c(1, length(i)))
   if (inherits(x, "tfd_reg") | inherits(x, "tfb")) {
-    assert_true(identical(argvals(x), argvals(value)))
+    assert_true(identical(arg(x), arg(value)))
   }
   if (is_tfd(x)) {
     assert_true(
@@ -138,7 +140,7 @@
   na_entries <- which(sapply(ret, is.null))
   if (length(na_entries)) {
     nas <- if (is_irreg(x)) {
-      replicate(length(na_entries), list(argvals = attr_x$domain[1], data = NA),
+      replicate(length(na_entries), list(arg = attr_x$domain[1], data = NA),
         simplify = FALSE) 
     } else {
       replicate(length(na_entries), rep(NA, length(x[[1]]))) 

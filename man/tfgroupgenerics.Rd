@@ -75,7 +75,7 @@ See examples below. Equality checks of functional objects are rather iffy and
 not very reliable at this point. Note that \code{max} and \code{min} are not guaranteed
 to be maximal/minmal over the entire domain, only on the evaluation grid used for
 computation. With the exception of addition and multiplication,
-operations on \code{tfb}-objects first evaluate them over their \code{argvals},
+operations on \code{tfb}-objects first evaluate them over their \code{arg},
 perform computations on these evaluations and then convert back to an \code{tfb}-
 object, so a loss of precision should be expected, especially so if bases are small
 or data is very wiggly.

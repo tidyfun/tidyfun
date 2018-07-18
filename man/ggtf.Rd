@@ -12,18 +12,17 @@
 \usage{
 stat_tf(mapping = NULL, data = NULL, geom = "line",
   position = "identity", na.rm = TRUE, show.legend = NA,
-  inherit.aes = TRUE, argvals = NULL, ...)
+  inherit.aes = TRUE, arg = NULL, ...)
 
 geom_spaghetti(mapping = NULL, data = NULL, position = "identity",
-  na.rm = TRUE, show.legend = NA, inherit.aes = TRUE, argvals = NULL,
-  ...)
+  na.rm = TRUE, show.legend = NA, inherit.aes = TRUE, arg = NULL, ...)
 
 geom_meatballs(mapping = NULL, data = NULL, position = "identity",
-  na.rm = TRUE, show.legend = NA, inherit.aes = TRUE, argvals = NULL,
+  na.rm = TRUE, show.legend = NA, inherit.aes = TRUE, arg = NULL,
   spaghetti = TRUE, ...)
 
 geom_lasagna(mapping = list(), data = NULL, position = "identity",
-  na.rm = TRUE, show.legend = NA, inherit.aes = TRUE, argvals = NULL,
+  na.rm = TRUE, show.legend = NA, inherit.aes = TRUE, arg = NULL,
   order_by = NULL, size = 4, ...)
 }
 \arguments{
@@ -64,7 +63,7 @@ rather than combining with them. This is most useful for helper functions
 that define both data and aesthetics and shouldn't inherit behaviour from
 the default plot specification, e.g. \code{\link[=borders]{borders()}}.}
 
-\item{argvals}{where to evaluate \code{tf} -- defaults to the default ;)}
+\item{arg}{where to evaluate \code{tf} -- defaults to the default ;)}
 
 \item{...}{Other arguments passed on to \code{\link[=layer]{layer()}}. These are
 often aesthetics, used to set an aesthetic to a fixed value, like

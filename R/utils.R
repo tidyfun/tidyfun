@@ -1,8 +1,8 @@
 ensure_list <- function(x) if (!is.list(x)) list(x) else x
 
 unique_id <- function(x)  {
-  if (is.null(x)) return(x)
-  if (is.character(x))  x <- sub("$^", "?", x) 
+  if (!any(duplicated(x))) return(x)
+  if (is.character(x))  x <- sub("$^", "?", x)
   x <- make.unique(make.names(as.character(x)))
   #TODO: make sure this has the correct order (here or in converters?)
   x
@@ -11,9 +11,9 @@ unique_id <- function(x)  {
 #'@import zoo
 zoo_wrapper <- function(f, ...){
   dots <- list(...)
-  function(x, argvals, evaluations) {
-      x_arg <- sort(unique(c(x, argvals)))
-      x_arg_match <- match(x_arg, argvals, nomatch = length(argvals) + 1)
+  function(x, arg, evaluations) {
+      x_arg <- sort(unique(c(x, arg)))
+      x_arg_match <- match(x_arg, arg, nomatch = length(arg) + 1)
       requested <-  x_arg %in% x
       dots[[length(dots) + 1]] <- zoo(evaluations[x_arg_match], x_arg)
       ret <- do.call(f, dots)
@@ -35,68 +35,68 @@ na_to_0 <- function(x) {
   x
 }
 
-find_argvals <- function(data, argvals) {
-  if (is.null(argvals)) {
-    suppressWarnings(argvals <- as.numeric(dimnames(data)[[2]]))
-    if (is.null(argvals) | any(is.na(argvals))) {
-      message("Column names of <data> not suitable as argvals.")
-      argvals <- numeric(0)
+find_arg <- function(data, arg) {
+  if (is.null(arg)) {
+    suppressWarnings(arg <- as.numeric(dimnames(data)[[2]]))
+    if (is.null(arg) | any(is.na(arg))) {
+      message("Column names of <data> not suitable as arg.")
+      arg <- numeric(0)
     }
   } 
-  if (!length(argvals)) argvals <- seq_len(dim(data)[2])
-  stopifnot(length(argvals)  == dim(data)[2], 
-    is.numeric(argvals), all(!is.na(argvals)))
-  list(argvals)
+  if (!length(arg)) arg <- seq_len(dim(data)[2])
+  stopifnot(length(arg)  == dim(data)[2], 
+    is.numeric(arg), all(!is.na(arg)))
+  list(arg)
 }
 
 #' @import checkmate
-assert_argvals <- function(argvals, x){
-  if (is.list(argvals)) {
-    assert_true(length(argvals) %in% c(1, length(x)))
-    map(argvals, ~ assert_argvals_vector(., x = x))
+assert_arg <- function(arg, x){
+  if (is.list(arg)) {
+    assert_true(length(arg) %in% c(1, length(x)))
+    map(arg, ~ assert_arg_vector(., x = x))
   } else {
-    assert_argvals_vector(argvals, x)
+    assert_arg_vector(arg, x)
   }
 }
-assert_argvals_vector <- function(argvals, x) {
-  assert_numeric(argvals, any.missing = FALSE, unique = TRUE,
+assert_arg_vector <- function(arg, x) {
+  assert_numeric(arg, any.missing = FALSE, unique = TRUE,
     lower = domain(x)[1], upper = domain(x)[2])
 }
 
 
 
 # #TODO: write proper tests for this
-# check_interpolation <- function(x, argvals){
+# check_interpolation <- function(x, arg){
 #   UseMethod("check_interpolation")
 # }
-# check_interpolation.tfd_reg <- function(x, argvals){
-#   original <- argvals(x)
-#   if (is.list(argvals)) {
-#     map(argvals, ~ !(. %in% original))
+# check_interpolation.tfd_reg <- function(x, arg){
+#   original <- arg(x)
+#   if (is.list(arg)) {
+#     map(arg, ~ !(. %in% original))
 #   } else {
-#     !(argvals %in% original)
+#     !(arg %in% original)
 #   }
 # }
-# check_interpolation.tfd_irreg <- function(x, argvals) {
-#   original <- argvals(x)
-#   if (is.list(argvals)) {
-#     map2(argvals, original, ~ !(.x %in% .y))
+# check_interpolation.tfd_irreg <- function(x, arg) {
+#   original <- arg(x)
+#   if (is.list(arg)) {
+#     map2(arg, original, ~ !(.x %in% .y))
 #   } else {
-#     map(original, ~ !(argvals %in% .x))
+#     map(original, ~ !(arg %in% .x))
 #   }
 # }
 
-adjust_resolution <- function(argvals, f) {
-  signif <- attr(f, "signif_argvals")
-  .adjust_resolution(argvals, signif)
+adjust_resolution <- function(arg, f) {
+  signif <- attr(f, "signif_arg")
+  .adjust_resolution(arg, signif)
 }
 
-.adjust_resolution <- function(argvals, signif, unique = TRUE){
+.adjust_resolution <- function(arg, signif, unique = TRUE){
   u <- if (unique) base::unique else function(x) x
-  if (is.list(argvals)) {
-    map(argvals, ~ u(signif(., signif)))
+  if (is.list(arg)) {
+    map(arg, ~ u(signif(., signif)))
   } else {
-    u(signif(argvals, signif))
+    u(signif(arg, signif))
   }  
 }
 

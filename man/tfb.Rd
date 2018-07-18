@@ -16,28 +16,28 @@
 as.tfb(data, basis = c("mgcv", "fpc"), ...)
 
 \method{as.data.frame}{tfb}(x, row.names = NULL, optional = FALSE,
-  argvals = NULL, ...)
+  arg = NULL, ...)
 
-\method{as.matrix}{tfb}(x, argvals = NULL, ...)
+\method{as.matrix}{tfb}(x, arg = NULL, ...)
 
 tfb(data, ...)
 
-\method{tfb}{data.frame}(data, id = 1, argvals = 2, value = 3,
+\method{tfb}{data.frame}(data, id = 1, arg = 2, value = 3,
   domain = NULL, penalized = TRUE, signif = 4, ...)
 
-\method{tfb}{matrix}(data, argvals = NULL, domain = NULL,
-  penalized = TRUE, signif = 4, ...)
-
-\method{tfb}{numeric}(data, argvals = NULL, domain = NULL,
-  penalized = TRUE, signif = 4, ...)
-
-\method{tfb}{list}(data, argvals = NULL, domain = NULL, penalized = TRUE,
+\method{tfb}{matrix}(data, arg = NULL, domain = NULL, penalized = TRUE,
   signif = 4, ...)
 
-\method{tfb}{tfd}(data, argvals = NULL, domain = NULL, penalized = TRUE,
+\method{tfb}{numeric}(data, arg = NULL, domain = NULL, penalized = TRUE,
   signif = 4, ...)
 
-\method{tfb}{tfb}(data, argvals = NULL, domain = NULL, penalized = TRUE,
+\method{tfb}{list}(data, arg = NULL, domain = NULL, penalized = TRUE,
+  signif = 4, ...)
+
+\method{tfb}{tfd}(data, arg = NULL, domain = NULL, penalized = TRUE,
+  signif = 4, ...)
+
+\method{tfb}{tfb}(data, arg = NULL, domain = NULL, penalized = TRUE,
   signif = 4, ...)
 }
 \arguments{
@@ -55,14 +55,14 @@ or "fpc" to call \code{\link[=fpcbase]{fpcbase()}} which uses a (smoothed) funct
 
 \item{optional}{not used}
 
-\item{argvals}{\code{numeric}, or list of \code{numeric}s. The evaluation grid. See Details.
+\item{arg}{\code{numeric}, or list of \code{numeric}s. The evaluation grid. See Details.
 For the \code{data.frame}-methods: the name/number of the column defining the evaluation grid.}
 
 \item{id}{The name/number of the column defining which data belong to which function.}
 
 \item{value}{The name/number of the column containing the function evaluations.}
 
-\item{domain}{range of the \code{argvals}.}
+\item{domain}{range of the \code{arg}.}
 
 \item{penalized}{should the coefficients of the basis representation be estimated
 via \code{\link[mgcv:magic]{mgcv::magic()}} (default) or ordinary least squares.}

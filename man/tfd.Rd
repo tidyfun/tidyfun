@@ -18,31 +18,31 @@ as.tfd(data, ...)
 as.tfd_irreg(data, signif = NULL, ...)
 
 \method{as.data.frame}{tfd}(x, row.names = NULL, optional = FALSE,
-  argvals = NULL, interpolate = FALSE, ...)
+  arg = NULL, interpolate = FALSE, ...)
 
-\method{as.matrix}{tfd}(x, argvals = NULL, interpolate = FALSE, ...)
+\method{as.matrix}{tfd}(x, arg = NULL, interpolate = FALSE, ...)
 
 tfd(data, ...)
 
-\method{tfd}{matrix}(data, argvals = NULL, domain = NULL,
+\method{tfd}{matrix}(data, arg = NULL, domain = NULL,
   evaluator = approx_linear, signif = 4, ...)
 
-\method{tfd}{numeric}(data, argvals = NULL, domain = NULL,
+\method{tfd}{numeric}(data, arg = NULL, domain = NULL,
   evaluator = approx_linear, signif = 4, ...)
 
-\method{tfd}{data.frame}(data, id = 1, argvals = 2, value = 3,
+\method{tfd}{data.frame}(data, id = 1, arg = 2, value = 3,
   domain = NULL, evaluator = approx_linear, signif = 4, ...)
 
-\method{tfd}{list}(data, argvals = NULL, domain = NULL,
+\method{tfd}{list}(data, arg = NULL, domain = NULL,
   evaluator = approx_linear, signif = 4, ...)
 
-\method{tfd}{tf}(data, argvals = NULL, domain = NULL,
+\method{tfd}{tf}(data, arg = NULL, domain = NULL,
   evaluator = approx_linear, signif = 4, ...)
 }
 \arguments{
 \item{data}{a \code{matrix}, \code{data.frame} or \code{list} of suitable shape, or another \code{tf}-object.}
 
-\item{...}{not used in \code{tfd}, except for \code{tfd.tf} -- specify \code{argvals} and \code{ìnterpolate = TRUE} to
+\item{...}{not used in \code{tfd}, except for \code{tfd.tf} -- specify \code{arg} and \code{ìnterpolate = TRUE} to
 turn an irregular \code{tfd} into a regular one, see examples.}
 
 \item{signif}{significant digits of the "resolution" of the evaluation grid.  See details.}
@@ -53,16 +53,16 @@ turn an irregular \code{tfd} into a regular one, see examples.}
 
 \item{optional}{not used}
 
-\item{argvals}{\code{numeric}, or list of \code{numeric}s. The evaluation grid. See Details.
+\item{arg}{\code{numeric}, or list of \code{numeric}s. The evaluation grid. See Details.
 For the \code{data.frame}-methods: the name/number of the column defining the evaluation grid.}
 
 \item{interpolate}{should functions be evaluated (i.e., inter-/extrapolated)
-for \code{argvals} for which no original data is available? Only relevant for
+for \code{arg} for which no original data is available? Only relevant for
 \code{tfd}, defaults to TRUE.}
 
-\item{domain}{range of the \code{argvals}.}
+\item{domain}{range of the \code{arg}.}
 
-\item{evaluator}{a function accepting arguments \code{x, argvals, evaluations}. See details.}
+\item{evaluator}{a function accepting arguments \code{x, arg, evaluations}. See details.}
 
 \item{id}{The name/number of the column defining which data belong to which function.}
 
@@ -76,12 +76,12 @@ Various constructor and conversion methods.
 
 \code{tfd.list} accepts a list of vectors of identical lengths
 containing evaluations or a list of 2-column matrices/data.frames with
-\code{argvals} in the first and evaluations in the second column
+\code{arg} in the first and evaluations in the second column
 }
 \details{
-\strong{\code{evaluator}}: must be a \code{function(x, argvals, evaluations)} that returns
+\strong{\code{evaluator}}: must be a \code{function(x, arg, evaluations)} that returns
 the function's (approximated/interpolated) values at locations \code{x} based on
-the \code{evaluations} available at locations \code{argvals}.
+the \code{evaluations} available at locations \code{arg}.
 Available \code{evaluator}-functions:
 \itemize{
 \item \code{approx_linear} for linear interpolation without extrapolation (i.e.,
@@ -100,13 +100,13 @@ See \code{tidyfun:::zoo_wrapper} and \code{tidyfun:::approx_linear}, which is si
 \code{zoo_wrapper(zoo::na.approx, na.rm = FALSE)}, for examples of implementations of
 this.
 
-\strong{\code{signif}}: \code{argvals} that are equivalent to this significant digit are
+\strong{\code{signif}}: \code{arg} that are equivalent to this significant digit are
 treated as identical. E.g., if an evaluation of f(t) is available at t=1 and a function
 value is requested at t = 1.001, f(1) will be returned if \code{signif} < 4.
 }
 \examples{
 #turn irregular to regular tfd
 #TODO: add extra function/verb for this
-(f <- c(rgp(1, argvals = seq(0,1,l=11)), rgp(1, argvals = seq(0,1,l=21))))
-tfd(f, interpolate = TRUE, argvals = seq(0,1,l=21))
+(f <- c(rgp(1, arg = seq(0,1,l=11)), rgp(1, arg = seq(0,1,l=21))))
+tfd(f, interpolate = TRUE, arg = seq(0,1,l=21))
 }

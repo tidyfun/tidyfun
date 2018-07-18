@@ -57,20 +57,20 @@ all.equal(log(exp(fb)), fb, tol = 1e-3)
 all.equal(sinh(sin(tfb(seq(0,1,l = 20)))), 
   tfb(seq(0,1,l = 20)), tol = 1e-3)
 
-f1 <- tfb(dbeta(seq(0, 1, l = 21), 7, 3), argvals = seq(0, 1, l = 21))
-f2 <- tfb(dbeta(seq(0, 1, l = 13), 2, 3), argvals = seq(0, 1, l = 13), 
+f1 <- tfb(dbeta(seq(0, 1, l = 21), 7, 3), arg = seq(0, 1, l = 21))
+f2 <- tfb(dbeta(seq(0, 1, l = 13), 2, 3), arg = seq(0, 1, l = 13), 
   domain = c(0,1))
 f3 <- c(f1, f2)  
 f4 <- c(f2, f1) 
 
 data_irreg <- data.frame(id = rep(1:3, each = 21), 
-  argvals = round(rep(seq(0, 1, l = 21), times = 3) + runif(63, -.1, .1), 4),
+  arg = round(rep(seq(0, 1, l = 21), times = 3) + runif(63, -.1, .1), 4),
   data = dbeta(rep(seq(0, 1, l = 21), times = 3), 3, 7))  #%>% 
-  #group_by(id) %>%  arrange(argvals, .by_group = TRUE) %>%  ungroup()
+  #group_by(id) %>%  arrange(arg, .by_group = TRUE) %>%  ungroup()
 firreg <- tfd(data_irreg)
 
 data_reg <- data.frame(id = rep(1:3, each = 21), 
-  argvals = rep(seq(0, 1, l = 21), times = 3),
+  arg = rep(seq(0, 1, l = 21), times = 3),
   data = as.vector(replicate(3, dbeta(seq(0, 1, l = 21), 
     runif(1, 2, 5), runif(1, 3, 9)))))
 freg <- tfd(data_reg)
