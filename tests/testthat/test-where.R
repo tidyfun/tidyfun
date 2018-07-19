@@ -11,6 +11,8 @@ test_that("where works", {
     list(c(-1, 0), c(-1, 0)))
   expect_identical(where(lin, value < -1.5, "any"),
     c(FALSE, TRUE))
+  expect_identical(where(lin, value < -1.5, "any"),
+    anywhere(lin, value < -1.5))
   expect_identical(where(lin, value < -2),
     list(numeric(0), numeric(0)))
 })

@@ -2,11 +2,14 @@
 % Please edit documentation in R/where.R
 \name{where}
 \alias{where}
+\alias{anywhere}
 \alias{in_range}
 \alias{\%inr\%}
 \title{Find out where functional data fulfills certain conditions.}
 \usage{
 where(f, cond, return = c("all", "first", "last", "range", "any"), arg)
+
+anywhere(f, cond, arg)
 
 in_range(f, r)
 
@@ -34,8 +37,11 @@ defaults to \code{arg(f)}.}
 numeric a vectors of the same length as \code{f}.
 }
 \description{
-This function allows to define a logical expression about the function values
-and returns the argument values for which that condition is true.
+\code{where} allows to define a logical expression about the function values
+and returns the argument values for which that condition is true.\cr
+\code{anywhere} is syntactic sugar for \code{where} with \code{return = "any"} to
+get a logical flag for each function if the condition is \code{TRUE} \emph{anywhere},
+see below.
 
 \code{in_range} and its infix-equivalent return \code{TRUE} for all
 values in \code{f} that are within the range of values in \code{r}.
@@ -55,6 +61,7 @@ Any condition evaluates to \code{NA} on \code{NA}-entries in \code{f}.
   where(lin, value > a, "first")
   where(lin, value < a, "last")
   where(lin, value > 2, "any")
+  anywhere(lin, value > 2)
 
   set.seed(4353)
   plot(f <- rgp(5, 11L), pch = as.character(1:5), points = TRUE)
@@ -68,4 +75,6 @@ Any condition evaluates to \code{NA} on \code{NA}-entries in \code{f}.
       sign(c(diff(value), diff(value)[n()-1])))
   # where for arg > .5 is the function positive:
   where(f, arg > .5 & value > 0)
+  # does the function ever exceed 1:
+  anywhere(f, value > 1)
 }

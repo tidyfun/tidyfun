@@ -1,7 +1,10 @@
 #' Find out where functional data fulfills certain conditions.
 #'
-#' This function allows to define a logical expression about the function values
-#' and returns the argument values for which that condition is true.
+#' `where` allows to define a logical expression about the function values
+#' and returns the argument values for which that condition is true.\cr
+#' `anywhere` is syntactic sugar for `where` with `return = "any"` to
+#' get a logical flag for each function if the condition is `TRUE` *anywhere*,
+#' see below.
 #'
 #' Entries in `f` that do not fulfill `cond` anywhere yield `numeric(0)`.\cr
 #' `cond`  is evaluated as a [dplyr::filter()]-statement on a `data.frame`
@@ -29,6 +32,7 @@
 #'   where(lin, value > a, "first")
 #'   where(lin, value < a, "last")
 #'   where(lin, value > 2, "any")
+#'   anywhere(lin, value > 2)
 #' 
 #'   set.seed(4353)
 #'   plot(f <- rgp(5, 11L), pch = as.character(1:5), points = TRUE)
@@ -42,16 +46,18 @@
 #'       sign(c(diff(value), diff(value)[n()-1])))
 #'   # where for arg > .5 is the function positive:
 #'   where(f, arg > .5 & value > 0)
-#' @export   
+#'   # does the function ever exceed 1:
+#'   anywhere(f, value > 1)
+#' @export
 where <- function(f, cond, return = c("all", "first", "last", "range", "any"),
     arg) {
   if (missing(arg)) {
     arg <- tidyfun::arg(f)
   } else assert_arg(arg, f)
   return <- match.arg(return)
-  cond_q <- enquo(cond)
+  cond <- enquo(cond)
   where_at <- map(f[, arg, matrix = FALSE], 
-    ~ filter(.x, !! cond_q) %>% pull(arg))
+    ~ filter(.x, !! cond) %>% pull(arg))
   if (return == "first") {
     where_at <- map_if(where_at, ~ length(.x) > 0, min)
   }
@@ -67,6 +73,15 @@ where <- function(f, cond, return = c("all", "first", "last", "range", "any"),
   where_at[is.na(f)] <- NA
   where_at
 }
+#' @rdname where
+#' @export
+anywhere <- function(f, cond, arg) {
+  call <- match.call()
+  call[[1]] <- where
+  call$return <- "any"
+  eval(call, parent.frame())
+}
+
 #' @description `in_range` and its infix-equivalent return `TRUE` for all 
 #'    values in `f` that are within the range of values in `r`. 
 #' @param r used to specify a range, only the minimum and maximum of `r` are used.
@@ -82,18 +97,3 @@ in_range <- function(f, r){
 #' @export
 `%inr%` <- function(f, r) in_range(f, r)
 
-if (FALSE) {
-  lin <- 1:4 * tfd(seq(-1, 1,l = 11), seq(-1, 1, l = 11))
-  where(lin, value %inr% c(-1, .5))
-  where(lin, value %inr% c(-1, .5), "range")
-  
-  a <- 1
-  where(lin, value > a, "first")
-  where(lin, value < a, "last")
-  
-  where(lin, value > 2, "any")
-  
-  set.seed(4353)
-  plot(f <- rgp(5, 11L), pch = as.character(1:5), points = TRUE)
-  where(f, value == max(value))
-}
