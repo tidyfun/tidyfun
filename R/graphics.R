@@ -92,6 +92,8 @@ plot.tf <- function(x, y, n_grid = 50, points = is_irreg(x),
   f <- x
   if (missing(y)) {
     arg <- prep_plotting_arg(x, n_grid)
+    # irreg args need to be turned to a vector for as.matrix below:
+    if (is.list(arg)) arg <- sort(unique(unlist(arg)))
   } else {
     arg <- y
   }  
@@ -130,8 +132,11 @@ plot.tf <- function(x, y, n_grid = 50, points = is_irreg(x),
 linespoints_tf <- function(x, arg, n_grid = 50, points = TRUE, 
   alpha = min(1, max(.05, 2/length(x))), interpolate = TRUE, ...) {
   assert_number(n_grid, na.ok = TRUE)
+  force(x)
   if (missing(arg)) {
     arg <- prep_plotting_arg(x, n_grid)
+    # irreg args need to be turned to a vector for as.matrix below:
+    if (is.list(arg)) arg <- sort(unique(unlist(arg)))
   }
   m <- if (is_tfd(x)) {
     suppressWarnings(
@@ -165,7 +170,3 @@ points.tf <- function(x, arg, n_grid = NA,
   do.call(linespoints_tf, args)
   invisible(x)
 }
-
-# TOD0:
-# geom_spaghetti 
-# geom_lasagna
