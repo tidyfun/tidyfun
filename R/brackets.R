@@ -143,11 +143,11 @@
       replicate(length(na_entries), list(arg = attr_x$domain[1], data = NA),
         simplify = FALSE) 
     } else {
-      replicate(length(na_entries), rep(NA, length(x[[1]]))) 
+      replicate(length(na_entries), rep(NA, length(x[[1]])), simplify = FALSE) 
     }  
     ret[na_entries] <- nas
   }
   attributes(ret) <- attr_x
-  names(ret)[is.na(names(ret))] <- ""
+  if (!is.null(names(ret))) names(ret)[is.na(names(ret))] <- ""
   ret
 }
