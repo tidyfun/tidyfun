@@ -200,7 +200,7 @@ tfb.matrix <- function(data, arg = NULL,
 #' @rdname tfb
 #' @export
 tfb.numeric <- function(data, arg = NULL, 
-  domain = NULL,   penalized = TRUE, signif = 4, ...) {
+  domain = NULL, penalized = TRUE, signif = 4, ...) {
   data <- t(as.matrix(data))
   tfb(data = data, arg = arg, domain = domain, penalized = penalized,
     signif = signif, ...)
@@ -245,9 +245,12 @@ tfb.tfd <- function(data, arg = NULL,
   domain = NULL, penalized = TRUE, signif = 4, ...) {
   arg <- arg %||% arg(data)
   domain <- domain %||% domain(data)
+  names_data <- names(data)
   data <- as.data.frame(data, arg)
-  tfb(data, basis = basis, domain = domain,   
+  ret <- tfb(data, basis = basis, domain = domain,   
     penalized = penalized, signif = signif, ...)
+  names(ret) <- names_data
+  ret
 }
 
 #' @rdname tfb
