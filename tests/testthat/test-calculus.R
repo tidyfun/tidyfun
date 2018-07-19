@@ -61,7 +61,7 @@ test_that("deriv & integrate are reversible (approximately)", {
   expect_error(integrate(deriv(tfb(f, verbose = FALSE)), definite = FALSE), 
     "previously")
   
-  f_pc <- fpcbase(f, smooth = FALSE, verbose = FALSE)
+  f_pc <- tfb_fpc(f, smooth = FALSE, verbose = FALSE)
   f_pc2 <- integrate(deriv(f_pc), definite = FALSE)
   f_pc3 <- deriv(integrate(f_pc, definite = FALSE))
   expect_equivalent(f_pc[,dgrid], f_pc2[,dgrid], tolerance = .1)

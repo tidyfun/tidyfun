@@ -1,4 +1,4 @@
-context("depth measures:")
+context("depth measures")
 
 grid <- round(seq(0, 10, l = 11), 3)
 lin <- -3:3 * tfd(.1 * grid, grid)
