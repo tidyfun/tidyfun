@@ -8,7 +8,8 @@
 #'
 #' @param n how many realizations to draw
 #' @param arg vector of evaluation points (`arg` of the return object).
-#'   Defaults to (0, 0.02, 0.04, ..., 1).
+#'   Defaults to (0, 0.02, 0.04, ..., 1). If a single integer, creates a grid 
+#'   of the given length over (0,1).
 #' @param scale scale parameter (see Description). Defaults to the width of the
 #'   domain divided by 10.
 #' @param cor type of correlation structure to use. Currently available:
@@ -18,9 +19,15 @@
 #' @return an `tfd`-vector of length `n`
 #' @importFrom mvtnorm rmvnorm
 #' @export
-rgp <- function(n, arg = seq(0, 1, l = 51), scale = diff(range(arg))/10, 
+rgp <- function(n, arg = 51L, scale = diff(range(arg))/10, 
   cor = c("squareexp", "wiener"), nugget = scale/200) {
   cor <- match.arg(cor)
+  if (length(arg == 1) & is.integer(arg)) arg <- seq(0, 1, length = arg)
+  check_numeric(arg, any.missing = FALSE, unique = TRUE)
+  check_number(n, lower = 1)
+  check_number(scale, lower = 0)
+  check_number(nugget, lower = 0)
+  
   f_cov <- switch(cor, "wiener" = function(s, t) pmin(s, t)/scale,
     "squareexp" = function(s,t) exp(-(s - t)^2/scale))
   cov <- outer(arg, arg, f_cov) + diag(0*arg + nugget)

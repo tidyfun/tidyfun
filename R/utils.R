@@ -27,9 +27,14 @@ approx_locf <- zoo_wrapper(na.locf, na.rm = FALSE)
 approx_nocb <- zoo_wrapper(na.locf, na.rm = FALSE, fromLast = TRUE)
 
 in_range <- function(x, r){
+  assert_numeric(x)
+  assert_numeric(r)
   r <- range(r, na.rm = TRUE)
   x >= r[1] & x <= r[2]
 }
+
+`%inr%` <- function(x, r) in_range(x, r)
+
 na_to_0 <- function(x) {
   x[is.na(x)] <- 0
   x

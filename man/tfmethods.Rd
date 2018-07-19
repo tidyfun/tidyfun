@@ -9,6 +9,8 @@
 \alias{basis}
 \alias{evaluator<-}
 \alias{arg<-}
+\alias{arg<-.tfd_irreg}
+\alias{arg<-.tfd_reg}
 \alias{coef.tfb}
 \alias{rev.tf}
 \alias{is_tf}
@@ -26,13 +28,17 @@ n_evaluations(f)
 
 domain(f)
 
-evaluator(f)
+evaluator(f, forget = FALSE)
 
 basis(f)
 
 evaluator(x) <- value
 
 arg(x) <- value
+
+\method{arg}{tfd_irreg}(x) <- value
+
+\method{arg}{tfd_reg}(x) <- value
 
 \method{coef}{tfb}(object, ...)
 
@@ -51,12 +57,15 @@ is_tfb(x)
 \arguments{
 \item{f}{an \code{tf} object}
 
+\item{forget}{extract the evaluator function without its cache?
+See \code{\link[memoise:::forget]{memoise::::forget()}}Defaults to \code{FALSE}.}
+
 \item{x}{an \code{tf} object}
 
-\item{value}{for \code{evaluator<-}: name of a function that can be used to interpolate an \code{tfd}. Needs to
+\item{value}{\strong{for \code{evaluator<-}:} name of a function that can be used to interpolate an \code{tfd}. Needs to
 accept vector arguments \code{x}, \code{arg}, \code{evaluations} and return
 evaluations of the function defined by \code{arg}, \code{evaluations} at \code{x}
-for \code{arg<-}: a list of grid points, for internal use only.}
+\strong{for \code{arg<-}:} a (list of) new \code{arg}-values}
 
 \item{object}{as usual}
 

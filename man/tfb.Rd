@@ -51,7 +51,7 @@ or "fpc" to call \code{\link[=tfb_fpc]{tfb_fpc()}} which uses a (smoothed) funct
 \code{\link[mgcv:magic]{mgcv::magic()}} (if \code{penalized} is TRUE). If not user-specified here,
 \code{tidyfun} uses \code{k=15} cubic regression spline basis functions (i.e., \code{bs = "cr"}) by default, but at least how many basis functions \code{k} the spline
 basis should have probably needs to be set manually.\cr
-\strong{for \code{as.tfb}-methods:} use this to give arguments to \code{\link[=tfb]{tfb()}} or \code{\link[=tfb_fpc]{tfb_fpc()}}.}
+\strong{for \code{as.tfb}:} use this to give arguments to \code{\link[=tfb]{tfb()}} or \code{\link[=tfb_fpc]{tfb_fpc()}}.}
 
 \item{x}{an \code{tfb} object}
 

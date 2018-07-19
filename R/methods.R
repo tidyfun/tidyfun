@@ -53,10 +53,14 @@ domain <- function(f) {
 }
 
 #' @rdname tfmethods
+#' @param forget extract the evaluator function without its cache? 
+#'   See [memoise:::forget()]Defaults to `FALSE`.
 #' @export
-evaluator <- function(f) {
+evaluator <- function(f, forget = FALSE) {
   stopifnot(inherits(f, "tfd"))
-  attr(f, "evaluator")
+  ret <- attr(f, "evaluator")
+  if (forget) forget(ret)
+  ret
 }
 
 #' @rdname tfmethods
@@ -67,31 +71,52 @@ basis <- function(f) {
 }
 
 #' @rdname tfmethods
-#' @param value for `evaluator<-`: name of a function that can be used to interpolate an `tfd`. Needs to
+#' @param value **for `evaluator<-`:** name of a function that can be used to interpolate an `tfd`. Needs to
 #'   accept vector arguments `x`, `arg`, `evaluations` and return
 #'   evaluations of the function defined by `arg`, `evaluations` at `x`
-#'   for `arg<-`: a list of grid points, for internal use only.
+#'   **for `arg<-`:** a (list of) new `arg`-values
 #' @export
 `evaluator<-` <- function(x, value) {
+  stopifnot(is_tfd(x))
   evaluator <- 
     if (is.character(value))  get(value, mode = "function") else value
   stopifnot(inherits(x, "tfd"), is.function(evaluator))
   assert_set_equal(names(formals(evaluator)), 
     c("x", "arg", "evaluations")) 
-  attr(x, "evaluator_name") <- deparse(substitute(value))
+  attr(x, "evaluator_name") <- if (is.character(value)) {
+     value 
+    }  else deparse(substitute(value))
   attr(x, "evaluator") <- memoise(evaluator)
   x
 }
-# this only used internally in tfd_irreg conversion functions.
+
 #' @rdname tfmethods
-`arg<-` <- function(x, value) {
-  stopifnot(inherits(x, "tfd_irreg"))
+#' @export
+`arg<-` <- function(x, value) UseMethod("arg<-")
+
+#' @rdname tfmethods
+#' @export
+`arg<-.tfd_irreg` <- function(x, value) {  
   value <- map(value, ~signif(.x, attr(x, "signif_arg")))
   assert_arg(value, x)
   ret <- map2(evaluations(x), value, ~list(arg = .y, data = .x))
   attributes(ret) <- attributes(x)
+  forget(attr(ret, "evaluator"))
   ret
 }
+
+#' @rdname tfmethods
+#' @export
+`arg<-.tfd_reg` <- function(x, value) {
+  value <- map(value, ~signif(.x, attr(x, "signif_arg")))
+  assert_arg(value, x)
+  attr(x, "arg") <- value
+  forget(attr(x, "evaluator"))
+  x
+}
+
+#TODO: add pipe-able modify_xx that call assignment functions on their first arg
+
 
 #-------------------------------------------------------------------------------
 

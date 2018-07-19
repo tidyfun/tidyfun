@@ -4,14 +4,15 @@
 \alias{rgp}
 \title{Random generator for Gaussian Processes}
 \usage{
-rgp(n, arg = seq(0, 1, l = 51), scale = diff(range(arg))/10,
-  cor = c("squareexp", "wiener"), nugget = scale/200)
+rgp(n, arg = 51L, scale = diff(range(arg))/10, cor = c("squareexp",
+  "wiener"), nugget = scale/200)
 }
 \arguments{
 \item{n}{how many realizations to draw}
 
 \item{arg}{vector of evaluation points (\code{arg} of the return object).
-Defaults to (0, 0.02, 0.04, ..., 1).}
+Defaults to (0, 0.02, 0.04, ..., 1). If a single integer, creates a grid
+of the given length over (0,1).}
 
 \item{scale}{scale parameter (see Description). Defaults to the width of the
 domain divided by 10.}
