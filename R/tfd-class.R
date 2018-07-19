@@ -7,11 +7,12 @@ new_tfd <- function(arg, datalist, regular, domain, evaluator, signif = 4) {
     c("x", "arg", "evaluations")) 
   arg_o <- map(arg, order)
   arg <- map2(arg, arg_o, ~.x[.y])
-  datalist <- map2(datalist, arg_o, ~.x[.y])
+  datalist <- map2(datalist, arg_o, ~ unname(.x[.y]))
   domain <- signif(domain %||% range(arg, na.rm = TRUE), signif)
   if (!regular) {
     datalist <- map2(datalist, arg, 
-      ~ list(arg = signif(.y[!is.na(.x)], signif), value = .x[!is.na(.x)]))
+      ~ list(arg = unname(signif(.y[!is.na(.x)], signif)), 
+          value = unname(.x[!is.na(.x)])))
     arg <- numeric(0)
     class <- "tfd_irreg"
   } else {
