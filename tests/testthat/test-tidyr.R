@@ -21,3 +21,28 @@ test_that("tf_gather works", {
     attr(tf_gather(d1, evaluator = approx_spline)$cca, "evaluator_name"), 
     "approx_spline")
 })
+
+test_that("tf_nest works", {
+  f1 <- rgp(3, 11L)
+  f2 <- rgp(3, 11L)
+  data <- inner_join(as.data.frame(f1), as.data.frame(f2), by = c("id", "arg"))
+  expect_equivalent(tf_nest(data)$value.x, f1)
+  expect_equivalent(tf_nest(data)$value.y, f2)
+  expect_equal(names(tf_nest(data, value.x:value.y)),names(tf_nest(data)))
+  expect_equivalent(names(tf_nest(data, -(1:2))), names(tf_nest(data)))
+  g <- rnorm(3)
+  data <- bind_cols(data, g = rep(g, e = n_evaluations(f1)))
+  expect_equal(tf_nest(data, value.x:value.y)$g, g)
+  data <- bind_cols(data, f = rep(rnorm(nrow(data))))
+  expect_error(tf_nest(data, value.x:value.y), "Columns f are not constant")
+})
+
+test_that("tf_unnest works", {
+  f1 <- rgp(3, 11L)
+  f2 <- rgp(3, 11L)
+  data <- inner_join(as.data.frame(f1), as.data.frame(f2), by = c("id", "arg"))
+  tfdata <- tf_nest(data)
+  expect_true(all(tf_unnest(tfdata) == data))
+  expect_message(tf_unnest(tfdata), "Removing duplicate")
+  expect_is(tf_unnest(tfdata, value.x, .preserve = value.y)$value.y, "tfd")
+})

@@ -25,7 +25,14 @@
 #' @importFrom tidyselect vars_select
 #' @importFrom stringr str_replace
 #' @export
-#' @seealso dplyr::select() tfd()
+#' @seealso dplyr::select() tfd() tf_nest() tf_unnest()
+#' @examples
+#' (d <- as.tbl(data.frame(refund::DTI[1:5,]$cca[, 1:10])))
+#' tf_gather(d)
+#' tf_gather(d, key = "cca_tf")
+#' tf_gather(d, arg = seq(0, 1, l = 10))$cca
+#' (d2 <- bind_cols(id = rownames(d), d))
+#' tf_gather(d2, -id) # tf_gather(d2, matches("cca")); tf_gather(d2, -1); etc
 tf_gather <- function(data, ..., key = ".tfd", arg = NULL, domain = NULL, 
     evaluator = approx_linear, signif = 4) {
   key_var <- quo_name(enexpr(key))
@@ -69,3 +76,97 @@ tf_gather <- function(data, ..., key = ".tfd", arg = NULL, domain = NULL,
         tfd(tfd_data, arg = arg, domain = domain, evaluator = !!evaluator, 
           signif = signif)) 
 }
+
+# ------------------------------------------------------------------------------
+
+#' Turn "long" tables into tidy data frames with `tf`-objects
+#'
+#' Similar in spirit to [tidyr::nest()]. This turns tables in "long" format,
+#' where one column (`.id`) defines the unit of observation, one column (`.arg`)
+#' defines the evaluation of the functional observations, and other columns (`...`)
+#' define the values of the functions into a (much shorter) table containing
+#' `tfd`-objects. All other variables are checked for constancy over `.id` and
+#' appended as well.
+#'
+#' @param data a data frame
+#' @param ... A selection of columns. If empty, all variables except the 
+#'   `.id` and `.arg` columns are selected. You can supply bare variable names, 
+#'   select all variables between `x` and `z` with `x:z`, exclude `y` with `-y`. 
+#'   For more options, see the [dplyr::select()] documentation. 
+#'   See also the section on selection rules below.
+#' @param .id the (bare or quoted) name of the column defining the different observations
+#' @param .arg the (bare or quoted) name of the column defining the `arg`-values of the observed functions
+#' @return a data frame with (at least) `.id` and `tfd` columns
+#' @export
+#' @seealso tf_gather() tf_unnest()
+tf_nest <- function(data, ..., .id = "id", .arg = "arg") {
+  stopifnot(!missing(data)) 
+  id_var <- quo_name(enexpr(.id))
+  arg_var <- quo_name(enexpr(.arg))
+  quos <- quos(...)
+  if (is_empty(quos)) {
+    value_vars <- setdiff(names(data), c(id_var, arg_var))
+  } else {
+    value_vars <- unname(vars_select(names(data), !!!quos))
+  }
+  if (is_empty(value_vars)) {
+    return(data)
+  }
+  remaining <- setdiff(names(data), c(id_var, arg_var, value_vars))
+  # check that nesting is possible without information loss
+  ret <- select(data, !!id_var, !!remaining) %>%
+    group_by(!!as.name(id_var))
+  not_constant <- ret %>% 
+    summarise_all(n_distinct) %>% select(-!!id_var) %>% 
+    summarise_all(function(x) !all(x == 1L)) %>% 
+    select_if(isTRUE)
+  if (ncol(not_constant)) {
+    stop("Columns ", paste(names(not_constant), collapse = ", "), 
+      " are not constant for all levels of the id-variable.")
+  }
+  ret <- slice(ret, 1) %>% ungroup
+  tfd_list <- map(value_vars, 
+    ~ select(data, id_var, arg_var, .x) %>%  tfd)
+  names(tfd_list) <- value_vars
+  for (v in value_vars) {
+    ret[[v]] <- tfd_list[[v]]
+  }
+  ret
+} 
+
+#-------------------------------------------------------------------------------
+
+#' Turn data frames with `tf`-objects / list columns into "long" tables.
+#'
+#' Similar in spirit to [tidyr::unnest()], the reverse of `tf_nest`.
+#' Note 
+#'
+#' @param data a data frame
+#' @param .arg optional values for the `arg` argument of [evaluate.data.frame()]
+#' @inheritParams evaluate.data.frame
+#' @inheritParams tidyr::unnest
+#' @return a "long" data frame with 
+#' @export
+#' @seealso tf_gather() tf_unnest() evaluate.data.frame
+tf_unnest <- function(data, ..., .arg, .drop = NA, .id = NULL, .sep = "_", 
+    .preserve = NULL) {
+  preserve <- unname(vars_select(names(data), !!!enquo(.preserve)))
+  tfds <- unname(vars_select(names(data), !!!quos(...)))
+  ret <- evaluate.data.frame(data, arg = .arg, !!!tfds) %>% 
+    unnest(.drop = .drop, .id = .id, .sep = .sep, .preserve = preserve)
+  
+  # drop duplicated arg columns if possible: 
+  same_arg <- select(ret, matches("_arg$")) %>% as.matrix %>% t %>% 
+    duplicated %>% tail(-1) %>% all
+  if (same_arg) {
+    no_arg_col <- !("arg" %in% names(ret))
+    if (length(vars_select(names(ret), matches("_arg$"))) > 1 & no_arg_col) 
+      message("Removing duplicate columns of arg-values")
+    if (no_arg_col) {
+      new_arg <- select(ret, matches("_arg$")) %>% names %>% head(1)
+      ret <- rename(ret, arg = !!new_arg) %>% select(-matches("_arg$"))
+    }  
+  }
+  ret
+} 
+

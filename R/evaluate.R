@@ -66,32 +66,38 @@ evaluate_tfb_once <- function(x, arg, coefs, basis, X) {
 
 
 #' @rdname evaluate
-#' @param ... optional: names of the `tf`-columns to unnest 
+#' @param ... optional:  A selection of columns. If empty, all `tfd`-variables 
+#'   are selected. You can supply bare variable names, 
+#'   select all variables between `x` and `z` with `x:z`, exclude `y` with `-y`. 
+#'   For more options, see the [dplyr::select()] documentation.
 #' @import tidyr
 #' @importFrom tidyselect vars_select quos
 #' @importFrom rlang quo_text
 #' @export
-#' @md
 evaluate.data.frame <- function(object, arg, ...) {
-#FIXME this does not really work for object with mutiple tfd's
-    quos <- quos(...)
+  quos <- quos(...)
   # figure out which tf columns to evaluate
   tf_cols <- names(object)[map_lgl(object, is_tf)]
   if (!is_empty(quos)) {
-    tf_cols <- intersect(tf_cols, map_chr(quos, rlang::quo_text))
+    to_eval <- unname(vars_select(names(object), !!!quos))
+    tf_cols <- intersect(tf_cols, to_eval)
   }
   if (!length(tf_cols)) {
-    warning("No tfs to evaluate. Returning unchanged object.")
     return(object)
   }
   if (!missing(arg)) {
-    arg <- ensure_list(arg) 
+    arg <- ensure_list(arg)
+    if (length(arg) == 1) {
+      arg <- replicate(length(tf_cols), arg, simplify = FALSE)
+    }  
   } else {
     arg <- map(object[tf_cols], ~tidyfun::arg(.))
   }
+  stopifnot(length(arg) == length(tf_cols))
+  names(arg) <- tf_cols
   # convert them to list-columns of data.frames
   for (f in tf_cols) {
-    object[[f]] <- object[[f]][, arg, matrix = FALSE]
+    object[[f]] <- object[[f]][, arg[[f]], matrix = FALSE]
   }
   object
 }

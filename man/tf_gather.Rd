@@ -41,6 +41,14 @@ gathered columns into one very long "value"-column while labeling the different
 original columns in a very long "key"-column -- instead it creates a \code{tfd}-column
 containing the functional measurements of the columns given in \code{...}.
 }
+\examples{
+(d <- as.tbl(data.frame(refund::DTI[1:5,]$cca[, 1:10])))
+tf_gather(d)
+tf_gather(d, key = "cca_tf")
+tf_gather(d, arg = seq(0, 1, l = 10))$cca
+(d2 <- bind_cols(id = rownames(d), d))
+tf_gather(d2, -id) # tf_gather(d2, matches("cca")); tf_gather(d2, -1); etc
+}
 \seealso{
-dplyr::select() tfd()
+dplyr::select() tfd() tf_nest() tf_unnest()
 }
