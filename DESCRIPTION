@@ -6,10 +6,32 @@ Description: Provides S3 classes and methods for working with functional data in
 Depends: R (>= 3.4.3)
 Imports: 
   checkmate, dplyr, ggplot2, memoise, mvtnorm, mgcv, modelr, purrr, refund, rlang,
-  stats, tidyselect, tidyr, zoo  
+  stats, stringr, tidyselect, tidyr, zoo
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.0.1
 Suggests: testthat, data.table
 Roxygen: list(markdown = TRUE)
+Collate: 
+    'brackets.R'
+    'calculus.R'
+    'concatenate.R'
+    'convert.R'
+    'depth.R'
+    'evaluate.R'
+    'ggplot.R'
+    'graphics.R'
+    'ops.R'
+    'math.R'
+    'methods.R'
+    'print-format.R'
+    'rng.R'
+    'summarize.R'
+    'tfb-class.R'
+    'tfb-fpc.R'
+    'tfd-class.R'
+    'tidyr.R'
+    'utils.R'
+    'where.R'
+    'zoom.R'
