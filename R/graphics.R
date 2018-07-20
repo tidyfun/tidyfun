@@ -132,7 +132,6 @@ plot.tf <- function(x, y, n_grid = 50, points = is_irreg(x),
 linespoints_tf <- function(x, arg, n_grid = 50, points = TRUE, 
   alpha = min(1, max(.05, 2/length(x))), interpolate = TRUE, ...) {
   assert_number(n_grid, na.ok = TRUE)
-  force(x)
   if (missing(arg)) {
     arg <- prep_plotting_arg(x, n_grid)
     # irreg args need to be turned to a vector for as.matrix below:

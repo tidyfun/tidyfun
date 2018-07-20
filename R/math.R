@@ -33,6 +33,8 @@ summarize_tf <- function(..., op = NULL, eval = FALSE) {
   }
 }
 #------------------------------------------------------------------------------
+#' @include ops.R 
+NULL
 
 #' Math, Summary and Ops Methods for `tf`
 #' 
@@ -61,15 +63,15 @@ summarize_tf <- function(..., op = NULL, eval = FALSE) {
 #' 2 * f == f + f
 #' sum(f) == f[1] + f[2] + f[3] + f[4]
 #' log(exp(f)) == f 
-#' plot(f, points = FALSE); lines(range(f), col = 2, lty = 2)
+#' plot(f, points = FALSE)
+#' lines(range(f), col = 2, lty = 2)
 #' 
 #' f2 <- tfb(rgp(5), k = 50)
-#' layout(t(1:2)); plot(f2, col = 1:5); plot(cummax(f2), col = 1:5); lines(f2)
-#' 
-#' # loss of precision:
-#' f3 <- tfb(rgp(5, scale = 0.01), k = 50)
-#' log(exp(f3)) == f3 #!!
-#' plot(log(exp(f3))); lines(f3, lty = 2, col = 2) # still reasonable
+#' layout(t(1:2))
+#' plot(f2, col = 1:5)
+#' plot(cumsum(f2), col = 1:5)
+#' # use ?integrate.tfd for "function-wise" integrals i.e., weighted cumulative sums...
+#' lines(f2)
 #' @export
 #' 
 Math.tfd <- function(x, ...) {

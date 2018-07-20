@@ -54,7 +54,7 @@ domain <- function(f) {
 
 #' @rdname tfmethods
 #' @param forget extract the evaluator function without its cache? 
-#'   See [memoise:::forget()]Defaults to `FALSE`.
+#'   See [memoise::forget()]. Defaults to `FALSE`.
 #' @export
 evaluator <- function(f, forget = FALSE) {
   stopifnot(inherits(f, "tfd"))

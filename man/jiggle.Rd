@@ -9,7 +9,7 @@ jiggle(f, ...)
 \arguments{
 \item{f}{a \code{tfd} object}
 
-\item{..}{not used currently}
+\item{...}{not used currently}
 }
 \description{
 ... by moving around its \code{arg}-values.

@@ -39,7 +39,7 @@ rgp <- function(n, arg = 51L, scale = diff(range(arg))/10,
 #' 
 #' ... by moving around its `arg`-values.
 #' @param f a `tfd` object
-#' @param .. not used currently
+#' @param ... not used currently
 #' @importFrom stats runif
 #' @export
 jiggle <- function(f, ...) {

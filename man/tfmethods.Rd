@@ -58,7 +58,7 @@ is_tfb(x)
 \item{f}{an \code{tf} object}
 
 \item{forget}{extract the evaluator function without its cache?
-See \code{\link[memoise:::forget]{memoise::::forget()}}Defaults to \code{FALSE}.}
+See \code{\link[memoise:forget]{memoise::forget()}}. Defaults to \code{FALSE}.}
 
 \item{x}{an \code{tf} object}
 
