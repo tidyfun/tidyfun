@@ -21,7 +21,7 @@
 #'   See [tfd()].
 #' @inheritParams tfd 
 #' @return a modified `data.frame` with a `tfd` column replacing the `...`.
-#' @importFrom rlang is_empty :=
+#' @importFrom rlang is_empty :=  quo_name enexpr
 #' @importFrom tidyselect vars_select
 #' @importFrom stringr str_replace
 #' @export
@@ -29,12 +29,13 @@
 tf_gather <- function(data, ..., key = ".tfd", arg = NULL, domain = NULL, 
     evaluator = approx_linear, signif = 4) {
   key_var <- quo_name(enexpr(key))
+  evaluator <- quo_name(enexpr(evaluator))
   search_key <- isTRUE(key == ".tfd")
   quos <- quos(...)
   if (rlang::is_empty(quos)) {
     gather_vars <- names(data)
   } else {
-    gather_vars <- unname(tidyselect::vars_select(names(data), !!!quos))
+    gather_vars <- unname(vars_select(names(data), !!!quos))
   }
   if (rlang::is_empty(gather_vars)) {
     return(data)
@@ -65,6 +66,6 @@ tf_gather <- function(data, ..., key = ".tfd", arg = NULL, domain = NULL,
 
   data %>% select(-gather_vars) %>% 
     mutate(!!key_var := 
-        tfd(tfd_data, arg = arg, domain = domain, evaluator = !! evaluator, 
+        tfd(tfd_data, arg = arg, domain = domain, evaluator = !!evaluator, 
           signif = signif)) 
 }
