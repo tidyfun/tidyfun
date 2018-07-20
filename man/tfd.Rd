@@ -79,8 +79,9 @@ containing evaluations or a list of 2-column matrices/data.frames with
 \code{arg} in the first and evaluations in the second column
 }
 \details{
-\strong{\code{evaluator}}: must be a \code{function(x, arg, evaluations)} that returns
-the function's (approximated/interpolated) values at locations \code{x} based on
+\strong{\code{evaluator}}: must be the (quoted or bare) name of a
+\code{function(x, arg, evaluations)} that returns
+the functions' (approximated/interpolated) values at locations \code{x} based on
 the \code{evaluations} available at locations \code{arg}.
 Available \code{evaluator}-functions:
 \itemize{
@@ -100,7 +101,7 @@ See \code{tidyfun:::zoo_wrapper} and \code{tidyfun:::approx_linear}, which is si
 \code{zoo_wrapper(zoo::na.approx, na.rm = FALSE)}, for examples of implementations of
 this.
 
-\strong{\code{signif}}: \code{arg} that are equivalent to this significant digit are
+\strong{\code{signif}}: \code{arg} that are equivalent up to this significant digit are
 treated as identical. E.g., if an evaluation of f(t) is available at t=1 and a function
 value is requested at t = 1.001, f(1) will be returned if \code{signif} < 4.
 }

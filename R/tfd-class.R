@@ -2,8 +2,10 @@
 #' @import purrr
 #' @import dplyr
 new_tfd <- function(arg, datalist, regular, domain, evaluator, signif = 4) {
-  assert_function(eval(evaluator))
-  assert_set_equal(names(formals(eval(evaluator))), 
+  assert_string(evaluator)
+  evaluator_f <- get(evaluator, mode = "function", envir = parent.frame())
+  assert_function(evaluator_f)
+  assert_set_equal(names(formals(evaluator_f)), 
     c("x", "arg", "evaluations")) 
   arg_o <- map(arg, order)
   arg <- map2(arg, arg_o, ~.x[.y])
@@ -22,8 +24,8 @@ new_tfd <- function(arg, datalist, regular, domain, evaluator, signif = 4) {
   ret <- structure(datalist, 
     arg =  arg,
     domain = domain,
-    evaluator = memoise(eval(evaluator)),
-    evaluator_name = deparse(evaluator, width.cutoff = 60)[1],
+    evaluator = memoise(evaluator_f),
+    evaluator_name = evaluator,
     signif_arg = signif, #maybe turn this into a <global> option? 
     class = c(class, "tfd", "tf"))
   assert_arg(arg, ret)
@@ -36,8 +38,9 @@ new_tfd <- function(arg, datalist, regular, domain, evaluator, signif = 4) {
 #' 
 #' Various constructor and conversion methods.
 #' 
-#' **`evaluator`**: must be a `function(x, arg, evaluations)` that returns
-#' the function's (approximated/interpolated) values at locations `x` based on
+#' **`evaluator`**: must be the (quoted or bare) name of a 
+#' `function(x, arg, evaluations)` that returns
+#' the functions' (approximated/interpolated) values at locations `x` based on
 #' the `evaluations` available at locations `arg`. 
 #' Available `evaluator`-functions: 
 #' 
@@ -57,7 +60,7 @@ new_tfd <- function(arg, datalist, regular, domain, evaluator, signif = 4) {
 #' this. 
 #' 
 #' 
-#' **`signif`**: `arg` that are equivalent to this significant digit are 
+#' **`signif`**: `arg` that are equivalent up to this significant digit are 
 #' treated as identical. E.g., if an evaluation of f(t) is available at t=1 and a function
 #' value is requested at t = 1.001, f(1) will be returned if `signif` < 4.
 #' 
@@ -78,22 +81,24 @@ tfd <- function(data, ...) UseMethod("tfd")
 tfd.matrix <- function(data, arg = NULL, domain = NULL, 
     evaluator = approx_linear, signif = 4, ...) {
   stopifnot(is.numeric(data))
+  evaluator <- quo_name(enexpr(evaluator))
   arg <- find_arg(data, arg) # either arg or numeric colnames or 1:ncol
   id <- unique_id(rownames(data) %||% seq_len(dim(data)[1]))
   # make factor conversion explicit to avoid reordering
   datalist <- split(data, factor(id, unique(as.character(id))))
   names(datalist) <- rownames(data)
   regular <- !any(is.na(data))
-  new_tfd(arg, datalist, regular, domain, substitute(evaluator), signif)
+  new_tfd(arg, datalist, regular, domain, evaluator, signif)
 }
 #' @rdname tfd
 #' @export
 tfd.numeric <- function(data, arg = NULL, 
     domain = NULL, evaluator = approx_linear, signif = 4, ...) {
+  evaluator <- quo_name(enexpr(evaluator))
   data <- t(as.matrix(data))
   #dispatch to matrix method
   args <- list(data, arg = arg, domain = domain,   
-    evaluator = substitute(evaluator), signif = signif)
+    evaluator = evaluator, signif = signif)
   return(do.call(tfd, args))
 }
 
@@ -104,6 +109,7 @@ tfd.numeric <- function(data, arg = NULL,
 #' @param value The name/number of the column containing the function evaluations.
 tfd.data.frame <- function(data, id = 1, arg = 2, value = 3, domain = NULL, 
     evaluator = approx_linear, signif = 4, ...) {
+  evaluator <- quo_name(enexpr(evaluator))
   data <- na.omit(data[, c(id, arg, value)])
   stopifnot(is.numeric(data[[2]]), 
     is.numeric(data[[3]]))
@@ -112,7 +118,7 @@ tfd.data.frame <- function(data, id = 1, arg = 2, value = 3, domain = NULL,
   datalist <- split(data[[3]], id)
   arg <- split(data[[2]], id)
   regular <- length(arg) == 1 | all(duplicated(arg)[-1])
-  new_tfd(arg, datalist, regular, domain, substitute(evaluator), signif)
+  new_tfd(arg, datalist, regular, domain, evaluator, signif)
 }
 
 # TODO this will break for multivariate data!
@@ -123,6 +129,7 @@ tfd.data.frame <- function(data, id = 1, arg = 2, value = 3, domain = NULL,
 #' @rdname tfd
 tfd.list <- function(data, arg = NULL, domain = NULL, 
     evaluator = approx_linear, signif = 4, ...) {
+  evaluator <- quo_name(enexpr(evaluator))
   vectors <- map_lgl(data, ~ is.numeric(.) & !is.array(.)) 
   if (all(vectors)) {
     lengths <- sapply(data, length)
@@ -130,7 +137,7 @@ tfd.list <- function(data, arg = NULL, domain = NULL,
       data <- do.call(rbind, data)
       #dispatch to matrix method
       args <- list(data, arg = arg, domain = domain,   
-        evaluator = substitute(evaluator), signif = signif)
+        evaluator = evaluator, signif = signif)
       return(do.call(tfd, args))
     } else {
       stopifnot(!is.null(arg), length(arg) == length(data), 
@@ -147,7 +154,7 @@ tfd.list <- function(data, arg = NULL, domain = NULL,
     regular <- (length(data) == 1 | all(duplicated(arg)[-1])) 
   }
   new_tfd(arg, data, regular = regular, domain = domain, 
-    evaluator = substitute(evaluator), signif = signif)
+    evaluator = evaluator, signif = signif)
 }
 
 #' @export
@@ -159,12 +166,13 @@ tfd.list <- function(data, arg = NULL, domain = NULL,
 #' @rdname tfd
 tfd.tf <- function(data, arg = NULL, domain = NULL, 
     evaluator = approx_linear, signif = 4, ...) {
+  evaluator <- quo_name(enexpr(evaluator))
   arg <- ensure_list(arg %||% arg(data))
   evaluations <- evaluate(data, arg)
   domain <- domain %||% domain(data)
   data <- as.data.frame(data, arg, ...)
   new_tfd(arg, evaluations, regular = (length(arg) == 1),
-    domain = domain, evaluator = substitute(evaluator), 
+    domain = domain, evaluator = evaluator, 
     signif = signif)
 }
 

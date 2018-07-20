@@ -62,9 +62,10 @@ See \code{\link[memoise:forget]{memoise::forget()}}. Defaults to \code{FALSE}.}
 
 \item{x}{an \code{tf} object}
 
-\item{value}{\strong{for \code{evaluator<-}:} name of a function that can be used to interpolate an \code{tfd}. Needs to
-accept vector arguments \code{x}, \code{arg}, \code{evaluations} and return
-evaluations of the function defined by \code{arg}, \code{evaluations} at \code{x}
+\item{value}{\strong{for \code{evaluator<-}:} (bare or quoted) name of a function that
+can be used to interpolate an \code{tfd}. Needs to accept vector arguments \code{x},
+\code{arg}, \code{evaluations} and return evaluations of the function defined by
+\code{arg}, \code{evaluations} at \code{x}
 \strong{for \code{arg<-}:} a (list of) new \code{arg}-values}
 
 \item{object}{as usual}

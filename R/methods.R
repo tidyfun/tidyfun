@@ -71,21 +71,22 @@ basis <- function(f) {
 }
 
 #' @rdname tfmethods
-#' @param value **for `evaluator<-`:** name of a function that can be used to interpolate an `tfd`. Needs to
-#'   accept vector arguments `x`, `arg`, `evaluations` and return
-#'   evaluations of the function defined by `arg`, `evaluations` at `x`
+#' @param value **for `evaluator<-`:** (bare or quoted) name of a function that
+#'   can be used to interpolate an `tfd`. Needs to accept vector arguments `x`,
+#'   `arg`, `evaluations` and return evaluations of the function defined by
+#'   `arg`, `evaluations` at `x`
 #'   **for `arg<-`:** a (list of) new `arg`-values
 #' @export
 `evaluator<-` <- function(x, value) {
+  value <- if (is.function(value)) {
+    deparse(substitute(value))
+  } else quo_name(enexpr(value))
   stopifnot(is_tfd(x))
-  evaluator <- 
-    if (is.character(value))  get(value, mode = "function") else value
-  stopifnot(inherits(x, "tfd"), is.function(evaluator))
+  evaluator <- get(value, mode = "function", envir = parent.frame())
+  stopifnot(inherits(x, "tfd"))
   assert_set_equal(names(formals(evaluator)), 
     c("x", "arg", "evaluations")) 
-  attr(x, "evaluator_name") <- if (is.character(value)) {
-     value 
-    }  else deparse(substitute(value))
+  attr(x, "evaluator_name") <- value
   attr(x, "evaluator") <- memoise(evaluator)
   x
 }

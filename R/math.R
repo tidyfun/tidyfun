@@ -27,7 +27,7 @@ summarize_tf <- function(..., op = NULL, eval = FALSE) {
     domain = list(domain(funs)), 
     signif = attr(funs, "signif_arg"))
   if (eval) {
-    return(do.call(tfd, c(args, evaluator = as.name(attr(funs, "evaluator_name")))))
+    return(do.call(tfd, c(args, evaluator = attr(funs, "evaluator_name"))))
   } else {
     return(do.call(tfb, c(args, penalized = FALSE, attr(funs, "basis_args"))))
   }
