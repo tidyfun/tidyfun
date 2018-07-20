@@ -31,14 +31,26 @@ na_to_0 <- function(x) {
   x
 }
 
+#' @importFrom stringr str_extract
 find_arg <- function(data, arg) {
   if (is.null(arg)) {
-    suppressWarnings(arg <- as.numeric(dimnames(data)[[2]]))
+    names <- dimnames(data)[[2]]
+    suppressWarnings(arg <- as.numeric(names))
     if (is.null(arg) | any(is.na(arg))) {
-      message("Column names of <data> not suitable as arg.")
+      #extract number-strings
+      # will interpret separating-dashes as minus-signs, so functions may run 
+      # backwards.
+      # regex adapted from https://www.regular-expressions.info/floatingpoint.html
+      arg <- str_extract(names,
+        "[-+]?(0|(0\\.[0-9]+)|([1-9][0-9]*\\.?[0-9]*))([eE][-+]?[0-9]+)?$")
+      suppressWarnings(arg <- as.numeric(arg))
+      if (length(unique(arg))  != dim(data)[2]) arg <- NULL
+    }
+    if (is.null(arg) | any(is.na(arg))) {
+      message("Column names not suitable as arg. Using 1:ncol(data).")
       arg <- numeric(0)
     }
-  } 
+  }
   if (!length(arg)) arg <- seq_len(dim(data)[2])
   stopifnot(length(arg)  == dim(data)[2], 
     is.numeric(arg), all(!is.na(arg)))
