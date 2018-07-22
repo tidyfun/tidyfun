@@ -46,8 +46,7 @@
 #'   geom_lasagna(order_by = function(f) f[1])  + facet_wrap(~ col)   
 #' @name ggtf
 NULL
-
-is.finite.tfd <- function(x) map(evaluations(x), ~ all(is.finite(x)))
+is.finite.tf <- function(x) map(evaluations(x), ~ all(is.finite(x)))
 scale_type.tf <- function(x) "identity"
 
 #' @export
@@ -57,18 +56,17 @@ scale_type.tf <- function(x) "identity"
 #' @format NULL
 StatTf <- ggproto("StatTf", Stat,
   required_aes = "tf",
-  default_aes = aes(x = stat(.arg), y = stat(.value), group = stat(.id), 
-    order = NULL),
+  default_aes = aes(x = stat(.arg), y = stat(.value), group = stat(.id)),
   setup_params = function(data, params) {
-    if (!is.null(params$arg))
-      return(params)
-    params$arg <- arg(pull(data, tf))
+    if (is.null(params$arg))
+      params$arg <- list(arg(pull(data, tf)))
     if (!is.null(params$order_by)) 
       stopifnot(is.function(params$order_by))
     params
   },
   compute_layer = function(self, data, params, layout) {
     stopifnot(is_tf(pull(data, tf)))
+    browser()
     tf_eval <- evaluate(object = data, arg = params$arg, tf) %>%
       select(-group) %>% 
       unnest(.id = ".id") %>% 
@@ -99,7 +97,6 @@ StatTf <- ggproto("StatTf", Stat,
   # need this so arg, order_by gets recognized as valid parameters
   # because layer() only checks compute_panel & compute_group
   compute_panel = function(self, data, scales, arg, order_by) {
-    browser()
     Stat$compute_panel(self, data, scales)
   }  
 )
@@ -171,10 +168,3 @@ geom_lasagna <- function(mapping = list(),
       order_by = order_by)
   ) 
 }
-
-
-
-
-   
-   
-  
