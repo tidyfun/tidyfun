@@ -87,11 +87,11 @@ evaluate.data.frame <- function(object, arg, ...) {
   }
   if (!missing(arg)) {
     arg <- ensure_list(arg)
-    if (length(arg) == 1) {
+    if (length(arg) == 1 & length(tf_cols) > 1) {
       arg <- replicate(length(tf_cols), arg, simplify = FALSE)
     }  
   } else {
-    arg <- map(object[tf_cols], ~tidyfun::arg(.))
+    arg <- map(object[tf_cols], ~ ensure_list(tidyfun::arg(.)))
   }
   stopifnot(length(arg) == length(tf_cols))
   names(arg) <- tf_cols
