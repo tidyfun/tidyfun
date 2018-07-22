@@ -139,7 +139,6 @@ tf_nest <- function(data, ..., .id = "id", .arg = "arg") {
 #' Turn data frames with `tf`-objects / list columns into "long" tables.
 #'
 #' Similar in spirit to [tidyr::unnest()], the reverse of `tf_nest`.
-#' Note 
 #'
 #' @param data a data frame
 #' @param .arg optional values for the `arg` argument of [evaluate.data.frame()]
@@ -148,6 +147,7 @@ tf_nest <- function(data, ..., .id = "id", .arg = "arg") {
 #' @return a "long" data frame with 
 #' @export
 #' @seealso tf_gather() tf_unnest() evaluate.data.frame
+#' @importFrom digest digest
 tf_unnest <- function(data, ..., .arg, .drop = NA, .id = "id", .sep = "_", 
     .preserve = NULL) {
   preserve <- unname(vars_select(names(data), !!!enquo(.preserve)))
@@ -156,36 +156,33 @@ tf_unnest <- function(data, ..., .arg, .drop = NA, .id = "id", .sep = "_",
   # don't unnest unevaluated tf-columns:
   preserve <- unique(c(preserve, names(ret)[map_lgl(ret, is_tf)]))
   ret <- unnest(ret, .drop = .drop, .id = .id, .sep = .sep, .preserve = preserve)
-  arg_merge <- id_merge <- FALSE
-  # drop duplicated arg columns if possible: 
+  # drop duplicated arg/id columns if possible: 
   arg_pattern <- paste0(.sep, "arg$")
-  same_arg <- select(ret, matches(!!!arg_pattern)) %>% as.matrix %>% t %>% 
-    duplicated %>% tail(-1) %>% all
-  if (same_arg) {
-    arg_merge  <- length(vars_select(names(ret), matches(!!!arg_pattern))) > 1 &
-      !("arg" %in% names(ret))
-    if (arg_merge) {
-      new_arg <- select(ret, matches(!!!arg_pattern)) %>% names %>% head(1)
-      ret <- rename(ret, arg = !!new_arg) %>% select(-matches(!!!arg_pattern))
-    }  
-  }
-  # drop duplicated id columns if possible: 
+  same_arg <- select(ret, c(matches("arg"), matches(!!!arg_pattern))) %>% 
+    summarize_all(digest::digest) %>% t %>% duplicated %>%
+    tail(-1) %>% row.names
   id_pattern <- paste0(.sep, "id$")
-  same_id <- select(ret, matches(!!!id_pattern)) %>% as.matrix %>% t %>% 
-    duplicated %>% tail(-1) %>% all
-  if (same_id) {
-    id_merge  <- length(vars_select(names(ret), matches(!!!id_pattern))) > 1 &
-      !("id" %in% names(ret))
-    if (id_merge) {
-      new_id <- select(ret, matches(!!!id_pattern)) %>% names %>% head(1)
-      ret <- rename(ret, id = !!new_id) %>% select(-matches(!!!id_pattern))
-    }   
+  same_id <- select(ret, c(matches("id"), matches(!!!id_pattern))) %>%
+    summarize_all(digest::digest) %>% t %>% duplicated %>%
+    tail(-1) %>% row.names
+  if (length(same_arg)) ret <- ret %>% select(- !!same_arg)
+  if (length(same_id)) ret <- ret %>% select(- !!same_id)
+  if (length(c(same_arg, same_id))) {
+    message("Duplicate columns ", paste(same_arg, collapse = ", "), " ", 
+      paste(same_id, collapse = ", "),
+      " created by unnesting were dropped.")
   }
-  if (id_merge | arg_merge) {
-    message("Removing duplicate columns of ", 
-      ifelse(id_merge, "ids", ""),
-      ifelse(id_merge & arg_merge, ", ", ""),
-      ifelse(arg_merge, "arg-values", ""))
+  one_arg_left <- length(vars_select(names(ret), matches(!!!arg_pattern))) == 1
+  if (!("arg" %in% names(ret)) & one_arg_left) {
+    new_arg <- select(ret, matches(!!!arg_pattern)) %>% names
+    ret <- rename(ret, arg = !!new_arg)
+    message("Renamed ", sQuote(new_arg), " to 'arg'")
+  }
+  one_id_left <- length(vars_select(names(ret), matches(!!!id_pattern))) == 1
+  if (!("id" %in% names(ret)) & one_id_left) {
+    new_id <- select(ret, matches(!!!id_pattern)) %>% names
+    ret <- rename(ret, id = !!new_id)
+    message("Renamed ", sQuote(new_id), " to 'arg'")
   }  
   ret
 } 

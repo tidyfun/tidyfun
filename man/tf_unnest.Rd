@@ -4,7 +4,7 @@
 \alias{tf_unnest}
 \title{Turn data frames with \code{tf}-objects / list columns into "long" tables.}
 \usage{
-tf_unnest(data, ..., .arg, .drop = NA, .id = NULL, .sep = "_",
+tf_unnest(data, ..., .arg, .drop = NA, .id = "id", .sep = "_",
   .preserve = NULL)
 }
 \arguments{
@@ -39,7 +39,6 @@ a "long" data frame with
 }
 \description{
 Similar in spirit to \code{\link[tidyr:unnest]{tidyr::unnest()}}, the reverse of \code{tf_nest}.
-Note
 }
 \seealso{
 tf_gather() tf_unnest() evaluate.data.frame

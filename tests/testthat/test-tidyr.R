@@ -15,7 +15,7 @@ test_that("tf_gather works", {
   expect_equal(tf_gather(d2, -1, key = "nuhnuh")$nuhnuh, tf_gather(d2, -1)$cca)
   
   expect_equal(tf_gather(d2, -id)$cca, tf_gather(d2, -1)$cca)
-  expect_equal(tf_gather(d2, matches("cca"))$cca, tf_gather(d2, -1)$cca)
+  expect_equal(tf_gather(d2, starts_with("cca"))$cca, tf_gather(d2, -1)$cca)
   
   expect_equal(
     attr(tf_gather(d1, evaluator = approx_spline)$cca, "evaluator_name"), 
@@ -42,7 +42,8 @@ test_that("tf_unnest works", {
   f2 <- rgp(3, 11L)
   data <- inner_join(as.data.frame(f1), as.data.frame(f2), by = c("id", "arg"))
   tfdata <- tf_nest(data)
-  expect_true(all(tf_unnest(tfdata) == data))
-  expect_message(tf_unnest(tfdata), "Removing duplicate")
+  expect_true(all(tf_unnest(tfdata)[] == data))
+  expect_message(tf_unnest(tfdata), "Duplicate columns")
+  expect_message(tf_unnest(tfdata), "Renamed")
   expect_is(tf_unnest(tfdata, value.x, .preserve = value.y)$value.y, "tfd")
 })
