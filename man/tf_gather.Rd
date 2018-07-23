@@ -42,7 +42,7 @@ original columns in a very long "key"-column -- instead it creates a \code{tfd}-
 containing the functional measurements of the columns given in \code{...}.
 }
 \examples{
-(d <- as.tbl(data.frame(refund::DTI[1:5,]$cca[, 1:10])))
+(d <- dplyr::as.tbl(data.frame(refund::DTI[1:5,]$cca[, 1:10])))
 tf_gather(d)
 tf_gather(d, key = "cca_tf")
 tf_gather(d, arg = seq(0, 1, l = 10))$cca

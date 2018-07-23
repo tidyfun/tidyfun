@@ -62,6 +62,7 @@
     ret <- unclass(x)[i]
     attributes(ret) <- append(attributes(x)[names(attributes(x)) != "names"], 
       list(names = names(ret)))
+    attr(ret, "id") <- names(ret)
     return(ret)
   } 
   if (matrix & is.list(j)) {
@@ -149,5 +150,6 @@
   }
   attributes(ret) <- attr_x
   if (!is.null(names(ret))) names(ret)[is.na(names(ret))] <- ""
+  attr(ret, "id") <- names(ret)
   ret
 }

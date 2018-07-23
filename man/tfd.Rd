@@ -54,7 +54,7 @@ turn an irregular \code{tfd} into a regular one, see examples.}
 \item{optional}{not used}
 
 \item{arg}{\code{numeric}, or list of \code{numeric}s. The evaluation grid. See Details.
-For the \code{data.frame}-methods: the name/number of the column defining the evaluation grid.}
+For the \code{data.frame}-method: the name/number of the column defining the evaluation grid.}
 
 \item{interpolate}{should functions be evaluated (i.e., inter-/extrapolated)
 for values in \code{arg} for which no original data is available? Only relevant for
@@ -74,6 +74,9 @@ an \code{tfd}-object (or a \code{data.frame}/\code{matrix} for the conversion fu
 \description{
 Various constructor and conversion methods.
 
+\code{tfd.data.frame} uses the first 3 columns of <data> for function information by default:
+(\code{ìd}, \code{arg}, \code{value})
+
 \code{tfd.list} accepts a list of vectors of identical lengths
 containing evaluations or a list of 2-column matrices/data.frames with
 \code{arg} in the first and evaluations in the second column
@@ -82,7 +85,7 @@ containing evaluations or a list of 2-column matrices/data.frames with
 \strong{\code{evaluator}}: must be the (quoted or bare) name of a
 \code{function(x, arg, evaluations)} that returns
 the functions' (approximated/interpolated) values at locations \code{x} based on
-the \code{evaluations} available at locations \code{arg}.
+the \code{evaluations} available at locations \code{arg}.\cr
 Available \code{evaluator}-functions:
 \itemize{
 \item \code{approx_linear} for linear interpolation without extrapolation (i.e.,
@@ -95,11 +98,10 @@ with \code{na.rm = FALSE}),
 \code{\link[zoo:na.locf]{zoo::na.locf()}} with \code{na.rm = FALSE} and
 \item \code{approx_nocb} for "next observation carried backward" (i.e.,
 \code{\link[zoo:na.locf]{zoo::na.locf()}} with \code{na.rm = FALSE, fromLast = TRUE}).
-}
-
 See \code{tidyfun:::zoo_wrapper} and \code{tidyfun:::approx_linear}, which is simply
 \code{zoo_wrapper(zoo::na.approx, na.rm = FALSE)}, for examples of implementations of
 this.
+}
 
 \strong{\code{signif}}: \code{arg} that are equivalent up to this significant digit are
 treated as identical. E.g., if an evaluation of f(t) is available at t=1 and a function

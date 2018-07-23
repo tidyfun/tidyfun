@@ -112,6 +112,8 @@ mgcv_tfb <- function(data, regular, domain = NULL,
   names(coef_list) <- levels(data$id)
   basis_constructor <- smooth_spec_wrapper(spec_object)
   structure(coef_list, 
+    # copy names into another attribute so they don't get stripped by ggplot:
+    id = names(coef_list),
     domain = domain,
     basis = memoise(basis_constructor),
     basis_label = deparse(s_call, width.cutoff = 60)[1],
@@ -249,7 +251,7 @@ tfb.tfd <- function(data, arg = NULL,
   data <- as.data.frame(data, arg)
   ret <- tfb(data, basis = basis, domain = domain,   
     penalized = penalized, signif = signif, ...)
-  names(ret) <- names_data
+  attr(ret, "id") <- names(ret) <- names_data
   ret
 }
 
@@ -265,6 +267,6 @@ tfb.tfb <- function(data, arg = NULL,
   data <- as.data.frame(data, arg = arg)
   ret <- do.call("tfb", c(list(data), basis = basis, domain = domain,
     penalized = penalized, signif = signif, s_args))
-  names(ret) <- names_data
+  attr(ret, "id") <- names(ret) <- names_data
   ret
 }

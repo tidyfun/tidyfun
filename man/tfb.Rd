@@ -60,7 +60,7 @@ basis should have probably needs to be set manually.\cr
 \item{optional}{not used}
 
 \item{arg}{\code{numeric}, or list of \code{numeric}s. The evaluation grid. See Details.
-For the \code{data.frame}-methods: the name/number of the column defining the evaluation grid.}
+For the \code{data.frame}-method: the name/number of the column defining the evaluation grid.}
 
 \item{id}{The name/number of the column defining which data belong to which function.}
 

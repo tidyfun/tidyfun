@@ -22,6 +22,8 @@ new_tfd <- function(arg, datalist, regular, domain, evaluator, signif = 4) {
     class <- "tfd_reg"
   }
   ret <- structure(datalist, 
+    # copy names into another attribute so they don't get stripped by ggplot:
+    id = names(datalist),
     arg =  arg,
     domain = domain,
     evaluator = memoise(evaluator_f),
@@ -36,14 +38,13 @@ new_tfd <- function(arg, datalist, regular, domain, evaluator, signif = 4) {
 
 #' Constructors for functional data evaluated on grids of argument values
 #' 
-#' Various constructor and conversion methods.
-#' 
+#' Various constructor and conversion methods. 
+#'
 #' **`evaluator`**: must be the (quoted or bare) name of a 
 #' `function(x, arg, evaluations)` that returns
 #' the functions' (approximated/interpolated) values at locations `x` based on
-#' the `evaluations` available at locations `arg`. 
-#' Available `evaluator`-functions: 
-#' 
+#' the `evaluations` available at locations `arg`.\cr
+#' Available `evaluator`-functions:  
 #' - `approx_linear` for linear interpolation without extrapolation (i.e.,
 #' [zoo::na.approx()] with `na.rm = FALSE`)  -- this is the default,
 #' - `approx_spline` for cubic spline interpolation, (i.e., [zoo::na.spline()]
@@ -53,14 +54,12 @@ new_tfd <- function(arg, datalist, regular, domain, evaluator, signif = 4) {
 #' - `approx_locf` for "last observation carried forward"  (i.e.,
 #' [zoo::na.locf()] with `na.rm = FALSE` and
 #' - `approx_nocb` for "next observation carried backward" (i.e.,
-#' [zoo::na.locf()] with `na.rm = FALSE, fromLast = TRUE`).
-#' 
+#' [zoo::na.locf()] with `na.rm = FALSE, fromLast = TRUE`).  
 #' See `tidyfun:::zoo_wrapper` and `tidyfun:::approx_linear`, which is simply
 #' `zoo_wrapper(zoo::na.approx, na.rm = FALSE)`, for examples of implementations of
-#' this. 
+#' this.  
 #' 
-#' 
-#' **`signif`**: `arg` that are equivalent up to this significant digit are 
+#' **`signif`**: `arg`-values that are equivalent up to this significant digit are 
 #' treated as identical. E.g., if an evaluation of f(t) is available at t=1 and a function
 #' value is requested at t = 1.001, f(1) will be returned if `signif` < 4.
 #' 
@@ -74,10 +73,10 @@ tfd <- function(data, ...) UseMethod("tfd")
 #' @export
 #' @rdname tfd
 #' @param arg `numeric`, or list of `numeric`s. The evaluation grid. See Details.
-#'  For the `data.frame`-methods: the name/number of the column defining the evaluation grid.
+#'  For the `data.frame`-method: the name/number of the column defining the evaluation grid.
 #' @param domain range of the `arg`. 
 #' @param evaluator a function accepting arguments `x, arg, evaluations`. See details.
-#' @param signif significant digits of the "resolution" of the evaluation grid.  See details. 
+#' @param signif significant digits of the "resolution" of the evaluation grid.  See details.
 tfd.matrix <- function(data, arg = NULL, domain = NULL, 
     evaluator = approx_linear, signif = 4, ...) {
   stopifnot(is.numeric(data))
@@ -102,7 +101,8 @@ tfd.numeric <- function(data, arg = NULL,
   return(do.call(tfd, args))
 }
 
-# default: use first 3 columns of <data> for function information
+#' @description `tfd.data.frame` uses the first 3 columns of <data> for function information by default:
+#' (`ìd`, `arg`, `value`)
 #' @export
 #' @rdname tfd
 #' @param id The name/number of the column defining which data belong to which function.
@@ -169,8 +169,8 @@ tfd.tf <- function(data, arg = NULL, domain = NULL,
   evaluator <- quo_name(enexpr(evaluator))
   arg <- ensure_list(arg %||% arg(data))
   evaluations <- evaluate(data, arg)
+  names(evaluations) <- names(data)
   domain <- domain %||% domain(data)
-  data <- as.data.frame(data, arg, ...)
   new_tfd(arg, evaluations, regular = (length(arg) == 1),
     domain = domain, evaluator = evaluator, 
     signif = signif)

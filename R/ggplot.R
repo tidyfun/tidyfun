@@ -56,7 +56,8 @@ scale_type.tf <- function(x) "identity"
 #' @format NULL
 StatTf <- ggproto("StatTf", Stat,
   required_aes = "tf",
-  default_aes = aes(x = stat(.arg), y = stat(.value), group = stat(.id)),
+  default_aes = aes(x = stat(.arg), y = stat(.value), group = stat(.id), 
+    label = names(tf)),
   setup_params = function(data, params) {
     if (is.null(params$arg))
       params$arg <- list(arg(pull(data, tf)))
@@ -66,11 +67,16 @@ StatTf <- ggproto("StatTf", Stat,
   },
   compute_layer = function(self, data, params, layout) {
     stopifnot(is_tf(pull(data, tf)))
-    browser()
-    tf_eval <- evaluate(object = data, arg = params$arg, tf) %>%
-      select(-group) %>% 
-      unnest(.id = ".id") %>% 
-      rename(.arg = arg, .value = value) 
+    # NASTY HACK:
+    # Layer$compute_aesthetics UNNAMES all data columns,
+    # so by the time we get here data is stripped of identifiers for the tf
+    # we need for lasagna labels:
+    # https://github.com/tidyverse/ggplot2/blob/17b45f906c3a55d187915f4f3010836a804051ae/R/layer.r#L237
+    # Workaround: restore names from "id"-attribute created for this purpose...
+    names(data[["tf"]]) <- attr(data[["tf"]], "id")
+    # FIXME: this is still dangerous if id, arg, value are also present in the data!
+    tf_eval <- suppressMessages(tf_unnest(data, tf, .arg = params$arg)) %>%
+      rename(.id = id, .arg = arg, .value = tf_value)
     if (is.null(data$order) & is.null(params$order_by)) {
       ordered_id <- tf_eval %>% pull(.id) %>% unique
     } 
