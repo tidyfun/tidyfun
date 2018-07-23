@@ -17,7 +17,8 @@ evaluate.default <- function(object, arg, ...) .NotYetImplemented()
 #' @export
 #' @rdname evaluate
 evaluate.tfd <- function(object, arg, ...) {
-  if (missing(arg) | is.null(arg)) arg <- tidyfun::arg(object)
+  if (missing(arg)) arg <- tidyfun::arg(object)
+  if (is.null(arg)) arg <- tidyfun::arg(object)
   arg <- ensure_list(arg)
   assert_arg(arg, object)
   pmap(list(arg, ensure_list(arg(object)), evaluations(object)), 
@@ -33,7 +34,8 @@ evaluate_tfd_once <- function(x, arg, evaluations, evaluator) {
 #' @export
 #' @rdname evaluate
 evaluate.tfb <- function(object, arg, ...) {
-  if (missing(arg) | is.null(arg)) arg <- tidyfun::arg(object)
+  if (missing(arg)) arg <- tidyfun::arg(object)
+  if (is.null(arg)) arg <- tidyfun::arg(object)
   arg <- ensure_list(arg)
   assert_arg(arg, object)
   if (length(arg) == 1) {

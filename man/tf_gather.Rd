@@ -2,7 +2,7 @@
 % Please edit documentation in R/tidyr.R
 \name{tf_gather}
 \alias{tf_gather}
-\title{Gather all columns representing functional measurements into a \code{tf}-object}
+\title{Gather all columns representing functional measurements into a \code{tfd}-object}
 \usage{
 tf_gather(data, ..., key = ".tfd", arg = NULL, domain = NULL,
   evaluator = approx_linear, signif = 4)

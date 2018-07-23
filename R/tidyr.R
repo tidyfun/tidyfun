@@ -1,4 +1,4 @@
-#' Gather all columns representing functional measurements into a `tf`-object
+#' Gather all columns representing functional measurements into a `tfd`-object
 #' 
 #' Similar in spirit to [tidyr::gather()], but does NOT put the values in the 
 #' gathered columns into one very long "value"-column while labeling the different 
@@ -77,6 +77,68 @@ tf_gather <- function(data, ..., key = ".tfd", arg = NULL, domain = NULL,
           signif = signif)) 
 }
 
+
+#' Spread a `tf`-column into many columns representing the 
+#' function evaluations.
+#' 
+#' Similar in spirit to [tidyr::spread()], but does NOT shorten, 
+#' just widens the data frame  -- a `tf`-column is spread out into many columns 
+#' containing the functional measurements. 
+#' 
+#' @param data a data frame with at least one `tf`-column
+#' @param value the name of the `tf`-column to 'spread'/evaluate. 
+#'   You can supply bare variable names etc., see the [dplyr::select()] 
+#'   documentation. Also works without this if there's only one `tf` in `data`, 
+#'   see examples.
+#' @param arg (Semi-)optional. A vector of `arg`-values on which to evaluate the 
+#'   functions. If not provided, uses the default `arg`s. Needs to be
+#'   specified for `f_irreg`.
+#' @param sep separating character used to create column names for the new columns, 
+#'   defaults to `"_"` for column names "<name of the `tf`>_<`arg`-value>". 
+#'   Set to NULL to get column names that only contain the `arg`-value.
+#' @param interpolate `interpolate`-argument for evaluating the functional data.
+#'   Defaults to TRUE, i.e., `tfd`s are inter/extrapolated on unobserved `arg`-values.
+#' @importFrom tidyselect vars_pull
+#' @export
+#' @examples
+#' d <- data_frame(g = 1:3)
+#' d$f <- rgp(3, 11L)
+#' tf_spread(d, f)
+#' tf_spread(d, -g)
+#' tf_spread(d)
+tf_spread <- function(data, value, arg, sep="_", interpolate = TRUE) {
+  if (missing(value)) {
+    tf_cols <- which(map_lgl(data, is_tf))
+    if (length(tf_cols) == 0) {
+      warning("<value>-argument ", sQuote(tf_var), 
+        " is not a column of class 'tf'. Nothing's happening here.")
+      return(data)
+    }
+    if (length(tf_cols) == 1) {
+      value <- tf_cols
+    } else {
+      stop("More than one `tf` found, specify which one to spread in <value>.")  
+    }  
+  }
+  tf_var <- tidyselect::vars_pull(names(data), !!enquo(value))
+  tf <-  data[[tf_var]]
+  if (!is_tf(tf)) {
+    warning("<value>-argument ", sQuote(tf_var), 
+      " is not a column of class 'tf'. Nothing's happening here.")
+    return(data)
+  }
+  if (missing(arg)) {
+    if (is_irreg(tf)) 
+      stop("need explicit <arg> for irregular ", sQuote(tf_var), ".")
+    arg <- tidyfun::arg(tf)
+  }
+  tf_eval <- tf[, arg, matrix = TRUE, interpolate = interpolate] %>%
+    as.data.frame
+  if (!is.null(sep)) colnames(tf_eval) <-  paste0(tf_var, sep, arg)
+  data %>% select(-!!tf_var) %>% bind_cols(tf_eval)
+}
+
+
 # ------------------------------------------------------------------------------
 
 #' Turn "long" tables into tidy data frames with `tf`-objects
@@ -93,7 +155,6 @@ tf_gather <- function(data, ..., key = ".tfd", arg = NULL, domain = NULL,
 #'   `.id` and `.arg` columns are selected. You can supply bare variable names, 
 #'   select all variables between `x` and `z` with `x:z`, exclude `y` with `-y`. 
 #'   For more options, see the [dplyr::select()] documentation. 
-#'   See also the section on selection rules below.
 #' @param .id the (bare or quoted) name of the column defining the different observations
 #' @param .arg the (bare or quoted) name of the column defining the `arg`-values of the observed functions
 #' @return a data frame with (at least) `.id` and `tfd` columns

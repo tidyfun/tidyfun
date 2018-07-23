@@ -22,6 +22,29 @@ test_that("tf_gather works", {
     "approx_spline")
 })
 
+test_that("tf_spread works", {
+  d <- data_frame(g = 1:3)
+  d$f <- rgp(3, 11L)
+  expect_equivalent(tf_spread(d, f, sep = NULL)[,-1], 
+    as.data.frame(as.matrix(d$f))) 
+  expect_equivalent(tf_spread(d, f), tf_spread(d, -g))
+  expect_equivalent(tf_spread(d, f), tf_spread(d))
+  expect_equivalent(tf_spread(d, f, arg = seq(0, 1, l = 20), sep = NULL)[,-1], 
+    as.data.frame(d$f[, seq(0, 1, l = 20), interpolate = TRUE])) 
+  d$fb <- tfb(rgp(3, 11L))
+  expect_error(tf_spread(d), "More than one")
+  expect_equivalent(tf_spread(d, fb, sep = NULL)[,-(1:2)], 
+    as.data.frame(as.matrix(d$fb)))
+  d$fi <- jiggle(rgp(3, 11L))
+  expect_error(tf_spread(d, fi), "need explicit <arg>")
+  expect_equivalent(
+    tf_spread(d, fi, arg = seq(0, 1, l = 20), sep = NULL)[,-(1:3)], 
+    as.data.frame(as.matrix(d$fi, arg = seq(0, 1, l = 20), interpolate = TRUE)))
+})
+
+
+
+
 test_that("tf_nest works", {
   f1 <- rgp(3, 11L)
   f2 <- rgp(3, 11L)

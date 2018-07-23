@@ -103,7 +103,7 @@ See \code{tidyfun:::zoo_wrapper} and \code{tidyfun:::approx_linear}, which is si
 this.
 }
 
-\strong{\code{signif}}: \code{arg} that are equivalent up to this significant digit are
+\strong{\code{signif}}: \code{arg}-values that are equivalent up to this significant digit are
 treated as identical. E.g., if an evaluation of f(t) is available at t=1 and a function
 value is requested at t = 1.001, f(1) will be returned if \code{signif} < 4.
 }
