@@ -238,13 +238,13 @@ tf_unnest <- function(data, ..., .arg, .drop = NA, .id = "id", .sep = "_",
   if (!("arg" %in% names(ret)) & one_arg_left) {
     new_arg <- select(ret, matches(!!!arg_pattern)) %>% names
     ret <- rename(ret, arg = !!new_arg)
-    message("Renamed ", sQuote(new_arg), " to 'arg'")
+    message("Renamed ", sQuote(new_arg), " to 'arg'.")
   }
   one_id_left <- length(vars_select(names(ret), matches(!!!id_pattern))) == 1
   if (!("id" %in% names(ret)) & one_id_left) {
     new_id <- select(ret, matches(!!!id_pattern)) %>% names
     ret <- rename(ret, id = !!new_id)
-    message("Renamed ", sQuote(new_id), " to 'arg'")
+    message("Renamed ", sQuote(new_id), " to 'id'.")
   }  
   ret
 } 

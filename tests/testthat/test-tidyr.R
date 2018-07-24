@@ -9,6 +9,7 @@ test_that("tf_gather works", {
   expect_is(tf_gather(d1)$cca, "tfd")
   expect_message(tf_gather(d1)$cca, "cca")
   expect_equal(tf_gather(d1)$cca, cca)
+  expect_equivalent(tf_gather(d1)$cca, tf_gather(data[,1:8], cca)$cca)
   
   expect_equal(tf_gather(d2, -1)$cca, cca)
   expect_equal(tf_gather(d2, -1)$id, d2$id)

@@ -108,6 +108,14 @@ adjust_resolution <- function(arg, f) {
   }  
 }
 
+is_equidist <- function(f) {
+  if (is_irreg(f)) return(FALSE)
+  n_diffs <- map_lgl(ensure_list(arg(f)), 
+    ~ round(diff(.x), attr(f, "signif")) %>% duplicated %>% tail(-1) %>% all)
+  all(n_diffs)
+}
+
+
 compare_tf_attribs <- function(e1, e2, ignore = "names") {
 # TODO: better way to check evaluator/basis functions?
   a1 <- attributes(e1)

@@ -1,4 +1,4 @@
-context("evaluator")
+context("evaluate")
 
 grid <- round(seq(0, 1, l = 21), 3)
 lin <- 2*grid
@@ -68,4 +68,10 @@ test_that("memoisation works", {
   t1 <- system.time(evaluate(f_lin, new_grid))[3]
   t2 <- system.time(evaluate(f_lin, new_grid))[3]
   expect_true(t1 > 10 * t2)
+})
+
+test_that("mutiple arg-vectors work for tfb", {
+  fb <- tfb(rgp(3), verbose = FALSE)
+  expect_equal(unlist(evaluate(fb, as.list(c(0,.5, 1)))),
+    unlist(c(evaluate(fb[1], 0), evaluate(fb[2], 0.5), evaluate(fb[3], 1))))
 })
