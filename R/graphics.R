@@ -28,7 +28,7 @@ prep_plotting_arg <- function(f, n_grid) {
 #' @param points should the original evaluation points be marked by points?
 #'   Defaults to `TRUE` for irregular `tfd` and FALSE for all others
 #' @param type "spaghetti": line plots, "lasagna": heat maps.
-#' @param alpha [alpha-value](grDevices::rgb()) for noodle transparency. 
+#' @param alpha alpha-value (see[grDevices::rgb()]) for noodle transparency. 
 #'   Defaults to 2/(no. of observations). Lower is more transparent.
 #' @return for `funplot`: the `ggplot`-object for further modification. For the 
 #'  others: the plotted `tf`-object, invisibly.
