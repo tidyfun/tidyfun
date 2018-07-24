@@ -137,3 +137,28 @@ rev.tf <- function(x) {
   x[rev(seq_along(x))]
 }
 
+#-------------------------------------------------------------------------------
+
+#' @rdname tfmethods
+is.na.tf <- function(x) {
+  map_lgl(unclass(x), ~ any(is.na(.x)))
+}
+
+#-------------------------------------------------------------------------------
+
+#' @rdname tfmethods
+#' @export
+is_tf <- function(x) "tf" %in% class(x)
+
+#' @rdname tfmethods
+#' @export
+is_irreg <- function(x) "tfd_irreg" %in% class(x)
+
+#' @rdname tfmethods
+#' @export
+is_tfd <- function(x) "tfd" %in% class(x)
+
+#' @rdname tfmethods
+#' @export
+is_tfb <- function(x) "tfb" %in% class(x)
+
