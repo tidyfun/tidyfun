@@ -133,7 +133,9 @@ tfd.list <- function(data, arg = NULL, domain = NULL,
   vectors <- map_lgl(data, ~ is.numeric(.) & !is.array(.)) 
   if (all(vectors)) {
     lengths <- sapply(data, length)
-    if (all(lengths == lengths[1])) {
+    regular <- all(lengths == lengths[1]) & 
+      (is.numeric(arg) || all(duplicated(arg)[-1]))
+    if (regular) {
       data <- do.call(rbind, data)
       #dispatch to matrix method
       args <- list(data, arg = arg, domain = domain,   
@@ -142,7 +144,6 @@ tfd.list <- function(data, arg = NULL, domain = NULL,
     } else {
       stopifnot(!is.null(arg), length(arg) == length(data), 
         all(sapply(arg, length) == lengths))
-      regular <- FALSE
     }
   }
   if (!any(vectors)) {
