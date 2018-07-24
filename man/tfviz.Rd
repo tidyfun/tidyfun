@@ -33,7 +33,7 @@ Defaults to \code{TRUE} for irregular \code{tfd} and FALSE for all others}
 
 \item{type}{"spaghetti": line plots, "lasagna": heat maps.}
 
-\item{alpha}{\href{grDevices::rgb()}{alpha-value} for noodle transparency.
+\item{alpha}{alpha-value (see\code{\link[grDevices:rgb]{grDevices::rgb()}}) for noodle transparency.
 Defaults to 2/(no. of observations). Lower is more transparent.}
 
 \item{x}{an \code{tf} object}

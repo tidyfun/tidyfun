@@ -2,15 +2,22 @@
 % Please edit documentation in R/rng.R
 \name{jiggle}
 \alias{jiggle}
-\title{Make a \code{tfd} function (more) irregular}
+\alias{sparsify}
+\title{Make a \code{tf} (more) irregular}
 \usage{
 jiggle(f, ...)
+
+sparsify(f, dropout = 0.5, ...)
 }
 \arguments{
 \item{f}{a \code{tfd} object}
 
 \item{...}{not used currently}
+
+\item{dropout}{how many values of \code{f} to drop, defaults to 50\%.}
 }
 \description{
-... by moving around its \code{arg}-values.
+Randomly create some irregular functional data from regular ones.\cr
+\strong{jiggle} it by randomly moving around its \code{arg}-values. Only for \code{tfd}.\cr
+\strong{sparsify} it by setting (100*\code{dropout})\% of its values to \code{NA}.
 }

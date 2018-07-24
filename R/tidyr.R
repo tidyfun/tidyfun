@@ -31,7 +31,7 @@
 #' tf_gather(d)
 #' tf_gather(d, key = "cca_tf")
 #' tf_gather(d, arg = seq(0, 1, l = 10))$cca
-#' (d2 <- bind_cols(id = rownames(d), d))
+#' (d2 <- dplyr::bind_cols(id = rownames(d), d))
 #' tf_gather(d2, -id) # tf_gather(d2, matches("cca")); tf_gather(d2, -1); etc
 tf_gather <- function(data, ..., key = ".tfd", arg = NULL, domain = NULL, 
     evaluator = approx_linear, signif = 4) {
@@ -101,7 +101,7 @@ tf_gather <- function(data, ..., key = ".tfd", arg = NULL, domain = NULL,
 #' @importFrom tidyselect vars_pull
 #' @export
 #' @examples
-#' d <- data_frame(g = 1:3)
+#' d <- dplyr::data_frame(g = 1:3)
 #' d$f <- rgp(3, 11L)
 #' tf_spread(d, f)
 #' tf_spread(d, -g)
@@ -209,6 +209,7 @@ tf_nest <- function(data, ..., .id = "id", .arg = "arg") {
 #' @export
 #' @seealso tf_gather() tf_unnest() evaluate.data.frame
 #' @importFrom digest digest
+#' @importFrom utils data tail
 tf_unnest <- function(data, ..., .arg, .drop = NA, .id = "id", .sep = "_", 
     .preserve = NULL) {
   preserve <- unname(vars_select(names(data), !!!enquo(.preserve)))

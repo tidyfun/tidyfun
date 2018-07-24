@@ -32,7 +32,7 @@ just widens the data frame  -- a \code{tf}-column is spread out into many column
 containing the functional measurements.
 }
 \examples{
-d <- data_frame(g = 1:3)
+d <- dplyr::data_frame(g = 1:3)
 d$f <- rgp(3, 11L)
 tf_spread(d, f)
 tf_spread(d, -g)

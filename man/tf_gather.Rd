@@ -46,7 +46,7 @@ containing the functional measurements of the columns given in \code{...}.
 tf_gather(d)
 tf_gather(d, key = "cca_tf")
 tf_gather(d, arg = seq(0, 1, l = 10))$cca
-(d2 <- bind_cols(id = rownames(d), d))
+(d2 <- dplyr::bind_cols(id = rownames(d), d))
 tf_gather(d2, -id) # tf_gather(d2, matches("cca")); tf_gather(d2, -1); etc
 }
 \seealso{
