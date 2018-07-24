@@ -40,6 +40,7 @@ prep_zoom_args <- function(f, begin, end) {
 }
 
 #' @rdname zoom
+#' @export
 zoom.tfd <- function(f, begin = domain(f)[1], end = domain(f)[2], ...) {
   args <- prep_zoom_args(f, begin, end)
   ret <- pmap(list(f[ , arg(f), matrix = FALSE], args$begin, args$end), 
@@ -58,6 +59,7 @@ zoom.tfd <- function(f, begin = domain(f)[1], end = domain(f)[2], ...) {
   ret
 }
 #' @rdname zoom
+#' @export
 zoom.tfb <- function(f, begin = domain(f)[1], end = domain(f)[2], ...) {
   args <- prep_zoom_args(f, begin, end)
   if (!args$regular) {
@@ -73,7 +75,3 @@ zoom.tfb <- function(f, begin = domain(f)[1], end = domain(f)[2], ...) {
   attr(ret, "domain") <- args$dom
   ret
 }
-
-# where: ask about args for which condition is TRUE
-
-# move: change domain of the function 

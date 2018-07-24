@@ -31,6 +31,7 @@ string_rep_tf <- function(f, signif_arg = NULL,
 #' 
 #' @rdname tfdisplay
 #' @param n how many elements of `x` to print out
+#' @export
 print.tf <- function(x, n  = 10, ...) {
   cat(paste0("tf[",length(x),"] on (", domain(x)[1], ",",
     domain(x)[2], ")"))
