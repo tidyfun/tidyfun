@@ -4,7 +4,7 @@ fun_math <- function(x, op){
   ret <- map(evaluations(x), ~ do.call(op, list(x = .x)))
   forget(attr_ret$evaluator)
   if (is_irreg(x)) {
-    ret <- map2(arg(x), ret, ~ list(arg = .x, data = .y))
+    ret <- map2(arg(x), ret, ~ list(arg = .x, value = .y))
   } 
   attributes(ret) <- attr_ret
   ret
@@ -33,6 +33,7 @@ summarize_tf <- function(..., op = NULL, eval = FALSE) {
   }
 }
 #------------------------------------------------------------------------------
+
 #' @include ops.R 
 NULL
 
@@ -73,7 +74,6 @@ NULL
 #' # use ?integrate.tfd for "function-wise" integrals i.e., weighted cumulative sums...
 #' lines(f2)
 #' @export
-#' 
 Math.tfd <- function(x, ...) {
   fun_math(x, .Generic)
 } 
