@@ -224,7 +224,7 @@ tf_unnest <- function(data, ..., .arg, .drop = NA, .id = "id", .sep = "_",
     summarize_all(digest::digest) %>% t %>% duplicated %>%
     tail(-1) %>% row.names
   id_pattern <- paste0(.sep, "id$")
-  same_id <- select(ret, c(matches("id"), matches(!!!id_pattern))) %>%
+  same_id <- select(ret, c(matches("id", ignore.case = FALSE), matches(!!!id_pattern))) %>%
     summarize_all(digest::digest) %>% t %>% duplicated %>%
     tail(-1) %>% row.names
   if (length(same_arg)) ret <- ret %>% select(- !!same_arg)
