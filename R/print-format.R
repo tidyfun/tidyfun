@@ -1,15 +1,26 @@
-string_rep_tf <- function(arg, evaluations, signif_arg = NULL, 
+string_rep_tf <- function(f, signif_arg = NULL, 
     show = 3, digits = NULL, ...) {
   digits_eval <- digits %||% options()$digits
-  digits_arg <- max(digits_eval, signif_arg %||% digits_eval) 
-  show <- min(show, length(arg))
-  str <- paste(
-    paste0("(", format(arg[1:show], digits = digits_arg, trim = TRUE, ...),
-      ",",
-      format(evaluations[1:show], digits = digits_eval, trim = TRUE, ...), ")"), 
-    collapse = ";")
-  if (show < length(arg)) str <- paste0(str, "; ...")
-  str
+  digits_arg <- min(digits_eval, signif_arg %||% digits_eval) 
+  arg_len <- map(ensure_list(arg(f)), length)
+  show <- as.list(pmin(show, unlist(arg_len)))
+  # fix weird dots handling by map/format:
+  nsmall <- list(...)$nsmall %||% 0
+  justify <- list(...)$justified %||% "right"
+  arg_ch <- map2(ensure_list(arg(f)), show,
+    ~ format(x = .x[1:.y], trim = FALSE, digits = digits_arg, 
+      nsmall = nsmall, justify = justify, width = 4, ...))
+  value_ch <- map2(evaluations(f), show,
+    ~ format(x = .x[1:.y],  trim = FALSE, digits = digits_eval, 
+      nsmall = nsmall, justify = justify, width = 4, ...))
+  arg_nchar <- map(arg_ch, ~ nchar(.x)) %>% unlist %>% max
+  value_nchar <- map(value_ch, ~ nchar(.x)) %>% unlist %>% max
+  arg_ch <- map(arg_ch, ~stringr::str_pad(.x, arg_nchar))
+  value_ch <- map(value_ch, ~stringr::str_pad(.x, value_nchar))
+  str <- map2(arg_ch, value_ch, 
+    ~ paste(paste0("(", .x, ",", .y, ")"), collapse = ";"))
+  pmap(list(str, arg_len, show), 
+    ~ ifelse(..2 > ..3, paste0(..1, "; ..."), ..1))
 }
 
 #-------------------------------------------------------------------------------
@@ -70,17 +81,55 @@ print.tfb <- function(x, n = 10, ...) {
   }  
 }
 
-# FIXME: this needs proper width align etc arguments like format.default
 #' @rdname tfdisplay
 #' @inheritParams base::format.default
+#' @param prefix used internally.
 #' @export
-format.tf <- function(x, digits = 2, nsmall = 0, ...){
-  str <- map2_chr(ensure_list(arg(x)), evaluations(x), string_rep_tf, 
-    signif_arg = attr(x, "signif_arg"), 
-    digits = digits, nsmall = nsmall, ... = ...)
-  if (is.null(names(x))) {
-    str
-  } else {
-    map2_chr(names(x)[1:length(str)], str, ~ paste0(.x,": ",.y))
+format.tf <- function(x, digits = 2, nsmall = 0, width = options()$width, 
+    n  = 10, prefix = TRUE, ...) {
+  long <- length(x) > n
+  if (long && width > 0 && width <= 30) 
+    x = head(x, n)
+  str <- string_rep_tf(x, signif_arg = attr(x, "signif_arg"), 
+    digits = digits, nsmall = nsmall, ...)
+  if (prefix) {
+    prefix <- if (!is.null(names(x))) 
+      names(x)[1:length(str)] else paste0("[", 1:length(str), "]")
+    str <- map2(prefix, str, ~ paste0(.x,": ",.y))
   }  
+  unlist(map_if(str, ~ nchar(.x) > width, 
+    ~ paste0(substr(.x, 1, width - 3), "...")))
+}
+
+
+#-------------------------------------------------------------------------------
+
+## tibble methods:
+# adapted from https://github.com/r-spatial/sf/blob/master/R/tidyverse.R 
+
+#' Summarize tidy functional data for tibble
+#'
+#' Summarize tidy functional data for tibble
+#' @param x object of class tf
+#' @param ... ignored
+#' @rdname tftibble
+#' @importFrom pillar type_sum obj_sum pillar_shaft
+#' @details see [pillar::type_sum()]
+type_sum.tf <- function(x, ...) {
+  class(x)[length(class(x)) - 1]
+}
+
+#' @rdname tftibble
+obj_sum.tf <- function(x) {
+  paste0(type_sum.tf(x), "[", length(x), "]")
+}
+
+#' @rdname tftibble
+pillar_shaft.tf <- function(x, ...) {
+  digits = options("pillar.sigfig")$pillar.sigfig
+  if (is.null(digits))
+    digits = options("digits")$digits
+  out <- format(x, width = 30L, digits = min(digits, attr(x, "signif")), 
+    prefix = FALSE, ...)
+  pillar::new_pillar_shaft_simple(out, align = "right", min_width = 25)
 }

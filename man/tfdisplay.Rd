@@ -16,7 +16,8 @@
 
 \method{print}{tfb}(x, n = 10, ...)
 
-\method{format}{tf}(x, digits = 2, nsmall = 0, ...)
+\method{format}{tf}(x, digits = 2, nsmall = 0, width = options()$width,
+  n = 10, prefix = TRUE, ...)
 }
 \arguments{
 \item{x}{any \R object (conceptually); typically numeric.}
@@ -35,6 +36,15 @@
 \item{nsmall}{the minimum number of digits to the right of the decimal
     point in formatting real/complex numbers in non-scientific formats.
     Allowed values are \code{0 <= nsmall <= 20}.}
+
+\item{width}{\code{default} method: the \emph{minimum} field width or
+    \code{NULL} or \code{0} for no restriction.
+
+    \code{AsIs} method: the \emph{maximum} field width for non-character
+    objects.  \code{NULL} corresponds to the default \code{12}.
+  }
+
+\item{prefix}{used internally.}
 }
 \description{
 Print/format \code{tf}-objects.
