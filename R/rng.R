@@ -35,13 +35,16 @@ rgp <- function(n, arg = 51L, scale = diff(range(arg))/10,
   tfd(y, arg = arg)
 }
 
-#' Make a `tfd` function (more) irregular
+#' Make a `tf` (more) irregular
 #' 
-#' ... by moving around its `arg`-values.
+#' Randomly create some irregular functional data from regular ones.\cr  
+#' **jiggle** it by randomly moving around its `arg`-values. Only for `tfd`.\cr  
+#' **sparsify** it by setting (100*`dropout`)\% of its values to `NA`.
+#' 
 #' @param f a `tfd` object
-#' @param ... not used currently
 #' @importFrom stats runif
 #' @export
+#' @rdname jiggle
 jiggle <- function(f, ...) {
   stopifnot(is_tfd(f))
   f <- as.tfd_irreg(f)
@@ -55,4 +58,15 @@ jiggle <- function(f, ...) {
   } 
   new_args <- map(arg(f), jiggle_args)
   tfd(map2(new_args, evaluations(f), cbind), domain = domain(f))
+}
+
+#' @rdname jiggle
+#' @param dropout how many values of `f` to drop, defaults to 50\%. 
+#' @param ... not used currently
+#' @export
+sparsify <- function(f, dropout = .5, ...) {
+  stopifnot(is_tf(f))
+  tf_evals <- map(evaluations(f), 
+    ~ ifelse(runif(length(.x)) < dropout, NA, .x))
+  tfd(tf_evals, arg(f), signif = attr(f, "signif"), domain = domain(f))
 }
