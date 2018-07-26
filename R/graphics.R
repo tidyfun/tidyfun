@@ -122,8 +122,9 @@ plot.tf <- function(x, y, n_grid = 50, points = is_irreg(x),
         z = t(m), col = heat.colors(25),
         ylab = "id", xlab = "", yaxt = "n"), 
       list(...))
+    m <- m[rev(seq_len(nrow(m))), ] #so first obs is on top
     do.call(image, args)
-    axis(2, at = seq_len(nrow(m)), labels = names(f) %||% seq_len(nrow(m)))
+    axis(2, at = seq_len(nrow(m)), labels = rev(names(f) %||% seq_len(nrow(m))))
   }
   invisible(f)
 }
