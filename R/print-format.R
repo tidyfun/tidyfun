@@ -33,7 +33,7 @@ string_rep_tf <- function(f, signif_arg = NULL,
 #' @param n how many elements of `x` to print out
 #' @export
 print.tf <- function(x, n  = 10, ...) {
-  cat(paste0("tf[",length(x),"] on (", domain(x)[1], ",",
+  cat(paste0(type_sum(x),"[",length(x),"] on (", domain(x)[1], ",",
     domain(x)[2], ")"))
   invisible(x)
 }
@@ -101,7 +101,6 @@ format.tf <- function(x, digits = 2, nsmall = 0, width = options()$width,
   unlist(map_if(str, ~ nchar(.x) > width, 
     ~ paste0(substr(.x, 1, width - 3), "...")))
 }
-
 
 #-------------------------------------------------------------------------------
 
