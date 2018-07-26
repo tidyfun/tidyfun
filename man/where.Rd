@@ -33,8 +33,14 @@ defaults to \code{arg(f)}.}
 \item{r}{used to specify a range, only the minimum and maximum of \code{r} are used.}
 }
 \value{
-\code{return = "any"} returns a logical vector, the others a list of
-numeric a vectors of the same length as \code{f}.
+depends on  \code{return}:
+\itemize{
+\item \code{return = "any"}, i.e, \code{anywhere}: a logical vector of the same length as \code{f}.
+\item \code{return = "all"}: a list of vectors of the same length as \code{f}, with
+empty vectors for the functions that  never fulfill the \code{cond}ition.
+\item \code{return = "range"}: a data frame with columns "begin" and "end".
+\item else, a numeric vector of the same length as \code{f} with \code{NA}s for the functions that  never fulfill the \code{cond}ition.
+}
 }
 \description{
 \code{where} allows to define a logical expression about the function values

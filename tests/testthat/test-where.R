@@ -4,11 +4,11 @@ test_that("where works", {
   expect_identical(where(lin, value %inr% c(-1, -.5)), 
     list(c(-1.0, -0.8, -0.6), c(-0.4)))
   expect_identical(where(lin, value > 0, "first"),
-    list(c(0.2), c(0.2)))
+    c(0.2, 0.2))
   expect_identical(where(lin, value < 0, "last"),
-    list(c(-0.2), c(-0.2)))
-  expect_identical(where(lin, value <= 0, "range"),
-    list(c(-1, 0), c(-1, 0)))
+    c(-0.2, -0.2))
+  expect_equivalent(where(lin, value <= 0, "range"),
+    data.frame(begin = -1, end = c(0, 0)))
   expect_identical(where(lin, value < -1.5, "any"),
     c(FALSE, TRUE))
   expect_identical(where(lin, value < -1.5, "any"),

@@ -22,8 +22,12 @@
 #'   range, though, this is not checked.
 #' @param arg optional `arg`-values on which to evaluate `f` and check `cond`,
 #'   defaults to `arg(f)`.
-#' @return `return = "any"` returns a logical vector, the others a list of
-#'   numeric a vectors of the same length as `f`.
+#' @return depends on  `return`:  
+#'  - `return = "any"`, i.e, `anywhere`: a logical vector of the same length as `f`.
+#'  - `return = "all"`: a list of vectors of the same length as `f`, with  
+#'     empty vectors for the functions that  never fulfill the `cond`ition.
+#'  - `return = "range"`: a data frame with columns "begin" and "end".
+#'  - else, a numeric vector of the same length as `f` with `NA`s for the functions that  never fulfill the `cond`ition.
 #' @examples 
 #'   lin <- 1:4 * tfd(seq(-1, 1,l = 11), seq(-1, 1, l = 11))
 #'   where(lin, value %inr% c(-1, .5))
@@ -71,7 +75,15 @@ where <- function(f, cond, return = c("all", "first", "last", "range", "any"),
     where_at <- map_lgl(where_at, ~ length(.x) > 0)
   }
   where_at[is.na(f)] <- NA
-  where_at
+  if (return == "all") return(where_at)
+  where_at <- map_if(where_at, ~ length(.x) == 0, ~ {NA})
+  if (return == "range") {
+    where_at <- map_if(where_at, ~ all(is.na(.x)), ~ {c(NA, NA)}) %>% 
+      do.call(what = rbind, args = .) %>% as.data.frame %>% 
+      rename(begin = V1, end = V2)
+    return(where_at)
+  } 
+  unlist(where_at)
 }
 #' @rdname where
 #' @export
