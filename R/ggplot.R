@@ -75,8 +75,9 @@ StatTf <- ggproto("StatTf", Stat,
     # Workaround: restore names from "id"-attribute created for this purpose...
     names(data[["tf"]]) <- attr(data[["tf"]], "id")
     # FIXME: this is still dangerous if id, arg, value are also present in the data!
-    tf_eval <- suppressMessages(tf_unnest(data, tf, .arg = params$arg)) %>%
-      rename(.id = id, .arg = arg, .value = tf_value)
+    tf_eval <- 
+      suppressMessages(tf_unnest(data, tf, .arg = params$arg, .sep = "___")) %>%
+      rename(.id =  tf___id, .arg = tf___arg, .value = tf___value)
     if (is.null(data$order) & is.null(params$order_by)) {
       ordered_id <- tf_eval %>% pull(.id) %>% unique
     } 
