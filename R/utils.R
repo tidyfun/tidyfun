@@ -116,7 +116,7 @@ is_equidist <- function(f) {
 }
 
 
-compare_tf_attribs <- function(e1, e2, ignore = "names") {
+compare_tf_attribs <- function(e1, e2, ignore = c("names", "id")) {
 # TODO: better way to check evaluator/basis functions?
   a1 <- attributes(e1)
   a2 <- attributes(e2)

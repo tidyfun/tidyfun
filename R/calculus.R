@@ -150,7 +150,9 @@ integrate.tfd <- function(f, lower = domain(f)[1], upper = domain(f)[2],
   evaluations <- evaluate(f, arg)
   quads <- map2(arg, evaluations, ~ quad_trapez(arg = .x, evaluations = .y))
   if (definite) {
-    return(map(quads, sum) %>% unlist)
+    ret <- map(quads, sum) %>% unlist
+    names(ret) <- names(f)
+    ret
   } else {
     tfd(data = map(quads, cumsum), arg = unlist(arg), domain = limits, 
       signif = attr(f, "signif_arg"), evaluator = approx_linear)
