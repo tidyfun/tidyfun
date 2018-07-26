@@ -35,13 +35,14 @@ median.tf <- function(x, na.rm = FALSE, depth = c("MBD", "pointwise"), ...){
   } else {
     depths <- depth(x, depth = depth)
     med <- x[depths == max(depths)]
-    if (length(med) == 1) {
-      med
-    } else {
+    if (length(med) > 1) {
       warning(length(med), 
         " observations with maximal depth, returning their mean.")
-      mean(med)
-    }  
+      med <- mean(med)
+    } 
+    # always return tfd_reg
+    if (is_tfd(med)) med <- tfd(med)
+    med
   }
 }
 
