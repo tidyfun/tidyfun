@@ -29,7 +29,8 @@ summarize_tf <- function(..., op = NULL, eval = FALSE) {
   if (eval) {
     return(do.call(tfd, c(args, evaluator = attr(funs, "evaluator_name"))))
   } else {
-    return(do.call(tfb, c(args, penalized = FALSE, attr(funs, "basis_args"))))
+    return(do.call(tfb, c(args, penalized = FALSE, verbose = FALSE, 
+      attr(funs, "basis_args"))))
   }
 }
 #------------------------------------------------------------------------------

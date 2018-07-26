@@ -115,7 +115,7 @@ Ops.tfb <- function(e1, e2) {
       stopifnot(all(compare_tf_attribs(e1, e2)))
     }
     if (both_funs & .Generic %in% c("+", "-")) {
-      # just add/subtract coefs for identical bass
+      # just add/subtract coefs for identical bases
       return(fun_op(e1, e2, .Generic))
     } else {
       # ... else convert to tfd, compute, refit basis
