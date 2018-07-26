@@ -2,7 +2,7 @@
 pc_truncated <- function(data, pve = .995) {
   mean <- colMeans(data)
   data_c <- t(t(data) - mean)
-  pc <- svd(data_c, nu = ncol(data), nv = ncol(data))
+  pc <- svd(data_c, nu = min(dim(data)), nv = min(dim(data)))
   pve_observed <- cumsum(pc$d^2)/sum(pc$d^2)
   use <- min(which(pve_observed >= pve))
   efunctions <- pc$v[,1:use]
@@ -85,7 +85,7 @@ tfb_fpc <- function(data, ...) UseMethod("tfb_fpc")
 tfb_fpc.data.frame <- function(data, id = 1, arg = 2, value = 3,  
   domain = NULL, smooth = TRUE, signif = 4, ...) {
   data <- df_2_df(data, id, arg, value)
-  make_tfb_fpc(data, domain = domain, signif = signif, ...)
+  make_tfb_fpc(data, domain = domain, smooth = smooth, signif = signif, ...)
 }
 
 #' @rdname tfb_fpc
@@ -103,7 +103,7 @@ tfb_fpc.matrix <- function(data, arg = NULL, domain = NULL, smooth = TRUE, signi
 #' @export
 tfb_fpc.numeric <- function(data, arg = NULL, domain = NULL, smooth = TRUE, signif = 4, ...) {
   data <- t(as.matrix(data))
-  tfb_fpc(data = data, arg = arg, domain = domain, smooth = smooth, signif = signif, ...)
+  tfb_fpc(data = data, arg = arg, smooth = smooth, domain = domain, signif = signif, ...)
 }
 
 # #' @rdname tfb_fpc

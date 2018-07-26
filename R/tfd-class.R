@@ -166,12 +166,29 @@ tfd.list <- function(data, arg = NULL, domain = NULL,
 #' tfd(f, interpolate = TRUE, arg = seq(0,1,l=21))
 #' @rdname tfd
 tfd.tf <- function(data, arg = NULL, domain = NULL, 
-    evaluator = approx_linear, signif = 4, ...) {
-  evaluator <- quo_name(enexpr(evaluator))
+    evaluator = NULL, signif = NULL, ...) {
+  evaluator <- if (is_tfd(data) & is.null(evaluator)) {
+    attr(data, "evaluator_name")
+  } else "approx_linear"
+  domain <- (domain %||% unlist(arg) %||% domain(data)) %>% range
+  signif <- signif %||% attr(data, "signif_arg")
   arg <- ensure_list(arg %||% arg(data))
   evaluations <- evaluate(data, arg)
+  nas <- map(evaluations, ~ which(is.na(.x)))
+  if (length(unlist(nas))) {
+    warning("NAs created, returned object will be irregular")
+    evaluations <- map2(evaluations, nas, ~ {
+      if(length(.y)) {
+        .x[-.y]
+      } else .x})
+    arg <- map2(arg, nas, ~ {
+      if(length(.y)) {
+        .x[-.y]
+      } else .x})
+  }
   names(evaluations) <- names(data)
-  domain <- domain %||% domain(data)
+  # FIXME : this does not check for NAs in evaluations! 
+  # (especialy leading/closing NAs could happen often)
   new_tfd(arg, evaluations, regular = (length(arg) == 1),
     domain = domain, evaluator = evaluator, 
     signif = signif)

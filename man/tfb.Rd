@@ -35,10 +35,10 @@ tfb(data, ...)
   signif = 4, ...)
 
 \method{tfb}{tfd}(data, arg = NULL, domain = NULL, penalized = TRUE,
-  signif = 4, ...)
+  signif = NULL, ...)
 
 \method{tfb}{tfb}(data, arg = NULL, domain = NULL, penalized = TRUE,
-  signif = 4, ...)
+  signif = NULL, ...)
 }
 \arguments{
 \item{data}{a \code{matrix}, \code{data.frame} or \code{list} of suitable shape, or another

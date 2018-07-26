@@ -36,8 +36,8 @@ tfd(data, ...)
 \method{tfd}{list}(data, arg = NULL, domain = NULL,
   evaluator = approx_linear, signif = 4, ...)
 
-\method{tfd}{tf}(data, arg = NULL, domain = NULL,
-  evaluator = approx_linear, signif = 4, ...)
+\method{tfd}{tf}(data, arg = NULL, domain = NULL, evaluator = NULL,
+  signif = NULL, ...)
 }
 \arguments{
 \item{data}{a \code{matrix}, \code{data.frame} or \code{list} of suitable shape, or another \code{tf}-object.}

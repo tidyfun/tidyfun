@@ -244,9 +244,10 @@ tfb.list <- function(data, arg = NULL,
 #' @rdname tfb
 #' @export
 tfb.tfd <- function(data, arg = NULL, 
-  domain = NULL, penalized = TRUE, signif = 4, ...) {
+  domain = NULL, penalized = TRUE, signif = NULL, ...) {
   arg <- arg %||% arg(data)
   domain <- domain %||% domain(data)
+  signif <- signif %||% attr(data, "signif_arg")
   names_data <- names(data)
   data <- as.data.frame(data, arg)
   ret <- tfb(data, basis = basis, domain = domain,   
@@ -258,8 +259,9 @@ tfb.tfd <- function(data, arg = NULL,
 #' @rdname tfb
 #' @export
 tfb.tfb <- function(data, arg = NULL,
-  domain = NULL, penalized = TRUE, signif = 4, ...) {
+  domain = NULL, penalized = TRUE, signif = NULL, ...) {
   arg <- arg %||% arg(data)
+  signif <- signif %||% attr(data, "signif_arg")
   domain <- domain %||% domain(data)
   s_args <- modifyList(attr(data, "basis_args"),
     list(...)[names(list(...)) %in% names(formals(mgcv::s))])
