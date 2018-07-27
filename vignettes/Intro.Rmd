@@ -412,55 +412,6 @@ dti_long = dti %>% tf_unnest(cca); dti_long %>% glimpse()
 dti_long %>% tf_nest(cca_value, .id = cca_id, .arg = cca_arg) %>% glimpse()
 ```
 
-
-
-```{r}
-arg <- seq(0, 2, l = 51)
-values <- rbind(arg^2, log1p(arg), sin(3*arg))
-f <- tfd(values, arg = arg) 
-f
-str(as.data.frame(f))
-all(as.matrix(f) == values)
-plot(f)
-```
-```{r}
-# evaluate anywhere:
-f[, c(0.02, 1.1)]
-# compute:
-2*f
-log(f)
-# summarize (point-wise or across the function):
-mean(f)
-depth(f)
-
-# integrate / differentiate
-integrate(f)
-deriv(f)
-
-#query
-where(f, value < 0.3 & arg > .3)
-```
-
-## Pipe-friendly `tidyverse` verbs for dealing with functional data inside data frames
-
-`tidyfun` provides `tf_gather` & `tf_spread`, `tf_nest` & `tf_unnest`
-in order to quickly and easily create, reshape and transform functional data columns 
-
-```{r}
-# data.frame with functional data as matrix column:
-str(data <- refund::DTI[, c(1:2, 5, 8)])
-# convert to tfd-column
-glimpse(data <- as.tbl(tf_gather(data, cca)))
-# spread out into separate columns:
-(data <- tf_spread(data, cca, arg = seq(1, 93, by = 3)))
-# re-collect columns into one tfd-column:
-glimpse(data <- tf_gather(data, matches("cca")))
-# make long format data frame with one row for each function evaluation:
-glimpse(data <- tf_unnest(data, cca))
-# re-collect rows for each function evaluation into tfd column and shorter table:
-glimpse(data <- tf_nest(data, cca_value, .id = cca_id, .arg = cca_arg))
-```
-
 ## New geoms and stats for functional data for customizable `ggplot2` graphics
 
 ```{r}
