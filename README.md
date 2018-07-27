@@ -54,3 +54,4 @@ To come:
 - **`geom_capellini`** for little sparklines / [glyphs](http://ggobi.github.io/ggally/#ggallyglyphs) on maps etc. 
 
 
+**See the vignette for code examples.**
