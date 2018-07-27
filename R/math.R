@@ -20,14 +20,19 @@ summarize_tf <- function(..., op = NULL, eval = FALSE) {
   op_call <- function(x) do.call(op, c(list(x), op_args))
   funs <- do.call(c, funs)
   attr_ret <- attributes(funs)
-  m <- as.matrix(funs)
+  #FIXME: should this set interpolate = TRUE so irregular data returns 
+  #  more useful results?
+  m <- suppressWarnings(as.matrix(funs))
   ret <- apply(m, 2, op_call)
   arg <- as.numeric(colnames(m))
   args <- c(list(ret), arg = list(arg),
     domain = list(domain(funs)), 
     signif = attr(funs, "signif_arg"))
   if (eval) {
-    return(do.call(tfd, c(args, evaluator = attr(funs, "evaluator_name"))))
+    ret <- do.call(tfd, c(args, evaluator = attr(funs, "evaluator_name")))
+    if (is_irreg(funs) & !is_irreg(ret)) ret <- as.tfd_irreg(ret)
+    if (!is_irreg(funs) & is_irreg(ret)) ret <- as.tfd(ret)
+    return(ret)
   } else {
     return(do.call(tfb, c(args, penalized = FALSE, verbose = FALSE, 
       attr(funs, "basis_args"))))
