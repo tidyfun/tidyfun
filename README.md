@@ -29,9 +29,9 @@ Such `tf`s can be subsetted or subassigned, computed on and summarized: almost a
 
 are defined for **`tidyfun`**'s data structures.
 
-They are represented as lists, so they work well as columns in data frames. That makes it a lot easier to keep conventional data and functional measurements together in one object for preprocessing, exploratory analysis and description.
+The `tf` objects are glorified lists^[like, e.g., `data.frames` or `sf::sfc_XXX` objects], so they work well as columns in data frames. That makes it a lot easier to keep conventional data and functional measurements together in one object for preprocessing, exploratory analysis and description.
 
-At the same time, they actually behave like vectors of *functions**, i.e. they can be evaluated on any point of their domain, integrated or differentiated, etc.
+At the same time, they actually behave like vectors of *functions* to some extent, i.e., they can be evaluated on any point of their domain, integrated or differentiated, etc.
 
 #### `tidyverse` verbs for dealing with functional data inside data frames
 
@@ -53,5 +53,6 @@ To come:
 - **`geom_pappardelle`** for functional boxplots
 - **`geom_capellini`** for little sparklines / [glyphs](http://ggobi.github.io/ggally/#ggallyglyphs) on maps etc. 
 
+----------------------
 
 **See the vignette for code examples.**
