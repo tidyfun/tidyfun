@@ -89,7 +89,6 @@ plot.tf <- function(x, y, n_grid = 50, points = is_irreg(x),
   type <- match.arg(type)
   assert_logical(points)
   assert_number(n_grid, na.ok = TRUE)
-  f <- x
   if (missing(y)) {
     arg <- prep_plotting_arg(x, n_grid)
     # irreg args need to be turned to a vector for as.matrix below:
@@ -97,9 +96,9 @@ plot.tf <- function(x, y, n_grid = 50, points = is_irreg(x),
   } else {
     arg <- y
   }  
-  m <- if (is_tfd(f)) {
-    as.matrix(f, arg = arg, interpolate = TRUE) 
-  } else as.matrix(f, arg = arg)
+  m <- if (is_tfd(x)) {
+    as.matrix(x, arg = arg, interpolate = TRUE) 
+  } else as.matrix(x, arg = arg)
   if (type == "spaghetti") {
     args <- modifyList(
       list(x = drop(attr(m, "arg")), y = t(m), type = "l", 
@@ -124,9 +123,9 @@ plot.tf <- function(x, y, n_grid = 50, points = is_irreg(x),
       list(...))
     m <- m[rev(seq_len(nrow(m))), ] #so first obs is on top
     do.call(image, args)
-    axis(2, at = seq_len(nrow(m)), labels = rev(names(f) %||% seq_len(nrow(m))))
+    axis(2, at = seq_len(nrow(m)), labels = rev(names(x) %||% seq_len(nrow(m))))
   }
-  invisible(f)
+  invisible(x)
 }
 
 #' @importFrom graphics matlines
@@ -155,6 +154,8 @@ lines.tf <- function(x, arg, n_grid = 50,
   alpha = min(1, max(.05, 2/length(x))), ...) {
   args <- c(modifyList(head(formals(lines.tf), -1),
     as.list(match.call())[-1]), points = FALSE)
+  # eval here so pipe finds it later
+  args$x <- x
   do.call(linespoints_tf, args)
   invisible(x)
 }
@@ -167,6 +168,8 @@ points.tf <- function(x, arg, n_grid = NA,
     alpha = min(1, max(.05, 2/length(x))), interpolate = FALSE, ...) {
   args <- c(modifyList(head(formals(points.tf), -1),
     as.list(match.call())[-1]), points = TRUE)
+  # eval here so pipe finds it later
+  args$x <- x
   do.call(linespoints_tf, args)
   invisible(x)
 }
