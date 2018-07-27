@@ -2,15 +2,22 @@
 title: "Introducing tidyfun"
 author: "Fabian Scheipl"
 date: "`r Sys.Date()`"
-output: rmarkdown::html_vignette
-
+output: 
+    rmarkdown::html_vignette:
+      fig_width: 12
+vignette: >
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteIndexEntry{Introducing tidyfun}
+  %\VignetteEncoding{UTF-8}
 ---
 
 ```{r setup, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
-)
+  comment = "##",
+  cache = TRUE,
+  fig.width = 8, fig.height = 5.5)
+
 library(tidyverse)
 library(refund)
 library(ggplot2)
@@ -79,7 +86,7 @@ rownames(ex_data) = LETTERS[1:5]
 ex = tfd(ex_data, signif = 2)
 ```
 
-```{r, ex-fig, echo = FALSE, out.height = '.45\\textheight', fig.width = 6, fig.height = 4}
+```{r, ex-fig, echo = FALSE}
 plot(ex,  xlim = c(-0.15, 1), col = pal_5)
 text(x = -.1, y = ex[,0.07], labels = names(ex), col = pal_5)
 ```
@@ -98,7 +105,7 @@ dti
 
 **`tfd`** objects contain "raw" functional data: 
 
- - represented as a list of **`evaluations`** $f_i(t)|_{t=\boldmath{t'}}$ and corresponding **`arg`**ument vector(s) $\boldmath{t'}$
+ - represented as a list of **`evaluations`** $f_i(t)|_{t=t'}$ and corresponding **`arg`**ument vector(s) $t'$
  - has a **`domain`**:  the range of valid **`arg`**s.
 
 ```{r}
@@ -120,7 +127,7 @@ evaluator(ex) = approx_spline
 
 - **`tfd`** has subclasses for regular data with a common grid and irregular or sparse data.
 
-```{r, out.height = '.30\\textheight', fig.width = 6, fig.height = 4.5}
+```{r}
 dti$rcst[1:2]
 dti$rcst[1:2] %>% arg() %>% str
 dti$rcst[1:2] %>% plot(pch = "x", col = viridis(2))
@@ -157,7 +164,7 @@ ex  %>% plot()
 ex_b %>% plot(col = "red")
 ex %>% tfb(k = 35, penalized = FALSE) %>% lines(col = "blue")
 ```
-```{r, echo = FALSE, results = 'hide', out.height = '.4\\textheight', fig.width = 8, fig.height = 4}
+```{r, echo = FALSE, results = 'hide'}
 layout(t(1:2))
 plot(ex, alpha = 1)
 plot(ex_b, col = "red")
@@ -185,7 +192,7 @@ ex %>% tfb_fpc(smooth = FALSE, pve = .999) %>% plot(col = "red")
 ex %>% tfb_fpc(pve = .95) %>% lines(col = "blue")
 ```
 
-```{r, echo = FALSE, results = 'hide', out.height = '.4\\textheight', fig.width = 8, fig.height = 4}
+```{r, echo = FALSE, results = 'hide'}
 layout(t(1:2))
 plot(ex, alpha = 1)
 plot(ex  %>% tfb_fpc(smooth = FALSE, pve = .999), col = "red", ylab = "tfb_fpc(ex)")
@@ -238,7 +245,7 @@ median(ex) == ex[which.max(depth(ex))]
 
 ## (Simple, local) smoothing
 
-```{r, echo = FALSE, fig.height = 4.5}
+```{r, echo = FALSE}
 layout(t(1:3))
 ex %>% plot(alpha = .2, ylab = "lowess")
 ex %>% smooth("lowess") %>% lines(col = pal_5)
@@ -255,7 +262,7 @@ ex %>% smooth("savgol", fl = 11) %>% plot
 
 ## Differentiate & integrate
 
-```{r, echo = FALSE, fig.height = 4.5}
+```{r, echo = FALSE}
 layout(t(1:3))
 plot(ex, col = pal_5)
 plot(deriv(smooth(tfd(ex, signif = 4))), col = pal_5, ylab = "deriv(smooth(ex))")
@@ -284,7 +291,7 @@ ex %>% where(value > .6 & arg > .5, "first")
 
 ## Zoom & query
 
-```{r, ex-fig2, echo = FALSE, out.height = '.35\\textheight', fig.width = 6.5, fig.height = 4}
+```{r, ex-fig2, echo = FALSE}
 plot(ex,  xlim = c(-0.15, 1), col = pal_5, lwd = 2)
 text(x = -.1, y = ex[,0.07], labels = names(ex), col = pal_5, cex = 1.5)
 lines(median(ex), col = pal_5[3], lwd = 4)
@@ -307,9 +314,11 @@ ex_matrix[1:2, ] %>% tfd()
 tfd(ex_df) == tfd(ex_matrix)
 ```
 
+# New geoms and stats for functional data for customizable `ggplot2` graphics
+
 ## Visualize: `base` 
 
-```{r ex-fig3,  out.height = '.35\\textheight', fig.width = 8, fig.height = 4}
+```{r ex-fig3}
 layout(t(1:2))
 plot(ex, type = "spaghetti"); lines(c(median(ex), mean(ex)), col = c(2, 4))
 plot(ex, type = "lasagna", col = viridis(50))
@@ -336,7 +345,7 @@ ggplot(dti, aes(tf = cca, colour = case)) +
   geom_spaghetti() + facet_wrap(~ sex)
 ```
 
-```{r, dti-fig1, echo = FALSE, out.height = '.7\\textheight', fig.width = 12, fig.height = 7}
+```{r, dti-fig1, echo = FALSE}
 ggplot(dti) + 
   geom_spaghetti(aes(tf = cca, col = case, alpha = .2 + .4*(case == "control"))) + facet_wrap(~ sex) + scale_alpha(guide = 'none', range = c(.2, .4))
 ```
@@ -347,7 +356,7 @@ ggplot(dti) +
 ggplot(dti, aes(tf = cca, order = integrate(cca, definite = TRUE))) + 
   geom_lasagna() + facet_wrap(~ case)
 ```
-```{r, dti-fig2, echo = FALSE, out.height = '.7\\textheight', fig.width = 12, fig.height = 7}  
+```{r, dti-fig2, echo = FALSE}  
 ggplot(dti[1:100,], aes(tf = cca, order = integrate(cca, definite = TRUE))) + 
   geom_lasagna(size = 2.5) + theme(axis.text.y = element_text(size = 6)) + 
     facet_wrap(~ case, ncol = 2, scales = "free")
@@ -402,7 +411,6 @@ dti_wide %>% tf_gather(matches("cca_")) %>% glimpse()
 
 ## Wrangling `tf`s inside data frames: `tidyr`
 
-
 ```{r, tidyr2}
 # unnest tf by writing 3 loong columns id, arg, value:
 # (will try to avoid unnecessary duplication of columns)
@@ -410,17 +418,4 @@ dti_long = dti %>% tf_unnest(cca); dti_long %>% glimpse()
 
 # nest tf by writing 3 loong columns id, arg, value:
 dti_long %>% tf_nest(cca_value, .id = cca_id, .arg = cca_arg) %>% glimpse()
-```
-
-## New geoms and stats for functional data for customizable `ggplot2` graphics
-
-```{r}
-data <- data %>% rename(cca = cca_value)
-ggplot(dti) + 
-  geom_spaghetti(aes(tf = cca, col = case, alpha = .2 + .4*(case == "control"))) +
-  facet_wrap(~ sex) + scale_alpha(guide = 'none', range = c(.2, .4))
-
-ggplot(dti[1:100,], aes(tf = cca, order = integrate(cca, definite = TRUE))) + 
-  geom_lasagna(size = 2.5) + theme(axis.text.y = element_text(size = 6)) + 
-    facet_wrap(~ case, ncol = 2, scales = "free")
 ```
