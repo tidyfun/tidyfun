@@ -5,22 +5,21 @@ string_rep_tf <- function(f, signif_arg = NULL,
   arg_len <- map(ensure_list(arg(f)), length)
   show <- as.list(pmin(show, unlist(arg_len)))
   # fix weird dots handling by map/format:
-  nsmall <- list(...)$nsmall %||% 0
-  justify <- list(...)$justified %||% "right"
+  format_args <- modifyList(tail(head(formals(format.default), -1), -1),
+    list(digits = digits_arg, justify = "right", ...))
   arg_ch <- map2(ensure_list(arg(f)), show,
-    ~ format(x = .x[1:.y], trim = FALSE, digits = digits_arg, 
-      nsmall = nsmall, justify = justify, width = 4, ...))
+    ~ do.call(format, c(format_args, list(x = .x[1:.y]))))
   value_ch <- map2(evaluations(f), show,
-    ~ format(x = .x[1:.y],  trim = FALSE, digits = digits_eval, 
-      nsmall = nsmall, justify = justify, width = 4, ...))
+    ~ do.call(format, c(format_args, list(x = .x[1:.y]))))
   arg_nchar <- map(arg_ch, ~ nchar(.x)) %>% unlist %>% max
   value_nchar <- map(value_ch, ~ nchar(.x)) %>% unlist %>% max
   arg_ch <- map(arg_ch, ~stringr::str_pad(.x, arg_nchar))
   value_ch <- map(value_ch, ~stringr::str_pad(.x, value_nchar))
   str <- map2(arg_ch, value_ch, 
     ~ paste(paste0("(", .x, ",", .y, ")"), collapse = ";"))
-  pmap(list(str, arg_len, show), 
+  str <- pmap(list(str, arg_len, show), 
     ~ ifelse(..2 > ..3, paste0(..1, "; ..."), ..1))
+  map_if(str, str_detect(str, "NA\\)"), ~ {"NA"})
 }
 
 #-------------------------------------------------------------------------------
@@ -116,7 +115,7 @@ format.tf <- function(x, digits = 2, nsmall = 0, width = options()$width,
 #' @importFrom pillar type_sum obj_sum pillar_shaft
 #' @details see [pillar::type_sum()]
 type_sum.tf <- function(x, ...) {
-  class(x)[length(class(x)) - 1]
+  class(x)[2]
 }
 
 #' @rdname tftibble

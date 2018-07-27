@@ -41,7 +41,11 @@ n_evaluations <- function(f) UseMethod("n_evaluations")
 #' @export
 n_evaluations.default <- function(f) .NotYetImplemented()
 #' @export
-n_evaluations.tfd_irreg <- function(f) map_int(evaluations(f), length)
+n_evaluations.tfd_irreg <- function(f) {
+  ret <- map_int(evaluations(f), length)
+  ret[is.na(f)] <- 0
+  ret
+}  
 #' @export
 n_evaluations.tfd_reg <- function(f) length(arg(f))
 
@@ -141,8 +145,13 @@ rev.tf <- function(x) {
 
 #' @rdname tfmethods
 is.na.tf <- function(x) {
-  map_lgl(unclass(x), ~ any(is.na(.x)))
+  map_lgl(unclass(x), ~ is.na(.x)[1])
 }
+#' @rdname tfmethods
+is.na.tfd_irreg <- function(x) {
+  map_lgl(unclass(x), ~ is.na(.x$value[1]))
+}
+
 
 #-------------------------------------------------------------------------------
 

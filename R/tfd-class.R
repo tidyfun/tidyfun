@@ -15,6 +15,10 @@ new_tfd <- function(arg, datalist, regular, domain, evaluator, signif = 4) {
     datalist <- map2(datalist, arg, 
       ~ list(arg = unname(signif(.y[!is.na(.x)], signif)), 
           value = unname(.x[!is.na(.x)])))
+    n_evals <- map(datalist, ~ length(.x$value))
+    if (any(n_evals == 0)) warning("NA entries created.")
+    datalist <- map_if(datalist, n_evals == 0, 
+      ~ {list(arg = domain[1], value = NA)})
     arg <- numeric(0)
     class <- "tfd_irreg"
   } else {
@@ -172,25 +176,25 @@ tfd.tf <- function(data, arg = NULL, domain = NULL,
   } else "approx_linear"
   domain <- (domain %||% unlist(arg) %||% domain(data)) %>% range
   signif <- signif %||% attr(data, "signif_arg")
+  re_eval <- !is.null(arg)
   arg <- ensure_list(arg %||% arg(data))
-  evaluations <- evaluate(data, arg)
-  nas <- map(evaluations, ~ which(is.na(.x)))
-  if (length(unlist(nas))) {
-    warning("NAs created, returned object will be irregular")
-    evaluations <- map2(evaluations, nas, ~ {
-      if(length(.y)) {
-        .x[-.y]
-      } else .x})
-    arg <- map2(arg, nas, ~ {
-      if(length(.y)) {
-        .x[-.y]
-      } else .x})
+  evaluations <- if (re_eval) evaluate(data, arg) else tidyfun::evaluations(data)
+  if (re_eval) {
+    nas <- map(evaluations, ~ which(is.na(.x)))
+    if (length(unlist(nas))) {
+      warning(length(unlist(nas)), " evaluations were NA, returning irregular tfd.")
+      evaluations <- map2(evaluations, nas, ~ {
+        if(length(.y)) {
+          .x[-.y]
+        } else .x})
+      arg <- map2(arg, nas, ~ {
+        if(length(.y)) {
+          .x[-.y]
+        } else .x})
+    }
   }
   names(evaluations) <- names(data)
-  # FIXME : this does not check for NAs in evaluations! 
-  # (especialy leading/closing NAs could happen often)
   new_tfd(arg, evaluations, regular = (length(arg) == 1),
-    domain = domain, evaluator = evaluator, 
-    signif = signif)
+    domain = domain, evaluator = evaluator, signif = signif)
 }
 

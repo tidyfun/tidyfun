@@ -141,7 +141,7 @@
   na_entries <- which(sapply(ret, is.null))
   if (length(na_entries)) {
     nas <- if (is_irreg(x)) {
-      replicate(length(na_entries), list(arg = attr_x$domain[1], data = NA),
+      replicate(length(na_entries), list(arg = attr_x$domain[1], value = NA),
         simplify = FALSE) 
     } else {
       replicate(length(na_entries), rep(NA, length(x[[1]])), simplify = FALSE) 
