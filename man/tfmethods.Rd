@@ -14,6 +14,7 @@
 \alias{coef.tfb}
 \alias{rev.tf}
 \alias{is.na.tf}
+\alias{is.na.tfd_irreg}
 \alias{is_tf}
 \alias{is_irreg}
 \alias{is_tfd}
@@ -45,6 +46,8 @@ arg(x) <- value
 \method{rev}{tf}(x)
 
 \method{is.na}{tf}(x)
+
+\method{is.na}{tfd_irreg}(x)
 
 is_tf(x)
 

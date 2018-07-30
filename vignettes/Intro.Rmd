@@ -341,24 +341,23 @@ To come:
 ## Visualize: `ggplot2`
 
 ```{r, eval = FALSE}
-ggplot(dti, aes(tf = cca, colour = case)) +
+ggplot(dti, aes(y = cca, colour = case)) +
   geom_spaghetti() + facet_wrap(~ sex)
 ```
 
 ```{r, dti-fig1, echo = FALSE}
 ggplot(dti) + 
-  geom_spaghetti(aes(tf = cca, col = case, alpha = .2 + .4*(case == "control"))) + facet_wrap(~ sex) + scale_alpha(guide = 'none', range = c(.2, .4))
+  geom_spaghetti(aes(y = cca, col = case, alpha = .2 + .4*(case == "control"))) + facet_wrap(~ sex) + scale_alpha(guide = 'none', range = c(.2, .4))
 ```
 
 ## Visualize: `ggplot2`
 
 ```{r, eval = FALSE}
-ggplot(dti, aes(tf = cca, order = integrate(cca, definite = TRUE))) + 
-  geom_lasagna() + facet_wrap(~ case)
+gglasagna(dti, cca, order = integrate(cca, definite = TRUE)) + facet_wrap(~ case)
 ```
 ```{r, dti-fig2, echo = FALSE}  
-ggplot(dti[1:100,], aes(tf = cca, order = integrate(cca, definite = TRUE))) + 
-  geom_lasagna(size = 2.5) + theme(axis.text.y = element_text(size = 6)) + 
+gglasagna(dti, cca, order = integrate(cca, definite = TRUE), arg = seq(0,1, l = 101)) + 
+  theme(axis.text.y = element_text(size = 6)) + 
     facet_wrap(~ case, ncol = 2, scales = "free")
 ```
 

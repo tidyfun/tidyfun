@@ -87,7 +87,7 @@ evaluate.data.frame <- function(object, arg, ...) {
   if (!length(tf_cols)) {
     return(object)
   }
-  if (!missing(arg)) {
+  if (!missing(arg) && !is.null(arg)) {
     arg <- ensure_list(arg)
     if (length(arg) == 1 & length(tf_cols) > 1) {
       arg <- replicate(length(tf_cols), arg, simplify = FALSE)
