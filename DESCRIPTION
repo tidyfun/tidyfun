@@ -35,6 +35,7 @@ Collate:
     'tfb-class.R'
     'tfb-fpc.R'
     'tfd-class.R'
+    'tidyfun-package.r'
     'tidyr.R'
     'utils.R'
     'where.R'
