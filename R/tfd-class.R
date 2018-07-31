@@ -26,8 +26,6 @@ new_tfd <- function(arg, datalist, regular, domain, evaluator, resolution) {
     class <- "tfd_reg"
   }
   ret <- structure(datalist, 
-    # copy names into another attribute so they don't get stripped by ggplot:
-    id = names(datalist),
     arg =  arg,
     domain = domain,
     evaluator = memoise(evaluator_f),
