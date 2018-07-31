@@ -94,17 +94,32 @@ assert_arg_vector <- function(arg, x) {
 #   }
 # }
 
-adjust_resolution <- function(arg, f) {
-  signif <- attr(f, "signif_arg")
-  .adjust_resolution(arg, signif)
+.resolution <- function(f) {
+  attr(f, "resolution")
 }
 
-.adjust_resolution <- function(arg, signif, unique = TRUE){
+adjust_resolution <- function(arg, f) {
+  resolution <- .resolution(f)
+  domain <- domain(f)
+  .adjust_resolution(arg, resolution, domain)
+}
+
+# "quantize" the values in arg to the given resolution
+.apply_resolution <- function(arg, resolution, domain) {
+  # length of regular equence with diff <= resolution covering the domain
+  ints <- diff(domain) %/% resolution + 1
+  grid <- seq(domain[1], domain[2], l = ints)
+  # first and last "bin" are only half as wide as the others. who cares.
+  int_index <- cut(arg, breaks = c(-Inf, grid + resolution/2)) %>% as.numeric
+  grid[int_index]
+}
+
+.adjust_resolution <- function(arg, resolution, domain, unique = TRUE){
   u <- if (unique) base::unique else function(x) x
   if (is.list(arg)) {
-    map(arg, ~ u(signif(., signif)))
+    map(arg, ~ u(.apply_resolution(., resolution, domain)))
   } else {
-    u(signif(arg, signif))
+    u(.apply_resolution(arg, resolution, domain))
   }  
 }
 
