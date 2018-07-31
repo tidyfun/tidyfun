@@ -1,7 +1,7 @@
 #' @import memoise
 #' @import purrr
 #' @import dplyr
-new_tfd <- function(arg, datalist, regular, domain, evaluator, signif = 4) {
+new_tfd <- function(arg, datalist, regular, domain, evaluator, resolution) {
   assert_string(evaluator)
   evaluator_f <- get(evaluator, mode = "function", envir = parent.frame())
   assert_function(evaluator_f)
@@ -10,10 +10,10 @@ new_tfd <- function(arg, datalist, regular, domain, evaluator, signif = 4) {
   arg_o <- map(arg, order)
   arg <- map2(arg, arg_o, ~.x[.y])
   datalist <- map2(datalist, arg_o, ~ unname(.x[.y]))
-  domain <- signif(domain %||% range(arg, na.rm = TRUE), signif)
+  domain <- domain %||% range(arg, na.rm = TRUE)
   if (!regular) {
     datalist <- map2(datalist, arg, 
-      ~ list(arg = unname(signif(.y[!is.na(.x)], signif)), 
+      ~ list(arg = unname(.apply_resolution(.y[!is.na(.x)], resolution, domain)),
           value = unname(.x[!is.na(.x)])))
     n_evals <- map(datalist, ~ length(.x$value))
     if (any(n_evals == 0)) warning("NA entries created.")
@@ -22,7 +22,7 @@ new_tfd <- function(arg, datalist, regular, domain, evaluator, signif = 4) {
     arg <- numeric(0)
     class <- "tfd_irreg"
   } else {
-    arg <- list(signif(arg[[1]], signif))
+    arg <- list(.apply_resolution(arg[[1]], resolution, domain))
     class <- "tfd_reg"
   }
   ret <- structure(datalist, 

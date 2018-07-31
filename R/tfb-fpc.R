@@ -42,8 +42,6 @@ make_tfb_fpc <- function(data, domain = NULL, smooth = TRUE, signif = 4, ...) {
   fpc_basis <- tfd(fpc, arg = arg, evaluator = approx_spline)
   fpc_constructor <- fpc_wrapper(fpc_basis)
   structure(coef_list, 
-    # copy names into another attribute so they don't get stripped by ggplot:
-    id = names(coef_list),
     domain = domain %||% range(arg),
     basis = fpc_constructor,
     basis_label = paste0("FPC: ", fpc_spec$npc, " components."),
