@@ -46,7 +46,7 @@ in order to quickly and easily create, reshape and transform functional data col
 
 - **`geom_spaghetti`** for lines
 - **`geom_meatballs`**  for (lines &) points
-- **`geom_lasagna`** for [lasagna plots](https://asset.jmir.pub/assets/76aeec48564abf0e6f6da8e9cd06346d.png), with an **`order`**-aesthetic to sort the lasagna layers
+- **`gglasagna`** for [lasagna plots](https://asset.jmir.pub/assets/76aeec48564abf0e6f6da8e9cd06346d.png), with an **`order`**-aesthetic to sort the lasagna layers
 
 To come:
 

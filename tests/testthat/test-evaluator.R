@@ -13,7 +13,6 @@ test_that("argval checking works", {
   expect_error(evaluate(f_lin, min(grid) - 1), ">=")
   expect_error(evaluate(f_lin, max(grid) + 1), "<=")
   expect_error(evaluate(f_lin, 1*NA), "missing")
-  expect_error(evaluate(f_lin, c(1,1)), "duplicated")
   expect_error(evaluate(f_lin, list(1, 2)), "length")
 })  
 
@@ -22,7 +21,7 @@ test_that("evaluator approx_linear works", {
   expect_identical(2 * new_grid, 
     evaluator(f_lin)(new_grid, arg = grid, evaluations = lin))
   expect_identical(lin, evaluate(f_lin, grid)[[1]])
-  expect_identical(2 * new_grid, evaluate(f_lin, new_grid)[[1]])
+  expect_equal(2 * new_grid, evaluate(f_lin, new_grid)[[1]])
   
   expect_equivalent(curve, 
     evaluator(f_curve)(grid, arg = grid, evaluations = curve))
@@ -49,7 +48,7 @@ test_that("evaluator approx_spline works", {
   expect_identical(2 * new_grid, 
     evaluator(f_lin)(new_grid, arg = grid, evaluations = lin))
   expect_identical(lin, evaluate(f_lin, grid)[[1]])
-  expect_identical(2 * new_grid, evaluate(f_lin, new_grid)[[1]])
+  expect_equal(2 * new_grid, evaluate(f_lin, new_grid)[[1]])
   
   expect_equivalent(curve, 
     evaluator(f_curve)(grid, arg = grid, evaluations = curve))

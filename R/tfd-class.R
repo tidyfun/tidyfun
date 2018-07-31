@@ -11,6 +11,7 @@ new_tfd <- function(arg, datalist, regular, domain, evaluator, resolution) {
   arg <- map2(arg, arg_o, ~.x[.y])
   datalist <- map2(datalist, arg_o, ~ unname(.x[.y]))
   domain <- domain %||% range(arg, na.rm = TRUE)
+  resolution <- resolution %||% get_resolution(arg)
   if (!regular) {
     datalist <- map2(datalist, arg, 
       ~ list(arg = unname(.apply_resolution(.y[!is.na(.x)], resolution, domain)),
@@ -30,7 +31,7 @@ new_tfd <- function(arg, datalist, regular, domain, evaluator, resolution) {
     domain = domain,
     evaluator = memoise(evaluator_f),
     evaluator_name = evaluator,
-    signif_arg = signif, #maybe turn this into a <global> option? 
+    resolution = resolution, #maybe turn this into a <global> option? 
     class = c(class, "tfd", "tf"))
   assert_arg(arg, ret)
   ret
@@ -61,10 +62,14 @@ new_tfd <- function(arg, datalist, regular, domain, evaluator, resolution) {
 #' `zoo_wrapper(zoo::na.approx, na.rm = FALSE)`, for examples of implementations of
 #' this.  
 #' 
-#' **`signif`**: `arg`-values that are equivalent up to this significant digit are 
-#' treated as identical. E.g., if an evaluation of f(t) is available at t=1 and a function
-#' value is requested at t = 1.001, f(1) will be returned if `signif` < 4.
-#' 
+#' **`resolution`**: `arg`-values that are equivalent up to this difference are
+#' treated as identical. E.g., if an evaluation of $f(t)$ is available at $t=1$
+#' and a function value is requested at $t = 1.01$, $f(1)$ will be returned if
+#' `resolution` < .01. By default, this will be set to an integer-valued power
+#' of 10 one smaller than the than the smallest difference between adjacent
+#' arg-values: e.g., if the smallest observed difference is $0.12$, the
+#' resolution will be $0.01$
+#'  
 #' @param data a `matrix`, `data.frame` or `list` of suitable shape, or another `tf`-object.
 #' @param ... not used in `tfd`, except for `tfd.tf` -- specify `arg` and `ìnterpolate = TRUE` to 
 #'   turn an irregular `tfd` into a regular one, see examples. 
@@ -78,9 +83,9 @@ tfd <- function(data, ...) UseMethod("tfd")
 #'  For the `data.frame`-method: the name/number of the column defining the evaluation grid.
 #' @param domain range of the `arg`. 
 #' @param evaluator a function accepting arguments `x, arg, evaluations`. See details.
-#' @param signif significant digits of the "resolution" of the evaluation grid.  See details.
+#' @param resolution resolution of the evaluation grid. See details.
 tfd.matrix <- function(data, arg = NULL, domain = NULL, 
-    evaluator = approx_linear, signif = 4, ...) {
+    evaluator = approx_linear, resolution = NULL, ...) {
   stopifnot(is.numeric(data))
   evaluator <- quo_name(enexpr(evaluator))
   arg <- find_arg(data, arg) # either arg or numeric colnames or 1:ncol
@@ -89,17 +94,17 @@ tfd.matrix <- function(data, arg = NULL, domain = NULL,
   datalist <- split(data, factor(id, unique(as.character(id))))
   names(datalist) <- rownames(data)
   regular <- !any(is.na(data))
-  new_tfd(arg, datalist, regular, domain, evaluator, signif)
+  new_tfd(arg, datalist, regular, domain, evaluator, resolution)
 }
 #' @rdname tfd
 #' @export
 tfd.numeric <- function(data, arg = NULL, 
-    domain = NULL, evaluator = approx_linear, signif = 4, ...) {
+    domain = NULL, evaluator = approx_linear, resolution = NULL, ...) {
   evaluator <- quo_name(enexpr(evaluator))
   data <- t(as.matrix(data))
   #dispatch to matrix method
   args <- list(data, arg = arg, domain = domain,   
-    evaluator = evaluator, signif = signif)
+    evaluator = evaluator, resolution = resolution)
   return(do.call(tfd, args))
 }
 
@@ -110,7 +115,7 @@ tfd.numeric <- function(data, arg = NULL,
 #' @param id The name/number of the column defining which data belong to which function.
 #' @param value The name/number of the column containing the function evaluations.
 tfd.data.frame <- function(data, id = 1, arg = 2, value = 3, domain = NULL, 
-    evaluator = approx_linear, signif = 4, ...) {
+    evaluator = approx_linear, resolution = NULL, ...) {
   evaluator <- quo_name(enexpr(evaluator))
   data <- na.omit(data[, c(id, arg, value)])
   stopifnot(is.numeric(data[[2]]), 
@@ -120,7 +125,7 @@ tfd.data.frame <- function(data, id = 1, arg = 2, value = 3, domain = NULL,
   datalist <- split(data[[3]], id)
   arg <- split(data[[2]], id)
   regular <- length(arg) == 1 | all(duplicated(arg)[-1])
-  new_tfd(arg, datalist, regular, domain, evaluator, signif)
+  new_tfd(arg, datalist, regular, domain, evaluator, resolution)
 }
 
 # TODO this will break for multivariate data!
@@ -130,7 +135,7 @@ tfd.data.frame <- function(data, id = 1, arg = 2, value = 3, domain = NULL,
 #' @export
 #' @rdname tfd
 tfd.list <- function(data, arg = NULL, domain = NULL, 
-    evaluator = approx_linear, signif = 4, ...) {
+    evaluator = approx_linear, resolution = NULL, ...) {
   evaluator <- quo_name(enexpr(evaluator))
   vectors <- map_lgl(data, ~ is.numeric(.) & !is.array(.)) 
   if (all(vectors)) {
@@ -141,7 +146,7 @@ tfd.list <- function(data, arg = NULL, domain = NULL,
       data <- do.call(rbind, data)
       #dispatch to matrix method
       args <- list(data, arg = arg, domain = domain,   
-        evaluator = evaluator, signif = signif)
+        evaluator = evaluator, resolution = resolution)
       return(do.call(tfd, args))
     } else {
       stopifnot(!is.null(arg), length(arg) == length(data), 
@@ -157,7 +162,7 @@ tfd.list <- function(data, arg = NULL, domain = NULL,
     regular <- (length(data) == 1 | all(duplicated(arg)[-1])) 
   }
   new_tfd(arg, data, regular = regular, domain = domain, 
-    evaluator = evaluator, signif = signif)
+    evaluator = evaluator, resolution = resolution)
 }
 
 #' @export
@@ -168,12 +173,12 @@ tfd.list <- function(data, arg = NULL, domain = NULL,
 #' tfd(f, interpolate = TRUE, arg = seq(0,1,l=21))
 #' @rdname tfd
 tfd.tf <- function(data, arg = NULL, domain = NULL, 
-    evaluator = NULL, signif = NULL, ...) {
+    evaluator = NULL, resolution = NULL, ...) {
   evaluator <- if (is_tfd(data) & is.null(evaluator)) {
     attr(data, "evaluator_name")
   } else "approx_linear"
   domain <- (domain %||% unlist(arg) %||% domain(data)) %>% range
-  signif <- signif %||% attr(data, "signif_arg")
+  resolution <- resolution %||% tidyfun:::resolution(data)
   re_eval <- !is.null(arg)
   arg <- ensure_list(arg %||% arg(data))
   evaluations <- if (re_eval) evaluate(data, arg) else tidyfun::evaluations(data)
@@ -193,6 +198,6 @@ tfd.tf <- function(data, arg = NULL, domain = NULL,
   }
   names(evaluations) <- names(data)
   new_tfd(arg, evaluations, regular = (length(arg) == 1),
-    domain = domain, evaluator = evaluator, signif = signif)
+    domain = domain, evaluator = evaluator, resolution = resolution)
 }
 

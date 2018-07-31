@@ -58,16 +58,16 @@ find_arg <- function(data, arg) {
 }
 
 #' @import checkmate
-assert_arg <- function(arg, x){
+assert_arg <- function(arg, x, check_unique = TRUE){
   if (is.list(arg)) {
     assert_true(length(arg) %in% c(1, length(x)))
-    map(arg, ~ assert_arg_vector(., x = x))
+    map(arg, ~ assert_arg_vector(., x = x, check_unique = check_unique))
   } else {
     assert_arg_vector(arg, x)
   }
 }
-assert_arg_vector <- function(arg, x) {
-  assert_numeric(arg, any.missing = FALSE, unique = TRUE,
+assert_arg_vector <- function(arg, x, check_unique = TRUE) {
+  assert_numeric(arg, any.missing = FALSE, unique = check_unique,
     lower = domain(x)[1], upper = domain(x)[2])
 }
 
@@ -94,23 +94,32 @@ assert_arg_vector <- function(arg, x) {
 #   }
 # }
 
-.resolution <- function(f) {
+get_resolution <- function(arg) {
+  min_diff = map(arg, ~ min(diff(.x))) %>% unlist %>% min
+  if (min_diff < .Machine$double.eps * 10) {
+    stop("(Almost) non-unique arg values detected.")
+  }
+  10^(floor(log10(min_diff)) - 1)
+}
+
+resolution <- function(f) {
   attr(f, "resolution")
 }
 
-adjust_resolution <- function(arg, f) {
-  resolution <- .resolution(f)
+adjust_resolution <- function(arg, f, unique = TRUE) {
+  resolution <- tidyfun:::resolution(f)
   domain <- domain(f)
-  .adjust_resolution(arg, resolution, domain)
+  .adjust_resolution(arg, resolution, domain, unique = unique)
 }
 
 # "quantize" the values in arg to the given resolution
 .apply_resolution <- function(arg, resolution, domain) {
-  # length of regular equence with diff <= resolution covering the domain
+  if (is_missing(domain)) domain <- range(arg)
+  # length of regular sequence with diff <= resolution covering the domain
   ints <- diff(domain) %/% resolution + 1
   grid <- seq(domain[1], domain[2], l = ints)
   # first and last "bin" are only half as wide as the others. who cares.
-  int_index <- cut(arg, breaks = c(-Inf, grid + resolution/2)) %>% as.numeric
+  int_index <- findInterval(arg, grid + resolution/2)
   grid[int_index]
 }
 

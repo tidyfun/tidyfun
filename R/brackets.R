@@ -42,9 +42,7 @@
     interpolate <- TRUE
     message("interpolate argument ignored for data in basis representation")
   }
-  if (missing(i)) {
-    i <- seq_along(x)
-  } else {
+  if (!missing(i)) {
     assert_atomic(i)
     if (is.logical(i)) {
       assert_logical(i, any.missing = FALSE, len = length(x))
@@ -57,23 +55,25 @@
     assert_integerish(i, lower = -length(x), upper = length(x), 
       any.missing = FALSE)
     assert_true(all(sign(i) == sign(i)[1]))
-  }  
+    attr_x <- append(attributes(unname(x)), list(names = names(x)[i]))
+    x <- unclass(x)[i]
+    attributes(x) <- attr_x
+  } else {
+    i <- seq_along(x)
+  }
   if (missing(j)) {
-    ret <- unclass(x)[i]
-    attributes(ret) <- append(attributes(x)[names(attributes(x)) != "names"], 
-      list(names = names(ret)))
-    return(ret)
+    return(x)
   } 
   if (matrix & is.list(j)) {
     stop("need a single vector-valued <j> if matrix = TRUE")
   }
-  j <- adjust_resolution(ensure_list(j), x)
+  j <- ensure_list(j)
   if (!(length(j) %in% c(1, length(i)))) {
     stop("wrong length for <j>")
   } 
-  evals <- evaluate(x[i], arg = j)
+  evals <- evaluate(x, arg = j)
   if (!interpolate) {
-    new_j <- map2(j, ensure_list(arg(x[i])), ~ !(.x %in% .y))
+    new_j <- map2(j, ensure_list(arg(x)), ~ !(.x %in% .y))
     if (any(unlist(new_j))) {
       warning("interpolate = FALSE & no evaluations for some <j>: NAs created.")
     }
@@ -82,11 +82,11 @@
   if (matrix) {
     ret <- do.call(rbind, evals)
     colnames(ret) <- unlist(j)
-    rownames(ret) <- names(x)[i]
+    rownames(ret) <- names(x)
     structure(ret, arg = unlist(j))
   } else {
     ret <- map2(j, evals, ~ bind_cols(arg = .x, value = .y))
-    names(ret) <- names(x)[i]
+    names(ret) <- names(x)
     ret
   }
 } 

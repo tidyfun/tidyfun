@@ -89,7 +89,7 @@ ex = tfd(ex_data, signif = 2)
 ```
 
 ```{r, ex-fig, echo = FALSE}
-plot(ex,  xlim = c(-0.15, 1), col = pal_5)
+plot(ex, xlim = c(-0.15, 1), col = pal_5)
 text(x = -.1, y = ex[,0.07], labels = names(ex), col = pal_5)
 ```
 

@@ -20,7 +20,8 @@ evaluate.tfd <- function(object, arg, ...) {
   if (missing(arg)) arg <- tidyfun::arg(object)
   if (is.null(arg)) arg <- tidyfun::arg(object)
   arg <- ensure_list(arg)
-  assert_arg(arg, object)
+  assert_arg(arg, object, check_unique = FALSE)
+  arg <- adjust_resolution(arg, object, unique = FALSE)
   pmap(list(arg, ensure_list(arg(object)), evaluations(object)), 
     ~ evaluate_tfd_once(x = ..1, arg = ..2, evaluations = ..3, 
         evaluator = attr(object, "evaluator")))
@@ -28,7 +29,15 @@ evaluate.tfd <- function(object, arg, ...) {
 
 evaluate_tfd_once <- function(x, arg, evaluations, evaluator) {
   if (isTRUE(all.equal(x, arg))) return(evaluations)
-  evaluator(x, arg = arg, evaluations = evaluations)
+  seen <- match(x, arg)
+  seen_index <- na.omit(seen)
+  seen <- !is.na(seen)
+  ret <- rep(NA, length(x))
+  if (length(seen_index)) ret[seen] <- evaluations[seen_index]
+  unseen_index <- setdiff(seq_along(x), seen_index) 
+  ret[!seen] <- 
+    evaluator(x[unseen_index], arg = arg, evaluations = evaluations)
+  ret
 }
 
 #' @export
@@ -38,6 +47,7 @@ evaluate.tfb <- function(object, arg, ...) {
   if (is.null(arg)) arg <- tidyfun::arg(object)
   arg <- ensure_list(arg)
   assert_arg(arg, object)
+  arg <- adjust_resolution(arg, object, unique = FALSE)
   if (length(arg) == 1) {
     arg <- unlist(arg)
     evals <- evaluate_tfb_once(x = arg, 
@@ -56,13 +66,13 @@ evaluate.tfb <- function(object, arg, ...) {
 }  
 
 evaluate_tfb_once <- function(x, arg, coefs, basis, X) {
-  dejavu <- match(x, arg)
-  dejavu_index <- na.omit(dejavu)
-  dejavu <- !is.na(dejavu)
-  if (all(dejavu)) return(X[dejavu_index, ,drop = FALSE] %*% coefs)
+  seen <- match(x, arg)
+  seen_index <- na.omit(seen)
+  seen <- !is.na(seen)
+  if (all(seen)) return(X[seen_index, ,drop = FALSE] %*% coefs)
   Xnew <- X[rep(1, length(x)),]
-  if (any(dejavu)) Xnew[dejavu,] <- X[dejavu_index, , drop = FALSE]
-  Xnew[!dejavu,] <- basis(x[!dejavu])
+  if (any(seen)) Xnew[seen,] <- X[seen_index, , drop = FALSE]
+  Xnew[!seen,] <- basis(x[!seen])
   Xnew %*% coefs
 }
 

@@ -56,10 +56,11 @@ smooth_spec_wrapper <- function(spec, deriv = 0, eps = 1e-6) {
 
 #' @importFrom stats var na.omit median
 mgcv_tfb <- function(data, regular, domain = NULL,   
-    penalized = TRUE, signif = 4, verbose = TRUE, ...) {
-  data$arg <- .adjust_resolution(data$arg, signif, unique = FALSE)
+    penalized = TRUE, resolution = NULL, verbose = TRUE, ...) {
+  domain <- domain %||% range(arg)
   arg_u <- mgcv::uniquecombs(data$arg, ordered = TRUE)
-  domain <- domain %||% range(arg_u)
+  resolution <- resolution %||%  get_resolution(arg_u)
+  data$arg <- .adjust_resolution(data$arg, resolution, unique = FALSE)
   s_args <- list(...)[names(list(...)) %in% names(formals(mgcv::s))]
   if (!("bs" %in% names(s_args))) s_args$bs <- "cr"
   if (!("k" %in% names(s_args))) s_args$k <- min(25, nrow(arg_u))
@@ -118,7 +119,7 @@ mgcv_tfb <- function(data, regular, domain = NULL,
     basis_args = s_args,
     basis_matrix = spec_object$X,
     arg = arg_u$x,
-    signif_arg = signif, 
+    resolution = resolution, 
     class = c("tfb", "tf"))
 }
 
@@ -177,39 +178,39 @@ tfb <- function(data, ...) UseMethod("tfb")
 #' @rdname tfb
 #' @export
 tfb.data.frame <- function(data, id = 1, arg = 2, value = 3,  
-    domain = NULL, penalized = TRUE, signif = 4, ...) {
+    domain = NULL, penalized = TRUE, resolution = NULL, ...) {
   data <- df_2_df(data, id, arg, value)
   regular <- n_distinct(table(data[[1]])) == 1
   mgcv_tfb(data, regular, domain = domain,   
-    penalized = penalized, signif = signif, ...)
+    penalized = penalized, resolution = resolution, ...)
 }
 
 #' @rdname tfb
 #' @export
 tfb.matrix <- function(data, arg = NULL, 
-  domain = NULL,   penalized = TRUE, signif = 4, ...) {
+  domain = NULL,   penalized = TRUE, resolution = NULL, ...) {
   arg <- unlist(find_arg(data, arg))
   data_names <- rownames(data)
   data <- mat_2_df(data, arg)
   regular <- n_distinct(table(data[[1]])) == 1
   ret <- mgcv_tfb(data, regular, domain = domain,   
-    penalized = penalized, signif = signif, ...)
+    penalized = penalized, resolution = resolution, ...)
   names(ret) <- data_names
   ret
 }
 #' @rdname tfb
 #' @export
 tfb.numeric <- function(data, arg = NULL, 
-  domain = NULL, penalized = TRUE, signif = 4, ...) {
+  domain = NULL, penalized = TRUE, resolution = NULL, ...) {
   data <- t(as.matrix(data))
   tfb(data = data, arg = arg, domain = domain, penalized = penalized,
-    signif = signif, ...)
+    resolution = resolution, ...)
 }
 
 #' @rdname tfb
 #' @export
 tfb.list <- function(data, arg = NULL,  
-  domain = NULL,   penalized = TRUE, signif = 4, ...) {
+  domain = NULL,   penalized = TRUE, resolution = NULL, ...) {
   vectors <- sapply(data, is.numeric)
   stopifnot(all(vectors) | !any(vectors))
   names_data <- names(data)
@@ -219,7 +220,7 @@ tfb.list <- function(data, arg = NULL,
       data <- do.call(rbind, data)
       #dispatch to matrix method
       args <- list(data, arg,  domain = domain,   
-        penalized = penalized, signif = signif, ...)
+        penalized = penalized, resolution = resolution, ...)
       return(do.call(tfb, args))
     } else {
       stopifnot(!is.null(arg), length(arg) == length(data), 
@@ -234,7 +235,7 @@ tfb.list <- function(data, arg = NULL,
       funs = data) %>% tidyr::unnest
   #dispatch to data.frame method
   ret <- tfb(data, basis = basis, domain = domain,   
-    penalized = penalized, signif = signif, ...)
+    penalized = penalized, resolution = resolution, ...)
   names(ret) <- names_data
   ret
 }
@@ -242,14 +243,14 @@ tfb.list <- function(data, arg = NULL,
 #' @rdname tfb
 #' @export
 tfb.tfd <- function(data, arg = NULL, 
-  domain = NULL, penalized = TRUE, signif = NULL, ...) {
+  domain = NULL, penalized = TRUE, resolution = NULL, ...) {
   arg <- arg %||% arg(data)
   domain <- domain %||% domain(data)
-  signif <- signif %||% attr(data, "signif_arg")
+  resolution <- resolution %||% tidyfun:::resolution(data)
   names_data <- names(data)
   data <- as.data.frame(data, arg)
   ret <- tfb(data, basis = basis, domain = domain,   
-    penalized = penalized, signif = signif, ...)
+    penalized = penalized, resolution = resolution, ...)
   names(ret) <- names_data
   ret
 }
@@ -257,16 +258,16 @@ tfb.tfd <- function(data, arg = NULL,
 #' @rdname tfb
 #' @export
 tfb.tfb <- function(data, arg = NULL,
-  domain = NULL, penalized = TRUE, signif = NULL, ...) {
+  domain = NULL, penalized = TRUE, resolution = NULL, ...) {
   arg <- arg %||% arg(data)
-  signif <- signif %||% attr(data, "signif_arg")
+  resolution <- resolution %||% tidyfun:::resolution(data)
   domain <- domain %||% domain(data)
   s_args <- modifyList(attr(data, "basis_args"),
     list(...)[names(list(...)) %in% names(formals(mgcv::s))])
   names_data <- names(data)
   data <- as.data.frame(data, arg = arg)
   ret <- do.call("tfb", c(list(data), basis = basis, domain = domain,
-    penalized = penalized, signif = signif, s_args))
+    penalized = penalized, resolution = resolution, s_args))
   names(ret) <- names_data
   ret
 }
