@@ -2,8 +2,10 @@ prep_plotting_arg <- function(f, n_grid) {
   if (!isTRUE(n_grid > 1)) {
     tidyfun::arg(f)
   }  else {
-    union(modelr::seq_range(domain(f), n = n_grid), 
-      unlist(tidyfun::arg(f))) %>% sort
+    modelr::seq_range(domain(f), n = n_grid) %>% 
+      round_resolution(attr(f, "resolution")) %>%
+      setdiff(round_resolution(tidyfun::arg(f), attr(f, "resolution"))) %>% 
+      union(unlist(tidyfun::arg(f))) %>% sort
   }
 }
 

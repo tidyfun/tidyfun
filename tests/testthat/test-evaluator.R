@@ -17,9 +17,9 @@ test_that("argval checking works", {
 })  
 
 test_that("evaluator approx_linear works", {
-  expect_identical(rep(lin, each = 2), 
+  expect_identical(lin, 
     suppressWarnings(evaluator(f_lin)(grid, arg = grid, evaluations = lin)))
-  expect_identical(sort(c(lin, 2 * new_grid)), 
+  expect_identical(2 * new_grid, 
     suppressWarnings(evaluator(f_lin)(new_grid, arg = grid, evaluations = lin)))
   expect_identical(lin, evaluate(f_lin, grid)[[1]])
   expect_equal(2 * new_grid, evaluate(f_lin, new_grid)[[1]])
@@ -39,9 +39,9 @@ evaluator(f_lin) <- approx_spline
 evaluator(f_curve) <- approx_spline
 
 test_that("evaluator approx_spline works", {
-  expect_identical(rep(lin, e = 2),
+  expect_identical(lin,
     suppressWarnings(evaluator(f_lin)(grid, arg = grid, evaluations = lin)))
-  expect_identical(sort(c(lin, 2 * new_grid)), 
+  expect_identical(2 * new_grid, 
     suppressWarnings(evaluator(f_lin)(new_grid, arg = grid, evaluations = lin)))
   expect_identical(lin, evaluate(f_lin, grid)[[1]])
   expect_equal(2 * new_grid, evaluate(f_lin, new_grid)[[1]])

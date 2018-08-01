@@ -47,7 +47,7 @@ evaluate.tfb <- function(object, arg, ...) {
   if (missing(arg)) arg <- tidyfun::arg(object)
   if (is.null(arg)) arg <- tidyfun::arg(object)
   arg <- ensure_list(arg)
-  assert_arg(arg, object)
+  assert_arg(arg, object, check_unique = FALSE)
   if (length(arg) == 1) {
     arg <- unlist(arg)
     evals <- evaluate_tfb_once(x = arg, 
