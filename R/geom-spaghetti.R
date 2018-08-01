@@ -26,7 +26,10 @@ NULL
 # Error: evaluation nested too deeply: infinite recursion / options(expressions=)?
 #   Error during wrapup: evaluation nested too deeply: infinite recursion / options(expressions=)?
 
+#' @export
 is.finite.tf <- function(x) map(evaluations(x), ~ all(is.finite(x) | !is.na(x)))
+
+#' @export
 scale_type.tf <- function(x) "identity"
 
 #' @export

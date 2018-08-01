@@ -99,4 +99,12 @@ smooth.tfd <- function(x, method = c("lowess", "rollmean", "rollmedian", "savgol
 #' @rdname smooth
 #' @export
 #' @inheritParams stats::smooth
-smooth.default <- stats::smooth 
+smooth.default <- function(x, ..., 
+  kind = c("3RS3R", "3RSS", "3RSR", "3R", "3", "S"), 
+  twiceit = FALSE, endrule = c("Tukey", "copy"), do.ends = FALSE) {
+  kind <- match.arg(kind)
+  endrule <- match.arg(endrule)
+  stats::smooth(x, kind = kind, twiceit = twiceit, endrule = endrule, 
+    do.ends = do.ends) 
+}
+  

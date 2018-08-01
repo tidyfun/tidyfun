@@ -15,13 +15,11 @@ vignette: >
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "##",
-  cache = TRUE,
   fig.width = 8, fig.height = 5.5)
 
 library(tidyverse)
 library(refund)
 library(ggplot2)
-library(patchwork)
 library(viridisLite)
 theme_set(theme_minimal())
 options(
@@ -31,8 +29,9 @@ options(
 scale_colour_discrete = scale_colour_viridis_d
 scale_fill_discrete = scale_fill_viridis_d
 
-try(devtools::load_all("~/fda/tidyfun"))
-try(devtools::load_all("~/Work/fda/tidyfun"))
+library("tidyfun")
+#try(devtools::load_all("~/fda/tidyfun"))
+#try(devtools::load_all("~/Work/fda/tidyfun"))
 
 pal_5 = viridis(7)[-(1:2)]
 set.seed(1221)

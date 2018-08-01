@@ -52,6 +52,7 @@ observation in \code{data} and the vertical order of the layers corresponds to t
 ordering of observations for \code{arrange(data, order, order_by(value), row_number())}.
 }
 \examples{
+\dontrun{
 set.seed(1221)
 data = expand.grid(group = 1:5, rep = 1:10) 
 data = dplyr::mutate(data, id = paste(group, rep, sep = "-"))
@@ -63,6 +64,5 @@ gglasagna(data, f, label = id, order = group)
 gglasagna(data, f, label = id, order = group)
 gglasagna(data, f, label = id, order = depth(f))
 gglasagna(data, f, label = id, order_by = first) + 
-  facet_wrap(~group, scales = "free")
-#FIXME: render errors for weird arg lenght (e.g. 93) 
+  facet_wrap(~group, scales = "free")}
 }

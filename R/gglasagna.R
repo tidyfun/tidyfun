@@ -32,7 +32,9 @@ is.discrete <- function(x) {
 #' @param order_ticks_linetype defaults to 2
 #' @param order_ticks_alpha defaults to 0.5
 #' @return a `ggplot2`` object
+#' @export
 #' @examples 
+#' \dontrun{
 #' set.seed(1221)
 #' data = expand.grid(group = 1:5, rep = 1:10) 
 #' data = dplyr::mutate(data, id = paste(group, rep, sep = "-"))
@@ -44,11 +46,11 @@ is.discrete <- function(x) {
 #' gglasagna(data, f, label = id, order = group)
 #' gglasagna(data, f, label = id, order = depth(f))
 #' gglasagna(data, f, label = id, order_by = first) + 
-#'   facet_wrap(~group, scales = "free")
-#' #FIXME: render errors for weird arg lenght (e.g. 93) 
+#'   facet_wrap(~group, scales = "free")}
 gglasagna <- function(data, y, order = NULL, label = NULL, 
     arg = NULL, order_by = NULL, order_ticks = TRUE, order_ticks_color = "black", 
     order_ticks_linetype = 2, order_ticks_alpha = 0.5) {
+  #FIXME: render errors for weird arg lenght (e.g. 93) 
   stopifnot(is_tf(pull(data, !!enexpr(y))))
   has_order <- !is.null(match.call()[["order"]])
   has_order_by <- !is.null(match.call()[["order_by"]])
