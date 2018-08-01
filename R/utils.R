@@ -8,23 +8,6 @@ unique_id <- function(x)  {
   x
 } 
 
-#'@import zoo
-zoo_wrapper <- function(f, ...){
-  dots <- list(...)
-  function(x, arg, evaluations) {
-      x_arg <- sort(unique(c(x, arg)))
-      x_arg_match <- match(x_arg, arg, nomatch = length(arg) + 1)
-      requested <-  x_arg %in% x
-      dots[[length(dots) + 1]] <- zoo(evaluations[x_arg_match], x_arg)
-      ret <- do.call(f, dots)
-      coredata(ret)[requested]
-  }
-}
-approx_linear <- zoo_wrapper(na.approx, na.rm = FALSE)
-approx_spline <- zoo_wrapper(na.spline, na.rm = FALSE)
-approx_fill_extend <- zoo_wrapper(na.fill, fill = "extend")
-approx_locf <- zoo_wrapper(na.locf, na.rm = FALSE)
-approx_nocb <- zoo_wrapper(na.locf, na.rm = FALSE, fromLast = TRUE)
 
 na_to_0 <- function(x) {
   x[is.na(x)] <- 0
@@ -148,4 +131,36 @@ compare_tf_attribs <- function(e1, e2, ignore = c("names", "id")) {
   unlist(ret)
 }
 
+#-------------------------------------------------------------------------------
 
+#from refund
+#' @importFrom stats complete.cases
+irreg2mat <- function (ydata, binning = FALSE, maxbins = 1000) 
+{
+  ydata <- ydata[complete.cases(ydata), ]
+  nobs <- length(unique(ydata$.id))
+  newid <- as.numeric(as.factor(ydata$.id))
+  bins <- sort(unique(ydata$.index))
+  if (binning && (length(bins) > maxbins)) {
+    binvalues <- seq((1 - 0.001 * sign(bins[1])) * bins[1], 
+      (1 + 0.001 * sign(bins[length(bins)])) * bins[length(bins)], 
+      l = maxbins + 1)
+    bins <- binvalues
+    binvalues <- head(filter(binvalues, c(0.5, 0.5)), -1)
+  }
+  else {
+    binvalues <- bins
+    bins <- c((1 - 0.001 * sign(bins[1])) * bins[1], bins[-length(bins)], 
+      (1 + 0.001 * sign(bins[length(bins)])) * bins[length(bins)])
+    if (bins[1] == 0) 
+      bins[1] <- -0.001
+    if (bins[length(bins)] == 0) 
+      bins[length(bins)] <- 0.001
+  }
+  newindex <- cut(ydata$.index, breaks = bins, include.lowest = TRUE)
+  Y <- matrix(NA, nrow = nobs, ncol = nlevels(newindex))
+  colnames(Y) <- binvalues
+  attr(Y, "index") <- binvalues
+  Y[cbind(newid, as.numeric(newindex))] <- ydata$.value
+  return(Y)
+}

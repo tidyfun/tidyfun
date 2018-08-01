@@ -15,13 +15,11 @@ vignette: >
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "##",
-  cache = TRUE,
   fig.width = 8, fig.height = 5.5)
 
 library(tidyverse)
 library(refund)
 library(ggplot2)
-library(patchwork)
 library(viridisLite)
 theme_set(theme_minimal())
 options(

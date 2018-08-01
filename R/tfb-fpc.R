@@ -30,7 +30,7 @@ make_tfb_fpc <- function(data, domain = NULL, smooth = TRUE, signif = 4, ...) {
         list(...)[names(list(...)) %in% names(formals(refund::fpca.sc))])
     fpc_spec <- do.call(fpca.sc, fpca_args)
   } else {
-    datamat <- refund:::irreg2mat(data)
+    datamat <- irreg2mat(data)
     fpca_args <- 
       modifyList(list(data = datamat, pve = 0.995),
         list(...)[names(list(...)) %in% names(formals(pc_truncated))])
