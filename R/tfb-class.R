@@ -60,7 +60,6 @@ mgcv_tfb <- function(data, regular, domain = NULL,
   domain <- domain %||% range(arg)
   arg_u <- mgcv::uniquecombs(data$arg, ordered = TRUE)
   resolution <- resolution %||%  get_resolution(arg_u)
-  data$arg <- .adjust_resolution(data$arg, resolution, unique = FALSE)
   s_args <- list(...)[names(list(...)) %in% names(formals(mgcv::s))]
   if (!("bs" %in% names(s_args))) s_args$bs <- "cr"
   if (!("k" %in% names(s_args))) s_args$k <- min(25, nrow(arg_u))
@@ -112,7 +111,7 @@ mgcv_tfb <- function(data, regular, domain = NULL,
   }
   names(coef_list) <- levels(data$id)
   basis_constructor <- smooth_spec_wrapper(spec_object)
-  structure(coef_list, 
+  ret <- structure(coef_list, 
     domain = domain,
     basis = memoise(basis_constructor),
     basis_label = deparse(s_call, width.cutoff = 60)[1],
@@ -121,6 +120,7 @@ mgcv_tfb <- function(data, regular, domain = NULL,
     arg = arg_u$x,
     resolution = resolution, 
     class = c("tfb", "tf"))
+  ret
 }
 
 magic_smooth_coef <- function(evaluations, index, spec_object, magic_args) {

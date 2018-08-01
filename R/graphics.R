@@ -3,8 +3,7 @@ prep_plotting_arg <- function(f, n_grid) {
     tidyfun::arg(f)
   }  else {
     union(modelr::seq_range(domain(f), n = n_grid), 
-      unlist(tidyfun::arg(f))) %>% 
-      adjust_resolution(f) %>% sort
+      unlist(tidyfun::arg(f))) %>% sort
   }
 }
 

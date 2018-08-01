@@ -18,11 +18,14 @@ fpc_wrapper <- function(efunctions) {
 } 
 
 #' @importFrom refund fpca.sc
-make_tfb_fpc <- function(data, domain = NULL, smooth = TRUE, signif = 4, ...) {
+make_tfb_fpc <- function(data, domain = NULL, smooth = TRUE, resolution = NULL, ...) {
   #FIXME: rm renaming once we've cleaned up fpca.sc etc
   #FIXME: warn if domain != range(arg), can't extrapolate FPCs
-  data$arg <- .adjust_resolution(data$arg, signif, unique = FALSE)
   arg <- sort(unique(data$arg))
+  domain <- domain %||% range(arg)
+  resolution <- resolution %||% get_resolution(arg)
+  data$arg <- round_resolution(data$arg, resolution)
+  arg <- unique(round_resolution(arg, resolution))
   names(data) <- c(".id", ".index", ".value")
   if (smooth) {
     fpca_args <- 
@@ -39,15 +42,16 @@ make_tfb_fpc <- function(data, domain = NULL, smooth = TRUE, signif = 4, ...) {
   coef_list <- split(cbind(1, fpc_spec$scores), row(cbind(1, fpc_spec$scores)))
   names(coef_list) <- levels(as.factor(data$.id))
   fpc <- rbind(fpc_spec$mu, t(fpc_spec$efunctions))
-  fpc_basis <- tfd(fpc, arg = arg, evaluator = approx_spline)
+  fpc_basis <- tfd(fpc, arg = arg, evaluator = approx_spline, domain = domain, 
+    resolution = resolution)
   fpc_constructor <- fpc_wrapper(fpc_basis)
   structure(coef_list, 
-    domain = domain %||% range(arg),
+    domain = domain,
     basis = fpc_constructor,
     basis_label = paste0("FPC: ", fpc_spec$npc, " components."),
     basis_matrix = t(fpc),
     arg = arg,
-    signif_arg = signif, 
+    resolution = resolution, 
     class = c("tfb_fpc", "tfb", "tf"))
 }
 
@@ -81,27 +85,27 @@ tfb_fpc <- function(data, ...) UseMethod("tfb_fpc")
 #' @rdname tfb_fpc
 #' @export
 tfb_fpc.data.frame <- function(data, id = 1, arg = 2, value = 3,  
-  domain = NULL, smooth = TRUE, signif = 4, ...) {
+  domain = NULL, smooth = TRUE, resolution = NULL, ...) {
   data <- df_2_df(data, id, arg, value)
-  make_tfb_fpc(data, domain = domain, smooth = smooth, signif = signif, ...)
+  make_tfb_fpc(data, domain = domain, smooth = smooth, resolution = resolution, ...)
 }
 
 #' @rdname tfb_fpc
 #' @export
-tfb_fpc.matrix <- function(data, arg = NULL, domain = NULL, smooth = TRUE, signif = 4, ...) {
+tfb_fpc.matrix <- function(data, arg = NULL, domain = NULL, smooth = TRUE, resolution = NULL, ...) {
   arg <- unlist(find_arg(data, arg))
   names_data <- rownames(data)
   data <- mat_2_df(data, arg)
-  ret <- make_tfb_fpc(data, domain = domain, smooth = smooth, signif = signif, ...)
+  ret <- make_tfb_fpc(data, domain = domain, smooth = smooth, resolution = resolution, ...)
   names(ret) <- names_data
   ret
 }
 
 #' @rdname tfb_fpc
 #' @export
-tfb_fpc.numeric <- function(data, arg = NULL, domain = NULL, smooth = TRUE, signif = 4, ...) {
+tfb_fpc.numeric <- function(data, arg = NULL, domain = NULL, smooth = TRUE, resolution = NULL, ...) {
   data <- t(as.matrix(data))
-  tfb_fpc(data = data, arg = arg, smooth = smooth, domain = domain, signif = signif, ...)
+  tfb_fpc(data = data, arg = arg, smooth = smooth, domain = domain, resolution = resolution, ...)
 }
 
 # #' @rdname tfb_fpc
@@ -117,7 +121,7 @@ tfb_fpc.tf <- function(data, arg = NULL, smooth = TRUE, ...) {
   arg <- arg %||% arg(data)
   names_data <- names(data)
   ret <- tfb_fpc(as.data.frame(data, arg = arg), smooth = smooth, 
-    signif = attr(data, "signif_arg"),  ...)
+    resolution = tidyfun:::resolution(data),  ...)
   names(ret) <- names_data
   ret
 }

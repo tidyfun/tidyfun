@@ -21,22 +21,23 @@ evaluate.tfd <- function(object, arg, ...) {
   if (is.null(arg)) arg <- tidyfun::arg(object)
   arg <- ensure_list(arg)
   assert_arg(arg, object, check_unique = FALSE)
-  arg <- adjust_resolution(arg, object, unique = FALSE)
   pmap(list(arg, ensure_list(arg(object)), evaluations(object)), 
-    ~ evaluate_tfd_once(x = ..1, arg = ..2, evaluations = ..3, 
-        evaluator = attr(object, "evaluator")))
+    ~ evaluate_tfd_once(new_arg = ..1, arg = ..2, evaluations = ..3, 
+        evaluator = attr(object, "evaluator"), 
+        resolution = tidyfun:::resolution(object)))
 }  
 
-evaluate_tfd_once <- function(x, arg, evaluations, evaluator) {
-  if (isTRUE(all.equal(x, arg))) return(evaluations)
-  seen <- match(x, arg)
+evaluate_tfd_once <- function(new_arg, arg, evaluations, evaluator, resolution) {
+  new_arg_round <- round_resolution(new_arg, resolution)
+  arg_round <- round_resolution(arg, resolution)
+  if (isTRUE(all.equal(new_arg_round, arg_round))) return(evaluations)
+  seen <- match(new_arg_round, arg_round)
   seen_index <- na.omit(seen)
   seen <- !is.na(seen)
-  ret <- rep(NA, length(x))
-  if (length(seen_index)) ret[seen] <- evaluations[seen_index]
-  unseen_index <- setdiff(seq_along(x), seen_index) 
+  ret <- rep(NA, length(new_arg))
+  ret[seen] <- evaluations[seen_index]
   ret[!seen] <- 
-    evaluator(x[unseen_index], arg = arg, evaluations = evaluations)
+    evaluator(new_arg[!seen], arg = arg, evaluations = evaluations)
   ret
 }
 
@@ -47,26 +48,28 @@ evaluate.tfb <- function(object, arg, ...) {
   if (is.null(arg)) arg <- tidyfun::arg(object)
   arg <- ensure_list(arg)
   assert_arg(arg, object)
-  arg <- adjust_resolution(arg, object, unique = FALSE)
   if (length(arg) == 1) {
     arg <- unlist(arg)
     evals <- evaluate_tfb_once(x = arg, 
-      arg = attr(object, "arg"), 
+      arg = arg(object), 
       coefs = do.call(cbind, coef(object)),
       basis = attr(object, "basis"),
-      X = attr(object, "basis_matrix"))
+      X = attr(object, "basis_matrix"),
+      resolution = tidyfun:::resolution(object))
     ret <- split(evals, col(evals))
   } else {
     ret <- pmap(list(arg, ensure_list(arg(object)), coef(object)),
       ~ evaluate_tfb_once(x = ..1, arg = ..2, coefs = ..3, 
-        basis = attr(object, "basis"), X = attr(object, "basis_matrix")))
+        basis = attr(object, "basis"), X = attr(object, "basis_matrix"),
+        resolution = tidyfun:::resolution(object)))
   }
   names(ret) <- names(object)
   ret
 }  
 
-evaluate_tfb_once <- function(x, arg, coefs, basis, X) {
-  seen <- match(x, arg)
+evaluate_tfb_once <- function(x, arg, coefs, basis, X, resolution) {
+  seen <- match(round_resolution(x, resolution), 
+    round_resolution(arg, resolution))
   seen_index <- na.omit(seen)
   seen <- !is.na(seen)
   if (all(seen)) return(X[seen_index, ,drop = FALSE] %*% coefs)

@@ -14,7 +14,7 @@ new_tfd <- function(arg, datalist, regular, domain, evaluator, resolution) {
   resolution <- resolution %||% get_resolution(arg)
   if (!regular) {
     datalist <- map2(datalist, arg, 
-      ~ list(arg = unname(.apply_resolution(.y[!is.na(.x)], resolution, domain)),
+      ~ list(arg = unname(.y[!is.na(.x)]),
           value = unname(.x[!is.na(.x)])))
     n_evals <- map(datalist, ~ length(.x$value))
     if (any(n_evals == 0)) warning("NA entries created.")
@@ -23,7 +23,7 @@ new_tfd <- function(arg, datalist, regular, domain, evaluator, resolution) {
     arg <- numeric(0)
     class <- "tfd_irreg"
   } else {
-    arg <- list(.apply_resolution(arg[[1]], resolution, domain))
+    arg <- list(arg[[1]])
     class <- "tfd_reg"
   }
   ret <- structure(datalist, 
@@ -67,8 +67,8 @@ new_tfd <- function(arg, datalist, regular, domain, evaluator, resolution) {
 #' and a function value is requested at $t = 1.01$, $f(1)$ will be returned if
 #' `resolution` < .01. By default, this will be set to an integer-valued power
 #' of 10 one smaller than the than the smallest difference between adjacent
-#' arg-values: e.g., if the smallest observed difference is $0.12$, the
-#' resolution will be $0.01$
+#' arg-values: e.g., if the smallest difference between consecutive 
+#' arg-values is $0.12$, the resolution will be $0.01$, etc.
 #'  
 #' @param data a `matrix`, `data.frame` or `list` of suitable shape, or another `tf`-object.
 #' @param ... not used in `tfd`, except for `tfd.tf` -- specify `arg` and `ìnterpolate = TRUE` to 

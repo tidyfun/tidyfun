@@ -7,16 +7,10 @@ as.tfd.default <- function(data, ...) {
 
 # TODO: this ignores arg, domain for now, only needed internally in c.tfd
 #' @rdname tfd
-as.tfd_irreg <- function(data, signif = NULL, ...) UseMethod("as.tfd_irreg")
+as.tfd_irreg <- function(data, ...) UseMethod("as.tfd_irreg")
 
-as.tfd_irreg.tfd_reg <- function(data, signif = NULL, ...) {
+as.tfd_irreg.tfd_reg <- function(data, ...) {
   arg <- ensure_list(arg(data))
-  if (!is.null(signif)) {
-    arg <- .adjust_resolution(arg, signif = signif, unique = TRUE)
-    if (length(arg[[1]]) != length(arg(data))) {
-      stop("Converting 'data' to lower resolution would create non-unique arg.")
-    }
-  }
   ret <- map2(evaluations(data), arg, ~ list(arg = .y, value = .x))
   attributes(ret) <- attributes(data)
   attr(ret, "arg") <- numeric(0)
@@ -24,16 +18,7 @@ as.tfd_irreg.tfd_reg <- function(data, signif = NULL, ...) {
   ret
 }
 
-# TODO: this ignores arg, domain for now.....
-as.tfd_irreg.tfd_irreg <- function(data, signif = 4, ...) {
-  arg <- arg(data)
-  if (!is.null(signif)) {
-    arg <- .adjust_resolution(arg, signif = signif, unique = TRUE)
-    if (any(rapply(arg, length) != rapply(attr(data, "arg"), length))) {
-      stop("Can't convert data to lower resolution: creates non-unique arg.")
-    }
-  }
-  arg(data) <- arg
+as.tfd_irreg.tfd_irreg <- function(data, ...) {
   data
 }
 
@@ -48,7 +33,6 @@ as.data.frame.tfd <- function(x, row.names = NULL, optional = FALSE,
   if (is.null(arg)) {
     arg <- ensure_list(arg(x))
   } 
-  arg <- adjust_resolution(arg, x)
   tmp <- x[, arg, interpolate = interpolate, matrix = FALSE]
   id <- unique_id(names(x)) %||% seq_along(x)
   id <- ordered(id, levels = id) # don't reshuffle 
@@ -61,7 +45,6 @@ as.matrix.tfd <- function(x, arg = NULL, interpolate = FALSE, ...) {
   if (is.null(arg)) {
     arg <- sort(unlist(arg(x)))
   } 
-  arg <- adjust_resolution(arg, x)
   ret <- x[, arg, interpolate = interpolate, matrix = TRUE]
   structure(ret, arg = as.numeric(colnames(ret)))
 }
@@ -89,7 +72,6 @@ as.data.frame.tfb <- function(x, row.names = NULL, optional = FALSE,
   if (is.null(arg)) {
     arg <- ensure_list(arg(x))
   } 
-  arg <- adjust_resolution(arg, x)
   tmp <- x[, arg, matrix = FALSE]
   id <- unique_id(names(x)) %||% seq_along(x)
   id <- ordered(id, levels = id) # don't reshuffle 

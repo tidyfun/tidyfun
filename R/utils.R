@@ -12,12 +12,12 @@ unique_id <- function(x)  {
 zoo_wrapper <- function(f, ...){
   dots <- list(...)
   function(x, arg, evaluations) {
-      x_arg <- sort(unique(c(x, arg)))
-      x_arg_match <- match(x_arg, arg, nomatch = length(arg) + 1)
-      requested <-  x_arg %in% x
-      dots[[length(dots) + 1]] <- zoo(evaluations[x_arg_match], x_arg)
-      ret <- do.call(f, dots)
-      coredata(ret)[requested]
+    x_arg <- sort(c(x, arg))
+    x_arg_match <- match(x_arg, arg, nomatch = length(arg) + 1)
+    requested <-  x_arg %in% x
+    dots[[length(dots) + 1]] <- zoo(evaluations[x_arg_match], x_arg)
+    ret <- do.call(f, dots)
+    coredata(ret)[requested]
   }
 }
 approx_linear <- zoo_wrapper(na.approx, na.rm = FALSE)
@@ -67,7 +67,13 @@ assert_arg <- function(arg, x, check_unique = TRUE){
   }
 }
 assert_arg_vector <- function(arg, x, check_unique = TRUE) {
-  assert_numeric(arg, any.missing = FALSE, unique = check_unique,
+  if (check_unique) {
+    round_arg <- round_resolution(arg, tidyfun:::resolution(x))
+    if (any(duplicated(round_arg))) {
+      stop("Non-unique arg-values (for resolution).")
+    }
+  } 
+  assert_numeric(arg, any.missing = FALSE, unique = FALSE,
     lower = domain(x)[1], upper = domain(x)[2])
 }
 
@@ -95,7 +101,7 @@ assert_arg_vector <- function(arg, x, check_unique = TRUE) {
 # }
 
 get_resolution <- function(arg) {
-  min_diff = map(arg, ~ min(diff(.x))) %>% unlist %>% min
+  min_diff = map(ensure_list(arg), ~ min(diff(.x))) %>% unlist %>% min
   if (min_diff < .Machine$double.eps * 10) {
     stop("(Almost) non-unique arg values detected.")
   }
@@ -108,29 +114,24 @@ resolution <- function(f) {
 
 adjust_resolution <- function(arg, f, unique = TRUE) {
   resolution <- tidyfun:::resolution(f)
-  domain <- domain(f)
-  .adjust_resolution(arg, resolution, domain, unique = unique)
+  .adjust_resolution(arg, resolution, unique = unique)
+}
+
+.adjust_resolution <- function(arg, resolution, unique = TRUE){
+  u <- if (unique) base::unique else function(x) x
+  if (is.list(arg)) {
+    map(arg, ~ u(round_resolution(., resolution)))
+  } else {
+    u(round_resolution(arg, resolution))
+  }  
 }
 
 # "quantize" the values in arg to the given resolution
-.apply_resolution <- function(arg, resolution, domain) {
-  if (is_missing(domain)) domain <- range(arg)
-  # length of regular sequence with diff <= resolution covering the domain
-  ints <- diff(domain) %/% resolution + 1
-  grid <- seq(domain[1], domain[2], l = ints)
-  # first and last "bin" are only half as wide as the others. who cares.
-  int_index <- findInterval(arg, grid + resolution/2)
-  grid[int_index]
+round_resolution <- function(arg, resolution) {
+  round(arg / resolution) * resolution
 }
 
-.adjust_resolution <- function(arg, resolution, domain, unique = TRUE){
-  u <- if (unique) base::unique else function(x) x
-  if (is.list(arg)) {
-    map(arg, ~ u(.apply_resolution(., resolution, domain)))
-  } else {
-    u(.apply_resolution(arg, resolution, domain))
-  }  
-}
+
 
 is_equidist <- function(f) {
   if (is_irreg(f)) return(FALSE)
@@ -141,7 +142,7 @@ is_equidist <- function(f) {
 
 
 compare_tf_attribs <- function(e1, e2, ignore = c("names", "id")) {
-# TODO: better way to check evaluator/basis functions?
+  # TODO: better way to check evaluator/basis functions?
   a1 <- attributes(e1)
   a2 <- attributes(e2)
   attribs <- union(names(a1), names(a2))

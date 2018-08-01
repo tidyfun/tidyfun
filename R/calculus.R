@@ -143,7 +143,7 @@ integrate.tfd <- function(f, lower = domain(f)[1], upper = domain(f)[2],
   limits <- cbind(lower, upper)
   if (nrow(limits) > 1) {
     if (!definite) .NotYetImplemented() #needs vd-data
-    limits <- adjust_resolution(limits, f) %>% split(1:nrow(limits))
+    limits <- limits %>% split(1:nrow(limits))
   }
   arg <- map2(arg, ensure_list(limits),
     ~ c(.y[1], .x[.x > .y[1] & .x < .y[2]], .y[2]))
@@ -183,7 +183,6 @@ integrate.tfb <- function(f, lower = domain(f)[1], upper = domain(f)[2],
   }
   limits <- cbind(lower, upper)
   if (nrow(limits) > 1) .NotYetImplemented() #needs vd-data
-  limits <- adjust_resolution(limits, f)
   arg <- c(limits[1], arg[arg > limits[1] & arg < limits[2]], 
     limits[2])
   if (grepl("s\\(arg", attr(f, "basis_label"))) {

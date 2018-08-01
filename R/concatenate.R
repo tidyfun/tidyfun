@@ -68,7 +68,7 @@ c.tfd <- function(...) {
   }
   if (any(make_irreg)) {
     funs <- map_at(funs, which(make_irreg), 
-      ~ as.tfd_irreg(., signif = new_signif))
+      ~ as.tfd_irreg(.))
   }
   if (!all(compatible[, "evaluator_name"])) {
     warning("inputs have different evaluators, result has ", 
