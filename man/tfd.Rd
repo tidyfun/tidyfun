@@ -15,7 +15,7 @@
 \usage{
 as.tfd(data, ...)
 
-as.tfd_irreg(data, signif = NULL, ...)
+as.tfd_irreg(data, ...)
 
 \method{as.data.frame}{tfd}(x, row.names = NULL, optional = FALSE,
   arg = NULL, interpolate = FALSE, ...)
@@ -25,27 +25,25 @@ as.tfd_irreg(data, signif = NULL, ...)
 tfd(data, ...)
 
 \method{tfd}{matrix}(data, arg = NULL, domain = NULL,
-  evaluator = approx_linear, signif = 4, ...)
+  evaluator = approx_linear, resolution = NULL, ...)
 
 \method{tfd}{numeric}(data, arg = NULL, domain = NULL,
-  evaluator = approx_linear, signif = 4, ...)
+  evaluator = approx_linear, resolution = NULL, ...)
 
 \method{tfd}{data.frame}(data, id = 1, arg = 2, value = 3,
-  domain = NULL, evaluator = approx_linear, signif = 4, ...)
+  domain = NULL, evaluator = approx_linear, resolution = NULL, ...)
 
 \method{tfd}{list}(data, arg = NULL, domain = NULL,
-  evaluator = approx_linear, signif = 4, ...)
+  evaluator = approx_linear, resolution = NULL, ...)
 
 \method{tfd}{tf}(data, arg = NULL, domain = NULL, evaluator = NULL,
-  signif = NULL, ...)
+  resolution = NULL, ...)
 }
 \arguments{
 \item{data}{a \code{matrix}, \code{data.frame} or \code{list} of suitable shape, or another \code{tf}-object.}
 
 \item{...}{not used in \code{tfd}, except for \code{tfd.tf} -- specify \code{arg} and \code{ìnterpolate = TRUE} to
 turn an irregular \code{tfd} into a regular one, see examples.}
-
-\item{signif}{significant digits of the "resolution" of the evaluation grid.  See details.}
 
 \item{x}{an \code{tfd} object}
 
@@ -63,6 +61,8 @@ for values in \code{arg} for which no original data is available? Only relevant 
 \item{domain}{range of the \code{arg}.}
 
 \item{evaluator}{a function accepting arguments \code{x, arg, evaluations}. See details.}
+
+\item{resolution}{resolution of the evaluation grid. See details.}
 
 \item{id}{The name/number of the column defining which data belong to which function.}
 
@@ -103,9 +103,13 @@ See \code{tidyfun:::zoo_wrapper} and \code{tidyfun:::approx_linear}, which is si
 this.
 }
 
-\strong{\code{signif}}: \code{arg}-values that are equivalent up to this significant digit are
-treated as identical. E.g., if an evaluation of f(t) is available at t=1 and a function
-value is requested at t = 1.001, f(1) will be returned if \code{signif} < 4.
+\strong{\code{resolution}}: \code{arg}-values that are equivalent up to this difference are
+treated as identical. E.g., if an evaluation of $f(t)$ is available at $t=1$
+and a function value is requested at $t = 1.01$, $f(1)$ will be returned if
+\code{resolution} < .01. By default, this will be set to an integer-valued power
+of 10 one smaller than the than the smallest difference between adjacent
+arg-values: e.g., if the smallest difference between consecutive
+arg-values is $0.12$, the resolution will be $0.01$, etc.
 }
 \examples{
 #turn irregular to regular tfd

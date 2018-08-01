@@ -34,7 +34,6 @@ prep_zoom_args <- function(f, begin, end) {
     end   <- rep(end, length(f)) 
   } else regular <- FALSE
   stopifnot(length(begin) == length(end), all(begin < end))
-  # TODO: adjust signif for domain
   new_domain <- c(min(begin), max(end))
   list(begin = begin, end = end, dom = new_domain, regular = regular)
 }
@@ -45,7 +44,7 @@ zoom.tfd <- function(f, begin = domain(f)[1], end = domain(f)[2], ...) {
   args <- prep_zoom_args(f, begin, end)
   ret <- pmap(list(f[ , arg(f), matrix = FALSE], args$begin, args$end), 
     ~ filter(..1, arg >= ..2 & arg <= ..3))
-  ret <- tfd(ret, domain = args$dom, signif = attr(f, "signif_arg"))
+  ret <- tfd(ret, domain = args$dom, resolution = attr(f, "resolution"))
   if (is_irreg(ret)) {
     nas <- map_lgl(ret, ~ length(.x$arg) == 0)
     if (all(nas)) stop("no data in zoom region.")

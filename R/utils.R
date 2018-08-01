@@ -127,17 +127,20 @@ adjust_resolution <- function(arg, f, unique = TRUE) {
 }
 
 # "quantize" the values in arg to the given resolution
-round_resolution <- function(arg, resolution) {
-  round(arg / resolution) * resolution
+round_resolution <- function(arg, resolution, updown = 0) {
+  if (updown == 0) return(round(arg / resolution) * resolution)
+  if (updown < 0) return(floor(arg / resolution) * resolution)
+  if (updown > 0) return(ceiling(arg / resolution) * resolution)
 }
 
 
 
 is_equidist <- function(f) {
   if (is_irreg(f)) return(FALSE)
-  n_diffs <- map_lgl(ensure_list(arg(f)), 
-    ~ round(diff(.x), attr(f, "signif")) %>% duplicated %>% tail(-1) %>% all)
-  all(n_diffs)
+  unique_diffs <- map_lgl(ensure_list(arg(f)), 
+    ~ round_resolution(.x, attr(f, "resolution")) %>%diff %>% 
+    duplicated %>% tail(-1) %>% all)
+  all(unique_diffs)
 }
 
 

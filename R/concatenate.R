@@ -59,12 +59,12 @@ c.tfd <- function(...) {
     warning("concatenating functions on different grids.")
     make_irreg[!irreg] <- TRUE
   }
-  new_signif <- NULL
-  if (!all(compatible[, "signif_arg"])) {
-    new_signif <- attr(funs[[1]], "signif_arg")
+  new_resolution <- NULL
+  if (!all(compatible[, "resolution"])) {
+    new_resolution <- tidyfun:::resolution(funs[[1]])
     warning("inputs have different resolutions, result has ", 
-      "signif_arg =", new_signif)
-    make_irreg[!compatible[, "signif_arg"]] <- TRUE
+      "resolution =", new_resolution)
+    make_irreg[!compatible[, "resolution"]] <- TRUE
   }
   if (any(make_irreg)) {
     funs <- map_at(funs, which(make_irreg), 
@@ -111,9 +111,9 @@ c.tfb <- function(...) {
         flatten(list(list(.), arg = list(arg(funs[[1]])), 
           attr(funs[[1]], "basis_args")))))
   }    
-  if (!all(compatible[, "signif_arg"])) {
+  if (!all(compatible[, "resolution"])) {
     warning("inputs have different resolutions, result has ", 
-      "signif_arg =", attr(funs[[1]], "signif_arg"))
+      "resolution =", attr(funs[[1]], "resolution"))
   }
   attr_ret <- attributes(funs[[1]])
   attr_ret$names <- {

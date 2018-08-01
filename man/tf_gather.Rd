@@ -5,7 +5,7 @@
 \title{Gather all columns representing functional measurements into a \code{tfd}-object}
 \usage{
 tf_gather(data, ..., key = ".tfd", arg = NULL, domain = NULL,
-  evaluator = approx_linear, signif = 4)
+  evaluator = approx_linear, resolution = NULL)
 }
 \arguments{
 \item{data}{a data frame -- note that \code{dplyr} does not handle matrix columns well,
@@ -30,7 +30,7 @@ See \code{\link[=tfd]{tfd()}}.}
 
 \item{evaluator}{a function accepting arguments \code{x, arg, evaluations}. See details.}
 
-\item{signif}{significant digits of the "resolution" of the evaluation grid.  See details.}
+\item{resolution}{resolution of the evaluation grid. See details.}
 }
 \value{
 a modified \code{data.frame} with a \code{tfd} column replacing the \code{...}.

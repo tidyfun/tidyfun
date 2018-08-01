@@ -11,13 +11,13 @@
 tfb_fpc(data, ...)
 
 \method{tfb_fpc}{data.frame}(data, id = 1, arg = 2, value = 3,
-  domain = NULL, smooth = TRUE, signif = 4, ...)
+  domain = NULL, smooth = TRUE, resolution = NULL, ...)
 
 \method{tfb_fpc}{matrix}(data, arg = NULL, domain = NULL, smooth = TRUE,
-  signif = 4, ...)
+  resolution = NULL, ...)
 
 \method{tfb_fpc}{numeric}(data, arg = NULL, domain = NULL, smooth = TRUE,
-  signif = 4, ...)
+  resolution = NULL, ...)
 
 \method{tfb_fpc}{tf}(data, arg = NULL, smooth = TRUE, ...)
 }
@@ -41,7 +41,7 @@ For the \code{data.frame}-method: the name/number of the column defining the eva
 \item{smooth}{use smoothed mean function and smoothed covariance surface estimates
 from \code{\link[refund:fpca.sc]{refund::fpca.sc()}} or simply perform a (truncated) PCA of the data? See Details.}
 
-\item{signif}{significant digits of the "resolution" of the evaluation grid.  See details.}
+\item{resolution}{resolution of the evaluation grid. See details.}
 }
 \description{
 These functions perform a (functional) principal component analysis of the

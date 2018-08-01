@@ -68,5 +68,5 @@ sparsify <- function(f, dropout = .5, ...) {
   stopifnot(is_tf(f))
   tf_evals <- map(evaluations(f), 
     ~ ifelse(runif(length(.x)) < dropout, NA, .x))
-  tfd(tf_evals, arg(f), signif = attr(f, "signif"), domain = domain(f))
+  tfd(tf_evals, arg(f), resolution = attr(f, "resolution"), domain = domain(f))
 }

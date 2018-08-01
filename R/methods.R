@@ -102,7 +102,6 @@ basis <- function(f) {
 #' @rdname tfmethods
 #' @export
 `arg<-.tfd_irreg` <- function(x, value) {  
-  value <- map(value, ~signif(.x, attr(x, "signif_arg")))
   assert_arg(value, x)
   ret <- map2(evaluations(x), value, ~list(arg = .y, data = .x))
   attributes(ret) <- attributes(x)
@@ -113,7 +112,6 @@ basis <- function(f) {
 #' @rdname tfmethods
 #' @export
 `arg<-.tfd_reg` <- function(x, value) {
-  value <- map(value, ~signif(.x, attr(x, "signif_arg")))
   assert_arg(value, x)
   attr(x, "arg") <- value
   forget(attr(x, "evaluator"))

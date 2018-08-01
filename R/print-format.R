@@ -90,7 +90,7 @@ format.tf <- function(x, digits = 2, nsmall = 0, width = options()$width,
   long <- length(x) > n
   if (long && width > 0 && width <= 30) 
     x = head(x, n)
-  str <- string_rep_tf(x, signif_arg = attr(x, "signif_arg"), 
+  str <- string_rep_tf(x, signif_arg = abs(floor(log10(attr(x, "resolution")))), 
     digits = digits, nsmall = nsmall, ...)
   if (prefix) {
     prefix <- if (!is.null(names(x))) 
@@ -128,7 +128,8 @@ pillar_shaft.tf <- function(x, ...) {
   digits = options("pillar.sigfig")$pillar.sigfig
   if (is.null(digits))
     digits = options("digits")$digits
-  out <- format(x, width = 30L, digits = min(digits, attr(x, "signif")), 
+  out <- format(x, width = 30L, 
+    digits = min(digits, abs(floor(log10(attr(x, "resolution"))))), 
     prefix = FALSE, ...)
-  pillar::new_pillar_shaft_simple(out, align = "right", min_width = 25)
+  pillar::new_pillar_shaft_simple(out, align = "right", min_width = NULL)
 }

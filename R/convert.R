@@ -43,7 +43,7 @@ as.data.frame.tfd <- function(x, row.names = NULL, optional = FALSE,
 #' @export
 as.matrix.tfd <- function(x, arg = NULL, interpolate = FALSE, ...) {
   if (is.null(arg)) {
-    arg <- sort(unlist(arg(x)))
+    arg <- sort(unique(unlist(arg(x))))
   } 
   ret <- x[, arg, interpolate = interpolate, matrix = TRUE]
   structure(ret, arg = as.numeric(colnames(ret)))

@@ -34,7 +34,7 @@
 #' (d2 <- dplyr::bind_cols(id = rownames(d), d))
 #' tf_gather(d2, -id) # tf_gather(d2, matches("cca")); tf_gather(d2, -1); etc
 tf_gather <- function(data, ..., key = ".tfd", arg = NULL, domain = NULL, 
-    evaluator = approx_linear, signif = 4) {
+    evaluator = approx_linear, resolution = NULL) {
   key_var <- quo_name(enexpr(key))
   evaluator <- quo_name(enexpr(evaluator))
   search_key <- isTRUE(key == ".tfd")
@@ -74,7 +74,7 @@ tf_gather <- function(data, ..., key = ".tfd", arg = NULL, domain = NULL,
   data %>% select(-gather_vars) %>% 
     mutate(!!key_var := 
         tfd(tfd_data, arg = arg, domain = domain, evaluator = !!evaluator, 
-          signif = signif)) 
+          resolution = resolution)) 
 }
 
 

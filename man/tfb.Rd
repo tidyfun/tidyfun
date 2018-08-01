@@ -23,22 +23,22 @@ as.tfb(data, basis = c("mgcv", "fpc"), ...)
 tfb(data, ...)
 
 \method{tfb}{data.frame}(data, id = 1, arg = 2, value = 3,
-  domain = NULL, penalized = TRUE, signif = 4, ...)
+  domain = NULL, penalized = TRUE, resolution = NULL, ...)
 
 \method{tfb}{matrix}(data, arg = NULL, domain = NULL, penalized = TRUE,
-  signif = 4, ...)
+  resolution = NULL, ...)
 
 \method{tfb}{numeric}(data, arg = NULL, domain = NULL, penalized = TRUE,
-  signif = 4, ...)
+  resolution = NULL, ...)
 
 \method{tfb}{list}(data, arg = NULL, domain = NULL, penalized = TRUE,
-  signif = 4, ...)
+  resolution = NULL, ...)
 
 \method{tfb}{tfd}(data, arg = NULL, domain = NULL, penalized = TRUE,
-  signif = NULL, ...)
+  resolution = NULL, ...)
 
 \method{tfb}{tfb}(data, arg = NULL, domain = NULL, penalized = TRUE,
-  signif = NULL, ...)
+  resolution = NULL, ...)
 }
 \arguments{
 \item{data}{a \code{matrix}, \code{data.frame} or \code{list} of suitable shape, or another
@@ -71,7 +71,7 @@ For the \code{data.frame}-method: the name/number of the column defining the eva
 \item{penalized}{should the coefficients of the basis representation be estimated
 via \code{\link[mgcv:magic]{mgcv::magic()}} (default) or ordinary least squares.}
 
-\item{signif}{significant digits of the "resolution" of the evaluation grid.  See details.}
+\item{resolution}{resolution of the evaluation grid. See details.}
 }
 \value{
 an \code{tfb}-object (or a \code{data.frame}/\code{matrix} for the conversion

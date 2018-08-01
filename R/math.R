@@ -27,7 +27,7 @@ summarize_tf <- function(..., op = NULL, eval = FALSE) {
   arg <- as.numeric(colnames(m))
   args <- c(list(ret), arg = list(arg),
     domain = list(domain(funs)), 
-    signif = attr(funs, "signif_arg"))
+    resolution = attr(funs, "resolution"))
   if (eval) {
     ret <- do.call(tfd, c(args, evaluator = attr(funs, "evaluator_name")))
     if (is_irreg(funs) & !is_irreg(ret)) ret <- as.tfd_irreg(ret)
