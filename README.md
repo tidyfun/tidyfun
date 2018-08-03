@@ -1,8 +1,6 @@
 # **`tidyfun`**
 
-The goal of **`tidyfun`** is to provide accessible and well-documented software 
-that makes functional data analysis in `R` easy, specifically:  
-data wrangling and exploratory analysis.
+**`tidyfun`** makes data wrangling and exploratory analysis of functional data easier.
 
 **`tidyfun`** provides:  
 
@@ -31,28 +29,28 @@ are defined for **`tidyfun`**'s data structures.
 
 The `tf` objects are basically glorified lists, so they work well as columns in data frames. That makes it a lot easier to keep conventional data and functional measurements together in one object for preprocessing, exploratory analysis and description.
 
-At the same time, they actually behave like vectors of *functions* to some extent, i.e., they can be evaluated on any point of their domain, integrated or differentiated, etc.
+At the same time, they actually behave like vectors of *functions* to some extent, i.e., they can be evaluated on any point in their domain, they can be integrated or differentiated, etc.
 
 #### `tidyverse` verbs for dealing with functional data inside data frames
 
 All `dplyr` verbs work on `tf`-columns, so you can `filter`, `mutate`, `summarize` etc
 functional data pretty much like conventional data.
 **`tidyfun`** also provides `tf_gather` & `tf_spread`, `tf_nest` & `tf_unnest`
-in order to quickly and easily create, reshape and transform functional data columns.
+in order to reshape tables with functional data, i.e., go from wide to narrow, or from long to short, and *vice versa*.
 
 #### New `ggplot2` `geoms` and `stats` for functional data
 
-**`tidyfun`** defines **pasta-themed** `geom`s with a **`tf`**-aesthetic for functional data:
+**`tidyfun`** defines **pasta-themed** `geom`s for functional data:
 
 - **`geom_spaghetti`** for lines
 - **`geom_meatballs`**  for (lines &) points
-- **`geom_lasagna`** for [lasagna plots](https://asset.jmir.pub/assets/76aeec48564abf0e6f6da8e9cd06346d.png), with an **`order`**-aesthetic to sort the lasagna layers
-
-To come:
-
-- **`geom_pappardelle`** for functional boxplots
-- **`geom_capellini`** for little sparklines / [glyphs](http://ggobi.github.io/ggally/#ggallyglyphs) on maps etc. 
+- **`gglasagna`** for [lasagna plots](https://asset.jmir.pub/assets/76aeec48564abf0e6f6da8e9cd06346d.png), with an **`order`**-aesthetic to sort the lasagna layers
 
 ----------------------
 
-**See the vignette for code examples.**
+**Do have a look at the vignette for code examples.**
+
+Found a bug? Got a question? Got an idea?   
+Please let us know so we can make it better.  
+
+
