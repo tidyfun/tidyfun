@@ -77,6 +77,8 @@ deriv_tfb_fpc <- function(expr, order = 1, lower, upper,
 deriv.tfd <- function(expr, order = 1, arg = NULL, ...) {
   #TODO: should this interpolate back to the original grid?
   # shortens the domain (slightly), for now.
+  # this is necessary so that we don't get NAs when trying to evaluate derivs over 
+  # their default domain etc. 
   if (is_irreg(expr)) warning("differentiating irregular data could be sketchy.")
   data <- as.matrix(expr, arg = arg, interpolate = TRUE)
   arg <- as.numeric(colnames(data))
