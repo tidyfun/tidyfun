@@ -48,7 +48,7 @@ deriv_tfb_fpc <- function(expr, order = 1, lower, upper,
   environment(attr(expr, "basis"))$efunctions <- new_basis
   attr(expr, "basis_matrix") <- t(as.matrix(new_basis))
   attr(expr, "arg") <- arg(new_basis)
-  attr(expr, "domain") <- range(arg(new_basis))
+  attr(expr, "domain") <- domain(new_basis)
   expr
 }
 
@@ -76,13 +76,12 @@ deriv_tfb_fpc <- function(expr, order = 1, lower, upper,
 #' @rdname tfcalculus
 deriv.tfd <- function(expr, order = 1, arg = NULL, ...) {
   #TODO: should this interpolate back to the original grid?
-  # shortens the domain (slightly), for now.
   if (is_irreg(expr)) warning("differentiating irregular data could be sketchy.")
   data <- as.matrix(expr, arg = arg, interpolate = TRUE)
   arg <- as.numeric(colnames(data))
   derived <- deriv_matrix(data, arg, order)
   ret <- tfd(derived$data, derived$arg, 
-    domain = range(derived$arg), #!! shorter
+    domain = domain(expr), 
     resolution = tidyfun:::resolution(expr))
   evaluator(ret) <- attr(expr, "evaluator_name")
   ret
