@@ -3,6 +3,7 @@
 \name{approx_linear}
 \alias{approx_linear}
 \alias{approx_spline}
+\alias{approx_none}
 \alias{approx_fill_extend}
 \alias{approx_locf}
 \alias{approx_nocb}
@@ -11,6 +12,8 @@
 approx_linear(x, arg, evaluations)
 
 approx_spline(x, arg, evaluations)
+
+approx_none(x, arg, evaluations)
 
 approx_fill_extend(x, arg, evaluations)
 
@@ -38,6 +41,7 @@ The list:
 \code{\link[zoo:na.approx]{zoo::na.approx()}} with \code{na.rm = FALSE})  -- this is the default,
 \item \code{approx_spline} for cubic spline interpolation, (i.e., \code{\link[zoo:na.spline]{zoo::na.spline()}}
 with \code{na.rm = FALSE}),
+\item \code{approx_none} in order to not inter-/extrapolate ever (i.e., \code{\link[zoo:na.fill]{zoo::na.fill()}} with \code{fill = NA})
 \item \code{approx_fill_extend} for linear interpolation and constant extrapolation
 (i.e., \code{\link[zoo:na.fill]{zoo::na.fill()}} with \code{fill = "extend"})
 \item \code{approx_locf} for "last observation carried forward"  (i.e.,
