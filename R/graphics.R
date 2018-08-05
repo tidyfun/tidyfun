@@ -4,7 +4,8 @@ prep_plotting_arg <- function(f, n_grid) {
   }  else {
     modelr::seq_range(domain(f), n = n_grid) %>% 
       round_resolution(attr(f, "resolution")) %>%
-      setdiff(round_resolution(tidyfun::arg(f), attr(f, "resolution"))) %>% 
+      setdiff(
+        round_resolution(unlist(tidyfun::arg(f)), attr(f, "resolution"))) %>% 
       union(unlist(tidyfun::arg(f))) %>% sort
   }
 }
