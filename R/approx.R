@@ -28,6 +28,7 @@ zoo_wrapper <- function(f, ...){
 #' [zoo::na.approx()] with `na.rm = FALSE`)  -- this is the default,
 #' - `approx_spline` for cubic spline interpolation, (i.e., [zoo::na.spline()]
 #' with `na.rm = FALSE`),
+#' - `approx_none` in order to not inter-/extrapolate ever (i.e., [zoo::na.fill()] with `fill = NA`)
 #' - `approx_fill_extend` for linear interpolation and constant extrapolation
 #' (i.e., [zoo::na.fill()] with `fill = "extend"`)
 #' - `approx_locf` for "last observation carried forward"  (i.e.,
@@ -48,6 +49,10 @@ approx_linear <- zoo_wrapper(na.approx, na.rm = FALSE)
 #' @rdname approx
 #' @export
 approx_spline <- zoo_wrapper(na.spline, na.rm = FALSE)
+
+#' @rdname approx
+#' @export
+approx_none <- zoo_wrapper(na.fill, fill = NA)
 
 #' @rdname approx
 #' @export
