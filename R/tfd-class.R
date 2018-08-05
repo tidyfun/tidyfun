@@ -33,7 +33,7 @@ new_tfd <- function(arg, datalist, regular, domain, evaluator, resolution) {
     evaluator_name = evaluator,
     resolution = resolution, #maybe turn this into a <global> option? 
     class = c(class, "tfd", "tf"))
-  assert_arg(arg, ret)
+  assert_arg(arg(ret), ret)
   ret
 }
 

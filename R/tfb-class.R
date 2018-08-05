@@ -57,7 +57,7 @@ smooth_spec_wrapper <- function(spec, deriv = 0, eps = 1e-6) {
 #' @importFrom stats var na.omit median
 mgcv_tfb <- function(data, regular, domain = NULL,   
     penalized = TRUE, resolution = NULL, verbose = TRUE, ...) {
-  domain <- domain %||% range(arg)
+  domain <- domain %||% range(data$arg)
   arg_u <- mgcv::uniquecombs(data$arg, ordered = TRUE)
   resolution <- resolution %||%  get_resolution(arg_u)
   s_args <- list(...)[names(list(...)) %in% names(formals(mgcv::s))]
@@ -181,8 +181,10 @@ tfb.data.frame <- function(data, id = 1, arg = 2, value = 3,
     domain = NULL, penalized = TRUE, resolution = NULL, ...) {
   data <- df_2_df(data, id, arg, value)
   regular <- n_distinct(table(data[[1]])) == 1
-  mgcv_tfb(data, regular, domain = domain,   
+  ret <- mgcv_tfb(data, regular, domain = domain,   
     penalized = penalized, resolution = resolution, ...)
+  assert_arg(arg(ret), ret)
+  ret
 }
 
 #' @rdname tfb
@@ -196,6 +198,7 @@ tfb.matrix <- function(data, arg = NULL,
   ret <- mgcv_tfb(data, regular, domain = domain,   
     penalized = penalized, resolution = resolution, ...)
   names(ret) <- data_names
+  assert_arg(arg(ret), ret)
   ret
 }
 #' @rdname tfb

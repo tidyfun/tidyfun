@@ -45,7 +45,7 @@ assert_arg <- function(arg, x, check_unique = TRUE){
     assert_true(length(arg) %in% c(1, length(x)))
     map(arg, ~ assert_arg_vector(., x = x, check_unique = check_unique))
   } else {
-    assert_arg_vector(arg, x)
+    assert_arg_vector(arg, x, check_unique = check_unique)
   }
 }
 assert_arg_vector <- function(arg, x, check_unique = TRUE) {
