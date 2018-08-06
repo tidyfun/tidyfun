@@ -52,7 +52,7 @@ StatTf <- ggproto("StatTf", Stat,
       rename(group = y___id, x = y___arg, y = y___value)
     tf_eval
   },
-  # need this so arg, order_by gets recognized as valid parameters
+  # need this so arg, spaghetti gets recognized as valid parameters
   # because layer() only checks compute_panel & compute_group
   compute_panel = function(self, data, scales, arg, spaghetti) {
     Stat$compute_panel(self, data, scales)
