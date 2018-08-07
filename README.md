@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/fabian-s/tidyfun.svg?branch=master)](https://travis-ci.org/fabian-s/tidyfun)
+
 # **`tidyfun`**
 
 **`tidyfun`** makes data wrangling and exploratory analysis of functional data easier.
