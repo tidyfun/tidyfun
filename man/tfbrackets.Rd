@@ -54,6 +54,6 @@ Note that these break certain (terrible) R conventions for vector-like objects:\
 }
 \details{
 All of these will trigger errors. Subassigning new elements to positions
-beyond the original length of the object will still fill up the vector with \code{NAs},
-though. I'm a fickle, rainbow-colored unicorn.
+beyond the original length of the object will still fill up the vector
+up to that position with \code{NAs}, though. I'm a fickle, rainbow-colored unicorn.
 }

@@ -5,13 +5,13 @@ Authors@R: c(person("Fabian", "Scheipl", email = "fabian.scheipl@googlemail.com"
 Description: Provides S3 classes and methods for tidy functional data.
 Depends: R (>= 3.4.3)
 Imports:
-  checkmate, digest, dplyr, ggplot2, grid, memoise, mvtnorm, mgcv, modelr, pillar, pracma, purrr, refund, rlang,
+  checkmate, digest, dplyr, GGally, ggplot2, grid, memoise, mvtnorm, mgcv, modelr, pillar, pracma, purrr, refund, rlang,
   stats, stringr, tidyselect, tidyr, zoo
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.0.1
-Suggests: testthat, data.table, knitr, rmarkdown, tidyverse, viridisLite
+Suggests: testthat, data.table, knitr, rmarkdown, tidyverse, viridisLite, maps
 Roxygen: list(markdown = TRUE)
 Collate:
     'approx.R'

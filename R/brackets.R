@@ -11,8 +11,8 @@
 #' - no indexing with integers `> length(x)`
 #' 
 #' All of these will trigger errors. Subassigning new elements to positions
-#' beyond the original length of the object will still fill up the vector with `NAs`, 
-#' though. I'm a fickle, rainbow-colored unicorn.
+#' beyond the original length of the object will still fill up the vector 
+#' up to that position with `NAs`, though. I'm a fickle, rainbow-colored unicorn.
 #' 
 #' 
 #' @param x an `tf`
