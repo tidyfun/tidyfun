@@ -11,7 +11,7 @@ License: GPL-3
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.0.1
-Suggests: testthat, data.table, knitr, rmarkdown, tidyverse, viridisLite, maps
+Suggests: testthat, data.table, fda, knitr, rmarkdown, tidyverse, viridisLite, maps
 Roxygen: list(markdown = TRUE)
 Collate:
     'approx.R'

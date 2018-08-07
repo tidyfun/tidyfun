@@ -73,33 +73,29 @@ data wrangling and exploratory analysis.
 
 ## Example Data
 
-Some example data used in this vignette: 
+Some example data used in this vignette (the code used to create these will be explained later) --
 
-```{r load, echo=FALSE}
+a prepped version of the `refund::DTI` dataset with 2 functional covariates:
+```{r load-dti}
 dti = with(refund::DTI, 
   data.frame(id = ID, sex = sex, 
     case = factor(ifelse(case, "MS", "control")))) %>% as.tbl %>% 
         mutate(cca = tfd(DTI$cca, seq(0,1, l = 93), signif = 2) %>%
                      tfd(arg = seq(0,1,l = 93)),
                rcst = tfd(DTI$rcst, seq(0, 1, l = 55), signif = 3))
+dti
+```
+
+and a simple 5 element vector of functions on a regular grid:
+```{r ex-def}
 ex_data = dti$cca[1:5, seq(0, 1, l = 93), interpolate = TRUE]
 rownames(ex_data) = LETTERS[1:5]
 ex = tfd(ex_data, signif = 2)
-```
-
-```{r, ex-fig, echo = FALSE}
-plot(ex, xlim = c(-0.15, 1), col = pal_5)
-text(x = -.1, y = ex[,0.07], labels = names(ex), col = pal_5)
-```
-
-```{r}
 ex
 ```
-
-A prepped version of `refund::DTI`:
-
-```{r}
-dti
+```{r, ex-fig}
+plot(ex, xlim = c(-0.15, 1), col = pal_5)
+text(x = -.1, y = ex[,0.07], labels = names(ex), col = pal_5)
 ```
 
 ## **`tf`** subclass: **`tfd`**
@@ -119,7 +115,7 @@ ex %>% domain()
 
 ```{r}
 evaluator(ex) %>% str
-evaluator(ex) = approx_spline 
+evaluator(ex) = "approx_spline"
 ```
 
 ## **`tf`** subclass: **`tfd`** 
@@ -153,20 +149,17 @@ dti$cca %>% tfb(verbose = FALSE) %>% object.size() %>% print(units = "Kb")
 - either does a penalized fit with (GCV-based) function-specific smoothing or unpenalized.
 
 ```{r, message = TRUE}
-ex_b = ex %>% tfb(); ex_b[1:2]
+ex_b = ex %>% tfb()
+ex_b[1:2]
+
 ex[1:2] %>% tfb(bs = "tp", k = 55)
 ```
 
-```{r, eval = FALSE}
+```{r}
+layout(t(1:2))
 ex  %>% plot()
 ex_b %>% plot(col = "red")
 ex %>% tfb(k = 35, penalized = FALSE) %>% lines(col = "blue")
-```
-```{r, echo = FALSE, results = 'hide'}
-layout(t(1:2))
-plot(ex, alpha = 1)
-plot(ex_b, col = "red")
-lines(tfb(ex, k = 35, penalized = FALSE), col = "blue")
 ```
 
 ## **`tf`** subclass: **`tfb`** FPC-based
@@ -178,22 +171,17 @@ lines(tfb(ex, k = 35, penalized = FALSE), col = "blue")
 - observed functions are linear combinations of those.
 
 ```{r}
-(ex %>% tfb_fpc(smooth = FALSE, pve = .999))
-(ex %>% tfb_fpc(pve = .95))
+(ex_fpc = ex %>% tfb_fpc(smooth = FALSE, pve = .999))
+(ex_fpc_smooth = ex %>% tfb_fpc(pve = .95))
 ```
 
-```{r, eval = FALSE}
-ex %>% plot()
-ex %>% tfb_fpc(smooth = FALSE, pve = .999) %>% plot(col = "red")
-ex %>% tfb_fpc(pve = .95) %>% lines(col = "blue")
-```
-
-```{r, echo = FALSE, results = 'hide'}
+```{r}
 layout(t(1:2))
-plot(ex, alpha = 1)
-plot(ex  %>% tfb_fpc(smooth = FALSE, pve = .999), col = "red", ylab = "tfb_fpc(ex)")
-lines(ex %>% tfb_fpc(pve = .95), col = "blue")
+ex %>% plot()
+ex_fpc  %>% plot(col = "red", ylab = "tfb_fpc(ex)")
+ex_fpc_smooth %>% lines(col = "blue")
 ```
+
 
 # `tf`-Class: Methods
 
@@ -251,35 +239,26 @@ ex[1:2, seq(0, 1, l = 7), matrix = FALSE] %>% str
 
 ### (simple, local) smoothing
 
-```{r, echo = FALSE}
+```{r}
 layout(t(1:3))
 ex %>% plot(alpha = .2, ylab = "lowess")
 ex %>% smooth("lowess") %>% lines(col = pal_5)
-plot(ex, alpha = .2, ylab = "rolling median (k=5)")
-lines(smooth(ex, "rollmedian", k = 5), col = pal_5)
-plot(ex, alpha = .2, ylab = "Savitzky-Golay (quartic, 11 steps)")
-lines(smooth(ex, "savgol", fl = 11), col = pal_5)
-```
-```{r, eval  = FALSE}
-ex %>% smooth("lowess") %>% plot
-ex %>% smooth("rollmedian", k = 5) %>% plot
-ex %>% smooth("savgol", fl = 11) %>% plot
+
+ex %>% plot(alpha = .2, ylab = "rolling median (k=5)")
+ex %>% smooth("rollmedian", k = 5) %>% lines(col = pal_5)
+
+ex %>% plot(alpha = .2, ylab = "Savitzky-Golay (quartic, 11 steps)")
+ex %>% smooth("savgol", fl = 11) %>% lines(col = pal_5)
 ```
 
 ### differentiate & integrate:
 
-```{r, echo = FALSE}
+```{r}
 layout(t(1:3))
-plot(ex, col = pal_5)
-plot(deriv(smooth(tfd(ex, signif = 4))), col = pal_5, ylab = "deriv(smooth(ex))")
-plot(integrate(ex, definite = FALSE), col = pal_5)
+ex %>% plot(col = pal_5)
+ex %>% smooth() %>% deriv() %>% plot(col = pal_5, ylab = "deriv(smooth(ex))")
+ex %>% integrate(definite = FALSE) %>%  plot(col = pal_5)
 ```
-```{r, eval  = FALSE}
-ex %>% plot
-ex %>% smooth() %>% deriv() %>% plot
-ex %>% integrate(definite = FALSE) %>% plot
-```
-
 ```{r}
 ex %>% integrate()
 ```
@@ -297,10 +276,10 @@ ex %>% where(value > .6 & arg > .5, "first")
 
 ### zoom & query
 
-```{r, ex-fig2, echo = FALSE}
-plot(ex,  xlim = c(-0.15, 1), col = pal_5, lwd = 2)
+```{r, ex-fig2}
+ex %>% plot(xlim = c(-0.15, 1), col = pal_5, lwd = 2)
 text(x = -.1, y = ex[,0.07], labels = names(ex), col = pal_5, cex = 1.5)
-lines(median(ex), col = pal_5[3], lwd = 4)
+median(ex) %>% lines(col = pal_5[3], lwd = 4)
 ```
 
 ```{r}
@@ -337,30 +316,55 @@ plot(ex, type = "lasagna", col = viridis(50))
 - **`geom_spaghetti`** for lines
 - **`geom_meatballs`**  for (lines &) points
 - **`gglasagna`** with **`order`**-arguments to sort the lasagna layers
+- **`geom_capellini`** for little sparklines / glyphs on maps etc.
 
 To come:
 
 - **`geom_pappardelle`** for functional boxplots
-- **`geom_capellini`** for little sparklines / glyphs on maps etc. 
+ 
 
-```{r, eval = FALSE}
-ggplot(dti, aes(y = cca, colour = case)) +
-  geom_spaghetti() + facet_wrap(~ sex)
-```
-
-```{r, dti-fig1, echo = FALSE}
+```{r, dti-fig1}
 ggplot(dti) + 
-  geom_spaghetti(aes(y = cca, col = case, alpha = .2 + .4*(case == "control"))) + facet_wrap(~ sex) + scale_alpha(guide = 'none', range = c(.2, .4))
+  geom_spaghetti(aes(y = cca, col = case, alpha = .2 + .4*(case == "control"))) +
+  facet_wrap(~ sex) + scale_alpha(guide = 'none', range = c(.2, .4))
 ```
 
-```{r, eval = FALSE}
-gglasagna(dti, cca, order = integrate(cca, definite = TRUE)) + facet_wrap(~ case)
-```
-```{r, dti-fig2, echo = FALSE}  
-gglasagna(dti, cca, order = integrate(cca, definite = TRUE), arg = seq(0,1, l = 101)) + 
+```{r, dti-fig2}  
+gglasagna(dti, cca, 
+  order = integrate(cca, definite = TRUE), arg = seq(0,1, l = 101)) + 
   theme(axis.text.y = element_text(size = 6)) + 
     facet_wrap(~ case, ncol = 2, scales = "free")
 ```
+
+Some data prep for the iconic Canadian Weather data:
+```{r}
+canada <- data.frame(
+  place = fda::CanadianWeather$place, 
+  region = fda::CanadianWeather$region, 
+  lat = fda::CanadianWeather$coordinates[,1], 
+  lon = -fda::CanadianWeather$coordinates[,2], 
+  region = fda::CanadianWeather$region)
+
+canada$temp <- tfd(t(fda::CanadianWeather$dailyAv[,,1]), arg = 1:365)
+canada$precipl10 <- tfd(t(fda::CanadianWeather$dailyAv[,,3]), arg = 1:365) %>%
+  smooth
+
+canada_map <- 
+  data.frame(maps::map("world", "Canada", plot = FALSE)[c("x", "y")]) 
+```
+
+Now plot a map of Canada with annual temperature averages in red, 
+precipitation in blue: 
+```{r}
+ ggplot(canada, aes(x = lon, y = lat)) + 
+   geom_capellini(aes(tf = precipl10), width = 4, height = 5, colour = "blue", 
+     line.linetype = 1) +
+   geom_capellini(aes(tf = temp), width = 4, height = 5, colour = "red",
+     line.linetype = 1) +
+   geom_path(data = canada_map, aes(x = x, y = y), alpha = .1) +
+   coord_quickmap()
+```
+
 
 # Wrangling `tf`s inside data frames
 
