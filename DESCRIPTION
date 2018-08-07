@@ -1,9 +1,9 @@
 Package: tidyfun
 Title: Tools for Tidy Functional Data
-Version: 0.0.3
+Version: 0.0.4
 Authors@R: c(person("Fabian", "Scheipl", email = "fabian.scheipl@googlemail.com", role = c("aut", "cre")), person("Jeff", "Goldsmith", role = c("ctb")))
 Description: Provides S3 classes and methods for tidy functional data.
-Depends: R (>= 3.4.3)
+Depends: R (>= 3.4)
 Imports:
   checkmate, digest, dplyr, GGally, ggplot2, grid, memoise, mvtnorm, mgcv, modelr, pillar, pracma, purrr, refund, rlang,
   stats, stringr, tidyselect, tidyr, zoo
