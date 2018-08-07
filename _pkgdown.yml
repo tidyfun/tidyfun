@@ -1,6 +1,48 @@
-pandoc: 1.19.2.1
-pkgdown: 1.1.0
-pkgdown_sha: ~
+title: tidyfun
+url: https://fabian-s.github.io/tidyfun
+template:
+  params:
+    bootswatch: flatly
+reference:
+  - title: "tf - Classes"
+    desc: "Data types defined by tidyfun"
+    contents:
+      - tfd
+      - tfb
+      - tfb_fpc
+      - as.tfd
+      - as.tfb
+      
+  - title: "Methods"
+    desc: "Methods and functions defined for tf-objects"
+    contents:
+       - Ops.tf
+       - tfcalculus
+       - where
+       - smoooth.tf
+       
+  - title: "Wrangling"
+    desc: "Reshaping and transforming tf-objects inside data frames"
+    contents:
+      - tf_gather
+      - tf_spread
+      - tf_nest
+      - tf_unnest
+    
+  - title: "Visualization"
+    desc: "Graphics functions defined for tf-objects"
+    contents:
+      - plot.tf
+      - geom_spaghetti
+      - gglasagna
+      - geom_capellini
+  
+  - title: "Utilities"
+    desc: "Utility functions"
+    contents:
+      - arg
+    
+
 articles:
   Intro: Intro.html
 

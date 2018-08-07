@@ -42,3 +42,5 @@ Collate:
     'where.R'
     'zoom.R'
 VignetteBuilder: knitr
+URL: https://github.com/fabian-s/tidyfun
+BugReports: https://github.com/fabian-s/tidyfun/issues
