@@ -2,6 +2,7 @@
 % Please edit documentation in R/brackets.R
 \name{[.tf}
 \alias{[.tf}
+\alias{index.tf}
 \alias{[<-.tf}
 \title{Accessing/evaluating, subsetting and subassigning \code{tf}s}
 \usage{

@@ -37,6 +37,7 @@
 #' @import checkmate
 #' @rdname tfbrackets
 #' @export
+#' @aliases index.tf
 `[.tf` <- function(x, i, j, interpolate = TRUE, matrix = TRUE) {
   if (!interpolate & inherits(x, "tfb")) {
     interpolate <- TRUE

@@ -11,8 +11,8 @@
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
+<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/flatly/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 
-<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
 <!-- Font Awesome icons -->
@@ -88,7 +88,12 @@
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="https://github.com/fabian-s/tidyfun">
+    <span class="fa fa-github fa-lg"></span>
+     
+  </a>
+</li>
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -115,89 +120,16 @@
     <tbody>
       <tr>
         <th colspan="2">
-          <h2 id="section-all-functions" class="hasAnchor"><a href="#section-all-functions" class="anchor"></a>All functions</h2>
-          <p class="section-desc"></p>
+          <h2 id="section-tf-sub-classes-constructors-and-converters" class="hasAnchor"><a href="#section-tf-sub-classes-constructors-and-converters" class="anchor"></a>tf - (Sub)classes: Constructors and converters</h2>
+          <p class="section-desc"><p>Defining, evaluating and converting functional data objects</p></p>
         </th>
       </tr>
       <tr>
         
         <td>
-          <p><code><a href="approx.html">approx_linear()</a></code> <code><a href="approx.html">approx_spline()</a></code> <code><a href="approx.html">approx_none()</a></code> <code><a href="approx.html">approx_fill_extend()</a></code> <code><a href="approx.html">approx_locf()</a></code> <code><a href="approx.html">approx_nocb()</a></code> </p>
+          <p><code><a href="tfd.html">as.tfd()</a></code> <code><a href="tfd.html">as.tfd_irreg()</a></code> <code><a href="tfd.html">as.data.frame(<i>&lt;tfd&gt;</i>)</a></code> <code><a href="tfd.html">as.matrix(<i>&lt;tfd&gt;</i>)</a></code> <code><a href="tfd.html">tfd()</a></code> </p>
         </td>
-        <td><p>Inter-/extrapolation for <code>tfd</code>-objects</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="depth.html">depth()</a></code> </p>
-        </td>
-        <td><p>Data Depth</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="evaluate.html">evaluate()</a></code> </p>
-        </td>
-        <td><p>Evaluate <code>tf</code>s, both inside or outside a <code>data.frame</code></p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="ggcapellini.html">stat_capellini()</a></code> <code><a href="ggcapellini.html">geom_capellini()</a></code> </p>
-        </td>
-        <td><p>Glyph plots for <code>tf</code> objects</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="gglasagna.html">gglasagna()</a></code> </p>
-        </td>
-        <td><p>Lasagna plots for <code>tf</code>s using <code>ggplot2</code></p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="ggspaghetti.html">stat_tf()</a></code> <code><a href="ggspaghetti.html">geom_spaghetti()</a></code> <code><a href="ggspaghetti.html">geom_meatballs()</a></code> </p>
-        </td>
-        <td><p>Spaghetti plots for <code>tf</code> objects</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="jiggle.html">jiggle()</a></code> <code><a href="jiggle.html">sparsify()</a></code> </p>
-        </td>
-        <td><p>Make a <code>tf</code> (more) irregular</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="rgp.html">rgp()</a></code> </p>
-        </td>
-        <td><p>Random generator for Gaussian Processes</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="smooth.html">smooth()</a></code> </p>
-        </td>
-        <td><p>Simple smoothing of <code>tf</code> objects</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="tf_gather.html">tf_gather()</a></code> </p>
-        </td>
-        <td><p>Gather all columns representing functional measurements into a <code>tfd</code>-object</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="tf_nest.html">tf_nest()</a></code> </p>
-        </td>
-        <td><p>Turn "long" tables into tidy data frames with <code>tf</code>-objects</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="tf_spread.html">tf_spread()</a></code> </p>
-        </td>
-        <td><p>Spread a <code>tf</code>-column into many columns representing the
-function evaluations.</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="tf_unnest.html">tf_unnest()</a></code> </p>
-        </td>
-        <td><p>Turn data frames with <code>tf</code>-objects / list columns into "long" tables.</p></td>
+        <td><p>Constructors for functional data evaluated on grids of argument values</p></td>
       </tr><tr>
         
         <td>
@@ -219,9 +151,23 @@ function evaluations.</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="tfcalculus.html">deriv.tfd</a></code> </p>
+          <p><code><a href="approx.html">approx_linear()</a></code> <code><a href="approx.html">approx_spline()</a></code> <code><a href="approx.html">approx_none()</a></code> <code><a href="approx.html">approx_fill_extend()</a></code> <code><a href="approx.html">approx_locf()</a></code> <code><a href="approx.html">approx_nocb()</a></code> </p>
         </td>
-        <td><p>Derivatives and integrals of functional data</p></td>
+        <td><p>Inter-/extrapolation for <code>tfd</code>-objects</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-arithmetic-logical-and-summary-functions" class="hasAnchor"><a href="#section-arithmetic-logical-and-summary-functions" class="anchor"></a>Arithmetic, logical and summary functions</h2>
+          <p class="section-desc"><p>Functionality for computing on and comparing functional data</p></p>
+        </th>
+      </tr>
+      <tr>
+        
+        <td>
+          <p><code><a href="tfgroupgenerics.html">Ops(<i>&lt;tf&gt;</i>)</a></code> <code><a href="tfgroupgenerics.html">`==`(<i>&lt;tfd&gt;</i>)</a></code> <code><a href="tfgroupgenerics.html">`!=`(<i>&lt;tfd&gt;</i>)</a></code> <code><a href="tfgroupgenerics.html">`==`(<i>&lt;tfb&gt;</i>)</a></code> <code><a href="tfgroupgenerics.html">`!=`(<i>&lt;tfb&gt;</i>)</a></code> <code><a href="tfgroupgenerics.html">Ops(<i>&lt;tfd&gt;</i>)</a></code> <code><a href="tfgroupgenerics.html">Ops(<i>&lt;tfb&gt;</i>)</a></code> <code><a href="tfgroupgenerics.html">Math(<i>&lt;tfd&gt;</i>)</a></code> <code><a href="tfgroupgenerics.html">Math(<i>&lt;tfb&gt;</i>)</a></code> <code><a href="tfgroupgenerics.html">cummax(<i>&lt;tfd&gt;</i>)</a></code> <code><a href="tfgroupgenerics.html">cummin(<i>&lt;tfd&gt;</i>)</a></code> <code><a href="tfgroupgenerics.html">cumsum(<i>&lt;tfd&gt;</i>)</a></code> <code><a href="tfgroupgenerics.html">cumprod(<i>&lt;tfd&gt;</i>)</a></code> <code><a href="tfgroupgenerics.html">cummax(<i>&lt;tfb&gt;</i>)</a></code> <code><a href="tfgroupgenerics.html">cummin(<i>&lt;tfb&gt;</i>)</a></code> <code><a href="tfgroupgenerics.html">cumsum(<i>&lt;tfb&gt;</i>)</a></code> <code><a href="tfgroupgenerics.html">cumprod(<i>&lt;tfb&gt;</i>)</a></code> <code><a href="tfgroupgenerics.html">Summary(<i>&lt;tf&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Math, Summary and Ops Methods for <code>tf</code></p></td>
       </tr><tr>
         
         <td>
@@ -231,9 +177,94 @@ function evaluations.</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="tfd.html">as.tfd()</a></code> <code><a href="tfd.html">as.tfd_irreg()</a></code> <code><a href="tfd.html">as.data.frame(<i>&lt;tfd&gt;</i>)</a></code> <code><a href="tfd.html">as.matrix(<i>&lt;tfd&gt;</i>)</a></code> <code><a href="tfd.html">tfd()</a></code> </p>
+          <p><code><a href="depth.html">depth()</a></code> </p>
         </td>
-        <td><p>Constructors for functional data evaluated on grids of argument values</p></td>
+        <td><p>Data Depth</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tfsummaries.html">mean(<i>&lt;tf&gt;</i>)</a></code> <code><a href="tfsummaries.html">median(<i>&lt;tf&gt;</i>)</a></code> <code><a href="tfsummaries.html">quantile(<i>&lt;tf&gt;</i>)</a></code> <code><a href="tfsummaries.html">sd()</a></code> <code><a href="tfsummaries.html">var()</a></code> <code><a href="tfsummaries.html">summary(<i>&lt;tf&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Functions that summarize <code>tf</code> objects</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-differentiation-integration" class="hasAnchor"><a href="#section-differentiation-integration" class="anchor"></a>Differentiation &amp; integration</h2>
+          <p class="section-desc"><p>Compute (approximate) derivatives, anti-derivatives and integrals</p></p>
+        </th>
+      </tr>
+      <tr>
+        
+        <td>
+          <p><code><a href="tfcalculus.html">deriv.tfd</a></code> </p>
+        </td>
+        <td><p>Derivatives and integrals of functional data</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-wrangling" class="hasAnchor"><a href="#section-wrangling" class="anchor"></a>Wrangling</h2>
+          <p class="section-desc"><p>Reshaping and transforming tf-objects inside data frames</p></p>
+        </th>
+      </tr>
+      <tr>
+        
+        <td>
+          <p><code><a href="tf_gather.html">tf_gather()</a></code> </p>
+        </td>
+        <td><p>Gather all columns representing functional measurements into a <code>tfd</code>-object</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tf_spread.html">tf_spread()</a></code> </p>
+        </td>
+        <td><p>Spread a <code>tf</code>-column into many columns representing the
+function evaluations.</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tf_nest.html">tf_nest()</a></code> </p>
+        </td>
+        <td><p>Turn "long" tables into tidy data frames with <code>tf</code>-objects</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tf_unnest.html">tf_unnest()</a></code> </p>
+        </td>
+        <td><p>Turn data frames with <code>tf</code>-objects / list columns into "long" tables.</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-visualization-display" class="hasAnchor"><a href="#section-visualization-display" class="anchor"></a>Visualization &amp; Display</h2>
+          <p class="section-desc"><p>Graphics functions defined for tf-objects</p></p>
+        </th>
+      </tr>
+      <tr>
+        
+        <td>
+          <p><code><a href="tfviz.html">funplot()</a></code> <code><a href="tfviz.html">plot(<i>&lt;tf&gt;</i>)</a></code> <code><a href="tfviz.html">lines(<i>&lt;tf&gt;</i>)</a></code> <code><a href="tfviz.html">points(<i>&lt;tf&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Visualization functions for <code>tf</code>s</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="ggspaghetti.html">stat_tf()</a></code> <code><a href="ggspaghetti.html">geom_spaghetti()</a></code> <code><a href="ggspaghetti.html">geom_meatballs()</a></code> </p>
+        </td>
+        <td><p>Spaghetti plots for <code>tf</code> objects</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="gglasagna.html">gglasagna()</a></code> </p>
+        </td>
+        <td><p>Lasagna plots for <code>tf</code>s using <code>ggplot2</code></p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="ggcapellini.html">stat_capellini()</a></code> <code><a href="ggcapellini.html">geom_capellini()</a></code> </p>
+        </td>
+        <td><p>Glyph plots for <code>tf</code> objects</p></td>
       </tr><tr>
         
         <td>
@@ -243,40 +274,18 @@ function evaluations.</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="tfgroupgenerics.html">Ops(<i>&lt;tf&gt;</i>)</a></code> <code><a href="tfgroupgenerics.html">`==`(<i>&lt;tfd&gt;</i>)</a></code> <code><a href="tfgroupgenerics.html">`!=`(<i>&lt;tfd&gt;</i>)</a></code> <code><a href="tfgroupgenerics.html">`==`(<i>&lt;tfb&gt;</i>)</a></code> <code><a href="tfgroupgenerics.html">`!=`(<i>&lt;tfb&gt;</i>)</a></code> <code><a href="tfgroupgenerics.html">Ops(<i>&lt;tfd&gt;</i>)</a></code> <code><a href="tfgroupgenerics.html">Ops(<i>&lt;tfb&gt;</i>)</a></code> <code><a href="tfgroupgenerics.html">Math(<i>&lt;tfd&gt;</i>)</a></code> <code><a href="tfgroupgenerics.html">Math(<i>&lt;tfb&gt;</i>)</a></code> <code><a href="tfgroupgenerics.html">cummax(<i>&lt;tfd&gt;</i>)</a></code> <code><a href="tfgroupgenerics.html">cummin(<i>&lt;tfd&gt;</i>)</a></code> <code><a href="tfgroupgenerics.html">cumsum(<i>&lt;tfd&gt;</i>)</a></code> <code><a href="tfgroupgenerics.html">cumprod(<i>&lt;tfd&gt;</i>)</a></code> <code><a href="tfgroupgenerics.html">cummax(<i>&lt;tfb&gt;</i>)</a></code> <code><a href="tfgroupgenerics.html">cummin(<i>&lt;tfb&gt;</i>)</a></code> <code><a href="tfgroupgenerics.html">cumsum(<i>&lt;tfb&gt;</i>)</a></code> <code><a href="tfgroupgenerics.html">cumprod(<i>&lt;tfb&gt;</i>)</a></code> <code><a href="tfgroupgenerics.html">Summary(<i>&lt;tf&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Math, Summary and Ops Methods for <code>tf</code></p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="tfmethods.html">arg()</a></code> <code><a href="tfmethods.html">evaluations()</a></code> <code><a href="tfmethods.html">n_evaluations()</a></code> <code><a href="tfmethods.html">domain()</a></code> <code><a href="tfmethods.html">evaluator()</a></code> <code><a href="tfmethods.html">basis()</a></code> <code><a href="tfmethods.html">`evaluator<-`()</a></code> <code><a href="tfmethods.html">`arg<-`()</a></code> <code><a href="tfmethods.html">coef(<i>&lt;tfb&gt;</i>)</a></code> <code><a href="tfmethods.html">rev(<i>&lt;tf&gt;</i>)</a></code> <code><a href="tfmethods.html">is.na(<i>&lt;tf&gt;</i>)</a></code> <code><a href="tfmethods.html">is.na(<i>&lt;tfd_irreg&gt;</i>)</a></code> <code><a href="tfmethods.html">is_tf()</a></code> <code><a href="tfmethods.html">is_irreg()</a></code> <code><a href="tfmethods.html">is_tfd()</a></code> <code><a href="tfmethods.html">is_tfb()</a></code> </p>
-        </td>
-        <td><p>Utility functions for <code>tf</code>-objects</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="tfsummaries.html">mean(<i>&lt;tf&gt;</i>)</a></code> <code><a href="tfsummaries.html">median(<i>&lt;tf&gt;</i>)</a></code> <code><a href="tfsummaries.html">quantile(<i>&lt;tf&gt;</i>)</a></code> <code><a href="tfsummaries.html">sd()</a></code> <code><a href="tfsummaries.html">var()</a></code> <code><a href="tfsummaries.html">summary(<i>&lt;tf&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Functions that summarize <code>tf</code> objects</p></td>
-      </tr><tr>
-        
-        <td>
           <p><code><a href="tftibble.html">type_sum(<i>&lt;tf&gt;</i>)</a></code> <code><a href="tftibble.html">obj_sum(<i>&lt;tf&gt;</i>)</a></code> <code><a href="tftibble.html">pillar_shaft(<i>&lt;tf&gt;</i>)</a></code> </p>
         </td>
         <td><p>Summarize tidy functional data for tibble</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="tfviz.html">funplot()</a></code> <code><a href="tfviz.html">plot(<i>&lt;tf&gt;</i>)</a></code> <code><a href="tfviz.html">lines(<i>&lt;tf&gt;</i>)</a></code> <code><a href="tfviz.html">points(<i>&lt;tf&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Visualization functions for <code>tf</code>s</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="tidyfun.html">tidyfun</a></code> </p>
-        </td>
-        <td><p>tidyfun</p></td>
-      </tr><tr>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-utilities" class="hasAnchor"><a href="#section-utilities" class="anchor"></a>Utilities</h2>
+          <p class="section-desc"><p>Utility functions</p></p>
+        </th>
+      </tr>
+      <tr>
         
         <td>
           <p><code><a href="where.html">where()</a></code> <code><a href="where.html">anywhere()</a></code> <code><a href="where.html">in_range()</a></code> <code><a href="where.html">`%inr%`</a></code> </p>
@@ -288,6 +297,30 @@ function evaluations.</p></td>
           <p><code><a href="zoom.html">zoom()</a></code> </p>
         </td>
         <td><p>Functions to zoom in/out on functions</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="smooth.html">smooth()</a></code> </p>
+        </td>
+        <td><p>Simple smoothing of <code>tf</code> objects</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tfmethods.html">arg()</a></code> <code><a href="tfmethods.html">evaluations()</a></code> <code><a href="tfmethods.html">n_evaluations()</a></code> <code><a href="tfmethods.html">domain()</a></code> <code><a href="tfmethods.html">evaluator()</a></code> <code><a href="tfmethods.html">basis()</a></code> <code><a href="tfmethods.html">`evaluator<-`()</a></code> <code><a href="tfmethods.html">`arg<-`()</a></code> <code><a href="tfmethods.html">coef(<i>&lt;tfb&gt;</i>)</a></code> <code><a href="tfmethods.html">rev(<i>&lt;tf&gt;</i>)</a></code> <code><a href="tfmethods.html">is.na(<i>&lt;tf&gt;</i>)</a></code> <code><a href="tfmethods.html">is.na(<i>&lt;tfd_irreg&gt;</i>)</a></code> <code><a href="tfmethods.html">is_tf()</a></code> <code><a href="tfmethods.html">is_irreg()</a></code> <code><a href="tfmethods.html">is_tfd()</a></code> <code><a href="tfmethods.html">is_tfb()</a></code> </p>
+        </td>
+        <td><p>Utility functions for <code>tf</code>-objects</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="rgp.html">rgp()</a></code> </p>
+        </td>
+        <td><p>Random generator for Gaussian Processes</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="jiggle.html">jiggle()</a></code> <code><a href="jiggle.html">sparsify()</a></code> </p>
+        </td>
+        <td><p>Make a <code>tf</code> (more) irregular</p></td>
       </tr>
     </tbody>
     </table>
@@ -296,7 +329,12 @@ function evaluations.</p></td>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
-      <li><a href="#section-all-functions">All functions</a></li>
+      <li><a href="#section-tf-sub-classes-constructors-and-converters">tf - (Sub)classes: Constructors and converters</a></li>
+      <li><a href="#section-arithmetic-logical-and-summary-functions">Arithmetic, logical and summary functions</a></li>
+      <li><a href="#section-differentiation-integration">Differentiation &amp; integration</a></li>
+      <li><a href="#section-wrangling">Wrangling</a></li>
+      <li><a href="#section-visualization-display">Visualization &amp; Display</a></li>
+      <li><a href="#section-utilities">Utilities</a></li>
     </ul>
   </div>
 </div>

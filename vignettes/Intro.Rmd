@@ -118,8 +118,6 @@ evaluator(ex) %>% str
 evaluator(ex) = "approx_spline"
 ```
 
-## **`tf`** subclass: **`tfd`** 
-
 - **`tfd`** has subclasses for regular data with a common grid and irregular or sparse data,
 like the `rcst` measurements in our `dti` data.
 
@@ -143,7 +141,7 @@ dti$cca %>% object.size() %>% print(units = "Kb")
 dti$cca %>% tfb(verbose = FALSE) %>% object.size() %>% print(units = "Kb")
 ```
 
-## **`tf`** subclass: **`tfb`** spline basis
+### **`tfb`** spline basis
 
 - accepts all arguments of `mgcv`'s `s()`-syntax 
 - either does a penalized fit with (GCV-based) function-specific smoothing or unpenalized.
@@ -162,7 +160,7 @@ ex_b %>% plot(col = "red")
 ex %>% tfb(k = 35, penalized = FALSE) %>% lines(col = "blue")
 ```
 
-## **`tf`** subclass: **`tfb`** FPC-based
+###  **`tfb`** FPC-based
 
 - uses either 
     - simple unregularized SVD of the data matrix ("`smooth = FALSE`")

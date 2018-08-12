@@ -4,22 +4,33 @@ template:
   params:
     bootswatch: flatly
 reference:
-  - title: "tf - Classes"
-    desc: "Data types defined by tidyfun"
+  - title: "tf - (Sub)classes: Constructors and converters"
+    desc: "Defining, evaluating and converting functional data objects"
     contents:
       - tfd
       - tfb
       - tfb_fpc
       - as.tfd
       - as.tfb
+      - index.tf
+      - approx_linear
       
-  - title: "Methods"
-    desc: "Methods and functions defined for tf-objects"
+  - title: "Arithmetic, logical and summary functions"
+    desc: "Functionality for computing on and comparing functional data"
     contents:
        - Ops.tf
-       - tfcalculus
-       - where
-       - smoooth.tf
+       - Summary.tf
+       - c.tf
+       - depth
+       - tfsummaries
+       
+  - title: "Differentiation & integration"
+    desc: "Compute (approximate) derivatives, anti-derivatives and integrals"
+    contents:
+       - deriv.tfd
+       - deriv.tfb
+       - integrate.tfd
+       - integrate.tfb
        
   - title: "Wrangling"
     desc: "Reshaping and transforming tf-objects inside data frames"
@@ -29,20 +40,29 @@ reference:
       - tf_nest
       - tf_unnest
     
-  - title: "Visualization"
+  - title: "Visualization & Display"
     desc: "Graphics functions defined for tf-objects"
     contents:
       - plot.tf
       - geom_spaghetti
       - gglasagna
       - geom_capellini
+      - print.tf
+      - type_sum.tf
   
   - title: "Utilities"
     desc: "Utility functions"
     contents:
+      - where
+      - zoom
+      - smooth
       - arg
-    
+      - rgp
+      - jiggle
 
 articles:
-  Intro: Intro.html
+  - title: "Articles"
+    desc: "Articles & vignettes for tidyfun"
+    contents:
+    - Intro
 
