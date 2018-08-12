@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Introducing tidyfun • tidyfun</title>
-<!-- jquery --><script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<!-- jquery --><script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/flatly/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script><!-- Font Awesome icons --><link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script><!-- sticky kit --><script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
 <script src="../pkgdown.js"></script><meta property="og:title" content="Introducing tidyfun">
@@ -57,7 +57,14 @@
   </ul>
 </li>
       </ul>
-<ul class="nav navbar-nav navbar-right"></ul>
+<ul class="nav navbar-nav navbar-right">
+<li>
+  <a href="https://github.com/fabian-s/tidyfun">
+    <span class="fa fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
 </div>
 <!--/.nav-collapse -->
   </div>
@@ -72,9 +79,9 @@
       <h1>Introducing tidyfun</h1>
                         <h4 class="author">Fabian Scheipl</h4>
             
-            <h4 class="date">2018-08-07</h4>
+            <h4 class="date">2018-08-12</h4>
       
-      
+      <small class="dont-index">Source: <a href="https://github.com/fabian-s/tidyfun/blob/master/vignettes/Intro.Rmd"><code>vignettes/Intro.Rmd</code></a></small>
       <div class="hidden name"><code>Intro.Rmd</code></div>
 
     </div>
@@ -135,18 +142,18 @@ data wrangling and exploratory analysis.</p>
                <span class="dt">rcst =</span> <span class="kw"><a href="../reference/tfd.html">tfd</a></span>(DTI<span class="op">$</span>rcst, <span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dt">l =</span> <span class="dv">55</span>), <span class="dt">signif =</span> <span class="dv">3</span>))
 dti
 ## # A tibble: 382 x 5
-##       id sex    case    cca                     rcst                      
-##    &lt;dbl&gt; &lt;fct&gt;  &lt;fct&gt;   &lt;S3: tfd_reg&gt;           &lt;S3: tfd_irreg&gt;           
-##  1  1001 female control "c(0.490934483693957, … "list(arg = c(0, 0.018518…
-##  2  1002 female control "c(0.472162743693957, … "list(arg = c(0.222222222…
-##  3  1003 male   control "c(0.502373843693957, … "list(arg = c(0.222222222…
-##  4  1004 male   control "c(0.402189373693957, … "list(arg = c(0, 0.018518…
-##  5  1005 male   control "c(0.401874663693957, … "list(arg = c(0.222222222…
-##  6  1006 male   control "c(0.450729583693957, … "list(arg = c(0.055555555…
-##  7  1007 male   control "c(0.553716683693957, … "list(arg = c(0, 0.018518…
-##  8  1008 male   control "c(0.447732573693957, … "list(arg = c(0, 0.018518…
-##  9  1009 male   control "c(0.495339963693957, … "list(arg = c(0, 0.018518…
-## 10  1010 male   control "c(0.458089323693957, … "list(arg = c(0.222222222…
+##       id sex    case   cca                       rcst                     
+##    &lt;dbl&gt; &lt;fct&gt;  &lt;fct&gt;  &lt;S3: tfd_reg&gt;             &lt;S3: tfd_irreg&gt;          
+##  1  1001 female contr… 1001_1: (0.000,0.49);(0.… 1001_1: (0.000,0.26);(0.…
+##  2  1002 female contr… 1002_1: (0.000,0.47);(0.… 1002_1: ( 0.22,0.44);( 0…
+##  3  1003 male   contr… 1003_1: (0.000,0.50);(0.… 1003_1: ( 0.22,0.42);( 0…
+##  4  1004 male   contr… 1004_1: (0.000,0.40);(0.… 1004_1: (0.000,0.51);(0.…
+##  5  1005 male   contr… 1005_1: (0.000,0.40);(0.… 1005_1: ( 0.22,0.40);( 0…
+##  6  1006 male   contr… 1006_1: (0.000,0.45);(0.… 1006_1: (0.056,0.47);(0.…
+##  7  1007 male   contr… 1007_1: (0.000,0.55);(0.… 1007_1: (0.000,0.52);(0.…
+##  8  1008 male   contr… 1008_1: (0.000,0.45);(0.… 1008_1: (0.000,0.33);(0.…
+##  9  1009 male   contr… 1009_1: (0.000,0.50);(0.… 1009_1: (0.000,0.57);(0.…
+## 10  1010 male   contr… 1010_1: (0.000,0.46);(0.… 1010_1: ( 0.22,0.44);( 0…
 ## # ... with 372 more rows</code></pre></div>
 <p>and a simple 5 element vector of functions on a regular grid:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ex_data =<span class="st"> </span>dti<span class="op">$</span>cca[<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>, <span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dt">l =</span> <span class="dv">93</span>), interpolate =<span class="st"> </span><span class="ot">TRUE</span>]
@@ -160,6 +167,8 @@ ex
 ## C: (0.000,0.50);(0.011,0.51);(0.022,0.54); ...
 ## D: (0.000,0.40);(0.011,0.42);(0.022,0.44); ...
 ## E: (0.000,0.40);(0.011,0.41);(0.022,0.40); ...</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(ex, <span class="dt">xlim =</span> <span class="kw">c</span>(<span class="op">-</span><span class="fl">0.15</span>, <span class="dv">1</span>), <span class="dt">col =</span> pal_<span class="dv">5</span>)
+<span class="kw">text</span>(<span class="dt">x =</span> <span class="op">-</span>.<span class="dv">1</span>, <span class="dt">y =</span> ex[,<span class="fl">0.07</span>], <span class="dt">labels =</span> <span class="kw">names</span>(ex), <span class="dt">col =</span> pal_<span class="dv">5</span>)</code></pre></div>
 <p><img src="Intro_files/figure-html/ex-fig-1.png" width="768"></p>
 </div>
 <div id="tf-subclass-tfd" class="section level2">
@@ -191,11 +200,6 @@ ex <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a hr
 ##  - attr(*, "memoised")= logi TRUE
 ##  - attr(*, "class")= chr [1:2] "memoised" "function"
 <span class="kw"><a href="../reference/tfmethods.html">evaluator</a></span>(ex) =<span class="st"> "approx_spline"</span></code></pre></div>
-</div>
-<div id="tf-subclass-tfd-1" class="section level2">
-<h2 class="hasAnchor">
-<a href="#tf-subclass-tfd-1" class="anchor"></a><strong><code>tf</code></strong> subclass: <strong><code>tfd</code></strong>
-</h2>
 <ul>
 <li>
 <strong><code>tfd</code></strong> has subclasses for regular data with a common grid and irregular or sparse data, like the <code>rcst</code> measurements in our <code>dti</code> data.</li>
@@ -229,10 +233,9 @@ dti<span class="op">$</span>cca <span class="op">%&gt;%</span><span class="st"> 
 ## 333.5 Kb
 dti<span class="op">$</span>cca <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/tfb.html">tfb</a></span>(<span class="dt">verbose =</span> <span class="ot">FALSE</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">object.size</span>() <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">print</span>(<span class="dt">units =</span> <span class="st">"Kb"</span>)
 ## 148.9 Kb</code></pre></div>
-</div>
-<div id="tf-subclass-tfb-spline-basis" class="section level2">
-<h2 class="hasAnchor">
-<a href="#tf-subclass-tfb-spline-basis" class="anchor"></a><strong><code>tf</code></strong> subclass: <strong><code>tfb</code></strong> spline basis</h2>
+<div id="tfb-spline-basis" class="section level3">
+<h3 class="hasAnchor">
+<a href="#tfb-spline-basis" class="anchor"></a><strong><code>tfb</code></strong> spline basis</h3>
 <ul>
 <li>accepts all arguments of <code>mgcv</code>’s <code>s()</code>-syntax</li>
 <li>either does a penalized fit with (GCV-based) function-specific smoothing or unpenalized.</li>
@@ -267,9 +270,9 @@ ex <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a hr
 <pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
 ##    98.5    98.6    98.7    99.0    99.6    99.6</code></pre>
 </div>
-<div id="tf-subclass-tfb-fpc-based" class="section level2">
-<h2 class="hasAnchor">
-<a href="#tf-subclass-tfb-fpc-based" class="anchor"></a><strong><code>tf</code></strong> subclass: <strong><code>tfb</code></strong> FPC-based</h2>
+<div id="tfb-fpc-based" class="section level3">
+<h3 class="hasAnchor">
+<a href="#tfb-fpc-based" class="anchor"></a><strong><code>tfb</code></strong> FPC-based</h3>
 <ul>
 <li>uses either
 <ul>
@@ -302,6 +305,7 @@ ex <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">plot<
 ex_fpc  <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">plot</span>(<span class="dt">col =</span> <span class="st">"red"</span>, <span class="dt">ylab =</span> <span class="st">"tfb_fpc(ex)"</span>)
 ex_fpc_smooth <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">lines</span>(<span class="dt">col =</span> <span class="st">"blue"</span>)</code></pre></div>
 <p><img src="Intro_files/figure-html/unnamed-chunk-8-1.png" width="768"></p>
+</div>
 </div>
 </div>
 <div id="tf-class-methods" class="section level1">
@@ -504,28 +508,38 @@ ex_matrix[<span class="dv">1</span><span class="op">:</span><span class="dv">2</
 <strong><code>geom_pappardelle</code></strong> for functional boxplots</li>
 </ul>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(dti) <span class="op">+</span><span class="st"> </span>
-<span class="st">  </span><span class="kw"><a href="../reference/ggspaghetti.html">geom_spaghetti</a></span>(<span class="kw">aes</span>(<span class="dt">y =</span> cca, <span class="dt">col =</span> case, <span class="dt">alpha =</span> .<span class="dv">2</span> <span class="op">+</span><span class="st"> </span>.<span class="dv">4</span><span class="op">*</span>(case <span class="op">==</span><span class="st"> "control"</span>))) <span class="op">+</span><span class="st"> </span><span class="kw">facet_wrap</span>(<span class="op">~</span><span class="st"> </span>sex) <span class="op">+</span><span class="st"> </span><span class="kw">scale_alpha</span>(<span class="dt">guide =</span> <span class="st">'none'</span>, <span class="dt">range =</span> <span class="kw">c</span>(.<span class="dv">2</span>, .<span class="dv">4</span>))</code></pre></div>
+<span class="st">  </span><span class="kw"><a href="../reference/ggspaghetti.html">geom_spaghetti</a></span>(<span class="kw">aes</span>(<span class="dt">y =</span> cca, <span class="dt">col =</span> case, <span class="dt">alpha =</span> .<span class="dv">2</span> <span class="op">+</span><span class="st"> </span>.<span class="dv">4</span><span class="op">*</span>(case <span class="op">==</span><span class="st"> "control"</span>))) <span class="op">+</span>
+<span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span><span class="st"> </span>sex) <span class="op">+</span><span class="st"> </span><span class="kw">scale_alpha</span>(<span class="dt">guide =</span> <span class="st">'none'</span>, <span class="dt">range =</span> <span class="kw">c</span>(.<span class="dv">2</span>, .<span class="dv">4</span>))</code></pre></div>
 <p><img src="Intro_files/figure-html/dti-fig1-1.png" width="768"></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/gglasagna.html">gglasagna</a></span>(dti, cca, 
+  <span class="dt">order =</span> <span class="kw"><a href="../reference/tfcalculus.html">integrate</a></span>(cca, <span class="dt">definite =</span> <span class="ot">TRUE</span>), <span class="dt">arg =</span> <span class="kw">seq</span>(<span class="dv">0</span>,<span class="dv">1</span>, <span class="dt">l =</span> <span class="dv">101</span>)) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">axis.text.y =</span> <span class="kw">element_text</span>(<span class="dt">size =</span> <span class="dv">6</span>)) <span class="op">+</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">facet_wrap</span>(<span class="op">~</span><span class="st"> </span>case, <span class="dt">ncol =</span> <span class="dv">2</span>, <span class="dt">scales =</span> <span class="st">"free"</span>)</code></pre></div>
 <p><img src="Intro_files/figure-html/dti-fig2-1.png" width="768"></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"> weather &lt;-<span class="st"> </span>fda<span class="op">::</span>CanadianWeather
- canada &lt;-<span class="st"> </span><span class="kw">data.frame</span>(
-   <span class="dt">place =</span> weather<span class="op">$</span>place, 
-   <span class="dt">region =</span> weather<span class="op">$</span>region, 
-   <span class="dt">lat =</span> weather<span class="op">$</span>coordinates[,<span class="dv">1</span>], 
-   <span class="dt">lon =</span> <span class="op">-</span>weather<span class="op">$</span>coordinates[,<span class="dv">2</span>], 
-   <span class="dt">region =</span> weather<span class="op">$</span>region)
- canada<span class="op">$</span>temp &lt;-<span class="st"> </span><span class="kw"><a href="../reference/tfd.html">tfd</a></span>(<span class="kw">t</span>(weather<span class="op">$</span>dailyAv[,,<span class="dv">1</span>]), <span class="dt">arg =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">365</span>)
- canada<span class="op">$</span>precipl10 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/tfd.html">tfd</a></span>(<span class="kw">t</span>(weather<span class="op">$</span>dailyAv[,,<span class="dv">3</span>]), <span class="dt">arg =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">365</span>) <span class="op">%&gt;%</span><span class="st"> </span>smooth
+<p>Some data prep for the iconic Canadian Weather data:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">canada &lt;-<span class="st"> </span><span class="kw">data.frame</span>(
+  <span class="dt">place =</span> fda<span class="op">::</span>CanadianWeather<span class="op">$</span>place, 
+  <span class="dt">region =</span> fda<span class="op">::</span>CanadianWeather<span class="op">$</span>region, 
+  <span class="dt">lat =</span> fda<span class="op">::</span>CanadianWeather<span class="op">$</span>coordinates[,<span class="dv">1</span>], 
+  <span class="dt">lon =</span> <span class="op">-</span>fda<span class="op">::</span>CanadianWeather<span class="op">$</span>coordinates[,<span class="dv">2</span>], 
+  <span class="dt">region =</span> fda<span class="op">::</span>CanadianWeather<span class="op">$</span>region)
+
+canada<span class="op">$</span>temp &lt;-<span class="st"> </span><span class="kw"><a href="../reference/tfd.html">tfd</a></span>(<span class="kw">t</span>(fda<span class="op">::</span>CanadianWeather<span class="op">$</span>dailyAv[,,<span class="dv">1</span>]), <span class="dt">arg =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">365</span>)
+canada<span class="op">$</span>precipl10 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/tfd.html">tfd</a></span>(<span class="kw">t</span>(fda<span class="op">::</span>CanadianWeather<span class="op">$</span>dailyAv[,,<span class="dv">3</span>]), <span class="dt">arg =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">365</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span>smooth
 ## using f = 0.15 as smoother span for lowess
- canada_map &lt;-<span class="st"> </span>
-<span class="st">   </span><span class="kw">data.frame</span>(maps<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/maps/topics/map">map</a></span>(<span class="st">"world"</span>, <span class="st">"Canada"</span>, <span class="dt">plot =</span> <span class="ot">FALSE</span>)[<span class="kw">c</span>(<span class="st">"x"</span>, <span class="st">"y"</span>)]) 
- <span class="co"># map of canada with annual temperature averages in red, precipitation in blue:</span>
- <span class="kw">ggplot</span>(canada, <span class="kw">aes</span>(<span class="dt">x =</span> lon, <span class="dt">y =</span> lat)) <span class="op">+</span><span class="st"> </span>
-<span class="st">   </span><span class="kw"><a href="../reference/ggcapellini.html">geom_capellini</a></span>(<span class="kw">aes</span>(<span class="dt">tf =</span> precipl10), <span class="dt">width =</span> <span class="dv">3</span>, <span class="dt">height =</span> <span class="dv">5</span>, <span class="dt">colour =</span> <span class="st">"blue"</span>) <span class="op">+</span>
-<span class="st">   </span><span class="kw"><a href="../reference/ggcapellini.html">geom_capellini</a></span>(<span class="kw">aes</span>(<span class="dt">tf =</span> temp), <span class="dt">width =</span> <span class="dv">3</span>, <span class="dt">height =</span> <span class="dv">5</span>, <span class="dt">colour =</span> <span class="st">"red"</span>) <span class="op">+</span>
+
+canada_map &lt;-<span class="st"> </span>
+<span class="st">  </span><span class="kw">data.frame</span>(maps<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/maps/topics/map">map</a></span>(<span class="st">"world"</span>, <span class="st">"Canada"</span>, <span class="dt">plot =</span> <span class="ot">FALSE</span>)[<span class="kw">c</span>(<span class="st">"x"</span>, <span class="st">"y"</span>)]) </code></pre></div>
+<p>Now plot a map of Canada with annual temperature averages in red, precipitation in blue:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"> <span class="kw">ggplot</span>(canada, <span class="kw">aes</span>(<span class="dt">x =</span> lon, <span class="dt">y =</span> lat)) <span class="op">+</span><span class="st"> </span>
+<span class="st">   </span><span class="kw"><a href="../reference/ggcapellini.html">geom_capellini</a></span>(<span class="kw">aes</span>(<span class="dt">tf =</span> precipl10), <span class="dt">width =</span> <span class="dv">4</span>, <span class="dt">height =</span> <span class="dv">5</span>, <span class="dt">colour =</span> <span class="st">"blue"</span>, 
+     <span class="dt">line.linetype =</span> <span class="dv">1</span>) <span class="op">+</span>
+<span class="st">   </span><span class="kw"><a href="../reference/ggcapellini.html">geom_capellini</a></span>(<span class="kw">aes</span>(<span class="dt">tf =</span> temp), <span class="dt">width =</span> <span class="dv">4</span>, <span class="dt">height =</span> <span class="dv">5</span>, <span class="dt">colour =</span> <span class="st">"red"</span>,
+     <span class="dt">line.linetype =</span> <span class="dv">1</span>) <span class="op">+</span>
 <span class="st">   </span><span class="kw">geom_path</span>(<span class="dt">data =</span> canada_map, <span class="kw">aes</span>(<span class="dt">x =</span> x, <span class="dt">y =</span> y), <span class="dt">alpha =</span> .<span class="dv">1</span>) <span class="op">+</span>
 <span class="st">   </span><span class="kw">coord_quickmap</span>()</code></pre></div>
-<p><img src="Intro_files/figure-html/unnamed-chunk-21-1.png" width="768"></p>
+<p><img src="Intro_files/figure-html/unnamed-chunk-22-1.png" width="768"></p>
 </div>
 </div>
 <div id="wrangling-tfs-inside-data-frames" class="section level1">
@@ -539,22 +553,22 @@ ex_matrix[<span class="dv">1</span><span class="op">:</span><span class="dv">2</
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># group-wise functional means:</span>
 dti <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(case, sex) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">summarize</span>(<span class="dt">mean_rcst =</span> <span class="kw">mean</span>(rcst, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>))       <span class="op">%&gt;%</span><span class="st"> </span>ungroup
 ## # A tibble: 4 x 3
-##   case    sex    mean_rcst                                                
-##   &lt;fct&gt;   &lt;fct&gt;  &lt;S3: tfd_irreg&gt;                                          
-## 1 control male   "list(arg = c(0, 0.0185185185185185, 0.037037037037037, …
-## 2 control female "list(arg = c(0, 0.0185185185185185, 0.037037037037037, …
-## 3 MS      male   "list(arg = c(0, 0.0185185185185185, 0.037037037037037, …
-## 4 MS      female "list(arg = c(0, 0.0185185185185185, 0.037037037037037, …
+##   case    sex    mean_rcst                                       
+##   &lt;fct&gt;   &lt;fct&gt;  &lt;S3: tfd_irreg&gt;                                 
+## 1 control male   [1]: (0.000,0.51);(0.019,0.50);(0.037,0.49); ...
+## 2 control female [2]: (0.000,0.52);(0.019,0.53);(0.037,0.54); ...
+## 3 MS      male   [3]: (0.000,0.53);(0.019,0.52);(0.037,0.50); ...
+## 4 MS      female [4]: (0.000,0.52);(0.019,0.52);(0.037,0.50); ...
 <span class="co"># which subjects go below cca = .26:</span>
 dti <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(<span class="kw"><a href="../reference/where.html">anywhere</a></span>(cca, value <span class="op">&lt;</span><span class="st"> </span>.<span class="dv">26</span>))
 ## # A tibble: 5 x 5
-##      id sex   case  cca                       rcst                        
-##   &lt;dbl&gt; &lt;fct&gt; &lt;fct&gt; &lt;S3: tfd_reg&gt;             &lt;S3: tfd_irreg&gt;             
-## 1  2017 male  MS    "c(0.381180803693957, 0.… "list(arg = c(0.07407407407…
-## 2  2017 male  MS    "c(0.338787367407407, 0.… "list(arg = c(0, 0.01851851…
-## 3  2017 male  MS    "c(0.350753715708995, 0.… "list(arg = c(0, 0.01851851…
-## 4  2083 male  MS    "c(0.360904783693957, 0.… "list(arg = c(0, 0.01851851…
-## 5  2083 male  MS    "c(0.38858819262963, 0.4… "list(arg = c(0, 0.01851851…
+##      id sex   case  cca                         rcst                      
+##   &lt;dbl&gt; &lt;fct&gt; &lt;fct&gt; &lt;S3: tfd_reg&gt;               &lt;S3: tfd_irreg&gt;           
+## 1  2017 male  MS    [1]: (0.000,0.38);(0.011,0… [1]: (0.074,0.52);(0.093,…
+## 2  2017 male  MS    [2]: (0.000,0.34);(0.011,0… [2]: (0.000,0.62);(0.019,…
+## 3  2017 male  MS    [3]: (0.000,0.35);(0.011,0… [3]: (0.000,0.67);(0.019,…
+## 4  2083 male  MS    [4]: (0.000,0.36);(0.011,0… [4]: (0.000,0.40);(0.019,…
+## 5  2083 male  MS    [5]: (0.000,0.39);(0.011,0… [5]: (0.000,0.51);(0.019,…
 <span class="co"># center &amp; scale functional data: </span>
 dti <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">mutate</span>(<span class="dt">cca =</span> <span class="kw"><a href="../reference/tfb.html">tfb</a></span>(cca, <span class="dt">verbose =</span> <span class="ot">FALSE</span>), 
@@ -649,10 +663,7 @@ dti_long <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"
 <li><a href="#tf-class"><code>tf</code>-class</a></li>
       <li><a href="#example-data">Example Data</a></li>
       <li><a href="#tf-subclass-tfd"><strong><code>tf</code></strong> subclass: <strong><code>tfd</code></strong></a></li>
-      <li><a href="#tf-subclass-tfd-1"><strong><code>tf</code></strong> subclass: <strong><code>tfd</code></strong></a></li>
       <li><a href="#tf-subclass-tfb"><strong><code>tf</code></strong> subclass: <strong><code>tfb</code></strong></a></li>
-      <li><a href="#tf-subclass-tfb-spline-basis"><strong><code>tf</code></strong> subclass: <strong><code>tfb</code></strong> spline basis</a></li>
-      <li><a href="#tf-subclass-tfb-fpc-based"><strong><code>tf</code></strong> subclass: <strong><code>tfb</code></strong> FPC-based</a></li>
       </ul>
 </li>
       <li><a href="#tf-class-methods"><code>tf</code>-Class: Methods</a></li>

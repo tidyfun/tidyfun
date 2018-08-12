@@ -3,4 +3,7 @@ pkgdown: 1.1.0
 pkgdown_sha: ~
 articles:
   Intro: Intro.html
+urls:
+  reference: https://fabian-s.github.io/tidyfun/reference
+  article: https://fabian-s.github.io/tidyfun/articles
 
