@@ -16,8 +16,8 @@
 
 \method{print}{tfb}(x, n = 10, ...)
 
-\method{format}{tf}(x, digits = 2, nsmall = 0, width = options()$width,
-  n = 10, prefix = TRUE, ...)
+\method{format}{tf}(x, digits = 2, nsmall = 0,
+  width = options()$width, n = 10, prefix = TRUE, ...)
 }
 \arguments{
 \item{x}{any \R object (conceptually); typically numeric.}

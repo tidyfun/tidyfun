@@ -4,7 +4,7 @@ template:
   params:
     bootswatch: flatly
 reference:
-  - title: "tf - (Sub)classes: Constructors and converters"
+  - title: "tf - (Sub)classes: Constructors & converters"
     desc: "Defining, evaluating and converting functional data objects"
     contents:
       - tfd
@@ -12,17 +12,22 @@ reference:
       - tfb_fpc
       - as.tfd
       - as.tfb
+
+      
+  - title: "Concatenation, evaluation and indexing"
+    desc: "Accessing, appending, evaluating and overwriting functional data objects"
+    contents: 
       - index.tf
+      - c.tf
       - approx_linear
       
   - title: "Arithmetic, logical and summary functions"
-    desc: "Functionality for computing on and comparing functional data"
+    desc: "Functionality for computing with and comparing functional data"
     contents:
        - Ops.tf
-       - Summary.tf
-       - c.tf
-       - depth
        - tfsummaries
+       - depth
+       
        
   - title: "Differentiation & integration"
     desc: "Compute (approximate) derivatives, anti-derivatives and integrals"
@@ -41,7 +46,7 @@ reference:
       - tf_unnest
     
   - title: "Visualization & Display"
-    desc: "Graphics functions defined for tf-objects"
+    desc: "Graphics functions and print formats"
     contents:
       - plot.tf
       - geom_spaghetti

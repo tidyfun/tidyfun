@@ -1,21 +1,22 @@
-#' Random generator for Gaussian Processes
+#' Gaussian Process random generator
 #' 
-#' The function generates `n` realizations of Gaussian processes , either with
+#' The function generates `n` realizations of a Gaussian process, either with
 #' squared exponential covariance \eqn{Cov(x(t), x(t')) = \exp(-(t'-t)^2)/s) + n
-#' \delta_{t}(t')} or Wiener process covariance \eqn{Cov(x(t), x(t')) =
-#' \min(t',t)/s + n \delta_{t}(t')} with `scale` parameter s and `nugget` effect
-#' n.
+#' \delta_{t}(t')}  
+#' or Wiener process covariance \eqn{Cov(x(t), x(t')) =
+#' \min(t',t)/s + n \delta_{t}(t')}  
+#' with `scale` parameter s and `nugget` effect n.
 #'
 #' @param n how many realizations to draw
 #' @param arg vector of evaluation points (`arg` of the return object).
-#'   Defaults to (0, 0.02, 0.04, ..., 1). If a single integer, creates a grid 
+#'   Defaults to (0, 0.02, 0.04, ..., 1). If a single **integer** (don't forget the `L`...), creates a grid 
 #'   of the given length over (0,1).
 #' @param scale scale parameter (see Description). Defaults to the width of the
 #'   domain divided by 10.
 #' @param cor type of correlation structure to use. Currently available:
 #'   `"squareexp"` or `"wiener"`, see Description.
-#' @param nugget nugget effect for additional white error noise. Defaults to
-#'   `scale/200` (so: very little noise)
+#' @param nugget nugget effect for additional white noise / unstructured variability. 
+#'  Defaults to `scale/200` (so: very little noise).
 #' @return an `tfd`-vector of length `n`
 #' @importFrom mvtnorm rmvnorm
 #' @export

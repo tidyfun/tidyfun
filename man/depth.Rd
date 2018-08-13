@@ -4,7 +4,7 @@
 \alias{depth}
 \alias{depth.matrix}
 \alias{depth.tf}
-\title{Data Depth}
+\title{Functional Data Depth}
 \usage{
 depth(x, depth = "MBD", na.rm = TRUE, ...)
 
@@ -28,7 +28,8 @@ depth(x, depth = "MBD", na.rm = TRUE, ...)
 vector of depth values
 }
 \description{
-Data depth for functional data. Currently implemented: Modified Band-2 Depth
+Data depth for functional data.
+Currently implemented: Modified Band-2 Depth, see reference.
 }
 \references{
 Sun, Y., Genton, M. G., & Nychka, D. W. (2012).

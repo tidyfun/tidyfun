@@ -120,7 +120,7 @@
     <tbody>
       <tr>
         <th colspan="2">
-          <h2 id="section-tf-sub-classes-constructors-and-converters" class="hasAnchor"><a href="#section-tf-sub-classes-constructors-and-converters" class="anchor"></a>tf - (Sub)classes: Constructors and converters</h2>
+          <h2 id="section-tf-sub-classes-constructors-converters" class="hasAnchor"><a href="#section-tf-sub-classes-constructors-converters" class="anchor"></a>tf - (Sub)classes: Constructors &amp; converters</h2>
           <p class="section-desc"><p>Defining, evaluating and converting functional data objects</p></p>
         </th>
       </tr>
@@ -129,37 +129,51 @@
         <td>
           <p><code><a href="tfd.html">as.tfd()</a></code> <code><a href="tfd.html">as.tfd_irreg()</a></code> <code><a href="tfd.html">as.data.frame(<i>&lt;tfd&gt;</i>)</a></code> <code><a href="tfd.html">as.matrix(<i>&lt;tfd&gt;</i>)</a></code> <code><a href="tfd.html">tfd()</a></code> </p>
         </td>
-        <td><p>Constructors for functional data evaluated on grids of argument values</p></td>
+        <td><p>Constructors &amp; converters for "raw" functional data</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="tfb.html">as.tfb()</a></code> <code><a href="tfb.html">as.data.frame(<i>&lt;tfb&gt;</i>)</a></code> <code><a href="tfb.html">as.matrix(<i>&lt;tfb&gt;</i>)</a></code> <code><a href="tfb.html">tfb()</a></code> </p>
         </td>
-        <td><p>Constructors for (smoothed) functional data in basis representation</p></td>
+        <td><p>Constructors &amp; convertors for functional data in (spline) basis representation</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="tfb_fpc.html">tfb_fpc()</a></code> </p>
         </td>
-        <td><p>Constructors/converters for functional data in FPC-basis representation</p></td>
-      </tr><tr>
+        <td><p>Constructors for functional data in FPC-basis representation</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-concatenation-evaluation-and-indexing" class="hasAnchor"><a href="#section-concatenation-evaluation-and-indexing" class="anchor"></a>Concatenation, evaluation and indexing</h2>
+          <p class="section-desc"><p>Accessing, appending, evaluating and overwriting functional data objects</p></p>
+        </th>
+      </tr>
+      <tr>
         
         <td>
           <p><code><a href="tfbrackets.html">`[`(<i>&lt;tf&gt;</i>)</a></code> <code><a href="tfbrackets.html">`[<-`(<i>&lt;tf&gt;</i>)</a></code> </p>
         </td>
-        <td><p>Accessing/evaluating, subsetting and subassigning <code>tf</code>s</p></td>
+        <td><p>Accessing, evaluating, subsetting and subassigning <code>tf</code> vectors</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tfconcat.html">c(<i>&lt;tf&gt;</i>)</a></code> <code><a href="tfconcat.html">c(<i>&lt;tfd&gt;</i>)</a></code> <code><a href="tfconcat.html">c(<i>&lt;tfb&gt;</i>)</a></code> <code><a href="tfconcat.html">merge(<i>&lt;tf&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Concatenate <code>tf</code>-objects</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="approx.html">approx_linear()</a></code> <code><a href="approx.html">approx_spline()</a></code> <code><a href="approx.html">approx_none()</a></code> <code><a href="approx.html">approx_fill_extend()</a></code> <code><a href="approx.html">approx_locf()</a></code> <code><a href="approx.html">approx_nocb()</a></code> </p>
         </td>
-        <td><p>Inter-/extrapolation for <code>tfd</code>-objects</p></td>
+        <td><p>Inter- and extrapolation functions for <code>tfd</code>-objects</p></td>
       </tr>
     </tbody><tbody>
       <tr>
         <th colspan="2">
           <h2 id="section-arithmetic-logical-and-summary-functions" class="hasAnchor"><a href="#section-arithmetic-logical-and-summary-functions" class="anchor"></a>Arithmetic, logical and summary functions</h2>
-          <p class="section-desc"><p>Functionality for computing on and comparing functional data</p></p>
+          <p class="section-desc"><p>Functionality for computing with and comparing functional data</p></p>
         </th>
       </tr>
       <tr>
@@ -171,21 +185,15 @@
       </tr><tr>
         
         <td>
-          <p><code><a href="tfconcat.html">c(<i>&lt;tf&gt;</i>)</a></code> <code><a href="tfconcat.html">c(<i>&lt;tfd&gt;</i>)</a></code> <code><a href="tfconcat.html">c(<i>&lt;tfb&gt;</i>)</a></code> <code><a href="tfconcat.html">merge(<i>&lt;tf&gt;</i>)</a></code> </p>
+          <p><code><a href="tfsummaries.html">mean(<i>&lt;tf&gt;</i>)</a></code> <code><a href="tfsummaries.html">median(<i>&lt;tf&gt;</i>)</a></code> <code><a href="tfsummaries.html">quantile(<i>&lt;tf&gt;</i>)</a></code> <code><a href="tfsummaries.html">sd()</a></code> <code><a href="tfsummaries.html">var()</a></code> <code><a href="tfsummaries.html">summary(<i>&lt;tf&gt;</i>)</a></code> </p>
         </td>
-        <td><p>Concatenate <code>tf</code>-objects</p></td>
+        <td><p>Functions that summarize <code>tf</code> objects</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="depth.html">depth()</a></code> </p>
         </td>
-        <td><p>Data Depth</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="tfsummaries.html">mean(<i>&lt;tf&gt;</i>)</a></code> <code><a href="tfsummaries.html">median(<i>&lt;tf&gt;</i>)</a></code> <code><a href="tfsummaries.html">quantile(<i>&lt;tf&gt;</i>)</a></code> <code><a href="tfsummaries.html">sd()</a></code> <code><a href="tfsummaries.html">var()</a></code> <code><a href="tfsummaries.html">summary(<i>&lt;tf&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Functions that summarize <code>tf</code> objects</p></td>
+        <td><p>Functional Data Depth</p></td>
       </tr>
     </tbody><tbody>
       <tr>
@@ -197,7 +205,7 @@
       <tr>
         
         <td>
-          <p><code><a href="tfcalculus.html">deriv.tfd</a></code> </p>
+          <p><code><a href="tfcalculus.html">deriv(<i>&lt;tfd&gt;</i>)</a></code> <code><a href="tfcalculus.html">deriv(<i>&lt;tfb&gt;</i>)</a></code> <code><a href="tfcalculus.html">deriv(<i>&lt;tfb_fpc&gt;</i>)</a></code> <code><a href="tfcalculus.html">integrate()</a></code> </p>
         </td>
         <td><p>Derivatives and integrals of functional data</p></td>
       </tr>
@@ -238,7 +246,7 @@ function evaluations.</p></td>
       <tr>
         <th colspan="2">
           <h2 id="section-visualization-display" class="hasAnchor"><a href="#section-visualization-display" class="anchor"></a>Visualization &amp; Display</h2>
-          <p class="section-desc"><p>Graphics functions defined for tf-objects</p></p>
+          <p class="section-desc"><p>Graphics functions and print formats</p></p>
         </th>
       </tr>
       <tr>
@@ -276,7 +284,7 @@ function evaluations.</p></td>
         <td>
           <p><code><a href="tftibble.html">type_sum(<i>&lt;tf&gt;</i>)</a></code> <code><a href="tftibble.html">obj_sum(<i>&lt;tf&gt;</i>)</a></code> <code><a href="tftibble.html">pillar_shaft(<i>&lt;tf&gt;</i>)</a></code> </p>
         </td>
-        <td><p>Summarize tidy functional data for tibble</p></td>
+        <td><p>Format tidy functional data for tibbles</p></td>
       </tr>
     </tbody><tbody>
       <tr>
@@ -314,7 +322,7 @@ function evaluations.</p></td>
         <td>
           <p><code><a href="rgp.html">rgp()</a></code> </p>
         </td>
-        <td><p>Random generator for Gaussian Processes</p></td>
+        <td><p>Random generator for Gaussian Process functions.</p></td>
       </tr><tr>
         
         <td>
@@ -329,7 +337,8 @@ function evaluations.</p></td>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
-      <li><a href="#section-tf-sub-classes-constructors-and-converters">tf - (Sub)classes: Constructors and converters</a></li>
+      <li><a href="#section-tf-sub-classes-constructors-converters">tf - (Sub)classes: Constructors &amp; converters</a></li>
+      <li><a href="#section-concatenation-evaluation-and-indexing">Concatenation, evaluation and indexing</a></li>
       <li><a href="#section-arithmetic-logical-and-summary-functions">Arithmetic, logical and summary functions</a></li>
       <li><a href="#section-differentiation-integration">Differentiation &amp; integration</a></li>
       <li><a href="#section-wrangling">Wrangling</a></li>

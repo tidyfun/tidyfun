@@ -106,7 +106,7 @@ format.tf <- function(x, digits = 2, nsmall = 0, width = options()$width,
 ## tibble methods:
 # adapted from https://github.com/r-spatial/sf/blob/master/R/tidyverse.R 
 
-#' Summarize tidy functional data for tibble
+#' Format tidy functional data for tibbles
 #'
 #' Summarize tidy functional data for tibble
 #' @param x object of class tf

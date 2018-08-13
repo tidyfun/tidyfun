@@ -13,7 +13,7 @@ zoo_wrapper <- function(f, ...){
 
 #-------------------------------------------------------------------------------
 
-#' @title Inter-/extrapolation for `tfd`-objects
+#' @title Inter- and extrapolation functions for `tfd`-objects
 #'  
 #' @description 
 #' These are the currently available `evaluator`-functions for `tfd`-objects, 

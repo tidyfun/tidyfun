@@ -14,16 +14,16 @@
 \usage{
 stat_capellini(mapping = NULL, data = NULL, geom = "capellini",
   position = "identity", na.rm = TRUE, show.legend = NA,
-  inherit.aes = TRUE, arg = NULL, add_lines = FALSE, add_boxes = TRUE,
-  width = NULL, height = NULL, ...)
+  inherit.aes = TRUE, arg = NULL, add_lines = FALSE,
+  add_boxes = TRUE, width = NULL, height = NULL, ...)
 
 geom_capellini(mapping = NULL, data = NULL, stat = "capellini",
   position = "identity", ..., na.rm = TRUE, show.legend = NA,
-  inherit.aes = TRUE, arg = NULL, add_lines = TRUE, add_boxes = TRUE,
-  width = NULL, height = NULL, box.colour = "#0000001A",
-  box.linetype = 1, box.fill = NA, box.size = 0.1, box.alpha = 0.1,
-  line.colour = "black", line.linetype = 2, line.size = 0.3,
-  line.alpha = 0.5)
+  inherit.aes = TRUE, arg = NULL, add_lines = TRUE,
+  add_boxes = TRUE, width = NULL, height = NULL,
+  box.colour = "#0000001A", box.linetype = 1, box.fill = NA,
+  box.size = 0.1, box.alpha = 0.1, line.colour = "black",
+  line.linetype = 2, line.size = 0.3, line.alpha = 0.5)
 }
 \arguments{
 \item{mapping}{Set of aesthetic mappings created by \code{\link[=aes]{aes()}} or

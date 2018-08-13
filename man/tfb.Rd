@@ -11,7 +11,7 @@
 \alias{tfb.list}
 \alias{tfb.tfd}
 \alias{tfb.tfb}
-\title{Constructors for (smoothed) functional data in basis representation}
+\title{Constructors & convertors for functional data in (spline) basis representation}
 \usage{
 as.tfb(data, basis = c("mgcv", "fpc"), ...)
 
@@ -25,11 +25,11 @@ tfb(data, ...)
 \method{tfb}{data.frame}(data, id = 1, arg = 2, value = 3,
   domain = NULL, penalized = TRUE, resolution = NULL, ...)
 
-\method{tfb}{matrix}(data, arg = NULL, domain = NULL, penalized = TRUE,
-  resolution = NULL, ...)
+\method{tfb}{matrix}(data, arg = NULL, domain = NULL,
+  penalized = TRUE, resolution = NULL, ...)
 
-\method{tfb}{numeric}(data, arg = NULL, domain = NULL, penalized = TRUE,
-  resolution = NULL, ...)
+\method{tfb}{numeric}(data, arg = NULL, domain = NULL,
+  penalized = TRUE, resolution = NULL, ...)
 
 \method{tfb}{list}(data, arg = NULL, domain = NULL, penalized = TRUE,
   resolution = NULL, ...)

@@ -153,11 +153,6 @@ is returned.</p>
 
 <span class='fu'>integrate</span>(<span class='no'>f</span>, <span class='no'>lower</span>, <span class='no'>upper</span>, <span class='no'>...</span>)
 
-<span class='co'># S3 method for function</span>
-<span class='fu'>integrate</span>(<span class='no'>f</span>, <span class='no'>lower</span>, <span class='no'>upper</span>, <span class='no'>...</span>, <span class='kw'>subdivisions</span> <span class='kw'>=</span> <span class='fl'>100L</span>,
-  <span class='kw'>rel.tol</span> <span class='kw'>=</span> <span class='no'>.Machine</span>$<span class='no'>double.eps</span>^<span class='fl'>0.25</span>, <span class='kw'>abs.tol</span> <span class='kw'>=</span> <span class='no'>rel.tol</span>,
-  <span class='kw'>stop.on.error</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>keep.xy</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>aux</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)
-
 <span class='co'># S3 method for tfd</span>
 <span class='fu'>integrate</span>(<span class='no'>f</span>, <span class='kw'>lower</span> <span class='kw'>=</span> <span class='fu'><a href='tfmethods.html'>domain</a></span>(<span class='no'>f</span>)[<span class='fl'>1</span>], <span class='kw'>upper</span> <span class='kw'>=</span> <span class='fu'><a href='tfmethods.html'>domain</a></span>(<span class='no'>f</span>)[<span class='fl'>2</span>],
   <span class='kw'>definite</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>arg</span>, <span class='no'>...</span>)
@@ -186,12 +181,6 @@ is returned.</p>
       <td><p>not used</p></td>
     </tr>
     <tr>
-      <th>f</th>
-      <td><p>an <span style="R">R</span> function taking a numeric first argument and returning
-    a numeric vector of the same length.  Returning a non-finite element will
-    generate an error.</p></td>
-    </tr>
-    <tr>
       <th>lower</th>
       <td><p>lower limits of the integration range. For <code>definite=TRUE</code>, this can be
 a vector of the same length as <code>f</code>.</p></td>
@@ -200,32 +189,6 @@ a vector of the same length as <code>f</code>.</p></td>
       <th>upper</th>
       <td><p>upper limits of the integration range (but see <code>definite</code> arg / Description).
 For <code>definite=TRUE</code>, this can be a vector of the same length as <code>f</code>.</p></td>
-    </tr>
-    <tr>
-      <th>subdivisions</th>
-      <td><p>the maximum number of subintervals.</p></td>
-    </tr>
-    <tr>
-      <th>rel.tol</th>
-      <td><p>relative accuracy requested.</p></td>
-    </tr>
-    <tr>
-      <th>abs.tol</th>
-      <td><p>absolute accuracy requested.</p></td>
-    </tr>
-    <tr>
-      <th>stop.on.error</th>
-      <td><p>logical. If true (the default) an error stops the
-    function.  If false some errors will give a result with a warning in
-    the <code>message</code> component.</p></td>
-    </tr>
-    <tr>
-      <th>keep.xy</th>
-      <td><p>unused.  For compatibility with S.</p></td>
-    </tr>
-    <tr>
-      <th>aux</th>
-      <td><p>unused.  For compatibility with S.</p></td>
     </tr>
     <tr>
       <th>definite</th>

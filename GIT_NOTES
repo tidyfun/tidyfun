@@ -1,0 +1,12 @@
+BRANCHES:
+
+- master: keep it clean,i.e., should NEVER fail R CMD check --as-cran 
+
+- dev: for trying out new stuff
+
+- gh-pages: web-site 
+  To update pkgdown site: 
+    - run pkgdown::build_site() in a clean master branch
+    - git add .
+    - git commit -a -m "update pkgdown for $CURRENT_VERSION"
+    - git subtree push --prefix docs origin gh-pages

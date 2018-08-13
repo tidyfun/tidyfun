@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Constructors for (smoothed) functional data in basis representation — as.tfb • tidyfun</title>
+<title>Constructors &amp; convertors for functional data in (spline) basis representation — as.tfb • tidyfun</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -30,7 +30,7 @@
 
 
 
-<meta property="og:title" content="Constructors for (smoothed) functional data in basis representation — as.tfb" />
+<meta property="og:title" content="Constructors &amp; convertors for functional data in (spline) basis representation — as.tfb" />
 
 <meta property="og:description" content="Various constructor and conversion methods." />
 <meta name="twitter:card" content="summary" />
@@ -109,7 +109,7 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Constructors for (smoothed) functional data in basis representation</h1>
+    <h1>Constructors &amp; convertors for functional data in (spline) basis representation</h1>
     <small class="dont-index">Source: <a href='https://github.com/fabian-s/tidyfun/blob/master/R/convert.R'><code>R/convert.R</code></a>, <a href='https://github.com/fabian-s/tidyfun/blob/master/R/tfb-class.R'><code>R/tfb-class.R</code></a></small>
     <div class="hidden name"><code>tfb.Rd</code></div>
     </div>
@@ -136,12 +136,12 @@
   <span class='kw'>domain</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>penalized</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>resolution</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>...</span>)
 
 <span class='co'># S3 method for matrix</span>
-<span class='fu'>tfb</span>(<span class='no'>data</span>, <span class='kw'>arg</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>domain</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>penalized</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>resolution</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>...</span>)
+<span class='fu'>tfb</span>(<span class='no'>data</span>, <span class='kw'>arg</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>domain</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>penalized</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>resolution</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>...</span>)
 
 <span class='co'># S3 method for numeric</span>
-<span class='fu'>tfb</span>(<span class='no'>data</span>, <span class='kw'>arg</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>domain</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>penalized</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>resolution</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>...</span>)
+<span class='fu'>tfb</span>(<span class='no'>data</span>, <span class='kw'>arg</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>domain</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>penalized</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>resolution</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>...</span>)
 
 <span class='co'># S3 method for list</span>
 <span class='fu'>tfb</span>(<span class='no'>data</span>, <span class='kw'>arg</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>domain</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>penalized</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,

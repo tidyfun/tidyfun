@@ -4,7 +4,7 @@
 \alias{[.tf}
 \alias{index.tf}
 \alias{[<-.tf}
-\title{Accessing/evaluating, subsetting and subassigning \code{tf}s}
+\title{Accessing, evaluating, subsetting and subassigning \code{tf} vectors}
 \usage{
 \method{[}{tf}(x, i, j, interpolate = TRUE, matrix = TRUE)
 
@@ -42,8 +42,8 @@ represents one \code{argval} as given in argument \code{j}, with an attribute
 \code{i}.
 }
 \description{
-These functions access, subset, replace and evaluate \code{tf}s.
-For more information on creating \code{tf}s and converting them to/from
+These functions access, subset, replace and evaluate \code{tf} objects.
+For more information on creating \code{tf} objects and converting them to/from
 \code{list}, \code{data.frame} or \code{matrix}, see \code{\link[=tfd]{tfd()}} and \code{\link[=tfb]{tfb()}}. \cr
 Note that these break certain (terrible) R conventions for vector-like objects:\cr
 \itemize{
@@ -55,6 +55,7 @@ Note that these break certain (terrible) R conventions for vector-like objects:\
 }
 \details{
 All of these will trigger errors. Subassigning new elements to positions
-beyond the original length of the object will still fill up the vector
-up to that position with \code{NAs}, though. I'm a fickle, rainbow-colored unicorn.
+beyond the original length still works and will fill up the missing elements
+up to that position with \code{NAs}, though. This package was developed by fickle,
+rainbow-colored unicorns.
 }

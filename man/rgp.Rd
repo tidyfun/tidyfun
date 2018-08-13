@@ -2,7 +2,7 @@
 % Please edit documentation in R/rng.R
 \name{rgp}
 \alias{rgp}
-\title{Random generator for Gaussian Processes}
+\title{Gaussian Process random generator}
 \usage{
 rgp(n, arg = 51L, scale = diff(range(arg))/10, cor = c("squareexp",
   "wiener"), nugget = scale/200)
@@ -11,7 +11,7 @@ rgp(n, arg = 51L, scale = diff(range(arg))/10, cor = c("squareexp",
 \item{n}{how many realizations to draw}
 
 \item{arg}{vector of evaluation points (\code{arg} of the return object).
-Defaults to (0, 0.02, 0.04, ..., 1). If a single integer, creates a grid
+Defaults to (0, 0.02, 0.04, ..., 1). If a single \strong{integer} (don't forget the \code{L}...), creates a grid
 of the given length over (0,1).}
 
 \item{scale}{scale parameter (see Description). Defaults to the width of the
@@ -20,16 +20,17 @@ domain divided by 10.}
 \item{cor}{type of correlation structure to use. Currently available:
 \code{"squareexp"} or \code{"wiener"}, see Description.}
 
-\item{nugget}{nugget effect for additional white error noise. Defaults to
-\code{scale/200} (so: very little noise)}
+\item{nugget}{nugget effect for additional white noise / unstructured variability.
+Defaults to \code{scale/200} (so: very little noise).}
 }
 \value{
 an \code{tfd}-vector of length \code{n}
 }
 \description{
-The function generates \code{n} realizations of Gaussian processes , either with
+The function generates \code{n} realizations of a Gaussian process, either with
 squared exponential covariance \eqn{Cov(x(t), x(t')) = \exp(-(t'-t)^2)/s) + n
-\delta_{t}(t')} or Wiener process covariance \eqn{Cov(x(t), x(t')) =
-\min(t',t)/s + n \delta_{t}(t')} with \code{scale} parameter s and \code{nugget} effect
-n.
+\delta_{t}(t')}
+or Wiener process covariance \eqn{Cov(x(t), x(t')) =
+\min(t',t)/s + n \delta_{t}(t')}
+with \code{scale} parameter s and \code{nugget} effect n.
 }

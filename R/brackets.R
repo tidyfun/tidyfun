@@ -1,7 +1,7 @@
-#' Accessing/evaluating, subsetting and subassigning `tf`s
+#' Accessing, evaluating, subsetting and subassigning `tf` vectors
 #' 
-#' These functions access, subset, replace and evaluate `tf`s. 
-#' For more information on creating `tf`s and converting them to/from 
+#' These functions access, subset, replace and evaluate `tf` objects. 
+#' For more information on creating `tf` objects and converting them to/from 
 #' `list`, `data.frame` or `matrix`, see [tfd()] and [tfb()]. \cr
 #' Note that these break certain (terrible) R conventions for vector-like objects:\cr
 #'  
@@ -11,8 +11,9 @@
 #' - no indexing with integers `> length(x)`
 #' 
 #' All of these will trigger errors. Subassigning new elements to positions
-#' beyond the original length of the object will still fill up the vector 
-#' up to that position with `NAs`, though. I'm a fickle, rainbow-colored unicorn.
+#' beyond the original length still works and will fill up the missing elements
+#' up to that position with `NAs`, though. This package was developed by fickle,
+#' rainbow-colored unicorns.
 #' 
 #' 
 #' @param x an `tf`

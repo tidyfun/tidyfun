@@ -4,3 +4,4 @@
 ^_pkgdown\.yml$
 ^README\.Rmd$
 ^docs$
+^GIT_NOTES$

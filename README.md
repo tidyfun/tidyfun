@@ -18,6 +18,8 @@ devtools::install_github("fabian-s/tidyfun")
 
 ## What does it do?
 
+Have a look at [https://fabian-s.github.io/tidyfun]() for details, short summary below.
+
 #### New vector-like data types for functional data
 
 **`tidyfun`** provides new `S3`-classes for functional data, either as raw data (class `tfd` for *t*idy *f*unctional *d*ata) or in basis representation (class `tfb` for *t*idy *f*unctional *b*asis data). 
@@ -29,14 +31,14 @@ Such `tf`s can be subsetted or subassigned, computed on and summarized: almost a
 
 are defined for **`tidyfun`**'s data structures.
 
-The `tf` objects are basically glorified lists, so they work well as columns in data frames. That makes it a lot easier to keep conventional data and functional measurements together in one object for preprocessing, exploratory analysis and description.
+The `tf` objects are basically glorified lists, so they work well as columns in data frames. That makes it a lot easier to keep your other data and functional measurements together in one object for preprocessing, exploratory analysis and description.
 
-At the same time, they actually behave like vectors of *functions* to some extent, i.e., they can be evaluated on any point in their domain, they can be integrated or differentiated, etc.
+At the same time, these objects actually behave like vectors of *functions* to some extent, i.e., they can be evaluated on any point in their domain, they can be integrated or differentiated, etc.
 
 #### `tidyverse` verbs for dealing with functional data inside data frames
 
 All `dplyr` verbs work on `tf`-columns, so you can `filter`, `mutate`, `summarize` etc
-functional data pretty much like conventional data.
+functional data pretty much like conventional data.  
 **`tidyfun`** also provides `tf_gather` & `tf_spread`, `tf_nest` & `tf_unnest`
 in order to reshape tables with functional data, i.e., go from wide to narrow, or from long to short, and *vice versa*.
 
@@ -51,9 +53,9 @@ in order to reshape tables with functional data, i.e., go from wide to narrow, o
 
 ----------------------
 
-**Do have a look at the vignette for code examples.**
+**Do have a look at [https://fabian-s.github.io/tidyfun]() for examples, full documentation and vignettes.**
 
-Found a bug? Got a question? Got an idea?   
+Found a bug? Got a question? Missing some functionality?   
 Please let us know so we can make it better.  
 
 

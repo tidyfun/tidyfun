@@ -4,7 +4,7 @@
 \alias{type_sum.tf}
 \alias{obj_sum.tf}
 \alias{pillar_shaft.tf}
-\title{Summarize tidy functional data for tibble}
+\title{Format tidy functional data for tibbles}
 \usage{
 \method{type_sum}{tf}(x, ...)
 
