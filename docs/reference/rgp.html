@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Random generator for Gaussian Processes — rgp • tidyfun</title>
+<title>Random generator for Gaussian Process functions. — rgp • tidyfun</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -30,13 +30,14 @@
 
 
 
-<meta property="og:title" content="Random generator for Gaussian Processes — rgp" />
+<meta property="og:title" content="Random generator for Gaussian Process functions. — rgp" />
 
 <meta property="og:description" content="The function generates n realizations of Gaussian processes , either with
 squared exponential covariance \(Cov(x(t), x(t')) = \exp(-(t'-t)^2)/s) + n
-\delta_{t}(t')\) or Wiener process covariance \(Cov(x(t), x(t')) =
-\min(t',t)/s + n \delta_{t}(t')\) with scale parameter s and nugget effect
-n." />
+\delta_{t}(t')\)
+or Wiener process covariance \(Cov(x(t), x(t')) =
+\min(t',t)/s + n \delta_{t}(t')\)
+with scale parameter s and nugget effect n." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -113,7 +114,7 @@ n." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Random generator for Gaussian Processes</h1>
+    <h1>Random generator for Gaussian Process functions.</h1>
     <small class="dont-index">Source: <a href='https://github.com/fabian-s/tidyfun/blob/master/R/rng.R'><code>R/rng.R</code></a></small>
     <div class="hidden name"><code>rgp.Rd</code></div>
     </div>
@@ -122,9 +123,10 @@ n." />
     
     <p>The function generates <code>n</code> realizations of Gaussian processes , either with
 squared exponential covariance \(Cov(x(t), x(t')) = \exp(-(t'-t)^2)/s) + n
-\delta_{t}(t')\) or Wiener process covariance \(Cov(x(t), x(t')) =
-\min(t',t)/s + n \delta_{t}(t')\) with <code>scale</code> parameter s and <code>nugget</code> effect
-n.</p>
+\delta_{t}(t')\)
+or Wiener process covariance \(Cov(x(t), x(t')) =
+\min(t',t)/s + n \delta_{t}(t')\)
+with <code>scale</code> parameter s and <code>nugget</code> effect n.</p>
     
     </div>
 
@@ -141,7 +143,7 @@ n.</p>
     <tr>
       <th>arg</th>
       <td><p>vector of evaluation points (<code>arg</code> of the return object).
-Defaults to (0, 0.02, 0.04, ..., 1). If a single integer, creates a grid
+Defaults to (0, 0.02, 0.04, ..., 1). If a single <strong>integer</strong> (don't forget the <code>L</code>...), creates a grid
 of the given length over (0,1).</p></td>
     </tr>
     <tr>
@@ -156,8 +158,8 @@ domain divided by 10.</p></td>
     </tr>
     <tr>
       <th>nugget</th>
-      <td><p>nugget effect for additional white error noise. Defaults to
-<code>scale/200</code> (so: very little noise)</p></td>
+      <td><p>nugget effect for additional white noise / unstructured variability.
+Defaults to <code>scale/200</code> (so: very little noise).</p></td>
     </tr>
     </table>
     

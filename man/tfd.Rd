@@ -11,7 +11,7 @@
 \alias{tfd.data.frame}
 \alias{tfd.list}
 \alias{tfd.tf}
-\title{Constructors for functional data evaluated on grids of argument values}
+\title{Constructors & converters for "raw" functional data}
 \usage{
 as.tfd(data, ...)
 

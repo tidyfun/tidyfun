@@ -57,7 +57,7 @@ make_tfb_fpc <- function(data, domain = NULL, smooth = TRUE, resolution = NULL, 
 
 #-------------------------------------------------------------------------------
 
-#' Constructors/converters for functional data in FPC-basis representation
+#' Constructors for functional data in FPC-basis representation
 #' 
 #' These functions perform a (functional) principal component analysis of the
 #' input data and return an `tfb` `tf`-object that uses the empirical 

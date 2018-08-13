@@ -1,6 +1,7 @@
-#' Data Depth
+#' Functional Data Depth
 #' 
-#' Data depth for functional data. Currently implemented: Modified Band-2 Depth
+#' Data depth for functional data. 
+#' Currently implemented: Modified Band-2 Depth, see reference.
 #' 
 #' @param x `tf` (or a matrix of evaluations)
 #' @param depth currently available: "MBD", i.e. modified band depth

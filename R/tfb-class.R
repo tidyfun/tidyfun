@@ -131,7 +131,7 @@ magic_smooth_coef <- function(evaluations, index, spec_object, magic_args) {
 }
 
 #-------------------------------------------------------------------------------
-#' Constructors for (smoothed) functional data in basis representation
+#' Constructors & convertors for functional data in (spline) basis representation
 #' 
 #' Various constructor and conversion methods.
 #'

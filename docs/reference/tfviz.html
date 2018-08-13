@@ -122,13 +122,14 @@ spaghetti- (i.e., line plots) and lasagna- (i.e., heat map) flavors.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>funplot</span>(<span class='no'>f</span>, <span class='no'>arg</span>, <span class='kw'>n_grid</span> <span class='kw'>=</span> <span class='fl'>50</span>, <span class='kw'>points</span> <span class='kw'>=</span> <span class='fu'><a href='tfmethods.html'>is_irreg</a></span>(<span class='no'>f</span>), <span class='kw'>type</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"spaghetti"</span>,
-  <span class='st'>"lasagna"</span>), <span class='kw'>alpha</span> <span class='kw'>=</span> <span class='fu'>min</span>(<span class='fl'>1</span>, <span class='fu'>max</span>(<span class='fl'>0.05</span>, <span class='fl'>2</span>/<span class='fu'>length</span>(<span class='no'>f</span>))))
+    <pre class="usage"><span class='fu'>funplot</span>(<span class='no'>f</span>, <span class='no'>arg</span>, <span class='kw'>n_grid</span> <span class='kw'>=</span> <span class='fl'>50</span>, <span class='kw'>points</span> <span class='kw'>=</span> <span class='fu'><a href='tfmethods.html'>is_irreg</a></span>(<span class='no'>f</span>),
+  <span class='kw'>type</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"spaghetti"</span>, <span class='st'>"lasagna"</span>), <span class='kw'>alpha</span> <span class='kw'>=</span> <span class='fu'>min</span>(<span class='fl'>1</span>, <span class='fu'>max</span>(<span class='fl'>0.05</span>,
+  <span class='fl'>2</span>/<span class='fu'>length</span>(<span class='no'>f</span>))))
 
 <span class='co'># S3 method for tf</span>
 <span class='fu'>plot</span>(<span class='no'>x</span>, <span class='no'>y</span>, <span class='kw'>n_grid</span> <span class='kw'>=</span> <span class='fl'>50</span>, <span class='kw'>points</span> <span class='kw'>=</span> <span class='fu'><a href='tfmethods.html'>is_irreg</a></span>(<span class='no'>x</span>),
-  <span class='kw'>type</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"spaghetti"</span>, <span class='st'>"lasagna"</span>), <span class='kw'>alpha</span> <span class='kw'>=</span> <span class='fu'>min</span>(<span class='fl'>1</span>, <span class='fu'>max</span>(<span class='fl'>0.05</span>, <span class='fl'>2</span>/<span class='fu'>length</span>(<span class='no'>x</span>))),
-  <span class='no'>...</span>)
+  <span class='kw'>type</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"spaghetti"</span>, <span class='st'>"lasagna"</span>), <span class='kw'>alpha</span> <span class='kw'>=</span> <span class='fu'>min</span>(<span class='fl'>1</span>, <span class='fu'>max</span>(<span class='fl'>0.05</span>,
+  <span class='fl'>2</span>/<span class='fu'>length</span>(<span class='no'>x</span>))), <span class='no'>...</span>)
 
 <span class='co'># S3 method for tf</span>
 <span class='fu'>lines</span>(<span class='no'>x</span>, <span class='no'>arg</span>, <span class='kw'>n_grid</span> <span class='kw'>=</span> <span class='fl'>50</span>, <span class='kw'>alpha</span> <span class='kw'>=</span> <span class='fu'>min</span>(<span class='fl'>1</span>, <span class='fu'>max</span>(<span class='fl'>0.05</span>,

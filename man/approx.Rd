@@ -7,7 +7,7 @@
 \alias{approx_fill_extend}
 \alias{approx_locf}
 \alias{approx_nocb}
-\title{Inter-/extrapolation for \code{tfd}-objects}
+\title{Inter- and extrapolation functions for \code{tfd}-objects}
 \usage{
 approx_linear(x, arg, evaluations)
 

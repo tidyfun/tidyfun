@@ -39,7 +39,7 @@ new_tfd <- function(arg, datalist, regular, domain, evaluator, resolution) {
 
 #------------------------------------------------------------------------------
 
-#' Constructors for functional data evaluated on grids of argument values
+#' Constructors & converters for "raw" functional data
 #' 
 #' Various constructor and conversion methods. 
 #'

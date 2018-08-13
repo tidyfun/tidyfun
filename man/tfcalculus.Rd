@@ -5,7 +5,6 @@
 \alias{deriv.tfb}
 \alias{deriv.tfb_fpc}
 \alias{integrate}
-\alias{integrate.function}
 \alias{integrate.tfd}
 \alias{integrate.tfb}
 \title{Derivatives and integrals of functional data}
@@ -17,10 +16,6 @@
 \method{deriv}{tfb_fpc}(expr, order = 1, ...)
 
 integrate(f, lower, upper, ...)
-
-\method{integrate}{function}(f, lower, upper, ..., subdivisions = 100L,
-  rel.tol = .Machine$double.eps^0.25, abs.tol = rel.tol,
-  stop.on.error = TRUE, keep.xy = FALSE, aux = NULL)
 
 \method{integrate}{tfd}(f, lower = domain(f)[1], upper = domain(f)[2],
   definite = TRUE, arg, ...)
@@ -37,29 +32,13 @@ integrate(f, lower, upper, ...)
 
 \item{...}{not used}
 
-\item{f}{an \R function taking a numeric first argument and returning
-    a numeric vector of the same length.  Returning a non-finite element will
-    generate an error.}
+\item{f}{a \code{tf} object (or a \code{function}, see details)}
 
 \item{lower}{lower limits of the integration range. For \code{definite=TRUE}, this can be
 a vector of the same length as \code{f}.}
 
 \item{upper}{upper limits of the integration range (but see \code{definite} arg / Description).
 For \code{definite=TRUE}, this can be a vector of the same length as \code{f}.}
-
-\item{subdivisions}{the maximum number of subintervals.}
-
-\item{rel.tol}{relative accuracy requested.}
-
-\item{abs.tol}{absolute accuracy requested.}
-
-\item{stop.on.error}{logical. If true (the default) an error stops the
-    function.  If false some errors will give a result with a warning in
-    the \code{message} component.}
-
-\item{keep.xy}{unused.  For compatibility with S.}
-
-\item{aux}{unused.  For compatibility with S.}
 
 \item{definite}{should the definite integral  be returned (default)
 or the antiderivative. See Description.}

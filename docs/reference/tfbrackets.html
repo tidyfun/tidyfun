@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Accessing/evaluating, subsetting and subassigning <code>tf</code>s — [.tf • tidyfun</title>
+<title>Accessing, evaluating, subsetting and subassigning <code>tf</code> vectors — [.tf • tidyfun</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -30,10 +30,10 @@
 
 
 
-<meta property="og:title" content="Accessing/evaluating, subsetting and subassigning <code>tf</code>s — [.tf" />
+<meta property="og:title" content="Accessing, evaluating, subsetting and subassigning <code>tf</code> vectors — [.tf" />
 
-<meta property="og:description" content="These functions access, subset, replace and evaluate tfs.
-For more information on creating tfs and converting them to/from
+<meta property="og:description" content="These functions access, subset, replace and evaluate tf objects.
+For more information on creating tf objects and converting them to/from
 list, data.frame or matrix, see tfd() and tfb(). 
 Note that these break certain (terrible) R conventions for vector-like objects:
 no argument recycling,
@@ -117,15 +117,15 @@ no indexing with integers &amp;gt; length(x)
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Accessing/evaluating, subsetting and subassigning <code>tf</code>s</h1>
+    <h1>Accessing, evaluating, subsetting and subassigning <code>tf</code> vectors</h1>
     <small class="dont-index">Source: <a href='https://github.com/fabian-s/tidyfun/blob/master/R/brackets.R'><code>R/brackets.R</code></a></small>
     <div class="hidden name"><code>tfbrackets.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>These functions access, subset, replace and evaluate <code>tf</code>s.
-For more information on creating <code>tf</code>s and converting them to/from
+    <p>These functions access, subset, replace and evaluate <code>tf</code> objects.
+For more information on creating <code>tf</code> objects and converting them to/from
 <code>list</code>, <code>data.frame</code> or <code>matrix</code>, see <code><a href='tfd.html'>tfd()</a></code> and <code><a href='tfb.html'>tfb()</a></code>. <br />
 Note that these break certain (terrible) R conventions for vector-like objects:<br /></p><ul>
 <li><p>no argument recycling,</p></li>
@@ -193,8 +193,9 @@ represents one <code>argval</code> as given in argument <code>j</code>, with an 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>All of these will trigger errors. Subassigning new elements to positions
-beyond the original length of the object will still fill up the vector
-up to that position with <code>NAs</code>, though. I'm a fickle, rainbow-colored unicorn.</p>
+beyond the original length still works and will fill up the missing elements
+up to that position with <code>NAs</code>, though. This package was developed by fickle,
+rainbow-colored unicorns.</p>
     
 
   </div>

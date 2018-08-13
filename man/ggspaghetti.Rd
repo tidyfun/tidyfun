@@ -16,7 +16,8 @@ stat_tf(mapping = NULL, data = NULL, geom = "spaghetti",
   inherit.aes = TRUE, arg = NULL, ...)
 
 geom_spaghetti(mapping = NULL, data = NULL, position = "identity",
-  na.rm = TRUE, show.legend = NA, inherit.aes = TRUE, arg = NULL, ...)
+  na.rm = TRUE, show.legend = NA, inherit.aes = TRUE, arg = NULL,
+  ...)
 
 geom_meatballs(mapping = NULL, data = NULL, position = "identity",
   na.rm = TRUE, show.legend = NA, inherit.aes = TRUE, arg = NULL,

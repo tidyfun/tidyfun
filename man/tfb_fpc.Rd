@@ -6,18 +6,18 @@
 \alias{tfb_fpc.matrix}
 \alias{tfb_fpc.numeric}
 \alias{tfb_fpc.tf}
-\title{Constructors/converters for functional data in FPC-basis representation}
+\title{Constructors for functional data in FPC-basis representation}
 \usage{
 tfb_fpc(data, ...)
 
 \method{tfb_fpc}{data.frame}(data, id = 1, arg = 2, value = 3,
   domain = NULL, smooth = TRUE, resolution = NULL, ...)
 
-\method{tfb_fpc}{matrix}(data, arg = NULL, domain = NULL, smooth = TRUE,
-  resolution = NULL, ...)
+\method{tfb_fpc}{matrix}(data, arg = NULL, domain = NULL,
+  smooth = TRUE, resolution = NULL, ...)
 
-\method{tfb_fpc}{numeric}(data, arg = NULL, domain = NULL, smooth = TRUE,
-  resolution = NULL, ...)
+\method{tfb_fpc}{numeric}(data, arg = NULL, domain = NULL,
+  smooth = TRUE, resolution = NULL, ...)
 
 \method{tfb_fpc}{tf}(data, arg = NULL, smooth = TRUE, ...)
 }

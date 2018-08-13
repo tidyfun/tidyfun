@@ -14,8 +14,9 @@ smooth(x, ...)
 \method{smooth}{tfd}(x, method = c("lowess", "rollmean", "rollmedian",
   "savgol"), ...)
 
-\method{smooth}{default}(x, ..., kind = c("3RS3R", "3RSS", "3RSR", "3R", "3",
-  "S"), twiceit = FALSE, endrule = c("Tukey", "copy"), do.ends = FALSE)
+\method{smooth}{default}(x, ..., kind = c("3RS3R", "3RSS", "3RSR", "3R",
+  "3", "S"), twiceit = FALSE, endrule = c("Tukey", "copy"),
+  do.ends = FALSE)
 }
 \arguments{
 \item{x}{a \code{tf} object containing functional data}

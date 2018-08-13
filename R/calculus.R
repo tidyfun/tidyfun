@@ -109,20 +109,17 @@ deriv.tfb_fpc <- function(expr, order = 1, ...) {
 #'  like the *anti-derivative* on `[lower, upper]`, e.g. an `tfd` object
 #'  representing \eqn{F(t) = \int^{t}_{lower}f(s)ds}, for \eqn{t \in}`[lower, upper]`,
 #'  is returned.
+#' @details `integrate.function` is simply a wrapper for [stats::integrate()].
 #' @export
 integrate <- function(f, lower, upper, ...) {
   UseMethod("integrate")
 }
 
 integrate.default <- function(f, lower, upper, ...) .NotYetImplemented()
-
-#' @rdname tfcalculus
-#' @details `integrate.function` is simply a wrapper for [stats::integrate()].
-#' @inheritParams stats::integrate
-#' @export
 integrate.function <- stats::integrate
 
 #' @rdname tfcalculus
+#' @param f a `tf` object (or a `function`, see details)
 #' @param lower lower limits of the integration range. For `definite=TRUE`, this can be
 #'  a vector of the same length as `f`.
 #' @param upper upper limits of the integration range (but see `definite` arg / Description).
