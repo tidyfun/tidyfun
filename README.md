@@ -18,7 +18,7 @@ devtools::install_github("fabian-s/tidyfun")
 
 ## What does it do?
 
-Have a look at [https://fabian-s.github.io/tidyfun]() for details, short summary below.
+Have a look at [https://fabian-s.github.io/tidyfun](https://fabian-s.github.io/tidyfun) for details, short summary below.
 
 #### New vector-like data types for functional data
 
@@ -53,7 +53,7 @@ in order to reshape tables with functional data, i.e., go from wide to narrow, o
 
 ----------------------
 
-**Do have a look at [https://fabian-s.github.io/tidyfun]() for examples, full documentation and vignettes.**
+**Do have a look at [https://fabian-s.github.io/tidyfun](https://fabian-s.github.io/tidyfun) for examples, full documentation and vignettes.**
 
 Found a bug? Got a question? Missing some functionality?   
 Please let us know so we can make it better.  
