@@ -4,7 +4,8 @@
 \alias{tf_nest}
 \title{Turn "long" tables into tidy data frames with \code{tf}-objects}
 \usage{
-tf_nest(data, ..., .id = "id", .arg = "arg")
+tf_nest(data, ..., .id = "id", .arg = "arg", domain = NULL,
+  evaluator = approx_linear, resolution = NULL)
 }
 \arguments{
 \item{data}{a data frame}
@@ -17,6 +18,12 @@ For more options, see the \code{\link[dplyr:select]{dplyr::select()}} documentat
 \item{.id}{the (bare or quoted) name of the column defining the different observations}
 
 \item{.arg}{the (bare or quoted) name of the column defining the \code{arg}-values of the observed functions}
+
+\item{domain}{range of the \code{arg}.}
+
+\item{evaluator}{a function accepting arguments \code{x, arg, evaluations}. See details.}
+
+\item{resolution}{resolution of the evaluation grid. See details.}
 }
 \value{
 a data frame with (at least) \code{.id} and \code{tfd} columns
@@ -30,5 +37,5 @@ define the values of the functions into a (much shorter) table containing
 appended as well.
 }
 \seealso{
-tf_gather() tf_unnest()
+tf_gather(), tf_unnest(), tfd() for \code{domain, evaluator, resolution}
 }

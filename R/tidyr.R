@@ -157,10 +157,12 @@ tf_spread <- function(data, value, arg, sep="_", interpolate = TRUE) {
 #'   For more options, see the [dplyr::select()] documentation. 
 #' @param .id the (bare or quoted) name of the column defining the different observations
 #' @param .arg the (bare or quoted) name of the column defining the `arg`-values of the observed functions
+#' @inheritParams tfd
 #' @return a data frame with (at least) `.id` and `tfd` columns
 #' @export
-#' @seealso tf_gather() tf_unnest()
-tf_nest <- function(data, ..., .id = "id", .arg = "arg") {
+#' @seealso tf_gather(), tf_unnest(), tfd() for `domain, evaluator, resolution`
+tf_nest <- function(data, ..., .id = "id", .arg = "arg", domain = NULL, 
+  evaluator = approx_linear, resolution = NULL) {
   stopifnot(!missing(data)) 
   id_var <- quo_name(enexpr(.id))
   arg_var <- quo_name(enexpr(.arg))
@@ -186,8 +188,10 @@ tf_nest <- function(data, ..., .id = "id", .arg = "arg") {
       " are not constant for all levels of the id-variable.")
   }
   ret <- slice(ret, 1) %>% ungroup
+  # TODO: parallelize this over evaluator, domain, resolution
   tfd_list <- map(value_vars, 
-    ~ select(data, id_var, arg_var, .x) %>%  tfd)
+    ~ select(data, id_var, arg_var, .x) %>%  
+      tfd(evaluator = !!evaluator, domain = domain, resolution = resolution))
   names(tfd_list) <- value_vars
   for (v in value_vars) {
     ret[[v]] <- tfd_list[[v]]
