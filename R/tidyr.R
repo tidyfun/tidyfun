@@ -149,6 +149,11 @@ tf_spread <- function(data, value, arg, sep="_", interpolate = TRUE) {
 #' define the values of the functions into a (much shorter) table containing
 #' `tfd`-objects. All other variables are checked for constancy over `.id` and
 #' appended as well.
+#' 
+#' `domain`, `resolution` and `evaluator` can be speficied as lists or vectors 
+#' if you're nesting multiple functional data columns with different properties.
+#' Because quasi-quotation is *such* a bitch, you can only specify the evaluator
+#' functions as strings and not as bare names here.
 #'
 #' @param data a data frame
 #' @param ... A selection of columns. If empty, all variables except the 
@@ -162,7 +167,7 @@ tf_spread <- function(data, value, arg, sep="_", interpolate = TRUE) {
 #' @export
 #' @seealso tf_gather(), tf_unnest(), tfd() for `domain, evaluator, resolution`
 tf_nest <- function(data, ..., .id = "id", .arg = "arg", domain = NULL, 
-  evaluator = approx_linear, resolution = NULL) {
+  evaluator = "approx_linear", resolution = NULL) {
   stopifnot(!missing(data)) 
   id_var <- quo_name(enexpr(.id))
   arg_var <- quo_name(enexpr(.arg))
@@ -175,6 +180,20 @@ tf_nest <- function(data, ..., .id = "id", .arg = "arg", domain = NULL,
   if (is_empty(value_vars)) {
     return(data)
   }
+  # homogenize inputs:
+  stopifnot(length(evaluator) %in% c(1, length(value_vars)))
+  if (!is.list(domain)) {
+    domain <- replicate(length(value_vars), domain, simplify = FALSE)
+  } else stopifnot(length(domain) %in% c(1, length(value_vars)))
+  if (is.null(resolution)) {
+    resolution <- replicate(length(value_vars), resolution, simplify = FALSE)
+  }
+  if (!is.list(resolution) & !is.null(resolution)) {
+    resolution <- as.list(resolution)
+  } else stopifnot(length(resolution) %in% c(1, length(value_vars)))
+  evaluator <- as.list(evaluator)
+  stopifnot(length(evaluator) %in% c(1, length(value_vars)))
+  
   remaining <- setdiff(names(data), c(id_var, arg_var, value_vars))
   # check that nesting is possible without information loss
   ret <- select(data, !!id_var, !!remaining) %>%
@@ -189,9 +208,9 @@ tf_nest <- function(data, ..., .id = "id", .arg = "arg", domain = NULL,
   }
   ret <- slice(ret, 1) %>% ungroup
   # TODO: parallelize this over evaluator, domain, resolution
-  tfd_list <- map(value_vars, 
-    ~ select(data, id_var, arg_var, .x) %>%  
-      tfd(evaluator = !!evaluator, domain = domain, resolution = resolution))
+  tfd_list <- pmap(list(value_vars, evaluator, domain, resolution), 
+    ~ select(data, id_var, arg_var, ..1) %>%  
+      tfd(evaluator = !!(..2), domain = ..3, resolution = ..4))
   names(tfd_list) <- value_vars
   for (v in value_vars) {
     ret[[v]] <- tfd_list[[v]]

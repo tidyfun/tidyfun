@@ -5,7 +5,7 @@
 \title{Turn "long" tables into tidy data frames with \code{tf}-objects}
 \usage{
 tf_nest(data, ..., .id = "id", .arg = "arg", domain = NULL,
-  evaluator = approx_linear, resolution = NULL)
+  evaluator = "approx_linear", resolution = NULL)
 }
 \arguments{
 \item{data}{a data frame}
@@ -21,9 +21,9 @@ For more options, see the \code{\link[dplyr:select]{dplyr::select()}} documentat
 
 \item{domain}{range of the \code{arg}.}
 
-\item{evaluator}{a function accepting arguments \code{x, arg, evaluations}. See details.}
+\item{evaluator}{a function accepting arguments \code{x, arg, evaluations}. See details for \code{\link[=tfd]{tfd()}}.}
 
-\item{resolution}{resolution of the evaluation grid. See details.}
+\item{resolution}{resolution of the evaluation grid. See details for \code{\link[=tfd]{tfd()}}.}
 }
 \value{
 a data frame with (at least) \code{.id} and \code{tfd} columns
@@ -35,6 +35,12 @@ defines the evaluation of the functional observations, and other columns (\code{
 define the values of the functions into a (much shorter) table containing
 \code{tfd}-objects. All other variables are checked for constancy over \code{.id} and
 appended as well.
+}
+\details{
+\code{domain}, \code{resolution} and \code{evaluator} can be speficied as lists or vectors
+if you're nesting multiple functional data columns with different properties.
+Because quasi-quotation is \emph{such} a bitch, you can only specify the evaluator
+functions as strings and not as bare names here.
 }
 \seealso{
 tf_gather(), tf_unnest(), tfd() for \code{domain, evaluator, resolution}
