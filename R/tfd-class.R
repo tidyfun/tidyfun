@@ -65,10 +65,12 @@ new_tfd <- function(arg, datalist, regular, domain, evaluator, resolution) {
 #' **`resolution`**: `arg`-values that are equivalent up to this difference are
 #' treated as identical. E.g., if an evaluation of $f(t)$ is available at $t=1$
 #' and a function value is requested at $t = 1.01$, $f(1)$ will be returned if
-#' `resolution` < .01. By default, this will be set to an integer-valued power
-#' of 10 one smaller than the than the smallest difference between adjacent
-#' arg-values: e.g., if the smallest difference between consecutive 
-#' arg-values is $0.12$, the resolution will be $0.01$, etc.
+#' `resolution` < .01. By default, resolution will be set to an integer-valued power
+#' of 10 one smaller than smallest difference between adjacent
+#' arg-values rounded down to an integer-valued power
+#' of 10: e.g., if the smallest difference between consecutive 
+#' arg-values is between $0.1 and 0.9999$, the resolution will be $0.01$, etc.
+#' In code: `10^(floor(log10(min(diff(<arg>))) - 1)`
 #'  
 #' @param data a `matrix`, `data.frame` or `list` of suitable shape, or another `tf`-object.
 #' @param ... not used in `tfd`, except for `tfd.tf` -- specify `arg` and `ìnterpolate = TRUE` to 
@@ -82,8 +84,8 @@ tfd <- function(data, ...) UseMethod("tfd")
 #' @param arg `numeric`, or list of `numeric`s. The evaluation grid. See Details.
 #'  For the `data.frame`-method: the name/number of the column defining the evaluation grid.
 #' @param domain range of the `arg`. 
-#' @param evaluator a function accepting arguments `x, arg, evaluations`. See details.
-#' @param resolution resolution of the evaluation grid. See details.
+#' @param evaluator a function accepting arguments `x, arg, evaluations`. See details for [tfd()].
+#' @param resolution resolution of the evaluation grid. See details for [tfd()].
 tfd.matrix <- function(data, arg = NULL, domain = NULL, 
     evaluator = approx_linear, resolution = NULL, ...) {
   stopifnot(is.numeric(data))

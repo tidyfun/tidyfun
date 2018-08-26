@@ -41,7 +41,7 @@ For the \code{data.frame}-method: the name/number of the column defining the eva
 \item{smooth}{use smoothed mean function and smoothed covariance surface estimates
 from \code{\link[refund:fpca.sc]{refund::fpca.sc()}} or simply perform a (truncated) PCA of the data? See Details.}
 
-\item{resolution}{resolution of the evaluation grid. See details.}
+\item{resolution}{resolution of the evaluation grid. See details for \code{\link[=tfd]{tfd()}}.}
 }
 \description{
 These functions perform a (functional) principal component analysis of the

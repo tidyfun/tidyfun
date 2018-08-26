@@ -60,9 +60,9 @@ for values in \code{arg} for which no original data is available? Only relevant 
 
 \item{domain}{range of the \code{arg}.}
 
-\item{evaluator}{a function accepting arguments \code{x, arg, evaluations}. See details.}
+\item{evaluator}{a function accepting arguments \code{x, arg, evaluations}. See details for \code{\link[=tfd]{tfd()}}.}
 
-\item{resolution}{resolution of the evaluation grid. See details.}
+\item{resolution}{resolution of the evaluation grid. See details for \code{\link[=tfd]{tfd()}}.}
 
 \item{id}{The name/number of the column defining which data belong to which function.}
 
@@ -106,10 +106,12 @@ this.
 \strong{\code{resolution}}: \code{arg}-values that are equivalent up to this difference are
 treated as identical. E.g., if an evaluation of $f(t)$ is available at $t=1$
 and a function value is requested at $t = 1.01$, $f(1)$ will be returned if
-\code{resolution} < .01. By default, this will be set to an integer-valued power
-of 10 one smaller than the than the smallest difference between adjacent
-arg-values: e.g., if the smallest difference between consecutive
-arg-values is $0.12$, the resolution will be $0.01$, etc.
+\code{resolution} < .01. By default, resolution will be set to an integer-valued power
+of 10 one smaller than smallest difference between adjacent
+arg-values rounded down to an integer-valued power
+of 10: e.g., if the smallest difference between consecutive
+arg-values is between $0.1 and 0.9999$, the resolution will be $0.01$, etc.
+In code: \code{10^(floor(log10(min(diff(<arg>))) - 1)}
 }
 \examples{
 #turn irregular to regular tfd

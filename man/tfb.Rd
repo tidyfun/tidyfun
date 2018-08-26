@@ -71,7 +71,7 @@ For the \code{data.frame}-method: the name/number of the column defining the eva
 \item{penalized}{should the coefficients of the basis representation be estimated
 via \code{\link[mgcv:magic]{mgcv::magic()}} (default) or ordinary least squares.}
 
-\item{resolution}{resolution of the evaluation grid. See details.}
+\item{resolution}{resolution of the evaluation grid. See details for \code{\link[=tfd]{tfd()}}.}
 }
 \value{
 an \code{tfb}-object (or a \code{data.frame}/\code{matrix} for the conversion

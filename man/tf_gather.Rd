@@ -28,9 +28,9 @@ See \code{\link[=tfd]{tfd()}}.}
 
 \item{domain}{range of the \code{arg}.}
 
-\item{evaluator}{a function accepting arguments \code{x, arg, evaluations}. See details.}
+\item{evaluator}{a function accepting arguments \code{x, arg, evaluations}. See details for \code{\link[=tfd]{tfd()}}.}
 
-\item{resolution}{resolution of the evaluation grid. See details.}
+\item{resolution}{resolution of the evaluation grid. See details for \code{\link[=tfd]{tfd()}}.}
 }
 \value{
 a modified \code{data.frame} with a \code{tfd} column replacing the \code{...}.
