@@ -16,7 +16,7 @@ library(dplyr)
 covar = read_csv(here::here("data-raw", "covariate.csv"))
 activity = read_csv(here::here("data-raw", "activity.csv"))
 
-chs_activity = inner_join(covar, filter(activity, week == 1), by = "id") %>% 
+chf_df = inner_join(covar, filter(activity, week == 1), by = "id") %>% 
   tf_gather(activity.1:activity.1440, key = activity)
 
-devtools::use_data(chs_activity, overwrite = TRUE)
+devtools::use_data(chf_df, overwrite = TRUE)
