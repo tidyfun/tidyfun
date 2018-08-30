@@ -50,7 +50,7 @@ test_that("basic antiderivatives work", {
 
 test_that("deriv & integrate are reversible (approximately)", {
   set.seed(1337)
-  f <- rgp(10, arg = grid, nugget = 0)
+  f <- tf_rgp(10, arg = grid, nugget = 0)
   f <- f - f[, grid[1]] # start at  0
   f2 <- integrate(deriv(f), definite = FALSE)
   f3 <- deriv(integrate(f, definite = FALSE))

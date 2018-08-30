@@ -171,7 +171,7 @@ tfd.list <- function(data, arg = NULL, domain = NULL,
 #' @examples 
 #' #turn irregular to regular tfd
 #' #TODO: add extra function/verb for this
-#' (f <- c(rgp(1, arg = seq(0,1,l=11)), rgp(1, arg = seq(0,1,l=21))))
+#' (f <- c(tf_rgp(1, arg = seq(0,1,l=11)), tf_rgp(1, arg = seq(0,1,l=21))))
 #' tfd(f, interpolate = TRUE, arg = seq(0,1,l=21))
 #' @rdname tfd
 tfd.tf <- function(data, arg = NULL, domain = NULL, 

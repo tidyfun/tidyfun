@@ -59,7 +59,7 @@ test_that("memoisation works", {
 })
 
 test_that("multiple arg-vectors work for tfb", {
-  fb <- tfb(rgp(3), verbose = FALSE)
+  fb <- tfb(tf_rgp(3), verbose = FALSE)
   expect_equal(unlist(evaluate(fb, as.list(c(0,.5, 1)))),
     unlist(c(evaluate(fb[1], 0), evaluate(fb[2], 0.5), evaluate(fb[3], 1))))
 })
@@ -70,7 +70,7 @@ context("resolution")
 test_that("resolution finding works", {
   fi <- tfd(list(c(1,2), c(1,2)), arg = list(c(0, .1), c(1,2)))
   expect_equal(attr(fi, "resolution"), 0.01)
-  f <- rgp(3, 101L)
+  f <- tf_rgp(3, 101L)
   expect_equal(attr(f, "resolution"), 1e-4)
   fb <- tfb(f, verbose = FALSE)
   expect_equal(attr(fb, "resolution"), 1e-4)
@@ -90,7 +90,7 @@ test_that("resolution warnings work", {
 
 test_that("resolution works as expected", {
   f <- tfd(1:10, 1:10, resolution = .05, evaluator = tf_approx_none)
-  set.seed(122); fi <- sparsify(f); evaluator(fi) <- tf_approx_none
+  set.seed(122); fi <- tf_sparsify(f); evaluator(fi) <- tf_approx_none
   fb <- tfb(f, verbose = FALSE)
   
   # argvals +/- resolution/2 are not distinguished:

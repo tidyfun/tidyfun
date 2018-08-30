@@ -13,7 +13,7 @@
 #'   be turned into irregular `tfd`-objects iff `begin` or `end` are not scalar.
 #' @export 
 #' @examples 
-#'   (x <- rgp(10))
+#'   (x <- tf_rgp(10))
 #'   plot(x)
 #'   tf_zoom(x, .5, .9)
 #'   lines(tf_zoom(x, .5, .9), col = "red")

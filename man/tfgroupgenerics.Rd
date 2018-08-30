@@ -82,14 +82,14 @@ or data is very wiggly.
 }
 \examples{
 set.seed(1859)
-f <- rgp(4)
+f <- tf_rgp(4)
 2 * f == f + f
 sum(f) == f[1] + f[2] + f[3] + f[4]
 log(exp(f)) == f 
 plot(f, points = FALSE)
 lines(range(f), col = 2, lty = 2)
 
-f2 <- tfb(rgp(5), k = 50)
+f2 <- tfb(tf_rgp(5), k = 50)
 layout(t(1:2))
 plot(f2, col = 1:5)
 plot(cumsum(f2), col = 1:5)

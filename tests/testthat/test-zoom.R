@@ -1,8 +1,8 @@
 context("tf_zooming")
 
 set.seed(123)
-x <- rgp(4, arg = seq(0, 1, l = 51), nugget = .1)
-xi <- sparsify(jiggle(x), .2)
+x <- tf_rgp(4, arg = seq(0, 1, l = 51), nugget = .1)
+xi <- tf_sparsify(tf_jiggle(x), .2)
 xb <- tfb(x, verbose = FALSE)
 xbi <- tfb_fpc(xi, nbasis = 5)
 

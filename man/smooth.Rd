@@ -66,7 +66,7 @@ behavior of shortening the smoothed series.
 }
 }
 \examples{
-f <- sparsify(jiggle(rgp(4, 201L, nugget = .05)))
+f <- tf_sparsify(tf_jiggle(tf_rgp(4, 201L, nugget = .05)))
 f_lowess <- smooth(f, "lowess")
 # these methods ignore the distances between arg-values:
 f_mean <- smooth(f, "rollmean")

@@ -83,8 +83,8 @@ Mandatory. Used to designate a column of class \code{tf} to be visualized.
 \examples{
 set.seed(1221)
 data = data.frame(col = sample(gl(5, 2)))
-data$f = rgp(10)
-data$fi = jiggle(data$f)
+data$f = tf_rgp(10)
+data$fi = tf_jiggle(data$f)
 data$fb = tfb(data$f)
 library(ggplot2)
 ggplot(data, aes(y = f, color = tf_depth(f))) + geom_spaghetti()

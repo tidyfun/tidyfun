@@ -225,7 +225,7 @@ if (FALSE) {
     xlim(c(-90, -50))
   
   
-  f <- rgp(25)
+  f <- tf_rgp(25)
   data <- data.frame(
     lat = runif(25, 0, 5), lon = runif(25, 0, 5), 
     g = sample(c("a", "b"), 25, replace = TRUE))

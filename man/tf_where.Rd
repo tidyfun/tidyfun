@@ -71,7 +71,7 @@ Any condition evaluates to \code{NA} on \code{NA}-entries in \code{f}.
   anywhere(lin, value > 2)
 
   set.seed(4353)
-  plot(f <- rgp(5, 11L), pch = as.character(1:5), points = TRUE)
+  plot(f <- tf_rgp(5, 11L), pch = as.character(1:5), points = TRUE)
   tf_where(f, value == max(value))
   # where is the function increasing/decreasing:
   tf_where(f, value > dplyr::lag(value, 1, value[1]))
