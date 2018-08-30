@@ -5,3 +5,4 @@
 ^README\.Rmd$
 ^docs$
 ^GIT_NOTES$
+^data-raw$

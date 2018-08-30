@@ -26,3 +26,5 @@ vignettes/*.pdf
 .Rproj.user
 *.html
 inst/doc
+# complete data files in /data-raw/
+/data-raw/*.csv
