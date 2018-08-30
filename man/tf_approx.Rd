@@ -33,7 +33,7 @@ These are the currently available \code{evaluator}-functions for \code{tfd}-obje
 which control how the entries are inter-/extrapolated to previously unseen
 \code{arg}-values. They all are merely wrappers around \code{\link[zoo:na.fill]{zoo::na.fill()}},
 \code{\link[zoo:na.approx]{zoo::na.approx()}}, etc... Note that these are not meant to be called directly --
-they are internal functions used by \code{\link[=evaluate.tfd]{evaluate.tfd()}} to do its thing.
+they are internal functions used by \code{\link[=tf_evaluate.tfd]{tf_evaluate.tfd()}} to do its thing.
 
 The list:
 \itemize{

@@ -225,19 +225,19 @@ tf_nest <- function(data, ..., .id = "id", .arg = "arg", domain = NULL,
 #' Similar in spirit to [tidyr::unnest()], the reverse of `tf_nest`.
 #'
 #' @param data a data frame
-#' @param .arg optional values for the `arg` argument of [evaluate.data.frame()]
-#' @inheritParams evaluate.data.frame
+#' @param .arg optional values for the `arg` argument of [tf_evaluate.data.frame()]
+#' @inheritParams tf_evaluate.data.frame
 #' @inheritParams tidyr::unnest
 #' @return a "long" data frame with 
 #' @export
-#' @seealso tf_gather() tf_unnest() evaluate.data.frame
+#' @seealso tf_gather() tf_unnest() tf_evaluate.data.frame()
 #' @importFrom digest digest
 #' @importFrom utils data tail
 tf_unnest <- function(data, ..., .arg, .drop = NA, .id = "id", .sep = "_", 
     .preserve = NULL) {
   preserve <- unname(vars_select(names(data), !!!enquo(.preserve)))
   tfds <- unname(vars_select(names(data), !!!quos(...)))
-  ret <- evaluate.data.frame(data, arg = .arg, !!!tfds)
+  ret <- tf_evaluate.data.frame(data, arg = .arg, !!!tfds)
   # don't unnest unevaluated tf-columns:
   preserve <- unique(c(preserve, names(ret)[map_lgl(ret, is_tf)]))
   ret <- unnest(ret, .drop = .drop, .id = .id, .sep = .sep, .preserve = preserve)

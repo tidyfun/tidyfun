@@ -15,7 +15,7 @@ are selected. You can supply bare variable names,
 select all variables between \code{x} and \code{z} with \code{x:z}, exclude \code{y} with \code{-y}.
 For more options, see the \code{\link[dplyr:select]{dplyr::select()}} documentation.}
 
-\item{.arg}{optional values for the \code{arg} argument of \code{\link[=evaluate.data.frame]{evaluate.data.frame()}}}
+\item{.arg}{optional values for the \code{arg} argument of \code{\link[=tf_evaluate.data.frame]{tf_evaluate.data.frame()}}}
 
 \item{.drop}{Should additional list columns be dropped? By default,
 \code{unnest} will drop them if unnesting the specified columns requires
@@ -41,5 +41,5 @@ a "long" data frame with
 Similar in spirit to \code{\link[tidyr:unnest]{tidyr::unnest()}}, the reverse of \code{tf_nest}.
 }
 \seealso{
-tf_gather() tf_unnest() evaluate.data.frame
+tf_gather() tf_unnest() tf_evaluate.data.frame()
 }

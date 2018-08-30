@@ -20,7 +20,7 @@ zoo_wrapper <- function(f, ...){
 #' which control how the entries are inter-/extrapolated to previously unseen
 #' `arg`-values. They all are merely wrappers around [zoo::na.fill()], 
 #' [zoo::na.approx()], etc... Note that these are not meant to be called directly --
-#' they are internal functions used by [evaluate.tfd()] to do its thing.
+#' they are internal functions used by [tf_evaluate.tfd()] to do its thing.
 #' 
 #'The list: 
 #'

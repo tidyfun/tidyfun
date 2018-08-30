@@ -183,7 +183,7 @@ tfd.tf <- function(data, arg = NULL, domain = NULL,
   resolution <- resolution %||% tidyfun:::resolution(data)
   re_eval <- !is.null(arg)
   arg <- ensure_list(arg %||% arg(data))
-  evaluations <- if (re_eval) evaluate(data, arg) else tidyfun::tf_evaluations(data)
+  evaluations <- if (re_eval) tf_evaluate(data, arg) else tidyfun::tf_evaluations(data)
   if (re_eval) {
     nas <- map(evaluations, ~ which(is.na(.x)))
     if (length(unlist(nas))) {

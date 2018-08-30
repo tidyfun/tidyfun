@@ -146,7 +146,7 @@ integrate.tfd <- function(f, lower = tf_domain(f)[1], upper = tf_domain(f)[2],
   }
   arg <- map2(arg, ensure_list(limits),
     ~ c(.y[1], .x[.x > .y[1] & .x < .y[2]], .y[2]))
-  evaluations <- evaluate(f, arg)
+  evaluations <- tf_evaluate(f, arg)
   quads <- map2(arg, evaluations, ~ quad_trapez(arg = .x, evaluations = .y))
   if (definite) {
     ret <- map(quads, sum) %>% unlist

@@ -73,7 +73,7 @@
   if (!(length(j) %in% c(1, length(i)))) {
     stop("wrong length for <j>")
   } 
-  evals <- evaluate(x, arg = j)
+  evals <- tf_evaluate(x, arg = j)
   if (!interpolate) {
     new_j <- map2(j, ensure_list(arg(x)), ~ !(.x %in% .y))
     if (any(unlist(new_j))) {

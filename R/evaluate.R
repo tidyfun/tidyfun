@@ -3,20 +3,20 @@
 #' The `evaluate.data.frame` method evaluates `tf`-columns inside a `data.frame`
 #' into list columns of smaller `data.frames` containing the functions' arguments 
 #' (`arg`) and evaluations (`value`). Its `arg`-argument can be a list of `arg`-vectors 
-#' used as the `arg` argument for the [evaluate()]-method for the respective
+#' used as the `arg` argument for the [tf_evaluate()]-method for the respective
 #' `tf`-columns in `object`.
 #' @param object an `tf` or a `data.frame`-like object with `tf` columns
 #' @param arg optional evaluation grid, defaults to `arg(object)`. 
 #' @seealso \code{?`[.tf`}
 #' @export
-evaluate <- function(object, arg, ...) UseMethod("evaluate")
+tf_evaluate <- function(object, arg, ...) UseMethod("tf_evaluate")
 
 #' @export
-evaluate.default <- function(object, arg, ...) .NotYetImplemented()
+tf_evaluate.default <- function(object, arg, ...) .NotYetImplemented()
 
 #' @export
-#' @rdname evaluate
-evaluate.tfd <- function(object, arg, ...) {
+#' @rdname tf_evaluate
+tf_evaluate.tfd <- function(object, arg, ...) {
   if (missing(arg)) arg <- tidyfun::arg(object)
   if (is.null(arg)) arg <- tidyfun::arg(object)
   arg <- ensure_list(arg)
@@ -42,8 +42,8 @@ evaluate_tfd_once <- function(new_arg, arg, evaluations, evaluator, resolution) 
 }
 
 #' @export
-#' @rdname evaluate
-evaluate.tfb <- function(object, arg, ...) {
+#' @rdname tf_evaluate
+tf_evaluate.tfb <- function(object, arg, ...) {
   if (missing(arg)) arg <- tidyfun::arg(object)
   if (is.null(arg)) arg <- tidyfun::arg(object)
   arg <- ensure_list(arg)
@@ -80,7 +80,7 @@ evaluate_tfb_once <- function(x, arg, coefs, basis, X, resolution) {
 }
 
 
-#' @rdname evaluate
+#' @rdname tf_evaluate
 #' @param ... optional:  A selection of columns. If empty, all `tfd`-variables 
 #'   are selected. You can supply bare variable names, 
 #'   select all variables between `x` and `z` with `x:z`, exclude `y` with `-y`. 
@@ -89,7 +89,7 @@ evaluate_tfb_once <- function(x, arg, coefs, basis, X, resolution) {
 #' @importFrom tidyselect vars_select quos
 #' @importFrom rlang quo_text
 #' @export
-evaluate.data.frame <- function(object, arg, ...) {
+tf_evaluate.data.frame <- function(object, arg, ...) {
   quos <- quos(...)
   # figure out which tf columns to evaluate
   tf_cols <- names(object)[map_lgl(object, is_tf)]

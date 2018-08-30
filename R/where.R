@@ -36,7 +36,7 @@
 #'   tf_where(lin, value > a, "first")
 #'   tf_where(lin, value < a, "last")
 #'   tf_where(lin, value > 2, "any")
-#'   anywhere(lin, value > 2)
+#'   tf_anywhere(lin, value > 2)
 #' 
 #'   set.seed(4353)
 #'   plot(f <- tf_rgp(5, 11L), pch = as.character(1:5), points = TRUE)

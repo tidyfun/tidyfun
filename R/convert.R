@@ -92,5 +92,5 @@ as.matrix.tfb <- function(x, arg = NULL, ...) {
 #-------------------------------------------------------------------------------
 #' @export 
 as.function.tf <- function(x, ...) {
-  function(arg) unlist(evaluate(object = x, arg = arg))
+  function(arg) unlist(tf_evaluate(object = x, arg = arg))
 }
