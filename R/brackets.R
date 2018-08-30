@@ -126,7 +126,7 @@
   }
   if (is_tfd(x)) {
     assert_true(
-      identical(evaluator(x), evaluator(value), ignore.environment = TRUE))
+      identical(tf_evaluator(x), tf_evaluator(value), ignore.environment = TRUE))
   } else {
     assert_true(
       identical(basis(x), basis(value), ignore.environment = TRUE))

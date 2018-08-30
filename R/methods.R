@@ -60,7 +60,7 @@ tf_domain <- function(f) {
 #' @param forget extract the evaluator function without its cache? 
 #'   See [memoise::forget()]. Defaults to `FALSE`.
 #' @export
-evaluator <- function(f, forget = FALSE) {
+tf_evaluator <- function(f, forget = FALSE) {
   stopifnot(inherits(f, "tfd"))
   ret <- attr(f, "evaluator")
   if (forget) forget(ret)
@@ -81,7 +81,7 @@ basis <- function(f) {
 #'   `arg`, `evaluations` at `x`
 #'   **for `arg<-`:** a (list of) new `arg`-values
 #' @export
-`evaluator<-` <- function(x, value) {
+`tf_evaluator<-` <- function(x, value) {
   value <- if (is.function(value)) {
     deparse(substitute(value))
   } else quo_name(enexpr(value))

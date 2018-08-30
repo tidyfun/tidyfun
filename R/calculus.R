@@ -86,7 +86,7 @@ deriv.tfd <- function(expr, order = 1, arg = NULL, ...) {
   ret <- tfd(derived$data, derived$arg, 
     domain = range(derived$arg), #!! shorter
     resolution = tidyfun:::resolution(expr))
-  evaluator(ret) <- attr(expr, "evaluator_name")
+  tf_evaluator(ret) <- attr(expr, "evaluator_name")
   ret
 }
 #' @export

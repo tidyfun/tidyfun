@@ -5,9 +5,9 @@
 \alias{tf_evaluations}
 \alias{tf_count}
 \alias{tf_domain}
-\alias{evaluator}
+\alias{tf_evaluator}
 \alias{basis}
-\alias{evaluator<-}
+\alias{tf_evaluator<-}
 \alias{arg<-}
 \alias{arg<-.tfd_irreg}
 \alias{arg<-.tfd_reg}
@@ -29,11 +29,11 @@ tf_count(f)
 
 tf_domain(f)
 
-evaluator(f, forget = FALSE)
+tf_evaluator(f, forget = FALSE)
 
 basis(f)
 
-evaluator(x) <- value
+tf_evaluator(x) <- value
 
 arg(x) <- value
 

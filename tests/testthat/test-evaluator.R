@@ -18,31 +18,31 @@ test_that("argval checking works", {
 
 test_that("evaluator tf_approx_linear works", {
   expect_identical(lin, 
-    suppressWarnings(evaluator(f_lin)(grid, arg = grid, evaluations = lin)))
+    suppressWarnings(tf_evaluator(f_lin)(grid, arg = grid, evaluations = lin)))
   expect_identical(2 * new_grid, 
-    suppressWarnings(evaluator(f_lin)(new_grid, arg = grid, evaluations = lin)))
+    suppressWarnings(tf_evaluator(f_lin)(new_grid, arg = grid, evaluations = lin)))
   expect_identical(lin, evaluate(f_lin, grid)[[1]])
   expect_equal(2 * new_grid, evaluate(f_lin, new_grid)[[1]])
   expect_equal(curve, evaluate(f_curve, new_grid)[[1]][new_grid %in% grid])
 })
 
 test_that("re-assigning & extracting evaluator works", {
-  evaluator(f_lin) <- tf_approx_spline
-  evaluator(f_curve) <- tf_approx_spline
-  expect_equivalent(body(environment(evaluator(f_lin))[["_f"]]), 
+  tf_evaluator(f_lin) <- tf_approx_spline
+  tf_evaluator(f_curve) <- tf_approx_spline
+  expect_equivalent(body(environment(tf_evaluator(f_lin))[["_f"]]), 
     body(tf_approx_spline))
-  expect_equivalent(body(environment(evaluator(f_lin))[["_f"]]), 
-    body(environment(evaluator(f_curve))[["_f"]]))
+  expect_equivalent(body(environment(tf_evaluator(f_lin))[["_f"]]), 
+    body(environment(tf_evaluator(f_curve))[["_f"]]))
 })
 
-evaluator(f_lin) <- tf_approx_spline
-evaluator(f_curve) <- tf_approx_spline
+tf_evaluator(f_lin) <- tf_approx_spline
+tf_evaluator(f_curve) <- tf_approx_spline
 
 test_that("evaluator tf_approx_spline works", {
   expect_identical(lin,
-    suppressWarnings(evaluator(f_lin)(grid, arg = grid, evaluations = lin)))
+    suppressWarnings(tf_evaluator(f_lin)(grid, arg = grid, evaluations = lin)))
   expect_identical(2 * new_grid, 
-    suppressWarnings(evaluator(f_lin)(new_grid, arg = grid, evaluations = lin)))
+    suppressWarnings(tf_evaluator(f_lin)(new_grid, arg = grid, evaluations = lin)))
   expect_identical(lin, evaluate(f_lin, grid)[[1]])
   expect_equal(2 * new_grid, evaluate(f_lin, new_grid)[[1]])
 })
@@ -52,7 +52,7 @@ test_that("memoisation works", {
     Sys.sleep(0.2)
     tf_approx_linear(x, arg, evaluations)
   }
-  evaluator(f_lin) <- slow_tf_approx
+  tf_evaluator(f_lin) <- slow_tf_approx
   t1 <- system.time(evaluate(f_lin, new_grid))[3]
   t2 <- system.time(evaluate(f_lin, new_grid))[3]
   expect_true(t1 > 10 * t2)
@@ -90,7 +90,7 @@ test_that("resolution warnings work", {
 
 test_that("resolution works as expected", {
   f <- tfd(1:10, 1:10, resolution = .05, evaluator = tf_approx_none)
-  set.seed(122); fi <- tf_sparsify(f); evaluator(fi) <- tf_approx_none
+  set.seed(122); fi <- tf_sparsify(f); tf_evaluator(fi) <- tf_approx_none
   fb <- tfb(f, verbose = FALSE)
   
   # argvals +/- resolution/2 are not distinguished:

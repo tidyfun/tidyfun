@@ -54,7 +54,7 @@ tf_zoom.tfd <- function(f, begin = tf_domain(f)[1], end = tf_domain(f)[2], ...) 
     if (any(map_lgl(ret, ~ length(.x) == 0))) 
       stop("no data in zoom region.")
   }
-  evaluator(ret) <- attr(f, "evaluator_name")
+  tf_evaluator(ret) <- attr(f, "evaluator_name")
   ret
 }
 #' @rdname tf_zoom

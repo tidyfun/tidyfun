@@ -114,8 +114,8 @@ ex %>% tf_domain()
 - each **`tfd`**-vector contains an **`evaluator`** function that defines how to inter-/extrapolate `evaluations` between `arg`s (and remembers results of previous calls)
 
 ```{r}
-evaluator(ex) %>% str
-evaluator(ex) = "tf_approx_spline"
+tf_evaluator(ex) %>% str
+tf_evaluator(ex) = "tf_approx_spline"
 ```
 
 - **`tfd`** has subclasses for regular data with a common grid and irregular or sparse data,
