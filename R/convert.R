@@ -11,7 +11,7 @@ as.tfd_irreg <- function(data, ...) UseMethod("as.tfd_irreg")
 
 as.tfd_irreg.tfd_reg <- function(data, ...) {
   arg <- ensure_list(arg(data))
-  ret <- map2(evaluations(data), arg, ~ list(arg = .y, value = .x))
+  ret <- map2(tf_evaluations(data), arg, ~ list(arg = .y, value = .x))
   attributes(ret) <- attributes(data)
   attr(ret, "arg") <- numeric(0)
   class(ret)[1] <- "tfd_irreg"

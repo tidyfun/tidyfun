@@ -2,7 +2,7 @@
 % Please edit documentation in R/methods.R
 \name{arg}
 \alias{arg}
-\alias{evaluations}
+\alias{tf_evaluations}
 \alias{tf_count}
 \alias{domain}
 \alias{evaluator}
@@ -23,7 +23,7 @@
 \usage{
 arg(f)
 
-evaluations(f)
+tf_evaluations(f)
 
 tf_count(f)
 

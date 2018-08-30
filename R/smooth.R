@@ -84,14 +84,14 @@ smooth.tfd <- function(x, method = c("lowess", "rollmean", "rollmedian", "savgol
         message("using fl = ", dots$fl, " observations for rolling data window.")
       }
     }
-    smoothed <- map(evaluations(x), ~ do.call(smoother, append(list(.x), dots)))
+    smoothed <- map(tf_evaluations(x), ~ do.call(smoother, append(list(.x), dots)))
   }
   if (str_detect(method, "lowess")) {
     if (is.null(dots$f)) {
       dots$f <- .15
       message("using f = ", dots$f, " as smoother span for lowess")
     }
-    smoothed <- map(evaluations(x), ~ do.call(smoother, append(list(.x), dots))$y)
+    smoothed <- map(tf_evaluations(x), ~ do.call(smoother, append(list(.x), dots))$y)
   }
   tfd(smoothed, arg(x), evaluator = !!attr(x, "evaluator_name"), 
     resolution = attr(x, "resolution"), domain = domain(x))

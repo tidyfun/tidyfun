@@ -9,7 +9,7 @@ string_rep_tf <- function(f, signif_arg = NULL,
     list(digits = digits_arg, justify = "right", ...))
   arg_ch <- map2(ensure_list(arg(f)), show,
     ~ do.call(format, c(format_args, list(x = .x[1:.y]))))
-  value_ch <- map2(evaluations(f), show,
+  value_ch <- map2(tf_evaluations(f), show,
     ~ do.call(format, c(format_args, list(x = .x[1:.y]))))
   arg_nchar <- map(arg_ch, ~ nchar(.x)) %>% unlist %>% max
   value_nchar <- map(value_ch, ~ nchar(.x)) %>% unlist %>% max
@@ -55,7 +55,7 @@ print.tfd_reg <- function(x, n = 10, ...) {
 #' @export
 print.tfd_irreg <- function(x, n = 10, ...) {
   NextMethod()
-  nas <- map_lgl(evaluations(x), ~length(.)==1 && all(is.na(.)))
+  nas <- map_lgl(tf_evaluations(x), ~length(.)==1 && all(is.na(.)))
   n_evals <- tf_count(x[!nas])
   cat(paste0(" based on ", min(n_evals), " to ", max(n_evals)," (mean: ",
     round(mean(n_evals)),") evaluations each\n"))

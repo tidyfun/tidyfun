@@ -106,7 +106,7 @@ text(x = -.1, y = ex[,0.07], labels = names(ex), col = pal_5)
  - has a **`domain`**:  the range of valid **`arg`**s.
 
 ```{r}
-ex %>% evaluations() %>% str
+ex %>% tf_evaluations() %>% str
 ex %>% arg() %>% str
 ex %>% domain() 
 ```

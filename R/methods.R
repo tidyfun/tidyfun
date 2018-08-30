@@ -17,20 +17,20 @@ arg.tfb <- function(f) attr(f, "arg")
 
 #' @rdname tfmethods
 #' @export
-evaluations <- function(f) UseMethod("evaluations")
+tf_evaluations <- function(f) UseMethod("tf_evaluations")
 #' @export
-evaluations.default <- function(f) .NotYetImplemented()
+tf_evaluations.default <- function(f) .NotYetImplemented()
 #' @export
-evaluations.tfd_reg <- function(f) {
+tf_evaluations.tfd_reg <- function(f) {
   attributes(f) <- NULL
   f
 }
 #' @export
-evaluations.tfd_irreg <- function(f) {
+tf_evaluations.tfd_irreg <- function(f) {
   map(f, "value")
 }
 #' @export
-evaluations.tfb <- function(f) {
+tf_evaluations.tfb <- function(f) {
   map(f, ~ drop(attr(f, "basis_matrix") %*% .))
 } 
 
@@ -42,7 +42,7 @@ tf_count <- function(f) UseMethod("tf_count")
 tf_count.default <- function(f) .NotYetImplemented()
 #' @export
 tf_count.tfd_irreg <- function(f) {
-  ret <- map_int(evaluations(f), length)
+  ret <- map_int(tf_evaluations(f), length)
   ret[is.na(f)] <- 0
   ret
 }  
@@ -103,7 +103,7 @@ basis <- function(f) {
 #' @export
 `arg<-.tfd_irreg` <- function(x, value) {  
   assert_arg(value, x)
-  ret <- map2(evaluations(x), value, ~list(arg = .y, data = .x))
+  ret <- map2(tf_evaluations(x), value, ~list(arg = .y, data = .x))
   attributes(ret) <- attributes(x)
   forget(attr(ret, "evaluator"))
   ret

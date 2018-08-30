@@ -21,7 +21,7 @@ evaluate.tfd <- function(object, arg, ...) {
   if (is.null(arg)) arg <- tidyfun::arg(object)
   arg <- ensure_list(arg)
   assert_arg(arg, object, check_unique = FALSE)
-  pmap(list(arg, ensure_list(arg(object)), evaluations(object)), 
+  pmap(list(arg, ensure_list(arg(object)), tf_evaluations(object)), 
     ~ evaluate_tfd_once(new_arg = ..1, arg = ..2, evaluations = ..3, 
         evaluator = attr(object, "evaluator"), 
         resolution = tidyfun:::resolution(object)))

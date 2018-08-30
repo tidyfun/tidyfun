@@ -20,10 +20,10 @@ fun_op <- function(x, y, op, numeric = NA){
     arg_ret <- arg(y)
   }
   if (is_tfb(x)) x_ <- coef(x)
-  if (is_tfd(x)) x_ <- evaluations(x)
+  if (is_tfd(x)) x_ <- tf_evaluations(x)
   if (isTRUE(numeric == 1)) x_ <- x
   if (is_tfb(y)) y_ <- coef(y)
-  if (is_tfd(y)) y_ <- evaluations(y)
+  if (is_tfd(y)) y_ <- tf_evaluations(y)
   if (isTRUE(numeric == 2)) y_ <- y
   ret <- map2(x_, y_, ~ do.call(op, list(e1 = .x, e2 = .y)))
   if ("tfd" %in% attr_ret$class) {
