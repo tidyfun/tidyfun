@@ -266,10 +266,10 @@ ex %>% integrate()
 **`tidyfun`** makes it easy to find (ranges of) `arg`uments $t$ satisfying a condition on `value` $f(t)$ (and `arg`ument $t$):
 
 ```{r}
-ex %>% anywhere(value > .65)
-ex[1:2] %>% where(value > .6, "all")
-ex[2] %>% where(value > .6, "range")
-ex %>% where(value > .6 & arg > .5, "first")
+ex %>% tf_anywhere(value > .65)
+ex[1:2] %>% tf_where(value > .6, "all")
+ex[2] %>% tf_where(value > .6, "range")
+ex %>% tf_where(value > .6 & arg > .5, "first")
 ```
 
 ### zoom & query
@@ -281,9 +281,9 @@ median(ex) %>% lines(col = pal_5[3], lwd = 4)
 ```
 
 ```{r}
-ex %>% where(value == max(value), "first")
-ex[c("A", "D")] %>% zoom(.5, 1) %>% where(value == max(value), "first")
-ex %>% zoom(0.2, 0.6) %>% anywhere(value <= median(ex)[, arg])
+ex %>% tf_where(value == max(value), "first")
+ex[c("A", "D")] %>% tf_zoom(.5, 1) %>% tf_where(value == max(value), "first")
+ex %>% tf_zoom(0.2, 0.6) %>% tf_anywhere(value <= median(ex)[, arg])
 ```
 
 ### convert & construct
@@ -374,7 +374,7 @@ precipitation in blue:
 # group-wise functional means:
 dti %>% group_by(case, sex) %>% summarize(mean_rcst = mean(rcst, na.rm = TRUE))       %>% ungroup
 # which subjects go below cca = .26:
-dti %>% filter(anywhere(cca, value < .26))
+dti %>% filter(tf_anywhere(cca, value < .26))
 # center & scale functional data: 
 dti %>% 
   mutate(cca = tfb(cca, verbose = FALSE), 

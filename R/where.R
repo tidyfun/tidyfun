@@ -1,8 +1,8 @@
 #' Find out where functional data fulfills certain conditions.
 #'
-#' `where` allows to define a logical expression about the function values
+#' `tf_where` allows to define a logical expression about the function values
 #' and returns the argument values for which that condition is true.\cr
-#' `anywhere` is syntactic sugar for `where` with `return = "any"` to
+#' `tf_anywhere` is syntactic sugar for `tf_where` with `return = "any"` to
 #' get a logical flag for each function if the condition is `TRUE` *anywhere*,
 #' see below.
 #'
@@ -15,7 +15,7 @@
 #' @param f a `tf` object
 #' @param cond a logical expression on `value` that defines the condition about
 #'   the function values, see examples and details.
-#' @param return for each entry in `f`, `where` either returns *all* `arg` for
+#' @param return for each entry in `f`, `tf_where` either returns *all* `arg` for
 #'   which `cond` is true, the *first*, the *last* or their *range* or logical
 #'   flags whether the functions fullfill the condition *any*where. For
 #'   `"range"`, note that `cond` may not be true for all `arg` values in this
@@ -30,30 +30,30 @@
 #'  - else, a numeric vector of the same length as `f` with `NA`s for the functions that  never fulfill the `cond`ition.
 #' @examples 
 #'   lin <- 1:4 * tfd(seq(-1, 1,l = 11), seq(-1, 1, l = 11))
-#'   where(lin, value %inr% c(-1, .5))
-#'   where(lin, value %inr% c(-1, .5), "range")
+#'   tf_where(lin, value %inr% c(-1, .5))
+#'   tf_where(lin, value %inr% c(-1, .5), "range")
 #'   a <- 1
-#'   where(lin, value > a, "first")
-#'   where(lin, value < a, "last")
-#'   where(lin, value > 2, "any")
+#'   tf_where(lin, value > a, "first")
+#'   tf_where(lin, value < a, "last")
+#'   tf_where(lin, value > 2, "any")
 #'   anywhere(lin, value > 2)
 #' 
 #'   set.seed(4353)
 #'   plot(f <- rgp(5, 11L), pch = as.character(1:5), points = TRUE)
-#'   where(f, value == max(value))
+#'   tf_where(f, value == max(value))
 #'   # where is the function increasing/decreasing:
-#'   where(f, value > dplyr::lag(value, 1, value[1]))
-#'   where(f, value < dplyr::lead(value, 1, value[n()]))
+#'   tf_where(f, value > dplyr::lag(value, 1, value[1]))
+#'   tf_where(f, value < dplyr::lead(value, 1, value[n()]))
 #'   # where are the (interior) extreme points:
-#'   where(f, 
+#'   tf_where(f, 
 #'     sign(c(diff(value)[1], diff(value))) !=
 #'       sign(c(diff(value), diff(value)[n()-1])))
 #'   # where for arg > .5 is the function positive:
-#'   where(f, arg > .5 & value > 0)
+#'   tf_where(f, arg > .5 & value > 0)
 #'   # does the function ever exceed 1:
-#'   anywhere(f, value > 1)
+#'   tf_anywhere(f, value > 1)
 #' @export
-where <- function(f, cond, return = c("all", "first", "last", "range", "any"),
+tf_where <- function(f, cond, return = c("all", "first", "last", "range", "any"),
     arg) {
   if (missing(arg)) {
     arg <- tidyfun::arg(f)
@@ -85,11 +85,11 @@ where <- function(f, cond, return = c("all", "first", "last", "range", "any"),
   } 
   unlist(where_at)
 }
-#' @rdname where
+#' @rdname tf_where
 #' @export
-anywhere <- function(f, cond, arg) {
+tf_anywhere <- function(f, cond, arg) {
   call <- match.call()
-  call[[1]] <- where
+  call[[1]] <- tf_where
   call$return <- "any"
   eval(call, parent.frame())
 }
@@ -97,7 +97,7 @@ anywhere <- function(f, cond, arg) {
 #' @description `in_range` and its infix-equivalent return `TRUE` for all 
 #'    values in `f` that are within the range of values in `r`. 
 #' @param r used to specify a range, only the minimum and maximum of `r` are used.
-#' @rdname where
+#' @rdname tf_where
 #' @export
 in_range <- function(f, r){
   assert_numeric(f)
@@ -105,7 +105,7 @@ in_range <- function(f, r){
   r <- range(r, na.rm = TRUE)
   f >= r[1] & f <= r[2]
 }
-#' @rdname where
+#' @rdname tf_where
 #' @export
 `%inr%` <- function(f, r) in_range(f, r)
 
