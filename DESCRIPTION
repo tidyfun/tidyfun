@@ -19,6 +19,7 @@ Collate:
     'calculus.R'
     'concatenate.R'
     'convert.R'
+    'datasets.R'
     'depth.R'
     'evaluate.R'
     'geom-capellini.R'
