@@ -94,7 +94,7 @@ smooth.tfd <- function(x, method = c("lowess", "rollmean", "rollmedian", "savgol
     smoothed <- map(tf_evaluations(x), ~ do.call(smoother, append(list(.x), dots))$y)
   }
   tfd(smoothed, arg(x), evaluator = !!attr(x, "evaluator_name"), 
-    resolution = attr(x, "resolution"), domain = domain(x))
+    resolution = attr(x, "resolution"), domain = tf_domain(x))
 }
 #' @rdname smooth
 #' @export

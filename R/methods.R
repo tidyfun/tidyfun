@@ -51,7 +51,7 @@ tf_count.tfd_reg <- function(f) length(arg(f))
 
 #' @rdname tfmethods
 #' @export
-domain <- function(f) {
+tf_domain <- function(f) {
   stopifnot(inherits(f, "tf"))
   attr(f, "domain")
 }

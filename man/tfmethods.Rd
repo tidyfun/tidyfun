@@ -4,7 +4,7 @@
 \alias{arg}
 \alias{tf_evaluations}
 \alias{tf_count}
-\alias{domain}
+\alias{tf_domain}
 \alias{evaluator}
 \alias{basis}
 \alias{evaluator<-}
@@ -27,7 +27,7 @@ tf_evaluations(f)
 
 tf_count(f)
 
-domain(f)
+tf_domain(f)
 
 evaluator(f, forget = FALSE)
 

@@ -119,7 +119,7 @@
     }
   }
   stopifnot(inherits(value, class(x)[1]), 
-    all(domain(x) == domain(value)),
+    all(tf_domain(x) == tf_domain(value)),
     length(value) %in% c(1, length(i)))
   if (inherits(x, "tfd_reg") | inherits(x, "tfb")) {
     assert_true(identical(arg(x), arg(value)))

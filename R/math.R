@@ -26,7 +26,7 @@ summarize_tf <- function(..., op = NULL, eval = FALSE) {
   ret <- apply(m, 2, op_call)
   arg <- as.numeric(colnames(m))
   args <- c(list(ret), arg = list(arg),
-    domain = list(domain(funs)), 
+    domain = list(tf_domain(funs)), 
     resolution = attr(funs, "resolution"))
   if (eval) {
     ret <- do.call(tfd, c(args, evaluator = attr(funs, "evaluator_name")))

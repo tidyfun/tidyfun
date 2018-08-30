@@ -248,7 +248,7 @@ tfb.list <- function(data, arg = NULL,
 tfb.tfd <- function(data, arg = NULL, 
   domain = NULL, penalized = TRUE, resolution = NULL, ...) {
   arg <- arg %||% arg(data)
-  domain <- domain %||% domain(data)
+  domain <- domain %||% tf_domain(data)
   resolution <- resolution %||% tidyfun:::resolution(data)
   names_data <- names(data)
   data <- as.data.frame(data, arg)
@@ -264,7 +264,7 @@ tfb.tfb <- function(data, arg = NULL,
   domain = NULL, penalized = TRUE, resolution = NULL, ...) {
   arg <- arg %||% arg(data)
   resolution <- resolution %||% tidyfun:::resolution(data)
-  domain <- domain %||% domain(data)
+  domain <- domain %||% tf_domain(data)
   s_args <- modifyList(attr(data, "basis_args"),
     list(...)[names(list(...)) %in% names(formals(mgcv::s))])
   names_data <- names(data)

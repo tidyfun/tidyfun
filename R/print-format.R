@@ -32,8 +32,8 @@ string_rep_tf <- function(f, signif_arg = NULL,
 #' @param n how many elements of `x` to print out
 #' @export
 print.tf <- function(x, n  = 10, ...) {
-  cat(paste0(type_sum(x),"[",length(x),"] on (", domain(x)[1], ",",
-    domain(x)[2], ")"))
+  cat(paste0(type_sum(x),"[",length(x),"] on (", tf_domain(x)[1], ",",
+    tf_domain(x)[2], ")"))
   invisible(x)
 }
 

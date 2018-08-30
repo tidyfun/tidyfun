@@ -127,15 +127,15 @@ integrate.function <- stats::integrate
 #' @param definite should the definite integral  be returned (default)
 #'   or the antiderivative. See Description.
 #' @export
-integrate.tfd <- function(f, lower = domain(f)[1], upper = domain(f)[2], 
+integrate.tfd <- function(f, lower = tf_domain(f)[1], upper = tf_domain(f)[2], 
   definite = TRUE, arg, ...) {
   if (missing(arg)) {
     arg <- tidyfun::arg(f)
   } else assert_arg(arg, f)
   arg <- ensure_list(arg)
-  assert_numeric(lower, lower = domain(f)[1], upper =  domain(f)[2], 
+  assert_numeric(lower, lower = tf_domain(f)[1], upper =  tf_domain(f)[2], 
     any.missing = FALSE)
-  assert_numeric(upper,  lower = domain(f)[1], upper =  domain(f)[2], 
+  assert_numeric(upper,  lower = tf_domain(f)[1], upper =  tf_domain(f)[2], 
     any.missing = FALSE)
   stopifnot(length(lower) %in% c(1, length(f)), 
     length(upper) %in% c(1, length(f)))
@@ -165,14 +165,14 @@ integrate.tfd <- function(f, lower = domain(f)[1], upper = domain(f)[2],
 }
 #' @rdname tfcalculus
 #' @export
-integrate.tfb <- function(f, lower = domain(f)[1], upper = domain(f)[2], 
+integrate.tfb <- function(f, lower = tf_domain(f)[1], upper = tf_domain(f)[2], 
   definite = TRUE, arg, ...) {
   if (missing(arg)) {
     arg <- tidyfun::arg(f)
   } else assert_arg(arg, f)
-  assert_numeric(lower, lower = domain(f)[1], upper =  domain(f)[2], 
+  assert_numeric(lower, lower = tf_domain(f)[1], upper =  tf_domain(f)[2], 
     any.missing = FALSE)
-  assert_numeric(upper,  lower = domain(f)[1], upper =  domain(f)[2], 
+  assert_numeric(upper,  lower = tf_domain(f)[1], upper =  tf_domain(f)[2], 
     any.missing = FALSE)
   stopifnot(length(lower) %in% c(1, length(f)), 
     length(upper) %in% c(1, length(f)))

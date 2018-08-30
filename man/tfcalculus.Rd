@@ -17,11 +17,11 @@
 
 integrate(f, lower, upper, ...)
 
-\method{integrate}{tfd}(f, lower = domain(f)[1], upper = domain(f)[2],
-  definite = TRUE, arg, ...)
+\method{integrate}{tfd}(f, lower = tf_domain(f)[1],
+  upper = tf_domain(f)[2], definite = TRUE, arg, ...)
 
-\method{integrate}{tfb}(f, lower = domain(f)[1], upper = domain(f)[2],
-  definite = TRUE, arg, ...)
+\method{integrate}{tfb}(f, lower = tf_domain(f)[1],
+  upper = tf_domain(f)[2], definite = TRUE, arg, ...)
 }
 \arguments{
 \item{expr}{a \code{tf}}

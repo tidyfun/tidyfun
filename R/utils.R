@@ -56,7 +56,7 @@ assert_arg_vector <- function(arg, x, check_unique = TRUE) {
     }
   } 
   assert_numeric(arg, any.missing = FALSE, unique = FALSE,
-    lower = domain(x)[1], upper = domain(x)[2])
+    lower = tf_domain(x)[1], upper = tf_domain(x)[2])
 }
 
 

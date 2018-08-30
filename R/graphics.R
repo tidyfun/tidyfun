@@ -2,7 +2,7 @@ prep_plotting_arg <- function(f, n_grid) {
   if (!isTRUE(n_grid > 1)) {
     tidyfun::arg(f)
   }  else {
-    modelr::seq_range(domain(f), n = n_grid) %>% 
+    modelr::seq_range(tf_domain(f), n = n_grid) %>% 
       round_resolution(attr(f, "resolution")) %>%
       setdiff(
         round_resolution(unlist(tidyfun::arg(f)), attr(f, "resolution"))) %>% 

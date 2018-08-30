@@ -14,7 +14,7 @@ fun_op <- function(x, y, op, numeric = NA){
     stopifnot(
       # no "recycling" of args
       (length(x) %in% c(1, length(y))) | (length(y) %in% c(1, length(x))),
-      all.equal(domain(x), domain(y)),
+      all.equal(tf_domain(x), tf_domain(y)),
       all.equal(arg(x), arg(y)))
     attr_ret <- attributes(y)
     arg_ret <- arg(y)
