@@ -24,44 +24,44 @@ zoo_wrapper <- function(f, ...){
 #' 
 #'The list: 
 #'
-#' - `approx_linear` for linear interpolation without extrapolation (i.e.,
+#' - `tf_approx_linear` for linear interpolation without extrapolation (i.e.,
 #' [zoo::na.approx()] with `na.rm = FALSE`)  -- this is the default,
-#' - `approx_spline` for cubic spline interpolation, (i.e., [zoo::na.spline()]
+#' - `tf_approx_spline` for cubic spline interpolation, (i.e., [zoo::na.spline()]
 #' with `na.rm = FALSE`),
-#' - `approx_none` in order to not inter-/extrapolate ever (i.e., [zoo::na.fill()] with `fill = NA`)
-#' - `approx_fill_extend` for linear interpolation and constant extrapolation
+#' - `tf_approx_none` in order to not inter-/extrapolate ever (i.e., [zoo::na.fill()] with `fill = NA`)
+#' - `tf_approx_fill_extend` for linear interpolation and constant extrapolation
 #' (i.e., [zoo::na.fill()] with `fill = "extend"`)
-#' - `approx_locf` for "last observation carried forward"  (i.e.,
+#' - `tf_approx_locf` for "last observation carried forward"  (i.e.,
 #' [zoo::na.locf()] with `na.rm = FALSE` and
-#' - `approx_nocb` for "next observation carried backward" (i.e.,
+#' - `tf_approx_nocb` for "next observation carried backward" (i.e.,
 #' [zoo::na.locf()] with `na.rm = FALSE, fromLast = TRUE`).  
 #' 
 #' For implementing your own, see source code of `tidyfun:::zoo_wrapper`.
 #'
-#' @rdname approx
+#' @rdname tf_approx
 #' @seealso tfd
 #' @export
-#' @param x new arg values to approximate the function for
+#' @param x new arg values to tf_approximate the function for
 #' @param arg the `arg` values of the `evaluations`
 #' @param evaluations the function's values at `arg`
-approx_linear <- zoo_wrapper(na.approx, na.rm = FALSE)
+tf_approx_linear <- zoo_wrapper(na.approx, na.rm = FALSE)
 
-#' @rdname approx
+#' @rdname tf_approx
 #' @export
-approx_spline <- zoo_wrapper(na.spline, na.rm = FALSE)
+tf_approx_spline <- zoo_wrapper(na.spline, na.rm = FALSE)
 
-#' @rdname approx
+#' @rdname tf_approx
 #' @export
-approx_none <- zoo_wrapper(na.fill, fill = NA)
+tf_approx_none <- zoo_wrapper(na.fill, fill = NA)
 
-#' @rdname approx
+#' @rdname tf_approx
 #' @export
-approx_fill_extend <- zoo_wrapper(na.fill, fill = "extend")
+tf_approx_fill_extend <- zoo_wrapper(na.fill, fill = "extend")
 
-#' @rdname approx
+#' @rdname tf_approx
 #' @export
-approx_locf <- zoo_wrapper(na.locf, na.rm = FALSE)
+tf_approx_locf <- zoo_wrapper(na.locf, na.rm = FALSE)
 
-#' @rdname approx
+#' @rdname tf_approx
 #' @export
-approx_nocb <- zoo_wrapper(na.locf, na.rm = FALSE, fromLast = TRUE)
+tf_approx_nocb <- zoo_wrapper(na.locf, na.rm = FALSE, fromLast = TRUE)

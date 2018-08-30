@@ -44,7 +44,7 @@ is.discrete <- function(x) {
 #' gglasagna(data, f, label = id)
 #' gglasagna(data, f, label = id, order = group)
 #' gglasagna(data, f, label = id, order = group)
-#' gglasagna(data, f, label = id, order = depth(f))
+#' gglasagna(data, f, label = id, order = tf_depth(f))
 #' gglasagna(data, f, label = id, order_by = first) + 
 #'   facet_wrap(~group, scales = "free")}
 gglasagna <- function(data, y, order = NULL, label = NULL, 

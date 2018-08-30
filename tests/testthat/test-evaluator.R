@@ -16,7 +16,7 @@ test_that("argval checking works", {
   expect_error(evaluate(f_lin, list(1, 2)), "length")
 })  
 
-test_that("evaluator approx_linear works", {
+test_that("evaluator tf_approx_linear works", {
   expect_identical(lin, 
     suppressWarnings(evaluator(f_lin)(grid, arg = grid, evaluations = lin)))
   expect_identical(2 * new_grid, 
@@ -27,18 +27,18 @@ test_that("evaluator approx_linear works", {
 })
 
 test_that("re-assigning & extracting evaluator works", {
-  evaluator(f_lin) <- approx_spline
-  evaluator(f_curve) <- approx_spline
+  evaluator(f_lin) <- tf_approx_spline
+  evaluator(f_curve) <- tf_approx_spline
   expect_equivalent(body(environment(evaluator(f_lin))[["_f"]]), 
-    body(approx_spline))
+    body(tf_approx_spline))
   expect_equivalent(body(environment(evaluator(f_lin))[["_f"]]), 
     body(environment(evaluator(f_curve))[["_f"]]))
 })
 
-evaluator(f_lin) <- approx_spline
-evaluator(f_curve) <- approx_spline
+evaluator(f_lin) <- tf_approx_spline
+evaluator(f_curve) <- tf_approx_spline
 
-test_that("evaluator approx_spline works", {
+test_that("evaluator tf_approx_spline works", {
   expect_identical(lin,
     suppressWarnings(evaluator(f_lin)(grid, arg = grid, evaluations = lin)))
   expect_identical(2 * new_grid, 
@@ -48,11 +48,11 @@ test_that("evaluator approx_spline works", {
 })
 
 test_that("memoisation works", {
-  slow_approx <- function(x, arg, evaluations) {
+  slow_tf_approx <- function(x, arg, evaluations) {
     Sys.sleep(0.2)
-    approx_linear(x, arg, evaluations)
+    tf_approx_linear(x, arg, evaluations)
   }
-  evaluator(f_lin) <- slow_approx
+  evaluator(f_lin) <- slow_tf_approx
   t1 <- system.time(evaluate(f_lin, new_grid))[3]
   t2 <- system.time(evaluate(f_lin, new_grid))[3]
   expect_true(t1 > 10 * t2)
@@ -89,8 +89,8 @@ test_that("resolution warnings work", {
 })
 
 test_that("resolution works as expected", {
-  f <- tfd(1:10, 1:10, resolution = .05, evaluator = approx_none)
-  set.seed(122); fi <- sparsify(f); evaluator(fi) <- approx_none
+  f <- tfd(1:10, 1:10, resolution = .05, evaluator = tf_approx_none)
+  set.seed(122); fi <- sparsify(f); evaluator(fi) <- tf_approx_none
   fb <- tfb(f, verbose = FALSE)
   
   # argvals +/- resolution/2 are not distinguished:

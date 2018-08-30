@@ -34,7 +34,7 @@
 #' (d2 <- dplyr::bind_cols(id = rownames(d), d))
 #' tf_gather(d2, -id) # tf_gather(d2, matches("cca")); tf_gather(d2, -1); etc
 tf_gather <- function(data, ..., key = ".tfd", arg = NULL, domain = NULL, 
-    evaluator = approx_linear, resolution = NULL) {
+    evaluator = tf_approx_linear, resolution = NULL) {
   key_var <- quo_name(enexpr(key))
   evaluator <- quo_name(enexpr(evaluator))
   search_key <- isTRUE(key == ".tfd")
@@ -167,7 +167,7 @@ tf_spread <- function(data, value, arg, sep="_", interpolate = TRUE) {
 #' @export
 #' @seealso tf_gather(), tf_unnest(), tfd() for `domain, evaluator, resolution`
 tf_nest <- function(data, ..., .id = "id", .arg = "arg", domain = NULL, 
-  evaluator = "approx_linear", resolution = NULL) {
+  evaluator = "tf_approx_linear", resolution = NULL) {
   stopifnot(!missing(data)) 
   id_var <- quo_name(enexpr(.id))
   arg_var <- quo_name(enexpr(.arg))

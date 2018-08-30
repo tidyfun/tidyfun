@@ -5,7 +5,7 @@
 \title{Gather all columns representing functional measurements into a \code{tfd}-object}
 \usage{
 tf_gather(data, ..., key = ".tfd", arg = NULL, domain = NULL,
-  evaluator = approx_linear, resolution = NULL)
+  evaluator = tf_approx_linear, resolution = NULL)
 }
 \arguments{
 \item{data}{a data frame -- note that \code{dplyr} does not handle matrix columns well,

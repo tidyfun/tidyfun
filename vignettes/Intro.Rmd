@@ -115,7 +115,7 @@ ex %>% domain()
 
 ```{r}
 evaluator(ex) %>% str
-evaluator(ex) = "approx_spline"
+evaluator(ex) = "tf_approx_spline"
 ```
 
 - **`tfd`** has subclasses for regular data with a common grid and irregular or sparse data,
@@ -216,8 +216,8 @@ names(ex) = n_ex
 ```{r}
 c(mean = mean(ex), sd = sd(ex))
 
-depth(ex) ## Modified Band-2 Depth (à la Sun/Genton/Nychka, 2012), others to come.
-median(ex) == ex[which.max(depth(ex))]
+tf_depth(ex) ## Modified Band-2 Depth (à la Sun/Genton/Nychka, 2012), others to come.
+median(ex) == ex[which.max(tf_depth(ex))]
 ```
 
 In addition, **`tidyfun`** provides methods specific for functional data:

@@ -106,7 +106,7 @@ mgcv_tfb <- function(data, regular, domain = NULL,
   }
   if (verbose) {
     message("Percentage of raw input data variance preserved in basis representation:\n", 
-      "(per functional observation, approx.):")
+      "(per functional observation, tf_approx.):")
     print(summary(round(100 * pve, 1)))
   }
   names(coef_list) <- levels(data$id)

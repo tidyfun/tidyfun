@@ -3,10 +3,8 @@
 #' These will return a `tf` object containing the respective functional statistic.
 #' `summary` returns a vector with the mean function, the variance function, and the 
 #' functional range of the central half of the functions, as defined by the functional 
-#' depth that was usedb (i.e., the band defined by the 50% deepest functions). 
 #' 
 #' @param x a `tf` object
-#' @param ... additional arguments to the respective (pointwise or depth) 
 #'   functions, see source code.
 #' @name tfsummaries
 NULL
@@ -33,10 +31,10 @@ median.tf <- function(x, na.rm = FALSE, depth = c("MBD", "pointwise"), ...){
   if (depth == "pointwise") {
     summarize_tf(x, na.rm = na.rm, op = "median", eval  = is_tfd(x), ...)
   } else {
-    depths <- depth(x, depth = depth)
-    med <- x[depths == max(depths)]
+    tf_depths <- tf_depth(x, depth = depth)
+    med <- x[tf_depths == max(tf_depths)]
     if (length(med) > 1) {
-      warning(length(med), 
+      warning(length(med),
         " observations with maximal depth, returning their mean.")
       mean(med)
     } else med
@@ -94,9 +92,9 @@ var.tf <- function(x, y = NULL, na.rm = FALSE, use){
 #' @export
 #' @rdname tfsummaries
 summary.tf <- function(object, ...) {
-  depths <- depth(object, ...)
-  central <- which(depths <= median(depths))
+  tf_depths <- tf_depth(object, ...)
+  central <- which(tf_depths <= median(tf_depths))
   c(mean = mean(object), var = var(object),
-    median = object[which.max(depths)], 
+    median = object[which.max(tf_depths)], 
     central_half = range(object[central]))
 }

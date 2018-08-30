@@ -13,7 +13,7 @@
 #' data$fi = jiggle(data$f)
 #' data$fb = tfb(data$f)
 #' library(ggplot2)
-#' ggplot(data, aes(y = f, color = depth(f))) + geom_spaghetti()
+#' ggplot(data, aes(y = f, color = tf_depth(f))) + geom_spaghetti()
 #' ggplot(data, aes(y = fi, shape = col, color = col)) + geom_meatballs()
 #' ggplot(data, aes(y = fi)) + geom_meatballs(spaghetti = FALSE) + 
 #'   facet_wrap(~col)
@@ -21,7 +21,7 @@
 NULL
 
 # FIXME
-# > ggplot(data, aes(y = f, color = depth(f))) + geom_spaghetti() +
+# > ggplot(data, aes(y = f, color = tf_depth(f))) + geom_spaghetti() +
 #   + annotate("text", x = 1.05, y = runif(10), label = 1:10)
 # Error: evaluation nested too deeply: infinite recursion / options(expressions=)?
 #   Error during wrapup: evaluation nested too deeply: infinite recursion / options(expressions=)?

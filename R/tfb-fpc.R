@@ -42,7 +42,7 @@ make_tfb_fpc <- function(data, domain = NULL, smooth = TRUE, resolution = NULL, 
   coef_list <- split(cbind(1, fpc_spec$scores), row(cbind(1, fpc_spec$scores)))
   names(coef_list) <- levels(as.factor(data$.id))
   fpc <- rbind(fpc_spec$mu, t(fpc_spec$efunctions))
-  fpc_basis <- tfd(fpc, arg = arg, evaluator = approx_spline, domain = domain, 
+  fpc_basis <- tfd(fpc, arg = arg, evaluator = tf_approx_spline, domain = domain, 
     resolution = resolution)
   fpc_constructor <- fpc_wrapper(fpc_basis)
   structure(coef_list, 

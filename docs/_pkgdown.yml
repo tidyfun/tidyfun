@@ -19,18 +19,17 @@ reference:
     contents: 
       - index.tf
       - c.tf
-      - approx_linear
+      - tf_approx_linear
       
   - title: "Arithmetic, logical and summary functions"
     desc: "Functionality for computing with and comparing functional data"
     contents:
        - Ops.tf
        - tfsummaries
-       - depth
+       - tf_depth
        
        
   - title: "Differentiation & integration"
-    desc: "Compute (approximate) derivatives, anti-derivatives and integrals"
     contents:
        - deriv.tfd
        - deriv.tfb

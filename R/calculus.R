@@ -154,7 +154,7 @@ integrate.tfd <- function(f, lower = domain(f)[1], upper = domain(f)[2],
     ret
   } else {
     tfd(data = map(quads, cumsum), arg = unlist(arg), domain = limits, 
-      resolution = tidyfun:::resolution(f), evaluator = approx_linear)
+      resolution = tidyfun:::resolution(f), evaluator = tf_approx_linear)
   }
   # this is too slow:
   # turn into functions, return definite integrals

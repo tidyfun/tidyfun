@@ -37,10 +37,10 @@ var(x, y = NULL, na.rm = FALSE, use)
 \method{summary}{tf}(object, ...)
 }
 \arguments{
-\item{x}{a \code{tf} object}
-
-\item{...}{additional arguments to the respective (pointwise or depth)
+\item{x}{a \code{tf} object
 functions, see source code.}
+
+\item{...}{further arguments passed to or from other methods.}
 
 \item{na.rm}{logical; if true, any \code{\link{NA}} and \code{NaN}'s
     are removed from \code{x} before the quantiles are computed.}
@@ -75,5 +75,4 @@ a pointwise median function.}
 These will return a \code{tf} object containing the respective functional statistic.
 \code{summary} returns a vector with the mean function, the variance function, and the
 functional range of the central half of the functions, as defined by the functional
-depth that was usedb (i.e., the band defined by the 50% deepest functions).
 }

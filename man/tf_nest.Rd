@@ -5,7 +5,7 @@
 \title{Turn "long" tables into tidy data frames with \code{tf}-objects}
 \usage{
 tf_nest(data, ..., .id = "id", .arg = "arg", domain = NULL,
-  evaluator = "approx_linear", resolution = NULL)
+  evaluator = "tf_approx_linear", resolution = NULL)
 }
 \arguments{
 \item{data}{a data frame}

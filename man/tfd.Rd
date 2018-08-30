@@ -25,16 +25,17 @@ as.tfd_irreg(data, ...)
 tfd(data, ...)
 
 \method{tfd}{matrix}(data, arg = NULL, domain = NULL,
-  evaluator = approx_linear, resolution = NULL, ...)
+  evaluator = tf_approx_linear, resolution = NULL, ...)
 
 \method{tfd}{numeric}(data, arg = NULL, domain = NULL,
-  evaluator = approx_linear, resolution = NULL, ...)
+  evaluator = tf_approx_linear, resolution = NULL, ...)
 
 \method{tfd}{data.frame}(data, id = 1, arg = 2, value = 3,
-  domain = NULL, evaluator = approx_linear, resolution = NULL, ...)
+  domain = NULL, evaluator = tf_approx_linear, resolution = NULL,
+  ...)
 
 \method{tfd}{list}(data, arg = NULL, domain = NULL,
-  evaluator = approx_linear, resolution = NULL, ...)
+  evaluator = tf_approx_linear, resolution = NULL, ...)
 
 \method{tfd}{tf}(data, arg = NULL, domain = NULL, evaluator = NULL,
   resolution = NULL, ...)
@@ -84,22 +85,22 @@ containing evaluations or a list of 2-column matrices/data.frames with
 \details{
 \strong{\code{evaluator}}: must be the (quoted or bare) name of a
 \code{function(x, arg, evaluations)} that returns
-the functions' (approximated/interpolated) values at locations \code{x} based on
+the functions' (tf_approximated/interpolated) values at locations \code{x} based on
 the \code{evaluations} available at locations \code{arg}.\cr
 Available \code{evaluator}-functions:
 \itemize{
-\item \code{approx_linear} for linear interpolation without extrapolation (i.e.,
-\code{\link[zoo:na.approx]{zoo::na.approx()}} with \code{na.rm = FALSE})  -- this is the default,
-\item \code{approx_spline} for cubic spline interpolation, (i.e., \code{\link[zoo:na.spline]{zoo::na.spline()}}
+\item \code{tf_approx_linear} for linear interpolation without extrapolation (i.e.,
+\code{\link[zoo:na.tf_approx]{zoo::na.tf_approx()}} with \code{na.rm = FALSE})  -- this is the default,
+\item \code{tf_approx_spline} for cubic spline interpolation, (i.e., \code{\link[zoo:na.spline]{zoo::na.spline()}}
 with \code{na.rm = FALSE}),
-\item \code{approx_fill_extend} for linear interpolation and constant extrapolation
+\item \code{tf_approx_fill_extend} for linear interpolation and constant extrapolation
 (i.e., \code{\link[zoo:na.fill]{zoo::na.fill()}} with \code{fill = "extend"})
-\item \code{approx_locf} for "last observation carried forward"  (i.e.,
+\item \code{tf_approx_locf} for "last observation carried forward"  (i.e.,
 \code{\link[zoo:na.locf]{zoo::na.locf()}} with \code{na.rm = FALSE} and
-\item \code{approx_nocb} for "next observation carried backward" (i.e.,
+\item \code{tf_approx_nocb} for "next observation carried backward" (i.e.,
 \code{\link[zoo:na.locf]{zoo::na.locf()}} with \code{na.rm = FALSE, fromLast = TRUE}).
-See \code{tidyfun:::zoo_wrapper} and \code{tidyfun:::approx_linear}, which is simply
-\code{zoo_wrapper(zoo::na.approx, na.rm = FALSE)}, for examples of implementations of
+See \code{tidyfun:::zoo_wrapper} and \code{tidyfun:::tf_approx_linear}, which is simply
+\code{zoo_wrapper(zoo::na.tf_approx, na.rm = FALSE)}, for examples of implementations of
 this.
 }
 

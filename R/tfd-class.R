@@ -45,21 +45,21 @@ new_tfd <- function(arg, datalist, regular, domain, evaluator, resolution) {
 #'
 #' **`evaluator`**: must be the (quoted or bare) name of a 
 #' `function(x, arg, evaluations)` that returns
-#' the functions' (approximated/interpolated) values at locations `x` based on
+#' the functions' (tf_approximated/interpolated) values at locations `x` based on
 #' the `evaluations` available at locations `arg`.\cr
 #' Available `evaluator`-functions:  
-#' - `approx_linear` for linear interpolation without extrapolation (i.e.,
-#' [zoo::na.approx()] with `na.rm = FALSE`)  -- this is the default,
-#' - `approx_spline` for cubic spline interpolation, (i.e., [zoo::na.spline()]
+#' - `tf_approx_linear` for linear interpolation without extrapolation (i.e.,
+#' [zoo::na.tf_approx()] with `na.rm = FALSE`)  -- this is the default,
+#' - `tf_approx_spline` for cubic spline interpolation, (i.e., [zoo::na.spline()]
 #' with `na.rm = FALSE`),
-#' - `approx_fill_extend` for linear interpolation and constant extrapolation
+#' - `tf_approx_fill_extend` for linear interpolation and constant extrapolation
 #' (i.e., [zoo::na.fill()] with `fill = "extend"`)
-#' - `approx_locf` for "last observation carried forward"  (i.e.,
+#' - `tf_approx_locf` for "last observation carried forward"  (i.e.,
 #' [zoo::na.locf()] with `na.rm = FALSE` and
-#' - `approx_nocb` for "next observation carried backward" (i.e.,
+#' - `tf_approx_nocb` for "next observation carried backward" (i.e.,
 #' [zoo::na.locf()] with `na.rm = FALSE, fromLast = TRUE`).  
-#' See `tidyfun:::zoo_wrapper` and `tidyfun:::approx_linear`, which is simply
-#' `zoo_wrapper(zoo::na.approx, na.rm = FALSE)`, for examples of implementations of
+#' See `tidyfun:::zoo_wrapper` and `tidyfun:::tf_approx_linear`, which is simply
+#' `zoo_wrapper(zoo::na.tf_approx, na.rm = FALSE)`, for examples of implementations of
 #' this.  
 #' 
 #' **`resolution`**: `arg`-values that are equivalent up to this difference are
@@ -87,7 +87,7 @@ tfd <- function(data, ...) UseMethod("tfd")
 #' @param evaluator a function accepting arguments `x, arg, evaluations`. See details for [tfd()].
 #' @param resolution resolution of the evaluation grid. See details for [tfd()].
 tfd.matrix <- function(data, arg = NULL, domain = NULL, 
-    evaluator = approx_linear, resolution = NULL, ...) {
+    evaluator = tf_approx_linear, resolution = NULL, ...) {
   stopifnot(is.numeric(data))
   evaluator <- quo_name(enexpr(evaluator))
   arg <- find_arg(data, arg) # either arg or numeric colnames or 1:ncol
@@ -101,7 +101,7 @@ tfd.matrix <- function(data, arg = NULL, domain = NULL,
 #' @rdname tfd
 #' @export
 tfd.numeric <- function(data, arg = NULL, 
-    domain = NULL, evaluator = approx_linear, resolution = NULL, ...) {
+    domain = NULL, evaluator = tf_approx_linear, resolution = NULL, ...) {
   evaluator <- quo_name(enexpr(evaluator))
   data <- t(as.matrix(data))
   #dispatch to matrix method
@@ -117,7 +117,7 @@ tfd.numeric <- function(data, arg = NULL,
 #' @param id The name/number of the column defining which data belong to which function.
 #' @param value The name/number of the column containing the function evaluations.
 tfd.data.frame <- function(data, id = 1, arg = 2, value = 3, domain = NULL, 
-    evaluator = approx_linear, resolution = NULL, ...) {
+    evaluator = tf_approx_linear, resolution = NULL, ...) {
   evaluator <- quo_name(enexpr(evaluator))
   data <- na.omit(data[, c(id, arg, value)])
   stopifnot(is.numeric(data[[2]]), 
@@ -137,7 +137,7 @@ tfd.data.frame <- function(data, id = 1, arg = 2, value = 3, domain = NULL,
 #' @export
 #' @rdname tfd
 tfd.list <- function(data, arg = NULL, domain = NULL, 
-    evaluator = approx_linear, resolution = NULL, ...) {
+    evaluator = tf_approx_linear, resolution = NULL, ...) {
   evaluator <- quo_name(enexpr(evaluator))
   vectors <- map_lgl(data, ~ is.numeric(.) & !is.array(.)) 
   if (all(vectors)) {
@@ -178,7 +178,7 @@ tfd.tf <- function(data, arg = NULL, domain = NULL,
     evaluator = NULL, resolution = NULL, ...) {
   evaluator <- if (is_tfd(data) & is.null(evaluator)) {
     attr(data, "evaluator_name")
-  } else "approx_linear"
+  } else "tf_approx_linear"
   domain <- (domain %||% unlist(arg) %||% domain(data)) %>% range
   resolution <- resolution %||% tidyfun:::resolution(data)
   re_eval <- !is.null(arg)
