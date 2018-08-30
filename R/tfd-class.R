@@ -49,7 +49,7 @@ new_tfd <- function(arg, datalist, regular, domain, evaluator, resolution) {
 #' the `evaluations` available at locations `arg`.\cr
 #' Available `evaluator`-functions:  
 #' - `tf_approx_linear` for linear interpolation without extrapolation (i.e.,
-#' [zoo::na.tf_approx()] with `na.rm = FALSE`)  -- this is the default,
+#' [zoo::na.approx()] with `na.rm = FALSE`)  -- this is the default,
 #' - `tf_approx_spline` for cubic spline interpolation, (i.e., [zoo::na.spline()]
 #' with `na.rm = FALSE`),
 #' - `tf_approx_fill_extend` for linear interpolation and constant extrapolation
