@@ -56,7 +56,7 @@ print.tfd_reg <- function(x, n = 10, ...) {
 print.tfd_irreg <- function(x, n = 10, ...) {
   NextMethod()
   nas <- map_lgl(evaluations(x), ~length(.)==1 && all(is.na(.)))
-  n_evals <- n_evaluations(x[!nas])
+  n_evals <- tf_count(x[!nas])
   cat(paste0(" based on ", min(n_evals), " to ", max(n_evals)," (mean: ",
     round(mean(n_evals)),") evaluations each\n"))
   cat("inter-/extrapolation by", attr(x, "evaluator_name"), "\n")

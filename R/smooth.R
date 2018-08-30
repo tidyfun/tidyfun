@@ -68,7 +68,7 @@ smooth.tfd <- function(x, method = c("lowess", "rollmean", "rollmedian", "savgol
     }
     if (str_detect(method, "rollm")) {
       if (is.null(dots$k)) {
-        dots$k <- ceiling(.05 * min(n_evaluations(x)))
+        dots$k <- ceiling(.05 * min(tf_count(x)))
         dots$k <- dots$k + !(dots$k %% 2) # make uneven
         message("using k = ", dots$k, " observations for rolling data window.")
       }
@@ -79,7 +79,7 @@ smooth.tfd <- function(x, method = c("lowess", "rollmean", "rollmedian", "savgol
     }
     if (str_detect(method, "savgol")) {
       if (is.null(dots$fl)) {
-        dots$fl <- ceiling(.15 * min(n_evaluations(x)))
+        dots$fl <- ceiling(.15 * min(tf_count(x)))
         dots$fl <- dots$fl + !(dots$fl %% 2) # make uneven
         message("using fl = ", dots$fl, " observations for rolling data window.")
       }

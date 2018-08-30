@@ -37,17 +37,17 @@ evaluations.tfb <- function(f) {
 
 #' @rdname tfmethods
 #' @export
-n_evaluations <- function(f) UseMethod("n_evaluations")
+tf_count <- function(f) UseMethod("tf_count")
 #' @export
-n_evaluations.default <- function(f) .NotYetImplemented()
+tf_count.default <- function(f) .NotYetImplemented()
 #' @export
-n_evaluations.tfd_irreg <- function(f) {
+tf_count.tfd_irreg <- function(f) {
   ret <- map_int(evaluations(f), length)
   ret[is.na(f)] <- 0
   ret
 }  
 #' @export
-n_evaluations.tfd_reg <- function(f) length(arg(f))
+tf_count.tfd_reg <- function(f) length(arg(f))
 
 #' @rdname tfmethods
 #' @export

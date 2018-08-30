@@ -3,7 +3,7 @@
 \name{arg}
 \alias{arg}
 \alias{evaluations}
-\alias{n_evaluations}
+\alias{tf_count}
 \alias{domain}
 \alias{evaluator}
 \alias{basis}
@@ -25,7 +25,7 @@ arg(f)
 
 evaluations(f)
 
-n_evaluations(f)
+tf_count(f)
 
 domain(f)
 

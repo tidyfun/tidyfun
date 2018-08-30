@@ -57,7 +57,7 @@ test_that("tf_nest works", {
   expect_error(tf_nest(data, resolution = c(.01, .4, .4)))
   
   g <- rnorm(3)
-  data <- bind_cols(data, g = rep(g, e = n_evaluations(f1)))
+  data <- bind_cols(data, g = rep(g, e = tf_count(f1)))
   expect_equal(tf_nest(data, value.x:value.y)$g, g)
   data <- bind_cols(data, f = rep(rnorm(nrow(data))))
   expect_error(tf_nest(data, value.x:value.y), "Columns f are not constant")
