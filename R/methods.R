@@ -142,10 +142,12 @@ rev.tf <- function(x) {
 #-------------------------------------------------------------------------------
 
 #' @rdname tfmethods
+#' @export
 is.na.tf <- function(x) {
   map_lgl(unclass(x), ~ is.na(.x)[1])
 }
 #' @rdname tfmethods
+#' @export
 is.na.tfd_irreg <- function(x) {
   map_lgl(unclass(x), ~ is.na(.x$value[1]))
 }
