@@ -31,10 +31,10 @@ reference:
        
   - title: "Differentiation & integration"
     contents:
-       - deriv.tfd
-       - deriv.tfb
-       - integrate.tfd
-       - integrate.tfb
+       - tf_derive.tfd
+       - tf_derive.tfb
+       - tf_integrate.tfd
+       - tf_integrate.tfb
        
   - title: "Wrangling"
     desc: "Reshaping and transforming tf-objects inside data frames"
@@ -57,13 +57,18 @@ reference:
   - title: "Utilities"
     desc: "Utility functions"
     contents:
-      - where
-      - zoom
-      - smooth
-      - arg
-      - rgp
-      - jiggle
-
+      - tf_where
+      - tf_zoom
+      - tf_smooth
+      - tf_arg
+      - tf_rgp
+      - tf_jiggle
+  
+  - title: "Data Sets"
+     desc: "Functional data sets"
+     contents:
+       - chf_df
+  
 articles:
   - title: "Articles"
     desc: "Articles & vignettes for tidyfun"

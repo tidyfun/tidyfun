@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Tools for Tidy Functional Data • tidyfun</title>
-<!-- jquery --><script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/flatly/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+<!-- jquery --><script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script><!-- Font Awesome icons --><link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script><!-- sticky kit --><script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
 <script src="pkgdown.js"></script><meta property="og:title" content="Tools for Tidy Functional Data">
@@ -29,7 +29,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">tidyfun</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.0.4</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.0.5</span>
       </span>
     </div>
 
@@ -98,7 +98,7 @@
 <div id="what-does-it-do" class="section level2">
 <h2 class="hasAnchor">
 <a href="#what-does-it-do" class="anchor"></a>What does it do?</h2>
-<p>Have a look at <a href="">https://fabian-s.github.io/tidyfun</a> for details, short summary below.</p>
+<p>Have a look at <a href="https://fabian-s.github.io/tidyfun" class="uri">https://fabian-s.github.io/tidyfun</a> for details, short summary below.</p>
 <div id="new-vector-like-data-types-for-functional-data" class="section level4">
 <h4 class="hasAnchor">
 <a href="#new-vector-like-data-types-for-functional-data" class="anchor"></a>New vector-like data types for functional data</h4>
@@ -112,13 +112,13 @@
 </li>
 </ul>
 <p>are defined for <strong><code>tidyfun</code></strong>’s data structures.</p>
-<p>The <code>tf</code> objects are basically glorified lists, so they work well as columns in data frames. That makes it a lot easier to keep conventional data and functional measurements together in one object for preprocessing, exploratory analysis and description.</p>
-<p>At the same time, they actually behave like vectors of <em>functions</em> to some extent, i.e., they can be evaluated on any point in their domain, they can be integrated or differentiated, etc.</p>
+<p>The <code>tf</code> objects are basically glorified lists, so they work well as columns in data frames. That makes it a lot easier to keep your other data and functional measurements together in one object for preprocessing, exploratory analysis and description.</p>
+<p>At the same time, these objects actually behave like vectors of <em>functions</em> to some extent, i.e., they can be evaluated on any point in their domain, they can be integrated or differentiated, etc.</p>
 </div>
 <div id="tidyverse-verbs-for-dealing-with-functional-data-inside-data-frames" class="section level4">
 <h4 class="hasAnchor">
 <a href="#tidyverse-verbs-for-dealing-with-functional-data-inside-data-frames" class="anchor"></a><code>tidyverse</code> verbs for dealing with functional data inside data frames</h4>
-<p>All <code>dplyr</code> verbs work on <code>tf</code>-columns, so you can <code>filter</code>, <code>mutate</code>, <code>summarize</code> etc functional data pretty much like conventional data. <strong><code>tidyfun</code></strong> also provides <code>tf_gather</code> &amp; <code>tf_spread</code>, <code>tf_nest</code> &amp; <code>tf_unnest</code> in order to reshape tables with functional data, i.e., go from wide to narrow, or from long to short, and <em>vice versa</em>.</p>
+<p>All <code>dplyr</code> verbs work on <code>tf</code>-columns, so you can <code>filter</code>, <code>mutate</code>, <code>summarize</code> etc functional data pretty much like conventional data.<br><strong><code>tidyfun</code></strong> also provides <code>tf_gather</code> &amp; <code>tf_spread</code>, <code>tf_nest</code> &amp; <code>tf_unnest</code> in order to reshape tables with functional data, i.e., go from wide to narrow, or from long to short, and <em>vice versa</em>.</p>
 </div>
 <div id="new-ggplot2-geoms-and-stats-for-functional-data" class="section level4">
 <h4 class="hasAnchor">
@@ -132,10 +132,10 @@
 <li>
 <strong><code>gglasagna</code></strong> for <a href="https://asset.jmir.pub/assets/76aeec48564abf0e6f6da8e9cd06346d.png">lasagna plots</a>, with an <strong><code>order</code></strong>-aesthetic to sort the lasagna layers</li>
 <li>
-<strong>geom_capellini</strong> for <a href="http://ggobi.github.io/ggally/index_files/figure-html/glyphs-basic-usage-1.png">glyphs</a> plots (i.e., sparklines)</li>
+<strong><code>geom_capellini</code></strong> for <a href="http://ggobi.github.io/ggally/index_files/figure-html/glyphs-basic-usage-1.png">glyphs</a> plots (i.e., sparklines)</li>
 </ul>
 <hr>
-<p><strong>Do have a look at <a href="">https://fabian-s.github.io/tidyfun</a> for examples, full documentation and vignettes.</strong></p>
+<p><strong>Do have a look at <a href="https://fabian-s.github.io/tidyfun" class="uri">https://fabian-s.github.io/tidyfun</a> for examples, full documentation and vignettes.</strong></p>
 <p>Found a bug? Got a question? Missing some functionality?<br>
 Please let us know so we can make it better.</p>
 </div>
