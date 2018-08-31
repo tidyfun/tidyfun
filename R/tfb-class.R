@@ -237,7 +237,7 @@ tfb.list <- function(data, arg = NULL,
   data <- data_frame(id = unique_id(names(data)) %||% seq_along(data), 
       funs = data) %>% tidyr::unnest
   #dispatch to data.frame method
-  ret <- tfb(data, basis = basis, domain = domain,   
+  ret <- tfb(data, domain = domain,   
     penalized = penalized, resolution = resolution, ...)
   names(ret) <- names_data
   ret
@@ -252,7 +252,7 @@ tfb.tfd <- function(data, arg = NULL,
   resolution <- resolution %||% tidyfun:::resolution(data)
   names_data <- names(data)
   data <- as.data.frame(data, arg)
-  ret <- tfb(data, basis = basis, domain = domain,   
+  ret <- tfb(data, domain = domain,   
     penalized = penalized, resolution = resolution, ...)
   names(ret) <- names_data
   ret
@@ -269,7 +269,7 @@ tfb.tfb <- function(data, arg = NULL,
     list(...)[names(list(...)) %in% names(formals(mgcv::s))])
   names_data <- names(data)
   data <- as.data.frame(data, arg = arg)
-  ret <- do.call("tfb", c(list(data), basis = basis, domain = domain,
+  ret <- do.call("tfb", c(list(data), domain = domain,
     penalized = penalized, resolution = resolution, s_args))
   names(ret) <- names_data
   ret

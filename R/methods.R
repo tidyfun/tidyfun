@@ -1,6 +1,7 @@
 #' Utility functions for `tf`-objects
 #' 
-#' A bunch of methods & utilities that do what they say.
+#' A bunch of methods & utilities that do what they say: extract or set the
+#' respective attributes of a `tf`-object.
 #' @param f an `tf` object
 #' @param x an `tf` object
 #' @rdname tfmethods
@@ -57,7 +58,7 @@ tf_domain <- function(f) {
 }
 
 #' @rdname tfmethods
-#' @param forget extract the evaluator function without its cache? 
+#' @param forget extract the evaluator or basis-creating function without its cache? 
 #'   See [memoise::forget()]. Defaults to `FALSE`.
 #' @export
 tf_evaluator <- function(f, forget = FALSE) {
@@ -68,10 +69,14 @@ tf_evaluator <- function(f, forget = FALSE) {
 }
 
 #' @rdname tfmethods
+#' @param as_tfd should the basis be returned as a `tfd` evaluated on `arg(f)`? Defaults to FALSE.
 #' @export
-basis <- function(f) {
+tf_basis <- function(f, as_tfd = FALSE, forget = FALSE) {
   stopifnot(inherits(f, "tfb"))
-  attr(f, "basis")
+  basis <- attr(f, "basis")
+  if (forget) forget(basis)
+  if (!as_tfd) return(basis)
+  basis(arg(f)) %>% t %>% tfd(arg = arg(f))
 }
 
 #' @rdname tfmethods
@@ -119,7 +124,6 @@ basis <- function(f) {
 }
 
 #TODO: add pipe-able modify_xx that call assignment functions on their first arg
-
 
 #-------------------------------------------------------------------------------
 

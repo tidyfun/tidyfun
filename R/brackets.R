@@ -129,7 +129,7 @@
       identical(tf_evaluator(x), tf_evaluator(value), ignore.environment = TRUE))
   } else {
     assert_true(
-      identical(basis(x), basis(value), ignore.environment = TRUE))
+      identical(tf_basis(x), tf_basis(value), ignore.environment = TRUE))
     assert_true(
       all.equal(attr(x, "basis_matrix"), attr(value, "basis_matrix")))
   }

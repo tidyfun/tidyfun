@@ -6,7 +6,7 @@
 \alias{tf_count}
 \alias{tf_domain}
 \alias{tf_evaluator}
-\alias{basis}
+\alias{tf_basis}
 \alias{tf_evaluator<-}
 \alias{arg<-}
 \alias{arg<-.tfd_irreg}
@@ -31,7 +31,7 @@ tf_domain(f)
 
 tf_evaluator(f, forget = FALSE)
 
-basis(f)
+tf_basis(f, as_tfd = FALSE, forget = FALSE)
 
 tf_evaluator(x) <- value
 
@@ -60,8 +60,10 @@ is_tfb(x)
 \arguments{
 \item{f}{an \code{tf} object}
 
-\item{forget}{extract the evaluator function without its cache?
+\item{forget}{extract the evaluator or basis-creating function without its cache?
 See \code{\link[memoise:forget]{memoise::forget()}}. Defaults to \code{FALSE}.}
+
+\item{as_tfd}{should the basis be returned as a \code{tfd} evaluated on \code{arg(f)}? Defaults to FALSE.}
 
 \item{x}{an \code{tf} object}
 
@@ -76,5 +78,6 @@ can be used to interpolate an \code{tfd}. Needs to accept vector arguments \code
 \item{...}{dots}
 }
 \description{
-A bunch of methods & utilities that do what they say.
+A bunch of methods & utilities that do what they say: extract or set the
+respective attributes of a \code{tf}-object.
 }
