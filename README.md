@@ -49,7 +49,7 @@ in order to reshape tables with functional data, i.e., go from wide to narrow, o
 - **`geom_spaghetti`** for lines
 - **`geom_meatballs`**  for (lines &) points
 - **`gglasagna`** for [lasagna plots](https://asset.jmir.pub/assets/76aeec48564abf0e6f6da8e9cd06346d.png), with an **`order`**-aesthetic to sort the lasagna layers
-- **geom_capellini** for [glyphs](http://ggobi.github.io/ggally/index_files/figure-html/glyphs-basic-usage-1.png) plots (i.e., sparklines)
+- **`geom_capellini`** for [glyphs](http://ggobi.github.io/ggally/index_files/figure-html/glyphs-basic-usage-1.png) plots (i.e., sparklines)
 
 ----------------------
 

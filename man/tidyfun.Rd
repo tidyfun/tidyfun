@@ -14,7 +14,7 @@ in \code{R} easier.\cr\cr
 \item arithmetic operators (\code{\link[=Ops.tf]{Ops.tf()}}),
 \item descriptive statistics: e.g. \code{\link[=mean.tf]{mean.tf()}}, \code{\link[=median.tf]{median.tf()}}
 \item and graphics functions for such data: \code{\link[=plot.tf]{plot.tf()}}, \code{\link[=geom_spaghetti]{geom_spaghetti()}}, \code{\link[=gglasagna]{gglasagna()}}
-\item functions to do smoothing (\code{\link[=smooth.tfd]{smooth.tfd()}}), differentiation and integration (\code{\link[=tf_derive.tfd]{tf_derive.tfd()}})
+\item functions to do smoothing (\code{\link[=tf_smooth.tfd]{tf_smooth.tfd()}}), differentiation and integration (\code{\link[=tf_derive.tfd]{tf_derive.tfd()}})
 \item \code{tidyverse}-verbs for handling functional data inside data frames: \code{\link[=tf_gather]{tf_gather()}} etc.
 \cr\cr
 \cr

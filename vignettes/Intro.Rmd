@@ -240,13 +240,13 @@ ex[1:2, seq(0, 1, l = 7), matrix = FALSE] %>% str
 ```{r}
 layout(t(1:3))
 ex %>% plot(alpha = .2, ylab = "lowess")
-ex %>% smooth("lowess") %>% lines(col = pal_5)
+ex %>% tf_smooth("lowess") %>% lines(col = pal_5)
 
 ex %>% plot(alpha = .2, ylab = "rolling median (k=5)")
-ex %>% smooth("rollmedian", k = 5) %>% lines(col = pal_5)
+ex %>% tf_smooth("rollmedian", k = 5) %>% lines(col = pal_5)
 
 ex %>% plot(alpha = .2, ylab = "Savitzky-Golay (quartic, 11 steps)")
-ex %>% smooth("savgol", fl = 11) %>% lines(col = pal_5)
+ex %>% tf_smooth("savgol", fl = 11) %>% lines(col = pal_5)
 ```
 
 ### differentiate & integrate:
@@ -254,7 +254,7 @@ ex %>% smooth("savgol", fl = 11) %>% lines(col = pal_5)
 ```{r}
 layout(t(1:3))
 ex %>% plot(col = pal_5)
-ex %>% smooth() %>% tf_derive() %>% plot(col = pal_5, ylab = "tf_derive(smooth(ex))")
+ex %>% tf_smooth() %>% tf_derive() %>% plot(col = pal_5, ylab = "tf_derive(tf_smooth(ex))")
 ex %>% tf_integrate(definite = FALSE) %>%  plot(col = pal_5)
 ```
 ```{r}
@@ -345,7 +345,7 @@ canada <- data.frame(
 
 canada$temp <- tfd(t(fda::CanadianWeather$dailyAv[,,1]), arg = 1:365)
 canada$precipl10 <- tfd(t(fda::CanadianWeather$dailyAv[,,3]), arg = 1:365) %>%
-  smooth
+  tf_smooth
 
 canada_map <- 
   data.frame(maps::map("world", "Canada", plot = FALSE)[c("x", "y")]) 
@@ -364,9 +364,9 @@ precipitation in blue:
 ```
 
 
-# Wrangling `tf`s inside data frames
+# Wrangling `tf`-objects inside data frames
 
-### wrangling `tf`s inside data frames: `dplyr`
+### wrangling `tf`-objects inside data frames: `dplyr`
 
 **`dplyr`** verbs **`filter`**, **`select`**, **`mutate`**, **`summarize`** work on **`tf`**-columns - e.g.:
 
@@ -381,7 +381,7 @@ dti %>%
     cca_z = (cca - mean(cca))/sd(cca)) %>% glimpse
 ```
 
-### wrangling `tf`s inside data frames: `tidyr`
+### wrangling `tf`-objects inside data frames: `tidyr`
 
 **`tidyfun`** provides `tf_` variants of `tidyr`-verbs to reshape and reformat functional data while keeping it in sync with other covariates:
 

@@ -8,7 +8,7 @@
 #'   - arithmetic operators ([Ops.tf()]),
 #'   - descriptive statistics: e.g. [mean.tf()], [median.tf()] 
 #'   - and graphics functions for such data: [plot.tf()], [geom_spaghetti()], [gglasagna()]
-#'   - functions to do smoothing ([smooth.tfd()]), differentiation and integration ([tf_derive.tfd()])
+#'   - functions to do smoothing ([tf_smooth.tfd()]), differentiation and integration ([tf_derive.tfd()])
 #' - `tidyverse`-verbs for handling functional data inside data frames: [tf_gather()] etc.  
 #' \cr\cr
 #' \cr
