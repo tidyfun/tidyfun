@@ -76,7 +76,7 @@ c.tfd <- function(...) {
   }
   attr_ret <- attributes(funs[[1]])
   if (any(irreg | make_irreg)) {
-    attr_ret$arg <- flatten(map(funs, arg))
+    attr_ret$arg <- flatten(map(funs, tf_arg))
   }
   attr_ret$names <- {
     tmp <- unlist(flatten(map(funs, 

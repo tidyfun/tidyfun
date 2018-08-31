@@ -17,21 +17,21 @@
 #'   - **`savgol`** uses a window size of `k` = <number of
 #'   grid points>/10 (i.e., the nearest odd integer to that).
 #'
-#' @param f a `tf` object containing functional data
+#' @param x a `tf` object containing functional data
 #' @param method one of "lowess" (see [stats::lowess()]), "rollmean",
 #'   "rollmedian" (see [zoo::rollmean()]) or "sgolay" (see [pracma::savgol()])
 #' @param ... arguments for the respective `method`. See Details.
 #' @return a smoothed version of the input. For some methods/options, the
 #'   smoothed functions may be shorter than the original ones (at both ends).
 #' @export
-tf_smooth <- function(f, ...) {
+tf_smooth <- function(x, ...) {
   UseMethod("tf_smooth")
 }
 #' @export
 #' @rdname tf_smooth
-tf_smooth.tfb <- function(f, ...) {
+tf_smooth.tfb <- function(x, ...) {
   message("just use a smaller base / more penalty....")
-  f
+  x
 }
 #' @importFrom stats lowess
 #' @importFrom zoo rollmean rollmedian
@@ -41,6 +41,8 @@ tf_smooth.tfb <- function(f, ...) {
 #' @rdname tf_smooth
 #' @export
 #' @examples
+#' library(zoo)
+#' library(pracma)
 #' f <- tf_sparsify(tf_jiggle(tf_rgp(4, 201L, nugget = .05)))
 #' f_lowess <- tf_smooth(f, "lowess")
 #' # these methods ignore the distances between arg-values:
@@ -53,20 +55,21 @@ tf_smooth.tfb <- function(f, ...) {
 #' lines(tf_smooth(f, "lowess", f = .9), col = 2, alpha= .2)
 #' plot(f_mean, points = FALSE)
 #' lines(f_median, col = 2, alpha= .2) # note constant extrapolation
-#' plot(f_sg, points = FALSE) 
-tf_smooth.tfd <- function(f, method = c("lowess", "rollmean", "rollmedian", "savgol"),
+#' plot(f, points = FALSE)
+#' lines(f_sg, col = 2) 
+tf_smooth.tfd <- function(x, method = c("lowess", "rollmean", "rollmedian", "savgol"),
   ...) {
   method <- match.arg(method)
   smoother <- get(method, mode = "function")
   dots <- list(...)
   if (any(str_detect(method, c("savgol", "rollm")))) {
-    if (!is_equidist(f)) {
-      warning("non-equidistant arg-values in ", sQuote(deparse(substitute(f))),
+    if (!is_equidist(x)) {
+      warning("non-equidistant arg-values in ", sQuote(deparse(substitute(x))),
         " ignored by ", method, ".")
     }
     if (str_detect(method, "rollm")) {
       if (is.null(dots$k)) {
-        dots$k <- ceiling(.05 * min(tf_count(f)))
+        dots$k <- ceiling(.05 * min(tf_count(x)))
         dots$k <- dots$k + !(dots$k %% 2) # make uneven
         message("using k = ", dots$k, " observations for rolling data window.")
       }
@@ -77,23 +80,23 @@ tf_smooth.tfd <- function(f, method = c("lowess", "rollmean", "rollmedian", "sav
     }
     if (str_detect(method, "savgol")) {
       if (is.null(dots$fl)) {
-        dots$fl <- ceiling(.15 * min(tf_count(f)))
+        dots$fl <- ceiling(.15 * min(tf_count(x)))
         dots$fl <- dots$fl + !(dots$fl %% 2) # make uneven
         message("using fl = ", dots$fl, " observations for rolling data window.")
       }
     }
-    smoothed <- map(tf_evaluations(f), ~ do.call(smoother, append(list(.x), dots)))
+    smoothed <- map(tf_evaluations(x), ~ do.call(smoother, append(list(.x), dots)))
   }
   if (str_detect(method, "lowess")) {
     if (is.null(dots$f)) {
       dots$f <- .15
       message("using f = ", dots$f, " as smoother span for lowess")
     }
-    smoothed <- map(tf_evaluations(f), ~ do.call(smoother, append(list(.x), dots))$y)
+    smoothed <- map(tf_evaluations(x), ~ do.call(smoother, append(list(.x), dots))$y)
   }
-  tfd(smoothed, tf_arg(f), evaluator = !!attr(f, "evaluator_name"), 
-    resolution = attr(f, "resolution"), domain = tf_domain(f))
+  tfd(smoothed, tf_arg(x), evaluator = !!attr(x, "evaluator_name"), 
+    resolution = attr(x, "resolution"), domain = tf_domain(x))
 }
 #' @export
-tf_smooth.default <- function(f, ...) .NotYetImplemented()
+tf_smooth.default <- function(x, ...) .NotYetImplemented()
   

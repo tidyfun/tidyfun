@@ -6,15 +6,15 @@
 \alias{tf_smooth.tfd}
 \title{Simple smoothing of \code{tf} objects}
 \usage{
-tf_smooth(f, ...)
+tf_smooth(x, ...)
 
-\method{tf_smooth}{tfb}(f, ...)
+\method{tf_smooth}{tfb}(x, ...)
 
-\method{tf_smooth}{tfd}(f, method = c("lowess", "rollmean", "rollmedian",
+\method{tf_smooth}{tfd}(x, method = c("lowess", "rollmean", "rollmedian",
   "savgol"), ...)
 }
 \arguments{
-\item{f}{a \code{tf} object containing functional data}
+\item{x}{a \code{tf} object containing functional data}
 
 \item{...}{arguments for the respective \code{method}. See Details.}
 
@@ -45,6 +45,8 @@ behavior of shortening the smoothed series.
 }
 }
 \examples{
+library(zoo)
+library(pracma)
 f <- tf_sparsify(tf_jiggle(tf_rgp(4, 201L, nugget = .05)))
 f_lowess <- tf_smooth(f, "lowess")
 # these methods ignore the distances between arg-values:
@@ -57,5 +59,6 @@ plot(f_lowess, points = FALSE)
 lines(tf_smooth(f, "lowess", f = .9), col = 2, alpha= .2)
 plot(f_mean, points = FALSE)
 lines(f_median, col = 2, alpha= .2) # note constant extrapolation
-plot(f_sg, points = FALSE) 
+plot(f, points = FALSE)
+lines(f_sg, col = 2) 
 }

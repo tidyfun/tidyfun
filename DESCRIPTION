@@ -1,6 +1,6 @@
 Package: tidyfun
 Title: Tools for Tidy Functional Data
-Version: 0.0.4
+Version: 0.0.5
 Authors@R: c(person("Fabian", "Scheipl", email = "fabian.scheipl@googlemail.com", role = c("aut", "cre")), person("Jeff", "Goldsmith", role = c("ctb")))
 Description: Provides S3 classes and methods for tidy functional data.
 Depends: R (>= 3.4)
