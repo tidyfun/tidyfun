@@ -249,7 +249,7 @@ tfb.tfd <- function(data, arg = NULL,
   domain = NULL, penalized = TRUE, resolution = NULL, ...) {
   arg <- arg %||% arg(data)
   domain <- domain %||% tf_domain(data)
-  resolution <- resolution %||% resolution(data)
+  resolution <- resolution %||% tf_resolution(data)
   names_data <- names(data)
   data <- as.data.frame(data, arg)
   ret <- tfb(data, domain = domain,   
@@ -263,7 +263,7 @@ tfb.tfd <- function(data, arg = NULL,
 tfb.tfb <- function(data, arg = NULL,
   domain = NULL, penalized = TRUE, resolution = NULL, ...) {
   arg <- arg %||% arg(data)
-  resolution <- resolution %||% resolution(data)
+  resolution <- resolution %||% tf_resolution(data)
   domain <- domain %||% tf_domain(data)
   s_args <- modifyList(attr(data, "basis_args"),
     list(...)[names(list(...)) %in% names(formals(mgcv::s))])

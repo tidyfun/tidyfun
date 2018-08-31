@@ -61,7 +61,7 @@ c.tfd <- function(...) {
   }
   new_resolution <- NULL
   if (!all(compatible[, "resolution"])) {
-    new_resolution <- resolution(funs[[1]])
+    new_resolution <- tf_resolution(funs[[1]])
     warning("inputs have different resolutions, result has ", 
       "resolution =", new_resolution)
     make_irreg[!compatible[, "resolution"]] <- TRUE

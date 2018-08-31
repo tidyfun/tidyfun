@@ -180,7 +180,7 @@ tfd.tf <- function(data, arg = NULL, domain = NULL,
     attr(data, "evaluator_name")
   } else "tf_approx_linear"
   domain <- (domain %||% unlist(arg) %||% tf_domain(data)) %>% range
-  resolution <- resolution %||% resolution(data)
+  resolution <- resolution %||% tf_resolution(data)
   re_eval <- !is.null(arg)
   arg <- ensure_list(arg %||% arg(data))
   evaluations <- if (re_eval) tf_evaluate(data, arg) else tidyfun::tf_evaluations(data)

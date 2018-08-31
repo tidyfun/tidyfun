@@ -50,7 +50,7 @@ assert_arg <- function(arg, x, check_unique = TRUE){
 }
 assert_arg_vector <- function(arg, x, check_unique = TRUE) {
   if (check_unique) {
-    round_arg <- round_resolution(arg, resolution(x))
+    round_arg <- round_resolution(arg, tf_resolution(x))
     if (any(duplicated(round_arg))) {
       stop("Non-unique arg-values (for resolution).")
     }
@@ -90,9 +90,6 @@ get_resolution <- function(arg) {
   10^(floor(log10(min_diff)) - 1)
 }
 
-resolution <- function(f) {
-  attr(f, "resolution")
-}
 
 adjust_resolution <- function(arg, f, unique = TRUE) {
   resolution <- resolution(f)

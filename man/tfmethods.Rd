@@ -11,6 +11,7 @@
 \alias{arg<-}
 \alias{arg<-.tfd_irreg}
 \alias{arg<-.tfd_reg}
+\alias{tf_resolution}
 \alias{coef.tfb}
 \alias{rev.tf}
 \alias{is.na.tf}
@@ -40,6 +41,8 @@ arg(x) <- value
 \method{arg}{tfd_irreg}(x) <- value
 
 \method{arg}{tfd_reg}(x) <- value
+
+tf_resolution(f)
 
 \method{coef}{tfb}(object, ...)
 

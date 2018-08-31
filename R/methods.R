@@ -123,6 +123,12 @@ tf_basis <- function(f, as_tfd = FALSE, forget = FALSE) {
   x
 }
 
+#' @rdname tfmethods
+#' @export
+tf_resolution <- function(f) {
+  attr(f, "resolution")
+}
+
 #TODO: add pipe-able modify_xx that call assignment functions on their first arg
 
 #-------------------------------------------------------------------------------

@@ -24,7 +24,7 @@ tf_evaluate.tfd <- function(object, arg, ...) {
   pmap(list(arg, ensure_list(arg(object)), tf_evaluations(object)), 
     ~ evaluate_tfd_once(new_arg = ..1, arg = ..2, evaluations = ..3, 
         evaluator = attr(object, "evaluator"), 
-        resolution = resolution(object)))
+        resolution = tf_resolution(object)))
 }  
 
 evaluate_tfd_once <- function(new_arg, arg, evaluations, evaluator, resolution) {
@@ -55,13 +55,13 @@ tf_evaluate.tfb <- function(object, arg, ...) {
       coefs = do.call(cbind, coef(object)),
       basis = attr(object, "basis"),
       X = attr(object, "basis_matrix"),
-      resolution = resolution(object))
+      resolution = tf_resolution(object))
     ret <- split(evals, col(evals))
   } else {
     ret <- pmap(list(arg, ensure_list(arg(object)), coef(object)),
       ~ evaluate_tfb_once(x = ..1, arg = ..2, coefs = ..3, 
         basis = attr(object, "basis"), X = attr(object, "basis_matrix"),
-        resolution = resolution(object)))
+        resolution = tf_resolution(object)))
   }
   names(ret) <- names(object)
   ret
