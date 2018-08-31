@@ -61,23 +61,23 @@ the usual \code{dplyr} tricks are available, see examples.\cr
 Any condition evaluates to \code{NA} on \code{NA}-entries in \code{f}.
 }
 \examples{
-  lin <- 1:4 * tfd(seq(-1, 1,l = 11), seq(-1, 1, l = 11))
+  lin = 1:4 * tfd(seq(-1, 1,l = 11), seq(-1, 1, l = 11))
   tf_where(lin, value \%inr\% c(-1, .5))
   tf_where(lin, value \%inr\% c(-1, .5), "range")
-  a <- 1
+  a = 1
   tf_where(lin, value > a, "first")
   tf_where(lin, value < a, "last")
   tf_where(lin, value > 2, "any")
   tf_anywhere(lin, value > 2)
 
   set.seed(4353)
-  plot(f <- tf_rgp(5, 11L), pch = as.character(1:5), points = TRUE)
+  plot(f = tf_rgp(5, 11L), pch = as.character(1:5), points = TRUE)
   tf_where(f, value == max(value))
   # where is the function increasing/decreasing:
   tf_where(f, value > dplyr::lag(value, 1, value[1]))
   tf_where(f, value < dplyr::lead(value, 1, value[n()]))
   # where are the (interior) extreme points:
-  tf_where(f, 
+  tf_where(f,
     sign(c(diff(value)[1], diff(value))) !=
       sign(c(diff(value), diff(value)[n()-1])))
   # where for arg > .5 is the function positive:

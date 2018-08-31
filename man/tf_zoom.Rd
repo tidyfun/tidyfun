@@ -34,7 +34,7 @@ be turned into irregular \code{tfd}-objects iff \code{begin} or \code{end} are n
 These are used to redefine or restrict the \code{domain} of \code{tf} objects.
 }
 \examples{
-  (x <- tf_rgp(10))
+  (x = tf_rgp(10))
   plot(x)
   tf_zoom(x, .5, .9)
   lines(tf_zoom(x, .5, .9), col = "red")
