@@ -2,12 +2,12 @@ string_rep_tf <- function(f, signif_arg = NULL,
     show = 3, digits = NULL, ...) {
   digits_eval <- digits %||% options()$digits
   digits_arg <- min(digits_eval, signif_arg %||% digits_eval) 
-  arg_len <- map(ensure_list(arg(f)), length)
+  arg_len <- map(ensure_list(tf_arg(f)), length)
   show <- as.list(pmin(show, unlist(arg_len)))
   # fix weird dots handling by map/format:
   format_args <- modifyList(tail(head(formals(format.default), -1), -1),
     list(digits = digits_arg, justify = "right", ...))
-  arg_ch <- map2(ensure_list(arg(f)), show,
+  arg_ch <- map2(ensure_list(tf_arg(f)), show,
     ~ do.call(format, c(format_args, list(x = .x[1:.y]))))
   value_ch <- map2(tf_evaluations(f), show,
     ~ do.call(format, c(format_args, list(x = .x[1:.y]))))
@@ -41,7 +41,7 @@ print.tf <- function(x, n  = 10, ...) {
 #' @export
 print.tfd_reg <- function(x, n = 10, ...) {
   NextMethod()
-  cat(" based on", length(arg(x)), "evaluations each\n")
+  cat(" based on", length(tf_arg(x)), "evaluations each\n")
   cat("interpolation by", attr(x, "evaluator_name"), "\n")
   if (length(x)) {
     cat(format(x[1:min(n, length(x))], ...), sep = "\n")

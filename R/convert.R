@@ -10,7 +10,7 @@ as.tfd.default <- function(data, ...) {
 as.tfd_irreg <- function(data, ...) UseMethod("as.tfd_irreg")
 
 as.tfd_irreg.tfd_reg <- function(data, ...) {
-  arg <- ensure_list(arg(data))
+  arg <- ensure_list(tf_arg(data))
   ret <- map2(tf_evaluations(data), arg, ~ list(arg = .y, value = .x))
   attributes(ret) <- attributes(data)
   attr(ret, "arg") <- numeric(0)
@@ -31,7 +31,7 @@ as.tfd_irreg.tfd_irreg <- function(data, ...) {
 as.data.frame.tfd <- function(x, row.names = NULL, optional = FALSE, 
   arg = NULL, interpolate = FALSE, ...) {
   if (is.null(arg)) {
-    arg <- ensure_list(arg(x))
+    arg <- ensure_list(tf_arg(x))
   } 
   tmp <- x[, arg, interpolate = interpolate, matrix = FALSE]
   id <- unique_id(names(x)) %||% seq_along(x)
@@ -43,7 +43,7 @@ as.data.frame.tfd <- function(x, row.names = NULL, optional = FALSE,
 #' @export
 as.matrix.tfd <- function(x, arg = NULL, interpolate = FALSE, ...) {
   if (is.null(arg)) {
-    arg <- sort(unique(unlist(arg(x))))
+    arg <- sort(unique(unlist(tf_arg(x))))
   } 
   ret <- x[, arg, interpolate = interpolate, matrix = TRUE]
   structure(ret, arg = as.numeric(colnames(ret)))
@@ -70,7 +70,7 @@ as.tfb.default <- function(data, basis = c("mgcv", "fpc"), ...) {
 as.data.frame.tfb <- function(x, row.names = NULL, optional = FALSE, 
   arg = NULL, ...) {
   if (is.null(arg)) {
-    arg <- ensure_list(arg(x))
+    arg <- ensure_list(tf_arg(x))
   } 
   tmp <- x[, arg, matrix = FALSE]
   id <- unique_id(names(x)) %||% seq_along(x)

@@ -41,7 +41,7 @@ StatTf <- ggproto("StatTf", Stat,
   required_aes = "y",
   setup_params = function(data, params) {
     if (is.null(params$arg))
-      params$arg <- list(arg(pull(data, y)))
+      params$arg <- list(tf_arg(pull(data, y)))
     params
   },
   compute_layer = function(self, data, params, layout) {

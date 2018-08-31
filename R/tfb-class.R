@@ -183,7 +183,7 @@ tfb.data.frame <- function(data, id = 1, arg = 2, value = 3,
   regular <- n_distinct(table(data[[1]])) == 1
   ret <- mgcv_tfb(data, regular, domain = domain,   
     penalized = penalized, resolution = resolution, ...)
-  assert_arg(arg(ret), ret)
+  assert_arg(tf_arg(ret), ret)
   ret
 }
 
@@ -198,7 +198,7 @@ tfb.matrix <- function(data, arg = NULL,
   ret <- mgcv_tfb(data, regular, domain = domain,   
     penalized = penalized, resolution = resolution, ...)
   names(ret) <- data_names
-  assert_arg(arg(ret), ret)
+  assert_arg(tf_arg(ret), ret)
   ret
 }
 #' @rdname tfb
@@ -247,7 +247,7 @@ tfb.list <- function(data, arg = NULL,
 #' @export
 tfb.tfd <- function(data, arg = NULL, 
   domain = NULL, penalized = TRUE, resolution = NULL, ...) {
-  arg <- arg %||% arg(data)
+  arg <- arg %||% tf_arg(data)
   domain <- domain %||% tf_domain(data)
   resolution <- resolution %||% tf_resolution(data)
   names_data <- names(data)
@@ -262,7 +262,7 @@ tfb.tfd <- function(data, arg = NULL,
 #' @export
 tfb.tfb <- function(data, arg = NULL,
   domain = NULL, penalized = TRUE, resolution = NULL, ...) {
-  arg <- arg %||% arg(data)
+  arg <- arg %||% tf_arg(data)
   resolution <- resolution %||% tf_resolution(data)
   domain <- domain %||% tf_domain(data)
   s_args <- modifyList(attr(data, "basis_args"),

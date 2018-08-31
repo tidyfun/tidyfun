@@ -118,7 +118,7 @@ tfb_fpc.numeric <- function(data, arg = NULL, domain = NULL, smooth = TRUE, reso
 tfb_fpc.tf <- function(data, arg = NULL, smooth = TRUE, ...) {
    #TODO: major computational shortcuts possible here for tfb: reduced rank,
   #   direct inner prods of basis functions etc...
-  arg <- arg %||% arg(data)
+  arg <- arg %||% tf_arg(data)
   names_data <- names(data)
   ret <- tfb_fpc(as.data.frame(data, arg = arg), smooth = smooth, 
     domain = tf_domain(data), resolution = tf_resolution(data),  ...)

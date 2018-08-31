@@ -9,15 +9,15 @@ fun_op <- function(x, y, op, numeric = NA){
       (length(num) > 0 & length(f) == 1) |
       length(num) %in% c(1, length(f)))
     attr_ret <- attributes(f)
-    arg_ret <- arg(f)
+    arg_ret <- tf_arg(f)
   } else {
     stopifnot(
       # no "recycling" of args
       (length(x) %in% c(1, length(y))) | (length(y) %in% c(1, length(x))),
       all.equal(tf_domain(x), tf_domain(y)),
-      all.equal(arg(x), arg(y)))
+      all.equal(tf_arg(x), tf_arg(y)))
     attr_ret <- attributes(y)
-    arg_ret <- arg(y)
+    arg_ret <- tf_arg(y)
   }
   if (is_tfb(x)) x_ <- coef(x)
   if (is_tfd(x)) x_ <- tf_evaluations(x)

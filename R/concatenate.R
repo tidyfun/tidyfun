@@ -108,7 +108,7 @@ c.tfb <- function(...) {
       " using basis and arg of ", fun_names[1])
     funs <- map_at(funs,re_evals, 
       ~do.call(tfb, 
-        flatten(list(list(.), arg = list(arg(funs[[1]])), 
+        flatten(list(list(.), arg = list(tf_arg(funs[[1]])), 
           attr(funs[[1]], "basis_args")))))
   }    
   if (!all(compatible[, "resolution"])) {

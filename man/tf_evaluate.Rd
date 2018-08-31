@@ -18,7 +18,7 @@ tf_evaluate(object, arg, ...)
 \arguments{
 \item{object}{an \code{tf} or a \code{data.frame}-like object with \code{tf} columns}
 
-\item{arg}{optional evaluation grid, defaults to \code{arg(object)}.}
+\item{arg}{optional evaluation grid, defaults to \code{tf_arg(object)}.}
 
 \item{...}{optional:  A selection of columns. If empty, all \code{tfd}-variables
 are selected. You can supply bare variable names,

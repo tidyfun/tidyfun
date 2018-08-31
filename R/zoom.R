@@ -42,7 +42,7 @@ prep_tf_zoom_args <- function(f, begin, end) {
 #' @export
 tf_zoom.tfd <- function(f, begin = tf_domain(f)[1], end = tf_domain(f)[2], ...) {
   args <- prep_tf_zoom_args(f, begin, end)
-  ret <- pmap(list(f[ , arg(f), matrix = FALSE], args$begin, args$end), 
+  ret <- pmap(list(f[ , tf_arg(f), matrix = FALSE], args$begin, args$end), 
     ~ filter(..1, arg >= ..2 & arg <= ..3))
   ret <- tfd(ret, domain = args$dom, resolution = attr(f, "resolution"))
   if (is_irreg(ret)) {
@@ -65,12 +65,12 @@ tf_zoom.tfb <- function(f, begin = tf_domain(f)[1], end = tf_domain(f)[2], ...) 
     message("tf_zoom() with varying start or end points - converting to tfd.")
     return(tf_zoom(tfd(f), begin, end))
   }
-  use <- arg(f) >= args$dom[1] & arg(f) <= args$dom[2]
+  use <- tf_arg(f) >= args$dom[1] & tf_arg(f) <= args$dom[2]
   if (!any(use)) stop("no data in zoom region.")
   ret <- f
   forget(ret$basis)
   attr(ret, "basis_matrix") <- attr(f, "basis_matrix")[use, ]
-  attr(ret, "arg") <- arg(f)[use]
+  attr(ret, "arg") <- tf_arg(f)[use]
   attr(ret, "domain") <- args$dom
   ret
 }

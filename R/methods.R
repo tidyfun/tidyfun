@@ -6,15 +6,15 @@
 #' @param x an `tf` object
 #' @rdname tfmethods
 #' @export
-arg <- function(f) UseMethod("arg")
+tf_arg <- function(f) UseMethod("tf_arg")
 #' @export
-arg.default <- function(f) .NotYetImplemented()
+tf_arg.default <- function(f) .NotYetImplemented()
 #' @export
-arg.tfd_irreg <- function(f) map(f, "arg")
+tf_arg.tfd_irreg <- function(f) map(f, "arg")
 #' @export
-arg.tfd_reg <- function(f) attr(f, "arg")[[1]]
+tf_arg.tfd_reg <- function(f) attr(f, "arg")[[1]]
 #' @export
-arg.tfb <- function(f) attr(f, "arg")
+tf_arg.tfb <- function(f) attr(f, "arg")
 
 #' @rdname tfmethods
 #' @export
@@ -48,7 +48,7 @@ tf_count.tfd_irreg <- function(f) {
   ret
 }  
 #' @export
-tf_count.tfd_reg <- function(f) length(arg(f))
+tf_count.tfd_reg <- function(f) length(tf_arg(f))
 
 #' @rdname tfmethods
 #' @export
@@ -69,14 +69,14 @@ tf_evaluator <- function(f, forget = FALSE) {
 }
 
 #' @rdname tfmethods
-#' @param as_tfd should the basis be returned as a `tfd` evaluated on `arg(f)`? Defaults to FALSE.
+#' @param as_tfd should the basis be returned as a `tfd` evaluated on `tf_arg(f)`? Defaults to FALSE.
 #' @export
 tf_basis <- function(f, as_tfd = FALSE, forget = FALSE) {
   stopifnot(inherits(f, "tfb"))
   basis <- attr(f, "basis")
   if (forget) forget(basis)
   if (!as_tfd) return(basis)
-  basis(arg(f)) %>% t %>% tfd(arg = arg(f))
+  basis(tf_arg(f)) %>% t %>% tfd(arg = tf_arg(f))
 }
 
 #' @rdname tfmethods

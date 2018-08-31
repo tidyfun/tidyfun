@@ -29,7 +29,7 @@ flags whether the functions fullfill the condition \emph{any}where. For
 range, though, this is not checked.}
 
 \item{arg}{optional \code{arg}-values on which to evaluate \code{f} and check \code{cond},
-defaults to \code{arg(f)}.}
+defaults to \code{tf_arg(f)}.}
 
 \item{r}{used to specify a range, only the minimum and maximum of \code{r} are used.}
 }

@@ -21,7 +21,7 @@
 #'   `"range"`, note that `cond` may not be true for all `arg` values in this
 #'   range, though, this is not checked.
 #' @param arg optional `arg`-values on which to evaluate `f` and check `cond`,
-#'   defaults to `arg(f)`.
+#'   defaults to `tf_arg(f)`.
 #' @return depends on  `return`:  
 #'  - `return = "any"`, i.e, `anywhere`: a logical vector of the same length as `f`.
 #'  - `return = "all"`: a list of vectors of the same length as `f`, with  
@@ -56,7 +56,7 @@
 tf_where <- function(f, cond, return = c("all", "first", "last", "range", "any"),
     arg) {
   if (missing(arg)) {
-    arg <- tidyfun::arg(f)
+    arg <- tf_arg(f)
   } else assert_arg(arg, f)
   return <- match.arg(return)
   cond <- enquo(cond)

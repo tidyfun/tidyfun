@@ -6,7 +6,7 @@
 #' used as the `arg` argument for the [tf_evaluate()]-method for the respective
 #' `tf`-columns in `object`.
 #' @param object an `tf` or a `data.frame`-like object with `tf` columns
-#' @param arg optional evaluation grid, defaults to `arg(object)`. 
+#' @param arg optional evaluation grid, defaults to `tf_arg(object)`. 
 #' @seealso \code{?`[.tf`}
 #' @export
 tf_evaluate <- function(object, arg, ...) UseMethod("tf_evaluate")
@@ -17,11 +17,11 @@ tf_evaluate.default <- function(object, arg, ...) .NotYetImplemented()
 #' @export
 #' @rdname tf_evaluate
 tf_evaluate.tfd <- function(object, arg, ...) {
-  if (missing(arg)) arg <- tidyfun::arg(object)
-  if (is.null(arg)) arg <- tidyfun::arg(object)
+  if (missing(arg)) arg <- tf_arg(object)
+  if (is.null(arg)) arg <- tf_arg(object)
   arg <- ensure_list(arg)
   assert_arg(arg, object, check_unique = FALSE)
-  pmap(list(arg, ensure_list(arg(object)), tf_evaluations(object)), 
+  pmap(list(arg, ensure_list(tf_arg(object)), tf_evaluations(object)), 
     ~ evaluate_tfd_once(new_arg = ..1, arg = ..2, evaluations = ..3, 
         evaluator = attr(object, "evaluator"), 
         resolution = tf_resolution(object)))
@@ -44,21 +44,21 @@ evaluate_tfd_once <- function(new_arg, arg, evaluations, evaluator, resolution) 
 #' @export
 #' @rdname tf_evaluate
 tf_evaluate.tfb <- function(object, arg, ...) {
-  if (missing(arg)) arg <- tidyfun::arg(object)
-  if (is.null(arg)) arg <- tidyfun::arg(object)
+  if (missing(arg)) arg <- tf_arg(object)
+  if (is.null(arg)) arg <- tf_arg(object)
   arg <- ensure_list(arg)
   assert_arg(arg, object, check_unique = FALSE)
   if (length(arg) == 1) {
     arg <- unlist(arg)
     evals <- evaluate_tfb_once(x = arg, 
-      arg = arg(object), 
+      arg = tf_arg(object), 
       coefs = do.call(cbind, coef(object)),
       basis = attr(object, "basis"),
       X = attr(object, "basis_matrix"),
       resolution = tf_resolution(object))
     ret <- split(evals, col(evals))
   } else {
-    ret <- pmap(list(arg, ensure_list(arg(object)), coef(object)),
+    ret <- pmap(list(arg, ensure_list(tf_arg(object)), coef(object)),
       ~ evaluate_tfb_once(x = ..1, arg = ..2, coefs = ..3, 
         basis = attr(object, "basis"), X = attr(object, "basis_matrix"),
         resolution = tf_resolution(object)))
@@ -106,7 +106,7 @@ tf_evaluate.data.frame <- function(object, arg, ...) {
       arg <- replicate(length(tf_cols), arg, simplify = FALSE)
     }  
   } else {
-    arg <- map(object[tf_cols], ~ ensure_list(tidyfun::arg(.)))
+    arg <- map(object[tf_cols], ~ ensure_list(tf_arg(.)))
   }
   stopifnot(length(arg) == length(tf_cols))
   names(arg) <- tf_cols

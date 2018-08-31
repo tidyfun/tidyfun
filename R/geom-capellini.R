@@ -48,7 +48,7 @@ StatCapellini <- ggproto("StatCapellini", Stat,
   required_aes = c("x", "y", "tf"),
   setup_params = function(data, params) {
     if (is.null(params$arg))
-      params$arg <- list(arg(pull(data, tf)))
+      params$arg <- list(tf_arg(pull(data, tf)))
     if (is.null(params$width)) 
       params$width <- ggplot2::resolution(data$x)/1.5
     if (is.null(params$height))

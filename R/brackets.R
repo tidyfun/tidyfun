@@ -75,7 +75,7 @@
   } 
   evals <- tf_evaluate(x, arg = j)
   if (!interpolate) {
-    new_j <- map2(j, ensure_list(arg(x)), ~ !(.x %in% .y))
+    new_j <- map2(j, ensure_list(tf_arg(x)), ~ !(.x %in% .y))
     if (any(unlist(new_j))) {
       warning("interpolate = FALSE & no evaluations for some <j>: NAs created.")
     }
@@ -122,7 +122,7 @@
     all(tf_domain(x) == tf_domain(value)),
     length(value) %in% c(1, length(i)))
   if (inherits(x, "tfd_reg") | inherits(x, "tfb")) {
-    assert_true(identical(arg(x), arg(value)))
+    assert_true(identical(tf_arg(x), tf_arg(value)))
   }
   if (is_tfd(x)) {
     assert_true(

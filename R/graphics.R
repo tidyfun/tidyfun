@@ -1,12 +1,12 @@
 prep_plotting_arg <- function(f, n_grid) {
   if (!isTRUE(n_grid > 1)) {
-    tidyfun::arg(f)
+    tf_arg(f)
   }  else {
     modelr::seq_range(tf_domain(f), n = n_grid) %>% 
       round_resolution(attr(f, "resolution")) %>%
       setdiff(
-        round_resolution(unlist(tidyfun::arg(f)), attr(f, "resolution"))) %>% 
-      union(unlist(tidyfun::arg(f))) %>% sort
+        round_resolution(unlist(tf_arg(f)), attr(f, "resolution"))) %>% 
+      union(unlist(tf_arg(f))) %>% sort
   }
 }
 
@@ -58,7 +58,7 @@ funplot <- function(f, arg, n_grid = 50, points = is_irreg(f),
       geom_line(alpha = alpha)
     if (points) {
       p <- p + 
-        geom_point(data = as.data.frame(f, arg = arg(f)), alpha = alpha)
+        geom_point(data = as.data.frame(f, arg = tf_arg(f)), alpha = alpha)
     } 
   } 
   if (type == "lasagna") {

@@ -15,7 +15,7 @@ quad_trapez <- function(arg, evaluations) {
   c(0, 0.5 * diff(arg) * (head(evaluations, -1) + evaluations[-1]))
 }
 
-deriv_tfb_mgcv <- function(expr, order = 1, arg = tidyfun::arg(expr)) {
+deriv_tfb_mgcv <- function(expr, order = 1, arg = tf_arg(expr)) {
   #TODO: make this work for iterated application deriv(deriv(fb)) 
   if (!is.null(attr(expr, "basis_deriv"))) 
     stop("Can't derive or integrate previously derived/integrated tf in basis representation")
@@ -36,7 +36,7 @@ deriv_tfb_mgcv <- function(expr, order = 1, arg = tidyfun::arg(expr)) {
 }
 
 deriv_tfb_fpc <- function(expr, order = 1, lower, upper, 
-  arg = tidyfun::arg(expr)) {
+  arg = tf_arg(expr)) {
   efunctions <- environment(attr(expr, "basis"))$efunctions
   environment(attr(expr, "basis")) <- new.env()
   new_basis <- if (order > 0) {
@@ -47,8 +47,8 @@ deriv_tfb_fpc <- function(expr, order = 1, lower, upper,
   }  
   environment(attr(expr, "basis"))$efunctions <- new_basis
   attr(expr, "basis_matrix") <- t(as.matrix(new_basis))
-  attr(expr, "arg") <- arg(new_basis)
-  attr(expr, "domain") <- range(arg(new_basis))
+  attr(expr, "arg") <- tf_arg(new_basis)
+  attr(expr, "domain") <- range(tf_arg(new_basis))
   expr
 }
 
@@ -130,7 +130,7 @@ integrate.function <- stats::integrate
 integrate.tfd <- function(f, lower = tf_domain(f)[1], upper = tf_domain(f)[2], 
   definite = TRUE, arg, ...) {
   if (missing(arg)) {
-    arg <- tidyfun::arg(f)
+    arg <- tf_arg(f)
   } else assert_arg(arg, f)
   arg <- ensure_list(arg)
   assert_numeric(lower, lower = tf_domain(f)[1], upper =  tf_domain(f)[2], 
@@ -168,7 +168,7 @@ integrate.tfd <- function(f, lower = tf_domain(f)[1], upper = tf_domain(f)[2],
 integrate.tfb <- function(f, lower = tf_domain(f)[1], upper = tf_domain(f)[2], 
   definite = TRUE, arg, ...) {
   if (missing(arg)) {
-    arg <- tidyfun::arg(f)
+    arg <- tf_arg(f)
   } else assert_arg(arg, f)
   assert_numeric(lower, lower = tf_domain(f)[1], upper =  tf_domain(f)[2], 
     any.missing = FALSE)

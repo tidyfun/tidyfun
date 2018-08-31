@@ -57,7 +57,7 @@ tf_jiggle <- function(f, ...) {
     c(runif(1, arg[1], new_args[1]), new_args, 
       runif(1, new_args[n - 2], arg[n]))
   } 
-  new_args <- map(arg(f), tf_jiggle_args)
+  new_args <- map(tf_arg(f), tf_jiggle_args)
   tfd(map2(new_args, tf_evaluations(f), cbind), domain = tf_domain(f))
 }
 
@@ -69,5 +69,5 @@ tf_sparsify <- function(f, dropout = .5, ...) {
   stopifnot(is_tf(f))
   tf_evals <- map(tf_evaluations(f), 
     ~ ifelse(runif(length(.x)) < dropout, NA, .x))
-  tfd(tf_evals, arg(f), resolution = attr(f, "resolution"), domain = tf_domain(f))
+  tfd(tf_evals, tf_arg(f), resolution = attr(f, "resolution"), domain = tf_domain(f))
 }

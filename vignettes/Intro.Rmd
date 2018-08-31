@@ -107,7 +107,7 @@ text(x = -.1, y = ex[,0.07], labels = names(ex), col = pal_5)
 
 ```{r}
 ex %>% tf_evaluations() %>% str
-ex %>% arg() %>% str
+ex %>% tf_arg() %>% str
 ex %>% tf_domain() 
 ```
 
@@ -123,7 +123,7 @@ like the `rcst` measurements in our `dti` data.
 
 ```{r}
 dti$rcst[1:2]
-dti$rcst[1:2] %>% arg() %>% str
+dti$rcst[1:2] %>% tf_arg() %>% str
 dti$rcst[1:2] %>% plot(pch = "x", col = viridis(2))
 ```
 

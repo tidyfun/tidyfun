@@ -33,7 +33,7 @@ new_tfd <- function(arg, datalist, regular, domain, evaluator, resolution) {
     evaluator_name = evaluator,
     resolution = resolution, #maybe turn this into a <global> option? 
     class = c(class, "tfd", "tf"))
-  assert_arg(arg(ret), ret)
+  assert_arg(tf_arg(ret), ret)
   ret
 }
 
@@ -182,7 +182,7 @@ tfd.tf <- function(data, arg = NULL, domain = NULL,
   domain <- (domain %||% unlist(arg) %||% tf_domain(data)) %>% range
   resolution <- resolution %||% tf_resolution(data)
   re_eval <- !is.null(arg)
-  arg <- ensure_list(arg %||% arg(data))
+  arg <- ensure_list(arg %||% tf_arg(data))
   evaluations <- if (re_eval) tf_evaluate(data, arg) else tidyfun::tf_evaluations(data)
   if (re_eval) {
     nas <- map(evaluations, ~ which(is.na(.x)))

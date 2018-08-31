@@ -130,7 +130,7 @@ tf_spread <- function(data, value, arg, sep="_", interpolate = TRUE) {
   if (missing(arg)) {
     if (is_irreg(tf)) 
       stop("need explicit <arg> for irregular ", sQuote(tf_var), ".")
-    arg <- tidyfun::arg(tf)
+    arg <- tf_arg(tf)
   }
   tf_eval <- tf[, arg, matrix = TRUE, interpolate = interpolate] %>%
     as.data.frame

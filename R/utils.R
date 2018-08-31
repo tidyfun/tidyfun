@@ -66,7 +66,7 @@ assert_arg_vector <- function(arg, x, check_unique = TRUE) {
 #   UseMethod("check_interpolation")
 # }
 # check_interpolation.tfd_reg <- function(x, arg){
-#   original <- arg(x)
+#   original <- tf_arg(x)
 #   if (is.list(arg)) {
 #     map(arg, ~ !(. %in% original))
 #   } else {
@@ -74,7 +74,7 @@ assert_arg_vector <- function(arg, x, check_unique = TRUE) {
 #   }
 # }
 # check_interpolation.tfd_irreg <- function(x, arg) {
-#   original <- arg(x)
+#   original <- tf_arg(x)
 #   if (is.list(arg)) {
 #     map2(arg, original, ~ !(.x %in% .y))
 #   } else {
@@ -116,7 +116,7 @@ round_resolution <- function(arg, resolution, updown = 0) {
 
 is_equidist <- function(f) {
   if (is_irreg(f)) return(FALSE)
-  unique_diffs <- map_lgl(ensure_list(arg(f)), 
+  unique_diffs <- map_lgl(ensure_list(tf_arg(f)), 
     ~ round_resolution(.x, attr(f, "resolution")) %>%diff %>% 
     duplicated %>% tail(-1) %>% all)
   all(unique_diffs)
