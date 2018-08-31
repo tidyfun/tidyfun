@@ -11,8 +11,8 @@
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
-<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/flatly/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
 <!-- Font Awesome icons -->
@@ -34,8 +34,7 @@
 
 <meta property="og:description" content="These will return a tf object containing the respective functional statistic.
 summary returns a vector with the mean function, the variance function, and the
-functional range of the central half of the functions, as defined by the functional
-depth that was usedb (i.e., the band defined by the 50" />
+functional range of the central half of the functions, as defined by the functional" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -64,7 +63,7 @@ depth that was usedb (i.e., the band defined by the 50" />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidyfun</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.0.4</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.0.5</span>
       </span>
     </div>
 
@@ -121,8 +120,7 @@ depth that was usedb (i.e., the band defined by the 50" />
     
     <p>These will return a <code>tf</code> object containing the respective functional statistic.
 <code>summary</code> returns a vector with the mean function, the variance function, and the
-functional range of the central half of the functions, as defined by the functional
-depth that was usedb (i.e., the band defined by the 50<!-- % deepest functions). --></p>
+functional range of the central half of the functions, as defined by the functional</p>
     
     </div>
 
@@ -161,12 +159,12 @@ depth that was usedb (i.e., the band defined by the 50<!-- % deepest functions).
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>x</th>
-      <td><p>a <code>tf</code> object</p></td>
+      <td><p>a <code>tf</code> object
+functions, see source code.</p></td>
     </tr>
     <tr>
       <th>...</th>
-      <td><p>additional arguments to the respective (pointwise or depth)
-functions, see source code.</p></td>
+      <td><p>further arguments passed to or from other methods.</p></td>
     </tr>
     <tr>
       <th>na.rm</th>
@@ -176,7 +174,7 @@ functions, see source code.</p></td>
     <tr>
       <th>depth</th>
       <td><p>method used to determine the most central element in <code>x</code>, i.e., the median.
-One of the functional data depths available via <code><a href='depth.html'>depth()</a></code> or <code>"pointwise"</code> for
+One of the functional data depths available via <code>depth()</code> or <code>"pointwise"</code> for
 a pointwise median function.</p></td>
     </tr>
     <tr>

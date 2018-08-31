@@ -11,8 +11,8 @@
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
-<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/flatly/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
 <!-- Font Awesome icons -->
@@ -64,7 +64,7 @@ containing the functional measurements of the columns given in ...." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidyfun</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.0.4</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.0.5</span>
       </span>
     </div>
 
@@ -127,7 +127,7 @@ containing the functional measurements of the columns given in <code>...</code>.
     </div>
 
     <pre class="usage"><span class='fu'>tf_gather</span>(<span class='no'>data</span>, <span class='no'>...</span>, <span class='kw'>key</span> <span class='kw'>=</span> <span class='st'>".tfd"</span>, <span class='kw'>arg</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>domain</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>evaluator</span> <span class='kw'>=</span> <span class='no'>approx_linear</span>, <span class='kw'>resolution</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
+  <span class='kw'>evaluator</span> <span class='kw'>=</span> <span class='no'>tf_approx_linear</span>, <span class='kw'>resolution</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -164,11 +164,11 @@ See <code><a href='tfd.html'>tfd()</a></code>.</p></td>
     </tr>
     <tr>
       <th>evaluator</th>
-      <td><p>a function accepting arguments <code>x, arg, evaluations</code>. See details.</p></td>
+      <td><p>a function accepting arguments <code>x, arg, evaluations</code>. See details for <code><a href='tfd.html'>tfd()</a></code>.</p></td>
     </tr>
     <tr>
       <th>resolution</th>
-      <td><p>resolution of the evaluation grid. See details.</p></td>
+      <td><p>resolution of the evaluation grid. See details for <code><a href='tfd.html'>tfd()</a></code>.</p></td>
     </tr>
     </table>
     
@@ -204,7 +204,7 @@ See <code><a href='tfd.html'>tfd()</a></code>.</p></td>
 #&gt; 3 (1,0.5);(2,0.5);(3,0.5); ...
 #&gt; 4 (1,0.4);(2,0.4);(3,0.4); ...
 #&gt; 5 (1,0.4);(2,0.4);(3,0.4); ...</div><div class='input'><span class='fu'>tf_gather</span>(<span class='no'>d</span>, <span class='kw'>arg</span> <span class='kw'>=</span> <span class='fu'>seq</span>(<span class='fl'>0</span>, <span class='fl'>1</span>, <span class='kw'>l</span> <span class='kw'>=</span> <span class='fl'>10</span>))$<span class='no'>cca</span></div><div class='output co'>#&gt; <span class='message'>creating new tfd-column &lt;cca&gt;</span></div><div class='output co'>#&gt; tfd[5] on (0,1) based on 10 evaluations each
-#&gt; interpolation by approx_linear 
+#&gt; interpolation by tf_approx_linear 
 #&gt; 1001_1: (0.00,0.49);(0.11,0.52);(0.22,0.54); ...
 #&gt; 1002_1: (0.00,0.47);(0.11,0.49);(0.22,0.50); ...
 #&gt; 1003_1: (0.00,0.50);(0.11,0.51);(0.22,0.54); ...

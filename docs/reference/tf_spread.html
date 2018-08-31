@@ -12,8 +12,8 @@ function evaluations. — tf_spread • tidyfun</title>
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
-<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/flatly/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
 <!-- Font Awesome icons -->
@@ -65,7 +65,7 @@ containing the functional measurements." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidyfun</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.0.4</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.0.5</span>
       </span>
     </div>
 
@@ -165,7 +165,7 @@ Defaults to TRUE, i.e., <code>tfd</code>s are inter/extrapolated on unobserved <
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='no'>d</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='http://dplyr.tidyverse.org/reference/reexports.html'>data_frame</a></span>(<span class='kw'>g</span> <span class='kw'>=</span> <span class='fl'>1</span>:<span class='fl'>3</span>)
-<span class='no'>d</span>$<span class='no'>f</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='rgp.html'>rgp</a></span>(<span class='fl'>3</span>, <span class='fl'>11L</span>)
+<span class='no'>d</span>$<span class='no'>f</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='tf_rgp.html'>tf_rgp</a></span>(<span class='fl'>3</span>, <span class='fl'>11L</span>)
 <span class='fu'>tf_spread</span>(<span class='no'>d</span>, <span class='no'>f</span>)</div><div class='output co'>#&gt; # A tibble: 3 x 12
 #&gt;       g    f_0  f_0.1   f_0.2 f_0.3   f_0.4  f_0.5   f_0.6 f_0.7 f_0.8   f_0.9
 #&gt;   &lt;int&gt;  &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;
