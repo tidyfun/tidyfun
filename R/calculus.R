@@ -85,7 +85,7 @@ deriv.tfd <- function(expr, order = 1, arg = NULL, ...) {
   derived <- deriv_matrix(data, arg, order)
   ret <- tfd(derived$data, derived$arg, 
     domain = range(derived$arg), #!! shorter
-    resolution = tidyfun:::resolution(expr))
+    resolution = resolution(expr))
   tf_evaluator(ret) <- attr(expr, "evaluator_name")
   ret
 }
@@ -154,7 +154,7 @@ integrate.tfd <- function(f, lower = tf_domain(f)[1], upper = tf_domain(f)[2],
     ret
   } else {
     tfd(data = map(quads, cumsum), arg = unlist(arg), domain = limits, 
-      resolution = tidyfun:::resolution(f), evaluator = tf_approx_linear)
+      resolution = resolution(f), evaluator = tf_approx_linear)
   }
   # this is too slow:
   # turn into functions, return definite integrals

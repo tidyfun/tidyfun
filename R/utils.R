@@ -50,7 +50,7 @@ assert_arg <- function(arg, x, check_unique = TRUE){
 }
 assert_arg_vector <- function(arg, x, check_unique = TRUE) {
   if (check_unique) {
-    round_arg <- round_resolution(arg, tidyfun:::resolution(x))
+    round_arg <- round_resolution(arg, resolution(x))
     if (any(duplicated(round_arg))) {
       stop("Non-unique arg-values (for resolution).")
     }
@@ -95,7 +95,7 @@ resolution <- function(f) {
 }
 
 adjust_resolution <- function(arg, f, unique = TRUE) {
-  resolution <- tidyfun:::resolution(f)
+  resolution <- resolution(f)
   .adjust_resolution(arg, resolution, unique = unique)
 }
 

@@ -121,7 +121,7 @@ tfb_fpc.tf <- function(data, arg = NULL, smooth = TRUE, ...) {
   arg <- arg %||% arg(data)
   names_data <- names(data)
   ret <- tfb_fpc(as.data.frame(data, arg = arg), smooth = smooth, 
-    domain = tf_domain(data), resolution = tidyfun:::resolution(data),  ...)
+    domain = tf_domain(data), resolution = resolution(data),  ...)
   names(ret) <- names_data
   ret
 }
