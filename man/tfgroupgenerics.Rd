@@ -93,6 +93,6 @@ f2 <- tfb(tf_rgp(5), k = 50)
 layout(t(1:2))
 plot(f2, col = 1:5)
 plot(cumsum(f2), col = 1:5)
-# use ?integrate.tfd for "function-wise" integrals i.e., weighted cumulative sums...
+# use ?tf_integrate.tfd for "function-wise" integrals i.e., weighted cumulative sums...
 lines(f2)
 }

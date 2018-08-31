@@ -132,7 +132,7 @@ dti$rcst[1:2] %>% plot(pch = "x", col = viridis(2))
 Functional data in basis representation: 
 
  - represented as a list of **`coefficients`** and a common **`basis_matrix`** of basis function evaluations on a vector of `arg`-values.
- - contains a **`basis`** function that defines how to compute the basis for new **`arg`**s and how to differentiate/integrate.
+ - contains a **`basis`** function that defines how to compute the basis for new **`arg`**s and how to differentiate or integrate it.
  - (internal) flavors: **`mgcv`**-spline bases and FPCs (wavelets to be added)
 - significant memory and time savings:
 ```{r}
@@ -254,11 +254,11 @@ ex %>% smooth("savgol", fl = 11) %>% lines(col = pal_5)
 ```{r}
 layout(t(1:3))
 ex %>% plot(col = pal_5)
-ex %>% smooth() %>% deriv() %>% plot(col = pal_5, ylab = "deriv(smooth(ex))")
-ex %>% integrate(definite = FALSE) %>%  plot(col = pal_5)
+ex %>% smooth() %>% tf_derive() %>% plot(col = pal_5, ylab = "tf_derive(smooth(ex))")
+ex %>% tf_integrate(definite = FALSE) %>%  plot(col = pal_5)
 ```
 ```{r}
-ex %>% integrate()
+ex %>% tf_integrate()
 ```
 
 ### query
@@ -329,7 +329,7 @@ ggplot(dti) +
 
 ```{r, dti-fig2}  
 gglasagna(dti, cca, 
-  order = integrate(cca, definite = TRUE), arg = seq(0,1, l = 101)) + 
+  order = tf_integrate(cca, definite = TRUE), arg = seq(0,1, l = 101)) + 
   theme(axis.text.y = element_text(size = 6)) + 
     facet_wrap(~ case, ncol = 2, scales = "free")
 ```
