@@ -62,6 +62,7 @@ sd <- function(x, na.rm = FALSE) UseMethod("sd")
 
 #' @importFrom stats sd
 #' @rdname tfsummaries
+#' @export
 sd.default <- stats::sd
 
 #' @export
