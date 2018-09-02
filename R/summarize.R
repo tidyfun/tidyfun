@@ -67,6 +67,7 @@ quantile.tf = function(x, probs = seq(0, 1, 0.25), na.rm = FALSE,
 sd = function(x, na.rm = FALSE) UseMethod("sd")
 
 #' @importFrom stats sd
+#' @export
 #' @rdname tfsummaries
 sd.default = stats::sd
 
