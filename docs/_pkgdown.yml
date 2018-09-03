@@ -74,4 +74,5 @@ articles:
     desc: "Articles & vignettes for tidyfun"
     contents:
     - Intro
+    - Data_Manipulation
 
