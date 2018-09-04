@@ -366,6 +366,9 @@ precipitation in blue:
 
 # Wrangling `tf`-objects inside data frames
 
+For a more detailed discussion of the topic of this section, please see the [`Data Manipulation`](https://fabian-s.github.io/tidyfun/articles/02_Data_Manipulation.html) vignette.
+
+
 ### wrangling `tf`-objects inside data frames: `dplyr`
 
 **`dplyr`** verbs **`filter`**, **`select`**, **`mutate`**, **`summarize`** work on **`tf`**-columns - e.g.:

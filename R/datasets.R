@@ -2,7 +2,7 @@
 
 #' @name chf_df
 #' @docType data
-#' @title Congestive heart failure data: 
+#' @title Congestive heart failure accelerometry data 
 #' @description Activity data from a study of congestive heart failure. 
 #' Data were originally presented
 #' in "Multilevel Matrix-Variate Analysis and its Application 

@@ -41,8 +41,8 @@ At the same time, these objects actually behave like vectors of *functions* to s
 All `dplyr` verbs work on `tf`-columns, so you can `filter`, `mutate`, `summarize` etc
 functional data pretty much like conventional data.  
 **`tidyfun`** also provides `tf_gather` & `tf_spread`, `tf_nest` & `tf_unnest`
-in order to reshape tables with functional data, i.e., go from wide to narrow, or from long to short, and *vice versa*.
-([see here](https://fabian-s.github.io/tidyfun/articles/02_Data_Manipulation.html)).
+in order to reshape tables with functional data, i.e., go from wide to narrow, or from long to short, and *vice versa*
+ ([see here](https://fabian-s.github.io/tidyfun/articles/02_Data_Manipulation.html)).
 
 #### New `ggplot2` `geoms` and `stats` for functional data
 
@@ -53,7 +53,7 @@ in order to reshape tables with functional data, i.e., go from wide to narrow, o
 - **`gglasagna`** for [lasagna plots](https://asset.jmir.pub/assets/76aeec48564abf0e6f6da8e9cd06346d.png), with an **`order`**-aesthetic to sort the lasagna layers,
 - **`geom_capellini`** for [glyphs](http://ggobi.github.io/ggally/index_files/figure-html/glyphs-basic-usage-1.png) plots (i.e., sparklines),
 
-as well as new methods for `base::plot`, `lines` and `points` for quick and easy visualizations of functional data 
+as well as new methods for `plot`, `lines` and `points` for quick and easy visualizations of functional data 
 ([more](https://fabian-s.github.io/tidyfun/reference/index.html#section-visualization-display)).
 
 ----------------------
