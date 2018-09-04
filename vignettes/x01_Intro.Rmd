@@ -80,9 +80,9 @@ a prepped version of the `refund::DTI` dataset with 2 functional covariates:
 dti = with(refund::DTI, 
   data.frame(id = ID, sex = sex, 
     case = factor(ifelse(case, "MS", "control")))) %>% as.tbl %>% 
-        mutate(cca = tfd(DTI$cca, seq(0,1, l = 93)) %>%
+        mutate(cca = tfd(DTI$cca, seq(0,1, l = 93), signif = 2) %>%
                      tfd(arg = seq(0,1,l = 93)),
-               rcst = tfd(DTI$rcst, seq(0, 1, l = 55)))
+               rcst = tfd(DTI$rcst, seq(0, 1, l = 55), signif = 3))
 dti
 ```
 
@@ -336,18 +336,18 @@ gglasagna(dti, cca,
 
 Some data prep for the iconic Canadian Weather data:
 ```{r}
-canada = data.frame(
+canada <- data.frame(
   place = fda::CanadianWeather$place, 
   region = fda::CanadianWeather$region, 
   lat = fda::CanadianWeather$coordinates[,1], 
   lon = -fda::CanadianWeather$coordinates[,2], 
   region = fda::CanadianWeather$region)
 
-canada$temp = tfd(t(fda::CanadianWeather$dailyAv[,,1]), arg = 1:365)
-canada$precipl10 = tfd(t(fda::CanadianWeather$dailyAv[,,3]), arg = 1:365) %>%
+canada$temp <- tfd(t(fda::CanadianWeather$dailyAv[,,1]), arg = 1:365)
+canada$precipl10 <- tfd(t(fda::CanadianWeather$dailyAv[,,3]), arg = 1:365) %>%
   tf_smooth
 
-canada_map = 
+canada_map <- 
   data.frame(maps::map("world", "Canada", plot = FALSE)[c("x", "y")]) 
 ```
 

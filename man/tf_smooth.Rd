@@ -47,12 +47,12 @@ behavior of shortening the smoothed series.
 \examples{
 library(zoo)
 library(pracma)
-f = tf_sparsify(tf_jiggle(tf_rgp(4, 201L, nugget = .05)))
-f_lowess = tf_smooth(f, "lowess")
+f <- tf_sparsify(tf_jiggle(tf_rgp(4, 201L, nugget = .05)))
+f_lowess <- tf_smooth(f, "lowess")
 # these methods ignore the distances between arg-values:
-f_mean = tf_smooth(f, "rollmean")
-f_median = tf_smooth(f, "rollmean", k = 31)
-f_sg = tf_smooth(f, "savgol", fl = 31)
+f_mean <- tf_smooth(f, "rollmean")
+f_median <- tf_smooth(f, "rollmean", k = 31)
+f_sg <- tf_smooth(f, "savgol", fl = 31)
 layout(t(1:4))
 plot(f, points = FALSE)
 plot(f_lowess, points = FALSE)
@@ -60,5 +60,5 @@ lines(tf_smooth(f, "lowess", f = .9), col = 2, alpha= .2)
 plot(f_mean, points = FALSE)
 lines(f_median, col = 2, alpha= .2) # note constant extrapolation
 plot(f, points = FALSE)
-lines(f_sg, col = 2)
+lines(f_sg, col = 2) 
 }

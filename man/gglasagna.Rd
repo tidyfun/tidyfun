@@ -54,7 +54,7 @@ ordering of observations for \code{arrange(data, order, order_by(value), row_num
 \examples{
 \dontrun{
 set.seed(1221)
-data = expand.grid(group = 1:5, rep = 1:10)
+data = expand.grid(group = 1:5, rep = 1:10) 
 data = dplyr::mutate(data, id = paste(group, rep, sep = "-"))
 data$f = tf_rgp(50)
 data$fi = tf_sparsify(data$f)
@@ -63,6 +63,6 @@ gglasagna(data, f, label = id)
 gglasagna(data, f, label = id, order = group)
 gglasagna(data, f, label = id, order = group)
 gglasagna(data, f, label = id, order = tf_depth(f))
-gglasagna(data, f, label = id, order_by = first) +
+gglasagna(data, f, label = id, order_by = first) + 
   facet_wrap(~group, scales = "free")}
 }

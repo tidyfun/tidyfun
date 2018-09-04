@@ -22,30 +22,30 @@
 #'   range, though, this is not checked.
 #' @param arg optional `arg`-values on which to evaluate `f` and check `cond`,
 #'   defaults to `tf_arg(f)`.
-#' @return depends on  `return`:
+#' @return depends on  `return`:  
 #'  - `return = "any"`, i.e, `anywhere`: a logical vector of the same length as `f`.
-#'  - `return = "all"`: a list of vectors of the same length as `f`, with
+#'  - `return = "all"`: a list of vectors of the same length as `f`, with  
 #'     empty vectors for the functions that  never fulfill the `cond`ition.
 #'  - `return = "range"`: a data frame with columns "begin" and "end".
 #'  - else, a numeric vector of the same length as `f` with `NA`s for the functions that  never fulfill the `cond`ition.
-#' @examples
-#'   lin = 1:4 * tfd(seq(-1, 1,l = 11), seq(-1, 1, l = 11))
+#' @examples 
+#'   lin <- 1:4 * tfd(seq(-1, 1,l = 11), seq(-1, 1, l = 11))
 #'   tf_where(lin, value %inr% c(-1, .5))
 #'   tf_where(lin, value %inr% c(-1, .5), "range")
-#'   a = 1
+#'   a <- 1
 #'   tf_where(lin, value > a, "first")
 #'   tf_where(lin, value < a, "last")
 #'   tf_where(lin, value > 2, "any")
 #'   tf_anywhere(lin, value > 2)
-#'
+#' 
 #'   set.seed(4353)
-#'   plot(f = tf_rgp(5, 11L), pch = as.character(1:5), points = TRUE)
+#'   plot(f <- tf_rgp(5, 11L), pch = as.character(1:5), points = TRUE)
 #'   tf_where(f, value == max(value))
 #'   # where is the function increasing/decreasing:
 #'   tf_where(f, value > dplyr::lag(value, 1, value[1]))
 #'   tf_where(f, value < dplyr::lead(value, 1, value[n()]))
 #'   # where are the (interior) extreme points:
-#'   tf_where(f,
+#'   tf_where(f, 
 #'     sign(c(diff(value)[1], diff(value))) !=
 #'       sign(c(diff(value), diff(value)[n()-1])))
 #'   # where for arg > .5 is the function positive:
@@ -53,67 +53,59 @@
 #'   # does the function ever exceed 1:
 #'   tf_anywhere(f, value > 1)
 #' @export
-tf_where = function(f, cond, return = c("all", "first", "last", "range", "any"),
-                     arg) {
+tf_where <- function(f, cond, return = c("all", "first", "last", "range", "any"),
+    arg) {
   if (missing(arg)) {
-    arg = tf_arg(f)
-  } else {
-    assert_arg(arg, f)
-  }
-  return = match.arg(return)
-  cond = enquo(cond)
-  where_at = map(
-    f[, arg, matrix = FALSE],
-    ~filter(.x, !!cond) %>% pull(arg)
-  )
+    arg <- tf_arg(f)
+  } else assert_arg(arg, f)
+  return <- match.arg(return)
+  cond <- enquo(cond)
+  where_at <- map(f[, arg, matrix = FALSE], 
+    ~ filter(.x, !! cond) %>% pull(arg))
   if (return == "first") {
-    where_at = map_if(where_at, ~length(.x) > 0, min)
+    where_at <- map_if(where_at, ~ length(.x) > 0, min)
   }
   if (return == "last") {
-    where_at = map_if(where_at, ~length(.x) > 0, max)
+    where_at <- map_if(where_at, ~ length(.x) > 0, max)
   }
   if (return == "range") {
-    where_at = map_if(where_at, ~length(.x) > 0, range)
+    where_at <- map_if(where_at, ~ length(.x) > 0, range)
   }
   if (return == "any") {
-    where_at = map_lgl(where_at, ~length(.x) > 0)
+    where_at <- map_lgl(where_at, ~ length(.x) > 0)
   }
-  where_at[is.na(f)] = NA
+  where_at[is.na(f)] <- NA
   if (return == "all") return(where_at)
-  where_at = map_if(where_at, ~length(.x) == 0, ~{
-    NA
-  })
+  where_at <- map_if(where_at, ~ length(.x) == 0, ~ {NA})
   if (return == "range") {
-    where_at = map_if(where_at, ~all(is.na(.x)), ~{
-      c(NA, NA)
-    }) %>%
-      do.call(what = rbind, args = .) %>%
-      as.data.frame() %>%
+    where_at <- map_if(where_at, ~ all(is.na(.x)), ~ {c(NA, NA)}) %>% 
+      do.call(what = rbind, args = .) %>% as.data.frame %>% 
       rename(begin = V1, end = V2)
     return(where_at)
-  }
+  } 
   unlist(where_at)
 }
 #' @rdname tf_where
 #' @export
-tf_anywhere = function(f, cond, arg) {
-  call = match.call()
-  call[[1]] = tf_where
-  call$return = "any"
+tf_anywhere <- function(f, cond, arg) {
+  call <- match.call()
+  call[[1]] <- tf_where
+  call$return <- "any"
   eval(call, parent.frame())
 }
 
-#' @description `in_range` and its infix-equivalent return `TRUE` for all
-#'    values in `f` that are within the range of values in `r`.
+#' @description `in_range` and its infix-equivalent return `TRUE` for all 
+#'    values in `f` that are within the range of values in `r`. 
 #' @param r used to specify a range, only the minimum and maximum of `r` are used.
 #' @rdname tf_where
 #' @export
-in_range = function(f, r) {
+in_range <- function(f, r){
   assert_numeric(f)
   assert_numeric(r)
-  r = range(r, na.rm = TRUE)
+  r <- range(r, na.rm = TRUE)
   f >= r[1] & f <= r[2]
 }
 #' @rdname tf_where
 #' @export
-`%inr%` = function(f, r) in_range(f, r)
+`%inr%` <- function(f, r) in_range(f, r)
+
