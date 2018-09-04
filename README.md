@@ -10,7 +10,7 @@
 - arithmetic **operators**, descriptive **statistics** and **graphics** functions for such data
 - `tidyverse`-verbs for handling functional data **inside** data frames.
 
-Look [here](https://fabian-s.github.io/tidyfun/articles/01_Introduction.html) for an introduction with examples.
+Look [here](https://fabian-s.github.io/tidyfun/articles/x01_Introduction.html) for an introduction with examples.
 
 ## Installation
 
@@ -44,7 +44,7 @@ All `dplyr` verbs work on `tf`-columns, so you can `filter`, `mutate`, `summariz
 functional data pretty much like conventional data.  
 **`tidyfun`** also provides `tf_gather` & `tf_spread`, `tf_nest` & `tf_unnest`
 in order to reshape tables with functional data, i.e., go from wide to narrow, or from long to short, and *vice versa*
- ([see here](https://fabian-s.github.io/tidyfun/articles/02_Data_Manipulation.html)).
+ ([see here](https://fabian-s.github.io/tidyfun/articles/x02_Data_Manipulation.html)).
 
 #### New `ggplot2` `geoms` and `stats` for functional data
 
