@@ -1,12 +1,14 @@
 
 grid <- round(seq(0, 10, l = 11), 3)
 lin <- -3:3 * tfd(.1 * grid, grid)
-parallel <- -3:3 + tfd(0*grid, grid)
+parallel <- -3:3 + tfd(0 * grid, grid)
 
 spike_regular <- c(parallel, tfd(100 * (grid == 10), grid))
-spike_irregular <- c(-3:3 + tfd(c(0*grid, 0), c(grid, 20)), 
-  tfd(100 * (c(grid, 20) == 20), c(grid, 20)))
-na <- 1*NA + lin[1]
+spike_irregular <- c(
+  -3:3 + tfd(c(0 * grid, 0), c(grid, 20)),
+  tfd(100 * (c(grid, 20) == 20), c(grid, 20))
+)
+na <- 1 * NA + lin[1]
 
 lin_irreg <- {
   m <- as.matrix(lin)
@@ -32,4 +34,3 @@ test_that("median works", {
   expect_true(median(c(na, lin), na.rm = TRUE) == median(lin))
   expect_warning(median(lin[1:2]), "2 observations")
 })
-
