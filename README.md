@@ -10,6 +10,8 @@
 - arithmetic **operators**, descriptive **statistics** and **graphics** functions for such data
 - `tidyverse`-verbs for handling functional data **inside** data frames.
 
+Look [here](https://fabian-s.github.io/tidyfun/articles/01_Introduction.html) for an introduction with examples.
+
 ## Installation
 
 ``` r
