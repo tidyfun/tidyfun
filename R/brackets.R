@@ -1,21 +1,21 @@
 #' Accessing, evaluating, subsetting and subassigning `tf` vectors
-#' 
-#' These functions access, subset, replace and evaluate `tf` objects. 
-#' For more information on creating `tf` objects and converting them to/from 
+#'
+#' These functions access, subset, replace and evaluate `tf` objects.
+#' For more information on creating `tf` objects and converting them to/from
 #' `list`, `data.frame` or `matrix`, see [tfd()] and [tfb()]. \cr
 #' Note that these break certain (terrible) R conventions for vector-like objects:\cr
-#'  
+#'
 #' - no argument recycling,
 #' - no indexing with `NA`,
 #' - no indexing with names not present in `x`,
 #' - no indexing with integers `> length(x)`
-#' 
+#'
 #' All of these will trigger errors. Subassigning new elements to positions
 #' beyond the original length still works and will fill up the missing elements
 #' up to that position with `NAs`, though. This package was developed by fickle,
 #' rainbow-colored unicorns.
-#' 
-#' 
+#'
+#'
 #' @param x an `tf`
 #' @param i index of the observations (`integer`ish, `character` or `logical`,
 #'   usual R rules apply)
@@ -54,8 +54,10 @@
       assert_subset(i, names(x))
       i <- match(i, names(x))
     }
-    assert_integerish(i, lower = -length(x), upper = length(x), 
-      any.missing = FALSE)
+    assert_integerish(i,
+      lower = -length(x), upper = length(x),
+      any.missing = FALSE
+    )
     assert_true(all(sign(i) == sign(i)[1]))
     attr_x <- append(attributes(unname(x)), list(names = names(x)[i]))
     x <- unclass(x)[i]
@@ -65,21 +67,21 @@
   }
   if (missing(j)) {
     return(x)
-  } 
+  }
   if (matrix & is.list(j)) {
     stop("need a single vector-valued <j> if matrix = TRUE")
   }
   j <- ensure_list(j)
   if (!(length(j) %in% c(1, length(i)))) {
     stop("wrong length for <j>")
-  } 
+  }
   evals <- tf_evaluate(x, arg = j)
   if (!interpolate) {
-    new_j <- map2(j, ensure_list(tf_arg(x)), ~ !(.x %in% .y))
+    new_j <- map2(j, ensure_list(tf_arg(x)), ~!(.x %in% .y))
     if (any(unlist(new_j))) {
       warning("interpolate = FALSE & no evaluations for some <j>: NAs created.")
     }
-    evals <- map2(evals, new_j, ~ ifelse(.y, NA, .x))
+    evals <- map2(evals, new_j, ~ifelse(.y, NA, .x))
   }
   if (matrix) {
     ret <- do.call(rbind, evals)
@@ -87,14 +89,14 @@
     rownames(ret) <- names(x)
     structure(ret, arg = unlist(j))
   } else {
-    ret <- map2(j, evals, ~ bind_cols(arg = .x, value = .y))
+    ret <- map2(j, evals, ~bind_cols(arg = .x, value = .y))
     names(ret) <- names(x)
     ret
   }
-} 
+}
 
 #' @param value `tf` object for subassignment. This is (currently) very strictly typed,
-#'  i.e. only objects that are of the same class and have compatible `arg` can be 
+#'  i.e. only objects that are of the same class and have compatible `arg` can be
 #'  subassigned.
 #' @rdname tfbrackets
 #' @export
@@ -111,29 +113,36 @@
       assert_subset(i, names(x))
       i <- match(i, names(x))
     }
-    assert_integerish(i, lower = -length(x), 
-      any.missing = FALSE)
+    assert_integerish(i,
+      lower = -length(x),
+      any.missing = FALSE
+    )
     assert_true(all(sign(i) == sign(i)[1]))
     if (sign(i)[1] < 0) {
       i <- (1:length(x))[i]
     }
   }
-  stopifnot(inherits(value, class(x)[1]), 
+  stopifnot(
+    inherits(value, class(x)[1]),
     all(tf_domain(x) == tf_domain(value)),
-    length(value) %in% c(1, length(i)))
+    length(value) %in% c(1, length(i))
+  )
   if (inherits(x, "tfd_reg") | inherits(x, "tfb")) {
     assert_true(identical(tf_arg(x), tf_arg(value)))
   }
   if (is_tfd(x)) {
     assert_true(
-      identical(tf_evaluator(x), tf_evaluator(value), ignore.environment = TRUE))
+      identical(tf_evaluator(x), tf_evaluator(value), ignore.environment = TRUE)
+    )
   } else {
     assert_true(
-      identical(tf_basis(x), tf_basis(value), ignore.environment = TRUE))
+      identical(tf_basis(x), tf_basis(value), ignore.environment = TRUE)
+    )
     assert_true(
-      all.equal(attr(x, "basis_matrix"), attr(value, "basis_matrix")))
+      all.equal(attr(x, "basis_matrix"), attr(value, "basis_matrix"))
+    )
   }
-  
+
   attr_x <- attributes(x)
   attr_x$names[i] <- names(value)
   ret <- unclass(x)
@@ -143,10 +152,11 @@
   if (length(na_entries)) {
     nas <- if (is_irreg(x)) {
       replicate(length(na_entries), list(arg = attr_x$domain[1], value = NA),
-        simplify = FALSE) 
+        simplify = FALSE
+      )
     } else {
-      replicate(length(na_entries), rep(NA, length(x[[1]])), simplify = FALSE) 
-    }  
+      replicate(length(na_entries), rep(NA, length(x[[1]])), simplify = FALSE)
+    }
     ret[na_entries] <- nas
   }
   attributes(ret) <- attr_x
