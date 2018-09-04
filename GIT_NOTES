@@ -6,7 +6,9 @@ BRANCHES:
 
 - gh-pages: web-site 
 
-To update pkgdown site, run pkgdown::build_site() in a clean master branch, then:
+To update pkgdown site, make sure the master branch is clean and the docs are
+up-to-date, then run pkgdown::build_site(), to upload in the gh-pages branch: 
+
 git add .
 git commit -a -m "update pkgdown for $CURRENT_VERSION"
 git subtree push --prefix docs origin gh-pages
