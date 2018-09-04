@@ -2,8 +2,8 @@ pandoc: 1.19.2.1
 pkgdown: 1.1.0
 pkgdown_sha: ~
 articles:
-  01_Intro: 01_Intro.html
-  02_Data_Manipulation: 02_Data_Manipulation.html
+  x01_Intro: x01_Intro.html
+  x02_Data_Manipulation: x02_Data_Manipulation.html
 urls:
   reference: https://fabian-s.github.io/tidyfun/reference
   article: https://fabian-s.github.io/tidyfun/articles
