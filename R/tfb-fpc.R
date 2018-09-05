@@ -20,7 +20,8 @@ fpc_wrapper <- function(efunctions) {
 }
 
 #' @importFrom refund fpca.sc
-make_tfb_fpc <- function(data, domain = NULL, smooth = TRUE, resolution = NULL, ...) {
+make_tfb_fpc <- function(data, domain = NULL, smooth = TRUE, resolution = NULL, 
+                         ...) {
   # FIXME: rm renaming once we've cleaned up fpca.sc etc
   # FIXME: warn if domain != range(arg), can't extrapolate FPCs
   arg <- sort(unique(data$arg))
@@ -94,27 +95,33 @@ tfb_fpc <- function(data, ...) UseMethod("tfb_fpc")
 #' @rdname tfb_fpc
 #' @export
 tfb_fpc.data.frame <- function(data, id = 1, arg = 2, value = 3,
-                               domain = NULL, smooth = TRUE, resolution = NULL, ...) {
+                               domain = NULL, smooth = TRUE, resolution = NULL, 
+                               ...) {
   data <- df_2_df(data, id, arg, value)
-  make_tfb_fpc(data, domain = domain, smooth = smooth, resolution = resolution, ...)
+  make_tfb_fpc(data, domain = domain, smooth = smooth, 
+               resolution = resolution, ...)
 }
 
 #' @rdname tfb_fpc
 #' @export
-tfb_fpc.matrix <- function(data, arg = NULL, domain = NULL, smooth = TRUE, resolution = NULL, ...) {
+tfb_fpc.matrix <- function(data, arg = NULL, domain = NULL, smooth = TRUE, 
+                           resolution = NULL, ...) {
   arg <- unlist(find_arg(data, arg))
   names_data <- rownames(data)
   data <- mat_2_df(data, arg)
-  ret <- make_tfb_fpc(data, domain = domain, smooth = smooth, resolution = resolution, ...)
+  ret <- make_tfb_fpc(data, domain = domain, smooth = smooth, 
+                      resolution = resolution, ...)
   names(ret) <- names_data
   ret
 }
 
 #' @rdname tfb_fpc
 #' @export
-tfb_fpc.numeric <- function(data, arg = NULL, domain = NULL, smooth = TRUE, resolution = NULL, ...) {
+tfb_fpc.numeric <- function(data, arg = NULL, domain = NULL, smooth = TRUE, 
+                            resolution = NULL, ...) {
   data <- t(as.matrix(data))
-  tfb_fpc(data = data, arg = arg, smooth = smooth, domain = domain, resolution = resolution, ...)
+  tfb_fpc(data = data, arg = arg, smooth = smooth, domain = domain, 
+          resolution = resolution, ...)
 }
 
 # #' @rdname tfb_fpc

@@ -26,7 +26,9 @@ test_that("MBD works", {
   expect_equivalent(rank(tf_depth(lin_b, depth = "MBD")), ranks)
   # weighting by interval length:
   # increases importance of last point -> lower tf_depth
-  expect_true(tail(tf_depth(spike_regular), 1) > tail(tf_depth(spike_irregular), 1))
+  expect_true(
+    tail(tf_depth(spike_regular), 1) > tail(tf_depth(spike_irregular), 1)
+  )
 })
 
 test_that("median works", {

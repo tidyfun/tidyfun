@@ -23,7 +23,8 @@ test_that("evaluator tf_approx_linear works", {
   )
   expect_identical(
     2 * new_grid,
-    suppressWarnings(tf_evaluator(f_lin)(new_grid, arg = grid, evaluations = lin))
+    suppressWarnings(tf_evaluator(f_lin)(new_grid, arg = grid, 
+                                         evaluations = lin))
   )
   expect_identical(lin, tf_evaluate(f_lin, grid)[[1]])
   expect_equal(2 * new_grid, tf_evaluate(f_lin, new_grid)[[1]])
@@ -53,7 +54,8 @@ test_that("evaluator tf_approx_spline works", {
   )
   expect_identical(
     2 * new_grid,
-    suppressWarnings(tf_evaluator(f_lin)(new_grid, arg = grid, evaluations = lin))
+    suppressWarnings(tf_evaluator(f_lin)(new_grid, arg = grid, 
+                                         evaluations = lin))
   )
   expect_identical(lin, tf_evaluate(f_lin, grid)[[1]])
   expect_equal(2 * new_grid, tf_evaluate(f_lin, new_grid)[[1]])
@@ -74,7 +76,8 @@ test_that("multiple arg-vectors work for tfb", {
   fb <- tfb(tf_rgp(3), verbose = FALSE)
   expect_equal(
     unlist(tf_evaluate(fb, as.list(c(0, .5, 1)))),
-    unlist(c(tf_evaluate(fb[1], 0), tf_evaluate(fb[2], 0.5), tf_evaluate(fb[3], 1)))
+    unlist(c(tf_evaluate(fb[1], 0), tf_evaluate(fb[2], 0.5), 
+             tf_evaluate(fb[3], 1)))
   )
 })
 

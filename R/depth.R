@@ -55,6 +55,6 @@ mbd <- function(x, arg = seq_len(ncol(x)), ...) {
     (c(lengths, 0) + c(0, lengths)) / diff(range(arg))
   }
   n <- nrow(ranks)
-  tmp <- colSums(t((n - ranks) * (ranks - 1)) * weights, na.rm = TRUE)
+  tmp <- colSums( t( (n - ranks) * (ranks - 1)) * weights, na.rm = TRUE)
   (tmp + n - 1) / choose(n, 2)
 }

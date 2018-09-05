@@ -57,8 +57,9 @@ tf_smooth.tfb <- function(x, ...) {
 #' lines(f_median, col = 2, alpha= .2) # note constant extrapolation
 #' plot(f, points = FALSE)
 #' lines(f_sg, col = 2)
-tf_smooth.tfd <- function(x, method = c("lowess", "rollmean", "rollmedian", "savgol"),
-                          ...) {
+tf_smooth.tfd <- 
+  function(x, method = c("lowess", "rollmean", "rollmedian", "savgol"), 
+           ...) {
   method <- match.arg(method)
   smoother <- get(method, mode = "function")
   dots <- list(...)
@@ -87,14 +88,16 @@ tf_smooth.tfd <- function(x, method = c("lowess", "rollmean", "rollmedian", "sav
         message("using fl = ", dots$fl, " observations for rolling data window.")
       }
     }
-    smoothed <- map(tf_evaluations(x), ~do.call(smoother, append(list(.x), dots)))
+    smoothed <- map(tf_evaluations(x), 
+                    ~do.call(smoother, append(list(.x), dots)))
   }
   if (str_detect(method, "lowess")) {
     if (is.null(dots$f)) {
       dots$f <- .15
       message("using f = ", dots$f, " as smoother span for lowess")
     }
-    smoothed <- map(tf_evaluations(x), ~do.call(smoother, append(list(.x), dots))$y)
+    smoothed <- map(tf_evaluations(x), 
+                    ~do.call(smoother, append(list(.x), dots))$y)
   }
   tfd(smoothed, tf_arg(x),
     evaluator = !!attr(x, "evaluator_name"),

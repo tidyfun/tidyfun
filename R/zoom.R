@@ -44,7 +44,8 @@ prep_tf_zoom_args <- function(f, begin, end) {
 
 #' @rdname tf_zoom
 #' @export
-tf_zoom.tfd <- function(f, begin = tf_domain(f)[1], end = tf_domain(f)[2], ...) {
+tf_zoom.tfd <- function(f, begin = tf_domain(f)[1], end = tf_domain(f)[2], 
+                        ...) {
   args <- prep_tf_zoom_args(f, begin, end)
   ret <- pmap(
     list(f[, tf_arg(f), matrix = FALSE], args$begin, args$end),
@@ -66,7 +67,8 @@ tf_zoom.tfd <- function(f, begin = tf_domain(f)[1], end = tf_domain(f)[2], ...) 
 }
 #' @rdname tf_zoom
 #' @export
-tf_zoom.tfb <- function(f, begin = tf_domain(f)[1], end = tf_domain(f)[2], ...) {
+tf_zoom.tfb <- function(f, begin = tf_domain(f)[1], end = tf_domain(f)[2], 
+                        ...) {
   args <- prep_tf_zoom_args(f, begin, end)
   if (!args$regular) {
     message("tf_zoom() with varying start or end points - converting to tfd.")

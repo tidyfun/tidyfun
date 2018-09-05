@@ -112,7 +112,8 @@ tfd.matrix <- function(data, arg = NULL, domain = NULL,
 #' @rdname tfd
 #' @export
 tfd.numeric <- function(data, arg = NULL,
-                        domain = NULL, evaluator = tf_approx_linear, resolution = NULL, ...) {
+                        domain = NULL, evaluator = tf_approx_linear, 
+                        resolution = NULL, ...) {
   evaluator <- quo_name(enexpr(evaluator))
   data <- t(as.matrix(data))
   # dispatch to matrix method
@@ -130,7 +131,8 @@ tfd.numeric <- function(data, arg = NULL,
 #' @param id The name/number of the column defining which data belong to which function.
 #' @param value The name/number of the column containing the function evaluations.
 tfd.data.frame <- function(data, id = 1, arg = 2, value = 3, domain = NULL,
-                           evaluator = tf_approx_linear, resolution = NULL, ...) {
+                           evaluator = tf_approx_linear, 
+                           resolution = NULL, ...) {
   evaluator <- quo_name(enexpr(evaluator))
   data <- na.omit(data[, c(id, arg, value)])
   stopifnot(
@@ -208,11 +210,16 @@ tfd.tf <- function(data, arg = NULL, domain = NULL,
   resolution <- resolution %||% tf_resolution(data)
   re_eval <- !is.null(arg)
   arg <- ensure_list(arg %||% tf_arg(data))
-  evaluations <- if (re_eval) tf_evaluate(data, arg) else tidyfun::tf_evaluations(data)
+  evaluations <- if (re_eval) {
+    tf_evaluate(data, arg) 
+    } else {
+      tidyfun::tf_evaluations(data)
+    }
   if (re_eval) {
     nas <- map(evaluations, ~which(is.na(.x)))
     if (length(unlist(nas))) {
-      warning(length(unlist(nas)), " evaluations were NA, returning irregular tfd.")
+      warning(length(unlist(nas)), 
+              " evaluations were NA, returning irregular tfd.")
       evaluations <- map2(evaluations, nas, ~{
         if (length(.y)) {
           .x[-.y]

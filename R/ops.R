@@ -49,9 +49,16 @@ fun_op <- function(x, y, op, numeric = NA) {
 #' @export
 Ops.tf <- function(e1, e2) {
   not_defined <- switch(.Generic,
-    `%%` = , `%/%` = ,
-    `&` = , `|` = , `!` = ,
-    `<` = , `<=` = , `>=` = , `>` = TRUE, FALSE
+    `%%` = , 
+    `%/%` = ,
+    `&` = , 
+    `|` = , 
+    `!` = ,
+    `<` = , 
+    `<=` = , 
+    `>=` = , 
+    `>` = TRUE, 
+    FALSE
   )
   if (not_defined) {
     stop(sprintf("%s not defined for \"tf\" objects", .Generic))

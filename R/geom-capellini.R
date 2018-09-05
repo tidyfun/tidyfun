@@ -127,13 +127,14 @@ stat_capellini <- function(mapping = NULL, data = NULL, geom = "capellini",
 #' @param line.linetype aesthetic property of the reference line
 #' @param line.size aesthetic property of of the reference line
 #' @param line.alpha aesthetic property of the reference line
-geom_capellini <- function(mapping = NULL, data = NULL, stat = "capellini",
-                           position = "identity", ..., na.rm = TRUE, show.legend = NA,
-                           inherit.aes = TRUE, arg = NULL, add_lines = TRUE, add_boxes = TRUE,
-                           width = NULL, height = NULL, box.colour = "#0000001A", box.linetype = 1,
-                           box.fill = NA, box.size = .1, box.alpha = .1,
-                           line.colour = "black", line.linetype = 2,
-                           line.size = .3, line.alpha = .5) {
+geom_capellini <- 
+  function(mapping = NULL, data = NULL, stat = "capellini",
+           position = "identity", ..., na.rm = TRUE, show.legend = NA,
+           inherit.aes = TRUE, arg = NULL, add_lines = TRUE, add_boxes = TRUE,
+           width = NULL, height = NULL, box.colour = "#0000001A", 
+           box.linetype = 1, box.fill = NA, box.size = .1, box.alpha = .1,
+           line.colour = "black", line.linetype = 2, line.size = .3, 
+           line.alpha = .5) {
   layer(
     stat = StatCapellini, data = data, mapping = mapping, geom = "capellini",
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
@@ -218,38 +219,3 @@ GeomCapellini <- ggproto("GeomCapellini", Geom,
   ),
   draw_key = GeomPath$draw_key
 )
-
-if (FALSE) {
-  library(devtools)
-  load_all()
-  library(ggplot2)
-  weather <- fda::CanadianWeather
-  canada <- data.frame(
-    place = weather$place, region = weather$region,
-    lat = weather$coordinates[, 1], lon = -weather$coordinates[, 2],
-    region = weather$region
-  )
-  canada$temp <- tfd(t(weather$dailyAv[, , 1]))
-  canada$precipl10 <- tfd(t(weather$dailyAv[, , 3])) %>% smooth()
-  canada_map <-
-    data.frame(maps::map("world", "Canada", plot = FALSE)[c("x", "y")]) %>%
-    dplyr::rename(lon = x, lat = y)
-
-
-  ggplot(canada, aes(x = lon, y = lat)) +
-    geom_capellini(aes(tf = precipl10), width = 3, height = 5, colour = "blue") +
-    geom_capellini(aes(tf = temp), width = 3, height = 5, colour = "red") +
-    geom_path(data = canada_map, aes(x = lon, y = lat), alpha = .1) +
-    coord_quickmap()
-  xlim(c(-90, -50))
-
-
-  f <- tf_rgp(25)
-  data <- data.frame(
-    lat = runif(25, 0, 5), lon = runif(25, 0, 5),
-    g = sample(c("a", "b"), 25, replace = TRUE)
-  )
-  data$f <- f
-  ggplot(data) +
-    geom_capellini(aes(x = lat, y = lon, tf = f, col = g), width = .2, height = .2)
-}

@@ -44,7 +44,7 @@ smooth_spec_wrapper <- function(spec, deriv = 0, eps = 1e-6) {
         object = spec,
         data = data.frame(arg = c(arg + eps, arg, arg - eps))
       )
-      (X[1:g, ] - (2 * X[(g + 1):(2 * g), ]) + X[-(1:(2 * g)), ]) / eps^2
+      (X[1:g, ] - (2 * X[(g + 1):(2 * g), ]) + X[- (1:(2 * g)), ]) / eps^2
     })
   }
   if (deriv == -1) {
@@ -207,7 +207,8 @@ tfb <- function(data, ...) UseMethod("tfb")
 #' @rdname tfb
 #' @export
 tfb.data.frame <- function(data, id = 1, arg = 2, value = 3,
-                           domain = NULL, penalized = TRUE, resolution = NULL, ...) {
+                           domain = NULL, penalized = TRUE, 
+                           resolution = NULL, ...) {
   data <- df_2_df(data, id, arg, value)
   regular <- n_distinct(table(data[[1]])) == 1
   ret <- mgcv_tfb(data, regular,
@@ -221,7 +222,8 @@ tfb.data.frame <- function(data, id = 1, arg = 2, value = 3,
 #' @rdname tfb
 #' @export
 tfb.matrix <- function(data, arg = NULL,
-                       domain = NULL, penalized = TRUE, resolution = NULL, ...) {
+                       domain = NULL, penalized = TRUE, 
+                       resolution = NULL, ...) {
   arg <- unlist(find_arg(data, arg))
   data_names <- rownames(data)
   data <- mat_2_df(data, arg)
@@ -237,7 +239,8 @@ tfb.matrix <- function(data, arg = NULL,
 #' @rdname tfb
 #' @export
 tfb.numeric <- function(data, arg = NULL,
-                        domain = NULL, penalized = TRUE, resolution = NULL, ...) {
+                        domain = NULL, penalized = TRUE, 
+                        resolution = NULL, ...) {
   data <- t(as.matrix(data))
   tfb(
     data = data, arg = arg, domain = domain, penalized = penalized,

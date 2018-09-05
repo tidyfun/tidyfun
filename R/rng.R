@@ -30,7 +30,7 @@ tf_rgp <- function(n, arg = 51L, scale = diff(range(arg)) / 10,
   check_number(nugget, lower = 0)
 
   f_cov <- switch(cor, "wiener" = function(s, t) pmin(s, t) / scale,
-    "squareexp" = function(s, t) exp(-(s - t)^2 / scale)
+    "squareexp" = function(s, t) exp( -(s - t)^2 / scale)
   )
   cov <- outer(arg, arg, f_cov) + diag(0 * arg + nugget)
   y <- rmvnorm(n, mean = 0 * arg, sigma = cov)
@@ -74,5 +74,6 @@ tf_sparsify <- function(f, dropout = .5, ...) {
     tf_evaluations(f),
     ~ifelse(runif(length(.x)) < dropout, NA, .x)
   )
-  tfd(tf_evals, tf_arg(f), resolution = attr(f, "resolution"), domain = tf_domain(f))
+  tfd(tf_evals, tf_arg(f), resolution = attr(f, "resolution"), 
+      domain = tf_domain(f))
 }

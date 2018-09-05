@@ -27,7 +27,9 @@ NULL
 #   Error during wrapup: evaluation nested too deeply: infinite recursion / options(expressions=)?
 
 #' @export
-is.finite.tf <- function(x) map(tf_evaluations(x), ~all(is.finite(x) | !is.na(x)))
+is.finite.tf <- function(x) {
+  map(tf_evaluations(x), ~all(is.finite(x) | !is.na(x)))
+}  
 
 #' @export
 scale_type.tf <- function(x) "identity"
@@ -116,7 +118,8 @@ GeomSpaghetti <- ggproto("GeomSpaghetti", Geom,
 #' @param spaghetti plot noodles along with meatballs? defaults to true.
 geom_meatballs <- function(mapping = NULL, data = NULL,
                            position = "identity", na.rm = TRUE, show.legend = NA,
-                           inherit.aes = TRUE, arg = NULL, spaghetti = TRUE, ...) {
+                           inherit.aes = TRUE, arg = NULL, spaghetti = TRUE, 
+                           ...) {
   layer(
     stat = StatTf, data = data, mapping = mapping, geom = "meatballs",
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,

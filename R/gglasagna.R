@@ -48,8 +48,9 @@ is.discrete <- function(x) {
 #' gglasagna(data, f, label = id, order_by = first) +
 #'   facet_wrap(~group, scales = "free")}
 gglasagna <- function(data, y, order = NULL, label = NULL,
-                      arg = NULL, order_by = NULL, order_ticks = TRUE, order_ticks_color = "black",
-                      order_ticks_linetype = 2, order_ticks_alpha = 0.5) {
+                      arg = NULL, order_by = NULL, order_ticks = TRUE, 
+                      order_ticks_color = "black", order_ticks_linetype = 2, 
+                      order_ticks_alpha = 0.5) {
   # FIXME: render errors for weird arg lenght (e.g. 93)
   stopifnot(is_tf(pull(data, !!enexpr(y))))
   has_order <- !is.null(match.call()[["order"]])
@@ -92,7 +93,9 @@ gglasagna <- function(data, y, order = NULL, label = NULL,
   }
   tf_eval <- tf_eval %>%
     arrange(..order, ..order_by_value, ..row) %>%
-    mutate(..y = ordered(..y, levels = unique(..y), labels = unique(..label))) %>%
+    mutate(..y = ordered(..y, 
+                         levels = unique(..y), 
+                         labels = unique(..label))) %>%
     rename(!!y_name := ..fill)
 
   p <- ggplot(tf_eval) +

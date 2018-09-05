@@ -22,7 +22,7 @@ find_arg <- function(data, arg) {
       # extract number-strings
       # will interpret separating-dashes as minus-signs, so functions may run
       # backwards.
-      # regex adapted from https://www.regular-expressions.info/floatingpoint.html
+      # regex adt'd from https://www.regular-expressions.info/floatingpoint.html
       arg <- str_extract(
         names,
         "[-+]?(0|(0\\.[0-9]+)|([1-9][0-9]*\\.?[0-9]*))([eE][-+]?[0-9]+)?$"
@@ -64,29 +64,6 @@ assert_arg_vector <- function(arg, x, check_unique = TRUE) {
     lower = tf_domain(x)[1], upper = tf_domain(x)[2]
   )
 }
-
-
-
-# #TODO: write proper tests for this
-# check_interpolation <- function(x, arg){
-#   UseMethod("check_interpolation")
-# }
-# check_interpolation.tfd_reg <- function(x, arg){
-#   original <- tf_arg(x)
-#   if (is.list(arg)) {
-#     map(arg, ~ !(. %in% original))
-#   } else {
-#     !(arg %in% original)
-#   }
-# }
-# check_interpolation.tfd_irreg <- function(x, arg) {
-#   original <- tf_arg(x)
-#   if (is.list(arg)) {
-#     map2(arg, original, ~ !(.x %in% .y))
-#   } else {
-#     map(original, ~ !(arg %in% .x))
-#   }
-# }
 
 get_resolution <- function(arg) {
   min_diff <- map(ensure_list(arg), ~min(diff(.x))) %>% unlist() %>% min()
@@ -145,12 +122,12 @@ compare_tf_attribs <- function(e1, e2, ignore = c("names", "id")) {
     suppressWarnings(
       if (is.function(a)) {
         # FIXME: this is not reliable/useful but prob. impossible to solve
-        # generally: would need to know which (functional) objects in the enclosure
-        # of these functions are relevant for comparison -- comparing all is too
-        # strict but comparing none is rather dangerous. Right now the function
-        # bodies all look the same since they share a common wrapper.... Fingers
-        # crossed relevant differences get picked up by differences in the label or
-        # basis attributes...
+        # generally: would need to know which (functional) objects in the
+        # enclosure of these functions are relevant for comparison -- comparing
+        # all is too strict but comparing none is rather dangerous. Right now
+        # the function bodies all look the same since they share a common
+        # wrapper.... Fingers crossed relevant differences get picked up by
+        # differences in the label or basis attributes...
         if (is.memoised(a)) {
           identical(environment(a)[["_f"]], environment(b)[["_f"]],
             ignore.environment = TRUE

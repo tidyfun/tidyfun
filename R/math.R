@@ -19,7 +19,6 @@ summarize_tf <- function(..., op = NULL, eval = FALSE) {
   funs <- dots[funs]
   op_call <- function(x) do.call(op, c(list(x), op_args))
   funs <- do.call(c, funs)
-  attr_ret <- attributes(funs)
   # FIXME: should this set interpolate = TRUE so irregular data returns
   #  more useful results?
   m <- suppressWarnings(as.matrix(funs))

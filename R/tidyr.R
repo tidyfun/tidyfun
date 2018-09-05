@@ -55,7 +55,6 @@ tf_gather <- function(data, ..., key = ".tfd", arg = NULL, domain = NULL,
       message("creating new tfd-column <", key_var, ">")
     }
   }
-  other_vars <- setdiff(names(data), gather_vars)
 
   tfd_data <- data %>% select(gather_vars) %>% as.matrix()
   if (search_key) {
@@ -293,7 +292,8 @@ tf_unnest <- function(data, ..., .arg, .drop = NA, .id = "id", .sep = "_",
     )
     # only rename left over columns if there was more than one and we don't
     # overwrite anything by doing so
-    one_arg_left <- length(vars_select(names(ret), matches(!!!arg_pattern))) == 1
+    one_arg_left <- 
+      length(vars_select(names(ret), matches(!!!arg_pattern))) == 1
     if (!("arg" %in% names(ret)) & one_arg_left & length(same_arg)) {
       new_arg <- select(ret, matches(!!!arg_pattern)) %>% names()
       ret <- rename(ret, arg = !!new_arg)

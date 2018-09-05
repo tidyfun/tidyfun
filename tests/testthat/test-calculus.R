@@ -62,7 +62,6 @@ test_that("deriv & tf_integrate are reversible (approximately)", {
   f3 <- tf_derive(tf_integrate(f, definite = FALSE))
   expect_equivalent(f[, dgrid], f2[, dgrid], tolerance = .1)
   expect_equivalent(f[, dgrid], f3[, dgrid], tolerance = .1)
-  # plot(f); lines(f2, col = 2, lty =2); lines(f3, col = 3, lty = 3)
 
   expect_error(
     tf_integrate(tf_derive(tfb(f, verbose = FALSE)), definite = FALSE),
@@ -76,6 +75,5 @@ test_that("deriv & tf_integrate are reversible (approximately)", {
   f_pc3 <- tf_derive(tf_integrate(f_pc, definite = FALSE))
   expect_equivalent(f_pc[, dgrid], f_pc2[, dgrid], tolerance = .1)
   expect_equivalent(f_pc[, dgrid], f_pc3[, dgrid], tolerance = .1)
-  # plot(f_pc); lines(f_pc2, col = 2, lty =2); lines(f_pc3, col = 3, lty = 3)
   expect_equivalent(tf_integrate(f_pc), tf_integrate(f[1:3]), tolerance = .01)
 })

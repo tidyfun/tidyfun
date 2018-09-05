@@ -53,13 +53,12 @@
 #'   # does the function ever exceed 1:
 #'   tf_anywhere(f, value > 1)
 #' @export
-tf_where <- function(f, cond, return = c("all", "first", "last", "range", "any"),
-                     arg) {
+tf_where <- function(f, cond, 
+                     return = c("all", "first", "last", "range", "any"),arg) {
   if (missing(arg)) {
     arg <- tf_arg(f)
-  } else {
-    assert_arg(arg, f)
   }
+  assert_arg(arg, f)
   return <- match.arg(return)
   cond <- enquo(cond)
   where_at <- map(
