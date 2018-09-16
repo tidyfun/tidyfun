@@ -121,26 +121,26 @@ library(ggplot2)
 library(tidyverse)
 weather <- fda::CanadianWeather
 canada <- data.frame(
-  place = weather$place, 
-  region = weather$region, 
-  lat = weather$coordinates[,1], 
-  lon = -weather$coordinates[,2], 
+  place = weather$place,
+  region = weather$region,
+  lat = weather$coordinates[,1],
+  lon = -weather$coordinates[,2],
   region = weather$region)
 canada$temp <- tfd(t(weather$dailyAv[,,1]), arg = 1:365)
 canada$precipl10 <- tfd(t(weather$dailyAv[,,3]), arg = 1:365) \%>\% smooth
-canada_map <- 
-  data.frame(maps::map("world", "Canada", plot = FALSE)[c("x", "y")]) 
+canada_map <-
+  data.frame(maps::map("world", "Canada", plot = FALSE)[c("x", "y")])
 # map of canada with annual temperature averages in red, precipitation in blue:
-ggplot(canada, aes(x = lon, y = lat)) + 
+ggplot(canada, aes(x = lon, y = lat)) +
   geom_capellini(aes(tf = precipl10), width = 3, height = 5, colour = "blue") +
   geom_capellini(aes(tf = temp), width = 3, height = 5, colour = "red") +
   geom_path(data = canada_map, aes(x = x, y = y), alpha = .1) +
   coord_quickmap()
-  
-ggplot(canada, aes(x = lon, y = lat, colour = region)) + 
-  geom_capellini(aes(tf = precipl10), width = 5, height = 3, 
+
+ggplot(canada, aes(x = lon, y = lat, colour = region)) +
+  geom_capellini(aes(tf = precipl10), width = 5, height = 3,
     line.linetype = 1, box.fill = "white", box.alpha=.5, box.colour = NA)
-}     
+}
 }
 \seealso{
 GGally::glyphs

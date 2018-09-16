@@ -85,7 +85,7 @@ set.seed(1859)
 f <- tf_rgp(4)
 2 * f == f + f
 sum(f) == f[1] + f[2] + f[3] + f[4]
-log(exp(f)) == f 
+log(exp(f)) == f
 plot(f, points = FALSE)
 lines(range(f), col = 2, lty = 2)
 
