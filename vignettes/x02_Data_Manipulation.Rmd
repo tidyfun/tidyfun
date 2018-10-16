@@ -7,7 +7,7 @@ output:
       fig_width: 12
 vignette: >
   %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteIndexEntry{Data_Manipulation}
+  %\VignetteIndexEntry{Data Manipulation}
   %\VignetteEncoding{UTF-8}
 ---
 

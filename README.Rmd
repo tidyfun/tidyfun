@@ -5,7 +5,7 @@ output:
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# tidyfun <img src="README_files/figures/tidyfun_hex.gif" align="right" height = "150" />
+# tidyfun <img src="https://github.com/fabian-s/tidyfun/blob/master/README_files/figures/tidyfun_hex.gif?raw=true" align="right" height = "150" />
 
 [![Build Status](https://travis-ci.org/fabian-s/tidyfun.svg?branch=master)](https://travis-ci.org/fabian-s/tidyfun)
 
