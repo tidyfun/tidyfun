@@ -66,13 +66,22 @@ gglasagna <- function(data, y, order = NULL, label = NULL,
   }
   if (is.null(label)) {
     label <- bquote(names(.(enexpr(y))) %||% row_number())
+    labelname <- ""
   } else {
     label <- match.call()$label
+    labelname <- deparse(label)
   }
   y_name <- quo_name(enquo(y))
-  data <- mutate(data, ..label = !!label, ..order = !!order, ..row = row_number())
-  tf_eval <- suppressMessages(tf_unnest(data, y_name, .arg = arg, .sep = "___")) %>%
-    rename(..y = matches("___id"), ..x = matches("___arg"), ..fill = matches("___value"))
+  data <- mutate(data, 
+                 ..label = !!label, 
+                 ..order = !!order, 
+                 ..row = row_number())
+  tf_eval <- suppressMessages(
+      tf_unnest(data, y_name, .arg = arg, .sep = "___")
+    ) %>%
+    rename(..y = matches("___id"), 
+           ..x = matches("___arg"), 
+           ..fill = matches("___value"))
   order_by_label <- enexpr(order_by)
   if (has_order_by) {
     order_by_label <- quo_name(order_by_label)
@@ -91,15 +100,18 @@ gglasagna <- function(data, y, order = NULL, label = NULL,
     order_by_label <- NULL
     tf_eval <- tf_eval %>% mutate(..order_by_value = ..order)
   }
+  # create order of rows
   tf_eval <- tf_eval %>%
     arrange(..order, ..order_by_value, ..row) %>%
-    mutate(..y = ordered(..y, 
-                         levels = unique(..y), 
-                         labels = unique(..label))) %>%
+    mutate(..y = ordered(..y, levels = unique(..y))) %>%
+    mutate(..y = as.numeric(..y)) %>% 
     rename(!!y_name := ..fill)
+  labeldata <- with(tf_eval, 
+                  data_frame(breaks = unique(..y)), 
+                             labels = ..label[!duplicated(..y)])
 
   p <- ggplot(tf_eval) +
-    geom_tile(aes(y = ..y, x = ..x, fill = !!sym(y_name))) + ylab("") +
+    geom_tile(aes(y = ..y, x = ..x, fill = !!sym(y_name))) +
     xlab("")
   if (!is.null(order_label) | !is.null(order_by_label)) {
     p <- p + labs(caption = paste(
@@ -125,10 +137,21 @@ gglasagna <- function(data, y, order = NULL, label = NULL,
         data = order_ticks, aes(yintercept = tick_pos),
         col = order_ticks_color, alpha = order_ticks_alpha,
         lty = order_ticks_linetype
-      )
+      )  + 
+      scale_y_continuous(labelname, breaks = labeldata$breaks, 
+                         labels = labeldata$labels, 
+                         sec.axis = 
+                           sec_axis(~., 
+                            breaks = order_ticks$label_pos, 
+                            labels = order_ticks %>% pull(!!order)
+                            )
+                         )
     #   p_ticks <- ggplot(order_ticks, aes(y = label_pos, label = !!order)) +
     #     geom_text(x = 0) + theme_void()
     #   #TODO: use gtable etc to align
+  } else {
+    p <- p + scale_y_continuous(labelname, breaks = labeldata$breaks, 
+                         labels = labeldata$labels)
   }
   # TODO: use another geom_line or _tile to add a colour bar for order_by_values
   p

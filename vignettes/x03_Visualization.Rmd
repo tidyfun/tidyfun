@@ -1,6 +1,6 @@
 ---
 title: "Visualization"
-author: "Jeff Goldsmith"
+author: "Jeff Goldsmith, Fabian Scheipl"
 date: "`r Sys.Date()`"
 output: 
     rmarkdown::html_vignette:
@@ -122,7 +122,7 @@ Lasagna plots are "[a saucy alternative to spaghetti plosts](https://www.ncbi.nl
 ```{r}
 chf_df %>% 
   filter(day %in% c("Monday", "Sunday")) %>% 
-  gglasagna(activity)
+  gglasagna(activity, label = id, order = day)
 ```
 
 
