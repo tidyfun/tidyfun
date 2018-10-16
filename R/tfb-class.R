@@ -34,7 +34,7 @@ smooth_spec_wrapper <- function(spec, deriv = 0, eps = 1e-6) {
         object = spec,
         data = data.frame(arg = c(arg + eps, arg - eps))
       )
-      (X[1:length(arg), ] - X[-(1:length(arg)), ]) / (2 * eps)
+      (X[seq_along(arg), ] - X[-seq_along(arg), ]) / (2 * eps)
     })
   }
   if (deriv == 2) {
@@ -252,11 +252,11 @@ tfb.numeric <- function(data, arg = NULL,
 #' @export
 tfb.list <- function(data, arg = NULL,
                      domain = NULL, penalized = TRUE, resolution = NULL, ...) {
-  vectors <- sapply(data, is.numeric)
+  vectors <- vapply(data, is.numeric, logical(1))
   stopifnot(all(vectors) | !any(vectors))
   names_data <- names(data)
   if (all(vectors)) {
-    lengths <- sapply(data, length)
+    lengths <- vapply(data, length, numeric(1))
     if (all(lengths == lengths[1])) {
       data <- do.call(rbind, data)
       # dispatch to matrix method
@@ -268,14 +268,14 @@ tfb.list <- function(data, arg = NULL,
     } else {
       stopifnot(
         !is.null(arg), length(arg) == length(data),
-        all(sapply(arg, length) == lengths)
+        all(vapply(arg, length, numeric(1)) == lengths)
       )
       data <- map2(arg, data, ~as.data.frame(cbind(arg = .x, data = .y)))
     }
   }
   dims <- map(data, dim)
   stopifnot(
-    all(sapply(dims, length) == 2), all(map(dims, ~.x[2]) == 2),
+    all(vapply(dims, length, numeric(1)) == 2), all(map(dims, ~.x[2]) == 2),
     all(rapply(data, is.numeric))
   )
   data <- data_frame(

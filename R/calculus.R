@@ -162,7 +162,7 @@ tf_integrate.tfd <- function(f, lower = tf_domain(f)[1], upper = tf_domain(f)[2]
   limits <- cbind(lower, upper)
   if (nrow(limits) > 1) {
     if (!definite) .NotYetImplemented() # needs vd-data
-    limits <- limits %>% split(1:nrow(limits))
+    limits <- limits %>% split(seq_len(nrow(limits)))
   }
   arg <- map2(
     arg, ensure_list(limits),

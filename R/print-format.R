@@ -116,9 +116,9 @@ format.tf <- function(x, digits = 2, nsmall = 0, width = options()$width,
   )
   if (prefix) {
     prefix <- if (!is.null(names(x))) {
-      names(x)[1:length(str)]
+      names(x)[seq_along(str)]
     } else {
-      paste0("[", 1:length(str), "]")
+      paste0("[", seq_along(str), "]")
     }
     str <- map2(prefix, str, ~paste0(.x, ": ", .y))
   }

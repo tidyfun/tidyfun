@@ -119,7 +119,7 @@
     )
     assert_true(all(sign(i) == sign(i)[1]))
     if (sign(i)[1] < 0) {
-      i <- (1:length(x))[i]
+      i <- seq_along(x)[i]
     }
   }
   stopifnot(
@@ -148,7 +148,7 @@
   ret <- unclass(x)
   ret[i] <- unclass(value)
   # fill up empty functions
-  na_entries <- which(sapply(ret, is.null))
+  na_entries <- which(vapply(ret, is.null, logical(1)))
   if (length(na_entries)) {
     nas <- if (is_irreg(x)) {
       replicate(length(na_entries), list(arg = attr_x$domain[1], value = NA),
