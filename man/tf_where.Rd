@@ -77,7 +77,7 @@ Any condition evaluates to \code{NA} on \code{NA}-entries in \code{f}.
   tf_where(f, value > dplyr::lag(value, 1, value[1]))
   tf_where(f, value < dplyr::lead(value, 1, value[n()]))
   # where are the (interior) extreme points:
-  tf_where(f, 
+  tf_where(f,
     sign(c(diff(value)[1], diff(value))) !=
       sign(c(diff(value), diff(value)[n()-1])))
   # where for arg > .5 is the function positive:

@@ -46,14 +46,15 @@ These functions access, subset, replace and evaluate \code{tf} objects.
 For more information on creating \code{tf} objects and converting them to/from
 \code{list}, \code{data.frame} or \code{matrix}, see \code{\link[=tfd]{tfd()}} and \code{\link[=tfb]{tfb()}}. \cr
 Note that these break certain (terrible) R conventions for vector-like objects:\cr
+}
+\details{
 \itemize{
 \item no argument recycling,
 \item no indexing with \code{NA},
 \item no indexing with names not present in \code{x},
 \item no indexing with integers \code{> length(x)}
 }
-}
-\details{
+
 All of these will trigger errors. Subassigning new elements to positions
 beyond the original length still works and will fill up the missing elements
 up to that position with \code{NAs}, though. This package was developed by fickle,

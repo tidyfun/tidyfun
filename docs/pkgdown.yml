@@ -4,6 +4,7 @@ pkgdown_sha: ~
 articles:
   x01_Intro: x01_Intro.html
   x02_Data_Manipulation: x02_Data_Manipulation.html
+  x03_Visualization: x03_Visualization.html
 urls:
   reference: https://fabian-s.github.io/tidyfun/reference
   article: https://fabian-s.github.io/tidyfun/articles

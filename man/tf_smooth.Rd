@@ -60,5 +60,5 @@ lines(tf_smooth(f, "lowess", f = .9), col = 2, alpha= .2)
 plot(f_mean, points = FALSE)
 lines(f_median, col = 2, alpha= .2) # note constant extrapolation
 plot(f, points = FALSE)
-lines(f_sg, col = 2) 
+lines(f_sg, col = 2)
 }
