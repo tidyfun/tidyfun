@@ -50,6 +50,14 @@ The data used in this vignette is the `tidyfun::chf_df` dataset. The data contai
 ```{r view_chf}
 data(chf_df)
 
+#REMOVE THIS AND USE data-raw PREP INSTEAD
+chf_df <- chf_df  %>% 
+  select(-week) %>% 
+  mutate(day = ordered(day, 
+    levels = c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday",
+      "Saturday", "Sunday"), 
+    labels = c("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun")))
+
 chf_df
 ```
 
@@ -73,7 +81,7 @@ A variant on the spaghetti plot is the meatballs plot, which shows both the "noo
 
 ```{r}
 chf_df %>% 
-  filter(id == 1, day == "Monday") %>% 
+  filter(id == 1, day == "Mon") %>% 
   ggplot(aes(y = activity)) + 
   geom_meatballs()
 ```
@@ -95,7 +103,7 @@ You can also use facetting:
 
 ```{r}
 chf_df %>% 
-  filter(day %in% c("Monday", "Sunday")) %>% 
+  filter(day %in% c("Mon", "Sun")) %>% 
   ggplot(aes(y = activity, color = gender)) + 
   geom_spaghetti(alpha = .1) + 
   facet_grid(~ day)
@@ -108,7 +116,7 @@ chf_df %>%
   group_by(gender, day) %>% 
   summarize(mean_act = mean(activity)) %>% 
   mutate(smooth_mean = tfb(mean_act)) %>% 
-  filter(day %in% c("Monday", "Sunday")) %>% 
+  filter(day %in% c("Mon", "Sun")) %>% 
   ggplot(aes(y = smooth_mean, color = gender)) + 
   geom_spaghetti(size = 1.25, alpha = 1) + 
   geom_meatballs(aes(y = mean_act), alpha = .1) + 
@@ -121,7 +129,21 @@ Lasagna plots are "[a saucy alternative to spaghetti plosts](https://www.ncbi.nl
 
 ```{r, eval = FALSE}
 chf_df %>% 
-  filter(day %in% c("Monday", "Sunday")) %>% 
+  filter(day %in% c("Mon")) %>% 
+  gglasagna(activity, label = id)
+```
+
+Using `order`, you can sort the "layers" of the lasagna plot according to another column in your data -- for example, we could look at activity profiles sorted according to people's age:
+```{r, eval = FALSE}
+chf_df %>% 
+  filter(day %in% c("Sat", "Sun")) %>% 
+  gglasagna(activity, label = id, order = age)
+```
+If `order` is a discrete variable like `day`, it will add labels for the order variables to the plot:
+
+```{r, eval = FALSE}
+chf_df %>% 
+  filter(day %in% c("Sat", "Sun")) %>% 
   gglasagna(activity, label = id, order = day)
 ```
 
