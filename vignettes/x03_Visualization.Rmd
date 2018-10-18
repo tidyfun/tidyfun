@@ -119,7 +119,7 @@ chf_df %>%
 
 Lasagna plots are "[a saucy alternative to spaghetti plosts](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2937254/)". They are a variant on a heatmaps which show functional observations in rows and use color to illustrate values taken at different arguments. In `tidyfun`, lasagna plots are implemented through `gglasagna`:
 
-```{r}
+```{r, eval = FALSE}
 chf_df %>% 
   filter(day %in% c("Monday", "Sunday")) %>% 
   gglasagna(activity, label = id, order = day)

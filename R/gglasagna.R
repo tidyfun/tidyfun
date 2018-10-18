@@ -27,30 +27,47 @@ is.discrete <- function(x) {
 #' @param order_by a function applied to each row in `y[, arg]` that must
 #'   return a scalar value to define the order of lasagna layers.
 #' @param order_ticks add horizontal lines indicating borders between levels of
-#'   `order` (if discrete)? Defaults to true.
-#' @param order_ticks_color defaults to "black"
-#' @param order_ticks_linetype defaults to 2
-#' @param order_ticks_alpha defaults to 0.5
+#'   `order` (if it is a discrete variable) and labels for its levels? 
+#'   Defaults to TRUE. Supply a list of arguments (grep source code for `order_ticks_args``) 
+#'   to override default appearance of labels. 
+#'   **Switch this off if you use facetting, it's a hack and will produce nonsense.**
 #' @return a `ggplot2`` object
 #' @export
+#' @importFrom grid unit grobTree textGrob gpar 
 #' @examples
 #' \dontrun{
 #' set.seed(1221)
-#' data = expand.grid(group = 1:5, rep = 1:10)
-#' data = dplyr::mutate(data, id = paste(group, rep, sep = "-"))
-#' data$f = tf_rgp(50)
-#' data$fi = tf_sparsify(data$f)
-#' data$fb = tfb(data$f)
+#' data = expand.grid(group = factor(1:5), rep = 1:10)
+#' data = dplyr::mutate(data, 
+#'                      id = paste(group, rep, sep = "-"), 
+#'                      f =  tf_rgp(50),
+#'                      fb = tfb(f))
+#' 
 #' gglasagna(data, f, label = id)
-#' gglasagna(data, f, label = id, order = group)
-#' gglasagna(data, f, label = id, order = group)
+#' gglasagna(data, fb, label = id, order = group)
+#' # order is lowest first / on top by default
 #' gglasagna(data, f, label = id, order = tf_depth(f))
 #' gglasagna(data, f, label = id, order_by = first) +
-#'   facet_wrap(~group, scales = "free")}
+#'   facet_wrap(~group, scales = "free")
+#' # order of layers is by "order_by" within "order":
+#' gglasagna(data, fb, label = id, order = group, order_by = first)
+#' }
 gglasagna <- function(data, y, order = NULL, label = NULL,
-                      arg = NULL, order_by = NULL, order_ticks = TRUE, 
-                      order_ticks_color = "black", order_ticks_linetype = 2, 
-                      order_ticks_alpha = 0.5) {
+                      arg = NULL, order_by = NULL, 
+                      order_ticks = TRUE) {
+  order_ticks_args <- list(
+    color = "black", 
+    linetype = 2, 
+    alpha = 0.5, 
+    fontsize = theme_get()$text$size * .8, 
+    rot = 90,
+    label_offset = grid::unit(0.02, "npc")
+  )
+  if (is.list(order_ticks)) {
+    order_ticks_args <- utils::modifyList(order_ticks_args, order_ticks)
+    order_ticks <- TRUE
+  }
+  
   # FIXME: render errors for weird arg lenght (e.g. 93)
   stopifnot(is_tf(pull(data, !!enexpr(y))))
   has_order <- !is.null(match.call()[["order"]])
@@ -61,10 +78,11 @@ gglasagna <- function(data, y, order = NULL, label = NULL,
     order <- match.call()$order
   } else {
     order_label <- NULL
-    order <- bquote(rev(row_number()))
+    order <- bquote(..row)
     order_ticks <- FALSE
   }
-  if (is.null(label)) {
+  has_label <- !is.null(match.call()[["label"]])
+  if (!has_label) {
     label <- bquote(names(.(enexpr(y))) %||% row_number())
     labelname <- ""
   } else {
@@ -74,8 +92,8 @@ gglasagna <- function(data, y, order = NULL, label = NULL,
   y_name <- quo_name(enquo(y))
   data <- mutate(data, 
                  ..label = !!label, 
-                 ..order = !!order, 
-                 ..row = row_number())
+                 ..row = row_number(),
+                 ..order = !!order)
   tf_eval <- suppressMessages(
       tf_unnest(data, y_name, .arg = arg, .sep = "___")
     ) %>%
@@ -93,22 +111,22 @@ gglasagna <- function(data, y, order = NULL, label = NULL,
       mutate(..order_by_value = rank(..order_by_value))
     tf_eval <- left_join(tf_eval, order_by_value, by = "..y")
     # override previous ordering
-    if (is.null(match.call()[["order"]])) {
+    if (!has_order) {
       tf_eval <- tf_eval %>% mutate(..order = ..order_by_value)
     }
   } else {
     order_by_label <- NULL
-    tf_eval <- tf_eval %>% mutate(..order_by_value = ..order)
+    tf_eval <- tf_eval %>% mutate(..order_by_value = ..row)
   }
   # create order of rows
   tf_eval <- tf_eval %>%
     arrange(..order, ..order_by_value, ..row) %>%
-    mutate(..y = ordered(..y, levels = unique(..y))) %>%
-    mutate(..y = as.numeric(..y)) %>% 
+    mutate(..y = ordered(..y, levels = rev(unique(..y)))) %>%
+   # mutate(..y = as.numeric(..y)) %>% 
     rename(!!y_name := ..fill)
   labeldata <- with(tf_eval, 
-                  data_frame(breaks = unique(..y)), 
-                             labels = ..label[!duplicated(..y)])
+                  data_frame(breaks = unique(..y), 
+                             labels = ..label[!duplicated(..y)]))
 
   p <- ggplot(tf_eval) +
     geom_tile(aes(y = ..y, x = ..x, fill = !!sym(y_name))) +
@@ -117,42 +135,44 @@ gglasagna <- function(data, y, order = NULL, label = NULL,
     p <- p + labs(caption = paste(
       "ordered by:",
       paste0(
-        order_label, ifelse(has_order_by & has_order, ";", ""),
+        order_label, ifelse(has_order_by & has_order, "; ", ""),
         order_by_label
       )
     ))
   }
-  if (order_ticks & is.discrete(pull(tf_eval, ..order))) {
-    order_ticks <- data %>%
-      arrange(desc(!!order)) %>%
-      mutate(ticks = row_number()) %>%
-      group_by(!!order) %>%
-      summarize(tick_hi = max(ticks), tick_lo = min(ticks)) %>%
-      mutate(
-        label_pos = (tick_hi + tick_lo) / 2,
-        tick_pos = lead(tick_hi) + 0.5
-      )
-    p <- p +
-      geom_hline(
-        data = order_ticks, aes(yintercept = tick_pos),
-        col = order_ticks_color, alpha = order_ticks_alpha,
-        lty = order_ticks_linetype
-      )  + 
-      scale_y_continuous(labelname, breaks = labeldata$breaks, 
-                         labels = labeldata$labels, 
-                         sec.axis = 
-                           sec_axis(~., 
-                            breaks = order_ticks$label_pos, 
-                            labels = order_ticks %>% pull(!!order)
-                            )
-                         )
-    #   p_ticks <- ggplot(order_ticks, aes(y = label_pos, label = !!order)) +
-    #     geom_text(x = 0) + theme_void()
-    #   #TODO: use gtable etc to align
-  } else {
-    p <- p + scale_y_continuous(labelname, breaks = labeldata$breaks, 
+  if (!is.null(order_ticks) & is.discrete(pull(tf_eval, ..order))) {
+     order_ticks_data <- data %>%
+       arrange(desc(!!order)) %>%
+       mutate(ticks = row_number()) %>%
+       group_by(!!order) %>%
+       summarize(tick_hi = max(ticks), tick_lo = min(ticks)) %>%
+       mutate(
+         label_pos = (tick_hi + tick_lo) / 2,
+         tick_pos = lead(tick_hi) + 0.5
+       )
+     p <- p +
+       geom_hline(
+         data = order_ticks_data, aes(yintercept = tick_pos),
+         col = order_ticks_args$color, alpha = order_ticks_args$alpha,
+         linetype = order_ticks_args$linetype
+       )
+     # adding a secondary axis with labels for the order-variable only works
+     # if we make the y-axis continuous -- but a) it isn't,really and 
+     # b)scales="free" is needed for good looking facets but won't 
+     # close gaps for pseudo-continuous y-scales, 
+     # so we use this annotation_custom weirdness instead
+     order_ticks_labelpos <- with(order_ticks_data,
+                                  grid::unit(label_pos/max(tick_hi), "npc"))
+     order_ticks_labels <- grid::grobTree(
+       grid::textGrob(order_ticks_data %>% pull(!!order), 
+                      x = order_ticks_args$label_offset, 
+                      y = order_ticks_labelpos, 
+                      rot = order_ticks_args$rot, 
+                      gp = grid::gpar(fontsize = order_ticks_args$fontsize)))
+     p <- p + annotation_custom(order_ticks_labels) 
+   } 
+  p <- p + scale_y_discrete(labelname, breaks = labeldata$breaks, 
                          labels = labeldata$labels)
-  }
   # TODO: use another geom_line or _tile to add a colour bar for order_by_values
   p
 }
