@@ -11,8 +11,8 @@
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
-<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/flatly/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
 <!-- Font Awesome icons -->
@@ -58,7 +58,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidyfun</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.0.4</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.0.6</span>
       </span>
     </div>
 
@@ -81,7 +81,13 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/Intro.html">Introducing tidyfun</a>
+      <a href="../articles/x01_Intro.html">Introducing tidyfun</a>
+    </li>
+    <li>
+      <a href="../articles/x02_Data_Manipulation.html">Data Manipulation</a>
+    </li>
+    <li>
+      <a href="../articles/x03_Visualization.html">Visualization</a>
     </li>
   </ul>
 </li>
@@ -165,9 +171,15 @@
       </tr><tr>
         
         <td>
-          <p><code><a href="approx.html">approx_linear()</a></code> <code><a href="approx.html">approx_spline()</a></code> <code><a href="approx.html">approx_none()</a></code> <code><a href="approx.html">approx_fill_extend()</a></code> <code><a href="approx.html">approx_locf()</a></code> <code><a href="approx.html">approx_nocb()</a></code> </p>
+          <p><code><a href="tf_approx.html">tf_approx_linear()</a></code> <code><a href="tf_approx.html">tf_approx_spline()</a></code> <code><a href="tf_approx.html">tf_approx_none()</a></code> <code><a href="tf_approx.html">tf_approx_fill_extend()</a></code> <code><a href="tf_approx.html">tf_approx_locf()</a></code> <code><a href="tf_approx.html">tf_approx_nocb()</a></code> </p>
         </td>
         <td><p>Inter- and extrapolation functions for <code>tfd</code>-objects</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tf_evaluate.html">tf_evaluate()</a></code> </p>
+        </td>
+        <td><p>Evaluate <code>tf</code>s, both inside or outside a <code>data.frame</code></p></td>
       </tr>
     </tbody><tbody>
       <tr>
@@ -191,7 +203,7 @@
       </tr><tr>
         
         <td>
-          <p><code><a href="depth.html">depth()</a></code> </p>
+          <p><code><a href="tf_depth.html">tf_depth()</a></code> </p>
         </td>
         <td><p>Functional Data Depth</p></td>
       </tr>
@@ -199,13 +211,13 @@
       <tr>
         <th colspan="2">
           <h2 id="section-differentiation-integration" class="hasAnchor"><a href="#section-differentiation-integration" class="anchor"></a>Differentiation &amp; integration</h2>
-          <p class="section-desc"><p>Compute (approximate) derivatives, anti-derivatives and integrals</p></p>
+          <p class="section-desc"></p>
         </th>
       </tr>
       <tr>
         
         <td>
-          <p><code><a href="tfcalculus.html">deriv(<i>&lt;tfd&gt;</i>)</a></code> <code><a href="tfcalculus.html">deriv(<i>&lt;tfb&gt;</i>)</a></code> <code><a href="tfcalculus.html">deriv(<i>&lt;tfb_fpc&gt;</i>)</a></code> <code><a href="tfcalculus.html">integrate()</a></code> </p>
+          <p><code><a href="tfcalculus.html">tf_derive()</a></code> <code><a href="tfcalculus.html">tf_integrate()</a></code> </p>
         </td>
         <td><p>Derivatives and integrals of functional data</p></td>
       </tr>
@@ -296,39 +308,53 @@ function evaluations.</p></td>
       <tr>
         
         <td>
-          <p><code><a href="where.html">where()</a></code> <code><a href="where.html">anywhere()</a></code> <code><a href="where.html">in_range()</a></code> <code><a href="where.html">`%inr%`</a></code> </p>
+          <p><code><a href="tf_where.html">tf_where()</a></code> <code><a href="tf_where.html">tf_anywhere()</a></code> <code><a href="tf_where.html">in_range()</a></code> <code><a href="tf_where.html">`%inr%`</a></code> </p>
         </td>
         <td><p>Find out where functional data fulfills certain conditions.</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="zoom.html">zoom()</a></code> </p>
+          <p><code><a href="tf_zoom.html">tf_zoom()</a></code> </p>
         </td>
         <td><p>Functions to zoom in/out on functions</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="smooth.html">smooth()</a></code> </p>
+          <p><code><a href="tf_smooth.html">tf_smooth()</a></code> </p>
         </td>
         <td><p>Simple smoothing of <code>tf</code> objects</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="tfmethods.html">arg()</a></code> <code><a href="tfmethods.html">evaluations()</a></code> <code><a href="tfmethods.html">n_evaluations()</a></code> <code><a href="tfmethods.html">domain()</a></code> <code><a href="tfmethods.html">evaluator()</a></code> <code><a href="tfmethods.html">basis()</a></code> <code><a href="tfmethods.html">`evaluator<-`()</a></code> <code><a href="tfmethods.html">`arg<-`()</a></code> <code><a href="tfmethods.html">coef(<i>&lt;tfb&gt;</i>)</a></code> <code><a href="tfmethods.html">rev(<i>&lt;tf&gt;</i>)</a></code> <code><a href="tfmethods.html">is.na(<i>&lt;tf&gt;</i>)</a></code> <code><a href="tfmethods.html">is.na(<i>&lt;tfd_irreg&gt;</i>)</a></code> <code><a href="tfmethods.html">is_tf()</a></code> <code><a href="tfmethods.html">is_irreg()</a></code> <code><a href="tfmethods.html">is_tfd()</a></code> <code><a href="tfmethods.html">is_tfb()</a></code> </p>
+          <p><code><a href="tfmethods.html">tf_arg()</a></code> <code><a href="tfmethods.html">tf_evaluations()</a></code> <code><a href="tfmethods.html">tf_count()</a></code> <code><a href="tfmethods.html">tf_domain()</a></code> <code><a href="tfmethods.html">tf_evaluator()</a></code> <code><a href="tfmethods.html">tf_basis()</a></code> <code><a href="tfmethods.html">`tf_evaluator<-`()</a></code> <code><a href="tfmethods.html">`arg<-`()</a></code> <code><a href="tfmethods.html">tf_resolution()</a></code> <code><a href="tfmethods.html">coef(<i>&lt;tfb&gt;</i>)</a></code> <code><a href="tfmethods.html">rev(<i>&lt;tf&gt;</i>)</a></code> <code><a href="tfmethods.html">is.na(<i>&lt;tf&gt;</i>)</a></code> <code><a href="tfmethods.html">is.na(<i>&lt;tfd_irreg&gt;</i>)</a></code> <code><a href="tfmethods.html">is_tf()</a></code> <code><a href="tfmethods.html">is_irreg()</a></code> <code><a href="tfmethods.html">is_tfd()</a></code> <code><a href="tfmethods.html">is_tfb()</a></code> </p>
         </td>
         <td><p>Utility functions for <code>tf</code>-objects</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="rgp.html">rgp()</a></code> </p>
+          <p><code><a href="tf_rgp.html">tf_rgp()</a></code> </p>
         </td>
-        <td><p>Random generator for Gaussian Process functions.</p></td>
+        <td><p>Gaussian Process random generator</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="jiggle.html">jiggle()</a></code> <code><a href="jiggle.html">sparsify()</a></code> </p>
+          <p><code><a href="tf_jiggle.html">tf_jiggle()</a></code> <code><a href="tf_jiggle.html">tf_sparsify()</a></code> </p>
         </td>
         <td><p>Make a <code>tf</code> (more) irregular</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-data-sets" class="hasAnchor"><a href="#section-data-sets" class="anchor"></a>Data Sets</h2>
+          <p class="section-desc"><p>Functional data sets</p></p>
+        </th>
+      </tr>
+      <tr>
+        
+        <td>
+          <p><code><a href="chf_df.html">chf_df</a></code> </p>
+        </td>
+        <td><p>Congestive heart failure accelerometry data</p></td>
       </tr>
     </tbody>
     </table>
@@ -344,13 +370,14 @@ function evaluations.</p></td>
       <li><a href="#section-wrangling">Wrangling</a></li>
       <li><a href="#section-visualization-display">Visualization &amp; Display</a></li>
       <li><a href="#section-utilities">Utilities</a></li>
+      <li><a href="#section-data-sets">Data Sets</a></li>
     </ul>
   </div>
 </div>
 
       <footer>
       <div class="copyright">
-  <p>Developed by Fabian Scheipl.</p>
+  <p>Developed by Fabian Scheipl, Jeff Goldsmith.</p>
 </div>
 
 <div class="pkgdown">

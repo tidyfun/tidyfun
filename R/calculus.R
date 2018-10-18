@@ -1,47 +1,47 @@
 # compute derivatives of data rows by finite differences.
 # returns derivatives at interval midpoints
-derive_matrix = function(data, arg, order) {
+derive_matrix <- function(data, arg, order) {
   for (i in 1:order) {
-    delta = diff(arg)
-    data = t(diff(t(data)) / delta)
-    arg = (arg[-1] + head(arg, -1)) / 2
+    delta <- diff(arg)
+    data <- t(diff(t(data)) / delta)
+    arg <- (arg[-1] + head(arg, -1)) / 2
   }
   list(data = data, arg = arg)
 }
 
 # trapezoidal quadrature
 #' @importFrom utils head
-quad_trapez = function(arg, evaluations) {
+quad_trapez <- function(arg, evaluations) {
   c(0, 0.5 * diff(arg) * (head(evaluations, -1) + evaluations[-1]))
 }
 
-derive_tfb_mgcv = function(f, order = 1, arg = tf_arg(f)) {
+derive_tfb_mgcv <- function(f, order = 1, arg = tf_arg(f)) {
   # TODO: make this work for iterated application tf_derive(tf_derive(fb))
   if (!is.null(attr(f, "basis_deriv"))) {
     stop("Can't derive or integrate previously derived/integrated tf in basis representation")
   }
-  s_args = attr(f, "basis_args")
-  s_call = as.call(c(quote(s), quote(arg), s_args))
-  s_spec = eval(s_call)
-  spec_object = smooth.construct(s_spec,
+  s_args <- attr(f, "basis_args")
+  s_call <- as.call(c(quote(s), quote(arg), s_args))
+  s_spec <- eval(s_call)
+  spec_object <- smooth.construct(s_spec,
     data = data.frame(arg = arg), knots = NULL
   )
-  eps = min(diff(arg)) / 1000
-  basis_constructor = smooth_spec_wrapper(spec_object, deriv = order, eps = eps)
-  attr(f, "basis") = memoise::memoise(basis_constructor)
-  attr(f, "basis_label") = deparse(s_call, width.cutoff = 60)[1]
-  attr(f, "basis_args") = s_args
-  attr(f, "basis_matrix") = basis_constructor(arg)
-  attr(f, "basis_deriv") = order
-  attr(f, "domain") = range(arg)
+  eps <- min(diff(arg)) / 1000
+  basis_constructor <- smooth_spec_wrapper(spec_object, deriv = order, eps = eps)
+  attr(f, "basis") <- memoise::memoise(basis_constructor)
+  attr(f, "basis_label") <- deparse(s_call, width.cutoff = 60)[1]
+  attr(f, "basis_args") <- s_args
+  attr(f, "basis_matrix") <- basis_constructor(arg)
+  attr(f, "basis_deriv") <- order
+  attr(f, "domain") <- range(arg)
   f
 }
 
-derive_tfb_fpc = function(f, order = 1, lower, upper,
+derive_tfb_fpc <- function(f, order = 1, lower, upper,
                            arg = tf_arg(f)) {
-  efunctions = environment(attr(f, "basis"))$efunctions
-  environment(attr(f, "basis")) = new.env()
-  new_basis = if (order > 0) {
+  efunctions <- environment(attr(f, "basis"))$efunctions
+  environment(attr(f, "basis")) <- new.env()
+  new_basis <- if (order > 0) {
     tf_derive(efunctions, order = order)
   } else {
     tf_integrate(efunctions,
@@ -49,10 +49,10 @@ derive_tfb_fpc = function(f, order = 1, lower, upper,
       arg = arg
     )
   }
-  environment(attr(f, "basis"))$efunctions = new_basis
-  attr(f, "basis_matrix") = t(as.matrix(new_basis))
-  attr(f, "arg") = tf_arg(new_basis)
-  attr(f, "domain") = range(tf_arg(new_basis))
+  environment(attr(f, "basis"))$efunctions <- new_basis
+  attr(f, "basis_matrix") <- t(as.matrix(new_basis))
+  attr(f, "arg") <- tf_arg(new_basis)
+  attr(f, "domain") <- range(tf_arg(new_basis))
   f
 }
 
@@ -78,38 +78,38 @@ derive_tfb_fpc = function(f, order = 1, lower, upper,
 #' @return a `tf` with (slightly) different `arg` (and `basis`), or the definite integrals of the functions in `f`
 #' @rdname tfcalculus
 #' @export
-tf_derive = function(f, ...) UseMethod("tf_derive")
+tf_derive <- function(f, ...) UseMethod("tf_derive")
 
 #' @export
 #' @rdname tfcalculus
-tf_derive.default = function(f, ...) .NotYetImplemented()
+tf_derive.default <- function(f, ...) .NotYetImplemented()
 
 #' @export
 #' @rdname tfcalculus
-tf_derive.tfd = function(f, order = 1, arg = NULL, ...) {
+tf_derive.tfd <- function(f, order = 1, arg = NULL, ...) {
   # TODO: should this interpolate back to the original grid?
   # shortens the domain (slightly), for now.
   # this is necessary so that we don't get NAs when trying to evaluate derivs over
   # their default domain etc.
   if (is_irreg(f)) warning("differentiating irregular data could be sketchy.")
-  data = as.matrix(f, arg = arg, interpolate = TRUE)
-  arg = as.numeric(colnames(data))
-  derived = derive_matrix(data, arg, order)
-  ret = tfd(derived$data, derived$arg,
+  data <- as.matrix(f, arg = arg, interpolate = TRUE)
+  arg <- as.numeric(colnames(data))
+  derived <- derive_matrix(data, arg, order)
+  ret <- tfd(derived$data, derived$arg,
     domain = range(derived$arg), # !! shorter
     resolution = tf_resolution(f)
   )
-  tf_evaluator(ret) = attr(f, "evaluator_name")
+  tf_evaluator(ret) <- attr(f, "evaluator_name")
   ret
 }
 #' @export
 #' @rdname tfcalculus
-tf_derive.tfb = function(f, order = 1, ...) {
+tf_derive.tfb <- function(f, order = 1, ...) {
   derive_tfb_mgcv(f, order = order)
 }
 #' @export
 #' @rdname tfcalculus
-tf_derive.tfb_fpc = function(f, order = 1, ...) {
+tf_derive.tfb_fpc <- function(f, order = 1, ...) {
   derive_tfb_fpc(f, order = order)
 }
 
@@ -124,12 +124,12 @@ tf_derive.tfb_fpc = function(f, order = 1, ...) {
 #'  is returned.
 #' @details `tf_integrate.function` is simply a wrapper for [stats::integrate()].
 #' @export
-tf_integrate = function(f, lower, upper, ...) {
+tf_integrate <- function(f, lower, upper, ...) {
   UseMethod("tf_integrate")
 }
 
-tf_integrate.default = function(f, lower, upper, ...) .NotYetImplemented()
-tf_integrate.function = stats::integrate
+tf_integrate.default <- function(f, lower, upper, ...) .NotYetImplemented()
+tf_integrate.function <- stats::integrate
 
 #' @rdname tfcalculus
 #' @param lower lower limits of the integration range. For `definite=TRUE`, this can be
@@ -139,14 +139,14 @@ tf_integrate.function = stats::integrate
 #' @param definite should the definite integral  be returned (default)
 #'   or the antiderivative. See Description.
 #' @export
-tf_integrate.tfd = function(f, lower = tf_domain(f)[1], upper = tf_domain(f)[2],
+tf_integrate.tfd <- function(f, lower = tf_domain(f)[1], upper = tf_domain(f)[2],
                              definite = TRUE, arg, ...) {
   if (missing(arg)) {
-    arg = tf_arg(f)
+    arg <- tf_arg(f)
   } else {
     assert_arg(arg, f)
   }
-  arg = ensure_list(arg)
+  arg <- ensure_list(arg)
   assert_numeric(lower,
     lower = tf_domain(f)[1], upper = tf_domain(f)[2],
     any.missing = FALSE
@@ -159,20 +159,20 @@ tf_integrate.tfd = function(f, lower = tf_domain(f)[1], upper = tf_domain(f)[2],
     length(lower) %in% c(1, length(f)),
     length(upper) %in% c(1, length(f))
   )
-  limits = cbind(lower, upper)
+  limits <- cbind(lower, upper)
   if (nrow(limits) > 1) {
     if (!definite) .NotYetImplemented() # needs vd-data
-    limits = limits %>% split(1:nrow(limits))
+    limits <- limits %>% split(seq_len(nrow(limits)))
   }
-  arg = map2(
+  arg <- map2(
     arg, ensure_list(limits),
     ~c(.y[1], .x[.x > .y[1] & .x < .y[2]], .y[2])
   )
-  evaluations = tf_evaluate(f, arg)
-  quads = map2(arg, evaluations, ~quad_trapez(arg = .x, evaluations = .y))
+  evaluations <- tf_evaluate(f, arg)
+  quads <- map2(arg, evaluations, ~quad_trapez(arg = .x, evaluations = .y))
   if (definite) {
-    ret = map(quads, sum) %>% unlist()
-    names(ret) = names(f)
+    ret <- map(quads, sum) %>% unlist()
+    names(ret) <- names(f)
     ret
   } else {
     tfd(
@@ -189,10 +189,10 @@ tf_integrate.tfd = function(f, lower = tf_domain(f)[1], upper = tf_domain(f)[2],
 }
 #' @rdname tfcalculus
 #' @export
-tf_integrate.tfb = function(f, lower = tf_domain(f)[1], upper = tf_domain(f)[2],
+tf_integrate.tfb <- function(f, lower = tf_domain(f)[1], upper = tf_domain(f)[2],
                              definite = TRUE, arg, ...) {
   if (missing(arg)) {
-    arg = tf_arg(f)
+    arg <- tf_arg(f)
   } else {
     assert_arg(arg, f)
   }
@@ -214,9 +214,9 @@ tf_integrate.tfb = function(f, lower = tf_domain(f)[1], upper = tf_domain(f)[2],
       arg = arg
     ))
   }
-  limits = cbind(lower, upper)
+  limits <- cbind(lower, upper)
   if (nrow(limits) > 1) .NotYetImplemented() # needs vd-data
-  arg = c(
+  arg <- c(
     limits[1], arg[arg > limits[1] & arg < limits[2]],
     limits[2]
   )

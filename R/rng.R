@@ -20,20 +20,20 @@
 #' @return an `tfd`-vector of length `n`
 #' @importFrom mvtnorm rmvnorm
 #' @export
-tf_rgp = function(n, arg = 51L, scale = diff(range(arg)) / 10,
+tf_rgp <- function(n, arg = 51L, scale = diff(range(arg)) / 10,
                    cor = c("squareexp", "wiener"), nugget = scale / 200) {
-  cor = match.arg(cor)
-  if (length(arg == 1) & is.integer(arg)) arg = seq(0, 1, length = arg)
+  cor <- match.arg(cor)
+  if (length(arg == 1) & is.integer(arg)) arg <- seq(0, 1, length = arg)
   check_numeric(arg, any.missing = FALSE, unique = TRUE)
   check_number(n, lower = 1)
   check_number(scale, lower = 0)
   check_number(nugget, lower = 0)
 
-  f_cov = switch(cor, "wiener" = function(s, t) pmin(s, t) / scale,
-    "squareexp" = function(s, t) exp(-(s - t)^2 / scale)
+  f_cov <- switch(cor, "wiener" = function(s, t) pmin(s, t) / scale,
+    "squareexp" = function(s, t) exp( -(s - t)^2 / scale)
   )
-  cov = outer(arg, arg, f_cov) + diag(0 * arg + nugget)
-  y = rmvnorm(n, mean = 0 * arg, sigma = cov)
+  cov <- outer(arg, arg, f_cov) + diag(0 * arg + nugget)
+  y <- rmvnorm(n, mean = 0 * arg, sigma = cov)
   tfd(y, arg = arg)
 }
 
@@ -47,20 +47,20 @@ tf_rgp = function(n, arg = 51L, scale = diff(range(arg)) / 10,
 #' @importFrom stats runif
 #' @export
 #' @rdname tf_jiggle
-tf_jiggle = function(f, ...) {
+tf_jiggle <- function(f, ...) {
   stopifnot(is_tfd(f))
-  f = as.tfd_irreg(f)
-  tf_jiggle_args = function(arg) {
-    diffs = diff(arg)
-    n = length(arg)
-    tf_jiggle = runif(n - 2, -.49, +.49) * diffs[2:(n - 1)]
-    new_args = arg[2:(n - 1)] + tf_jiggle
+  f <- as.tfd_irreg(f)
+  tf_jiggle_args <- function(arg) {
+    diffs <- diff(arg)
+    n <- length(arg)
+    tf_jiggle <- runif(n - 2, -.49, +.49) * diffs[2:(n - 1)]
+    new_args <- arg[2:(n - 1)] + tf_jiggle
     c(
       runif(1, arg[1], new_args[1]), new_args,
       runif(1, new_args[n - 2], arg[n])
     )
   }
-  new_args = map(tf_arg(f), tf_jiggle_args)
+  new_args <- map(tf_arg(f), tf_jiggle_args)
   tfd(map2(new_args, tf_evaluations(f), cbind), domain = tf_domain(f))
 }
 
@@ -68,11 +68,12 @@ tf_jiggle = function(f, ...) {
 #' @param dropout how many values of `f` to drop, defaults to 50\%.
 #' @param ... not used currently
 #' @export
-tf_sparsify = function(f, dropout = .5, ...) {
+tf_sparsify <- function(f, dropout = .5, ...) {
   stopifnot(is_tf(f))
-  tf_evals = map(
+  tf_evals <- map(
     tf_evaluations(f),
     ~ifelse(runif(length(.x)) < dropout, NA, .x)
   )
-  tfd(tf_evals, tf_arg(f), resolution = attr(f, "resolution"), domain = tf_domain(f))
+  tfd(tf_evals, tf_arg(f), resolution = attr(f, "resolution"), 
+      domain = tf_domain(f))
 }

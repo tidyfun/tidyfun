@@ -27,27 +27,29 @@ NULL
 #   Error during wrapup: evaluation nested too deeply: infinite recursion / options(expressions=)?
 
 #' @export
-is.finite.tf = function(x) map(tf_evaluations(x), ~all(is.finite(x) | !is.na(x)))
+is.finite.tf <- function(x) {
+  map(tf_evaluations(x), ~all(is.finite(x) | !is.na(x)))
+}  
 
 #' @export
-scale_type.tf = function(x) "identity"
+scale_type.tf <- function(x) "identity"
 
 #' @export
 #' @importFrom ggplot2 ggproto Stat Geom
 #' @rdname ggspaghetti
 #' @usage NULL
 #' @format NULL
-StatTf = ggproto("StatTf", Stat,
+StatTf <- ggproto("StatTf", Stat,
   required_aes = "y",
   setup_params = function(data, params) {
     if (is.null(params$arg)) {
-      params$arg = list(tf_arg(pull(data, y)))
+      params$arg <- list(tf_arg(pull(data, y)))
     }
     params
   },
   compute_layer = function(self, data, params, layout) {
     stopifnot(is_tf(pull(data, y)))
-    tf_eval =
+    tf_eval <-
       suppressMessages(tf_unnest(data, y, .arg = params$arg, .sep = "___")) %>%
       select(-group) %>%
       rename(group = y___id, x = y___arg, y = y___value)
@@ -64,7 +66,7 @@ StatTf = ggproto("StatTf", Stat,
 #' @rdname ggspaghetti
 #' @inheritParams ggplot2::stat_identity
 #' @param na.rm remove NAs? defaults to `TRUE`
-stat_tf = function(mapping = NULL, data = NULL, geom = "spaghetti",
+stat_tf <- function(mapping = NULL, data = NULL, geom = "spaghetti",
                     position = "identity", na.rm = TRUE, show.legend = NA,
                     inherit.aes = TRUE, arg = NULL, ...) {
   layer(
@@ -80,7 +82,7 @@ stat_tf = function(mapping = NULL, data = NULL, geom = "spaghetti",
 #' @rdname ggspaghetti
 #' @format NULL
 #' @param arg where to evaluate `tf` -- defaults to the default ;)
-geom_spaghetti = function(mapping = NULL, data = NULL,
+geom_spaghetti <- function(mapping = NULL, data = NULL,
                            position = "identity", na.rm = TRUE, show.legend = NA,
                            inherit.aes = TRUE, arg = NULL, ...) {
   layer(
@@ -93,7 +95,7 @@ geom_spaghetti = function(mapping = NULL, data = NULL,
 #' @rdname ggspaghetti
 #' @usage NULL
 #' @format NULL
-GeomSpaghetti = ggproto("GeomSpaghetti", Geom,
+GeomSpaghetti <- ggproto("GeomSpaghetti", Geom,
   setup_data = function(data, params) {
     GeomLine$setup_data(data, params)
   },
@@ -114,9 +116,10 @@ GeomSpaghetti = ggproto("GeomSpaghetti", Geom,
 #' @format NULL
 #' @importFrom grid gList
 #' @param spaghetti plot noodles along with meatballs? defaults to true.
-geom_meatballs = function(mapping = NULL, data = NULL,
+geom_meatballs <- function(mapping = NULL, data = NULL,
                            position = "identity", na.rm = TRUE, show.legend = NA,
-                           inherit.aes = TRUE, arg = NULL, spaghetti = TRUE, ...) {
+                           inherit.aes = TRUE, arg = NULL, spaghetti = TRUE, 
+                           ...) {
   layer(
     stat = StatTf, data = data, mapping = mapping, geom = "meatballs",
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
@@ -127,7 +130,7 @@ geom_meatballs = function(mapping = NULL, data = NULL,
 #' @rdname ggspaghetti
 #' @usage NULL
 #' @format NULL
-GeomMeatballs = ggproto("GeomMeatball", Geom,
+GeomMeatballs <- ggproto("GeomMeatball", Geom,
   setup_data = function(data, params) {
     GeomLine$setup_data(data, params)
   },

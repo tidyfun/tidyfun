@@ -6,13 +6,13 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Derivatives and integrals of functional data — deriv.tfd • tidyfun</title>
+<title>Derivatives and integrals of functional data — tf_derive • tidyfun</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
-<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/flatly/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
 <!-- Font Awesome icons -->
@@ -30,15 +30,15 @@
 
 
 
-<meta property="og:title" content="Derivatives and integrals of functional data — deriv.tfd" />
+<meta property="og:title" content="Derivatives and integrals of functional data — tf_derive" />
 
-<meta property="og:description" content="Derivatives of tfs use finite differences of the evaluations
+<meta property="og:description" content="Derivatives of tf-objects use finite differences of the evaluations
 for tfd and finite differences of the basis functions for tfb.
 Note that, for some spline bases like &quot;cr&quot; or &quot;tp&quot; which always begin/end linearly,
 computing second derivatives will produce artefacts at the outer limits
 of the functions' domain due to these boundary constraints. Basis &quot;bs&quot; does
 not have this problem, but tends to yield slightly less stable fits.
-Integration of tfs is done by quadrature (trapezoid rule, specifically).
+Integrals of tf-objects are computed by simple quadrature (trapezoid rule, specifically).
 By default the scalar definite integral \(\int^{upper}_{lower}f(s)ds\) is returned
 (option definite = TRUE), alternatively for definite = FALSE something
 like the anti-derivative on [lower, upper], e.g. an tfd object
@@ -72,7 +72,7 @@ is returned." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidyfun</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.0.4</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.0.6</span>
       </span>
     </div>
 
@@ -95,7 +95,13 @@ is returned." />
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/Intro.html">Introducing tidyfun</a>
+      <a href="../articles/x01_Intro.html">Introducing tidyfun</a>
+    </li>
+    <li>
+      <a href="../articles/x02_Data_Manipulation.html">Data Manipulation</a>
+    </li>
+    <li>
+      <a href="../articles/x03_Visualization.html">Visualization</a>
     </li>
   </ul>
 </li>
@@ -127,13 +133,13 @@ is returned." />
 
     <div class="ref-description">
     
-    <p>Derivatives of <code>tf</code>s use finite differences of the evaluations
+    <p><strong>Derivatives</strong> of <code>tf</code>-objects use finite differences of the evaluations
 for <code>tfd</code> and finite differences of the basis functions for <code>tfb</code>.
 Note that, for some spline bases like <code>"cr"</code> or <code>"tp"</code> which always begin/end linearly,
 computing second derivatives will produce artefacts at the outer limits
 of the functions' domain due to these boundary constraints. Basis <code>"bs"</code> does
 not have this problem, but tends to yield slightly less stable fits.</p>
-<p>Integration of <code>tf</code>s is done by quadrature (trapezoid rule, specifically).
+<p><strong>Integrals</strong> of <code>tf</code>-objects are computed by simple quadrature (trapezoid rule, specifically).
 By default the scalar definite integral \(\int^{upper}_{lower}f(s)ds\) is returned
 (option <code>definite = TRUE</code>), alternatively for <code>definite = FALSE</code> something
 like the <em>anti-derivative</em> on <code>[lower, upper]</code>, e.g. an <code>tfd</code> object
@@ -142,31 +148,40 @@ is returned.</p>
     
     </div>
 
-    <pre class="usage"><span class='co'># S3 method for tfd</span>
-<span class='fu'>deriv</span>(<span class='no'>expr</span>, <span class='kw'>order</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>arg</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>...</span>)
+    <pre class="usage"><span class='fu'>tf_derive</span>(<span class='no'>f</span>, <span class='no'>...</span>)
 
-<span class='co'># S3 method for tfb</span>
-<span class='fu'>deriv</span>(<span class='no'>expr</span>, <span class='kw'>order</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='no'>...</span>)
-
-<span class='co'># S3 method for tfb_fpc</span>
-<span class='fu'>deriv</span>(<span class='no'>expr</span>, <span class='kw'>order</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='no'>...</span>)
-
-<span class='fu'>integrate</span>(<span class='no'>f</span>, <span class='no'>lower</span>, <span class='no'>upper</span>, <span class='no'>...</span>)
+<span class='co'># S3 method for default</span>
+<span class='fu'>tf_derive</span>(<span class='no'>f</span>, <span class='no'>...</span>)
 
 <span class='co'># S3 method for tfd</span>
-<span class='fu'>integrate</span>(<span class='no'>f</span>, <span class='kw'>lower</span> <span class='kw'>=</span> <span class='fu'><a href='tfmethods.html'>domain</a></span>(<span class='no'>f</span>)[<span class='fl'>1</span>], <span class='kw'>upper</span> <span class='kw'>=</span> <span class='fu'><a href='tfmethods.html'>domain</a></span>(<span class='no'>f</span>)[<span class='fl'>2</span>],
-  <span class='kw'>definite</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>arg</span>, <span class='no'>...</span>)
+<span class='fu'>tf_derive</span>(<span class='no'>f</span>, <span class='kw'>order</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>arg</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>...</span>)
 
 <span class='co'># S3 method for tfb</span>
-<span class='fu'>integrate</span>(<span class='no'>f</span>, <span class='kw'>lower</span> <span class='kw'>=</span> <span class='fu'><a href='tfmethods.html'>domain</a></span>(<span class='no'>f</span>)[<span class='fl'>1</span>], <span class='kw'>upper</span> <span class='kw'>=</span> <span class='fu'><a href='tfmethods.html'>domain</a></span>(<span class='no'>f</span>)[<span class='fl'>2</span>],
-  <span class='kw'>definite</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>arg</span>, <span class='no'>...</span>)</pre>
+<span class='fu'>tf_derive</span>(<span class='no'>f</span>, <span class='kw'>order</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='no'>...</span>)
+
+<span class='co'># S3 method for tfb_fpc</span>
+<span class='fu'>tf_derive</span>(<span class='no'>f</span>, <span class='kw'>order</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='no'>...</span>)
+
+<span class='fu'>tf_integrate</span>(<span class='no'>f</span>, <span class='no'>lower</span>, <span class='no'>upper</span>, <span class='no'>...</span>)
+
+<span class='co'># S3 method for tfd</span>
+<span class='fu'>tf_integrate</span>(<span class='no'>f</span>, <span class='kw'>lower</span> <span class='kw'>=</span> <span class='fu'><a href='tfmethods.html'>tf_domain</a></span>(<span class='no'>f</span>)[<span class='fl'>1</span>],
+  <span class='kw'>upper</span> <span class='kw'>=</span> <span class='fu'><a href='tfmethods.html'>tf_domain</a></span>(<span class='no'>f</span>)[<span class='fl'>2</span>], <span class='kw'>definite</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>arg</span>, <span class='no'>...</span>)
+
+<span class='co'># S3 method for tfb</span>
+<span class='fu'>tf_integrate</span>(<span class='no'>f</span>, <span class='kw'>lower</span> <span class='kw'>=</span> <span class='fu'><a href='tfmethods.html'>tf_domain</a></span>(<span class='no'>f</span>)[<span class='fl'>1</span>],
+  <span class='kw'>upper</span> <span class='kw'>=</span> <span class='fu'><a href='tfmethods.html'>tf_domain</a></span>(<span class='no'>f</span>)[<span class='fl'>2</span>], <span class='kw'>definite</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>arg</span>, <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>expr</th>
-      <td><p>a <code>tf</code></p></td>
+      <th>f</th>
+      <td><p>a <code>tf</code>-object</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>not used</p></td>
     </tr>
     <tr>
       <th>order</th>
@@ -174,11 +189,8 @@ is returned.</p>
     </tr>
     <tr>
       <th>arg</th>
-      <td><p>grid to use for the differentiation/integration. Not the <code>arg</code> of the returned object.</p></td>
-    </tr>
-    <tr>
-      <th>...</th>
-      <td><p>not used</p></td>
+      <td><p>grid to use for the finite differences or quadrature.
+Not the <code>arg</code> of the returned object.</p></td>
     </tr>
     <tr>
       <th>lower</th>
@@ -199,11 +211,11 @@ or the antiderivative. See Description.</p></td>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>a <code>tf</code> with (slightly) different <code>arg</code> (and <code>basis</code>)</p>
+    <p>a <code>tf</code> with (slightly) different <code>arg</code> (and <code>basis</code>), or the definite integrals of the functions in <code>f</code></p>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p><code>integrate.function</code> is simply a wrapper for <code><a href='http://www.rdocumentation.org/packages/stats/topics/integrate'>stats::integrate()</a></code>.</p>
+    <p><code>tf_integrate.function</code> is simply a wrapper for <code><a href='http://www.rdocumentation.org/packages/stats/topics/integrate'>stats::integrate()</a></code>.</p>
     
 
   </div>
@@ -222,7 +234,7 @@ or the antiderivative. See Description.</p></td>
 
       <footer>
       <div class="copyright">
-  <p>Developed by Fabian Scheipl.</p>
+  <p>Developed by Fabian Scheipl, Jeff Goldsmith.</p>
 </div>
 
 <div class="pkgdown">

@@ -1,10 +1,10 @@
-c_names = function(funs) {
-  fnames = as.list(names(funs) %||% rep("", length(funs)))
-  elnames = map(funs, ~names(.x) %||% rep("", length(.x)))
+c_names <- function(funs) {
+  fnames <- as.list(names(funs) %||% rep("", length(funs)))
+  elnames <- map(funs, ~names(.x) %||% rep("", length(.x)))
   # always use argnames
   # argnames replace elementnames if elments have length 1
   # else paste with "."
-  names = map2(fnames, elnames, function(.x, .y) {
+  names <- map2(fnames, elnames, function(.x, .y) {
     if (.x == "") return(.y)
     if (all(.y == "") | length(.y) == 1) return(rep(.x, length(.y)))
     paste(.x, .y, sep = ".")
@@ -31,9 +31,9 @@ c_names = function(funs) {
 #' @return an `tf`-object containing all the arguments with the same
 #'   attributes as the the first argument (see Details).
 #' @rdname tfconcat
-c.tf = function(...) {
-  funs = list(...)
-  compatible = all(map_lgl(funs, is_tfd)) | all(map_lgl(funs, is_tfb))
+c.tf <- function(...) {
+  funs <- list(...)
+  compatible <- all(map_lgl(funs, is_tfd)) | all(map_lgl(funs, is_tfb))
   if (!compatible) {
     stop("Can't concatenate tfb & tfd objects.")
   }
@@ -41,39 +41,39 @@ c.tf = function(...) {
 
 #' @rdname tfconcat
 #' @export
-c.tfd = function(...) {
-  funs = list(...)
+c.tfd <- function(...) {
+  funs <- list(...)
   if (length(funs) == 1) {
     return(funs[[1]])
   } else {
     NextMethod()
   }
-  compatible = do.call(rbind, map(
+  compatible <- do.call(rbind, map(
     funs,
     ~compare_tf_attribs(funs[[1]], .)
   ))
   stopifnot(all(compatible[, "domain"]))
-  make_irreg = rep(FALSE, length(funs))
-  irreg = map_lgl(funs, is_irreg)
+  make_irreg <- rep(FALSE, length(funs))
+  irreg <- map_lgl(funs, is_irreg)
   if (!any(irreg) & !all(compatible[, "arg"])) {
     warning("concatenating functions on different grids.")
-    make_irreg = rep(TRUE, length(funs))
+    make_irreg <- rep(TRUE, length(funs))
   }
   if (any(irreg) & !all(irreg)) {
     warning("concatenating functions on different grids.")
-    make_irreg[!irreg] = TRUE
+    make_irreg[!irreg] <- TRUE
   }
-  new_resolution = NULL
+  new_resolution <- NULL
   if (!all(compatible[, "resolution"])) {
-    new_resolution = tf_resolution(funs[[1]])
+    new_resolution <- tf_resolution(funs[[1]])
     warning(
       "inputs have different resolutions, result has ",
       "resolution =", new_resolution
     )
-    make_irreg[!compatible[, "resolution"]] = TRUE
+    make_irreg[!compatible[, "resolution"]] <- TRUE
   }
   if (any(make_irreg)) {
-    funs = map_at(
+    funs <- map_at(
       funs, which(make_irreg),
       ~as.tfd_irreg(.)
     )
@@ -84,47 +84,47 @@ c.tfd = function(...) {
       attr(funs[[1]], "evaluator_name")
     )
   }
-  attr_ret = attributes(funs[[1]])
+  attr_ret <- attributes(funs[[1]])
   if (any(irreg | make_irreg)) {
-    attr_ret$arg = flatten(map(funs, tf_arg))
+    attr_ret$arg <- flatten(map(funs, tf_arg))
   }
-  attr_ret$names = {
-    tmp = unlist(flatten(map(
+  attr_ret$names <- {
+    tmp <- unlist(flatten(map(
       funs,
       function(x) names(x) %||% rep("", length(x))
     )))
     if (all(tmp == "")) NULL else tmp
   }
-  ret = flatten(funs)
-  attributes(ret) = attr_ret
-  names(ret) = c_names(funs)
+  ret <- flatten(funs)
+  attributes(ret) <- attr_ret
+  names(ret) <- c_names(funs)
   forget(attr(ret, "evaluator"))
   ret
 }
 
 #' @rdname tfconcat
 #' @export
-c.tfb = function(...) {
-  funs = list(...)
+c.tfb <- function(...) {
+  funs <- list(...)
   if (length(funs) == 1) {
     return(funs[[1]])
   } else {
     NextMethod()
   }
-  compatible = do.call(rbind, map(
+  compatible <- do.call(rbind, map(
     funs,
     ~compare_tf_attribs(funs[[1]], .)
   ))
   stopifnot(all(compatible[, "domain"]))
-  re_evals = which(!compatible[, "arg"] |
+  re_evals <- which(!compatible[, "arg"] |
     !compatible[, "basis_args"])
   if (length(re_evals)) {
-    fun_names = map(as.list(match.call())[-1], ~deparse(.)[1])
+    fun_names <- map(as.list(match.call())[-1], ~deparse(.)[1])
     warning(
       "re-evaluating ", paste(fun_names[re_evals], collapse = ", "),
       " using basis and arg of ", fun_names[1]
     )
-    funs = map_at(
+    funs <- map_at(
       funs, re_evals,
       ~do.call(
         tfb,
@@ -141,17 +141,17 @@ c.tfb = function(...) {
       "resolution =", attr(funs[[1]], "resolution")
     )
   }
-  attr_ret = attributes(funs[[1]])
-  attr_ret$names = {
-    tmp = unlist(flatten(map(
+  attr_ret <- attributes(funs[[1]])
+  attr_ret$names <- {
+    tmp <- unlist(flatten(map(
       funs,
       function(x) names(x) %||% rep("", length(x))
     )))
     if (all(tmp == "")) NULL else tmp
   }
-  ret = flatten(funs)
-  attributes(ret) = attr_ret
-  names(ret) = c_names(funs)
+  ret <- flatten(funs)
+  attributes(ret) <- attr_ret
+  names(ret) <- c_names(funs)
   ret
 }
 
@@ -159,6 +159,6 @@ c.tfb = function(...) {
 #' @param y `tf`-object
 #' @rdname tfconcat
 #' @export
-merge.tf = function(x, y, ...) {
+merge.tf <- function(x, y, ...) {
   c(x, y)
 }

@@ -1,7 +1,7 @@
 # input homogenizers
-df_2_df = function(data, id = 1, arg = 2, value = 3) {
-  data = na.omit(data[, c(id, arg, value)])
-  colnames(data) = c("id", "arg", "data")
+df_2_df <- function(data, id = 1, arg = 2, value = 3) {
+  data <- na.omit(data[, c(id, arg, value)])
+  colnames(data) <- c("id", "arg", "data")
   stopifnot(
     nrow(data) > 0,
     is.numeric(data[[2]]),
@@ -10,9 +10,9 @@ df_2_df = function(data, id = 1, arg = 2, value = 3) {
   data
 }
 
-mat_2_df = function(x, arg) {
+mat_2_df <- function(x, arg) {
   stopifnot(is.numeric(x))
-  id = unique_id(rownames(x)) %||% seq_len(dim(x)[1])
+  id <- unique_id(rownames(x)) %||% seq_len(dim(x)[1])
   df_2_df(data_frame(
     id = id[row(x)], arg = arg[col(x)],
     data = as.vector(x)
@@ -21,7 +21,7 @@ mat_2_df = function(x, arg) {
 
 
 #' @import mgcv
-smooth_spec_wrapper = function(spec, deriv = 0, eps = 1e-6) {
+smooth_spec_wrapper <- function(spec, deriv = 0, eps = 1e-6) {
   stopifnot(deriv %in% c(-1, 0, 1, 2), isTRUE(eps > 0))
   if (deriv == 0) {
     return(function(arg) {
@@ -30,31 +30,31 @@ smooth_spec_wrapper = function(spec, deriv = 0, eps = 1e-6) {
   }
   if (deriv == 1) {
     return(function(arg) {
-      X = mgcv::Predict.matrix(
+      X <- mgcv::Predict.matrix(
         object = spec,
         data = data.frame(arg = c(arg + eps, arg - eps))
       )
-      (X[1:length(arg), ] - X[-(1:length(arg)), ]) / (2 * eps)
+      (X[seq_along(arg), ] - X[-seq_along(arg), ]) / (2 * eps)
     })
   }
   if (deriv == 2) {
     return(function(arg) {
-      g = length(arg)
-      X = mgcv::Predict.matrix(
+      g <- length(arg)
+      X <- mgcv::Predict.matrix(
         object = spec,
         data = data.frame(arg = c(arg + eps, arg, arg - eps))
       )
-      (X[1:g, ] - (2 * X[(g + 1):(2 * g), ]) + X[-(1:(2 * g)), ]) / eps^2
+      (X[1:g, ] - (2 * X[(g + 1):(2 * g), ]) + X[- (1:(2 * g)), ]) / eps^2
     })
   }
   if (deriv == -1) {
     return(function(arg) {
       # make sure quadrature runs over entire range up to the new arg
       # --> have to re-use original grid
-      arg_orig = spec$Xu[spec$Xu <= max(arg)]
-      arg_interleave = sort(unique(c(arg_orig, arg)))
-      new_args = which(arg_interleave %in% arg)
-      X = mgcv::Predict.matrix(
+      arg_orig <- spec$Xu[spec$Xu <= max(arg)]
+      arg_interleave <- sort(unique(c(arg_orig, arg)))
+      new_args <- which(arg_interleave %in% arg)
+      X <- mgcv::Predict.matrix(
         object = spec,
         data = data.frame(arg = arg_interleave)
       )
@@ -66,28 +66,28 @@ smooth_spec_wrapper = function(spec, deriv = 0, eps = 1e-6) {
 }
 
 #' @importFrom stats var na.omit median
-mgcv_tfb = function(data, regular, domain = NULL,
+mgcv_tfb <- function(data, regular, domain = NULL,
                      penalized = TRUE, resolution = NULL, verbose = TRUE, ...) {
-  domain = domain %||% range(data$arg)
-  arg_u = mgcv::uniquecombs(data$arg, ordered = TRUE)
-  resolution = resolution %||% get_resolution(arg_u)
-  s_args = list(...)[names(list(...)) %in% names(formals(mgcv::s))]
-  if (!("bs" %in% names(s_args))) s_args$bs = "cr"
-  if (!("k" %in% names(s_args))) s_args$k = min(25, nrow(arg_u))
-  magic_args = list(...)[names(list(...)) %in% names(formals(mgcv::magic))]
-  if (!("sp" %in% names(magic_args))) magic_args$sp = -1
-  s_call = as.call(c(quote(s), quote(arg), s_args))
-  s_spec = eval(s_call)
-  # if ("deriv" %in% names(list(...))) s_spec$deriv = list(...)$deriv
-  # if ("mono" %in% names(list(...))) s_spec$mono = list(...)$mono
-  spec_object = smooth.construct(s_spec,
+  domain <- domain %||% range(data$arg)
+  arg_u <- mgcv::uniquecombs(data$arg, ordered = TRUE)
+  resolution <- resolution %||% get_resolution(arg_u)
+  s_args <- list(...)[names(list(...)) %in% names(formals(mgcv::s))]
+  if (!("bs" %in% names(s_args))) s_args$bs <- "cr"
+  if (!("k" %in% names(s_args))) s_args$k <- min(25, nrow(arg_u))
+  magic_args <- list(...)[names(list(...)) %in% names(formals(mgcv::magic))]
+  if (!("sp" %in% names(magic_args))) magic_args$sp <- -1
+  s_call <- as.call(c(quote(s), quote(arg), s_args))
+  s_spec <- eval(s_call)
+  # if ("deriv" %in% names(list(...))) s_spec$deriv <- list(...)$deriv
+  # if ("mono" %in% names(list(...))) s_spec$mono <- list(...)$mono
+  spec_object <- smooth.construct(s_spec,
     data = data.frame(arg = arg_u$x), knots = NULL
   )
-  n_evaluations = table(data$id)
-  underdet = n_evaluations < spec_object$bs.dim
+  n_evaluations <- table(data$id)
+  underdet <- n_evaluations < spec_object$bs.dim
   # explicit factor-conversion to avoid reordering
-  data$id = factor(data$id, levels = unique(as.character(data$id)))
-  eval_list = split(data$data, data$id)
+  data$id <- factor(data$id, levels = unique(as.character(data$id)))
+  eval_list <- split(data$data, data$id)
   if (!penalized) {
     if (any(underdet) & verbose) {
       warning(
@@ -96,35 +96,35 @@ mgcv_tfb = function(data, regular, domain = NULL,
       )
     }
     if (regular) {
-      eval_matrix = do.call(cbind, eval_list)
-      qr_basis = qr(spec_object$X)
-      coef_list = qr.coef(qr = qr_basis, y = eval_matrix)
-      coef_list = split(coef_list, col(coef_list))
-      pve = 1 - apply(qr.resid(
+      eval_matrix <- do.call(cbind, eval_list)
+      qr_basis <- qr(spec_object$X)
+      coef_list <- qr.coef(qr = qr_basis, y = eval_matrix)
+      coef_list <- split(coef_list, col(coef_list))
+      pve <- 1 - apply(qr.resid(
         qr = qr_basis,
         y = eval_matrix
       ), 2, var) / apply(eval_matrix, 2, var)
     } else {
-      index_list = split(attr(arg_u, "index"), data$id)
-      coef_list = map2(
+      index_list <- split(attr(arg_u, "index"), data$id)
+      coef_list <- map2(
         index_list, eval_list,
         ~qr.coef(qr = qr(spec_object$X[.x, ]), y = .y)
       )
-      pve = unlist(map2(
+      pve <- unlist(map2(
         index_list, eval_list,
         ~1 - var(qr.resid(qr = qr(spec_object$X[.x, ]), y = .y)) / var(.y)
       ))
     }
     # need to remove NAs if dim(basis) > length(arg)
-    coef_list[underdet] = map(coef_list[underdet], na_to_0)
+    coef_list[underdet] <- map(coef_list[underdet], na_to_0)
   } else {
-    index_list = split(attr(arg_u, "index"), data$id)
-    coef_list = map2(
+    index_list <- split(attr(arg_u, "index"), data$id)
+    coef_list <- map2(
       index_list, eval_list,
       ~magic_smooth_coef(.y, .x, spec_object, magic_args)
     )
-    pve = unlist(map(coef_list, 2))
-    coef_list = map(coef_list, 1)
+    pve <- unlist(map(coef_list, 2))
+    coef_list <- map(coef_list, 1)
   }
   if (verbose) {
     message(
@@ -133,9 +133,9 @@ mgcv_tfb = function(data, regular, domain = NULL,
     )
     print(summary(round(100 * pve, 1)))
   }
-  names(coef_list) = levels(data$id)
-  basis_constructor = smooth_spec_wrapper(spec_object)
-  ret = structure(coef_list,
+  names(coef_list) <- levels(data$id)
+  basis_constructor <- smooth_spec_wrapper(spec_object)
+  ret <- structure(coef_list,
     domain = domain,
     basis = memoise(basis_constructor),
     basis_label = deparse(s_call, width.cutoff = 60)[1],
@@ -148,8 +148,8 @@ mgcv_tfb = function(data, regular, domain = NULL,
   ret
 }
 
-magic_smooth_coef = function(evaluations, index, spec_object, magic_args) {
-  m = do.call(
+magic_smooth_coef <- function(evaluations, index, spec_object, magic_args) {
+  m <- do.call(
     mgcv::magic,
     c(
       list(y = evaluations, X = spec_object$X[index, ], S = spec_object$S),
@@ -191,7 +191,7 @@ magic_smooth_coef = function(evaluations, index, spec_object, magic_args) {
 #' @rdname tfb
 #' @seealso [tfb_fpc()]
 #' @export
-tfb = function(data, ...) UseMethod("tfb")
+tfb <- function(data, ...) UseMethod("tfb")
 
 
 #' @export
@@ -206,11 +206,12 @@ tfb = function(data, ...) UseMethod("tfb")
 #'   **for `as.tfb`:** use this to give arguments to [tfb()] or [tfb_fpc()].
 #' @rdname tfb
 #' @export
-tfb.data.frame = function(data, id = 1, arg = 2, value = 3,
-                           domain = NULL, penalized = TRUE, resolution = NULL, ...) {
-  data = df_2_df(data, id, arg, value)
-  regular = n_distinct(table(data[[1]])) == 1
-  ret = mgcv_tfb(data, regular,
+tfb.data.frame <- function(data, id = 1, arg = 2, value = 3,
+                           domain = NULL, penalized = TRUE, 
+                           resolution = NULL, ...) {
+  data <- df_2_df(data, id, arg, value)
+  regular <- n_distinct(table(data[[1]])) == 1
+  ret <- mgcv_tfb(data, regular,
     domain = domain,
     penalized = penalized, resolution = resolution, ...
   )
@@ -220,25 +221,27 @@ tfb.data.frame = function(data, id = 1, arg = 2, value = 3,
 
 #' @rdname tfb
 #' @export
-tfb.matrix = function(data, arg = NULL,
-                       domain = NULL, penalized = TRUE, resolution = NULL, ...) {
-  arg = unlist(find_arg(data, arg))
-  data_names = rownames(data)
-  data = mat_2_df(data, arg)
-  regular = n_distinct(table(data[[1]])) == 1
-  ret = mgcv_tfb(data, regular,
+tfb.matrix <- function(data, arg = NULL,
+                       domain = NULL, penalized = TRUE, 
+                       resolution = NULL, ...) {
+  arg <- unlist(find_arg(data, arg))
+  data_names <- rownames(data)
+  data <- mat_2_df(data, arg)
+  regular <- n_distinct(table(data[[1]])) == 1
+  ret <- mgcv_tfb(data, regular,
     domain = domain,
     penalized = penalized, resolution = resolution, ...
   )
-  names(ret) = data_names
+  names(ret) <- data_names
   assert_arg(tf_arg(ret), ret)
   ret
 }
 #' @rdname tfb
 #' @export
-tfb.numeric = function(data, arg = NULL,
-                        domain = NULL, penalized = TRUE, resolution = NULL, ...) {
-  data = t(as.matrix(data))
+tfb.numeric <- function(data, arg = NULL,
+                        domain = NULL, penalized = TRUE, 
+                        resolution = NULL, ...) {
+  data <- t(as.matrix(data))
   tfb(
     data = data, arg = arg, domain = domain, penalized = penalized,
     resolution = resolution, ...
@@ -247,17 +250,17 @@ tfb.numeric = function(data, arg = NULL,
 
 #' @rdname tfb
 #' @export
-tfb.list = function(data, arg = NULL,
+tfb.list <- function(data, arg = NULL,
                      domain = NULL, penalized = TRUE, resolution = NULL, ...) {
-  vectors = sapply(data, is.numeric)
+  vectors <- vapply(data, is.numeric, logical(1))
   stopifnot(all(vectors) | !any(vectors))
-  names_data = names(data)
+  names_data <- names(data)
   if (all(vectors)) {
-    lengths = sapply(data, length)
+    lengths <- vapply(data, length, numeric(1))
     if (all(lengths == lengths[1])) {
-      data = do.call(rbind, data)
+      data <- do.call(rbind, data)
       # dispatch to matrix method
-      args = list(data, arg,
+      args <- list(data, arg,
         domain = domain,
         penalized = penalized, resolution = resolution, ...
       )
@@ -265,63 +268,63 @@ tfb.list = function(data, arg = NULL,
     } else {
       stopifnot(
         !is.null(arg), length(arg) == length(data),
-        all(sapply(arg, length) == lengths)
+        all(vapply(arg, length, numeric(1)) == lengths)
       )
-      data = map2(arg, data, ~as.data.frame(cbind(arg = .x, data = .y)))
+      data <- map2(arg, data, ~as.data.frame(cbind(arg = .x, data = .y)))
     }
   }
-  dims = map(data, dim)
+  dims <- map(data, dim)
   stopifnot(
-    all(sapply(dims, length) == 2), all(map(dims, ~.x[2]) == 2),
+    all(vapply(dims, length, numeric(1)) == 2), all(map(dims, ~.x[2]) == 2),
     all(rapply(data, is.numeric))
   )
-  data = data_frame(
+  data <- data_frame(
     id = unique_id(names(data)) %||% seq_along(data),
     funs = data
   ) %>% tidyr::unnest
   # dispatch to data.frame method
-  ret = tfb(data,
+  ret <- tfb(data,
     domain = domain,
     penalized = penalized, resolution = resolution, ...
   )
-  names(ret) = names_data
+  names(ret) <- names_data
   ret
 }
 
 #' @rdname tfb
 #' @export
-tfb.tfd = function(data, arg = NULL,
+tfb.tfd <- function(data, arg = NULL,
                     domain = NULL, penalized = TRUE, resolution = NULL, ...) {
-  arg = arg %||% tf_arg(data)
-  domain = domain %||% tf_domain(data)
-  resolution = resolution %||% tf_resolution(data)
-  names_data = names(data)
-  data = as.data.frame(data, arg)
-  ret = tfb(data,
+  arg <- arg %||% tf_arg(data)
+  domain <- domain %||% tf_domain(data)
+  resolution <- resolution %||% tf_resolution(data)
+  names_data <- names(data)
+  data <- as.data.frame(data, arg)
+  ret <- tfb(data,
     domain = domain,
     penalized = penalized, resolution = resolution, ...
   )
-  names(ret) = names_data
+  names(ret) <- names_data
   ret
 }
 
 #' @rdname tfb
 #' @export
-tfb.tfb = function(data, arg = NULL,
+tfb.tfb <- function(data, arg = NULL,
                     domain = NULL, penalized = TRUE, resolution = NULL, ...) {
-  arg = arg %||% tf_arg(data)
-  resolution = resolution %||% tf_resolution(data)
-  domain = domain %||% tf_domain(data)
-  s_args = modifyList(
+  arg <- arg %||% tf_arg(data)
+  resolution <- resolution %||% tf_resolution(data)
+  domain <- domain %||% tf_domain(data)
+  s_args <- modifyList(
     attr(data, "basis_args"),
     list(...)[names(list(...)) %in% names(formals(mgcv::s))]
   )
-  names_data = names(data)
-  data = as.data.frame(data, arg = arg)
-  ret = do.call("tfb", c(list(data),
+  names_data <- names(data)
+  data <- as.data.frame(data, arg = arg)
+  ret <- do.call("tfb", c(list(data),
     domain = domain,
     penalized = penalized, resolution = resolution, s_args
   ))
-  names(ret) = names_data
+  names(ret) <- names_data
   ret
 }

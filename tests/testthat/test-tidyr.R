@@ -1,9 +1,9 @@
 context("gathering & (un)nesting")
 
-data = refund::DTI[1:5, ]
-d1 = data.frame(data$cca)
-d2 = data.frame(id = data$ID, data$cca)
-cca = tfd(data$cca)
+data <- refund::DTI[1:5, ]
+d1 <- data.frame(data$cca)
+d2 <- data.frame(id = data$ID, data$cca)
+cca <- tfd(data$cca)
 
 test_that("tf_gather works", {
   expect_is(tf_gather(d1)$cca, "tfd")
@@ -25,8 +25,8 @@ test_that("tf_gather works", {
 })
 
 test_that("tf_spread works", {
-  d = data_frame(g = 1:3)
-  d$f = tf_rgp(3, 11L)
+  d <- data_frame(g = 1:3)
+  d$f <- tf_rgp(3, 11L)
   expect_equivalent(
     tf_spread(d, f, sep = NULL)[, -1],
     as.data.frame(as.matrix(d$f))
@@ -37,13 +37,13 @@ test_that("tf_spread works", {
     tf_spread(d, f, arg = seq(0, 1, l = 20), sep = NULL)[, -1],
     as.data.frame(d$f[, seq(0, 1, l = 20), interpolate = TRUE])
   )
-  d$fb = tfb(tf_rgp(3, 11L))
+  d$fb <- tfb(tf_rgp(3, 11L))
   expect_error(tf_spread(d), "More than one")
   expect_equivalent(
-    tf_spread(d, fb, sep = NULL)[, -(1:2)],
+    tf_spread(d, fb, sep = NULL)[, - (1:2)],
     as.data.frame(as.matrix(d$fb))
   )
-  d$fi = tf_jiggle(tf_rgp(3, 11L))
+  d$fi <- tf_jiggle(tf_rgp(3, 11L))
   expect_error(tf_spread(d, fi), "need explicit <arg>")
   expect_equivalent(
     tf_spread(d, fi, arg = seq(0, 1, l = 20), sep = NULL)[, -(1:3)],
@@ -55,27 +55,27 @@ test_that("tf_spread works", {
 
 
 test_that("tf_nest works", {
-  f1 = tf_rgp(3, 11L)
-  f2 = tf_rgp(3, 11L)
-  data = inner_join(as.data.frame(f1), as.data.frame(f2), by = c("id", "arg"))
+  f1 <- tf_rgp(3, 11L)
+  f2 <- tf_rgp(3, 11L)
+  data <- inner_join(as.data.frame(f1), as.data.frame(f2), by = c("id", "arg"))
   expect_equivalent(tf_nest(data)$value.x, f1)
   expect_equivalent(tf_nest(data)$value.y, f2)
   expect_equal(names(tf_nest(data, value.x:value.y)), names(tf_nest(data)))
   expect_equivalent(names(tf_nest(data, -(1:2))), names(tf_nest(data)))
   expect_error(tf_nest(data, resolution = c(.01, .4, .4)))
 
-  g = rnorm(3)
-  data = bind_cols(data, g = rep(g, e = tf_count(f1)))
+  g <- rnorm(3)
+  data <- bind_cols(data, g = rep(g, e = tf_count(f1)))
   expect_equal(tf_nest(data, value.x:value.y)$g, g)
-  data = bind_cols(data, f = rep(rnorm(nrow(data))))
+  data <- bind_cols(data, f = rep(rnorm(nrow(data))))
   expect_error(tf_nest(data, value.x:value.y), "Columns f are not constant")
 })
 
 test_that("tf_unnest works", {
-  f1 = tf_rgp(3, 11L)
-  f2 = tf_rgp(3, 11L)
-  data = inner_join(as.data.frame(f1), as.data.frame(f2), by = c("id", "arg"))
-  tfdata = tf_nest(data)
+  f1 <- tf_rgp(3, 11L)
+  f2 <- tf_rgp(3, 11L)
+  data <- inner_join(as.data.frame(f1), as.data.frame(f2), by = c("id", "arg"))
+  tfdata <- tf_nest(data)
   expect_true(all(tf_unnest(tfdata)[] == data))
   expect_message(tf_unnest(tfdata), "Duplicate columns")
   expect_message(tf_unnest(tfdata), "Renamed")

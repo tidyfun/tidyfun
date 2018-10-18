@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Introducing tidyfun • tidyfun</title>
-<!-- jquery --><script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/flatly/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+<!-- jquery --><script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script><!-- Font Awesome icons --><link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script><!-- sticky kit --><script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
 <script src="../pkgdown.js"></script><meta property="og:title" content="Introducing tidyfun">
@@ -29,7 +29,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidyfun</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.0.4</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.0.6</span>
       </span>
     </div>
 
@@ -52,7 +52,13 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/Intro.html">Introducing tidyfun</a>
+      <a href="../articles/x01_Intro.html">Introducing tidyfun</a>
+    </li>
+    <li>
+      <a href="../articles/x02_Data_Manipulation.html">Data Manipulation</a>
+    </li>
+    <li>
+      <a href="../articles/x03_Visualization.html">Visualization</a>
     </li>
   </ul>
 </li>
@@ -79,10 +85,10 @@
       <h1>Introducing tidyfun</h1>
                         <h4 class="author">Fabian Scheipl</h4>
             
-            <h4 class="date">2018-08-13</h4>
+            <h4 class="date">2018-10-16</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/fabian-s/tidyfun/blob/master/vignettes/Intro.Rmd"><code>vignettes/Intro.Rmd</code></a></small>
-      <div class="hidden name"><code>Intro.Rmd</code></div>
+      <small class="dont-index">Source: <a href="https://github.com/fabian-s/tidyfun/blob/master/vignettes/x01_Intro.Rmd"><code>vignettes/x01_Intro.Rmd</code></a></small>
+      <div class="hidden name"><code>x01_Intro.Rmd</code></div>
 
     </div>
 
@@ -161,7 +167,7 @@ dti
 ex =<span class="st"> </span><span class="kw"><a href="../reference/tfd.html">tfd</a></span>(ex_data, <span class="dt">signif =</span> <span class="dv">2</span>)
 ex
 ## tfd[5] on (0,1) based on 93 evaluations each
-## interpolation by approx_linear 
+## interpolation by tf_approx_linear 
 ## A: (0.000,0.49);(0.011,0.52);(0.022,0.54); ...
 ## B: (0.000,0.47);(0.011,0.49);(0.022,0.50); ...
 ## C: (0.000,0.50);(0.011,0.51);(0.022,0.54); ...
@@ -169,7 +175,7 @@ ex
 ## E: (0.000,0.40);(0.011,0.41);(0.022,0.40); ...</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(ex, <span class="dt">xlim =</span> <span class="kw">c</span>(<span class="op">-</span><span class="fl">0.15</span>, <span class="dv">1</span>), <span class="dt">col =</span> pal_<span class="dv">5</span>)
 <span class="kw">text</span>(<span class="dt">x =</span> <span class="op">-</span>.<span class="dv">1</span>, <span class="dt">y =</span> ex[,<span class="fl">0.07</span>], <span class="dt">labels =</span> <span class="kw">names</span>(ex), <span class="dt">col =</span> pal_<span class="dv">5</span>)</code></pre></div>
-<p><img src="Intro_files/figure-html/ex-fig-1.png" width="768"></p>
+<p><img src="x01_Intro_files/figure-html/ex-fig-1.png" width="768"></p>
 </div>
 <div id="tf-subclass-tfd" class="section level2">
 <h2 class="hasAnchor">
@@ -181,40 +187,40 @@ ex
 </li>
 <li>has a <strong><code>domain</code></strong>: the range of valid <strong><code>arg</code></strong>s.</li>
 </ul>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ex <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/tfmethods.html">evaluations</a></span>() <span class="op">%&gt;%</span><span class="st"> </span>str
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ex <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/tfmethods.html">tf_evaluations</a></span>() <span class="op">%&gt;%</span><span class="st"> </span>str
 ## List of 5
 ##  $ : num [1:93] 0.491 0.517 0.536 0.555 0.593 ...
 ##  $ : num [1:93] 0.472 0.487 0.502 0.523 0.552 ...
 ##  $ : num [1:93] 0.502 0.514 0.539 0.574 0.603 ...
 ##  $ : num [1:93] 0.402 0.423 0.44 0.46 0.475 ...
 ##  $ : num [1:93] 0.402 0.406 0.399 0.386 0.409 ...
-ex <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/tfmethods.html">arg</a></span>() <span class="op">%&gt;%</span><span class="st"> </span>str
+ex <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/tfmethods.html">tf_arg</a></span>() <span class="op">%&gt;%</span><span class="st"> </span>str
 ##  num [1:93] 0 0.0109 0.0217 0.0326 0.0435 ...
-ex <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/tfmethods.html">domain</a></span>() 
+ex <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/tfmethods.html">tf_domain</a></span>() 
 ## [1] 0 1</code></pre></div>
 <ul>
 <li>each <strong><code>tfd</code></strong>-vector contains an <strong><code>evaluator</code></strong> function that defines how to inter-/extrapolate <code>evaluations</code> between <code>arg</code>s (and remembers results of previous calls)</li>
 </ul>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/tfmethods.html">evaluator</a></span>(ex) <span class="op">%&gt;%</span><span class="st"> </span>str
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/tfmethods.html">tf_evaluator</a></span>(ex) <span class="op">%&gt;%</span><span class="st"> </span>str
 ## function (x, arg, evaluations)  
 ##  - attr(*, "memoised")= logi TRUE
 ##  - attr(*, "class")= chr [1:2] "memoised" "function"
-<span class="kw"><a href="../reference/tfmethods.html">evaluator</a></span>(ex) =<span class="st"> "approx_spline"</span></code></pre></div>
+<span class="kw"><a href="../reference/tfmethods.html">tf_evaluator</a></span>(ex) =<span class="st"> "tf_approx_spline"</span></code></pre></div>
 <ul>
 <li>
 <strong><code>tfd</code></strong> has subclasses for regular data with a common grid and irregular or sparse data, like the <code>rcst</code> measurements in our <code>dti</code> data.</li>
 </ul>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dti<span class="op">$</span>rcst[<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>]
 ## tfd[2] on (0,1) based on 43 to 55 (mean: 49) evaluations each
-## inter-/extrapolation by approx_linear 
+## inter-/extrapolation by tf_approx_linear 
 ## 1001_1: (0.000,0.26);(0.019,0.45);(0.037,0.40); ...
 ## 1002_1: ( 0.22,0.44);( 0.24,0.48);( 0.26,0.48); ...
-dti<span class="op">$</span>rcst[<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>] <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/tfmethods.html">arg</a></span>() <span class="op">%&gt;%</span><span class="st"> </span>str
+dti<span class="op">$</span>rcst[<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>] <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/tfmethods.html">tf_arg</a></span>() <span class="op">%&gt;%</span><span class="st"> </span>str
 ## List of 2
 ##  $ 1001_1: num [1:55] 0 0.0185 0.037 0.0556 0.0741 ...
 ##  $ 1002_1: num [1:43] 0.222 0.241 0.259 0.278 0.296 ...
 dti<span class="op">$</span>rcst[<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>] <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">plot</span>(<span class="dt">pch =</span> <span class="st">"x"</span>, <span class="dt">col =</span> <span class="kw">viridis</span>(<span class="dv">2</span>))</code></pre></div>
-<p><img src="Intro_files/figure-html/unnamed-chunk-3-1.png" width="768"></p>
+<p><img src="x01_Intro_files/figure-html/unnamed-chunk-3-1.png" width="768"></p>
 </div>
 <div id="tf-subclass-tfb" class="section level2">
 <h2 class="hasAnchor">
@@ -223,16 +229,16 @@ dti<span class="op">$</span>rcst[<span class="dv">1</span><span class="op">:</sp
 <p>Functional data in basis representation:</p>
 <ul>
 <li>represented as a list of <strong><code>coefficients</code></strong> and a common <strong><code>basis_matrix</code></strong> of basis function evaluations on a vector of <code>arg</code>-values.</li>
-<li>contains a <strong><code>basis</code></strong> function that defines how to compute the basis for new <strong><code>arg</code></strong>s and how to differentiate/integrate.</li>
+<li>contains a <strong><code>basis</code></strong> function that defines how to compute the basis for new <strong><code>arg</code></strong>s and how to differentiate or integrate it.</li>
 <li>(internal) flavors: <strong><code>mgcv</code></strong>-spline bases and FPCs (wavelets to be added)</li>
 <li>significant memory and time savings:</li>
 </ul>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">refund<span class="op">::</span>DTI<span class="op">$</span>cca <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">object.size</span>() <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">print</span>(<span class="dt">units =</span> <span class="st">"Kb"</span>)
 ## 304 Kb
 dti<span class="op">$</span>cca <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">object.size</span>() <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">print</span>(<span class="dt">units =</span> <span class="st">"Kb"</span>)
-## 333.5 Kb
+## 337 Kb
 dti<span class="op">$</span>cca <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/tfb.html">tfb</a></span>(<span class="dt">verbose =</span> <span class="ot">FALSE</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">object.size</span>() <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">print</span>(<span class="dt">units =</span> <span class="st">"Kb"</span>)
-## 148.9 Kb</code></pre></div>
+## 152.7 Kb</code></pre></div>
 <div id="tfb-spline-basis" class="section level3">
 <h3 class="hasAnchor">
 <a href="#tfb-spline-basis" class="anchor"></a><strong><code>tfb</code></strong> spline basis</h3>
@@ -242,7 +248,7 @@ dti<span class="op">$</span>cca <span class="op">%&gt;%</span><span class="st"> 
 </ul>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ex_b =<span class="st"> </span>ex <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/tfb.html">tfb</a></span>()
 ## Percentage of raw input data variance preserved in basis representation:
-## (per functional observation, approx.):
+## (per functional observation, tf_approx.):
 ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
 ##   95.60   96.40   96.90   97.12   98.00   98.70
 ex_b[<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>]
@@ -253,7 +259,7 @@ ex_b[<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>
 
 ex[<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>] <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/tfb.html">tfb</a></span>(<span class="dt">bs =</span> <span class="st">"tp"</span>, <span class="dt">k =</span> <span class="dv">55</span>)
 ## Percentage of raw input data variance preserved in basis representation:
-## (per functional observation, approx.):
+## (per functional observation, tf_approx.):
 ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
 ##   99.10   99.22   99.35   99.35   99.47   99.60
 ## tf[2] on (0,1) in basis representation:
@@ -265,8 +271,8 @@ ex  <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">plot
 ex_b <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">plot</span>(<span class="dt">col =</span> <span class="st">"red"</span>)
 ex <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/tfb.html">tfb</a></span>(<span class="dt">k =</span> <span class="dv">35</span>, <span class="dt">penalized =</span> <span class="ot">FALSE</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">lines</span>(<span class="dt">col =</span> <span class="st">"blue"</span>)
 ## Percentage of raw input data variance preserved in basis representation:
-## (per functional observation, approx.):</code></pre></div>
-<p><img src="Intro_files/figure-html/unnamed-chunk-6-1.png" width="768"></p>
+## (per functional observation, tf_approx.):</code></pre></div>
+<p><img src="x01_Intro_files/figure-html/unnamed-chunk-6-1.png" width="768"></p>
 <pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
 ##    98.5    98.6    98.7    99.0    99.6    99.6</code></pre>
 </div>
@@ -304,7 +310,7 @@ ex <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a hr
 ex <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">plot</span>()
 ex_fpc  <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">plot</span>(<span class="dt">col =</span> <span class="st">"red"</span>, <span class="dt">ylab =</span> <span class="st">"tfb_fpc(ex)"</span>)
 ex_fpc_smooth <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">lines</span>(<span class="dt">col =</span> <span class="st">"blue"</span>)</code></pre></div>
-<p><img src="Intro_files/figure-html/unnamed-chunk-8-1.png" width="768"></p>
+<p><img src="x01_Intro_files/figure-html/unnamed-chunk-8-1.png" width="768"></p>
 </div>
 </div>
 </div>
@@ -317,13 +323,13 @@ ex_fpc_smooth <span class="op">%&gt;%</span><span class="st"> </span><span class
 <a href="#subset-subassign" class="anchor"></a>subset &amp; subassign:</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ex[<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>]
 ## tfd[2] on (0,1) based on 93 evaluations each
-## interpolation by approx_spline 
+## interpolation by tf_approx_spline 
 ## A: (0.000,0.49);(0.011,0.52);(0.022,0.54); ...
 ## B: (0.000,0.47);(0.011,0.49);(0.022,0.50); ...
 ex[<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>] =<span class="st"> </span>ex[<span class="dv">2</span><span class="op">:</span><span class="dv">1</span>]
 ex
 ## tfd[5] on (0,1) based on 93 evaluations each
-## interpolation by approx_spline 
+## interpolation by tf_approx_spline 
 ## B: (0.000,0.47);(0.011,0.49);(0.022,0.50); ...
 ## A: (0.000,0.49);(0.011,0.52);(0.022,0.54); ...
 ## C: (0.000,0.50);(0.011,0.51);(0.022,0.54); ...
@@ -345,14 +351,14 @@ ex <span class="op">-</span><span class="st"> </span>(<span class="dv">2</span><
 <a href="#summarize" class="anchor"></a>summarize:</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">c</span>(<span class="dt">mean =</span> <span class="kw">mean</span>(ex), <span class="dt">sd =</span> <span class="kw"><a href="../reference/tfsummaries.html">sd</a></span>(ex))
 ## tfd[2] on (0,1) based on 93 evaluations each
-## interpolation by approx_spline 
+## interpolation by tf_approx_spline 
 ## mean: (0.000, 0.45);(0.011, 0.47);(0.022, 0.48); ...
 ## sd: (0.000,0.049);(0.011,0.052);(0.022,0.062); ...
 
-<span class="kw"><a href="../reference/depth.html">depth</a></span>(ex) ## Modified Band-2 Depth (à la Sun/Genton/Nychka, 2012), others to come.
+<span class="kw"><a href="../reference/tf_depth.html">tf_depth</a></span>(ex) ## Modified Band-2 Depth (à la Sun/Genton/Nychka, 2012), others to come.
 ##         B         A         C         D         E 
 ## 0.6108696 0.6467391 0.6597826 0.5728261 0.5097826
-<span class="kw">median</span>(ex) <span class="op">==</span><span class="st"> </span>ex[<span class="kw">which.max</span>(<span class="kw"><a href="../reference/depth.html">depth</a></span>(ex))]
+<span class="kw">median</span>(ex) <span class="op">==</span><span class="st"> </span>ex[<span class="kw">which.max</span>(<span class="kw"><a href="../reference/tf_depth.html">tf_depth</a></span>(ex))]
 ##    C 
 ## TRUE</code></pre></div>
 <p>In addition, <strong><code>tidyfun</code></strong> provides methods specific for functional data:</p>
@@ -386,31 +392,31 @@ ex[<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>, 
 <a href="#simple-local-smoothing" class="anchor"></a>(simple, local) smoothing</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">layout</span>(<span class="kw">t</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>))
 ex <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">plot</span>(<span class="dt">alpha =</span> .<span class="dv">2</span>, <span class="dt">ylab =</span> <span class="st">"lowess"</span>)
-ex <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/smooth.html">smooth</a></span>(<span class="st">"lowess"</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">lines</span>(<span class="dt">col =</span> pal_<span class="dv">5</span>)
+ex <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/tf_smooth.html">tf_smooth</a></span>(<span class="st">"lowess"</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">lines</span>(<span class="dt">col =</span> pal_<span class="dv">5</span>)
 ## using f = 0.15 as smoother span for lowess
 
 ex <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">plot</span>(<span class="dt">alpha =</span> .<span class="dv">2</span>, <span class="dt">ylab =</span> <span class="st">"rolling median (k=5)"</span>)
-ex <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/smooth.html">smooth</a></span>(<span class="st">"rollmedian"</span>, <span class="dt">k =</span> <span class="dv">5</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">lines</span>(<span class="dt">col =</span> pal_<span class="dv">5</span>)
-## Warning in smooth.tfd(., "rollmedian", k = 5): non-equidistant arg-values
-## in '.' ignored by rollmedian.
+ex <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/tf_smooth.html">tf_smooth</a></span>(<span class="st">"rollmedian"</span>, <span class="dt">k =</span> <span class="dv">5</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">lines</span>(<span class="dt">col =</span> pal_<span class="dv">5</span>)
+## Warning in tf_smooth.tfd(., "rollmedian", k = 5): non-equidistant arg-
+## values in '.' ignored by rollmedian.
 ## setting fill = 'extend' for start/end values.
 
 ex <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">plot</span>(<span class="dt">alpha =</span> .<span class="dv">2</span>, <span class="dt">ylab =</span> <span class="st">"Savitzky-Golay (quartic, 11 steps)"</span>)
-ex <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/smooth.html">smooth</a></span>(<span class="st">"savgol"</span>, <span class="dt">fl =</span> <span class="dv">11</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">lines</span>(<span class="dt">col =</span> pal_<span class="dv">5</span>)
-## Warning in smooth.tfd(., "savgol", fl = 11): non-equidistant arg-values in
-## '.' ignored by savgol.</code></pre></div>
-<p><img src="Intro_files/figure-html/unnamed-chunk-15-1.png" width="768"></p>
+ex <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/tf_smooth.html">tf_smooth</a></span>(<span class="st">"savgol"</span>, <span class="dt">fl =</span> <span class="dv">11</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">lines</span>(<span class="dt">col =</span> pal_<span class="dv">5</span>)
+## Warning in tf_smooth.tfd(., "savgol", fl = 11): non-equidistant arg-values
+## in '.' ignored by savgol.</code></pre></div>
+<p><img src="x01_Intro_files/figure-html/unnamed-chunk-15-1.png" width="768"></p>
 </div>
 <div id="differentiate-integrate" class="section level3">
 <h3 class="hasAnchor">
 <a href="#differentiate-integrate" class="anchor"></a>differentiate &amp; integrate:</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">layout</span>(<span class="kw">t</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>))
 ex <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">plot</span>(<span class="dt">col =</span> pal_<span class="dv">5</span>)
-ex <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/smooth.html">smooth</a></span>() <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">deriv</span>() <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">plot</span>(<span class="dt">col =</span> pal_<span class="dv">5</span>, <span class="dt">ylab =</span> <span class="st">"deriv(smooth(ex))"</span>)
+ex <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/tf_smooth.html">tf_smooth</a></span>() <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/tfcalculus.html">tf_derive</a></span>() <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">plot</span>(<span class="dt">col =</span> pal_<span class="dv">5</span>, <span class="dt">ylab =</span> <span class="st">"tf_derive(tf_smooth(ex))"</span>)
 ## using f = 0.15 as smoother span for lowess
-ex <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/tfcalculus.html">integrate</a></span>(<span class="dt">definite =</span> <span class="ot">FALSE</span>) <span class="op">%&gt;%</span><span class="st">  </span><span class="kw">plot</span>(<span class="dt">col =</span> pal_<span class="dv">5</span>)</code></pre></div>
-<p><img src="Intro_files/figure-html/unnamed-chunk-16-1.png" width="768"></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ex <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/tfcalculus.html">integrate</a></span>()
+ex <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/tfcalculus.html">tf_integrate</a></span>(<span class="dt">definite =</span> <span class="ot">FALSE</span>) <span class="op">%&gt;%</span><span class="st">  </span><span class="kw">plot</span>(<span class="dt">col =</span> pal_<span class="dv">5</span>)</code></pre></div>
+<p><img src="x01_Intro_files/figure-html/unnamed-chunk-16-1.png" width="768"></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ex <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/tfcalculus.html">tf_integrate</a></span>()
 ##         B         A         C         D         E 
 ## 0.5202229 0.5266713 0.5090638 0.5308612 0.4661378</code></pre></div>
 </div>
@@ -418,10 +424,10 @@ ex <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a hr
 <h3 class="hasAnchor">
 <a href="#query" class="anchor"></a>query</h3>
 <p><strong><code>tidyfun</code></strong> makes it easy to find (ranges of) <code>arg</code>uments <span class="math inline">\(t\)</span> satisfying a condition on <code>value</code> <span class="math inline">\(f(t)\)</span> (and <code>arg</code>ument <span class="math inline">\(t\)</span>):</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ex <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/where.html">anywhere</a></span>(value <span class="op">&gt;</span><span class="st"> </span>.<span class="dv">65</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ex <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/tf_where.html">tf_anywhere</a></span>(value <span class="op">&gt;</span><span class="st"> </span>.<span class="dv">65</span>)
 ##     B     A     C     D     E 
 ## FALSE  TRUE  TRUE FALSE FALSE
-ex[<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>] <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/where.html">where</a></span>(value <span class="op">&gt;</span><span class="st"> </span>.<span class="dv">6</span>, <span class="st">"all"</span>)
+ex[<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>] <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/tf_where.html">tf_where</a></span>(value <span class="op">&gt;</span><span class="st"> </span>.<span class="dv">6</span>, <span class="st">"all"</span>)
 ## $B
 ## [1] 0.07608696 0.89130435 0.90217391 0.91304348 0.92391304 0.96739130
 ## [7] 0.97826087
@@ -429,10 +435,10 @@ ex[<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>] 
 ## $A
 ##  [1] 0.05434783 0.06521739 0.07608696 0.08695652 0.09782609 0.10869565
 ##  [7] 0.11956522 0.13043478 0.14130435 0.95652174 0.96739130 0.97826087
-ex[<span class="dv">2</span>] <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/where.html">where</a></span>(value <span class="op">&gt;</span><span class="st"> </span>.<span class="dv">6</span>, <span class="st">"range"</span>)
+ex[<span class="dv">2</span>] <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/tf_where.html">tf_where</a></span>(value <span class="op">&gt;</span><span class="st"> </span>.<span class="dv">6</span>, <span class="st">"range"</span>)
 ##        begin       end
 ## A 0.05434783 0.9782609
-ex <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/where.html">where</a></span>(value <span class="op">&gt;</span><span class="st"> </span>.<span class="dv">6</span> <span class="op">&amp;</span><span class="st"> </span>arg <span class="op">&gt;</span><span class="st"> </span>.<span class="dv">5</span>, <span class="st">"first"</span>)
+ex <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/tf_where.html">tf_where</a></span>(value <span class="op">&gt;</span><span class="st"> </span>.<span class="dv">6</span> <span class="op">&amp;</span><span class="st"> </span>arg <span class="op">&gt;</span><span class="st"> </span>.<span class="dv">5</span>, <span class="st">"first"</span>)
 ##         B         A         C         D         E 
 ## 0.8913043 0.9565217 0.9565217 0.9347826 0.9347826</code></pre></div>
 </div>
@@ -442,14 +448,14 @@ ex <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a hr
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ex <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">plot</span>(<span class="dt">xlim =</span> <span class="kw">c</span>(<span class="op">-</span><span class="fl">0.15</span>, <span class="dv">1</span>), <span class="dt">col =</span> pal_<span class="dv">5</span>, <span class="dt">lwd =</span> <span class="dv">2</span>)
 <span class="kw">text</span>(<span class="dt">x =</span> <span class="op">-</span>.<span class="dv">1</span>, <span class="dt">y =</span> ex[,<span class="fl">0.07</span>], <span class="dt">labels =</span> <span class="kw">names</span>(ex), <span class="dt">col =</span> pal_<span class="dv">5</span>, <span class="dt">cex =</span> <span class="fl">1.5</span>)
 <span class="kw">median</span>(ex) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">lines</span>(<span class="dt">col =</span> pal_<span class="dv">5</span>[<span class="dv">3</span>], <span class="dt">lwd =</span> <span class="dv">4</span>)</code></pre></div>
-<p><img src="Intro_files/figure-html/ex-fig2-1.png" width="768"></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ex <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/where.html">where</a></span>(value <span class="op">==</span><span class="st"> </span><span class="kw">max</span>(value), <span class="st">"first"</span>)
+<p><img src="x01_Intro_files/figure-html/ex-fig2-1.png" width="768"></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ex <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/tf_where.html">tf_where</a></span>(value <span class="op">==</span><span class="st"> </span><span class="kw">max</span>(value), <span class="st">"first"</span>)
 ##          B          A          C          D          E 
 ## 0.90217391 0.07608696 1.00000000 0.10869565 0.93478261
-ex[<span class="kw">c</span>(<span class="st">"A"</span>, <span class="st">"D"</span>)] <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/zoom.html">zoom</a></span>(.<span class="dv">5</span>, <span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/where.html">where</a></span>(value <span class="op">==</span><span class="st"> </span><span class="kw">max</span>(value), <span class="st">"first"</span>)
+ex[<span class="kw">c</span>(<span class="st">"A"</span>, <span class="st">"D"</span>)] <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/tf_zoom.html">tf_zoom</a></span>(.<span class="dv">5</span>, <span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/tf_where.html">tf_where</a></span>(value <span class="op">==</span><span class="st"> </span><span class="kw">max</span>(value), <span class="st">"first"</span>)
 ##         A         D 
 ## 0.9673913 0.9565217
-ex <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/zoom.html">zoom</a></span>(<span class="fl">0.2</span>, <span class="fl">0.6</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/where.html">anywhere</a></span>(value <span class="op">&lt;=</span><span class="st"> </span><span class="kw">median</span>(ex)[, arg])
+ex <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/tf_zoom.html">tf_zoom</a></span>(<span class="fl">0.2</span>, <span class="fl">0.6</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/tf_where.html">tf_anywhere</a></span>(value <span class="op">&lt;=</span><span class="st"> </span><span class="kw">median</span>(ex)[, arg])
 ##     B     A     C     D     E 
 ##  TRUE FALSE  TRUE FALSE  TRUE</code></pre></div>
 </div>
@@ -468,7 +474,7 @@ ex_df =<span class="st"> </span>ex <span class="op">%&gt;%</span><span class="st
 ##  $ value: num  0.472 0.487 0.502 0.523 0.552 ...
 ex_matrix[<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>, ] <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/tfd.html">tfd</a></span>()
 ## tfd[2] on (0,1) based on 93 evaluations each
-## interpolation by approx_linear 
+## interpolation by tf_approx_linear 
 ## B: (0.000,0.47);(0.011,0.49);(0.022,0.50); ...
 ## A: (0.000,0.49);(0.011,0.52);(0.022,0.54); ...
 <span class="kw"><a href="../reference/tfd.html">tfd</a></span>(ex_df) <span class="op">==</span><span class="st"> </span><span class="kw"><a href="../reference/tfd.html">tfd</a></span>(ex_matrix)
@@ -485,7 +491,7 @@ ex_matrix[<span class="dv">1</span><span class="op">:</span><span class="dv">2</
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">layout</span>(<span class="kw">t</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>))
 <span class="kw">plot</span>(ex, <span class="dt">type =</span> <span class="st">"spaghetti"</span>); <span class="kw">lines</span>(<span class="kw">c</span>(<span class="kw">median</span>(ex), <span class="kw">mean</span>(ex)), <span class="dt">col =</span> <span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">4</span>))
 <span class="kw">plot</span>(ex, <span class="dt">type =</span> <span class="st">"lasagna"</span>, <span class="dt">col =</span> <span class="kw">viridis</span>(<span class="dv">50</span>))</code></pre></div>
-<p><img src="Intro_files/figure-html/ex-fig3-1.png" width="768"></p>
+<p><img src="x01_Intro_files/figure-html/ex-fig3-1.png" width="768"></p>
 </div>
 <div id="visualize-with-ggplot2" class="section level3">
 <h3 class="hasAnchor">
@@ -510,12 +516,12 @@ ex_matrix[<span class="dv">1</span><span class="op">:</span><span class="dv">2</
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(dti) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw"><a href="../reference/ggspaghetti.html">geom_spaghetti</a></span>(<span class="kw">aes</span>(<span class="dt">y =</span> cca, <span class="dt">col =</span> case, <span class="dt">alpha =</span> .<span class="dv">2</span> <span class="op">+</span><span class="st"> </span>.<span class="dv">4</span><span class="op">*</span>(case <span class="op">==</span><span class="st"> "control"</span>))) <span class="op">+</span>
 <span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span><span class="st"> </span>sex) <span class="op">+</span><span class="st"> </span><span class="kw">scale_alpha</span>(<span class="dt">guide =</span> <span class="st">'none'</span>, <span class="dt">range =</span> <span class="kw">c</span>(.<span class="dv">2</span>, .<span class="dv">4</span>))</code></pre></div>
-<p><img src="Intro_files/figure-html/dti-fig1-1.png" width="768"></p>
+<p><img src="x01_Intro_files/figure-html/dti-fig1-1.png" width="768"></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/gglasagna.html">gglasagna</a></span>(dti, cca, 
-  <span class="dt">order =</span> <span class="kw"><a href="../reference/tfcalculus.html">integrate</a></span>(cca, <span class="dt">definite =</span> <span class="ot">TRUE</span>), <span class="dt">arg =</span> <span class="kw">seq</span>(<span class="dv">0</span>,<span class="dv">1</span>, <span class="dt">l =</span> <span class="dv">101</span>)) <span class="op">+</span><span class="st"> </span>
+  <span class="dt">order =</span> <span class="kw"><a href="../reference/tfcalculus.html">tf_integrate</a></span>(cca, <span class="dt">definite =</span> <span class="ot">TRUE</span>), <span class="dt">arg =</span> <span class="kw">seq</span>(<span class="dv">0</span>,<span class="dv">1</span>, <span class="dt">l =</span> <span class="dv">101</span>)) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">theme</span>(<span class="dt">axis.text.y =</span> <span class="kw">element_text</span>(<span class="dt">size =</span> <span class="dv">6</span>)) <span class="op">+</span><span class="st"> </span>
 <span class="st">    </span><span class="kw">facet_wrap</span>(<span class="op">~</span><span class="st"> </span>case, <span class="dt">ncol =</span> <span class="dv">2</span>, <span class="dt">scales =</span> <span class="st">"free"</span>)</code></pre></div>
-<p><img src="Intro_files/figure-html/dti-fig2-1.png" width="768"></p>
+<p><img src="x01_Intro_files/figure-html/dti-fig2-1.png" width="768"></p>
 <p>Some data prep for the iconic Canadian Weather data:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">canada &lt;-<span class="st"> </span><span class="kw">data.frame</span>(
   <span class="dt">place =</span> fda<span class="op">::</span>CanadianWeather<span class="op">$</span>place, 
@@ -526,7 +532,7 @@ ex_matrix[<span class="dv">1</span><span class="op">:</span><span class="dv">2</
 
 canada<span class="op">$</span>temp &lt;-<span class="st"> </span><span class="kw"><a href="../reference/tfd.html">tfd</a></span>(<span class="kw">t</span>(fda<span class="op">::</span>CanadianWeather<span class="op">$</span>dailyAv[,,<span class="dv">1</span>]), <span class="dt">arg =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">365</span>)
 canada<span class="op">$</span>precipl10 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/tfd.html">tfd</a></span>(<span class="kw">t</span>(fda<span class="op">::</span>CanadianWeather<span class="op">$</span>dailyAv[,,<span class="dv">3</span>]), <span class="dt">arg =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">365</span>) <span class="op">%&gt;%</span>
-<span class="st">  </span>smooth
+<span class="st">  </span>tf_smooth
 ## using f = 0.15 as smoother span for lowess
 
 canada_map &lt;-<span class="st"> </span>
@@ -539,15 +545,16 @@ canada_map &lt;-<span class="st"> </span>
      <span class="dt">line.linetype =</span> <span class="dv">1</span>) <span class="op">+</span>
 <span class="st">   </span><span class="kw">geom_path</span>(<span class="dt">data =</span> canada_map, <span class="kw">aes</span>(<span class="dt">x =</span> x, <span class="dt">y =</span> y), <span class="dt">alpha =</span> .<span class="dv">1</span>) <span class="op">+</span>
 <span class="st">   </span><span class="kw">coord_quickmap</span>()</code></pre></div>
-<p><img src="Intro_files/figure-html/unnamed-chunk-22-1.png" width="768"></p>
+<p><img src="x01_Intro_files/figure-html/unnamed-chunk-22-1.png" width="768"></p>
 </div>
 </div>
-<div id="wrangling-tfs-inside-data-frames" class="section level1">
+<div id="wrangling-tf-objects-inside-data-frames" class="section level1">
 <h1 class="hasAnchor">
-<a href="#wrangling-tfs-inside-data-frames" class="anchor"></a>Wrangling <code>tf</code>s inside data frames</h1>
-<div id="wrangling-tfs-inside-data-frames-dplyr" class="section level3">
+<a href="#wrangling-tf-objects-inside-data-frames" class="anchor"></a>Wrangling <code>tf</code>-objects inside data frames</h1>
+<p>For a more detailed discussion of the topic of this section, please see the <a href="https://fabian-s.github.io/tidyfun/articles/02_Data_Manipulation.html"><code>Data Manipulation</code></a> vignette.</p>
+<div id="wrangling-tf-objects-inside-data-frames-dplyr" class="section level3">
 <h3 class="hasAnchor">
-<a href="#wrangling-tfs-inside-data-frames-dplyr" class="anchor"></a>wrangling <code>tf</code>s inside data frames: <code>dplyr</code>
+<a href="#wrangling-tf-objects-inside-data-frames-dplyr" class="anchor"></a>wrangling <code>tf</code>-objects inside data frames: <code>dplyr</code>
 </h3>
 <p><strong><code>dplyr</code></strong> verbs <strong><code>filter</code></strong>, <strong><code>select</code></strong>, <strong><code>mutate</code></strong>, <strong><code>summarize</code></strong> work on <strong><code>tf</code></strong>-columns - e.g.:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># group-wise functional means:</span>
@@ -560,7 +567,7 @@ dti <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">grou
 ## 3 MS      male   [3]: (0.000,0.53);(0.019,0.52);(0.037,0.50); ...
 ## 4 MS      female [4]: (0.000,0.52);(0.019,0.52);(0.037,0.50); ...
 <span class="co"># which subjects go below cca = .26:</span>
-dti <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(<span class="kw"><a href="../reference/where.html">anywhere</a></span>(cca, value <span class="op">&lt;</span><span class="st"> </span>.<span class="dv">26</span>))
+dti <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(<span class="kw"><a href="../reference/tf_where.html">tf_anywhere</a></span>(cca, value <span class="op">&lt;</span><span class="st"> </span>.<span class="dv">26</span>))
 ## # A tibble: 5 x 5
 ##      id sex   case  cca                         rcst                      
 ##   &lt;dbl&gt; &lt;fct&gt; &lt;fct&gt; &lt;S3: tfd_reg&gt;               &lt;S3: tfd_irreg&gt;           
@@ -582,9 +589,9 @@ dti <span class="op">%&gt;%</span><span class="st"> </span>
 ## $ rcst  &lt;S3: tfd_irreg&gt; 1001_1: (0.000,0.26);(0.019,0.45);(0.037,0.40)...
 ## $ cca_z &lt;S3: tfb&gt; [1]: (0.000,  0.85);(0.011,  0.98);(0.022,  1.09); ....</code></pre></div>
 </div>
-<div id="wrangling-tfs-inside-data-frames-tidyr" class="section level3">
+<div id="wrangling-tf-objects-inside-data-frames-tidyr" class="section level3">
 <h3 class="hasAnchor">
-<a href="#wrangling-tfs-inside-data-frames-tidyr" class="anchor"></a>wrangling <code>tf</code>s inside data frames: <code>tidyr</code>
+<a href="#wrangling-tf-objects-inside-data-frames-tidyr" class="anchor"></a>wrangling <code>tf</code>-objects inside data frames: <code>tidyr</code>
 </h3>
 <p><strong><code>tidyfun</code></strong> provides <code>tf_</code> variants of <code>tidyr</code>-verbs to reshape and reformat functional data while keeping it in sync with other covariates:</p>
 <ul>
@@ -648,6 +655,7 @@ dti_long <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"
 ## $ case      &lt;fct&gt; control, control, control, control, control, control...
 ## $ rcst      &lt;S3: tfd_irreg&gt; [1]: (0.000,0.26);(0.019,0.45);(0.037,0.40...
 ## $ cca_value &lt;S3: tfd_reg&gt; 1001_1: (0.000,0.49);(0.011,0.52);(0.022,0.5...</code></pre></div>
+<p>Note that <code>left/right_join</code>-operations as well as <code>bind_rows</code> do not currently work for tables with <code>tfd</code> or <code>tfb</code>-columns, see <a href="https://github.com/fabian-s/tidyfun/issues/53">tidyfun/issues/53</a>. <code>bind_rows</code> can be easily avoided by using <code>rbind</code>, which still works, instead.</p>
 </div>
 </div>
   </div>
@@ -668,7 +676,7 @@ dti_long <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"
 </li>
       <li><a href="#tf-class-methods"><code>tf</code>-Class: Methods</a></li>
       <li><a href="#new-geoms-and-stats-for-functional-data-for-customizable-ggplot2-graphics">New geoms and stats for functional data for customizable <code>ggplot2</code> graphics</a></li>
-      <li><a href="#wrangling-tfs-inside-data-frames">Wrangling <code>tf</code>s inside data frames</a></li>
+      <li><a href="#wrangling-tf-objects-inside-data-frames">Wrangling <code>tf</code>-objects inside data frames</a></li>
       </ul>
 </div>
       </div>
@@ -677,7 +685,7 @@ dti_long <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"
 
 
       <footer><div class="copyright">
-  <p>Developed by Fabian Scheipl.</p>
+  <p>Developed by Fabian Scheipl, Jeff Goldsmith.</p>
 </div>
 
 <div class="pkgdown">

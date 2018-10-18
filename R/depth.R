@@ -17,14 +17,14 @@
 #'   *Journal of the American Statistical Association*, **104**, 718-734.
 #' @export
 #' @rdname tf_depth
-tf_depth = function(x, depth = "MBD", na.rm = TRUE, ...) {
+tf_depth <- function(x, depth = "MBD", na.rm = TRUE, ...) {
   UseMethod("tf_depth")
 }
 #' @export
 #' @rdname tf_depth
-tf_depth.matrix = function(x, depth = "MBD", na.rm = TRUE,
+tf_depth.matrix <- function(x, depth = "MBD", na.rm = TRUE,
                             arg = unlist(find_arg(x, NULL)), ...) {
-  depth = match.arg(depth)
+  depth <- match.arg(depth)
   # TODO: this ignores na.rm -- should it?
   switch(depth,
     "MBD" = mbd(x, arg, ...)
@@ -32,10 +32,10 @@ tf_depth.matrix = function(x, depth = "MBD", na.rm = TRUE,
 }
 #' @export
 #' @rdname tf_depth
-tf_depth.tf = function(x, depth = "MBD", na.rm = TRUE, arg = NULL, ...) {
+tf_depth.tf <- function(x, depth = "MBD", na.rm = TRUE, arg = NULL, ...) {
   if (!missing(arg)) assert_arg_vector(arg, x)
   # TODO: warn if irreg?
-  if (na.rm) x = x[!is.na(x)]
+  if (na.rm) x <- x[!is.na(x)]
   tf_depth(as.matrix(x, arg = arg, interpolate = TRUE),
     depth = depth,
     na.rm = na.rm, ...
@@ -45,16 +45,16 @@ tf_depth.tf = function(x, depth = "MBD", na.rm = TRUE, arg = NULL, ...) {
 #-------------------------------------------------------------------------------
 
 # modified band-2 tf_depth:
-mbd = function(x, arg = seq_len(ncol(x)), ...) {
+mbd <- function(x, arg = seq_len(ncol(x)), ...) {
   # algorithm of Sun/Genton/Nychka (2012)
-  ranks = apply(x, 2, rank, na.last = "keep", ...)
-  weights = {
+  ranks <- apply(x, 2, rank, na.last = "keep", ...)
+  weights <- {
     # assign half interval length to 2nd/nxt-to-last points to 1st and last point
     # assign other half intervals to intermediate points
-    lengths = diff(arg) / 2
+    lengths <- diff(arg) / 2
     (c(lengths, 0) + c(0, lengths)) / diff(range(arg))
   }
-  n = nrow(ranks)
-  tmp = colSums(t((n - ranks) * (ranks - 1)) * weights, na.rm = TRUE)
+  n <- nrow(ranks)
+  tmp <- colSums( t( (n - ranks) * (ranks - 1)) * weights, na.rm = TRUE)
   (tmp + n - 1) / choose(n, 2)
 }

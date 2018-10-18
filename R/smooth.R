@@ -24,12 +24,12 @@
 #' @return a smoothed version of the input. For some methods/options, the
 #'   smoothed functions may be shorter than the original ones (at both ends).
 #' @export
-tf_smooth = function(x, ...) {
+tf_smooth <- function(x, ...) {
   UseMethod("tf_smooth")
 }
 #' @export
 #' @rdname tf_smooth
-tf_smooth.tfb = function(x, ...) {
+tf_smooth.tfb <- function(x, ...) {
   message("just use a smaller base / more penalty....")
   x
 }
@@ -43,12 +43,12 @@ tf_smooth.tfb = function(x, ...) {
 #' @examples
 #' library(zoo)
 #' library(pracma)
-#' f = tf_sparsify(tf_jiggle(tf_rgp(4, 201L, nugget = .05)))
-#' f_lowess = tf_smooth(f, "lowess")
+#' f <- tf_sparsify(tf_jiggle(tf_rgp(4, 201L, nugget = .05)))
+#' f_lowess <- tf_smooth(f, "lowess")
 #' # these methods ignore the distances between arg-values:
-#' f_mean = tf_smooth(f, "rollmean")
-#' f_median = tf_smooth(f, "rollmean", k = 31)
-#' f_sg = tf_smooth(f, "savgol", fl = 31)
+#' f_mean <- tf_smooth(f, "rollmean")
+#' f_median <- tf_smooth(f, "rollmean", k = 31)
+#' f_sg <- tf_smooth(f, "savgol", fl = 31)
 #' layout(t(1:4))
 #' plot(f, points = FALSE)
 #' plot(f_lowess, points = FALSE)
@@ -57,11 +57,12 @@ tf_smooth.tfb = function(x, ...) {
 #' lines(f_median, col = 2, alpha= .2) # note constant extrapolation
 #' plot(f, points = FALSE)
 #' lines(f_sg, col = 2)
-tf_smooth.tfd = function(x, method = c("lowess", "rollmean", "rollmedian", "savgol"),
-                          ...) {
-  method = match.arg(method)
-  smoother = get(method, mode = "function")
-  dots = list(...)
+tf_smooth.tfd <- 
+  function(x, method = c("lowess", "rollmean", "rollmedian", "savgol"), 
+           ...) {
+  method <- match.arg(method)
+  smoother <- get(method, mode = "function")
+  dots <- list(...)
   if (any(str_detect(method, c("savgol", "rollm")))) {
     if (!is_equidist(x)) {
       warning(
@@ -71,30 +72,32 @@ tf_smooth.tfd = function(x, method = c("lowess", "rollmean", "rollmedian", "savg
     }
     if (str_detect(method, "rollm")) {
       if (is.null(dots$k)) {
-        dots$k = ceiling(.05 * min(tf_count(x)))
-        dots$k = dots$k + !(dots$k %% 2) # make uneven
+        dots$k <- ceiling(.05 * min(tf_count(x)))
+        dots$k <- dots$k + !(dots$k %% 2) # make uneven
         message("using k = ", dots$k, " observations for rolling data window.")
       }
       if (is.null(dots$fill)) {
         message("setting fill = 'extend' for start/end values.")
-        dots$fill = "extend"
+        dots$fill <- "extend"
       }
     }
     if (str_detect(method, "savgol")) {
       if (is.null(dots$fl)) {
-        dots$fl = ceiling(.15 * min(tf_count(x)))
-        dots$fl = dots$fl + !(dots$fl %% 2) # make uneven
+        dots$fl <- ceiling(.15 * min(tf_count(x)))
+        dots$fl <- dots$fl + !(dots$fl %% 2) # make uneven
         message("using fl = ", dots$fl, " observations for rolling data window.")
       }
     }
-    smoothed = map(tf_evaluations(x), ~do.call(smoother, append(list(.x), dots)))
+    smoothed <- map(tf_evaluations(x), 
+                    ~do.call(smoother, append(list(.x), dots)))
   }
   if (str_detect(method, "lowess")) {
     if (is.null(dots$f)) {
-      dots$f = .15
+      dots$f <- .15
       message("using f = ", dots$f, " as smoother span for lowess")
     }
-    smoothed = map(tf_evaluations(x), ~do.call(smoother, append(list(.x), dots))$y)
+    smoothed <- map(tf_evaluations(x), 
+                    ~do.call(smoother, append(list(.x), dots))$y)
   }
   tfd(smoothed, tf_arg(x),
     evaluator = !!attr(x, "evaluator_name"),
@@ -102,4 +105,4 @@ tf_smooth.tfd = function(x, method = c("lowess", "rollmean", "rollmedian", "savg
   )
 }
 #' @export
-tf_smooth.default = function(x, ...) .NotYetImplemented()
+tf_smooth.default <- function(x, ...) .NotYetImplemented()

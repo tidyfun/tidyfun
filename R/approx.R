@@ -1,12 +1,12 @@
 #' @import zoo
-zoo_wrapper = function(f, ...) {
-  dots = list(...)
+zoo_wrapper <- function(f, ...) {
+  dots <- list(...)
   function(x, arg, evaluations) {
-    x_arg = sort(unique(c(x, arg)))
-    x_arg_match = match(x_arg, arg, nomatch = length(arg) + 1)
-    requested = x_arg %in% x
-    dots[[length(dots) + 1]] = zoo(evaluations[x_arg_match], x_arg)
-    ret = do.call(f, dots)
+    x_arg <- sort(unique(c(x, arg)))
+    x_arg_match <- match(x_arg, arg, nomatch = length(arg) + 1)
+    requested <- x_arg %in% x
+    dots[[length(dots) + 1]] <- zoo(evaluations[x_arg_match], x_arg)
+    ret <- do.call(f, dots)
     coredata(ret)[requested]
   }
 }
@@ -44,24 +44,24 @@ zoo_wrapper = function(f, ...) {
 #' @param x new arg values to tf_approximate the function for
 #' @param arg the `arg` values of the `evaluations`
 #' @param evaluations the function's values at `arg`
-tf_approx_linear = zoo_wrapper(na.approx, na.rm = FALSE)
+tf_approx_linear <- zoo_wrapper(na.approx, na.rm = FALSE)
 
 #' @rdname tf_approx
 #' @export
-tf_approx_spline = zoo_wrapper(na.spline, na.rm = FALSE)
+tf_approx_spline <- zoo_wrapper(na.spline, na.rm = FALSE)
 
 #' @rdname tf_approx
 #' @export
-tf_approx_none = zoo_wrapper(na.fill, fill = NA)
+tf_approx_none <- zoo_wrapper(na.fill, fill = NA)
 
 #' @rdname tf_approx
 #' @export
-tf_approx_fill_extend = zoo_wrapper(na.fill, fill = "extend")
+tf_approx_fill_extend <- zoo_wrapper(na.fill, fill = "extend")
 
 #' @rdname tf_approx
 #' @export
-tf_approx_locf = zoo_wrapper(na.locf, na.rm = FALSE)
+tf_approx_locf <- zoo_wrapper(na.locf, na.rm = FALSE)
 
 #' @rdname tf_approx
 #' @export
-tf_approx_nocb = zoo_wrapper(na.locf, na.rm = FALSE, fromLast = TRUE)
+tf_approx_nocb <- zoo_wrapper(na.locf, na.rm = FALSE, fromLast = TRUE)

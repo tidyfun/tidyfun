@@ -119,16 +119,16 @@ Mandatory. Used to designate a column of class \code{tf} to be visualized as gly
 \dontrun{ # takes a little too long for CRAN
 library(ggplot2)
 library(tidyverse)
-weather = fda::CanadianWeather
-canada = data.frame(
+weather <- fda::CanadianWeather
+canada <- data.frame(
   place = weather$place,
   region = weather$region,
   lat = weather$coordinates[,1],
   lon = -weather$coordinates[,2],
   region = weather$region)
-canada$temp = tfd(t(weather$dailyAv[,,1]), arg = 1:365)
-canada$precipl10 = tfd(t(weather$dailyAv[,,3]), arg = 1:365) \%>\% smooth
-canada_map =
+canada$temp <- tfd(t(weather$dailyAv[,,1]), arg = 1:365)
+canada$precipl10 <- tfd(t(weather$dailyAv[,,3]), arg = 1:365) \%>\% smooth
+canada_map <-
   data.frame(maps::map("world", "Canada", plot = FALSE)[c("x", "y")])
 # map of canada with annual temperature averages in red, precipitation in blue:
 ggplot(canada, aes(x = lon, y = lat)) +

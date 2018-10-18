@@ -11,8 +11,8 @@
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
-<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/flatly/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
 <!-- Font Awesome icons -->
@@ -66,7 +66,7 @@ arg in the first and evaluations in the second column" />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidyfun</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.0.4</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.0.6</span>
       </span>
     </div>
 
@@ -89,7 +89,13 @@ arg in the first and evaluations in the second column" />
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/Intro.html">Introducing tidyfun</a>
+      <a href="../articles/x01_Intro.html">Introducing tidyfun</a>
+    </li>
+    <li>
+      <a href="../articles/x02_Data_Manipulation.html">Data Manipulation</a>
+    </li>
+    <li>
+      <a href="../articles/x03_Visualization.html">Visualization</a>
     </li>
   </ul>
 </li>
@@ -145,19 +151,20 @@ containing evaluations or a list of 2-column matrices/data.frames with
 
 <span class='co'># S3 method for matrix</span>
 <span class='fu'>tfd</span>(<span class='no'>data</span>, <span class='kw'>arg</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>domain</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>evaluator</span> <span class='kw'>=</span> <span class='no'>approx_linear</span>, <span class='kw'>resolution</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>...</span>)
+  <span class='kw'>evaluator</span> <span class='kw'>=</span> <span class='no'>tf_approx_linear</span>, <span class='kw'>resolution</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>...</span>)
 
 <span class='co'># S3 method for numeric</span>
 <span class='fu'>tfd</span>(<span class='no'>data</span>, <span class='kw'>arg</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>domain</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>evaluator</span> <span class='kw'>=</span> <span class='no'>approx_linear</span>, <span class='kw'>resolution</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>...</span>)
+  <span class='kw'>evaluator</span> <span class='kw'>=</span> <span class='no'>tf_approx_linear</span>, <span class='kw'>resolution</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>...</span>)
 
 <span class='co'># S3 method for data.frame</span>
 <span class='fu'>tfd</span>(<span class='no'>data</span>, <span class='kw'>id</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>arg</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>value</span> <span class='kw'>=</span> <span class='fl'>3</span>,
-  <span class='kw'>domain</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>evaluator</span> <span class='kw'>=</span> <span class='no'>approx_linear</span>, <span class='kw'>resolution</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>...</span>)
+  <span class='kw'>domain</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>evaluator</span> <span class='kw'>=</span> <span class='no'>tf_approx_linear</span>, <span class='kw'>resolution</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='no'>...</span>)
 
 <span class='co'># S3 method for list</span>
 <span class='fu'>tfd</span>(<span class='no'>data</span>, <span class='kw'>arg</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>domain</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>evaluator</span> <span class='kw'>=</span> <span class='no'>approx_linear</span>, <span class='kw'>resolution</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>...</span>)
+  <span class='kw'>evaluator</span> <span class='kw'>=</span> <span class='no'>tf_approx_linear</span>, <span class='kw'>resolution</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>...</span>)
 
 <span class='co'># S3 method for tf</span>
 <span class='fu'>tfd</span>(<span class='no'>data</span>, <span class='kw'>arg</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>domain</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>evaluator</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
@@ -204,11 +211,11 @@ for values in <code>arg</code> for which no original data is available? Only rel
     </tr>
     <tr>
       <th>evaluator</th>
-      <td><p>a function accepting arguments <code>x, arg, evaluations</code>. See details.</p></td>
+      <td><p>a function accepting arguments <code>x, arg, evaluations</code>. See details for <code>tfd()</code>.</p></td>
     </tr>
     <tr>
       <th>resolution</th>
-      <td><p>resolution of the evaluation grid. See details.</p></td>
+      <td><p>resolution of the evaluation grid. See details for <code>tfd()</code>.</p></td>
     </tr>
     <tr>
       <th>id</th>
@@ -228,42 +235,44 @@ for values in <code>arg</code> for which no original data is available? Only rel
 
     <p><strong><code>evaluator</code></strong>: must be the (quoted or bare) name of a
 <code>function(x, arg, evaluations)</code> that returns
-the functions' (approximated/interpolated) values at locations <code>x</code> based on
+the functions' (tf_approximated/interpolated) values at locations <code>x</code> based on
 the <code>evaluations</code> available at locations <code>arg</code>.<br />
 Available <code>evaluator</code>-functions:</p><ul>
-<li><p><code>approx_linear</code> for linear interpolation without extrapolation (i.e.,
+<li><p><code>tf_approx_linear</code> for linear interpolation without extrapolation (i.e.,
 <code><a href='http://www.rdocumentation.org/packages/zoo/topics/na.approx'>zoo::na.approx()</a></code> with <code>na.rm = FALSE</code>)  -- this is the default,</p></li>
-<li><p><code>approx_spline</code> for cubic spline interpolation, (i.e., <code><a href='http://www.rdocumentation.org/packages/zoo/topics/na.approx'>zoo::na.spline()</a></code>
+<li><p><code>tf_approx_spline</code> for cubic spline interpolation, (i.e., <code><a href='http://www.rdocumentation.org/packages/zoo/topics/na.approx'>zoo::na.spline()</a></code>
 with <code>na.rm = FALSE</code>),</p></li>
-<li><p><code>approx_fill_extend</code> for linear interpolation and constant extrapolation
+<li><p><code>tf_approx_fill_extend</code> for linear interpolation and constant extrapolation
 (i.e., <code><a href='http://www.rdocumentation.org/packages/zoo/topics/na.fill'>zoo::na.fill()</a></code> with <code>fill = "extend"</code>)</p></li>
-<li><p><code>approx_locf</code> for "last observation carried forward"  (i.e.,
+<li><p><code>tf_approx_locf</code> for "last observation carried forward"  (i.e.,
 <code><a href='http://www.rdocumentation.org/packages/zoo/topics/na.locf'>zoo::na.locf()</a></code> with <code>na.rm = FALSE</code> and</p></li>
-<li><p><code>approx_nocb</code> for "next observation carried backward" (i.e.,
+<li><p><code>tf_approx_nocb</code> for "next observation carried backward" (i.e.,
 <code><a href='http://www.rdocumentation.org/packages/zoo/topics/na.locf'>zoo::na.locf()</a></code> with <code>na.rm = FALSE, fromLast = TRUE</code>).
-See <code>tidyfun:::zoo_wrapper</code> and <code>tidyfun:::approx_linear</code>, which is simply
-<code>zoo_wrapper(zoo::na.approx, na.rm = FALSE)</code>, for examples of implementations of
+See <code>tidyfun:::zoo_wrapper</code> and <code>tidyfun:::tf_approx_linear</code>, which is simply
+<code>zoo_wrapper(zoo::na.tf_approx, na.rm = FALSE)</code>, for examples of implementations of
 this.</p></li>
 </ul>
     <p><strong><code>resolution</code></strong>: <code>arg</code>-values that are equivalent up to this difference are
 treated as identical. E.g., if an evaluation of $f(t)$ is available at $t=1$
 and a function value is requested at $t = 1.01$, $f(1)$ will be returned if
-<code>resolution</code> &lt; .01. By default, this will be set to an integer-valued power
-of 10 one smaller than the than the smallest difference between adjacent
-arg-values: e.g., if the smallest difference between consecutive
-arg-values is $0.12$, the resolution will be $0.01$, etc.</p>
+<code>resolution</code> &lt; .01. By default, resolution will be set to an integer-valued power
+of 10 one smaller than smallest difference between adjacent
+arg-values rounded down to an integer-valued power
+of 10: e.g., if the smallest difference between consecutive
+arg-values is between $0.1 and 0.9999$, the resolution will be $0.01$, etc.
+In code: <code>10^(floor(log10(min(diff(&lt;arg&gt;))) - 1)</code></p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'>#turn irregular to regular tfd</span>
 <span class='co'>#TODO: add extra function/verb for this</span>
-(<span class='no'>f</span> <span class='kw'>&lt;-</span> <span class='fu'>c</span>(<span class='fu'><a href='rgp.html'>rgp</a></span>(<span class='fl'>1</span>, <span class='kw'>arg</span> <span class='kw'>=</span> <span class='fu'>seq</span>(<span class='fl'>0</span>,<span class='fl'>1</span>,<span class='kw'>l</span><span class='kw'>=</span><span class='fl'>11</span>)), <span class='fu'><a href='rgp.html'>rgp</a></span>(<span class='fl'>1</span>, <span class='kw'>arg</span> <span class='kw'>=</span> <span class='fu'>seq</span>(<span class='fl'>0</span>,<span class='fl'>1</span>,<span class='kw'>l</span><span class='kw'>=</span><span class='fl'>21</span>))))</div><div class='output co'>#&gt; <span class='warning'>Warning: concatenating functions on different grids.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: inputs have different resolutions, result has resolution =0.01</span></div><div class='output co'>#&gt; tfd[2] on (0,1) based on 11 to 21 (mean: 16) evaluations each
-#&gt; inter-/extrapolation by approx_linear 
-#&gt; [1]: ( 0.0, 1.2);( 0.1, 1.4);( 0.2, 1.3); ...
-#&gt; [2]: (0.00,0.17);(0.05,0.60);(0.10,0.94); ...</div><div class='input'><span class='fu'>tfd</span>(<span class='no'>f</span>, <span class='kw'>interpolate</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>arg</span> <span class='kw'>=</span> <span class='fu'>seq</span>(<span class='fl'>0</span>,<span class='fl'>1</span>,<span class='kw'>l</span><span class='kw'>=</span><span class='fl'>21</span>))</div><div class='output co'>#&gt; tfd[2] on (0,1) based on 21 evaluations each
-#&gt; interpolation by approx_linear 
-#&gt; [1]: (0.00, 1.2);(0.05, 1.3);(0.10, 1.4); ...
-#&gt; [2]: (0.00,0.17);(0.05,0.60);(0.10,0.94); ...</div></pre>
+(<span class='no'>f</span> <span class='kw'>&lt;-</span> <span class='fu'>c</span>(<span class='fu'><a href='tf_rgp.html'>tf_rgp</a></span>(<span class='fl'>1</span>, <span class='kw'>arg</span> <span class='kw'>=</span> <span class='fu'>seq</span>(<span class='fl'>0</span>,<span class='fl'>1</span>,<span class='kw'>l</span><span class='kw'>=</span><span class='fl'>11</span>)), <span class='fu'><a href='tf_rgp.html'>tf_rgp</a></span>(<span class='fl'>1</span>, <span class='kw'>arg</span> <span class='kw'>=</span> <span class='fu'>seq</span>(<span class='fl'>0</span>,<span class='fl'>1</span>,<span class='kw'>l</span><span class='kw'>=</span><span class='fl'>21</span>))))</div><div class='output co'>#&gt; <span class='warning'>Warning: concatenating functions on different grids.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: inputs have different resolutions, result has resolution =0.01</span></div><div class='output co'>#&gt; tfd[2] on (0,1) based on 11 to 21 (mean: 16) evaluations each
+#&gt; inter-/extrapolation by tf_approx_linear 
+#&gt; [1]: ( 0.0, 2.0);( 0.1, 1.5);( 0.2, 1.0); ...
+#&gt; [2]: (0.00,0.74);(0.05,0.90);(0.10,0.97); ...</div><div class='input'><span class='fu'>tfd</span>(<span class='no'>f</span>, <span class='kw'>interpolate</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>arg</span> <span class='kw'>=</span> <span class='fu'>seq</span>(<span class='fl'>0</span>,<span class='fl'>1</span>,<span class='kw'>l</span><span class='kw'>=</span><span class='fl'>21</span>))</div><div class='output co'>#&gt; tfd[2] on (0,1) based on 21 evaluations each
+#&gt; interpolation by tf_approx_linear 
+#&gt; [1]: (0.00, 2.0);(0.05, 1.8);(0.10, 1.5); ...
+#&gt; [2]: (0.00,0.74);(0.05,0.90);(0.10,0.97); ...</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -282,7 +291,7 @@ arg-values is $0.12$, the resolution will be $0.01$, etc.</p>
 
       <footer>
       <div class="copyright">
-  <p>Developed by Fabian Scheipl.</p>
+  <p>Developed by Fabian Scheipl, Jeff Goldsmith.</p>
 </div>
 
 <div class="pkgdown">

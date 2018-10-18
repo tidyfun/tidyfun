@@ -39,31 +39,31 @@
 #' @rdname tfbrackets
 #' @export
 #' @aliases index.tf
-`[.tf` = function(x, i, j, interpolate = TRUE, matrix = TRUE) {
+`[.tf` <- function(x, i, j, interpolate = TRUE, matrix = TRUE) {
   if (!interpolate & inherits(x, "tfb")) {
-    interpolate = TRUE
+    interpolate <- TRUE
     message("interpolate argument ignored for data in basis representation")
   }
   if (!missing(i)) {
     assert_atomic(i)
     if (is.logical(i)) {
       assert_logical(i, any.missing = FALSE, len = length(x))
-      i = which(i)
+      i <- which(i)
     }
     if (is.character(i)) {
       assert_subset(i, names(x))
-      i = match(i, names(x))
+      i <- match(i, names(x))
     }
     assert_integerish(i,
       lower = -length(x), upper = length(x),
       any.missing = FALSE
     )
     assert_true(all(sign(i) == sign(i)[1]))
-    attr_x = append(attributes(unname(x)), list(names = names(x)[i]))
-    x = unclass(x)[i]
-    attributes(x) = attr_x
+    attr_x <- append(attributes(unname(x)), list(names = names(x)[i]))
+    x <- unclass(x)[i]
+    attributes(x) <- attr_x
   } else {
-    i = seq_along(x)
+    i <- seq_along(x)
   }
   if (missing(j)) {
     return(x)
@@ -71,26 +71,26 @@
   if (matrix & is.list(j)) {
     stop("need a single vector-valued <j> if matrix = TRUE")
   }
-  j = ensure_list(j)
+  j <- ensure_list(j)
   if (!(length(j) %in% c(1, length(i)))) {
     stop("wrong length for <j>")
   }
-  evals = tf_evaluate(x, arg = j)
+  evals <- tf_evaluate(x, arg = j)
   if (!interpolate) {
-    new_j = map2(j, ensure_list(tf_arg(x)), ~!(.x %in% .y))
+    new_j <- map2(j, ensure_list(tf_arg(x)), ~!(.x %in% .y))
     if (any(unlist(new_j))) {
       warning("interpolate = FALSE & no evaluations for some <j>: NAs created.")
     }
-    evals = map2(evals, new_j, ~ifelse(.y, NA, .x))
+    evals <- map2(evals, new_j, ~ifelse(.y, NA, .x))
   }
   if (matrix) {
-    ret = do.call(rbind, evals)
-    colnames(ret) = unlist(j)
-    rownames(ret) = names(x)
+    ret <- do.call(rbind, evals)
+    colnames(ret) <- unlist(j)
+    rownames(ret) <- names(x)
     structure(ret, arg = unlist(j))
   } else {
-    ret = map2(j, evals, ~bind_cols(arg = .x, value = .y))
-    names(ret) = names(x)
+    ret <- map2(j, evals, ~bind_cols(arg = .x, value = .y))
+    names(ret) <- names(x)
     ret
   }
 }
@@ -100,18 +100,18 @@
 #'  subassigned.
 #' @rdname tfbrackets
 #' @export
-`[<-.tf` = function(x, i, value) {
+`[<-.tf` <- function(x, i, value) {
   if (missing(i)) {
-    i = seq_along(x)
+    i <- seq_along(x)
   } else {
     assert_atomic(i)
     if (is.logical(i)) {
       assert_logical(i, any.missing = FALSE, len = length(x))
-      i = which(i)
+      i <- which(i)
     }
     if (is.character(i)) {
       assert_subset(i, names(x))
-      i = match(i, names(x))
+      i <- match(i, names(x))
     }
     assert_integerish(i,
       lower = -length(x),
@@ -119,7 +119,7 @@
     )
     assert_true(all(sign(i) == sign(i)[1]))
     if (sign(i)[1] < 0) {
-      i = (1:length(x))[i]
+      i <- seq_along(x)[i]
     }
   }
   stopifnot(
@@ -143,23 +143,23 @@
     )
   }
 
-  attr_x = attributes(x)
-  attr_x$names[i] = names(value)
-  ret = unclass(x)
-  ret[i] = unclass(value)
+  attr_x <- attributes(x)
+  attr_x$names[i] <- names(value)
+  ret <- unclass(x)
+  ret[i] <- unclass(value)
   # fill up empty functions
-  na_entries = which(sapply(ret, is.null))
+  na_entries <- which(vapply(ret, is.null, logical(1)))
   if (length(na_entries)) {
-    nas = if (is_irreg(x)) {
+    nas <- if (is_irreg(x)) {
       replicate(length(na_entries), list(arg = attr_x$domain[1], value = NA),
         simplify = FALSE
       )
     } else {
       replicate(length(na_entries), rep(NA, length(x[[1]])), simplify = FALSE)
     }
-    ret[na_entries] = nas
+    ret[na_entries] <- nas
   }
-  attributes(ret) = attr_x
-  if (!is.null(names(ret))) names(ret)[is.na(names(ret))] = ""
+  attributes(ret) <- attr_x
+  if (!is.null(names(ret))) names(ret)[is.na(names(ret))] <- ""
   ret
 }

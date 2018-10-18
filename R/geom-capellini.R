@@ -12,16 +12,16 @@
 #' \dontrun{ # takes a little too long for CRAN
 #' library(ggplot2)
 #' library(tidyverse)
-#' weather = fda::CanadianWeather
-#' canada = data.frame(
+#' weather <- fda::CanadianWeather
+#' canada <- data.frame(
 #'   place = weather$place,
 #'   region = weather$region,
 #'   lat = weather$coordinates[,1],
 #'   lon = -weather$coordinates[,2],
 #'   region = weather$region)
-#' canada$temp = tfd(t(weather$dailyAv[,,1]), arg = 1:365)
-#' canada$precipl10 = tfd(t(weather$dailyAv[,,3]), arg = 1:365) %>% smooth
-#' canada_map =
+#' canada$temp <- tfd(t(weather$dailyAv[,,1]), arg = 1:365)
+#' canada$precipl10 <- tfd(t(weather$dailyAv[,,3]), arg = 1:365) %>% smooth
+#' canada_map <-
 #'   data.frame(maps::map("world", "Canada", plot = FALSE)[c("x", "y")])
 #' # map of canada with annual temperature averages in red, precipitation in blue:
 #' ggplot(canada, aes(x = lon, y = lat)) +
@@ -44,23 +44,23 @@ NULL
 #' @rdname ggcapellini
 #' @usage NULL
 #' @format NULL
-StatCapellini = ggproto("StatCapellini", Stat,
+StatCapellini <- ggproto("StatCapellini", Stat,
   required_aes = c("x", "y", "tf"),
   setup_params = function(data, params) {
     if (is.null(params$arg)) {
-      params$arg = list(tf_arg(pull(data, tf)))
+      params$arg <- list(tf_arg(pull(data, tf)))
     }
     if (is.null(params$width)) {
-      params$width = ggplot2::resolution(data$x) / 1.5
+      params$width <- ggplot2::resolution(data$x) / 1.5
     }
     if (is.null(params$height)) {
-      params$height = ggplot2::resolution(data$y) / 1.5
+      params$height <- ggplot2::resolution(data$y) / 1.5
     }
     params
   },
   compute_layer = function(self, data, params, layout) {
     stopifnot(is_tf(pull(data, tf)))
-    tf_eval =
+    tf_eval <-
       suppressMessages(tf_unnest(data, tf, .arg = params$arg, .sep = "___")) %>%
       select(-group) %>%
       rename(group = tf___id, arg = tf___arg, value = tf___value) %>%
@@ -88,7 +88,7 @@ StatCapellini = ggproto("StatCapellini", Stat,
 #' @rdname ggcapellini
 #' @inheritParams ggplot2::stat_identity
 #' @param na.rm remove NAs? defaults to `TRUE`
-stat_capellini = function(mapping = NULL, data = NULL, geom = "capellini",
+stat_capellini <- function(mapping = NULL, data = NULL, geom = "capellini",
                            position = "identity", na.rm = TRUE, show.legend = NA,
                            inherit.aes = TRUE, arg = NULL, add_lines = FALSE,
                            add_boxes = TRUE, width = NULL, height = NULL, ...) {
@@ -127,13 +127,14 @@ stat_capellini = function(mapping = NULL, data = NULL, geom = "capellini",
 #' @param line.linetype aesthetic property of the reference line
 #' @param line.size aesthetic property of of the reference line
 #' @param line.alpha aesthetic property of the reference line
-geom_capellini = function(mapping = NULL, data = NULL, stat = "capellini",
-                           position = "identity", ..., na.rm = TRUE, show.legend = NA,
-                           inherit.aes = TRUE, arg = NULL, add_lines = TRUE, add_boxes = TRUE,
-                           width = NULL, height = NULL, box.colour = "#0000001A", box.linetype = 1,
-                           box.fill = NA, box.size = .1, box.alpha = .1,
-                           line.colour = "black", line.linetype = 2,
-                           line.size = .3, line.alpha = .5) {
+geom_capellini <- 
+  function(mapping = NULL, data = NULL, stat = "capellini",
+           position = "identity", ..., na.rm = TRUE, show.legend = NA,
+           inherit.aes = TRUE, arg = NULL, add_lines = TRUE, add_boxes = TRUE,
+           width = NULL, height = NULL, box.colour = "#0000001A", 
+           box.linetype = 1, box.fill = NA, box.size = .1, box.alpha = .1,
+           line.colour = "black", line.linetype = 2, line.size = .3, 
+           line.alpha = .5) {
   layer(
     stat = StatCapellini, data = data, mapping = mapping, geom = "capellini",
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
@@ -150,22 +151,22 @@ geom_capellini = function(mapping = NULL, data = NULL, stat = "capellini",
 #' @export
 #' @rdname ggcapellini
 #' @usage NULL
-geom_cappellini = geom_capellini
+geom_cappellini <- geom_capellini
 #' @export
 #' @usage NULL
 #' @rdname ggcapellini
-geom_capelini = geom_capellini
+geom_capelini <- geom_capellini
 #' @export
 #' @usage NULL
 #' @rdname ggcapellini
-geom_cappelini = geom_capellini
+geom_cappelini <- geom_capellini
 
 
 #' @export
 #' @rdname ggcapellini
 #' @usage NULL
 #' @format NULL
-GeomCapellini = ggproto("GeomCapellini", Geom,
+GeomCapellini <- ggproto("GeomCapellini", Geom,
   setup_data = function(data, params) {
     GeomPath$setup_data(data, params)
   },
@@ -174,9 +175,9 @@ GeomCapellini = ggproto("GeomCapellini", Geom,
                           box.fill = NA, box.size = .1, box.alpha = .1,
                           line.colour = "black", line.linetype = 2,
                           line.size = .3, line.alpha = .5) {
-    glyph_grob = GeomPath$draw_panel(data, panel_params, coord)
+    glyph_grob <- GeomPath$draw_panel(data, panel_params, coord)
     if (data$lines[1]) {
-      lines = data.frame(
+      lines <- data.frame(
         x = data$xgrid[1] - data$width[1] / 2,
         xend = data$xgrid[1] + data$width[1] / 2,
         y = data$ygrid[1],
@@ -186,12 +187,12 @@ GeomCapellini = ggproto("GeomCapellini", Geom,
         size = line.size,
         alpha = line.alpha
       )
-      lines_grob = GeomSegment$draw_panel(lines, panel_params, coord)
+      lines_grob <- GeomSegment$draw_panel(lines, panel_params, coord)
     } else {
-      lines_grob = NULL
+      lines_grob <- NULL
     }
     if (data$boxes[1]) {
-      boxes = data.frame(
+      boxes <- data.frame(
         xmin = data$xgrid[1] - data$width[1] / 2,
         xmax = data$xgrid[1] + data$width[1] / 2,
         ymin = data$ygrid[1] - data$height[1] / 2,
@@ -202,9 +203,9 @@ GeomCapellini = ggproto("GeomCapellini", Geom,
         alpha = box.alpha,
         size = box.size
       )
-      boxes_grob = GeomRect$draw_panel(boxes, panel_params, coord)
+      boxes_grob <- GeomRect$draw_panel(boxes, panel_params, coord)
     } else {
-      boxes_grob = NULL
+      boxes_grob <- NULL
     }
     grid::gList(
       lines_grob,
@@ -218,38 +219,3 @@ GeomCapellini = ggproto("GeomCapellini", Geom,
   ),
   draw_key = GeomPath$draw_key
 )
-
-if (FALSE) {
-  library(devtools)
-  load_all()
-  library(ggplot2)
-  weather = fda::CanadianWeather
-  canada = data.frame(
-    place = weather$place, region = weather$region,
-    lat = weather$coordinates[, 1], lon = -weather$coordinates[, 2],
-    region = weather$region
-  )
-  canada$temp = tfd(t(weather$dailyAv[, , 1]))
-  canada$precipl10 = tfd(t(weather$dailyAv[, , 3])) %>% smooth()
-  canada_map =
-    data.frame(maps::map("world", "Canada", plot = FALSE)[c("x", "y")]) %>%
-    dplyr::rename(lon = x, lat = y)
-
-
-  ggplot(canada, aes(x = lon, y = lat)) +
-    geom_capellini(aes(tf = precipl10), width = 3, height = 5, colour = "blue") +
-    geom_capellini(aes(tf = temp), width = 3, height = 5, colour = "red") +
-    geom_path(data = canada_map, aes(x = lon, y = lat), alpha = .1) +
-    coord_quickmap()
-  xlim(c(-90, -50))
-
-
-  f = tf_rgp(25)
-  data = data.frame(
-    lat = runif(25, 0, 5), lon = runif(25, 0, 5),
-    g = sample(c("a", "b"), 25, replace = TRUE)
-  )
-  data$f = f
-  ggplot(data) +
-    geom_capellini(aes(x = lat, y = lon, tf = f, col = g), width = .2, height = .2)
-}

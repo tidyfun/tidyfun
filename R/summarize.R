@@ -11,7 +11,7 @@ NULL
 
 #' @export
 #' @rdname tfsummaries
-mean.tf = function(x, ...) {
+mean.tf <- function(x, ...) {
   summarize_tf(x, op = "mean", eval = is_tfd(x), ...)
 }
 
@@ -21,18 +21,18 @@ mean.tf = function(x, ...) {
 #' @importFrom stats median
 #' @export
 #' @rdname tfsummaries
-median.tf = function(x, na.rm = FALSE, depth = c("MBD", "pointwise"), ...) {
+median.tf <- function(x, na.rm = FALSE, depth = c("MBD", "pointwise"), ...) {
   if (!na.rm) {
     if (any(is.na(x))) return(1 * NA * x[1])
   } else {
-    x = x[!is.na(x)]
+    x <- x[!is.na(x)]
   }
-  depth = match.arg(depth)
+  depth <- match.arg(depth)
   if (depth == "pointwise") {
     summarize_tf(x, na.rm = na.rm, op = "median", eval = is_tfd(x), ...)
   } else {
-    tf_depths = tf_depth(x, depth = depth)
-    med = x[tf_depths == max(tf_depths)]
+    tf_depths <- tf_depth(x, depth = depth)
+    med <- x[tf_depths == max(tf_depths)]
     if (length(med) > 1) {
       warning(
         length(med),
@@ -49,11 +49,12 @@ median.tf = function(x, na.rm = FALSE, depth = c("MBD", "pointwise"), ...) {
 #' @inheritParams stats::quantile
 #' @export
 #' @rdname tfsummaries
-quantile.tf = function(x, probs = seq(0, 1, 0.25), na.rm = FALSE,
+quantile.tf <- function(x, probs = seq(0, 1, 0.25), na.rm = FALSE,
                         names = TRUE, type = 7, ...) {
   # TODO: functional quantiles will need (a lot) more thought,
   # cf. Serfling, R., & Wijesuriya, U. (2017).
-  # Depth-based nonparametric description of functional data, with emphasis on use of spatial depth.
+  # Depth-based nonparametric description of functional data, 
+  #   with emphasis on use of spatial depth.
   warning("only pointwise, non-functional quantiles implemented for tfs.")
   summarize_tf(x,
     probs = probs, na.rm = na.rm,
@@ -64,32 +65,33 @@ quantile.tf = function(x, probs = seq(0, 1, 0.25), na.rm = FALSE,
 #' @inheritParams stats::sd
 #' @export
 #' @rdname tfsummaries
-sd = function(x, na.rm = FALSE) UseMethod("sd")
+sd <- function(x, na.rm = FALSE) UseMethod("sd")
 
 #' @importFrom stats sd
 #' @export
 #' @rdname tfsummaries
-sd.default = stats::sd
+#' @export
+sd.default <- stats::sd
 
 #' @export
 #' @rdname tfsummaries
-sd.tf = function(x, na.rm = FALSE) {
+sd.tf <- function(x, na.rm = FALSE) {
   summarize_tf(x, na.rm = na.rm, op = "sd", eval = is_tfd(x))
 }
 
 #' @inheritParams stats::var
 #' @export
 #' @rdname tfsummaries
-var = function(x, y = NULL, na.rm = FALSE, use) UseMethod("var")
+var <- function(x, y = NULL, na.rm = FALSE, use) UseMethod("var")
 
 #' @export
 #' @importFrom stats sd
 #' @rdname tfsummaries
-var.default = stats::var
+var.default <- stats::var
 
 #' @export
 #' @rdname tfsummaries
-var.tf = function(x, y = NULL, na.rm = FALSE, use) {
+var.tf <- function(x, y = NULL, na.rm = FALSE, use) {
   summarize_tf(x, na.rm = na.rm, op = "sd", eval = is_tfd(x))
 }
 
@@ -98,9 +100,9 @@ var.tf = function(x, y = NULL, na.rm = FALSE, use) {
 #' @param object a `tfd` object
 #' @export
 #' @rdname tfsummaries
-summary.tf = function(object, ...) {
-  tf_depths = tf_depth(object, ...)
-  central = which(tf_depths <= median(tf_depths))
+summary.tf <- function(object, ...) {
+  tf_depths <- tf_depth(object, ...)
+  central <- which(tf_depths <= median(tf_depths))
   c(
     mean = mean(object), var = var(object),
     median = object[which.max(tf_depths)],

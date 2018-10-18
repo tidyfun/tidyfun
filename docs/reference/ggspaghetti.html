@@ -11,8 +11,8 @@
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
-<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/flatly/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
 <!-- Font Awesome icons -->
@@ -63,7 +63,7 @@ with points for the actual evaluations." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidyfun</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.0.4</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.0.6</span>
       </span>
     </div>
 
@@ -86,7 +86,13 @@ with points for the actual evaluations." />
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/Intro.html">Introducing tidyfun</a>
+      <a href="../articles/x01_Intro.html">Introducing tidyfun</a>
+    </li>
+    <li>
+      <a href="../articles/x02_Data_Manipulation.html">Data Manipulation</a>
+    </li>
+    <li>
+      <a href="../articles/x03_Visualization.html">Visualization</a>
     </li>
   </ul>
 </li>
@@ -213,14 +219,12 @@ to the paired geom/stat.</p></td>
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'>set.seed</span>(<span class='fl'>1221</span>)
 <span class='no'>data</span> <span class='kw'>=</span> <span class='fu'>data.frame</span>(<span class='kw'>col</span> <span class='kw'>=</span> <span class='fu'>sample</span>(<span class='fu'>gl</span>(<span class='fl'>5</span>, <span class='fl'>2</span>)))
-<span class='no'>data</span>$<span class='no'>f</span> <span class='kw'>=</span> <span class='fu'><a href='rgp.html'>rgp</a></span>(<span class='fl'>10</span>)
-<span class='no'>data</span>$<span class='no'>fi</span> <span class='kw'>=</span> <span class='fu'><a href='jiggle.html'>jiggle</a></span>(<span class='no'>data</span>$<span class='no'>f</span>)
+<span class='no'>data</span>$<span class='no'>f</span> <span class='kw'>=</span> <span class='fu'><a href='tf_rgp.html'>tf_rgp</a></span>(<span class='fl'>10</span>)
+<span class='no'>data</span>$<span class='no'>fi</span> <span class='kw'>=</span> <span class='fu'><a href='tf_jiggle.html'>tf_jiggle</a></span>(<span class='no'>data</span>$<span class='no'>f</span>)
 <span class='no'>data</span>$<span class='no'>fb</span> <span class='kw'>=</span> <span class='fu'><a href='tfb.html'>tfb</a></span>(<span class='no'>data</span>$<span class='no'>f</span>)</div><div class='output co'>#&gt; <span class='message'>Percentage of raw input data variance preserved in basis representation:</span>
-#&gt; <span class='message'>(per functional observation, approx.):</span></div><div class='output co'>#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-#&gt;   99.60   99.70   99.90   99.83   99.90  100.00 </div><div class='input'><span class='fu'>library</span>(<span class='no'>ggplot2</span>)</div><div class='output co'>#&gt; <span class='message'></span>
-#&gt; <span class='message'>Attaching package: ‘ggplot2’</span></div><div class='output co'>#&gt; <span class='message'>The following object is masked from ‘package:tidyfun’:</span>
-#&gt; <span class='message'></span>
-#&gt; <span class='message'>    resolution</span></div><div class='input'><span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/ggplot'>ggplot</a></span>(<span class='no'>data</span>, <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/aes'>aes</a></span>(<span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>f</span>, <span class='kw'>color</span> <span class='kw'>=</span> <span class='fu'><a href='depth.html'>depth</a></span>(<span class='no'>f</span>))) + <span class='fu'>geom_spaghetti</span>()</div><div class='img'><img src='ggspaghetti-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/ggplot'>ggplot</a></span>(<span class='no'>data</span>, <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/aes'>aes</a></span>(<span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>fi</span>, <span class='kw'>shape</span> <span class='kw'>=</span> <span class='no'>col</span>, <span class='kw'>color</span> <span class='kw'>=</span> <span class='no'>col</span>)) + <span class='fu'>geom_meatballs</span>()</div><div class='img'><img src='ggspaghetti-2.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/ggplot'>ggplot</a></span>(<span class='no'>data</span>, <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/aes'>aes</a></span>(<span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>fi</span>)) + <span class='fu'>geom_meatballs</span>(<span class='kw'>spaghetti</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>) +
+#&gt; <span class='message'>(per functional observation, tf_approx.):</span></div><div class='output co'>#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+#&gt;   99.60   99.70   99.90   99.83   99.90  100.00 </div><div class='input'><span class='fu'>library</span>(<span class='no'>ggplot2</span>)
+<span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/ggplot'>ggplot</a></span>(<span class='no'>data</span>, <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/aes'>aes</a></span>(<span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>f</span>, <span class='kw'>color</span> <span class='kw'>=</span> <span class='fu'><a href='tf_depth.html'>tf_depth</a></span>(<span class='no'>f</span>))) + <span class='fu'>geom_spaghetti</span>()</div><div class='img'><img src='ggspaghetti-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/ggplot'>ggplot</a></span>(<span class='no'>data</span>, <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/aes'>aes</a></span>(<span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>fi</span>, <span class='kw'>shape</span> <span class='kw'>=</span> <span class='no'>col</span>, <span class='kw'>color</span> <span class='kw'>=</span> <span class='no'>col</span>)) + <span class='fu'>geom_meatballs</span>()</div><div class='img'><img src='ggspaghetti-2.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/ggplot'>ggplot</a></span>(<span class='no'>data</span>, <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/aes'>aes</a></span>(<span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>fi</span>)) + <span class='fu'>geom_meatballs</span>(<span class='kw'>spaghetti</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>) +
   <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/facet_wrap'>facet_wrap</a></span>(~<span class='no'>col</span>)</div><div class='img'><img src='ggspaghetti-3.png' alt='' width='700' height='433' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
@@ -238,7 +242,7 @@ to the paired geom/stat.</p></td>
 
       <footer>
       <div class="copyright">
-  <p>Developed by Fabian Scheipl.</p>
+  <p>Developed by Fabian Scheipl, Jeff Goldsmith.</p>
 </div>
 
 <div class="pkgdown">

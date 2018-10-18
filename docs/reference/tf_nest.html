@@ -11,8 +11,8 @@
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
-<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/flatly/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
 <!-- Font Awesome icons -->
@@ -66,7 +66,7 @@ appended as well." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidyfun</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.0.4</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.0.6</span>
       </span>
     </div>
 
@@ -89,7 +89,13 @@ appended as well." />
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/Intro.html">Introducing tidyfun</a>
+      <a href="../articles/x01_Intro.html">Introducing tidyfun</a>
+    </li>
+    <li>
+      <a href="../articles/x02_Data_Manipulation.html">Data Manipulation</a>
+    </li>
+    <li>
+      <a href="../articles/x03_Visualization.html">Visualization</a>
     </li>
   </ul>
 </li>
@@ -130,7 +136,8 @@ appended as well.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>tf_nest</span>(<span class='no'>data</span>, <span class='no'>...</span>, <span class='kw'>.id</span> <span class='kw'>=</span> <span class='st'>"id"</span>, <span class='kw'>.arg</span> <span class='kw'>=</span> <span class='st'>"arg"</span>)</pre>
+    <pre class="usage"><span class='fu'>tf_nest</span>(<span class='no'>data</span>, <span class='no'>...</span>, <span class='kw'>.id</span> <span class='kw'>=</span> <span class='st'>"id"</span>, <span class='kw'>.arg</span> <span class='kw'>=</span> <span class='st'>"arg"</span>, <span class='kw'>domain</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>evaluator</span> <span class='kw'>=</span> <span class='st'>"tf_approx_linear"</span>, <span class='kw'>resolution</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -154,15 +161,34 @@ For more options, see the <code><a href='http://dplyr.tidyverse.org/reference/se
       <th>.arg</th>
       <td><p>the (bare or quoted) name of the column defining the <code>arg</code>-values of the observed functions</p></td>
     </tr>
+    <tr>
+      <th>domain</th>
+      <td><p>range of the <code>arg</code>.</p></td>
+    </tr>
+    <tr>
+      <th>evaluator</th>
+      <td><p>a function accepting arguments <code>x, arg, evaluations</code>. See details for <code><a href='tfd.html'>tfd()</a></code>.</p></td>
+    </tr>
+    <tr>
+      <th>resolution</th>
+      <td><p>resolution of the evaluation grid. See details for <code><a href='tfd.html'>tfd()</a></code>.</p></td>
+    </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>a data frame with (at least) <code>.id</code> and <code>tfd</code> columns</p>
     
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p><code>domain</code>, <code>resolution</code> and <code>evaluator</code> can be speficied as lists or vectors
+if you're nesting multiple functional data columns with different properties.
+Because quasi-quotation is <em>such</em> a bitch, you can only specify the evaluator
+functions as strings and not as bare names here.</p>
+    
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p>tf_gather() tf_unnest()</p></div>
+    <div class='dont-index'><p>tf_gather(), tf_unnest(), tfd() for <code>domain, evaluator, resolution</code></p></div>
     
 
   </div>
@@ -173,6 +199,8 @@ For more options, see the <code><a href='http://dplyr.tidyverse.org/reference/se
       
       <li><a href="#value">Value</a></li>
 
+      <li><a href="#details">Details</a></li>
+
       <li><a href="#see-also">See also</a></li>
           </ul>
 
@@ -181,7 +209,7 @@ For more options, see the <code><a href='http://dplyr.tidyverse.org/reference/se
 
       <footer>
       <div class="copyright">
-  <p>Developed by Fabian Scheipl.</p>
+  <p>Developed by Fabian Scheipl, Jeff Goldsmith.</p>
 </div>
 
 <div class="pkgdown">

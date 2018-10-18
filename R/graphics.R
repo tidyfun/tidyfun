@@ -1,13 +1,13 @@
-prep_plotting_arg = function(x, n_grid) {
+prep_plotting_arg <- function(f, n_grid) {
   if (!isTRUE(n_grid > 1)) {
-    tf_arg(x)
+    tf_arg(f)
   } else {
-    modelr::seq_range(tf_domain(x), n = n_grid) %>%
-      round_resolution(attr(x, "resolution")) %>%
+    modelr::seq_range(tf_domain(f), n = n_grid) %>%
+      round_resolution(attr(f, "resolution")) %>%
       setdiff(
-        round_resolution(unlist(tf_arg(x)), attr(x, "resolution"))
+        round_resolution(unlist(tf_arg(f)), attr(f, "resolution"))
       ) %>%
-      union(unlist(tf_arg(x))) %>% 
+      union(unlist(tf_arg(f))) %>%
       sort()
   }
 }
@@ -40,35 +40,36 @@ prep_plotting_arg = function(x, n_grid) {
 #' @importFrom modelr seq_range
 #' @export
 #' @rdname tfviz
-funplot = function(f, arg, n_grid = 50, points = is_irreg(f),
-                    type = c("spaghetti", "lasagna"), alpha = min(1, max(.05, 2 / length(f)))) {
+funplot <- function(f, arg, n_grid = 50, points = is_irreg(f),
+                    type = c("spaghetti", "lasagna"), 
+                    alpha = min(1, max(.05, 2 / length(f)))) {
   assert_class(f, "tf")
   assert_number(n_grid, na.ok = TRUE)
   assert_flag(points)
-  type = match.arg(type)
+  type <- match.arg(type)
   if (missing(arg)) {
-    arg = prep_plotting_arg(f, n_grid)
+    arg <- prep_plotting_arg(f, n_grid)
   }
-  d = if (is_tfd(f)) {
+  d <- if (is_tfd(f)) {
     as.data.frame(f, arg = arg, interpolate = TRUE)
   } else {
     as.data.frame(f, arg = arg)
   }
 
   if (type == "spaghetti") {
-    p = ggplot(d, aes(x = arg, y = data, group = id)) +
+    p <- ggplot(d, aes(x = arg, y = data, group = id)) +
       geom_line(alpha = alpha)
     if (points) {
-      p = p +
+      p <- p +
         geom_point(data = as.data.frame(f, arg = tf_arg(f)), alpha = alpha)
     }
   }
   if (type == "lasagna") {
-    d = d %>%
+    d <- d %>%
       mutate(id_num = as.numeric(as.factor(id))) %>%
       group_by(id) %>%
       mutate(xmax = c(arg[-1], max(arg) + mean(diff(arg))))
-    p = ggplot(d, aes(
+    p <- ggplot(d, aes(
       y = id_num, xmin = arg, xmax = xmax,
       ymin = id_num - .5, ymax = id_num + .5, fill = data
     )) +
@@ -76,7 +77,7 @@ funplot = function(f, arg, n_grid = 50, points = is_irreg(f),
       scale_fill_gradient2(deparse(substitute(f)),
         midpoint = median(d$data, na.rm = TRUE)
       ) +
-      scale_y_continuous(name = "id", breaks = 1:length(f), labels = names(f))
+      scale_y_continuous(name = "id", breaks = seq_along(f), labels = names(f))
   }
   p
 }
@@ -91,25 +92,26 @@ funplot = function(f, arg, n_grid = 50, points = is_irreg(f),
 #' @rdname tfviz
 #' @references Swihart, B. J., Caffo, B., James, B. D., Strand, M., Schwartz, B. S., & Punjabi, N. M. (2010).
 #' Lasagna plots: a saucy alternative to spaghetti plots. *Epidemiology (Cambridge, Mass.)*, **21**(5), 621-625.
-plot.tf = function(x, y, n_grid = 50, points = is_irreg(x),
-                    type = c("spaghetti", "lasagna"), alpha = min(1, max(.05, 2 / length(x))), ...) {
-  type = match.arg(type)
+plot.tf <- function(x, y, n_grid = 50, points = is_irreg(x),
+                    type = c("spaghetti", "lasagna"), 
+                    alpha = min(1, max(.05, 2 / length(x))), ...) {
+  type <- match.arg(type)
   assert_logical(points)
   assert_number(n_grid, na.ok = TRUE)
   if (missing(y)) {
-    arg = prep_plotting_arg(x, n_grid)
+    arg <- prep_plotting_arg(x, n_grid)
     # irreg args need to be turned to a vector for as.matrix below:
-    if (is.list(arg)) arg = sort(unique(unlist(arg)))
+    if (is.list(arg)) arg <- sort(unique(unlist(arg)))
   } else {
-    arg = y
+    arg <- y
   }
-  m = if (is_tfd(x)) {
+  m <- if (is_tfd(x)) {
     as.matrix(x, arg = arg, interpolate = TRUE)
   } else {
     as.matrix(x, arg = arg)
   }
   if (type == "spaghetti") {
-    args = modifyList(
+    args <- modifyList(
       list(
         x = drop(attr(m, "arg")), y = t(m), type = "l",
         ylab = deparse(substitute(x)), xlab = "", lty = 1,
@@ -119,7 +121,7 @@ plot.tf = function(x, y, n_grid = 50, points = is_irreg(x),
     )
     do.call(matplot, args)
     if (points) {
-      pointsargs = modifyList(
+      pointsargs <- modifyList(
         list(
           x = x, arg = NULL,
           n_grid = NA, points = TRUE, interpolate = FALSE,
@@ -131,7 +133,7 @@ plot.tf = function(x, y, n_grid = 50, points = is_irreg(x),
     }
   }
   if (type == "lasagna") {
-    args = modifyList(
+    args <- modifyList(
       list(
         x = drop(attr(m, "arg")), y = seq_len(nrow(m)),
         z = t(m), col = heat.colors(25),
@@ -139,7 +141,7 @@ plot.tf = function(x, y, n_grid = 50, points = is_irreg(x),
       ),
       list(...)
     )
-    m = m[rev(seq_len(nrow(m))), ] # so first obs is on top
+    m <- m[rev(seq_len(nrow(m))), ] # so first obs is on top
     do.call(image, args)
     axis(2, at = seq_len(nrow(m)), labels = rev(names(x) %||% seq_len(nrow(m))))
   }
@@ -147,22 +149,23 @@ plot.tf = function(x, y, n_grid = 50, points = is_irreg(x),
 }
 
 #' @importFrom graphics matlines
-linespoints_tf = function(x, arg, n_grid = 50, points = TRUE,
-                           alpha = min(1, max(.05, 2 / length(x))), interpolate = TRUE, ...) {
+linespoints_tf <- function(x, arg, n_grid = 50, points = TRUE,
+                           alpha = min(1, max(.05, 2 / length(x))), 
+                           interpolate = TRUE, ...) {
   assert_number(n_grid, na.ok = TRUE)
   if (missing(arg)) {
-    arg = prep_plotting_arg(x, n_grid)
+    arg <- prep_plotting_arg(x, n_grid)
     # irreg args need to be turned to a vector for as.matrix below:
-    if (is.list(arg)) arg = sort(unique(unlist(arg)))
+    if (is.list(arg)) arg <- sort(unique(unlist(arg)))
   }
-  m = if (is_tfd(x)) {
+  m <- if (is_tfd(x)) {
     suppressWarnings(
       as.matrix(x, arg = arg, interpolate = interpolate)
     )
   } else {
     as.matrix(x, arg = arg)
   }
-  args = modifyList(
+  args <- modifyList(
     list(
       x = drop(attr(m, "arg")), y = t(m), type = ifelse(points, "p", "l"),
       lty = 1, col = rgb(0, 0, 0, alpha), pch = 19
@@ -174,14 +177,14 @@ linespoints_tf = function(x, arg, n_grid = 50, points = TRUE,
 
 #' @export
 #' @rdname tfviz
-lines.tf = function(x, arg, n_grid = 50,
+lines.tf <- function(x, arg, n_grid = 50,
                      alpha = min(1, max(.05, 2 / length(x))), ...) {
-  args = c(modifyList(
+  args <- c(modifyList(
     head(formals(lines.tf), -1),
     as.list(match.call())[-1]
   ), points = FALSE)
   # eval here so pipe finds it later
-  args$x = x
+  args$x <- x
   do.call(linespoints_tf, args)
   invisible(x)
 }
@@ -190,14 +193,15 @@ lines.tf = function(x, arg, n_grid = 50,
 #' @param interpolate should functions be evaluated (i.e., inter-/extrapolated)
 #'   for arg for which no original data is available? Only relevant for
 #'   tfd, defaults to FALSE
-points.tf = function(x, arg, n_grid = NA,
-                      alpha = min(1, max(.05, 2 / length(x))), interpolate = FALSE, ...) {
-  args = c(modifyList(
+points.tf <- function(x, arg, n_grid = NA,
+                      alpha = min(1, max(.05, 2 / length(x))), 
+                      interpolate = FALSE, ...) {
+  args <- c(modifyList(
     head(formals(points.tf), -1),
     as.list(match.call())[-1]
   ), points = TRUE)
   # eval here so pipe finds it later
-  args$x = x
+  args$x <- x
   do.call(linespoints_tf, args)
   invisible(x)
 }
