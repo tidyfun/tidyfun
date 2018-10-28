@@ -207,13 +207,16 @@ tf_nest <- function(data, ..., .id = "id", .arg = "arg", domain = NULL,
       " are not constant for all levels of the id-variable.")
   }
   ret <- slice(ret, 1) %>% ungroup
-  # TODO: parallelize this over evaluator, domain, resolution
+
   tfd_list <- pmap(list(value_vars, evaluator, domain, resolution), 
     ~ select(data, id_var, arg_var, ..1) %>%  
       tfd(evaluator = !!(..2), domain = ..3, resolution = ..4))
   names(tfd_list) <- value_vars
+  # re-index to make sure order is correct
+  id_index <- pull(ret, id_var)
+  if (is.factor(id_index)) id_index <- as.character(id_index)
   for (v in value_vars) {
-    ret[[v]] <- tfd_list[[v]]
+    ret[[v]] <- tfd_list[[v]][id_index, ]
   }
   ret
 } 
