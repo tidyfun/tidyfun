@@ -34,17 +34,7 @@
 
 <meta property="og:description" content="tidyfun makes data wrangling and exploratory analysis for functional data
 in R easier.
-tidyfun provides:
-new data types for representing functional data: tfd() &amp;amp; tfb()
-arithmetic operators (Ops.tf()),
-descriptive statistics: e.g. mean.tf(), median.tf()
-and graphics functions for such data: plot.tf(), geom_spaghetti(), gglasagna()
-functions to do smoothing (tf_smooth.tfd()), differentiation and integration (tf_derive.tfd())
-tidyverse-verbs for handling functional data inside data frames: tf_gather() etc.
-
-
-Also see vignette(&quot;Introducing tidyfun&quot;, &quot;tidyfun&quot;) for a brief introduction.
-" />
+tidyfun provides:" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -73,7 +63,7 @@ Also see vignette(&quot;Introducing tidyfun&quot;, &quot;tidyfun&quot;) for a br
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidyfun</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.0.5</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.0.6</span>
       </span>
     </div>
 
@@ -96,7 +86,13 @@ Also see vignette(&quot;Introducing tidyfun&quot;, &quot;tidyfun&quot;) for a br
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/Intro.html">Introducing tidyfun</a>
+      <a href="../articles/x01_Intro.html">Introducing tidyfun</a>
+    </li>
+    <li>
+      <a href="../articles/x02_Data_Manipulation.html">Data Manipulation</a>
+    </li>
+    <li>
+      <a href="../articles/x03_Visualization.html">Visualization</a>
     </li>
   </ul>
 </li>
@@ -130,34 +126,41 @@ Also see vignette(&quot;Introducing tidyfun&quot;, &quot;tidyfun&quot;) for a br
     
     <p><code>tidyfun</code> makes data wrangling and exploratory analysis for functional data
 in <code>R</code> easier.<br /><br />
-<code>tidyfun</code> provides:</p><ul>
-<li><p>new data types for representing functional data: <code><a href='tfd.html'>tfd()</a></code> &amp; <code><a href='tfb.html'>tfb()</a></code></p></li>
+<code>tidyfun</code> provides:</p>
+    
+    </div>
+
+        
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <ul>
+<li><p>new data types for representing functional data: <code><a href='tfd.html'>tfd()</a></code> &amp; <code><a href='tfb.html'>tfb()</a></code></p><ul>
 <li><p>arithmetic operators (<code><a href='tfgroupgenerics.html'>Ops.tf()</a></code>),</p></li>
 <li><p>descriptive statistics: e.g. <code><a href='tfsummaries.html'>mean.tf()</a></code>, <code><a href='tfsummaries.html'>median.tf()</a></code></p></li>
 <li><p>and graphics functions for such data: <code><a href='tfviz.html'>plot.tf()</a></code>, <code><a href='ggspaghetti.html'>geom_spaghetti()</a></code>, <code><a href='gglasagna.html'>gglasagna()</a></code></p></li>
 <li><p>functions to do smoothing (<code><a href='tf_smooth.html'>tf_smooth.tfd()</a></code>), differentiation and integration (<code><a href='tfcalculus.html'>tf_derive.tfd()</a></code>)</p></li>
+</ul></li>
 <li><p><code>tidyverse</code>-verbs for handling functional data inside data frames: <code><a href='tf_gather.html'>tf_gather()</a></code> etc.
 <br /><br />
 <br />
 Also see <code>vignette("Introducing tidyfun", "tidyfun")</code> for a brief introduction.</p></li>
 </ul>
     
-    </div>
-
-        
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
-                </ul>
+      
+      <li><a href="#details">Details</a></li>
+          </ul>
 
   </div>
 </div>
 
       <footer>
       <div class="copyright">
-  <p>Developed by Fabian Scheipl.</p>
+  <p>Developed by Fabian Scheipl, Jeff Goldsmith.</p>
 </div>
 
 <div class="pkgdown">

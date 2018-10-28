@@ -1,18 +1,18 @@
 #' Functions to zoom in/out on functions
-#' 
+#'
 #' These are used to redefine or restrict the `domain` of `tf` objects.
-#'  
+#'
 #' @param f a `tf`-object
-#' @param begin numeric vector of length 1 or `length(f)`. 
+#' @param begin numeric vector of length 1 or `length(f)`.
 #'  Defaults to the lower limit of the domain of `f`.
-#' @param end numeric vector of length 1 or `length(f)`. 
+#' @param end numeric vector of length 1 or `length(f)`.
 #'  Defaults to the upper limit of the domain of `f`.
 #' @param ... not used
 #' @return an object like `f` on a new domain (potentially).
-#' Note that regular functional data and functions in basis representation will 
+#' Note that regular functional data and functions in basis representation will
 #'   be turned into irregular `tfd`-objects iff `begin` or `end` are not scalar.
-#' @export 
-#' @examples 
+#' @export
+#' @examples
 #'   (x <- tf_rgp(10))
 #'   plot(x)
 #'   tf_zoom(x, .5, .9)
@@ -28,11 +28,15 @@ prep_tf_zoom_args <- function(f, begin, end) {
   regular <- TRUE
   # uses unique to homogenize and check regularity in one go
   if (length(unique(begin)) == 1) {
-    begin <- rep(begin, length(f)) 
-  } else regular <- FALSE
+    begin <- rep(begin, length(f))
+  } else {
+    regular <- FALSE
+  }
   if (length(unique(end)) == 1) {
-    end   <- rep(end, length(f)) 
-  } else regular <- FALSE
+    end <- rep(end, length(f))
+  } else {
+    regular <- FALSE
+  }
   stopifnot(length(begin) == length(end), all(begin < end))
   new_domain <- c(min(begin), max(end))
   list(begin = begin, end = end, dom = new_domain, regular = regular)
@@ -40,26 +44,31 @@ prep_tf_zoom_args <- function(f, begin, end) {
 
 #' @rdname tf_zoom
 #' @export
-tf_zoom.tfd <- function(f, begin = tf_domain(f)[1], end = tf_domain(f)[2], ...) {
+tf_zoom.tfd <- function(f, begin = tf_domain(f)[1], end = tf_domain(f)[2], 
+                        ...) {
   args <- prep_tf_zoom_args(f, begin, end)
-  ret <- pmap(list(f[ , tf_arg(f), matrix = FALSE], args$begin, args$end), 
-    ~ filter(..1, arg >= ..2 & arg <= ..3))
+  ret <- pmap(
+    list(f[, tf_arg(f), matrix = FALSE], args$begin, args$end),
+    ~filter(..1, arg >= ..2 & arg <= ..3)
+  )
   ret <- tfd(ret, domain = args$dom, resolution = attr(f, "resolution"))
   if (is_irreg(ret)) {
-    nas <- map_lgl(ret, ~ length(.x$arg) == 0)
+    nas <- map_lgl(ret, ~length(.x$arg) == 0)
     if (all(nas)) stop("no data in zoom region.")
     if (any(nas)) warning("NAs created by tf_zoom.")
     for (n in which(nas)) ret[[n]] <- list(arg = unname(args$dom[1]), value = NA)
   } else {
-    if (any(map_lgl(ret, ~ length(.x) == 0))) 
+    if (any(map_lgl(ret, ~length(.x) == 0))) {
       stop("no data in zoom region.")
+    }
   }
   tf_evaluator(ret) <- attr(f, "evaluator_name")
   ret
 }
 #' @rdname tf_zoom
 #' @export
-tf_zoom.tfb <- function(f, begin = tf_domain(f)[1], end = tf_domain(f)[2], ...) {
+tf_zoom.tfb <- function(f, begin = tf_domain(f)[1], end = tf_domain(f)[2], 
+                        ...) {
   args <- prep_tf_zoom_args(f, begin, end)
   if (!args$regular) {
     message("tf_zoom() with varying start or end points - converting to tfd.")

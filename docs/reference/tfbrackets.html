@@ -35,12 +35,7 @@
 <meta property="og:description" content="These functions access, subset, replace and evaluate tf objects.
 For more information on creating tf objects and converting them to/from
 list, data.frame or matrix, see tfd() and tfb(). 
-Note that these break certain (terrible) R conventions for vector-like objects:
-no argument recycling,
-no indexing with NA,
-no indexing with names not present in x,
-no indexing with integers &amp;gt; length(x)
-" />
+Note that these break certain (terrible) R conventions for vector-like objects:" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -69,7 +64,7 @@ no indexing with integers &amp;gt; length(x)
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidyfun</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.0.5</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.0.6</span>
       </span>
     </div>
 
@@ -92,7 +87,13 @@ no indexing with integers &amp;gt; length(x)
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/Intro.html">Introducing tidyfun</a>
+      <a href="../articles/x01_Intro.html">Introducing tidyfun</a>
+    </li>
+    <li>
+      <a href="../articles/x02_Data_Manipulation.html">Data Manipulation</a>
+    </li>
+    <li>
+      <a href="../articles/x03_Visualization.html">Visualization</a>
     </li>
   </ul>
 </li>
@@ -127,12 +128,7 @@ no indexing with integers &amp;gt; length(x)
     <p>These functions access, subset, replace and evaluate <code>tf</code> objects.
 For more information on creating <code>tf</code> objects and converting them to/from
 <code>list</code>, <code>data.frame</code> or <code>matrix</code>, see <code><a href='tfd.html'>tfd()</a></code> and <code><a href='tfb.html'>tfb()</a></code>. <br />
-Note that these break certain (terrible) R conventions for vector-like objects:<br /></p><ul>
-<li><p>no argument recycling,</p></li>
-<li><p>no indexing with <code>NA</code>,</p></li>
-<li><p>no indexing with names not present in <code>x</code>,</p></li>
-<li><p>no indexing with integers <code>&gt; length(x)</code></p></li>
-</ul>
+Note that these break certain (terrible) R conventions for vector-like objects:<br /></p>
     
     </div>
 
@@ -192,6 +188,12 @@ represents one <code>argval</code> as given in argument <code>j</code>, with an 
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
+    <ul>
+<li><p>no argument recycling,</p></li>
+<li><p>no indexing with <code>NA</code>,</p></li>
+<li><p>no indexing with names not present in <code>x</code>,</p></li>
+<li><p>no indexing with integers <code>&gt; length(x)</code></p></li>
+</ul>
     <p>All of these will trigger errors. Subassigning new elements to positions
 beyond the original length still works and will fill up the missing elements
 up to that position with <code>NAs</code>, though. This package was developed by fickle,
@@ -214,7 +216,7 @@ rainbow-colored unicorns.</p>
 
       <footer>
       <div class="copyright">
-  <p>Developed by Fabian Scheipl.</p>
+  <p>Developed by Fabian Scheipl, Jeff Goldsmith.</p>
 </div>
 
 <div class="pkgdown">

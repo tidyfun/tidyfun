@@ -18,7 +18,7 @@
 <![endif]-->
 </head>
 <body>
-    <div class="container template-home">
+    <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
@@ -29,7 +29,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">tidyfun</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.0.5</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.0.6</span>
       </span>
     </div>
 
@@ -52,7 +52,13 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="articles/Intro.html">Introducing tidyfun</a>
+      <a href="articles/x01_Intro.html">Introducing tidyfun</a>
+    </li>
+    <li>
+      <a href="articles/x02_Data_Manipulation.html">Data Manipulation</a>
+    </li>
+    <li>
+      <a href="articles/x03_Visualization.html">Visualization</a>
     </li>
   </ul>
 </li>
@@ -74,22 +80,26 @@
 
       
       </header><div class="row">
-  <div class="contents col-md-9">
+  <div class="col-md-9 contents">
     
 
+    
+    
+<!-- README.md is generated from README.Rmd. Please edit that file -->
 <div id="tidyfun" class="section level1">
 <div class="page-header"><h1 class="hasAnchor">
-<a href="#tidyfun" class="anchor"></a><strong><code>tidyfun</code></strong>
+<a href="#tidyfun" class="anchor"></a>tidyfun <img src="https://github.com/fabian-s/tidyfun/blob/master/README_files/figures/tidyfun_hex.gif?raw=true" align="right" height="150">
 </h1></div>
+
 <p><strong><code>tidyfun</code></strong> makes data wrangling and exploratory analysis of functional data easier.</p>
 <p><strong><code>tidyfun</code></strong> provides:</p>
 <ul>
-<li>new <strong>data types</strong> for representing functional data: <strong><code>tfd</code></strong> &amp; <strong><code>tfb</code></strong>
-</li>
+<li>new <strong>data types</strong> for representing functional data</li>
 <li>arithmetic <strong>operators</strong>, descriptive <strong>statistics</strong> and <strong>graphics</strong> functions for such data</li>
 <li>
 <code>tidyverse</code>-verbs for handling functional data <strong>inside</strong> data frames.</li>
 </ul>
+<p>Look <a href="https://fabian-s.github.io/tidyfun/articles/x01_Intro.html">here</a> for an introduction with examples.</p>
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
@@ -98,11 +108,12 @@
 <div id="what-does-it-do" class="section level2">
 <h2 class="hasAnchor">
 <a href="#what-does-it-do" class="anchor"></a>What does it do?</h2>
-<p>Have a look at <a href="https://fabian-s.github.io/tidyfun" class="uri">https://fabian-s.github.io/tidyfun</a> for details, short summary below.</p>
 <div id="new-vector-like-data-types-for-functional-data" class="section level4">
 <h4 class="hasAnchor">
 <a href="#new-vector-like-data-types-for-functional-data" class="anchor"></a>New vector-like data types for functional data</h4>
-<p><strong><code>tidyfun</code></strong> provides new <code>S3</code>-classes for functional data, either as raw data (class <code>tfd</code> for <em>t</em>idy <em>f</em>unctional <em>d</em>ata) or in basis representation (class <code>tfb</code> for <em>t</em>idy <em>f</em>unctional <em>b</em>asis data). Such <code>tf</code>s can be subsetted or subassigned, computed on and summarized: almost all</p>
+<p><strong><code>tidyfun</code></strong> provides <a href="https://fabian-s.github.io/tidyfun/reference/index.html#section-tf-sub-classes-constructors-converters">new <code>S3</code>-classes for functional data</a>, either as raw data (class <code>tfd</code> for <em>t</em>idy <em>f</em>unctional <em>d</em>ata) or in basis representation (class <code>tfb</code> for <em>t</em>idy <em>f</em>unctional <em>b</em>asis data).</p>
+<p>Such <code>tf</code>-objects can be subsetted or subassigned, computed on and summarized.</p>
+<p>Almost all</p>
 <ul>
 <li>operators like <code>==</code>, <code>+</code> or <code>*</code>
 </li>
@@ -111,14 +122,14 @@
 <li>and statistics functions like <code>mean</code> or <code>sd</code>
 </li>
 </ul>
-<p>are defined for <strong><code>tidyfun</code></strong>’s data structures.</p>
+<p>are defined for <strong><code>tidyfun</code></strong>’s data structures (<a href="https://fabian-s.github.io/tidyfun/reference/index.html#section-arithmetic-logical-and-summary-functions">more</a>).</p>
 <p>The <code>tf</code> objects are basically glorified lists, so they work well as columns in data frames. That makes it a lot easier to keep your other data and functional measurements together in one object for preprocessing, exploratory analysis and description.</p>
 <p>At the same time, these objects actually behave like vectors of <em>functions</em> to some extent, i.e., they can be evaluated on any point in their domain, they can be integrated or differentiated, etc.</p>
 </div>
 <div id="tidyverse-verbs-for-dealing-with-functional-data-inside-data-frames" class="section level4">
 <h4 class="hasAnchor">
 <a href="#tidyverse-verbs-for-dealing-with-functional-data-inside-data-frames" class="anchor"></a><code>tidyverse</code> verbs for dealing with functional data inside data frames</h4>
-<p>All <code>dplyr</code> verbs work on <code>tf</code>-columns, so you can <code>filter</code>, <code>mutate</code>, <code>summarize</code> etc functional data pretty much like conventional data.<br><strong><code>tidyfun</code></strong> also provides <code>tf_gather</code> &amp; <code>tf_spread</code>, <code>tf_nest</code> &amp; <code>tf_unnest</code> in order to reshape tables with functional data, i.e., go from wide to narrow, or from long to short, and <em>vice versa</em>.</p>
+<p>All <code>dplyr</code> verbs work on <code>tf</code>-columns, so you can <code>filter</code>, <code>mutate</code>, <code>summarize</code> etc functional data pretty much like conventional data.<br><strong><code>tidyfun</code></strong> also provides <code>tf_gather</code> &amp; <code>tf_spread</code>, <code>tf_nest</code> &amp; <code>tf_unnest</code> in order to reshape tables with functional data, i.e., go from wide to narrow, or from long to short, and <em>vice versa</em> (<a href="https://fabian-s.github.io/tidyfun/articles/x02_Data_Manipulation.html">see here</a>).</p>
 </div>
 <div id="new-ggplot2-geoms-and-stats-for-functional-data" class="section level4">
 <h4 class="hasAnchor">
@@ -126,25 +137,24 @@
 <p><strong><code>tidyfun</code></strong> defines <strong>pasta-themed</strong> <code>geom</code>s for functional data:</p>
 <ul>
 <li>
-<strong><code>geom_spaghetti</code></strong> for lines</li>
+<strong><code>geom_spaghetti</code></strong> for lines,</li>
 <li>
-<strong><code>geom_meatballs</code></strong> for (lines &amp;) points</li>
+<strong><code>geom_meatballs</code></strong> for (lines &amp;) points,</li>
 <li>
-<strong><code>gglasagna</code></strong> for <a href="https://asset.jmir.pub/assets/76aeec48564abf0e6f6da8e9cd06346d.png">lasagna plots</a>, with an <strong><code>order</code></strong>-aesthetic to sort the lasagna layers</li>
+<strong><code>gglasagna</code></strong> for <a href="https://asset.jmir.pub/assets/76aeec48564abf0e6f6da8e9cd06346d.png">lasagna plots</a>, with an <strong><code>order</code></strong>-aesthetic to sort the lasagna layers,</li>
 <li>
-<strong><code>geom_capellini</code></strong> for <a href="http://ggobi.github.io/ggally/index_files/figure-html/glyphs-basic-usage-1.png">glyphs</a> plots (i.e., sparklines)</li>
+<strong><code>geom_capellini</code></strong> for <a href="http://ggobi.github.io/ggally/index_files/figure-html/glyphs-basic-usage-1.png">glyphs</a> plots (i.e., sparklines),</li>
 </ul>
+<p>as well as new methods for <code>plot</code>, <code>lines</code> and <code>points</code> for quick and easy visualizations of functional data (<a href="https://fabian-s.github.io/tidyfun/reference/index.html#section-visualization-display">more</a>).</p>
 <hr>
-<p><strong>Do have a look at <a href="https://fabian-s.github.io/tidyfun" class="uri">https://fabian-s.github.io/tidyfun</a> for examples, full documentation and vignettes.</strong></p>
 <p>Found a bug? Got a question? Missing some functionality?<br>
 Please let us know so we can make it better.</p>
 </div>
 </div>
 </div>
-
   </div>
 
-  <div class="col-md-3" id="sidebar">
+  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <div class="links">
 <h2>Links</h2>
 <ul class="list-unstyled">
@@ -164,22 +174,23 @@ Please let us know so we can make it better.</p>
 <h2>Developers</h2>
 <ul class="list-unstyled">
 <li>Fabian Scheipl <br><small class="roles"> Author, maintainer </small>  </li>
-<li><a href="authors.html">All authors...</a></li>
+<li>Jeff Goldsmith <br><small class="roles"> Author </small>  </li>
 </ul>
 </div>
 
-  <div class="dev-status">
+      <div class="dev-status">
 <h2>Dev status</h2>
 <ul class="list-unstyled">
 <li><a href="https://travis-ci.org/fabian-s/tidyfun"><img src="https://travis-ci.org/fabian-s/tidyfun.svg?branch=master" alt="Build Status"></a></li>
 </ul>
 </div>
 </div>
+
 </div>
 
 
       <footer><div class="copyright">
-  <p>Developed by Fabian Scheipl.</p>
+  <p>Developed by Fabian Scheipl, Jeff Goldsmith.</p>
 </div>
 
 <div class="pkgdown">

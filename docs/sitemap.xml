@@ -4,13 +4,7 @@
     <loc>https://fabian-s.github.io/tidyfun/index.html</loc>
   </url>
   <url>
-    <loc>https://fabian-s.github.io/tidyfun/reference/approx.html</loc>
-  </url>
-  <url>
-    <loc>https://fabian-s.github.io/tidyfun/reference/depth.html</loc>
-  </url>
-  <url>
-    <loc>https://fabian-s.github.io/tidyfun/reference/evaluate.html</loc>
+    <loc>https://fabian-s.github.io/tidyfun/reference/chf_df.html</loc>
   </url>
   <url>
     <loc>https://fabian-s.github.io/tidyfun/reference/ggcapellini.html</loc>
@@ -22,25 +16,40 @@
     <loc>https://fabian-s.github.io/tidyfun/reference/ggspaghetti.html</loc>
   </url>
   <url>
-    <loc>https://fabian-s.github.io/tidyfun/reference/jiggle.html</loc>
+    <loc>https://fabian-s.github.io/tidyfun/reference/tf_approx.html</loc>
   </url>
   <url>
-    <loc>https://fabian-s.github.io/tidyfun/reference/rgp.html</loc>
+    <loc>https://fabian-s.github.io/tidyfun/reference/tf_depth.html</loc>
   </url>
   <url>
-    <loc>https://fabian-s.github.io/tidyfun/reference/smooth.html</loc>
+    <loc>https://fabian-s.github.io/tidyfun/reference/tf_evaluate.html</loc>
   </url>
   <url>
     <loc>https://fabian-s.github.io/tidyfun/reference/tf_gather.html</loc>
   </url>
   <url>
+    <loc>https://fabian-s.github.io/tidyfun/reference/tf_jiggle.html</loc>
+  </url>
+  <url>
     <loc>https://fabian-s.github.io/tidyfun/reference/tf_nest.html</loc>
+  </url>
+  <url>
+    <loc>https://fabian-s.github.io/tidyfun/reference/tf_rgp.html</loc>
+  </url>
+  <url>
+    <loc>https://fabian-s.github.io/tidyfun/reference/tf_smooth.html</loc>
   </url>
   <url>
     <loc>https://fabian-s.github.io/tidyfun/reference/tf_spread.html</loc>
   </url>
   <url>
     <loc>https://fabian-s.github.io/tidyfun/reference/tf_unnest.html</loc>
+  </url>
+  <url>
+    <loc>https://fabian-s.github.io/tidyfun/reference/tf_where.html</loc>
+  </url>
+  <url>
+    <loc>https://fabian-s.github.io/tidyfun/reference/tf_zoom.html</loc>
   </url>
   <url>
     <loc>https://fabian-s.github.io/tidyfun/reference/tfb.html</loc>
@@ -82,12 +91,12 @@
     <loc>https://fabian-s.github.io/tidyfun/reference/tidyfun.html</loc>
   </url>
   <url>
-    <loc>https://fabian-s.github.io/tidyfun/reference/where.html</loc>
+    <loc>https://fabian-s.github.io/tidyfun/articles/x01_Intro.html</loc>
   </url>
   <url>
-    <loc>https://fabian-s.github.io/tidyfun/reference/zoom.html</loc>
+    <loc>https://fabian-s.github.io/tidyfun/articles/x02_Data_Manipulation.html</loc>
   </url>
   <url>
-    <loc>https://fabian-s.github.io/tidyfun/articles/Intro.html</loc>
+    <loc>https://fabian-s.github.io/tidyfun/articles/x03_Visualization.html</loc>
   </url>
 </urlset>

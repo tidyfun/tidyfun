@@ -1,5 +1,5 @@
 #' Utility functions for `tf`-objects
-#' 
+#'
 #' A bunch of methods & utilities that do what they say: extract or set the
 #' respective attributes of a `tf`-object.
 #' @param f an `tf` object
@@ -32,8 +32,8 @@ tf_evaluations.tfd_irreg <- function(f) {
 }
 #' @export
 tf_evaluations.tfb <- function(f) {
-  map(f, ~ drop(attr(f, "basis_matrix") %*% .))
-} 
+  map(f, ~drop(attr(f, "basis_matrix") %*% .))
+}
 
 
 #' @rdname tfmethods
@@ -46,7 +46,7 @@ tf_count.tfd_irreg <- function(f) {
   ret <- map_int(tf_evaluations(f), length)
   ret[is.na(f)] <- 0
   ret
-}  
+}
 #' @export
 tf_count.tfd_reg <- function(f) length(tf_arg(f))
 
@@ -58,7 +58,7 @@ tf_domain <- function(f) {
 }
 
 #' @rdname tfmethods
-#' @param forget extract the evaluator or basis-creating function without its cache? 
+#' @param forget extract the evaluator or basis-creating function without its cache?
 #'   See [memoise::forget()]. Defaults to `FALSE`.
 #' @export
 tf_evaluator <- function(f, forget = FALSE) {
@@ -76,7 +76,7 @@ tf_basis <- function(f, as_tfd = FALSE, forget = FALSE) {
   basis <- attr(f, "basis")
   if (forget) forget(basis)
   if (!as_tfd) return(basis)
-  basis(tf_arg(f)) %>% t %>% tfd(arg = tf_arg(f))
+  basis(tf_arg(f)) %>% t() %>% tfd(arg = tf_arg(f))
 }
 
 #' @rdname tfmethods
@@ -89,12 +89,16 @@ tf_basis <- function(f, as_tfd = FALSE, forget = FALSE) {
 `tf_evaluator<-` <- function(x, value) {
   value <- if (is.function(value)) {
     deparse(substitute(value))
-  } else quo_name(enexpr(value))
+  } else {
+    quo_name(enexpr(value))
+  }
   stopifnot(is_tfd(x))
   evaluator <- get(value, mode = "function", envir = parent.frame())
   stopifnot(inherits(x, "tfd"))
-  assert_set_equal(names(formals(evaluator)), 
-    c("x", "arg", "evaluations")) 
+  assert_set_equal(
+    names(formals(evaluator)),
+    c("x", "arg", "evaluations")
+  )
   attr(x, "evaluator_name") <- value
   attr(x, "evaluator") <- memoise(evaluator)
   x
@@ -106,7 +110,7 @@ tf_basis <- function(f, as_tfd = FALSE, forget = FALSE) {
 
 #' @rdname tfmethods
 #' @export
-`arg<-.tfd_irreg` <- function(x, value) {  
+`arg<-.tfd_irreg` <- function(x, value) {
   assert_arg(value, x)
   ret <- map2(tf_evaluations(x), value, ~list(arg = .y, data = .x))
   attributes(ret) <- attributes(x)
@@ -129,7 +133,7 @@ tf_resolution <- function(f) {
   attr(f, "resolution")
 }
 
-#TODO: add pipe-able modify_xx that call assignment functions on their first arg
+# TODO: add pipe-able modify_xx that call assignment functions on their first arg
 
 #-------------------------------------------------------------------------------
 
@@ -154,12 +158,12 @@ rev.tf <- function(x) {
 #' @rdname tfmethods
 #' @export
 is.na.tf <- function(x) {
-  map_lgl(unclass(x), ~ is.na(.x)[1])
+  map_lgl(unclass(x), ~is.na(.x)[1])
 }
 #' @rdname tfmethods
 #' @export
 is.na.tfd_irreg <- function(x) {
-  map_lgl(unclass(x), ~ is.na(.x$value[1]))
+  map_lgl(unclass(x), ~is.na(.x$value[1]))
 }
 
 
@@ -180,4 +184,3 @@ is_tfd <- function(x) "tfd" %in% class(x)
 #' @rdname tfmethods
 #' @export
 is_tfb <- function(x) "tfb" %in% class(x)
-
