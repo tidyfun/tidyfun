@@ -101,7 +101,8 @@ gglasagna <- function(data, y, order = NULL, label = NULL,
     rename(!!y_name := ..fill)
 
   p <- ggplot(tf_eval) +
-    geom_tile(aes(y = ..y, x = ..x, fill = !!sym(y_name))) + ylab("") +
+    geom_tile(aes(y = ..y, x = ..x, fill = !!sym(y_name), 
+      colour = !!sym(y_name))) + ylab("") +
     xlab("")
   if (!is.null(order_label) | !is.null(order_by_label)) {
     p <- p + labs(caption = paste(
