@@ -15,58 +15,15 @@ quad_trapez <- function(arg, evaluations) {
   c(0, 0.5 * diff(arg) * (head(evaluations, -1) + evaluations[-1]))
 }
 
-derive_tfb_mgcv <- function(f, order = 1, arg = tf_arg(f)) {
-  # TODO: make this work for iterated application tf_derive(tf_derive(fb))
-  if (!is.null(attr(f, "basis_deriv"))) {
-    stop("Can't derive or integrate previously derived/integrated tf in basis representation")
-  }
-  s_args <- attr(f, "basis_args")
-  s_call <- as.call(c(quote(s), quote(arg), s_args))
-  s_spec <- eval(s_call)
-  spec_object <- smooth.construct(s_spec,
-    data = data.frame(arg = arg), knots = NULL
-  )
-  eps <- min(diff(arg)) / 1000
-  basis_constructor <- smooth_spec_wrapper(spec_object, deriv = order, eps = eps)
-  attr(f, "basis") <- memoise::memoise(basis_constructor)
-  attr(f, "basis_label") <- deparse(s_call, width.cutoff = 60)[1]
-  attr(f, "basis_args") <- s_args
-  attr(f, "basis_matrix") <- basis_constructor(arg)
-  attr(f, "basis_deriv") <- order
-  attr(f, "domain") <- range(arg)
-  f
-}
-
-derive_tfb_fpc <- function(f, order = 1, lower, upper,
-                           arg = tf_arg(f)) {
-  efunctions <- environment(attr(f, "basis"))$efunctions
-  environment(attr(f, "basis")) <- new.env()
-  new_basis <- if (order > 0) {
-    tf_derive(efunctions, order = order)
-  } else {
-    tf_integrate(efunctions,
-      lower = lower, upper = upper, definite = FALSE,
-      arg = arg
-    )
-  }
-  environment(attr(f, "basis"))$efunctions <- new_basis
-  attr(f, "basis_matrix") <- t(as.matrix(new_basis))
-  attr(f, "arg") <- tf_arg(new_basis)
-  attr(f, "domain") <- range(tf_arg(new_basis))
-  f
-}
-
-
-
 #-------------------------------------------------------------------------------
 
 #' Derivatives and integrals of functional data
 #'
-#' **Derivatives** of `tf`-objects use finite differences of the evaluations
-#' for `tfd` and finite differences of the basis functions for `tfb`.
-#' Note that, for some spline bases like `"cr"` or `"tp"` which always begin/end linearly,
-#' computing second derivatives will produce artefacts at the outer limits
-#' of the functions' domain due to these boundary constraints. Basis `"bs"` does
+#' **Derivatives** of `tf`-objects use finite differences of the evaluations for
+#' `tfd` and finite differences of the basis functions for `tfb`. Note that, for
+#' some spline bases like `"cr"` or `"tp"` which always begin/end linearly,
+#' computing second derivatives will produce artefacts at the outer limits of
+#' the functions' domain due to these boundary constraints. Basis `"bs"` does
 #' not have this problem, but tends to yield slightly less stable fits.
 #'
 #' @param f a `tf`-object
@@ -75,14 +32,15 @@ derive_tfb_fpc <- function(f, order = 1, lower, upper,
 #'   Not the `arg` of the returned object.
 #' @param ... not used
 #'
-#' @return a `tf` with (slightly) different `arg` (and `basis`), or the definite integrals of the functions in `f`
+#' @return a `tf` with (slightly) different `arg` (and `basis`), or the definite
+#'   integrals of the functions in `f`
 #' @rdname tfcalculus
 #' @export
-tf_derive <- function(f, ...) UseMethod("tf_derive")
+tf_derive <- function(f, order = 1, arg = NULL, ...) UseMethod("tf_derive")
 
 #' @export
 #' @rdname tfcalculus
-tf_derive.default <- function(f, ...) .NotYetImplemented()
+tf_derive.default <- function(f, order = 1, arg = NULL, ...) .NotYetImplemented()
 
 #' @export
 #' @rdname tfcalculus
@@ -104,24 +62,59 @@ tf_derive.tfd <- function(f, order = 1, arg = NULL, ...) {
 }
 #' @export
 #' @rdname tfcalculus
-tf_derive.tfb <- function(f, order = 1, ...) {
-  derive_tfb_mgcv(f, order = order)
+tf_derive.tfb_spline <- function(f, order = 1, arg = NULL, ...) {
+  if (is.null(arg)) {
+    arg <- tf_arg(f)
+  } else assert_arg(arg, f)
+  # TODO: make this work for iterated application tf_derive(tf_derive(fb))
+  if (!is.null(attr(f, "basis_deriv"))) {
+    stop("Can't derive or integrate previously derived/integrated tf in spline representation")
+  }
+  s_args <- attr(f, "basis_args")
+  s_call <- as.call(c(quote(s), quote(arg), s_args))
+  s_spec <- eval(s_call)
+  spec_object <- smooth.construct(s_spec,
+                                  data = data.frame(arg = arg), knots = NULL
+  )
+  eps <- min(diff(arg)) / 1000
+  basis_constructor <- smooth_spec_wrapper(spec_object, deriv = order, eps = eps)
+  attr(f, "basis") <- memoise::memoise(basis_constructor)
+  attr(f, "basis_label") <- deparse(s_call, width.cutoff = 60)[1]
+  attr(f, "basis_args") <- s_args
+  attr(f, "basis_matrix") <- basis_constructor(arg)
+  attr(f, "basis_deriv") <- order
+  attr(f, "domain") <- range(arg)
+  f
 }
 #' @export
 #' @rdname tfcalculus
-tf_derive.tfb_fpc <- function(f, order = 1, ...) {
-  derive_tfb_fpc(f, order = order)
+tf_derive.tfb_fpc <- function(f, order = 1, arg = NULL, ...) {
+  efunctions <- environment(attr(f, "basis"))$efunctions
+  environment(attr(f, "basis")) <- new.env()
+  new_basis <- if (order > 0) {
+    tf_derive(efunctions, order = order, arg = arg)
+  } else {
+    tf_integrate(efunctions,
+                 lower = lower, upper = upper, definite = FALSE,
+                 arg = arg
+    )
+  }
+  environment(attr(f, "basis"))$efunctions <- new_basis
+  attr(f, "basis_matrix") <- t(as.matrix(new_basis))
+  attr(f, "arg") <- tf_arg(new_basis)
+  attr(f, "domain") <- range(tf_arg(new_basis))
+  f
 }
 
 #-------------------------------------------------------------------------------
 
 #' @rdname tfcalculus
-#' @description **Integrals** of `tf`-objects are computed by simple quadrature (trapezoid rule, specifically).
-#'  By default the scalar definite integral \eqn{\int^{upper}_{lower}f(s)ds} is returned
-#'  (option `definite = TRUE`), alternatively for `definite = FALSE` something
-#'  like the *anti-derivative* on `[lower, upper]`, e.g. an `tfd` object
-#'  representing \eqn{F(t) = \int^{t}_{lower}f(s)ds}, for \eqn{t \in}`[lower, upper]`,
-#'  is returned.
+#' @description **Integrals** of `tf`-objects are computed by simple quadrature
+#'   (trapezoid rule, specifically). By default the scalar definite integral
+#'   \eqn{\int^{upper}_{lower}f(s)ds} is returned (option `definite = TRUE`),
+#'   alternatively for `definite = FALSE` something like the *anti-derivative*
+#'   on `[lower, upper]`, e.g. an `tfd` object representing \eqn{F(t) =
+#'   \int^{t}_{lower}f(s)ds}, for \eqn{t \in}`[lower, upper]`, is returned.
 #' @details `tf_integrate.function` is simply a wrapper for [stats::integrate()].
 #' @export
 tf_integrate <- function(f, lower, upper, ...) {
@@ -221,7 +214,7 @@ tf_integrate.tfb <- function(f, lower = tf_domain(f)[1], upper = tf_domain(f)[2]
     limits[2]
   )
   if (grepl("s\\(arg", attr(f, "basis_label"))) {
-    return(derive_tfb_mgcv(f, order = -1, arg = arg))
+    return(tderive_tfb_mgcv(f, order = -1, arg = arg))
   }
   if (grepl("FPC", attr(f, "basis_label"))) {
     return(derive_tfb_fpc(f,

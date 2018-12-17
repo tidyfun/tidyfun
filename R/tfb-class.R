@@ -2,15 +2,15 @@
 #'
 #' Various constructor and conversion methods.
 #'
-#' `tfb` is a wrapper for functions that set up spline-, principal component- 
-#' or wavelet-based representations of functional data. For all three, the
-#' input data $x_i(t)$ are represented as weighted sums of a set of common basis 
-#' functions $B_k(t); k = 1,\\dots, K$ identical for all
-#' observations and weight or coefficient vectors $b_i = (b_{i1}, \\dots, b_{iK})$ 
-#' estimated for each observation: $x_i(t) = B_1(t) b_{i1} + \dots + B_K(t) b_{iK}$.
-#' Depending on the value of `basis`, the basis functions $B(t)$ will either be 
-#' `spline`` functions or the first few estimated eigenfunctions of the covariance 
-#' operator of the $x(t)$ (`fpc`) or wavelets (`wavelet`).
+#' `tfb` is a wrapper for functions that set up spline-, principal component- or
+#' wavelet-based representations of functional data. For all three, the input
+#' data \eqn{x_i(t)} are represented as weighted sums of a set of common basis
+#' functions \eqn{B_k(t); k = 1,\\dots, K} identical for all observations and
+#' weight or coefficient vectors \eqn{b_i = (b_{i1}, \dots, b_{iK})} estimated
+#' for each observation: \eqn{x_i(t) \approx \sum_k B_k(t) b_{ik}}. Depending on
+#' the value of `basis`, the basis functions \eqn{B(t)} will either be `spline`
+#' functions or the first few estimated eigenfunctions of the covariance
+#' operator of the \eqn{x(t)} (`fpc`) or wavelets (`wavelet`).
 #' 
 #' See [tfb_spline()] for spline based basis representation (the default).
 #' See [tfb_fpc()] for using an FPC representation with an orthonormal basis estimated from the

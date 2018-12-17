@@ -4,7 +4,7 @@
 \alias{tf_derive}
 \alias{tf_derive.default}
 \alias{tf_derive.tfd}
-\alias{tf_derive.tfb}
+\alias{tf_derive.tfb_spline}
 \alias{tf_derive.tfb_fpc}
 \alias{tf_integrate}
 \alias{tf_integrate.tfd}
@@ -17,9 +17,9 @@ tf_derive(f, ...)
 
 \method{tf_derive}{tfd}(f, order = 1, arg = NULL, ...)
 
-\method{tf_derive}{tfb}(f, order = 1, ...)
+\method{tf_derive}{tfb_spline}(f, order = 1, arg = NULL, ...)
 
-\method{tf_derive}{tfb_fpc}(f, order = 1, ...)
+\method{tf_derive}{tfb_fpc}(f, order = 1, arg = NULL, ...)
 
 tf_integrate(f, lower, upper, ...)
 
@@ -49,22 +49,23 @@ For \code{definite=TRUE}, this can be a vector of the same length as \code{f}.}
 or the antiderivative. See Description.}
 }
 \value{
-a \code{tf} with (slightly) different \code{arg} (and \code{basis}), or the definite integrals of the functions in \code{f}
+a \code{tf} with (slightly) different \code{arg} (and \code{basis}), or the definite
+integrals of the functions in \code{f}
 }
 \description{
-\strong{Derivatives} of \code{tf}-objects use finite differences of the evaluations
-for \code{tfd} and finite differences of the basis functions for \code{tfb}.
-Note that, for some spline bases like \code{"cr"} or \code{"tp"} which always begin/end linearly,
-computing second derivatives will produce artefacts at the outer limits
-of the functions' domain due to these boundary constraints. Basis \code{"bs"} does
+\strong{Derivatives} of \code{tf}-objects use finite differences of the evaluations for
+\code{tfd} and finite differences of the basis functions for \code{tfb}. Note that, for
+some spline bases like \code{"cr"} or \code{"tp"} which always begin/end linearly,
+computing second derivatives will produce artefacts at the outer limits of
+the functions' domain due to these boundary constraints. Basis \code{"bs"} does
 not have this problem, but tends to yield slightly less stable fits.
 
-\strong{Integrals} of \code{tf}-objects are computed by simple quadrature (trapezoid rule, specifically).
-By default the scalar definite integral \eqn{\int^{upper}_{lower}f(s)ds} is returned
-(option \code{definite = TRUE}), alternatively for \code{definite = FALSE} something
-like the \emph{anti-derivative} on \code{[lower, upper]}, e.g. an \code{tfd} object
-representing \eqn{F(t) = \int^{t}_{lower}f(s)ds}, for \eqn{t \in}\code{[lower, upper]},
-is returned.
+\strong{Integrals} of \code{tf}-objects are computed by simple quadrature
+(trapezoid rule, specifically). By default the scalar definite integral
+\eqn{\int^{upper}_{lower}f(s)ds} is returned (option \code{definite = TRUE}),
+alternatively for \code{definite = FALSE} something like the \emph{anti-derivative}
+on \code{[lower, upper]}, e.g. an \code{tfd} object representing \eqn{F(t) =
+  \int^{t}_{lower}f(s)ds}, for \eqn{t \in}\code{[lower, upper]}, is returned.
 }
 \details{
 \code{tf_integrate.function} is simply a wrapper for \code{\link[stats:integrate]{stats::integrate()}}.
