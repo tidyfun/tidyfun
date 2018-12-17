@@ -36,6 +36,8 @@ Collate:
     'summarize.R'
     'tfb-class.R'
     'tfb-fpc.R'
+    'tfb-spline.R'
+    'tfb-utils.R'
     'tfd-class.R'
     'tidyfun-package.r'
     'tidyr.R'

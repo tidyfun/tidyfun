@@ -57,5 +57,5 @@ for irregular / non-equidistant grids and does not work for
 incomplete/irregular data.
 }
 \seealso{
-tfb
+\code{\link[=tfb]{tfb()}},  \code{\link[refund:fpca.sc]{refund::fpca.sc()}} for principal components options.
 }

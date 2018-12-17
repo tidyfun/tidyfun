@@ -52,20 +52,16 @@ as.matrix.tfd <- function(x, arg = NULL, interpolate = FALSE, ...) {
 #-------------------------------------------------------------------------------
 
 #' @rdname tfb
-#' @param basis either "mgcv" to call [tfb()] which uses `mgcv`-type spline basis functions
-#'   or "fpc" to call [tfb_fpc()] which uses a (smoothed) functional principal component basis.
+#' @inheritParams tfb
 #' @export
-as.tfb <- function(data, basis = c("mgcv", "fpc"), ...) UseMethod("as.tfb")
-as.tfb.default <- function(data, basis = c("mgcv", "fpc"), ...) {
-  basis <- match.arg(basis)
-  tfb_maker <- switch(basis, "mgcv" = tfb, "fpc" = tfb_fpc)
-  tfb_maker(data, ...)
-}
+as.tfb <- function(data, basis = c("spline", "fpc"), ...) tfb(data, basis, ...)
+
 
 #' @rdname tfb
 #' @param row.names not used
 #' @param optional not used
 #' @param x an `tfb` object
+#' @param arg optional vector of argument values
 #' @export
 as.data.frame.tfb <- function(x, row.names = NULL, optional = FALSE,
                               arg = NULL, ...) {

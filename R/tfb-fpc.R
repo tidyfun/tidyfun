@@ -20,7 +20,7 @@ fpc_wrapper <- function(efunctions) {
 }
 
 #' @importFrom refund fpca.sc
-make_tfb_fpc <- function(data, domain = NULL, smooth = TRUE, resolution = NULL, 
+new_tfb_fpc <- function(data, domain = NULL, smooth = TRUE, resolution = NULL, 
                          ...) {
   # FIXME: rm renaming once we've cleaned up fpca.sc etc
   # FIXME: warn if domain != range(arg), can't extrapolate FPCs
@@ -87,7 +87,7 @@ make_tfb_fpc <- function(data, domain = NULL, smooth = TRUE, resolution = NULL,
 #'  (regularized/smoothed) FPCA. Unless set by the user `tidyfun` uses `pve = .995` to
 #'  determine the truncation levels and uses `bs = 15` basis functions for
 #'  the mean function and the marginal bases for the covariance surface.
-#' @seealso tfb
+#' @seealso [tfb()],  [refund::fpca.sc()] for principal components options. 
 #' @rdname tfb_fpc
 #' @export
 tfb_fpc <- function(data, ...) UseMethod("tfb_fpc")
@@ -98,7 +98,7 @@ tfb_fpc.data.frame <- function(data, id = 1, arg = 2, value = 3,
                                domain = NULL, smooth = TRUE, resolution = NULL, 
                                ...) {
   data <- df_2_df(data, id, arg, value)
-  make_tfb_fpc(data, domain = domain, smooth = smooth, 
+  new_tfb_fpc(data, domain = domain, smooth = smooth, 
                resolution = resolution, ...)
 }
 
@@ -109,7 +109,7 @@ tfb_fpc.matrix <- function(data, arg = NULL, domain = NULL, smooth = TRUE,
   arg <- unlist(find_arg(data, arg))
   names_data <- rownames(data)
   data <- mat_2_df(data, arg)
-  ret <- make_tfb_fpc(data, domain = domain, smooth = smooth, 
+  ret <- new_tfb_fpc(data, domain = domain, smooth = smooth, 
                       resolution = resolution, ...)
   names(ret) <- names_data
   ret

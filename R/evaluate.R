@@ -62,7 +62,7 @@ tf_evaluate.tfb <- function(object, arg, ...) {
       X = attr(object, "basis_matrix"),
       resolution = tf_resolution(object)
     )
-    ret <- split(evals, col(evals))
+    ret <- split(evals, col(as.matrix(evals)))
   } else {
     ret <- pmap(
       list(arg, ensure_list(tf_arg(object)), coef(object)),
@@ -84,11 +84,11 @@ evaluate_tfb_once <- function(x, arg, coefs, basis, X, resolution) {
   )
   seen_index <- na.omit(seen)
   seen <- !is.na(seen)
-  if (all(seen)) return(X[seen_index, , drop = FALSE] %*% coefs)
+  if (all(seen)) return(drop(X[seen_index, , drop = FALSE] %*% coefs))
   Xnew <- X[rep(1, length(x)), ]
   if (any(seen)) Xnew[seen, ] <- X[seen_index, , drop = FALSE]
   Xnew[!seen, ] <- basis(x[!seen])
-  Xnew %*% coefs
+  drop(Xnew %*% coefs)
 }
 
 
