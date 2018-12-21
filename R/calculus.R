@@ -1,5 +1,6 @@
 # compute derivatives of data rows by finite differences.
 # returns derivatives at interval midpoints
+#' @importFrom utils head
 derive_matrix <- function(data, arg, order) {
   for (i in 1:order) {
     delta <- diff(arg)
@@ -10,7 +11,6 @@ derive_matrix <- function(data, arg, order) {
 }
 
 # trapezoidal quadrature
-#' @importFrom utils head
 quad_trapez <- function(arg, evaluations) {
   c(0, 0.5 * diff(arg) * (head(evaluations, -1) + evaluations[-1]))
 }
@@ -26,13 +26,17 @@ quad_trapez <- function(arg, evaluations) {
 #' the functions' domain due to these boundary constraints. Basis `"bs"` does
 #' not have this problem, but tends to yield slightly less stable fits.
 #'
+#' The derivatives of `tfd` objects use centered finite differences, e.g. for first derivatives 
+#' \eqn{f'((t_i + t_{i+1})/2)\approx \frac{f(t_i) + f(t_{i+1})}{t_{i+1} - t_i}},
+#' so the domains of differentiated `tfd` will shrink slightly at both ends.
+#'
 #' @param f a `tf`-object
-#' @param order order of differentiation. Maximally 2 for `tfb` with `mgcv`-spline bases.
+#' @param order order of differentiation. Maximal value for `tfb` with `mgcv`-spline bases is 2.
 #' @param arg grid to use for the finite differences or quadrature.
 #'   Not the `arg` of the returned object.
 #' @param ... not used
 #'
-#' @return a `tf` with (slightly) different `arg` (and `basis`), or the definite
+#' @return a `tf` (with slightly different `arg` or `basis` for the derivatives, see Details), or the definite
 #'   integrals of the functions in `f`
 #' @rdname tfcalculus
 #' @export
@@ -94,10 +98,7 @@ tf_derive.tfb_fpc <- function(f, order = 1, arg = NULL, ...) {
   new_basis <- if (order > 0) {
     tf_derive(efunctions, order = order, arg = arg)
   } else {
-    tf_integrate(efunctions,
-                 lower = lower, upper = upper, definite = FALSE,
-                 arg = arg
-    )
+    tf_integrate(efunctions, definite = FALSE, arg = arg, ...)
   }
   environment(attr(f, "basis"))$efunctions <- new_basis
   attr(f, "basis_matrix") <- t(as.matrix(new_basis))
@@ -113,7 +114,7 @@ tf_derive.tfb_fpc <- function(f, order = 1, arg = NULL, ...) {
 #'   (trapezoid rule, specifically). By default the scalar definite integral
 #'   \eqn{\int^{upper}_{lower}f(s)ds} is returned (option `definite = TRUE`),
 #'   alternatively for `definite = FALSE` something like the *anti-derivative*
-#'   on `[lower, upper]`, e.g. an `tfd` object representing \eqn{F(t) =
+#'   on `[lower, upper]`, e.g. an `tfd` object representing \eqn{F(t) \approx
 #'   \int^{t}_{lower}f(s)ds}, for \eqn{t \in}`[lower, upper]`, is returned.
 #' @details `tf_integrate.function` is simply a wrapper for [stats::integrate()].
 #' @export
@@ -162,7 +163,7 @@ tf_integrate.tfd <- function(f, lower = tf_domain(f)[1], upper = tf_domain(f)[2]
     ~c(.y[1], .x[.x > .y[1] & .x < .y[2]], .y[2])
   )
   evaluations <- tf_evaluate(f, arg)
-  quads <- map2(arg, evaluations, ~quad_trapez(arg = .x, evaluations = .y))
+  quads <- map2(arg, evaluations, ~ quad_trapez(arg = .x, evaluations = .y))
   if (definite) {
     ret <- map(quads, sum) %>% unlist()
     names(ret) <- names(f)
@@ -182,6 +183,8 @@ tf_integrate.tfd <- function(f, lower = tf_domain(f)[1], upper = tf_domain(f)[2]
 }
 #' @rdname tfcalculus
 #' @export
+#' 
+#' 
 tf_integrate.tfb <- function(f, lower = tf_domain(f)[1], upper = tf_domain(f)[2],
                              definite = TRUE, arg, ...) {
   if (missing(arg)) {
@@ -213,13 +216,5 @@ tf_integrate.tfb <- function(f, lower = tf_domain(f)[1], upper = tf_domain(f)[2]
     limits[1], arg[arg > limits[1] & arg < limits[2]],
     limits[2]
   )
-  if (grepl("s\\(arg", attr(f, "basis_label"))) {
-    return(tderive_tfb_mgcv(f, order = -1, arg = arg))
-  }
-  if (grepl("FPC", attr(f, "basis_label"))) {
-    return(derive_tfb_fpc(f,
-      order = -1, arg = arg, lower = lower,
-      upper = upper
-    ))
-  }
+  tf_derive(f, order = -1, arg = arg, lower = lower,upper = upper)
 }

@@ -1,9 +1,12 @@
 #' @importFrom stats var na.omit median
-new_tfb_spline <- function(data, regular, domain = NULL,
+new_tfb_spline <- function(data, domain = NULL,
                            penalized = TRUE, resolution = NULL, verbose = TRUE, ...) {
   domain <- domain %||% range(data$arg)
   arg_u <- mgcv::uniquecombs(data$arg, ordered = TRUE)
   resolution <- resolution %||% get_resolution(arg_u)
+  # explicit factor-conversion to avoid reordering:
+  data$id <- factor(data$id, levels = unique(as.character(data$id)))
+  
   s_args <- list(...)[names(list(...)) %in% names(formals(mgcv::s))]
   if (!("bs" %in% names(s_args))) s_args$bs <- "cr"
   if (!("k" %in% names(s_args))) s_args$k <- min(25, nrow(arg_u))
@@ -11,22 +14,20 @@ new_tfb_spline <- function(data, regular, domain = NULL,
   if (!("sp" %in% names(magic_args))) magic_args$sp <- -1
   s_call <- as.call(c(quote(s), quote(arg), s_args))
   s_spec <- eval(s_call)
-  # if ("deriv" %in% names(list(...))) s_spec$deriv <- list(...)$deriv
-  # if ("mono" %in% names(list(...))) s_spec$mono <- list(...)$mono
-  spec_object <- smooth.construct(s_spec,
-                                  data = data.frame(arg = arg_u$x), knots = NULL
-  )
+  spec_object <- smooth.construct(s_spec, data = data.frame(arg = arg_u$x), 
+                                  knots = NULL)
+  
   n_evaluations <- table(data$id)
+  arg_list <- split(data$arg, data$id)
+  regular <- all(duplicated(arg_list)[-1])
   underdet <- n_evaluations <= spec_object$bs.dim
-  # explicit factor-conversion to avoid reordering
-  data$id <- factor(data$id, levels = unique(as.character(data$id)))
+  
   eval_list <- split(data$data, data$id)
   if (!penalized) {
-    if (any(underdet) & verbose) {
-      warning(
-        "At least as many basis functions as evaluations for ",
+    if (any(underdet)) {
+      stop("At least as many basis functions as evaluations for ",
         sum(underdet), " functions.",
-        " Interpolation may be completely unreliable."
+        " Use penalized = TRUE or reduce k for spline interpolation."
       )
     }
     if (regular) {
@@ -42,15 +43,13 @@ new_tfb_spline <- function(data, regular, domain = NULL,
       index_list <- split(attr(arg_u, "index"), data$id)
       coef_list <- map2(
         index_list, eval_list,
-        ~qr.coef(qr = qr(spec_object$X[.x, ]), y = .y)
+        ~ qr.coef(qr = qr(spec_object$X[.x, ]), y = .y)
       )
       pve <- unlist(map2(
         index_list, eval_list,
         ~1 - var(qr.resid(qr = qr(spec_object$X[.x, ]), y = .y)) / var(.y)
       ))
     }
-    # need to remove NAs if dim(basis) > length(arg)
-    coef_list[underdet] <- map(coef_list[underdet], na_to_0)
   } else {
     index_list <- split(attr(arg_u, "index"), data$id)
     coef_list <- map2(
@@ -60,6 +59,12 @@ new_tfb_spline <- function(data, regular, domain = NULL,
     pve <- unlist(map(coef_list, 2))
     coef_list <- map(coef_list, 1)
   }
+  if (!regular) {
+    arg_u <- data.frame(x = unique(round_resolution(arg_u$x, resolution)))
+    spec_object <- smooth.construct(s_spec, data = data.frame(arg = arg_u$x), 
+                                    knots = NULL)
+  }
+  
   if (verbose) {
     message(
       "Percentage of raw input data variance preserved in basis representation:\n",
@@ -132,10 +137,8 @@ tfb_spline.data.frame <- function(data, id = 1, arg = 2, value = 3,
                                   resolution = NULL, ...) {
   data <- df_2_df(data, id, arg, value)
   regular <- n_distinct(table(data[[1]])) == 1
-  ret <- new_tfb_spline(data, regular,
-                        domain = domain,
-                        penalized = penalized, resolution = resolution, ...
-  )
+  ret <- new_tfb_spline(data, regular, domain = domain, penalized = penalized,
+                        resolution = resolution, ...)
   assert_arg(tf_arg(ret), ret)
   ret
 }
@@ -150,10 +153,8 @@ tfb_spline.matrix <- function(data, arg = NULL,
   data_names <- rownames(data)
   data <- mat_2_df(data, arg)
   regular <- n_distinct(table(data[[1]])) == 1
-  ret <- new_tfb_spline(data, regular,
-                        domain = domain,
-                        penalized = penalized, resolution = resolution, ...
-  )
+  ret <- new_tfb_spline(data, regular, domain = domain, penalized = penalized,
+                        resolution = resolution, ...)
   names(ret) <- data_names
   assert_arg(tf_arg(ret), ret)
   ret
