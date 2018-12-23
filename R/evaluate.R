@@ -1,13 +1,15 @@
 #' Evaluate `tf`s, both inside or outside a `data.frame`
 #'
-#' The `evaluate.data.frame` method evaluates `tf`-columns inside a `data.frame`
-#' into list columns of smaller `data.frames` containing the functions' arguments
-#' (`arg`) and evaluations (`value`). Its `arg`-argument can be a list of `arg`-vectors
-#' used as the `arg` argument for the [tf_evaluate()]-method for the respective
-#' `tf`-columns in `object`.
+#' @details The `arg`-argument of `tf_evaluate.data.frame` method can be a
+#'   list of `arg`-vectors or -lists used as the `arg` argument for the
+#'   [tf_evaluate()]-method for the respective `tf`-columns in `object`.
 #' @param object an `tf` or a `data.frame`-like object with `tf` columns
 #' @param arg optional evaluation grid, defaults to `tf_arg(object)`.
-#' @seealso \code{?`[.tf`}
+#' @return For `tf`-objects, a list of numeric vectors containing the function
+#'   evaluations. For data frames, replaces `tf`-columns with list columns of
+#'   smaller `data.frames` containing the functions' arguments (`arg`) and
+#'   evaluations (`value`).
+#' @seealso This is used internally by \code{\link[tfbrackets]{[.tf}} to evaluate `object`.
 #' @export
 tf_evaluate <- function(object, arg, ...) UseMethod("tf_evaluate")
 
@@ -93,7 +95,7 @@ evaluate_tfb_once <- function(x, arg, coefs, basis, X, resolution) {
 
 
 #' @rdname tf_evaluate
-#' @param ... optional:  A selection of columns. If empty, all `tfd`-variables
+#' @param ... optional:  A selection of columns. If empty, all `tf`-variables
 #'   are selected. You can supply bare variable names,
 #'   select all variables between `x` and `z` with `x:z`, exclude `y` with `-y`.
 #'   For more options, see the [dplyr::select()] documentation.

@@ -20,18 +20,25 @@ tf_evaluate(object, arg, ...)
 
 \item{arg}{optional evaluation grid, defaults to \code{tf_arg(object)}.}
 
-\item{...}{optional:  A selection of columns. If empty, all \code{tfd}-variables
+\item{...}{optional:  A selection of columns. If empty, all \code{tf}-variables
 are selected. You can supply bare variable names,
 select all variables between \code{x} and \code{z} with \code{x:z}, exclude \code{y} with \code{-y}.
 For more options, see the \code{\link[dplyr:select]{dplyr::select()}} documentation.}
 }
+\value{
+For \code{tf}-objects, a list of numeric vectors containing the function
+evaluations. For data frames, replaces \code{tf}-columns with list columns of
+smaller \code{data.frames} containing the functions' arguments (\code{arg}) and
+evaluations (\code{value}).
+}
 \description{
-The \code{evaluate.data.frame} method evaluates \code{tf}-columns inside a \code{data.frame}
-into list columns of smaller \code{data.frames} containing the functions' arguments
-(\code{arg}) and evaluations (\code{value}). Its \code{arg}-argument can be a list of \code{arg}-vectors
-used as the \code{arg} argument for the \code{\link[=tf_evaluate]{tf_evaluate()}}-method for the respective
-\code{tf}-columns in \code{object}.
+Evaluate \code{tf}s, both inside or outside a \code{data.frame}
+}
+\details{
+The \code{arg}-argument of \code{tf_evaluate.data.frame} method can be a
+list of \code{arg}-vectors or -lists used as the \code{arg} argument for the
+\code{\link[=tf_evaluate]{tf_evaluate()}}-method for the respective \code{tf}-columns in \code{object}.
 }
 \seealso{
-\code{?`[.tf`}
+This is used internally by \code{\link[tfbrackets]{[.tf}} to evaluate \code{object}.
 }
