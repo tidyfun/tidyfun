@@ -1,6 +1,6 @@
 #' @importFrom stats var na.omit median
-new_tfb_spline <- function(data, domain = NULL,
-                           penalized = TRUE, resolution = NULL, verbose = TRUE, ...) {
+new_tfb_spline <- function(data, domain = NULL, penalized = TRUE, 
+                           resolution = NULL, verbose = TRUE, ...) {
   domain <- domain %||% range(data$arg)
   arg_u <- mgcv::uniquecombs(data$arg, ordered = TRUE)
   resolution <- resolution %||% get_resolution(arg_u)
@@ -136,8 +136,7 @@ tfb_spline.data.frame <- function(data, id = 1, arg = 2, value = 3,
                                   domain = NULL, penalized = TRUE, 
                                   resolution = NULL, ...) {
   data <- df_2_df(data, id, arg, value)
-  regular <- n_distinct(table(data[[1]])) == 1
-  ret <- new_tfb_spline(data, regular, domain = domain, penalized = penalized,
+  ret <- new_tfb_spline(data, domain = domain, penalized = penalized,
                         resolution = resolution, ...)
   assert_arg(tf_arg(ret), ret)
   ret
@@ -152,8 +151,7 @@ tfb_spline.matrix <- function(data, arg = NULL,
   arg <- unlist(find_arg(data, arg))
   data_names <- rownames(data)
   data <- mat_2_df(data, arg)
-  regular <- n_distinct(table(data[[1]])) == 1
-  ret <- new_tfb_spline(data, regular, domain = domain, penalized = penalized,
+  ret <- new_tfb_spline(data, domain = domain, penalized = penalized,
                         resolution = resolution, ...)
   names(ret) <- data_names
   assert_arg(tf_arg(ret), ret)
@@ -166,10 +164,8 @@ tfb_spline.numeric <- function(data, arg = NULL,
                                domain = NULL, penalized = TRUE, 
                                resolution = NULL, ...) {
   data <- t(as.matrix(data))
-  tfb(
-    data = data, arg = arg, domain = domain, penalized = penalized,
-    resolution = resolution, ...
-  )
+  tfb(data = data, arg = arg, domain = domain, penalized = penalized,
+      resolution = resolution, ...)
 }
 
 
@@ -185,18 +181,14 @@ tfb_spline.list <- function(data, arg = NULL,
     if (all(lengths == lengths[1])) {
       data <- do.call(rbind, data)
       # dispatch to matrix method
-      args <- list(data, arg,
-                   domain = domain,
-                   penalized = penalized, resolution = resolution, ...
-      )
-      return(do.call(tfb, args))
-    } else {
-      stopifnot(
-        !is.null(arg), length(arg) == length(data),
-        all(vapply(arg, length, numeric(1)) == lengths)
-      )
-      data <- map2(arg, data, ~as.data.frame(cbind(arg = .x, data = .y)))
-    }
+      return(tfb(data, arg, domain = domain, penalized = penalized, 
+                 resolution = resolution, ...))
+    } 
+    stopifnot(
+      !is.null(arg), length(arg) == length(data),
+      all(vapply(arg, length, numeric(1)) == lengths)
+    )
+    data <- map2(arg, data, ~as.data.frame(cbind(arg = .x, data = .y)))
   }
   dims <- map(data, dim)
   stopifnot(
@@ -208,10 +200,8 @@ tfb_spline.list <- function(data, arg = NULL,
     funs = data
   ) %>% { tidyr::unnest(.) }
   # dispatch to data.frame method
-  ret <- tfb(data,
-             domain = domain,
-             penalized = penalized, resolution = resolution, ...
-  )
+  ret <- tfb(data, domain = domain, penalized = penalized, 
+             resolution = resolution, ...)
   names(ret) <- names_data
   ret
 }
