@@ -66,3 +66,57 @@ smooth_spec_wrapper <- function(spec, deriv = 0, eps = 1e-6) {
     })
   }
 }
+
+#-------------------------------------------------------------------------------
+
+fit_unpenalized <- function(data, spec_object, arg_u, regular) {
+  eval_list <- split(data$data, data$id)
+  if (regular) {
+    eval_matrix <- do.call(cbind, eval_list)
+    qr_basis <- qr(spec_object$X)
+    coef_list <- qr.coef(qr = qr_basis, y = eval_matrix)
+    coef_list <- split(coef_list, col(coef_list))
+    pve <- 1 - apply(qr.resid(
+      qr = qr_basis,
+      y = eval_matrix
+    ), 2, var) / apply(eval_matrix, 2, var)
+  } else {
+    index_list <- split(attr(arg_u, "index"), data$id)
+    coef_list <- map2(
+      index_list, eval_list,
+      ~ qr.coef(qr = qr(spec_object$X[.x, ]), y = .y)
+    )
+    pve <- unlist(map2(
+      index_list, eval_list,
+      ~1 - var(qr.resid(qr = qr(spec_object$X[.x, ]), y = .y)) / var(.y)
+    ))
+  }
+  names(coef_list) <- levels(data$id)
+  return(list(coef = coef_list, pve = pve))
+}
+
+
+fit_penalized <- function(data, spec_object, arg_u, gam_args, regular, global) {
+  eval_list <- split(data$data, data$id)
+  index_list <- split(attr(arg_u, "index"), data$id)
+  coef_list <- map2(
+    index_list, eval_list,
+    ~ magic_smooth_coef(.y, .x, spec_object, magic_args)
+  )
+  pve <- unlist(map(coef_list, 2))
+  coef_list <- map(coef_list, 1)
+  names(coef_list) <- levels(data$id)
+  return(list(coef = coef_list, pve = pve))
+}
+
+
+magic_smooth_coef <- function(evaluations, index, spec_object, magic_args) {
+  m <- do.call(
+    mgcv::magic,
+    c(
+      list(y = evaluations, X = spec_object$X[index, ], S = spec_object$S),
+      flatten(list(off = 1, magic_args))
+    )
+  )
+  list(coef = m$b, pve = 1 - m$scale / var(evaluations))
+}

@@ -10,8 +10,8 @@ new_tfb_spline <- function(data, domain = NULL, penalized = TRUE,
   s_args <- list(...)[names(list(...)) %in% names(formals(mgcv::s))]
   if (!("bs" %in% names(s_args))) s_args$bs <- "cr"
   if (!("k" %in% names(s_args))) s_args$k <- min(25, nrow(arg_u))
-  magic_args <- list(...)[names(list(...)) %in% names(formals(mgcv::magic))]
-  if (!("sp" %in% names(magic_args))) magic_args$sp <- -1
+  gam_args <- list(...)[names(list(...)) %in% names(formals(mgcv::gam))]
+  if (!("sp" %in% names(gam_args))) gam_args$sp <- -1
   s_call <- as.call(c(quote(s), quote(arg), s_args))
   s_spec <- eval(s_call)
   spec_object <- smooth.construct(s_spec, data = data.frame(arg = arg_u$x), 
@@ -20,61 +20,36 @@ new_tfb_spline <- function(data, domain = NULL, penalized = TRUE,
   n_evaluations <- table(data$id)
   arg_list <- split(data$arg, data$id)
   regular <- all(duplicated(arg_list)[-1])
-  underdet <- n_evaluations <= spec_object$bs.dim
-  
-  eval_list <- split(data$data, data$id)
   if (!penalized) {
-    if (any(underdet)) {
+    underdetermined <- n_evaluations <= spec_object$bs.dim
+    if (any(underdetermined)) {
       stop("At least as many basis functions as evaluations for ",
-        sum(underdet), " functions.",
+        sum(underdetermined), " functions.",
         " Use penalized = TRUE or reduce k for spline interpolation."
       )
     }
-    if (regular) {
-      eval_matrix <- do.call(cbind, eval_list)
-      qr_basis <- qr(spec_object$X)
-      coef_list <- qr.coef(qr = qr_basis, y = eval_matrix)
-      coef_list <- split(coef_list, col(coef_list))
-      pve <- 1 - apply(qr.resid(
-        qr = qr_basis,
-        y = eval_matrix
-      ), 2, var) / apply(eval_matrix, 2, var)
-    } else {
-      index_list <- split(attr(arg_u, "index"), data$id)
-      coef_list <- map2(
-        index_list, eval_list,
-        ~ qr.coef(qr = qr(spec_object$X[.x, ]), y = .y)
-      )
-      pve <- unlist(map2(
-        index_list, eval_list,
-        ~1 - var(qr.resid(qr = qr(spec_object$X[.x, ]), y = .y)) / var(.y)
-      ))
-    }
+   fit <- 
+      fit_unpenalized(data = data, spec_object = spec_object, arg_u = arg_u, 
+                    regular = regular)
   } else {
-    index_list <- split(attr(arg_u, "index"), data$id)
-    coef_list <- map2(
-      index_list, eval_list,
-      ~magic_smooth_coef(.y, .x, spec_object, magic_args)
-    )
-    pve <- unlist(map(coef_list, 2))
-    coef_list <- map(coef_list, 1)
+    fit <- fit_penalized(data = data, spec_object = spec_object, arg_u = arg_u,
+                         gam_args = gam_args, regular = regular, global = global)
   }
   if (!regular) {
     arg_u <- data.frame(x = unique(round_resolution(arg_u$x, resolution)))
     spec_object <- smooth.construct(s_spec, data = data.frame(arg = arg_u$x), 
                                     knots = NULL)
   }
-  
   if (verbose) {
     message(
       "Percentage of raw input data variance preserved in basis representation:\n",
       "(per functional observation, tf_approx.):"
     )
-    print(summary(round(100 * pve, 1)))
+    print(summary(round(100 * fit$pve, 1)))
   }
-  names(coef_list) <- levels(data$id)
+  
   basis_constructor <- smooth_spec_wrapper(spec_object)
-  ret <- structure(coef_list,
+  ret <- structure(fit[["coef"]],
                    domain = domain,
                    basis = memoise(basis_constructor),
                    basis_label = deparse(s_call, width.cutoff = 60)[1],
@@ -87,16 +62,6 @@ new_tfb_spline <- function(data, domain = NULL, penalized = TRUE,
   ret
 }
 
-magic_smooth_coef <- function(evaluations, index, spec_object, magic_args) {
-  m <- do.call(
-    mgcv::magic,
-    c(
-      list(y = evaluations, X = spec_object$X[index, ], S = spec_object$S),
-      flatten(list(off = 1, magic_args))
-    )
-  )
-  list(coef = m$b, pve = 1 - m$scale / var(evaluations))
-}
 
 #-------------------------------------------------------------------------------
 
