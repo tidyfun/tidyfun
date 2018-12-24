@@ -13,6 +13,7 @@ pc_truncated <- function(data, pve = .995) {
   )
 }
 
+
 fpc_wrapper <- function(efunctions) {
   function(arg) {
     t(efunctions[, arg, interpolate = TRUE, matrix = TRUE])
@@ -67,10 +68,10 @@ new_tfb_fpc <- function(data, domain = NULL, smooth = TRUE, resolution = NULL,
 
 #-------------------------------------------------------------------------------
 
-#' Constructors for functional data in FPC-basis representation
+#' Functional data in FPC-basis representation
 #'
 #' These functions perform a (functional) principal component analysis of the
-#' input data and return an `tfb` `tf`-object that uses the empirical
+#' input data and return an `tfb_fpc` `tf`-object that uses the empirical
 #' eigenfunctions as basis functions for representing the data. By default, a
 #' `smooth`ed FPCA via [refund::fpca.sc()] is used to compute eigenfunctions and
 #' scores based on the smoothed empirical covariance.

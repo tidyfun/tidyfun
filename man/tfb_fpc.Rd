@@ -6,7 +6,7 @@
 \alias{tfb_fpc.matrix}
 \alias{tfb_fpc.numeric}
 \alias{tfb_fpc.tf}
-\title{Constructors for functional data in FPC-basis representation}
+\title{Functional data in FPC-basis representation}
 \usage{
 tfb_fpc(data, ...)
 
