@@ -69,7 +69,21 @@ smooth_spec_wrapper <- function(spec, deriv = 0, eps = 1e-6) {
 
 #-------------------------------------------------------------------------------
 
-fit_unpenalized <- function(data, spec_object, arg_u, regular) {
+fit_unpenalized <- function(data, spec_object, gam_args, arg_u, regular, 
+                            ls_fit) {
+  if (ls_fit) return(fit_unpenalized_ls(data, spec_object, arg_u, regular))
+  
+  eval_list <- split(data$data, data$id)
+  index_list <- split(attr(arg_u, "index"), data$id)
+  
+  browser()
+  arg_u$X <- spec_object$X
+  G <- do.call(gam, 
+               c(list(formula = x ~ 0 + X, data = arg_u), fit = FALSE, gam_args))
+  
+}
+
+fit_unpenalized_ls <- function(data, spec_object, arg_u, regular) {
   eval_list <- split(data$data, data$id)
   if (regular) {
     eval_matrix <- do.call(cbind, eval_list)
@@ -96,7 +110,9 @@ fit_unpenalized <- function(data, spec_object, arg_u, regular) {
 }
 
 
-fit_penalized <- function(data, spec_object, arg_u, gam_args, regular, global) {
+fit_ls_penalized <- function(data, spec_object, arg_u, gam_args, regular, global) {
+  browser()
+  
   eval_list <- split(data$data, data$id)
   index_list <- split(attr(arg_u, "index"), data$id)
   coef_list <- map2(
@@ -107,6 +123,7 @@ fit_penalized <- function(data, spec_object, arg_u, gam_args, regular, global) {
   coef_list <- map(coef_list, 1)
   names(coef_list) <- levels(data$id)
   return(list(coef = coef_list, pve = pve))
+  # needs transform function etc, also for unpenalized
 }
 
 
@@ -120,3 +137,5 @@ magic_smooth_coef <- function(evaluations, index, spec_object, magic_args) {
   )
   list(coef = m$b, pve = 1 - m$scale / var(evaluations))
 }
+
+

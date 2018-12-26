@@ -20,20 +20,22 @@ new_tfb_spline <- function(data, domain = NULL, penalized = TRUE,
   n_evaluations <- table(data$id)
   arg_list <- split(data$arg, data$id)
   regular <- all(duplicated(arg_list)[-1])
+  ls_fit <- is.null(gam_args$family) || 
+    grepl("gaussian", deparse(gam_args$family))
   if (!penalized) {
     underdetermined <- n_evaluations <= spec_object$bs.dim
     if (any(underdetermined)) {
       stop("At least as many basis functions as evaluations for ",
         sum(underdetermined), " functions.",
-        " Use penalized = TRUE or reduce k for spline interpolation."
-      )
+        " Use penalized = TRUE or reduce k for spline interpolation.")
     }
    fit <- 
-      fit_unpenalized(data = data, spec_object = spec_object, arg_u = arg_u, 
-                    regular = regular)
+     fit_unpenalized(data = data, spec_object = spec_object, arg_u = arg_u, 
+                     gam_args = gam_args, regular = regular, ls_fit = ls_fit)
   } else {
     fit <- fit_penalized(data = data, spec_object = spec_object, arg_u = arg_u,
-                         gam_args = gam_args, regular = regular, global = global)
+                         gam_args = gam_args, regular = regular, global = global,
+                         ls_fit = ls_fit)
   }
   if (!regular) {
     arg_u <- data.frame(x = unique(round_resolution(arg_u$x, resolution)))

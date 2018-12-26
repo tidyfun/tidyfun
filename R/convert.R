@@ -76,6 +76,8 @@ as.data.frame.tfb <- function(x, row.names = NULL, optional = FALSE,
 
 #' @rdname tfb
 as.matrix.tfb <- function(x, arg = NULL, ...) {
+  # check arg-vector
+  # rm dplyr / tidyr, evaluate basis then mutiply with coefs
   ret <- as.data.frame(x, arg = arg) %>%
     arrange(arg) %>%
     tidyr::spread(key = arg, value = value) %>%

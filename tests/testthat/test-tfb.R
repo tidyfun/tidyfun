@@ -55,8 +55,8 @@ test_that("tfb_spline penalization switch works", {
             "tfb_spline")
   expect_is(tfb_spline(rough, k = 15, penalized = FALSE, verbose = FALSE),
             "tfb_spline")
-  plot(tfb(rough, k = 100, verbose = FALSE))
-  plot(tfb(rough, k = 100, penalized = FALSE))
+  #plot(tfb(rough, k = 100, verbose = FALSE))
+  #plot(tfb(rough, k = 100, penalized = FALSE))
   approx_penalized <- abs(rough - tfd(tfb(rough, k = 40, verbose = FALSE))) %>% 
     as.matrix %>% sum
   approx_unpenalized <- abs(rough - tfd(tfb(rough, k = 40, penalized = FALSE, 
@@ -64,6 +64,8 @@ test_that("tfb_spline penalization switch works", {
     as.matrix %>% sum
   expect_true(approx_penalized > approx_unpenalized)
 })
+
+tfb_spline(rough, family = "scat", penalized = FALSE)
 
 # # check constructors from tfd, matrix, data.frame, list
 # context("tfb_fpc constructor")
