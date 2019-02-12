@@ -55,7 +55,7 @@ tf_zoom.tfd <- function(f, begin = tf_domain(f)[1], end = tf_domain(f)[2],
     nas <- map_lgl(ret, ~length(.x$arg) == 0)
     if (all(nas)) stop("no data in zoom region.")
     if (any(nas)) warning("NAs created by tf_zoom.")
-    for (n in which(nas)) ret[[n]] <- list(arg = unname(args$dom[1]), value = NA_real_)
+    for (n in which(nas)) ret[[n]] <- data.frame(arg = unname(args$dom[1]), value = NA_real_)
   } else {
     if (any(map_lgl(ret, ~length(.x$arg) == 0))) {
       stop("no data in zoom region.")
