@@ -14,10 +14,11 @@ mat_2_df <- function(x, arg) {
   stopifnot(is.numeric(x))
   id <- unique_id(rownames(x)) %||% seq_len(dim(x)[1])
   id <- ordered(id, levels = unique(id))
-  df_2_df(data_frame(
+  df_2_df(data.frame(
     # use t(x) here so that order of vector remains unchanged...
     id = id[col(t(x))], arg = arg[row(t(x))],
-    data = as.vector(t(x))
+    data = as.vector(t(x)),
+    stringsAsFactors = FALSE
   ))
 }
 

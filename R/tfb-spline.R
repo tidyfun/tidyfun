@@ -162,7 +162,7 @@ tfb_spline.list <- function(data, arg = NULL,
     all(vapply(dims, length, numeric(1)) == 2), all(map(dims, ~.x[2]) == 2),
     all(rapply(data, is.numeric))
   )
-  data <- data_frame(
+  data <- dplyr::tibble(
     id = unique_id(names(data)) %||% seq_along(data),
     funs = data
   ) %>% { tidyr::unnest(.) }

@@ -105,7 +105,7 @@ tf_gather <- function(data, ..., key = ".tfd", arg = NULL, domain = NULL,
 #' @importFrom tidyselect vars_pull
 #' @export
 #' @examples
-#' d <- dplyr::data_frame(g = 1:3)
+#' d <- tibble::tibble(g = 1:3)
 #' d$f <- tf_rgp(3, 11L)
 #' tf_spread(d, f)
 #' tf_spread(d, -g)
