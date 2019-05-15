@@ -47,7 +47,7 @@ smooth_spec_wrapper <- function(spec, deriv = 0, eps = 1e-6) {
         object = spec,
         data = data.frame(arg = c(arg + eps, arg, arg - eps))
       )
-      (X[1:g, ] - (2 * X[(g + 1):(2 * g), ]) + X[- (1:(2 * g)), ]) / eps^2
+      (X[1:g, ] - (2 * X[(g + 1):(2 * g), ]) + X[-(1:(2 * g)), ]) / eps^2
     })
   }
   if (deriv == -1) {
@@ -69,20 +69,55 @@ smooth_spec_wrapper <- function(spec, deriv = 0, eps = 1e-6) {
 }
 
 #-------------------------------------------------------------------------------
-
+# utility functions for unpenalized spline representation: least squares & GLM
 fit_unpenalized <- function(data, spec_object, gam_args, arg_u, regular, 
                             ls_fit) {
-  if (ls_fit) return(fit_unpenalized_ls(data, spec_object, arg_u, regular))
-  
+  if (ls_fit) {
+    return(fit_unpenalized_ls(data, spec_object, arg_u, regular))
+  }  
+  fit_unpenalized_glm(data, spec_object, gam_args, arg_u)
+}
+
+fit_unpenalized_glm <- function(data, spec_object, gam_args, arg_u) {
   eval_list <- split(data$data, data$id)
   index_list <- split(attr(arg_u, "index"), data$id)
-  
-  browser()
   arg_u$X <- spec_object$X
-  G <- do.call(gam, 
-               c(list(formula = x ~ 0 + X, data = arg_u), fit = FALSE, gam_args))
-  
+  gam_prep <- do.call(gam, 
+                      c(list(formula = x ~ 0 + X, data = arg_u), 
+                        fit = FALSE, gam_args))
+  ret <- map2(
+    index_list, eval_list, 
+    ~ purrr::possibly(fit_unpenalized_glm_once, 
+                      quiet = FALSE,
+                      otherwise = list(
+                        coef = rep(NA_real_, ncol(spec_object$X)),
+                        pve = NA_real_))(.x, .y, gam_prep = gam_prep)
+  )
+  names(ret) <- levels(data$id)
+  pve <- unlist(map_dbl(ret, "pve"))
+  failed <- which(is.na(pve))
+  if (length(failed) > 0) {
+    stop("Basis representation failed for entries:\n ", 
+         paste(unname(failed), collapse = ", "))
+  }
+  list(coef = map(ret, "coef"), pve = pve)
 }
+
+
+fit_unpenalized_glm_once <- function(index, evaluations, gam_prep) {
+  G_tmp <- gam_prep
+  G_tmp$X <- G_tmp$X[index, ]
+  G_tmp$y <- evaluations
+  G_tmp$n <- length(evaluations)
+  G_tmp$w <- rep(1, G_tmp$n)
+  G_tmp$mf$x <- G_tmp$y
+  G_tmp$offset <- rep(0, G_tmp$n)
+  G_tmp$sp <- NULL #gam expects this to be nameable otherwise
+  m <- gam(G = G_tmp)
+  list(coef = unname(m$coefficients),
+       pve = (m$null.deviance - m$deviance)/m$null.deviance)
+}
+
 
 fit_unpenalized_ls <- function(data, spec_object, arg_u, regular) {
   eval_list <- split(data$data, data$id)
@@ -110,23 +145,32 @@ fit_unpenalized_ls <- function(data, spec_object, arg_u, regular) {
   return(list(coef = coef_list, pve = pve))
 }
 
+#-------------------------------------------------------------------------------
+# utility functions for penalized spline representation: 
+# global fit, curve-specific LS, curve-specific GLM
+fit_penalized <- function(data, spec_object, gam_args, arg_u, regular, global, 
+                          ls_fit) { 
+  if (global) {
+    return(fit_penalized_global(data, spec_object, gam_args))
+  }
+  if (!ls_fit) {
+    ## return(fit_penalized_local
+  }
+  fit_penalized_ls_local(data, spec_object, arg_u, gam_args, regular)
+}
 
-fit_ls_penalized <- function(data, spec_object, arg_u, gam_args, regular, global) {
-  browser()
-  
+fit_penalized_ls_local <- function(data, spec_object, arg_u, gam_args, regular) {
   eval_list <- split(data$data, data$id)
   index_list <- split(attr(arg_u, "index"), data$id)
-  coef_list <- map2(
+  ret <- map2(
     index_list, eval_list,
     ~ magic_smooth_coef(.y, .x, spec_object, magic_args)
   )
-  pve <- unlist(map(coef_list, 2))
-  coef_list <- map(coef_list, 1)
+  pve <- unlist(map(ret, "pve"))
+  coef_list <- map(ret, "coef")
   names(coef_list) <- levels(data$id)
   return(list(coef = coef_list, pve = pve))
-  # needs transform function etc, also for unpenalized
 }
-
 
 magic_smooth_coef <- function(evaluations, index, spec_object, magic_args) {
   m <- do.call(
@@ -139,4 +183,5 @@ magic_smooth_coef <- function(evaluations, index, spec_object, magic_args) {
   list(coef = m$b, pve = 1 - m$scale / var(evaluations))
 }
 
-
+#mgcv_smooth_coef <- function()
+  
