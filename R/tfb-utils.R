@@ -159,6 +159,42 @@ fit_penalized <- function(data, spec_object, gam_args, arg_u, regular, global,
   fit_penalized_ls_local(data, spec_object, arg_u, gam_args, regular)
 }
 
+# fit_penalized_global <- function(data, spec_object, gam_args) {
+#   # by = id:   does not work due to centering per
+#   # bs = "fs": does not work because of internal nat.param
+#   
+#   data$id <- factor(data$id, ordered = FALSE)
+#   # create formula
+#   s_term <- spec_object$call
+#   if (!is.null(s_term$xt)) {
+#     warning("basis specification argument `xt` is ignored if `global = TRUE`.")
+#   }
+#   s_term$xt <- s_term$bs
+#   s_term$bs <- "fs"
+#   s_term[[length(s_term) + 1]] <- as.symbol("id")
+#   s_formula <- data ~ arg - 1
+#   s_formula[[3]][[2]] <- s_term
+#   # can't use "s(..., by = id") because of centering.
+#   # set penalty on null space components of "fs" to be negligible:
+#   gam_args$sp <- c(rep(1e-9, spec_object$null.space.dim), gam_args$sp)
+#   m <- do.call(bam,
+#                c(list(formula = s_formula, data = data), gam_args))
+#   browser()
+#   coef_list <- split(m$coefficients, 
+#                      rep(levels(data$id), 
+#                          each = spec_object$bs.dim))[levels(data$id)]
+#   null_deviance <- map_dbl(split(m$y, data$id)[levels(data$id)], 
+#     ~ sum(m$family$dev.resids(.x, mean(.x), 1))
+#     )
+#   fit_deviance <- map2_dbl(
+#     split(m$y, data$id)[levels(data$id)],
+#     split(m$family$linkinv(m$fitted), data$id)[levels(data$id)], 
+#     ~ sum(m$family$dev.resids(.x, .y, 1))
+#     )
+#   pve <- (null_deviance - fit_deviance)/null_deviance
+#   return(list(coef = coef_list, pve = pve))
+# }
+
 fit_penalized_ls_local <- function(data, spec_object, arg_u, gam_args, regular) {
   eval_list <- split(data$data, data$id)
   index_list <- split(attr(arg_u, "index"), data$id)
