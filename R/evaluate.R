@@ -75,6 +75,7 @@ tf_evaluate.tfb <- function(object, arg, ...) {
       )
     )
   }
+  ret <- map(ret, attr(object, "family")$linkinv)
   names(ret) <- names(object)
   ret
 }

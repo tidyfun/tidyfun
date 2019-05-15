@@ -13,22 +13,23 @@
 tfb_spline(data, ...)
 
 \method{tfb_spline}{data.frame}(data, id = 1, arg = 2, value = 3,
-  domain = NULL, penalized = TRUE, resolution = NULL, ...)
+  domain = NULL, penalized = TRUE, global = FALSE,
+  resolution = NULL, ...)
 
 \method{tfb_spline}{matrix}(data, arg = NULL, domain = NULL,
-  penalized = TRUE, resolution = NULL, ...)
+  penalized = TRUE, global = FALSE, resolution = NULL, ...)
 
 \method{tfb_spline}{numeric}(data, arg = NULL, domain = NULL,
-  penalized = TRUE, resolution = NULL, ...)
+  penalized = TRUE, global = FALSE, resolution = NULL, ...)
 
 \method{tfb_spline}{list}(data, arg = NULL, domain = NULL,
-  penalized = TRUE, resolution = NULL, ...)
+  penalized = TRUE, global = FALSE, resolution = NULL, ...)
 
 \method{tfb_spline}{tfd}(data, arg = NULL, domain = NULL,
-  penalized = TRUE, resolution = NULL, ...)
+  penalized = TRUE, global = FALSE, resolution = NULL, ...)
 
 \method{tfb_spline}{tfb}(data, arg = NULL, domain = NULL,
-  penalized = TRUE, resolution = NULL, ...)
+  penalized = TRUE, global = FALSE, resolution = NULL, ...)
 }
 \arguments{
 \item{data}{a \code{matrix}, \code{data.frame} or \code{list} of suitable shape, or another
@@ -36,7 +37,8 @@ tfb_spline(data, ...)
 
 \item{...}{arguments to the calls to \code{\link[mgcv:s]{mgcv::s()}} setting up the basis and
 \code{\link[mgcv:magic]{mgcv::magic()}} (if \code{penalized} is TRUE). If not user-specified here,
-\code{tidyfun} uses \code{k = 25} cubic regression spline basis functions (i.e., \code{bs = "cr"}) by default, but this should be set manually}
+\code{tidyfun} uses \code{k = 25} cubic regression spline basis functions
+(i.e., \code{bs = "cr"}) by default, but this should be set manually}
 
 \item{id}{The name/number of the column defining which data belong to which function.}
 
@@ -49,6 +51,10 @@ tfb_spline(data, ...)
 \item{penalized}{should the coefficients of the basis representation be estimated
 via \code{\link[mgcv:magic]{mgcv::magic()}} (default) or ordinary least squares.}
 
+\item{global}{Defaults to \code{FALSE}.
+If \code{TRUE} and \code{penalized = TRUE}, all functions share the same smoothing
+parameter (see Details).}
+
 \item{resolution}{resolution of the evaluation grid. See details for \code{\link[=tfd]{tfd()}}.}
 }
 \value{
@@ -60,17 +66,22 @@ Represent curves as a weighted sum of spline basis functions.
 \details{
 The basis to be used is set up via a call to \code{\link[mgcv:s]{mgcv::s()}} and all the spline bases
 discussed in \code{\link[mgcv:smooth.terms]{mgcv::smooth.terms()}} are available, in principle. Depending on
-the value of the \code{penalized}-flag, the coefficient vectors for each
-observation are then estimated via fitting a (small) GAM for each observation
-via \code{\link[mgcv:magic]{mgcv::magic()}} or via simple ordinary least squares.
+the value of the \code{penalized}- and \code{global}-flags, the coefficient vectors for each
+observation are then estimated via fitting a GAM
+(separately for each observation, if \code{!global})
+via \code{\link[mgcv:magic]{mgcv::magic()}} or unpenalized maximum likelihood.
 
 After the "smoothed" representation is computed, the amount of smoothing that
 was performed is reported in terms of the "percentage of variance preserved",
-which is the variance of the smoothed function values divided by the variance
-of the original values. The \code{...} arguments supplies arguments to both the
+which is the variance (explained deviance, in the general case) of the smoothed function values divided by the variance
+of the original values (null deviance, in the general case).
+The \code{...} arguments supplies arguments to both the
 spline basis set up (via \code{\link[mgcv:s]{mgcv::s()}}) and the estimation (via
-\code{\link[mgcv:magic]{mgcv::magic()}}), most important: how many basis functions \code{k} the spline
-basis should have, the default is 25.
+\code{\link[mgcv:magic]{mgcv::magic()}} or \code{\link[mgcv:gam]{mgcv::gam()}}), most important:
+how many basis functions \code{k} the spline basis should have, the default is 25.
+The \code{...}-argument can also be used to supply a \code{family}-argument to the fitters
+for data for which squared errors are not a reasonable criterion for the representation
+accuracy.
 }
 \section{Methods (by class)}{
 \itemize{
