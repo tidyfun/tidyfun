@@ -14,6 +14,11 @@ new_tfb_spline <- function(data, domain = NULL, penalized = TRUE, global = FALSE
                           c(names(formals(mgcv::gam)), 
                             names(formals(mgcv::bam)))]
   if (!("sp" %in% names(gam_args))) gam_args$sp <- -1
+  
+  n_evaluations <- table(data$id)
+  arg_list <- split(data$arg, data$id)
+  regular <- all(duplicated(arg_list)[-1])
+
   s_call <- as.call(c(quote(s), quote(arg), s_args))
   s_spec <- eval(s_call)
   spec_object <- smooth.construct(s_spec, data = data.frame(arg = arg_u$x), 
@@ -31,9 +36,6 @@ new_tfb_spline <- function(data, domain = NULL, penalized = TRUE, global = FALSE
     gam_args$family <- gam_args$family()
   }
 
-  n_evaluations <- table(data$id)
-  arg_list <- split(data$arg, data$id)
-  regular <- all(duplicated(arg_list)[-1])
   ls_fit <- gam_args$family$family == "gaussian" & 
     gam_args$family$link == "identity"
   
@@ -52,16 +54,24 @@ new_tfb_spline <- function(data, domain = NULL, penalized = TRUE, global = FALSE
       fit_penalized(data = data, spec_object = spec_object, arg_u = arg_u,
                     gam_args = gam_args, regular = regular, global = global,
                     ls_fit = ls_fit)
+    if (global & verbose) {
+      message(
+        sprintf(
+          c("Using global smoothing parameter sp = %.3g,",
+            " estimated on subsample of curves."),
+          fit$sp[1]
+          ))
+    }
   }
   if (!regular) {
     arg_u <- data.frame(x = unique(round_resolution(arg_u$x, resolution)))
-    spec_object <- smooth.construct(s_spec, data = data.frame(arg = arg_u$x), 
-                                    knots = NULL)
+    spec_object$X <- PredictMat(spec_object, data = data.frame(arg = arg_u$x))
   }
   if (verbose) {
     message(
-      "Percentage of input data variability preserved in basis representation:\n",
-      "(per functional observation, approximately):"
+      "Percentage of input data variability preserved in basis representation:\n(",
+      if (!ls_fit) "on inverse link-scale, " else NULL,
+      "per functional observation, approximate):"
     )
     print(summary(round(100 * fit$pve, 1)))
   }

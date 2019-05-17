@@ -49,23 +49,61 @@ test_that("tfb_spline defaults work for all kinds of irregular input", {
   }
 })
 
-test_that("tfb_spline penalization switch works", {
+test_that("unpenalized tfb_spline works", {
   expect_error(tfb_spline(narrow, k = 11, penalized = FALSE), "reduce k")
   expect_is(tfb_spline(narrow, k = 8, penalized = FALSE, verbose = FALSE),
             "tfb_spline")
   expect_is(tfb_spline(rough, k = 15, penalized = FALSE, verbose = FALSE),
             "tfb_spline")
-  #plot(tfb(rough, k = 100, verbose = FALSE))
-  #plot(tfb(rough, k = 100, penalized = FALSE))
+  expect_is(tfb_spline(exp(smoo), family = Gamma(link = "log"), 
+                       penalized = FALSE, verbose = FALSE),
+            "tfb_spline")
+  expect_is(tfb_spline(rough^3, family = scat(), 
+                       penalized = FALSE, verbose = FALSE),
+            "tfb_spline")
+  expect_equivalent(tfb_spline(irr, k = 11, penalized = FALSE), 
+                    tfb_spline(irr, k = 11),
+                    tol = 1e-2)
+  
+  # GLM case: fitting on exp-scale and transforming back:
+  expect_equivalent(
+    tfb_spline(exp(smoo), family = gaussian(link = "log"), penalized = FALSE) %>% 
+      log %>% as.matrix, 
+    as.matrix(smoo), 
+    tolerance = .001)
+  
+  expect_message(
+    try(tfb_spline(smoo, family = Gamma(link = "log"), penalized = FALSE),
+        silent = TRUE),
+    "non-positive")
+  expect_error(
+    suppressMessages(
+      tfb_spline(smoo, family = Gamma(link = "log"), penalized = FALSE)
+    ),
+    "Basis representation failed")
+  
   approx_penalized <- abs(rough - tfd(tfb(rough, k = 40, verbose = FALSE))) %>% 
-    as.matrix %>% sum
+     as.matrix %>% sum
   approx_unpenalized <- abs(rough - tfd(tfb(rough, k = 40, penalized = FALSE, 
-                                          verbose = FALSE))) %>% 
+                                            verbose = FALSE))) %>% 
     as.matrix %>% sum
   expect_true(approx_penalized > approx_unpenalized)
 })
 
-tfb_spline(rough, family = "scat", penalized = FALSE)
+test_that("global smoothing option works", {
+ ##
+})
+
+# local - global - prespecified
+# ls - glm
+# regular - irregular
+
+tfb_spline(smoo, family = Gamma(link = "log"), penalized = FALSE)
+
+ruff <- 
+  (rough + seq(-5, 5, l = 10)) + seq(-2, 2, l = 10) * tfd(tf_arg(rough), tf_arg(rough))
+
+tfb(ruff, global = TRUE)
 
 # # check constructors from tfd, matrix, data.frame, list
 # context("tfb_fpc constructor")
