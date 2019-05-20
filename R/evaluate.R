@@ -9,7 +9,7 @@
 #'   evaluations. For data frames, replaces `tf`-columns with list columns of
 #'   smaller `data.frames` containing the functions' arguments (`arg`) and
 #'   evaluations (`value`).
-#' @seealso This is used internally by \code{\link[tfbrackets]{[.tf}} to evaluate `object`.
+#' @seealso This is used internally by `[.tf` to evaluate `object`.
 #' @export
 tf_evaluate <- function(object, arg, ...) UseMethod("tf_evaluate")
 
@@ -75,7 +75,9 @@ tf_evaluate.tfb <- function(object, arg, ...) {
       )
     )
   }
-  ret <- map(ret, attr(object, "family")$linkinv)
+  if (!inherits(object, "tfb_fpc")) {
+    ret <- map(ret, attr(object, "family")$linkinv)
+  }  
   names(ret) <- names(object)
   ret
 }
