@@ -105,7 +105,7 @@ tf_gather <- function(data, ..., key = ".tfd", arg = NULL, domain = NULL,
 #' @importFrom tidyselect vars_pull
 #' @export
 #' @examples
-#' d <- dplyr::data_frame(g = 1:3)
+#' d <- tibble::tibble(g = 1:3)
 #' d$f <- tf_rgp(3, 11L)
 #' tf_spread(d, f)
 #' tf_spread(d, -g)
@@ -222,6 +222,7 @@ tf_nest <- function(data, ..., .id = "id", .arg = "arg", domain = NULL,
       " are not constant for all levels of the id-variable."
     )
   }
+
   ret <- slice(ret, 1) %>% ungroup()
   # TODO: parallelize this over evaluator, domain, resolution
   tfd_list <- pmap(
@@ -230,8 +231,11 @@ tf_nest <- function(data, ..., .id = "id", .arg = "arg", domain = NULL,
       tfd(evaluator = !!(..2), domain = ..3, resolution = ..4)
   )
   names(tfd_list) <- value_vars
+  # re-index to make sure order is correct
+  id_index <- pull(ret, id_var)
+  if (is.factor(id_index)) id_index <- as.character(id_index)
   for (v in value_vars) {
-    ret[[v]] <- tfd_list[[v]]
+    ret[[v]] <- tfd_list[[v]][id_index, ]
   }
   ret
 }
@@ -244,68 +248,73 @@ tf_nest <- function(data, ..., .id = "id", .arg = "arg", domain = NULL,
 #'
 #' @param data a data frame
 #' @param .arg optional values for the `arg` argument of [tf_evaluate.data.frame()]
+#' @param try_dropping should `tf_unnest` try to avoid duplicating `id` or 
+#'  `arg` columns? Defaults to TRUE. 
 #' @inheritParams tf_evaluate.data.frame
 #' @inheritParams tidyr::unnest
 #' @return a "long" data frame with
 #' @export
-#' @seealso tf_gather() tf_unnest() tf_evaluate.data.frame()
+#' @seealso tf_gather(), tf_unnest(), tf_evaluate.data.frame()
 #' @importFrom digest digest
 #' @importFrom utils data tail
 tf_unnest <- function(data, ..., .arg, .drop = NA, .id = "id", .sep = "_",
-                      .preserve = NULL) {
+                      .preserve = NULL, try_dropping = TRUE) {
   preserve <- unname(vars_select(names(data), !!!enquo(.preserve)))
   tfds <- unname(vars_select(names(data), !!!quos(...)))
   ret <- tf_evaluate.data.frame(data, arg = .arg, !!!tfds)
   # don't unnest unevaluated tf-columns:
   preserve <- unique(c(preserve, names(ret)[map_lgl(ret, is_tf)]))
-  ret <- unnest(ret, .drop = .drop, .id = .id, .sep = .sep, .preserve = preserve)
-  # drop duplicated arg/id columns if possible:
-  arg_pattern <- paste0(.sep, "arg$")
-  same_arg <- ret %>%
-    select(c(matches("^arg$"), matches(!!!arg_pattern))) %>%
-    # stackoverflow.com/questions/7585316
-    summarize_all(digest::digest) %>%
-    t() %>%
-    duplicated() %>%
-    tail(-1) %>%
-    {
-      row.names(.)[which(.)]
-    }
-  id_pattern <- paste0(.sep, "id$")
-  same_id <- ret %>%
-    select(c(matches("^id$", ignore.case = FALSE), matches(!!!id_pattern))) %>%
-    # stackoverflow.com/questions/7585316
-    summarize_all(function(x) digest::digest(as.character(x))) %>%
-    t() %>%
-    duplicated() %>%
-    tail(-1) %>%
-    {
-      row.names(.)[which(.)]
-    }
-  if (length(same_arg)) ret <- ret %>% select(-!!same_arg)
-  if (length(same_id)) ret <- ret %>% select(-!!same_id)
-  if (length(c(same_arg, same_id))) {
-    message(
-      "Duplicate column", ifelse(length(c(same_arg, same_id)) > 1, "s ", " "),
-      paste(same_arg, collapse = ", "), " ", paste(same_id, collapse = ", "),
-      " created by unnesting were dropped."
-    )
-    # only rename left over columns if there was more than one and we don't
-    # overwrite anything by doing so
-    one_arg_left <- 
-      length(vars_select(names(ret), matches(!!!arg_pattern))) == 1
-    if (!("arg" %in% names(ret)) & one_arg_left & length(same_arg)) {
-      new_arg <- select(ret, matches(!!!arg_pattern)) %>% names()
-      ret <- rename(ret, arg = !!new_arg)
-      message("Renamed ", sQuote(new_arg), " to 'arg'.")
-    }
-    one_id_left <- length(vars_select(names(ret), matches(!!!id_pattern))) == 1
-    if (!("id" %in% names(ret)) & one_id_left & length(same_id)) {
-      new_id <- select(ret, matches(!!!id_pattern)) %>% names()
-      ret <- rename(ret, id = !!new_id)
-      message("Renamed ", sQuote(new_id), " to 'id'.")
+  ret <- unnest(ret, .drop = .drop, .id = .id, .sep = .sep, 
+    .preserve = preserve)
+  
+  if (try_dropping) {
+    # drop duplicated arg/id columns if possible:
+    arg_pattern <- paste0(.sep, "arg$")
+    same_arg <- ret %>%
+      select(c(matches("^arg$"), matches(!!!arg_pattern))) %>%
+      # stackoverflow.com/questions/7585316
+      summarize_all(digest::digest) %>%
+      t() %>%
+      duplicated() %>%
+      tail(-1) %>%
+      {
+        row.names(.)[which(.)]
+      }
+    id_pattern <- paste0(.sep, "id$")
+    same_id <- ret %>%
+      select(c(matches("^id$", ignore.case = FALSE), matches(!!!id_pattern))) %>%
+      # stackoverflow.com/questions/7585316
+      summarize_all(function(x) digest::digest(as.character(x))) %>%
+      t() %>%
+      duplicated() %>%
+      tail(-1) %>%
+      {
+        row.names(.)[which(.)]
+      }
+    if (length(same_arg)) ret <- ret %>% select(-!!same_arg)
+    if (length(same_id)) ret <- ret %>% select(-!!same_id)
+    if (length(c(same_arg, same_id))) {
+      message(
+        "Duplicate column", ifelse(length(c(same_arg, same_id)) > 1, "s ", " "),
+        paste(same_arg, collapse = ", "), " ", paste(same_id, collapse = ", "),
+        " created by unnesting were dropped."
+      )
+      # only rename left over columns if there was more than one and we don't
+      # overwrite anything by doing so
+      one_arg_left <- 
+        length(vars_select(names(ret), matches(!!!arg_pattern))) == 1
+      if (!("arg" %in% names(ret)) & one_arg_left & length(same_arg)) {
+        new_arg <- select(ret, matches(!!!arg_pattern)) %>% names()
+        ret <- rename(ret, arg = !!new_arg)
+        message("Renamed ", sQuote(new_arg), " to 'arg'.")
+      }
+      one_id_left <- length(vars_select(names(ret), matches(!!!id_pattern))) == 1
+      if (!("id" %in% names(ret)) & one_id_left & length(same_id)) {
+        new_id <- select(ret, matches(!!!id_pattern)) %>% names()
+        ret <- rename(ret, id = !!new_id)
+        message("Renamed ", sQuote(new_id), " to 'id'.")
+      }
     }
   }
-
   ret
 }

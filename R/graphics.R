@@ -77,7 +77,7 @@ funplot <- function(f, arg, n_grid = 50, points = is_irreg(f),
       scale_fill_gradient2(deparse(substitute(f)),
         midpoint = median(d$data, na.rm = TRUE)
       ) +
-      scale_y_continuous(name = "id", breaks = 1:length(f), labels = names(f))
+      scale_y_continuous(name = "id", breaks = seq_along(f), labels = names(f))
   }
   p
 }

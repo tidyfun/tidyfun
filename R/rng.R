@@ -23,7 +23,10 @@
 tf_rgp <- function(n, arg = 51L, scale = diff(range(arg)) / 10,
                    cor = c("squareexp", "wiener"), nugget = scale / 200) {
   cor <- match.arg(cor)
-  if (length(arg == 1) & is.integer(arg)) arg <- seq(0, 1, length = arg)
+  if (length(arg) == 1) {
+    check_integerish(arg, lower = 1)
+    arg <- seq(0, 1, length = arg)
+  } 
   check_numeric(arg, any.missing = FALSE, unique = TRUE)
   check_number(n, lower = 1)
   check_number(scale, lower = 0)

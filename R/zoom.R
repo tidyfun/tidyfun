@@ -49,19 +49,19 @@ tf_zoom.tfd <- function(f, begin = tf_domain(f)[1], end = tf_domain(f)[2],
   args <- prep_tf_zoom_args(f, begin, end)
   ret <- pmap(
     list(f[, tf_arg(f), matrix = FALSE], args$begin, args$end),
-    ~filter(..1, arg >= ..2 & arg <= ..3)
+    ~ filter(..1, arg >= ..2 & arg <= ..3)
   )
-  ret <- tfd(ret, domain = args$dom, resolution = attr(f, "resolution"))
-  if (is_irreg(ret)) {
+  if (is_irreg(f) | !args$regular) {
     nas <- map_lgl(ret, ~length(.x$arg) == 0)
     if (all(nas)) stop("no data in zoom region.")
     if (any(nas)) warning("NAs created by tf_zoom.")
-    for (n in which(nas)) ret[[n]] <- list(arg = unname(args$dom[1]), value = NA)
+    for (n in which(nas)) ret[[n]] <- data.frame(arg = unname(args$dom[1]), value = NA_real_)
   } else {
-    if (any(map_lgl(ret, ~length(.x) == 0))) {
+    if (any(map_lgl(ret, ~length(.x$arg) == 0))) {
       stop("no data in zoom region.")
     }
   }
+  ret <- tfd(ret, domain = args$dom, resolution = attr(f, "resolution"))
   tf_evaluator(ret) <- attr(f, "evaluator_name")
   ret
 }
