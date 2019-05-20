@@ -114,25 +114,25 @@ fit_penalized <- function(data, spec_object, gam_args, arg_u, regular, global,
     # find a suitable global level of smoothing based on a pilot estimate
     # uses 10% of curves, at most 100, at least 5
     # uses median of the smothing parameters on this pilot sample.
-    # FIXME: how to set seed here to make this reproducible ?!
-    id_pilot <- sample(levels(data$id), 
-                       min(max(5, 0.1 * nlevels(data$id)), 100))
+    pilot_id <- round(seq(from = 1, to = nlevels(data$id), 
+                    length = max(1, 
+                                 min(max(5, 0.1 * nlevels(data$id)), 100))))
+    pilot_id <- levels(data$id)[unique(pilot_id)]
     arg_u_pilot <- arg_u
-    attr(arg_u_pilot, "index") <- attr(arg_u_pilot, "index")[data$id %in% id_pilot]
-    data_pilot <- subset(data, id %in% id_pilot)  %>% droplevels
+    attr(arg_u_pilot, "index") <- attr(arg_u_pilot, "index")[data$id %in% pilot_id]
+    data_pilot <- subset(data, id %in% pilot_id)  %>% droplevels
     if (!ls_fit) {
-      gam_args$sp <- 
+      pilot_sp <- 
         fit_ml(
           data_pilot, spec_object, gam_args, arg_u_pilot, penalized = TRUE
-          )$sp %>% 
-        median
+          )$sp
     } else {
-      gam_args$sp <- 
+      pilot_sp <- 
         fit_penalized_ls(
           data_pilot, spec_object, arg_u_pilot, gam_args, regular
-          )$sp %>% 
-        median
+          )$sp
     }
+    gam_args$sp <- exp(mean(log(pilot_sp))) #median?
   }
   if (!ls_fit) {
     return(fit_ml(data, spec_object, gam_args, arg_u, penalized = TRUE, 
@@ -191,6 +191,7 @@ fit_ml <- function(data, spec_object, gam_args, arg_u, penalized, sp = -1) {
                       # needs to be set explicitly so magic does not get NA
                       # as 11th argument when called from gam.fit
   if (!penalized) {
+    fixed_sp <- TRUE
     gam_prep$sp <- NULL #gam expects this to be nameable otherwise
     sp <- NULL
   } else {
@@ -213,13 +214,15 @@ fit_ml <- function(data, spec_object, gam_args, arg_u, penalized, sp = -1) {
                       )(.x, .y, gam_prep = gam_prep, sp = sp)
   )
   names(ret) <- levels(data$id)
-  pve <- unlist(map_dbl(ret, "pve"))
-  failed <- which(is.na(sp))
+  coef <- map(ret, "coef")
+  failed <- which(map_lgl(coef, ~ any(is.na(.))))
   if (length(failed) > 0) {
     stop("Basis representation failed for entries:\n ", 
          paste(unname(failed), collapse = ", "))
   }
-  list(coef = map(ret, "coef"), pve = pve, sp = map(ret, "sp"))
+  list(coef = coef, 
+       pve = map_dbl(ret, "pve"), 
+       sp = if (penalized & !fixed_sp) map_dbl(ret, "sp") else NULL)
 }
 
 
@@ -234,8 +237,7 @@ fit_ml_once <- function(index, evaluations, gam_prep, sp) {
   attributes(mf) <- attributes(G_tmp$mf )
   G_tmp$mf <- mf
   G_tmp$offset <- rep(0, G_tmp$n)
-  # suppress "deprecated performance iteration"
-  m <- suppressWarnings(gam.fit(G = G_tmp, family = G_tmp$family)) 
+  m <- gam(G = G_tmp, family = G_tmp$family) 
   list(coef = unname(m$coefficients),
        pve = (m$null.deviance - m$deviance)/m$null.deviance,
        # FIXME: null deviance not always defined..? (Gamma(link = inverse))

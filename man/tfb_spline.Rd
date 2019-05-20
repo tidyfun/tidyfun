@@ -36,9 +36,9 @@ tfb_spline(data, ...)
 \code{tf}-object containing functional data.}
 
 \item{...}{arguments to the calls to \code{\link[mgcv:s]{mgcv::s()}} setting up the basis and
-\code{\link[mgcv:magic]{mgcv::magic()}} (if \code{penalized} is TRUE). If not user-specified here,
+\code{\link[mgcv:magic]{mgcv::magic()}} or \code{\link[mgcv:gam.fit]{mgcv::gam.fit()}} (if \code{penalized} is TRUE). If not user-specified here,
 \code{tidyfun} uses \code{k = 25} cubic regression spline basis functions
-(i.e., \code{bs = "cr"}) by default, but this should be set manually}
+(i.e., \code{bs = "cr"}) by default, but this should (!) be set appropriately.}
 
 \item{id}{The name/number of the column defining which data belong to which function.}
 
@@ -69,19 +69,41 @@ discussed in \code{\link[mgcv:smooth.terms]{mgcv::smooth.terms()}} are available
 the value of the \code{penalized}- and \code{global}-flags, the coefficient vectors for each
 observation are then estimated via fitting a GAM
 (separately for each observation, if \code{!global})
-via \code{\link[mgcv:magic]{mgcv::magic()}} or unpenalized maximum likelihood.
+via \code{\link[mgcv:magic]{mgcv::magic()}} (least square error, the default)
+or \code{\link[mgcv:gam]{mgcv::gam()}} (if a \code{family} argument was supplied) or
+unpenalized least squares / maximum likelihood.
 
 After the "smoothed" representation is computed, the amount of smoothing that
-was performed is reported in terms of the "percentage of variance preserved",
+was performed is reported in terms of the "percentage of variability preserved",
 which is the variance (explained deviance, in the general case) of the smoothed function values divided by the variance
 of the original values (null deviance, in the general case).
+Reporting can be switched off with \code{verbose = FALSE}.
+
 The \code{...} arguments supplies arguments to both the
-spline basis set up (via \code{\link[mgcv:s]{mgcv::s()}}) and the estimation (via
+spline basis (via \code{\link[mgcv:s]{mgcv::s()}}) and the estimation (via
 \code{\link[mgcv:magic]{mgcv::magic()}} or \code{\link[mgcv:gam]{mgcv::gam()}}), most important:
-how many basis functions \code{k} the spline basis should have, the default is 25.
-The \code{...}-argument can also be used to supply a \code{family}-argument to the fitters
-for data for which squared errors are not a reasonable criterion for the representation
-accuracy.
+\itemize{
+\item how many basis functions \code{k} the spline basis should have, the default is
+}
+\enumerate{
+\item 
+}
+\itemize{
+\item which type of spline basis \code{bs} should be used, the default is cubic
+regression splines (\code{"cr"}) - a \code{family}-argument to the fitters for data for
+which squared errors are not a reasonable criterion for the representation
+accuracy (see \code{\link[mgcv:family.mgcv]{mgcv::family.mgcv()}} for what's available).
+\item an \code{sp}-argument for manually fixing the amount of smoothing (see
+\code{\link[mgcv:s]{mgcv::s()}}), which (drastically) reduces the computation time.
+}
+
+If \strong{\code{global == TRUE}}, the routine first takes a subset of curves (10\% of
+curves sampled deterministically, at most 100, at least 5) on which smoothing
+parameters per curve are estimated and then uses the mean of the log
+smoothing parameter of those for all curves. This can be much faster than
+optimizing the smoothing parameter for each curve on large datasets. For very
+sparse data, it would be preferable to estimate a joint smoothing parameter
+directly for all curves, this is \emph{not} what's implemented here.
 }
 \section{Methods (by class)}{
 \itemize{
@@ -95,7 +117,7 @@ accuracy.
 
 \item \code{tfd}: convert \code{tfd} (raw functional data)
 
-\item \code{tfb}: convert \code{tfb}: modify basis representation
+\item \code{tfb}: convert \code{tfb}: modify basis representation, smoothing.
 }}
 
 \seealso{
