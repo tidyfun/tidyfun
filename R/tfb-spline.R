@@ -9,6 +9,11 @@ new_tfb_spline <- function(data, domain = NULL, penalized = TRUE, global = FALSE
   
   s_args <- list(...)[names(list(...)) %in% names(formals(mgcv::s))]
   if (!("bs" %in% names(s_args))) s_args$bs <- "cr"
+  if (s_args$bs == "ad") {
+    warning("adaptive smooths with (bs='ad') not implemented yet.",
+    "Changing to bs='cr'.")
+    s_args$bs <- "cr"
+  }
   if (!("k" %in% names(s_args))) s_args$k <- min(25, nrow(arg_u))
   gam_args <- list(...)[names(list(...)) %in% 
                           c(names(formals(mgcv::gam)), 
@@ -69,7 +74,7 @@ new_tfb_spline <- function(data, domain = NULL, penalized = TRUE, global = FALSE
   }
   if (verbose) {
     message(
-      "Percentage of input data variability preserved in basis representation:\n(",
+      "Percentage of input data variability preserved in basis representation\n(",
       if (!ls_fit) "on inverse link-scale, " else NULL,
       "per functional observation, approximate):"
     )
@@ -103,28 +108,45 @@ new_tfb_spline <- function(data, domain = NULL, penalized = TRUE, global = FALSE
 #' the value of the `penalized`- and `global`-flags, the coefficient vectors for each
 #' observation are then estimated via fitting a GAM 
 #' (separately for each observation, if `!global`)
-#' via [mgcv::magic()] or unpenalized maximum likelihood. 
+#' via [mgcv::magic()] (least square error, the default) 
+#' or [mgcv::gam()] (if a `family` argument was supplied) or 
+#' unpenalized least squares / maximum likelihood. 
 #'
 #' After the "smoothed" representation is computed, the amount of smoothing that
-#' was performed is reported in terms of the "percentage of variance preserved",
+#' was performed is reported in terms of the "percentage of variability preserved",
 #' which is the variance (explained deviance, in the general case) of the smoothed function values divided by the variance
 #' of the original values (null deviance, in the general case). 
+#' Reporting can be switched off with `verbose = FALSE`.
+#' 
 #' The `...` arguments supplies arguments to both the
-#' spline basis set up (via [mgcv::s()]) and the estimation (via
-#' [mgcv::magic()] or [mgcv::gam()]), most important: 
-#' how many basis functions `k` the spline basis should have, the default is 25.
-#' The `...`-argument can also be used to supply a `family`-argument to the fitters
-#' for data for which squared errors are not a reasonable criterion for the representation
-#' accuracy.
+#' spline basis (via [mgcv::s()]) and the estimation (via
+#' [mgcv::magic()] or [mgcv::gam()]), most important:  
+#' 
+#' - how many basis functions `k` the spline basis should have, the default is
+#' 25.
+#' - which type of spline basis `bs` should be used, the default is cubic
+#' regression splines (`"cr"`) - a `family`-argument to the fitters for data for
+#' which squared errors are not a reasonable criterion for the representation
+#' accuracy (see [mgcv::family.mgcv()] for what's available).
+#' - an `sp`-argument for manually fixing the amount of smoothing (see
+#' [mgcv::s()]), which (drastically) reduces the computation time. 
+#' 
+#' If **`global == TRUE`**, the routine first takes a subset of curves (10\% of
+#' curves sampled deterministically, at most 100, at least 5) on which smoothing
+#' parameters per curve are estimated and then uses the mean of the log
+#' smoothing parameter of those for all curves. This can be much faster than
+#' optimizing the smoothing parameter for each curve on large datasets. For very
+#' sparse data, it would be preferable to estimate a joint smoothing parameter
+#' directly for all curves, this is *not* what's implemented here.
 #' 
 #' @inheritParams tfb
 #' @param global Defaults to `FALSE`. 
 #' If `TRUE` and `penalized = TRUE`, all functions share the same smoothing
 #'   parameter (see Details).
 #' @param ...  arguments to the calls to [mgcv::s()] setting up the basis and
-#'   [mgcv::magic()] (if `penalized` is TRUE). If not user-specified here,
+#'   [mgcv::magic()] or [mgcv::gam.fit()] (if `penalized` is TRUE). If not user-specified here,
 #'   `tidyfun` uses `k = 25` cubic regression spline basis functions 
-#'   (i.e., `bs = "cr"`) by default, but this should be set manually
+#'   (i.e., `bs = "cr"`) by default, but this should (!) be set appropriately.
 #' @return a `tfb`-object
 #' @seealso [mgcv::smooth.terms()] for spline basis options. 
 tfb_spline <- function(data, ...) UseMethod("tfb_spline")
@@ -227,7 +249,7 @@ tfb_spline.tfd <- function(data, arg = NULL,
 }
 
 #' @export
-#' @describeIn tfb_spline convert `tfb`: modify basis representation
+#' @describeIn tfb_spline convert `tfb`: modify basis representation, smoothing.
 tfb_spline.tfb <- function(data, arg = NULL,
                            domain = NULL, penalized = TRUE, 
                            global = FALSE, resolution = NULL, ...) {
