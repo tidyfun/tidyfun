@@ -83,6 +83,9 @@ tf_derive.tfb_spline <- function(f, order = 1, arg = NULL, ...) {
   if (!is.null(attr(f, "basis_deriv"))) {
     stop("Can't integrate or derive previously integrated or derived tfb_spline.")
   }
+  if (attr(f, "family")$link != "identity") {
+    stop("Can't integrate or derive tfb_spline with non-identity link function.")
+  }  
   if (is.null(arg)) {
     arg <- tf_arg(f)
   } else assert_arg(arg, f)
