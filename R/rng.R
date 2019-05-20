@@ -23,7 +23,7 @@
 tf_rgp <- function(n, arg = 51L, scale = diff(range(arg)) / 10,
                    cor = c("squareexp", "wiener"), nugget = scale / 200) {
   cor <- match.arg(cor)
-  if (length(arg == 1)) {
+  if (length(arg) == 1) {
     check_integerish(arg, lower = 1)
     arg <- seq(0, 1, length = arg)
   } 
