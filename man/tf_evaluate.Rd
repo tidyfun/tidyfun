@@ -40,5 +40,5 @@ list of \code{arg}-vectors or -lists used as the \code{arg} argument for the
 \code{\link[=tf_evaluate]{tf_evaluate()}}-method for the respective \code{tf}-columns in \code{object}.
 }
 \seealso{
-This is used internally by \code{\link[tfbrackets]{[.tf}} to evaluate \code{object}.
+This is used internally by \code{[.tf} to evaluate \code{object}.
 }
