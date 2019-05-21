@@ -20,7 +20,7 @@
 #'   lon = -weather$coordinates[,2],
 #'   region = weather$region)
 #' canada$temp <- tfd(t(weather$dailyAv[,,1]), arg = 1:365)
-#' canada$precipl10 <- tfd(t(weather$dailyAv[,,3]), arg = 1:365) %>% smooth
+#' canada$precipl10 <- tfd(t(weather$dailyAv[,,3]), arg = 1:365) %>% tf_smooth
 #' canada_map <-
 #'   data.frame(maps::map("world", "Canada", plot = FALSE)[c("x", "y")])
 #' # map of canada with annual temperature averages in red, precipitation in blue:

@@ -80,7 +80,7 @@ are close together.}
 
 \item{...}{Other arguments passed on to \code{\link[=layer]{layer()}}. These are
 often aesthetics, used to set an aesthetic to a fixed value, like
-\code{colour = "red"} or \code{size = 3}. They may also be parameters
+\code{color = "red"} or \code{size = 3}. They may also be parameters
 to the paired geom/stat.}
 
 \item{stat}{that's "capellini"!}
@@ -127,7 +127,7 @@ canada <- data.frame(
   lon = -weather$coordinates[,2],
   region = weather$region)
 canada$temp <- tfd(t(weather$dailyAv[,,1]), arg = 1:365)
-canada$precipl10 <- tfd(t(weather$dailyAv[,,3]), arg = 1:365) \%>\% smooth
+canada$precipl10 <- tfd(t(weather$dailyAv[,,3]), arg = 1:365) \%>\% tf_smooth
 canada_map <-
   data.frame(maps::map("world", "Canada", plot = FALSE)[c("x", "y")])
 # map of canada with annual temperature averages in red, precipitation in blue:
