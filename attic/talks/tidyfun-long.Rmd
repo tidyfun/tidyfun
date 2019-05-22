@@ -113,14 +113,10 @@ Third bad option: **matrix columns** in a `data.frame`.
 
 Sucks, too:
 
-- not really well supported (breaks entire `tidyverse`, much unexpected behavior in `base`)
+- not really well supported (breaks lots of `tidyverse`-stuff, much unexpected behavior in `base`)
 - more trouble than it’s worth: doesn’t solve how to keep track of
 argument values
 
-```{r}
-str(dti_mat)
-select(dti_mat, cca) %>% glimpse
-```
 
 ## Functional Data
 
@@ -667,6 +663,12 @@ Careful:
 
 - Grouped `mutate`-operations on irregular data can go wrong
 - Internals likely to change completely if `tidyverse`-people enforce switch to `vctrs`.
+
+## Wrangling `tf`s inside `data.table`:
+
+... under development. 
+
+Should be workable, `data.table` generally does list columns well.
 
 
 # Wrap-Up & Discussion
