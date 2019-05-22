@@ -160,7 +160,8 @@ data wrangling and exploratory analysis.
 
 ## Plan for today
 
-- Overview over `tidyfun`'s data types and methods
+- **`tidyfun`**'s data types
+- **`tidyfun`**'s methods \& functions
 - Discussion & Feedback: 
     - What's stupid? 
     - What is too complicated? 
@@ -173,8 +174,8 @@ data wrangling and exploratory analysis.
 **`tf`** is a new data type for (vectors of) functional data: 
 
 - an abstract superclass for functional data in 2 forms:
-    - as (argument, value)-tuples: subclass **`tfd`**, also irregular or sparse
-    - or in basis representation: subclass **`tfb`**
+    - as **(argument, value)-tuples**: subclass **`tfd`**, also irregular or sparse
+    - or in **basis representation**: subclass **`tfb`**
     
 - basically, a glorified `list` of numeric vectors  
   (... since `list`s work well as columns of data frames ...)
@@ -275,7 +276,7 @@ dti$cca[1:3] %>% tfb(verbose = FALSE) %>% str(1)
 - accepts all arguments of `mgcv`'s `s()`-syntax: control basis type `bs`, basis dimension `k`, penalty order `m`
 - also does non-Gaussian fits: `family` argument 
     - all exponential families
-    - but also: $t$-distribution (robust smoothing?), ZI-Poisson (accelerometry?), Beta (), ... 
+    - but also: $t$-distribution (robust smoothing?), ZI-Poisson (accelerometry?), Beta, ... 
 
 ## **`tf`** subclass: **`tfb_spline`**
 
@@ -287,7 +288,7 @@ ex[1:2] %>% tfb(bs = "ps", m = c(2,1), family = betar(link = "cloglog"))
 
 ## **`tf`** subclass: **`tfb`** spline basis
 
-- penalization: function-specific by default, none, prespecified (`sp`), or global 
+- penalization: function-specific (default), none, prespecified (`sp`), or global 
 
 ```{r, eval = FALSE}
 ex  %>% plot()
@@ -303,23 +304,23 @@ lines(tfb(ex, k = 35, penalized = FALSE, verbose = FALSE), col = "blue")
 
 ## **`tf`** subclass: **`tfb`** spline basis
 
-- penalization: function-specific by default, prespecified, none, or global 
+- penalization: function-specific (default), none, prespecified (`sp`), or global
 
 ```{r, eval = FALSE}
 ex  %>% plot()
 ex %>% tfb() %>% plot(col = "red")
-ex %>% tfb(sp = .001) %>% lines(col = "cyan")
+ex %>% tfb(sp = .001) %>% lines(col = "orange")
 ```
 ```{r, echo = FALSE, results = 'hide', out.height = '.4\\textheight', fig.width = 8, fig.height = 4}
 layout(t(1:2))
 plot(ex, alpha = 1)
 plot(ex %>% tfb(verbose = FALSE), col = "red")
-lines(tfb(ex, sp = .001, col = "cyan"))
+lines(tfb(ex, sp = .001), col = "orange")
 ```
 
 ## **`tf`** subclass: **`tfb`** spline basis
 
-**Global** smoothing:  
+**"Global" smoothing**:  
 
 1. estimate smoothing parameters for subsample (~10\%) of curves
 2. apply geometric mean of estimated smoothing parameters to smooth *all* curves
@@ -440,7 +441,8 @@ names(ex) = n_ex
 ```{r}
 c(mean = mean(ex), sd = sd(ex))
 
-tf_depth(ex) # Modified Band-2 Depth (Sun/Genton/Nychka, 2012), others to come -- which?
+# Modified Band-2 Depth (Sun/Genton/Nychka, 2012), others to come -- which?
+tf_depth(ex) 
 
 median(ex) == ex[which.max(tf_depth(ex))]
 ```
@@ -479,14 +481,15 @@ ex %>% tf_integrate()
 
 ## Query
 
-Find `arg`uments $t$ satisfying a condition on `value` $f(t)$ (and `arg`ument $t$):
+Find `arg`uments $t$ satisfying a condition on `value` $f(t)$  
+(and `arg`ument $t$, optionally):
 
 ```{r}
 ex %>% tf_anywhere(value > .65)
 
 ex[1:2] %>% tf_where(value > .6, "all")
 
-ex[2] %>% tf_where(value > .6, "range")
+ex["A"] %>% tf_where(value > .6, "range")
 
 ex %>% tf_where(value > .6 & arg > .5, "first")
 ```
@@ -514,7 +517,7 @@ ex %>% tf_zoom(0.2, 0.6) %>% tf_anywhere(value < median(ex)[, arg])
 To & from list, matrix or data frame with `"id"`,`"arg"`,`"value"`-columns:
 
 ```{r}
-ex_matrix = ex %>% as.matrix(); ex_matrix[1:2, 1:3]
+ex_matrix = ex %>% as.matrix(); str(ex_matrix)
 
 ex_df = ex %>% as.data.frame(); str(ex_df)
 
@@ -522,6 +525,8 @@ ex_matrix[1:2, ] %>% tfd()
 
 tfd(ex_df) == tfd(ex_matrix)
 ```
+
+Same for `tfb`.
 
 ## Visualize: `base` 
 
@@ -589,7 +594,7 @@ canada_map <-
    data.frame(maps::map("world", "Canada", plot = FALSE)[c("x", "y")])
  # maps of Canada with annual temperature averages in red, precipitation in blue:
 map_plot <- ggplot(canada, aes(x = lon, y = lat)) + 
-  geom_path(data = canada_map, aes(x = x, y = y), alpha = .1) +
+  geom_path(data = canada_map, aes(x = x, y = y), alpha = .3) +
   coord_quickmap()
 map_plot + 
   geom_capellini(aes(tf = precipl10), width = 3, height = 5, colour = "blue") +
@@ -656,6 +661,14 @@ dti_long = dti %>% tf_unnest(cca); dti_long %>% glimpse()
 dti_long %>% tf_nest(cca_value, .id = cca_id, .arg = cca_arg) %>% glimpse()
 ```
 
+## Wrangling `tf`s inside data frames: `tidyr`
+
+Careful:
+
+- Grouped `mutate`-operations on irregular data can go wrong
+- Internals likely to change completely if `tidyverse`-people enforce switch to `vctrs`.
+
+
 # Wrap-Up & Discussion
 
 ##
@@ -677,7 +690,8 @@ What additional features would you need...?
 
 ## What is missing:
 
-- Integration with / bridges to existing packages: `fda`, `fda.usc`, `refund`, `fdasrvf`, `registr`, ...
+- Bridges to `fda`, `fda.usc`, `roahd`, `fdasrvf`, ...
+- Integration with `refund`, `FDboost`, `registr`, ...
 
 ##  
 
