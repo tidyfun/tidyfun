@@ -1,4 +1,4 @@
-#' @importFrom stats var na.omit median
+#' @importFrom stats var na.omit median gaussian
 new_tfb_spline <- function(data, domain = NULL, penalized = TRUE, global = FALSE,
                            resolution = NULL, verbose = TRUE, ...) {
   domain <- domain %||% range(data$arg)

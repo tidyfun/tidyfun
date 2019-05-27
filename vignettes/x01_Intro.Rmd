@@ -77,20 +77,24 @@ Some example data used in this vignette (the code used to create these will be e
 
 a prepped version of the `refund::DTI` dataset with 2 functional covariates:
 ```{r load-dti}
-dti = with(refund::DTI, 
-  data.frame(id = ID, sex = sex, 
-    case = factor(ifelse(case, "MS", "control")))) %>% as.tbl %>% 
-        mutate(cca = tfd(DTI$cca, seq(0,1, l = 93), signif = 2) %>%
-                     tfd(arg = seq(0,1,l = 93)),
-               rcst = tfd(DTI$rcst, seq(0, 1, l = 55), signif = 3))
+dti <- with(refund::DTI, 
+            data.frame(
+              id = ID, 
+              sex = sex, 
+              case = factor(ifelse(case, "MS", "control")))
+            ) %>%
+  as.tbl %>%
+  mutate(cca = tfd(DTI$cca, seq(0,1, l = 93)) %>%
+           tfd(arg = seq(0,1,l = 93)),
+         rcst = tfd(DTI$rcst, seq(0, 1, l = 55)))
 dti
 ```
 
 and a simple 5 element vector of functions on a regular grid:
 ```{r ex-def}
-ex_data = dti$cca[1:5, seq(0, 1, l = 93), interpolate = TRUE]
-rownames(ex_data) = LETTERS[1:5]
-ex = tfd(ex_data, signif = 2)
+ex_data <- dti$cca[1:5, seq(0, 1, l = 93), interpolate = TRUE]
+rownames(ex_data) <- LETTERS[1:5]
+ex <- tfd(ex_data, signif = 2)
 ex
 ```
 ```{r, ex-fig}
@@ -115,7 +119,7 @@ ex %>% tf_domain()
 
 ```{r}
 tf_evaluator(ex) %>% str
-tf_evaluator(ex) = "tf_approx_spline"
+tf_evaluator(ex) <- tf_approx_spline
 ```
 
 - **`tfd`** has subclasses for regular data with a common grid and irregular or sparse data,
@@ -133,7 +137,9 @@ Functional data in basis representation:
 
  - represented as a list of **`coefficients`** and a common **`basis_matrix`** of basis function evaluations on a vector of `arg`-values.
  - contains a **`basis`** function that defines how to compute the basis for new **`arg`**s and how to differentiate or integrate it.
- - (internal) flavors: **`mgcv`**-spline bases and FPCs (wavelets to be added)
+- (internal) flavors: 
+    - `tfb_spline`: uses `mgcv`-spline bases 
+    - `tfb_fpc`: uses functional principal components 
 - significant memory and time savings:
 ```{r}
 refund::DTI$cca %>% object.size() %>% print(units = "Kb")
@@ -141,23 +147,64 @@ dti$cca %>% object.size() %>% print(units = "Kb")
 dti$cca %>% tfb(verbose = FALSE) %>% object.size() %>% print(units = "Kb")
 ```
 
-### **`tfb`** spline basis
+### **`tfb_spline`**: spline basis
 
-- accepts all arguments of `mgcv`'s `s()`-syntax 
-- either does a penalized fit with (GCV-based) function-specific smoothing or unpenalized.
+- default for `tfb()`
+- accepts all arguments of `mgcv`'s `s()`-syntax: control basis type `bs`, basis dimension `k`, penalty order `m`
+- also does non-Gaussian fits: `family` argument 
+    - all exponential families
+    - but also: $t$-distribution, ZI-Poisson, Beta, ... 
 
 ```{r, message = TRUE}
-ex_b = ex %>% tfb()
+ex_b <- ex %>% tfb()
 ex_b[1:2]
-
 ex[1:2] %>% tfb(bs = "tp", k = 55)
+ex[1:2] %>% tfb(bs = "ps", m = c(2,1), family = mgcv::betar(link = "cloglog"))
 ```
+
+### Penalization: 
+
+**Function-specific (default), none**, prespecified (`sp`), or global: 
 
 ```{r}
 layout(t(1:2))
 ex  %>% plot()
 ex_b %>% plot(col = "red")
 ex %>% tfb(k = 35, penalized = FALSE) %>% lines(col = "blue")
+ex %>% tfb(sp = .001) %>% lines(col = "orange")
+```
+
+**"Global" smoothing**:  
+
+1. estimate smoothing parameters for subsample (~10\%) of curves
+2. apply geometric mean of estimated smoothing parameters to smooth *all* curves
+
+**Advantages:**
+
+- (much) faster than optimizing penalization for each curve
+- should scale well for larg-ish datasets
+
+**Disadvantages**
+
+- no real borrowing of information across curves (very sparse or functional fragment data, e.g.)
+- still requires more observations than basis functions *per curve*
+- subsample could miss small subgroups with different roughness, over-/undersmooth parts of the data, see below.
+
+```{r, echo = FALSE}
+set.seed(1212)
+raw <- c(
+  tf_rgp(5, scale = 0.2, nugget = .05, arg = 101L) - 5,
+  tf_rgp(5, scale = 0.02, nugget = .05, arg = 101L),
+  tf_rgp(5, scale = 0.002, nugget = .05, arg = 101L) + 5)
+```
+
+Dataset with heterogeneous roughness:
+```{r}
+layout(t(1:3))
+clrs <- scales::alpha(sample(viridis(15)), .5)
+plot(raw, main = "raw", col = clrs)
+plot(tfb(raw, k = 55), main = "separate", col = clrs)
+plot(tfb(raw, k = 55, global = TRUE), main = "global", col = clrs)
 ```
 
 ###  **`tfb`** FPC-based
@@ -169,8 +216,8 @@ ex %>% tfb(k = 35, penalized = FALSE) %>% lines(col = "blue")
 - observed functions are linear combinations of those.
 
 ```{r}
-(ex_fpc = ex %>% tfb_fpc(smooth = FALSE, pve = .999))
-(ex_fpc_smooth = ex %>% tfb_fpc(pve = .95))
+(ex_fpc <- ex %>% tfb_fpc(smooth = FALSE, pve = .999))
+(ex_fpc_smooth <- ex %>% tfb_fpc(pve = .95))
 ```
 
 ```{r}
@@ -291,9 +338,14 @@ ex %>% tf_zoom(0.2, 0.6) %>% tf_anywhere(value <= median(ex)[, arg])
 To & from list, matrix or data frame with `"id"`,`"arg"`,`"value"`-columns:
 
 ```{r}
-ex_matrix = ex %>% as.matrix(); ex_matrix[1:2, 1:3]
-ex_df = ex %>% as.data.frame(); str(ex_df)
+ex_matrix <- ex %>% as.matrix()
+ex_matrix[1:2, 1:3]
+
+ex_df <- ex %>% as.data.frame()
+str(ex_df)
+
 ex_matrix[1:2, ] %>% tfd()
+
 tfd(ex_df) == tfd(ex_matrix)
 ```
 
@@ -303,7 +355,10 @@ tfd(ex_df) == tfd(ex_matrix)
 
 ```{r ex-fig3}
 layout(t(1:2))
-plot(ex, type = "spaghetti"); lines(c(median(ex), mean(ex)), col = c(2, 4))
+
+plot(ex, type = "spaghetti")
+lines(c(median(ex), mean(ex)), col = c(2, 4))
+
 plot(ex, type = "lasagna", col = viridis(50))
 ```
 
@@ -315,11 +370,6 @@ plot(ex, type = "lasagna", col = viridis(50))
 - **`geom_meatballs`**  for (lines &) points
 - **`gglasagna`** with **`order`**-arguments to sort the lasagna layers
 - **`geom_capellini`** for little sparklines / glyphs on maps etc.
-
-To come:
-
-- **`geom_pappardelle`** for functional boxplots
- 
 
 ```{r, dti-fig1}
 ggplot(dti) + 
@@ -375,13 +425,18 @@ For a more detailed discussion of the topic of this section, please see the [`Da
 
 ```{r, dplyr}
 # group-wise functional means:
-dti %>% group_by(case, sex) %>% summarize(mean_rcst = mean(rcst, na.rm = TRUE))       %>% ungroup
+dti %>% group_by(case, sex) %>% 
+  summarize(mean_rcst = mean(rcst, na.rm = TRUE)) %>% 
+  ungroup()
 # which subjects go below cca = .26:
 dti %>% filter(tf_anywhere(cca, value < .26))
-# center & scale functional data: 
-dti %>% 
-  mutate(cca = tfb(cca, verbose = FALSE), 
-    cca_z = (cca - mean(cca))/sd(cca)) %>% glimpse
+# mutate and create derived functional data
+dti %>%
+  mutate(
+    rcst_smooth = tfb(rcst, k = 15, verbose = FALSE),
+    rcst_deriv = tf_derive(rcst_smooth)
+  ) %>%
+  glimpse
 ```
 
 ### wrangling `tf`-objects inside data frames: `tidyr`
@@ -412,5 +467,5 @@ dti_long = dti %>% tf_unnest(cca); dti_long %>% glimpse()
 dti_long %>% tf_nest(cca_value, .id = cca_id, .arg = cca_arg) %>% glimpse()
 ```
 
-Note that `left/right_join`-operations as well as `bind_rows` do not currently work 
+Note that `left/right_join`-operations as well as `bind_rows` do not currently work reliably 
 for tables with `tfd` or `tfb`-columns, see [tidyfun/issues/53](https://github.com/fabian-s/tidyfun/issues/53). `bind_rows` can be easily avoided by using `rbind`, which still works, instead.
