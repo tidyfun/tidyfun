@@ -127,8 +127,3 @@ test_that("resolution works as expected", {
   expect_equivalent(fb[, 1:9 + .01], fb[, 1:9])
   expect_equivalent(fb[, 1:9 + .0249], fb[, 1:9])
 })
-
-
-# resolution error when too low
-# constant value for arg inside resolution
-#

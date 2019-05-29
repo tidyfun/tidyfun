@@ -21,7 +21,7 @@ test_that("tfb_spline defaults work for all kinds of regular input", {
   expect_is(tfb_spline(smoo, verbose = FALSE), "tfb_spline")
   expect_output(tfb_spline(smoo), "100")
   expect_equal(length(tfb_spline(smoo, verbose = FALSE)), length(smoo))
-  expect_equal(tf_evaluations(tfb_spline(smoo, verbose = FALSE)), tf_evaluations(smoo), 
+  expect_equivalent(tf_evaluations(tfb_spline(smoo, verbose = FALSE)), tf_evaluations(smoo), 
                tolerance = 1e-3)
   for (dat in list(smoo_list, smoo_matrix, smoo_df)) {
     smoo_ <- try(tfb_spline(dat, verbose = FALSE))
