@@ -18,7 +18,11 @@ fun_op <- function(x, y, op, numeric = NA) {
       all.equal(tf_domain(x), tf_domain(y)),
       all.equal(tf_arg(x), tf_arg(y))
     )
-    attr_ret <- attributes(y)
+    attr_ret <- if (length(x) >= length(y)) {
+      attributes(x)
+    } else {
+      attributes(y)
+    }  
     arg_ret <- tf_arg(y)
   }
   if (is_tfb(x)) x_ <- coef(x)
