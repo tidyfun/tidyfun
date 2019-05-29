@@ -206,10 +206,11 @@ tfd.list <- function(data, arg = NULL, domain = NULL,
 #' @rdname tfd
 tfd.tf <- function(data, arg = NULL, domain = NULL,
                    evaluator = NULL, resolution = NULL, ...) {
+  evaluator_name <- enexpr(evaluator)
   evaluator <- if (is_tfd(data) & is.null(evaluator)) {
     attr(data, "evaluator_name")
   } else {
-    "tf_approx_linear"
+    if (is.null(evaluator)) "tf_approx_linear" else quo_name(evaluator_name)
   }
   domain <- (domain %||% unlist(arg) %||% tf_domain(data)) %>% range()
   resolution <- resolution %||% tf_resolution(data)
