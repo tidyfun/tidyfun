@@ -22,10 +22,16 @@
     <loc>https://fabian-s.github.io/tidyfun/reference/tf_depth.html</loc>
   </url>
   <url>
+    <loc>https://fabian-s.github.io/tidyfun/reference/tf_derive.html</loc>
+  </url>
+  <url>
     <loc>https://fabian-s.github.io/tidyfun/reference/tf_evaluate.html</loc>
   </url>
   <url>
     <loc>https://fabian-s.github.io/tidyfun/reference/tf_gather.html</loc>
+  </url>
+  <url>
+    <loc>https://fabian-s.github.io/tidyfun/reference/tf_integrate.html</loc>
   </url>
   <url>
     <loc>https://fabian-s.github.io/tidyfun/reference/tf_jiggle.html</loc>
@@ -58,10 +64,10 @@
     <loc>https://fabian-s.github.io/tidyfun/reference/tfb_fpc.html</loc>
   </url>
   <url>
-    <loc>https://fabian-s.github.io/tidyfun/reference/tfbrackets.html</loc>
+    <loc>https://fabian-s.github.io/tidyfun/reference/tfb_spline.html</loc>
   </url>
   <url>
-    <loc>https://fabian-s.github.io/tidyfun/reference/tfcalculus.html</loc>
+    <loc>https://fabian-s.github.io/tidyfun/reference/tfbrackets.html</loc>
   </url>
   <url>
     <loc>https://fabian-s.github.io/tidyfun/reference/tfconcat.html</loc>

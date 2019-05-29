@@ -43,11 +43,11 @@
 #'   tf_where(f, value == max(value))
 #'   # where is the function increasing/decreasing:
 #'   tf_where(f, value > dplyr::lag(value, 1, value[1]))
-#'   tf_where(f, value < dplyr::lead(value, 1, value[n()]))
+#'   tf_where(f, value < dplyr::lead(value, 1, value[dplyr::n()]))
 #'   # where are the (interior) extreme points:
 #'   tf_where(f,
 #'     sign(c(diff(value)[1], diff(value))) !=
-#'       sign(c(diff(value), diff(value)[n()-1])))
+#'       sign(c(diff(value), diff(value)[dplyr::n()-1])))
 #'   # where for arg > .5 is the function positive:
 #'   tf_where(f, arg > .5 & value > 0)
 #'   # does the function ever exceed 1:

@@ -1,6 +1,6 @@
 Package: tidyfun
 Title: Tools for Tidy Functional Data
-Version: 0.0.7
+Version: 0.0.8
 Authors@R: c(person("Fabian", "Scheipl", email = "fabian.scheipl@googlemail.com", role = c("aut", "cre")), person("Jeff", "Goldsmith", role = c("aut")))
 Description: Provides S3 classes and methods for tidy functional data.
 Depends: R (>= 3.4)
@@ -11,7 +11,7 @@ License: GPL-3
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.1.1
-Suggests: testthat, data.table, fda, knitr, rmarkdown, tidyverse, viridisLite, maps
+Suggests: testthat, data.table, fda, knitr, rmarkdown, tidyverse, viridisLite, maps, scales
 Roxygen: list(markdown = TRUE)
 Collate:
     'approx.R'
