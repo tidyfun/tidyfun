@@ -54,9 +54,9 @@ the value of \code{basis}, the basis functions \eqn{B(t)} will either be \code{s
 functions or the first few estimated eigenfunctions of the covariance
 operator of the \eqn{x(t)} (\code{fpc}) or wavelets (\code{wavelet}).
 
-See \code{\link[=tfb_spline]{tfb_spline()}} for spline based basis representation (the default).
-See \code{\link[=tfb_fpc]{tfb_fpc()}} for using an FPC representation with an orthonormal basis estimated from the
-data instead.
+See \strong{\code{\link[=tfb_spline]{tfb_spline()}}} for more details on spline basis representation (the default).
+See \strong{\code{\link[=tfb_fpc]{tfb_fpc()}}} for using an functional principal component
+representation with an orthonormal basis estimated from the data instead.
 }
 \seealso{
 \code{\link[=tfb_fpc]{tfb_fpc()}}, \code{\link[=tfb_spline]{tfb_spline()}}
