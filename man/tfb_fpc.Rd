@@ -6,7 +6,7 @@
 \alias{tfb_fpc.matrix}
 \alias{tfb_fpc.numeric}
 \alias{tfb_fpc.tf}
-\title{Constructors for functional data in FPC-basis representation}
+\title{Functional data in FPC-basis representation}
 \usage{
 tfb_fpc(data, ...)
 
@@ -45,7 +45,7 @@ from \code{\link[refund:fpca.sc]{refund::fpca.sc()}} or simply perform a (trunca
 }
 \description{
 These functions perform a (functional) principal component analysis of the
-input data and return an \code{tfb} \code{tf}-object that uses the empirical
+input data and return an \code{tfb_fpc} \code{tf}-object that uses the empirical
 eigenfunctions as basis functions for representing the data. By default, a
 \code{smooth}ed FPCA via \code{\link[refund:fpca.sc]{refund::fpca.sc()}} is used to compute eigenfunctions and
 scores based on the smoothed empirical covariance.
@@ -57,5 +57,5 @@ for irregular / non-equidistant grids and does not work for
 incomplete/irregular data.
 }
 \seealso{
-tfb
+\code{\link[=tfb]{tfb()}},  \code{\link[refund:fpca.sc]{refund::fpca.sc()}} for principal components options.
 }

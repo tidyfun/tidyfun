@@ -2,6 +2,7 @@
 #' @import purrr
 #' @import dplyr
 new_tfd <- function(arg, datalist, regular, domain, evaluator, resolution) {
+  
   assert_string(evaluator)
   evaluator_f <- get(evaluator, mode = "function", envir = parent.frame())
   assert_function(evaluator_f)
@@ -9,11 +10,13 @@ new_tfd <- function(arg, datalist, regular, domain, evaluator, resolution) {
     names(formals(evaluator_f)),
     c("x", "arg", "evaluations")
   )
+  
   arg_o <- map(arg, order)
   arg <- map2(arg, arg_o, ~.x[.y])
   datalist <- map2(datalist, arg_o, ~unname(.x[.y]))
   domain <- domain %||% range(arg, na.rm = TRUE)
   resolution <- resolution %||% get_resolution(arg)
+  
   if (!regular) {
     datalist <- map2(
       datalist, arg,
@@ -156,7 +159,7 @@ tfd.data.frame <- function(data, id = 1, arg = 2, value = 3, domain = NULL,
 tfd.list <- function(data, arg = NULL, domain = NULL,
                      evaluator = tf_approx_linear, resolution = NULL, ...) {
   evaluator <- quo_name(enexpr(evaluator))
-  vectors <- map_lgl(data, ~is.numeric(.) & !is.array(.))
+  vectors <- map_lgl(data, ~ is.numeric(.) & !is.array(.))
   if (all(vectors)) {
     lengths <- vapply(data, length, numeric(1))
     regular <- all(lengths == lengths[1]) &

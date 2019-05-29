@@ -90,16 +90,11 @@ gglasagna <- function(data, y, order = NULL, label = NULL,
     labelname <- deparse(label)
   }
   y_name <- quo_name(enquo(y))
-  data <- mutate(data, 
-                 ..label = !!label, 
-                 ..row = row_number(),
-                 ..order = !!order)
-  tf_eval <- suppressMessages(
-      tf_unnest(data, y_name, .arg = arg, .sep = "___")
-    ) %>%
-    rename(..y = matches("___id"), 
-           ..x = matches("___arg"), 
-           ..fill = matches("___value"))
+  data <- mutate(data, ..label = !!label, ..order = !!order, ..row = row_number())
+  tf_eval <- 
+    #TODO: add .preserve for all list columns not being plotted
+    tf_unnest(data, y_name, .arg = arg, .sep = "___", try_dropping = FALSE) %>%
+    rename(..y = matches("___id"), ..x = matches("___arg"), ..fill = matches("___value"))
   order_by_label <- enexpr(order_by)
   if (has_order_by) {
     order_by_label <- quo_name(order_by_label)
@@ -129,7 +124,8 @@ gglasagna <- function(data, y, order = NULL, label = NULL,
                              labels = ..label[!duplicated(..y)]))
 
   p <- ggplot(tf_eval) +
-    geom_tile(aes(y = ..y, x = ..x, fill = !!sym(y_name))) +
+    geom_tile(aes(y = ..y, x = ..x, fill = !!sym(y_name), 
+      colour = !!sym(y_name))) + ylab("") +
     xlab("")
   if (!is.null(order_label) | !is.null(order_by_label)) {
     p <- p + labs(caption = paste(

@@ -32,7 +32,8 @@ tf_evaluations.tfd_irreg <- function(f) {
 }
 #' @export
 tf_evaluations.tfb <- function(f) {
-  map(f, ~drop(attr(f, "basis_matrix") %*% .))
+  raw <- map(f, ~ drop(attr(f, "basis_matrix") %*% .))
+  map(raw, attr(f, "family")$linkinv)
 }
 
 

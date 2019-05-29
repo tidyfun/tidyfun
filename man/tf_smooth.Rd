@@ -37,7 +37,7 @@ methods:
 \item \strong{\code{lowess}} uses a span parameter of \code{f} = .15 (instead of .75)
 by default.
 \item \strong{\code{rollmean}/\code{median}} use a window size of \code{k} = <number of
-  grid points>/20 (i.e., the nearest odd integer to that) and sets \code{fill= "extend"} (i.e., constant extrapolation to replace missing values at the
+  grid points>/20 (i.e., the nearest odd integer to that) and sets \code{fill=   "extend"} (i.e., constant extrapolation to replace missing values at the
 extremes of the domain) by default. Use \code{fill= NA} for \code{zoo}'s default
 behavior of shortening the smoothed series.
 \item \strong{\code{savgol}} uses a window size of \code{k} = <number of
