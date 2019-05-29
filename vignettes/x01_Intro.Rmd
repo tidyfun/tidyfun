@@ -84,9 +84,9 @@ dti <- with(refund::DTI,
               case = factor(ifelse(case, "MS", "control")))
             ) %>%
   as.tbl %>%
-  mutate(cca = tfd(DTI$cca, seq(0,1, l = 93)) %>%
+  mutate(cca = tfd(refund::DTI$cca, seq(0,1, l = 93)) %>%
            tfd(arg = seq(0,1,l = 93)),
-         rcst = tfd(DTI$rcst, seq(0, 1, l = 55)))
+         rcst = tfd(refund::DTI$rcst, seq(0, 1, l = 55)))
 dti
 ```
 
