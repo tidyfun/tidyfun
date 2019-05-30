@@ -6,12 +6,12 @@ reference:
     desc: "Defining, evaluating and converting functional data objects"
     contents:
       - tfd
-      - tfb
-      - tfb_fpc
       - as.tfd
+      - tfb
       - as.tfb
+      - tfb_spline
+      - tfb_fpc
 
-      
   - title: "Concatenation, evaluation and indexing"
     desc: "Accessing, appending, evaluating and overwriting functional data objects"
     contents: 
