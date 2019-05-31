@@ -19,4 +19,4 @@ activity <- read_csv(here::here("data-raw", "activity.csv"))
 chf_df <- inner_join(covar, filter(activity, week == 1), by = "id") %>%
   tf_gather(activity.1:activity.1440, key = activity)
 
-devtools::use_data(chf_df, overwrite = TRUE)
+usethis::use_data(chf_df, overwrite = TRUE)
