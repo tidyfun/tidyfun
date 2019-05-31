@@ -4,6 +4,8 @@ new_tfb_spline <- function(data, domain = NULL, penalized = TRUE, global = FALSE
   domain <- domain %||% range(data$arg)
   arg_u <- mgcv::uniquecombs(data$arg, ordered = TRUE)
   resolution <- resolution %||% get_resolution(arg_u)
+  domain <- c(round_resolution(domain[1], resolution, -1),
+              round_resolution(domain[2], resolution, 1))
   # explicit factor-conversion to avoid reordering:
   data$id <- factor(data$id, levels = unique(as.character(data$id)))
   

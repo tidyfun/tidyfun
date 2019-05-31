@@ -30,6 +30,9 @@ new_tfb_fpc <- function(data, domain = NULL, smooth = TRUE, resolution = NULL,
   resolution <- resolution %||% get_resolution(arg)
   data$arg <- round_resolution(data$arg, resolution)
   arg <- unique(round_resolution(arg, resolution))
+  domain <- c(round_resolution(domain[1], resolution, -1),
+              round_resolution(domain[2], resolution, 1))
+  
   names(data) <- c(".id", ".index", ".value")
   if (smooth) {
     fpca_args <-
