@@ -1,0 +1,233 @@
+---
+title: "Converting data to tf"
+author: "Jeff Goldsmith"
+date: "`r Sys.Date()`"
+output: 
+    rmarkdown::html_vignette:
+      fig_width: 12
+vignette: >
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteIndexEntry{Converting to tf}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "##",
+  fig.width = 8, 
+  fig.height = 5.5,
+  out.width = "90%"
+)
+
+library(tidyverse)
+library(ggplot2)
+library(viridisLite)
+
+library(patchwork)
+
+theme_set(theme_minimal() + theme(legend.position = "bottom"))
+
+options(
+  ggplot2.continuous.colour = "viridis",
+  ggplot2.continuous.fill = "viridis"
+)
+scale_colour_discrete = scale_colour_viridis_d
+scale_fill_discrete = scale_fill_viridis_d
+
+library("tidyfun")
+#try(devtools::load_all("~/fda/tidyfun"))
+#try(devtools::load_all("~/Work/fda/tidyfun"))
+
+pal_5 = viridis(7)[-(1:2)]
+set.seed(1221)
+```
+
+Functional data have often been stored in matrices or data frames. Although these structures have sufficed for some purposes, they are cumbersome or impossible to use with modern tools for data wrangling. 
+
+In this vignette, we illustrate how to convert data from common structures to `tf` objects. Throughout, functional data vectors are stored as columns in a data frame to facilitate subsequent wrangling and analysis. 
+
+## Conversion from matrices
+
+in these, we'll use `tfd` to get a `tf` object from a matrix. This function expects data to be organized so that each row is the functional observation for a single subject. 
+
+DTI (from the `refund` package), with spaghetti plot (this code is used to create the `tidyfun::dti_df` dataset included in the package. )
+
+```{r}
+dti_df = tibble(
+  id = refund::DTI$ID, 
+  sex = refund::DTI$sex, 
+  case = factor(ifelse(refund::DTI$case, "MS", "control")))
+
+dti_df$cca = tfd(refund::DTI$cca, arg = seq(0,1, l = 93))
+dti_df$rcst = tfd(refund::DTI$rcst, arg = seq(0, 1, l = 55))
+```
+
+Make a quick plot
+
+```{r}
+dti_df %>% 
+  ggplot() + 
+  geom_spaghetti(aes(y = cca, col = case, alpha = .2 + .4*(case == "control"))) +
+  facet_wrap(~ sex) + 
+  scale_alpha(guide = 'none', range = c(.2, .4))
+```
+
+
+Canadian weather (from the `fda` package):
+
+```{r}
+canada = tibble(
+  place = fda::CanadianWeather$place, 
+  region = fda::CanadianWeather$region, 
+  lat = fda::CanadianWeather$coordinates[,1], 
+  lon = -fda::CanadianWeather$coordinates[,2])
+
+canada$temp = tfd(t(fda::CanadianWeather$dailyAv[,,1]), arg = 1:365)
+canada$precipl10 = 
+  tfd(t(fda::CanadianWeather$dailyAv[,,3]), arg = 1:365) %>%
+  tf_smooth
+```
+
+spaghetti -- two panels with patchwork to put them together
+
+```{r}
+temp_panel =
+  canada %>% 
+  ggplot(aes(y = temp, color = region)) + geom_spaghetti() 
+
+precip_panel =
+  canada %>% 
+  ggplot(aes(y = precipl10, color = region)) + geom_spaghetti() 
+
+temp_panel + precip_panel
+```
+
+
+## From data frame
+
+### ... in "long" format
+
+throughout, `tf_nest` is the key function. 
+
+
+Pig weight, from package `SemiPar`
+
+```{r}
+data("pig.weights", package = "SemiPar")
+
+pig.weights = as_tibble(pig.weights)
+
+pig.weights
+```
+
+
+```{r}
+pig_df = 
+  pig.weights %>% 
+  tf_nest(weight, .id = id.num, .arg = num.weeks)
+
+pig_df
+```
+
+```{r}
+pig_df %>% 
+  ggplot(aes(y = weight)) + 
+  geom_spaghetti()
+```
+
+
+FEV from `ALA` package (installation is from non-cran):
+
+```{r, eval = FALSE}
+install.packages("ALA", repos="http://R-Forge.R-project.org")
+```
+
+useful because you can nest multiple functions, if they exist in the dataset
+
+```{r}
+ALA::fev1 %>% 
+  group_by(id) %>% 
+  mutate(n_obs = n()) %>% 
+  filter(n_obs > 1) %>% 
+  tf_nest(logFEV1, height, .arg = age)
+```
+
+
+### ... in "wide" format
+
+Doesn't happen too often, but sometimes you get data in "wide" format. Here we convert DTI data to look like this, then use `tf_gather`
+
+```{r}
+dti = 
+  refund::DTI %>% 
+  janitor::clean_names() %>% 
+  select(-starts_with("rcst")) %>% 
+  tf_gather(starts_with("cca"))
+```
+
+
+## Other formats
+
+`fda` and `fd` coming soon ...
+
+## Back to matrices
+
+
+THINGS BREAK BELOW HERE
+
+
+
+
+
+
+### wrangling `tf`-objects inside data frames: `tidyr`
+
+**`tidyfun`** provides `tf_` variants of `tidyr`-verbs to reshape and reformat functional data while keeping it in sync with other covariates:
+
+
+- `tf_spread:` `tf` $\rightarrow$ columns for each `arg`
+- `tf_gather:` columns for each `arg` $\rightarrow$ `tf`
+
+```{r, tidyr}
+# spread tf out into columns for each arg
+dti_wide = dti_df %>% tf_spread(cca, arg = seq(0, 1, length = 93))
+dti_wide[, 1:7] %>% glimpse()  
+
+# collect all columns into a single tf-column 
+# (... will try to guess arg from column names, name of tf from their prefix)
+dti_wide %>% tf_gather(matches("cca_")) %>% glimpse()
+```
+
+- `tf_unnest:` `tf` $\rightarrow$ data in long format (`id`, `arg`, `value`)  
+- `tf_nest  :` data in long format (`id`, `arg`, `value`)  $\rightarrow$ `tf`
+
+```{r, tidyr2}
+# unnest tf by writing 3 loong columns id, arg, value:
+# (will try to avoid unnecessary duplication of columns)
+dti_long = dti_df %>% tf_unnest(cca); dti_long %>% glimpse()  
+# nest tf by writing 3 loong columns id, arg, value:
+dti_long %>% tf_nest(cca_value, .id = cca_id, .arg = cca_arg) %>% glimpse()
+```
+
+Note that `left/right_join`-operations as well as `bind_rows` do not currently work reliably 
+for tables with `tfd` or `tfb`-columns, see [tidyfun/issues/53](https://github.com/fabian-s/tidyfun/issues/53). `bind_rows` can be easily avoided by using `rbind`, which still works, instead.
+
+
+
+
+### convert & construct
+
+To & from list, matrix or data frame with `"id"`,`"arg"`,`"value"`-columns:
+
+```{r, eval = FALSE}
+ex_matrix <- ex %>% as.matrix()
+ex_matrix[1:2, 1:3]
+
+ex_df <- ex %>% as.data.frame()
+str(ex_df)
+
+ex_matrix[1:2, ] %>% tfd()
+
+tfd(ex_df) == tfd(ex_matrix)
+```

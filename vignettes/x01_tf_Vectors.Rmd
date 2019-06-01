@@ -1,0 +1,327 @@
+---
+title: "tf Vectors and Operations"
+author: "Fabian Scheipl"
+date: "`r Sys.Date()`"
+output: 
+    rmarkdown::html_vignette:
+      fig_width: 12
+vignette: >
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteIndexEntry{Introducing tf vectors}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "##",
+  fig.width = 8, fig.height = 5.5)
+
+library(tidyverse)
+library(refund)
+library(ggplot2)
+library(viridisLite)
+theme_set(theme_minimal())
+options(
+  ggplot2.continuous.colour = "viridis",
+  ggplot2.continuous.fill = "viridis"
+)
+scale_colour_discrete = scale_colour_viridis_d
+scale_fill_discrete = scale_fill_viridis_d
+
+library("tidyfun")
+#try(devtools::load_all("~/fda/tidyfun"))
+#try(devtools::load_all("~/Work/fda/tidyfun"))
+
+pal_5 = viridis(7)[-(1:2)]
+set.seed(1221)
+```
+
+This vignette introduces the `tf` class, as well as the `tfd` and `tfb` subclasses, and focuses on vectors of this class. It also illustrates operations for `tf` vectors. 
+
+# `tf`-Class: Definition
+
+##  `tf`-class
+
+**`tf`** is a new data type for (vectors of) functional data: 
+
+- an abstract superclass for functional data in 2 forms:
+    - as (argument, value)-tuples: subclass **`tfd`**, also irregular or sparse
+    - or in basis representation: subclass **`tfb`**
+    
+- basically, a `list` of numeric vectors  
+  (... since `list`s work well as columns of data frames ...)
+
+- with additional attributes that define *function-like* behavior:
+    - how to **evaluate** the given "functions" for new arguments
+    - their **domain** 
+    - the **resolution** of the argument values
+
+- `S3` based
+
+## Example Data
+
+The code below creates some example data used in this vignette (and is explained in the [data conversion](https://fabian-s.github.io/tidyfun/articles/02_Conversion.html) vignette). 
+
+First we extract two `tf` vectors from the `tidyfun::chf_df` dataset. These vectors contain fractional anisotropy tract profiles for the corpus callosum (`cca`) and the right corticospinal tract (`rcst`).
+
+```{r load-dti}
+data("dti_df")
+
+cca = dti_df$cca
+rcst = dti_df$rcst
+
+cca
+rcst
+```
+
+We also extract a simple 5-element vector of functions on a regular grid:
+
+```{r ex-def}
+cca_five <- cca[1:5, seq(0, 1, l = 93), interpolate = TRUE]
+rownames(cca_five) <- LETTERS[1:5]
+cca_five <- tfd(cca_five, signif = 2)
+cca_five
+```
+
+For illustration, we plot the vector `cca_five` below. 
+
+```{r, ex-fig}
+plot(cca_five, xlim = c(-0.15, 1), col = pal_5)
+text(x = -.1, y = cca_five[,0.07], labels = names(cca_five), col = pal_5)
+```
+
+## **`tf`** subclass: **`tfd`**
+
+**`tfd`** objects contain "raw" functional data: 
+
+ - represented as a list of **`evaluations`** $f_i(t)|_{t=t'}$ and corresponding **`arg`**ument vector(s) $t'$
+ - has a **`domain`**:  the range of valid **`arg`**s.
+
+```{r}
+cca_five %>% tf_evaluations() %>% str
+cca_five %>% tf_arg() %>% str
+cca_five %>% tf_domain() 
+```
+
+- each **`tfd`**-vector contains an **`evaluator`** function that defines how to inter-/extrapolate `evaluations` between `arg`s (and remembers results of previous calls)
+
+```{r}
+tf_evaluator(cca_five) %>% str
+tf_evaluator(cca_five) <- tf_approx_spline
+```
+
+- **`tfd`** has subclasses for regular data with a common grid and irregular or sparse data,
+like the elements of the `rcst` vector.
+
+```{r}
+rcst[1:2]
+rcst[1:2] %>% tf_arg() %>% str
+rcst[1:2] %>% plot(pch = "x", col = viridis(2))
+```
+
+## **`tf`** subclass: **`tfb`**
+
+Functional data in basis representation: 
+
+ - represented as a list of **`coefficients`** and a common **`basis_matrix`** of basis function evaluations on a vector of `arg`-values.
+ - contains a **`basis`** function that defines how to compute the basis for new **`arg`**s and how to differentiate or integrate it.
+- (internal) flavors: 
+    - `tfb_spline`: uses `mgcv`-spline bases 
+    - `tfb_fpc`: uses functional principal components 
+- significant memory and time savings:
+```{r}
+refund::DTI$cca %>% object.size() %>% print(units = "Kb")
+cca %>% object.size() %>% print(units = "Kb")
+cca %>% tfb(verbose = FALSE) %>% object.size() %>% print(units = "Kb")
+```
+
+### **`tfb_spline`**: spline basis
+
+- default for `tfb()`
+- accepts all arguments of `mgcv`'s `s()`-syntax: control basis type `bs`, basis dimension `k`, penalty order `m`
+- also does non-Gaussian fits: `family` argument 
+    - all exponential families
+    - but also: $t$-distribution, ZI-Poisson, Beta, ... 
+
+```{r, message = TRUE}
+cca_five_b <- cca_five %>% tfb()
+cca_five_b[1:2]
+cca_five[1:2] %>% tfb(bs = "tp", k = 55)
+cca_five[1:2] %>% tfb(bs = "ps", m = c(2,1), family = mgcv::betar(link = "cloglog"))
+```
+
+### Penalization: 
+
+**Function-specific (default), none**, prespecified (`sp`), or global: 
+
+```{r}
+layout(t(1:2))
+cca_five  %>% plot()
+cca_five_b %>% plot(col = "red")
+cca_five %>% tfb(k = 35, penalized = FALSE) %>% lines(col = "blue")
+cca_five %>% tfb(sp = .001) %>% lines(col = "orange")
+```
+
+**"Global" smoothing**:  
+
+1. estimate smoothing parameters for subsample (~10\%) of curves
+2. apply geometric mean of estimated smoothing parameters to smooth *all* curves
+
+**Advantages:**
+
+- (much) faster than optimizing penalization for each curve
+- should scale well for larg-ish datasets
+
+**Disadvantages**
+
+- no real borrowing of information across curves (very sparse or functional fragment data, e.g.)
+- still requires more observations than basis functions *per curve*
+- subsample could miss small subgroups with different roughness, over-/undersmooth parts of the data, see below.
+
+```{r, echo = FALSE}
+set.seed(1212)
+raw <- c(
+  tf_rgp(5, scale = 0.2, nugget = .05, arg = 101L) - 5,
+  tf_rgp(5, scale = 0.02, nugget = .05, arg = 101L),
+  tf_rgp(5, scale = 0.002, nugget = .05, arg = 101L) + 5)
+```
+
+Dataset with heterogeneous roughness:
+```{r}
+layout(t(1:3))
+clrs <- scales::alpha(sample(viridis(15)), .5)
+plot(raw, main = "raw", col = clrs)
+plot(tfb(raw, k = 55), main = "separate", col = clrs)
+plot(tfb(raw, k = 55, global = TRUE), main = "global", col = clrs)
+```
+
+###  **`tfb`** FPC-based
+
+- uses either 
+    - simple unregularized SVD of the data matrix ("`smooth = FALSE`")
+    - or smoothed covariance estimate from `refund::fpca.sc`
+- corresponding FPC basis and mean function saved as `tfd`-object
+- observed functions are linear combinations of those.
+
+```{r}
+(cca_five_fpc <- cca_five %>% tfb_fpc(smooth = FALSE, pve = .999))
+(cca_five_fpc_smooth <- cca_five %>% tfb_fpc(pve = .95))
+```
+
+```{r}
+layout(t(1:2))
+cca_five %>% plot()
+cca_five_fpc  %>% plot(col = "red", ylab = "tfb_fpc(cca_five)")
+cca_five_fpc_smooth %>% lines(col = "blue")
+```
+
+
+# `tf`-Class: Methods
+
+**`tidyfun`** implements almost all types of operations that are available for conventional
+numerical or logical vectors for `tf`-vectors as well, so you can:
+
+### subset & subassign:
+
+```{r}
+cca_five[1:2]
+cca_five[1:2] = cca_five[2:1]
+cca_five
+```
+
+### compare & compute:
+
+```{r, echo = FALSE}
+n_cca_five = names(cca_five)
+cca_five = unname(cca_five)
+```
+
+```{r}
+cca_five[1] + cca_five[1] == 2 * cca_five[1]
+log(exp(cca_five[2])) == cca_five[2]
+cca_five - (2:-2) != cca_five 
+```
+
+```{r, echo = FALSE}
+names(cca_five) = n_cca_five
+```
+
+### summarize: 
+
+```{r}
+c(mean = mean(cca_five), sd = sd(cca_five))
+
+tf_depth(cca_five) ## Modified Band-2 Depth (à la Sun/Genton/Nychka, 2012), others to come.
+median(cca_five) == cca_five[which.max(tf_depth(cca_five))]
+```
+
+In addition, **`tidyfun`** provides methods specific for functional data:
+
+### evaluate:
+
+`tf`-objects have a special `[`-operator: Its second argument specifies 
+`arg`ument values at which to evaluate the functions and has some additional options, 
+so it's easy to get point values for `tf` objects: 
+
+```{r, warning  = FALSE}
+cca_five[1:2, seq(0, 1, l = 3)]
+cca_five["B", seq(0, .15, l = 3), interpolate = FALSE]
+cca_five[1:2, seq(0, 1, l = 7), matrix = FALSE] %>% str
+```
+
+
+### (simple, local) smoothing
+
+```{r}
+layout(t(1:3))
+cca_five %>% plot(alpha = .2, ylab = "lowess")
+cca_five %>% tf_smooth("lowess") %>% lines(col = pal_5)
+
+cca_five %>% plot(alpha = .2, ylab = "rolling median (k=5)")
+cca_five %>% tf_smooth("rollmedian", k = 5) %>% lines(col = pal_5)
+
+cca_five %>% plot(alpha = .2, ylab = "Savitzky-Golay (quartic, 11 steps)")
+cca_five %>% tf_smooth("savgol", fl = 11) %>% lines(col = pal_5)
+```
+
+### differentiate & integrate:
+
+```{r}
+layout(t(1:3))
+cca_five %>% plot(col = pal_5)
+cca_five %>% tf_smooth() %>% tf_derive() %>% plot(col = pal_5, ylab = "tf_derive(tf_smooth(cca_five))")
+cca_five %>% tf_integrate(definite = FALSE) %>%  plot(col = pal_5)
+```
+```{r}
+cca_five %>% tf_integrate()
+```
+
+### query
+
+**`tidyfun`** makes it easy to find (ranges of) `arg`uments $t$ satisfying a condition on `value` $f(t)$ (and `arg`ument $t$):
+
+```{r}
+cca_five %>% tf_anywhere(value > .65)
+cca_five[1:2] %>% tf_where(value > .6, "all")
+cca_five[2] %>% tf_where(value > .6, "range")
+cca_five %>% tf_where(value > .6 & arg > .5, "first")
+```
+
+### zoom & query
+
+```{r, ex-fig2}
+cca_five %>% plot(xlim = c(-0.15, 1), col = pal_5, lwd = 2)
+text(x = -.1, y = cca_five[,0.07], labels = names(cca_five), col = pal_5, cex = 1.5)
+median(cca_five) %>% lines(col = pal_5[3], lwd = 4)
+```
+
+```{r}
+cca_five %>% tf_where(value == max(value), "first")
+cca_five[c("A", "D")] %>% tf_zoom(.5, 1) %>% tf_where(value == max(value), "first")
+cca_five %>% tf_zoom(0.2, 0.6) %>% tf_anywhere(value <= median(cca_five)[, arg])
+```
+
+
+
+
