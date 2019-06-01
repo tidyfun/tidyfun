@@ -89,7 +89,7 @@
       <h1>tf Vectors and Operations</h1>
                         <h4 class="author">Fabian Scheipl</h4>
             
-            <h4 class="date">2019-05-31</h4>
+            <h4 class="date">2019-06-01</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/fabian-s/tidyfun/blob/master/vignettes/x01_tf_Vectors.Rmd"><code>vignettes/x01_tf_Vectors.Rmd</code></a></small>
       <div class="hidden name"><code>x01_tf_Vectors.Rmd</code></div>
@@ -131,7 +131,7 @@
 <h2 class="hasAnchor">
 <a href="#example-data" class="anchor"></a>Example Data</h2>
 <p>The code below creates some example data used in this vignette (and is explained in the <a href="https://fabian-s.github.io/tidyfun/articles/02_Conversion.html">data conversion</a> vignette).</p>
-<p>First we extract two <code>tf</code> vectors from the <code><a href="../reference/chf_df.html">tidyfun::chf_df</a></code> dataset. These vectors contain fractional anisotropy tract profiles for the corpus callosum (<code>cca</code>) and the right corticospinal tract (<code>rcst</code>).</p>
+<p>First we extract two <code>tf</code> vectors from the <code><a href="../reference/chf_df.html">tidyfun::chf_df</a></code> dataset. These vectors contain fractional anisotropy tract profiles for the corpus callosum (<code>cca</code>) and the right corticospinal tract (<code>rcst</code>). When printed, <code>tf</code> vectors show the first few <code>arg</code> and <code>value</code> pairs for each subject.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/data">data</a></span>(<span class="st">"dti_df"</span>)</a>
 <a class="sourceLine" id="cb1-2" data-line-number="2"></a>
 <a class="sourceLine" id="cb1-3" data-line-number="3">cca =<span class="st"> </span>dti_df<span class="op">$</span>cca</a>
@@ -180,7 +180,7 @@
 <p>For illustration, we plot the vector <code>cca_five</code> below.</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(cca_five, <span class="dt">xlim =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="op">-</span><span class="fl">0.15</span>, <span class="dv">1</span>), <span class="dt">col =</span> pal_<span class="dv">5</span>)</a>
 <a class="sourceLine" id="cb3-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/text">text</a></span>(<span class="dt">x =</span> <span class="fl">-.1</span>, <span class="dt">y =</span> cca_five[,<span class="fl">0.07</span>], <span class="dt">labels =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/names">names</a></span>(cca_five), <span class="dt">col =</span> pal_<span class="dv">5</span>)</a></code></pre></div>
-<p><img src="x01_tf_Vectors_files/figure-html/ex-fig-1.png" width="768"></p>
+<p><img src="x01_tf_Vectors_files/figure-html/ex-fig-1.png" width="90%"></p>
 </div>
 <div id="tf-subclass-tfd" class="section level2">
 <h2 class="hasAnchor">
@@ -225,7 +225,7 @@
 <a class="sourceLine" id="cb6-8" data-line-number="8"><span class="co">##  $ 1001_1: num [1:55] 0 0.0185 0.037 0.0556 0.0741 ...</span></a>
 <a class="sourceLine" id="cb6-9" data-line-number="9"><span class="co">##  $ 1002_1: num [1:43] 0.222 0.241 0.259 0.278 0.296 ...</span></a>
 <a class="sourceLine" id="cb6-10" data-line-number="10">rcst[<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>] <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(<span class="dt">pch =</span> <span class="st">"x"</span>, <span class="dt">col =</span> <span class="kw">viridis</span>(<span class="dv">2</span>))</a></code></pre></div>
-<p><img src="x01_tf_Vectors_files/figure-html/unnamed-chunk-3-1.png" width="768"></p>
+<p><img src="x01_tf_Vectors_files/figure-html/unnamed-chunk-3-1.png" width="90%"></p>
 </div>
 <div id="tf-subclass-tfb" class="section level2">
 <h2 class="hasAnchor">
@@ -310,7 +310,7 @@
 <a class="sourceLine" id="cb9-9" data-line-number="9">cca_five <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/tfb.html">tfb</a></span>(<span class="dt">sp =</span> <span class="fl">.001</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/lines">lines</a></span>(<span class="dt">col =</span> <span class="st">"orange"</span>)</a>
 <a class="sourceLine" id="cb9-10" data-line-number="10"><span class="co">## Percentage of input data variability preserved in basis representation</span></a>
 <a class="sourceLine" id="cb9-11" data-line-number="11"><span class="co">## (per functional observation, approximate):</span></a></code></pre></div>
-<p><img src="x01_tf_Vectors_files/figure-html/unnamed-chunk-6-1.png" width="768"></p>
+<p><img src="x01_tf_Vectors_files/figure-html/unnamed-chunk-6-1.png" width="90%"></p>
 <pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
 ##   72.60   75.90   76.50   76.54   77.20   80.50</code></pre>
 <p><strong>“Global” smoothing</strong>:</p>
@@ -345,7 +345,7 @@
 <a class="sourceLine" id="cb11-12" data-line-number="12"><span class="co">## (per functional observation, approximate):</span></a>
 <a class="sourceLine" id="cb11-13" data-line-number="13"><span class="co">##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span></a>
 <a class="sourceLine" id="cb11-14" data-line-number="14"><span class="co">##   71.20   80.35   86.40   86.46   95.00   96.90</span></a></code></pre></div>
-<p><img src="x01_tf_Vectors_files/figure-html/unnamed-chunk-8-1.png" width="768"></p>
+<p><img src="x01_tf_Vectors_files/figure-html/unnamed-chunk-8-1.png" width="90%"></p>
 </div>
 <div id="tfb-fpc-based" class="section level3">
 <h3 class="hasAnchor">
@@ -381,7 +381,7 @@
 <a class="sourceLine" id="cb13-2" data-line-number="2">cca_five <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>()</a>
 <a class="sourceLine" id="cb13-3" data-line-number="3">cca_five_fpc  <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(<span class="dt">col =</span> <span class="st">"red"</span>, <span class="dt">ylab =</span> <span class="st">"tfb_fpc(cca_five)"</span>)</a>
 <a class="sourceLine" id="cb13-4" data-line-number="4">cca_five_fpc_smooth <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/lines">lines</a></span>(<span class="dt">col =</span> <span class="st">"blue"</span>)</a></code></pre></div>
-<p><img src="x01_tf_Vectors_files/figure-html/unnamed-chunk-10-1.png" width="768"></p>
+<p><img src="x01_tf_Vectors_files/figure-html/unnamed-chunk-10-1.png" width="90%"></p>
 </div>
 </div>
 </div>
@@ -476,7 +476,7 @@
 <a class="sourceLine" id="cb18-13" data-line-number="13">cca_five <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/tf_smooth.html">tf_smooth</a></span>(<span class="st">"savgol"</span>, <span class="dt">fl =</span> <span class="dv">11</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/lines">lines</a></span>(<span class="dt">col =</span> pal_<span class="dv">5</span>)</a>
 <a class="sourceLine" id="cb18-14" data-line-number="14"><span class="co">## Warning in tf_smooth.tfd(., "savgol", fl = 11): non-equidistant arg-values</span></a>
 <a class="sourceLine" id="cb18-15" data-line-number="15"><span class="co">## in '.' ignored by savgol.</span></a></code></pre></div>
-<p><img src="x01_tf_Vectors_files/figure-html/unnamed-chunk-17-1.png" width="768"></p>
+<p><img src="x01_tf_Vectors_files/figure-html/unnamed-chunk-17-1.png" width="90%"></p>
 </div>
 <div id="differentiate-integrate" class="section level3">
 <h3 class="hasAnchor">
@@ -486,7 +486,7 @@
 <a class="sourceLine" id="cb19-3" data-line-number="3">cca_five <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/tf_smooth.html">tf_smooth</a></span>() <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/tf_derive.html">tf_derive</a></span>() <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(<span class="dt">col =</span> pal_<span class="dv">5</span>, <span class="dt">ylab =</span> <span class="st">"tf_derive(tf_smooth(cca_five))"</span>)</a>
 <a class="sourceLine" id="cb19-4" data-line-number="4"><span class="co">## using f = 0.15 as smoother span for lowess</span></a>
 <a class="sourceLine" id="cb19-5" data-line-number="5">cca_five <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/tf_integrate.html">tf_integrate</a></span>(<span class="dt">definite =</span> <span class="ot">FALSE</span>) <span class="op">%&gt;%</span><span class="st">  </span><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(<span class="dt">col =</span> pal_<span class="dv">5</span>)</a></code></pre></div>
-<p><img src="x01_tf_Vectors_files/figure-html/unnamed-chunk-18-1.png" width="768"></p>
+<p><img src="x01_tf_Vectors_files/figure-html/unnamed-chunk-18-1.png" width="90%"></p>
 <div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" data-line-number="1">cca_five <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/tf_integrate.html">tf_integrate</a></span>()</a>
 <a class="sourceLine" id="cb20-2" data-line-number="2"><span class="co">##         B         A         C         D         E </span></a>
 <a class="sourceLine" id="cb20-3" data-line-number="3"><span class="co">## 0.5202229 0.5266713 0.5090638 0.5308612 0.4661378</span></a></code></pre></div>
@@ -519,7 +519,7 @@
 <div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" data-line-number="1">cca_five <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(<span class="dt">xlim =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="op">-</span><span class="fl">0.15</span>, <span class="dv">1</span>), <span class="dt">col =</span> pal_<span class="dv">5</span>, <span class="dt">lwd =</span> <span class="dv">2</span>)</a>
 <a class="sourceLine" id="cb22-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/text">text</a></span>(<span class="dt">x =</span> <span class="fl">-.1</span>, <span class="dt">y =</span> cca_five[,<span class="fl">0.07</span>], <span class="dt">labels =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/names">names</a></span>(cca_five), <span class="dt">col =</span> pal_<span class="dv">5</span>, <span class="dt">cex =</span> <span class="fl">1.5</span>)</a>
 <a class="sourceLine" id="cb22-3" data-line-number="3"><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/median">median</a></span>(cca_five) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/lines">lines</a></span>(<span class="dt">col =</span> pal_<span class="dv">5</span>[<span class="dv">3</span>], <span class="dt">lwd =</span> <span class="dv">4</span>)</a></code></pre></div>
-<p><img src="x01_tf_Vectors_files/figure-html/ex-fig2-1.png" width="768"></p>
+<p><img src="x01_tf_Vectors_files/figure-html/ex-fig2-1.png" width="90%"></p>
 <div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" data-line-number="1">cca_five <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/tf_where.html">tf_where</a></span>(value <span class="op">==</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Extremes">max</a></span>(value), <span class="st">"first"</span>)</a>
 <a class="sourceLine" id="cb23-2" data-line-number="2"><span class="co">##          B          A          C          D          E </span></a>
 <a class="sourceLine" id="cb23-3" data-line-number="3"><span class="co">## 0.90217391 0.07608696 1.00000000 0.10869565 0.93478261</span></a>

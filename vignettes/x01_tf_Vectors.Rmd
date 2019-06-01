@@ -15,13 +15,16 @@ vignette: >
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "##",
-  fig.width = 8, fig.height = 5.5)
+  fig.width = 8, 
+  fig.height = 5.5,
+  out.width = "90%"
+)
 
 library(tidyverse)
-library(refund)
-library(ggplot2)
 library(viridisLite)
-theme_set(theme_minimal())
+
+theme_set(theme_minimal() + theme(legend.position = "bottom"))
+
 options(
   ggplot2.continuous.colour = "viridis",
   ggplot2.continuous.fill = "viridis"
@@ -63,7 +66,7 @@ This vignette introduces the `tf` class, as well as the `tfd` and `tfb` subclass
 
 The code below creates some example data used in this vignette (and is explained in the [data conversion](https://fabian-s.github.io/tidyfun/articles/02_Conversion.html) vignette). 
 
-First we extract two `tf` vectors from the `tidyfun::chf_df` dataset. These vectors contain fractional anisotropy tract profiles for the corpus callosum (`cca`) and the right corticospinal tract (`rcst`).
+First we extract two `tf` vectors from the `tidyfun::chf_df` dataset. These vectors contain fractional anisotropy tract profiles for the corpus callosum (`cca`) and the right corticospinal tract (`rcst`). When printed, `tf` vectors show the first few `arg` and `value` pairs for each subject.  
 
 ```{r load-dti}
 data("dti_df")
@@ -321,7 +324,5 @@ cca_five %>% tf_where(value == max(value), "first")
 cca_five[c("A", "D")] %>% tf_zoom(.5, 1) %>% tf_where(value == max(value), "first")
 cca_five %>% tf_zoom(0.2, 0.6) %>% tf_anywhere(value <= median(cca_five)[, arg])
 ```
-
-
 
 

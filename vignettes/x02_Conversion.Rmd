@@ -21,7 +21,6 @@ knitr::opts_chunk$set(
 )
 
 library(tidyverse)
-library(ggplot2)
 library(viridisLite)
 
 library(gridExtra)
@@ -47,11 +46,13 @@ Functional data have often been stored in matrices or data frames. Although thes
 
 In this vignette, we illustrate how to convert data from common structures to `tf` objects. Throughout, functional data vectors are stored as columns in a data frame to facilitate subsequent wrangling and analysis. 
 
-## Conversion from matrices
+# Conversion from matrices
 
-in these, we'll use `tfd` to get a `tf` object from a matrix. This function expects data to be organized so that each row is the functional observation for a single subject. 
+One of the most common structures for storing functional data has been a matrix. Especially when subjects are observed over the same (regular or irregular) grid, it is natural to observations on a subject in rows (or columns) of a matrix. Matrices, however, are difficult to wrangle along with data in a data frame, leading to confusing and easy-to-break subsetting across several objects. 
 
-DTI (from the `refund` package), with spaghetti plot (this code is used to create the `tidyfun::dti_df` dataset included in the package. )
+In the following examples, we'll use `tfd` to get a `tf` vector from matrices. The `tfd` function expects data to be organized so that each row is the functional observation for a single subject. It's possible to focus only on the resulting `tf` vector, but in keeping with the broader goals of `tidyfun` we'll add these as columns to a data frame.
+
+The `DTI` data in the `refund` package has been a popular example in functional data analysis. In the code below, we create a data frame (or `tibble`) containing scalar covariates, and then add columns for the `cca` and `rcst` track profiles. This code was used to create the `tidyfun::dti_df` dataset included in the package.
 
 ```{r}
 dti_df = tibble(
@@ -63,7 +64,13 @@ dti_df$cca = tfd(refund::DTI$cca, arg = seq(0,1, l = 93))
 dti_df$rcst = tfd(refund::DTI$rcst, arg = seq(0, 1, l = 55))
 ```
 
-Make a quick plot
+In `tfd`, the first argument is a matrix; `arg` defines the grid over which functions are observed. The output of `tfd` is a vector, which we include in the `dti_df` data frame. 
+
+```{r}
+dti_df
+```
+
+Finally, we'll make a quick spaghetti plot to illustrate that the complete functional data is included in each `tf` column. 
 
 ```{r}
 dti_df %>% 
@@ -73,8 +80,9 @@ dti_df %>%
   scale_alpha(guide = 'none', range = c(.2, .4))
 ```
 
+We'll repeat the same basic process using a second, and probably even-more-perennial, functional data example: the Canadian weather data in the `fda` package. Here, functional data are stored in a three-dimensional array, with dimesions corresponding to day, station, and outcome (temperature, precipitation, and log10 precipitation).
 
-Canadian weather (from the `fda` package):
+In the following, we: create a `tibble` with scalar covariates; use `tfd` to create functional data vectors; and include the resulting vectors in the dataframe. In this case, our `arg`s are days of the year, and we use `tf_smooth` to smooth the precipitation outcome. Because the matrices store functional data in columns rather than in rows, we transpose matrices in the call to `tfd`. 
 
 ```{r}
 canada = tibble(
@@ -89,7 +97,13 @@ canada$precipl10 =
   tf_smooth
 ```
 
-spaghetti -- two panels with patchwork to put them together
+The resulting data frame is shown below.
+
+```{r}
+canada
+```
+
+A plot containing both functional observations is shown below. 
 
 ```{r}
 temp_panel =
@@ -104,14 +118,13 @@ gridExtra::grid.arrange(temp_panel, precip_panel, nrow = 1)
 ```
 
 
-## From data frame
+# Conversion from a data frame
 
 ### ... in "long" format
 
-throughout, `tf_nest` is the key function. 
+"Long" format data frames containing functional data include columns containing a subject identifier, the functional argument, and the value each subject's function takes at each argument. There are also often (but not always) non-functional covariates that are repeated within a subject. For data in this form, we use `tf_nest` to produce a data frame containing a single row for each subject.
 
-
-Pig weight, from package `SemiPar`
+A first example is the pig weight data from the `SemiPar` package, which is a nice example from longitudinal data analysis. This includes columns for `id.num`, `num.weeks`, and `weight` -- which correspond to the subject, argument, and value. 
 
 ```{r}
 data("pig.weights", package = "SemiPar")
@@ -121,6 +134,7 @@ pig.weights = as_tibble(pig.weights)
 pig.weights
 ```
 
+We create `pig_df` by nesting weight within subject. The result is a data frame containing a single row for each pig, and columns for `id.num` and the `weight` function.
 
 ```{r}
 pig_df = 
@@ -130,20 +144,21 @@ pig_df =
 pig_df
 ```
 
+We'll make a quick plot to show the result.
+
 ```{r}
 pig_df %>% 
   ggplot(aes(y = weight)) + 
   geom_spaghetti()
 ```
 
-
-FEV from `ALA` package (installation is from non-cran):
+A second example uses the `ALA::fev1` dataset. `ALA` is not available on CRAN but can be installed using the line below.
 
 ```{r, eval = FALSE}
 install.packages("ALA", repos="http://R-Forge.R-project.org")
 ```
 
-useful because you can nest multiple functions, if they exist in the dataset
+In this dataset, both `height` and `logFEV1` are observed at multiple ages for each child; that is, there are two functions observed simultaneously, over a shared argument. We can use `tf_nest` to create a dataframe with a single row for each subject, which includes both non-functional covariates (like age and height at baseline), and functional observations `logFEV1` and `height`. 
 
 ```{r, eval = FALSE}
 ALA::fev1 %>% 
@@ -156,78 +171,64 @@ ALA::fev1 %>%
 
 ### ... in "wide" format
 
-Doesn't happen too often, but sometimes you get data in "wide" format. Here we convert DTI data to look like this, then use `tf_gather`
+In some cases functional data are stored in "wide" format, meaning that there are separate columns for each argument, and values are stored in these columns. In this case, `tf_gather` can be use to collapse across columns to produce a function for each subject.
+
+The example below again uses the `refund::DTI` dataset. We convert `cca` so that, instead of acting as a matrix, it is in "wide" format. We then use `tf_gather` to combine the `cca` observations into a function. 
 
 ```{r}
-dti = 
-  refund::DTI %>% 
+dti_df = 
+  refund::DTI %>%
   janitor::clean_names() %>% 
   select(-starts_with("rcst")) %>% 
-  tf_gather(starts_with("cca"))
+  tf_gather(starts_with("cca")) %>% 
+  as_tibble()
 ```
 
 
-## Other formats
+# Other formats
 
 `fda` and `fd` coming soon ...
 
-## Back to matrices
 
+# Reversing the conversion
 
-THINGS BREAK BELOW HERE
+**`tidyfun`** includes a wide range of tools for exploratory analysis and visualization, but some analysis approaches require data to be stored in more traditional formats. Several functions are available to aid in this conversion.
 
+## Conversion to data frames
 
+The functions `tf_unnest` and `tf_spread` reverse the operations in `tf_nest` and `tf_gather`, respectively -- that is, they take a data frame with a functional observation and produce long or wide data frames. We'll illustrate these with the `pig_df` data set. 
 
+First, to produce a long-format dataf rame, one can use `tf_unnest`:
 
-
-
-### wrangling `tf`-objects inside data frames: `tidyr`
-
-**`tidyfun`** provides `tf_` variants of `tidyr`-verbs to reshape and reformat functional data while keeping it in sync with other covariates:
-
-
-- `tf_spread:` `tf` $\rightarrow$ columns for each `arg`
-- `tf_gather:` columns for each `arg` $\rightarrow$ `tf`
-
-```{r, tidyr}
-# spread tf out into columns for each arg
-dti_wide = dti_df %>% tf_spread(cca, arg = seq(0, 1, length = 93))
-dti_wide[, 1:7] %>% glimpse()  
-
-# collect all columns into a single tf-column 
-# (... will try to guess arg from column names, name of tf from their prefix)
-dti_wide %>% tf_gather(matches("cca_")) %>% glimpse()
+```{r}
+pig_df %>% 
+  tf_unnest()
 ```
 
-- `tf_unnest:` `tf` $\rightarrow$ data in long format (`id`, `arg`, `value`)  
-- `tf_nest  :` data in long format (`id`, `arg`, `value`)  $\rightarrow$ `tf`
+To produce a wide-format data frame, one can use `tf_spread`:
 
-```{r, tidyr2}
-# unnest tf by writing 3 loong columns id, arg, value:
-# (will try to avoid unnecessary duplication of columns)
-dti_long = dti_df %>% tf_unnest(cca); dti_long %>% glimpse()  
-# nest tf by writing 3 loong columns id, arg, value:
-dti_long %>% tf_nest(cca_value, .id = cca_id, .arg = cca_arg) %>% glimpse()
+```{r}
+pig_df %>% 
+  tf_spread()
 ```
 
-Note that `left/right_join`-operations as well as `bind_rows` do not currently work reliably 
-for tables with `tfd` or `tfb`-columns, see [tidyfun/issues/53](https://github.com/fabian-s/tidyfun/issues/53). `bind_rows` can be easily avoided by using `rbind`, which still works, instead.
+## Converting back to a matrix or data frame
 
+To convert `tf` vector to a matrix, use `as.matrix`:
 
+```{r}
+weight_vec = pig_df$weight
 
+weight_matrix = 
+  weight_vec %>% as.matrix
 
-### convert & construct
-
-To & from list, matrix or data frame with `"id"`,`"arg"`,`"value"`-columns:
-
-```{r, eval = FALSE}
-ex_matrix <- ex %>% as.matrix()
-ex_matrix[1:2, 1:3]
-
-ex_df <- ex %>% as.data.frame()
-str(ex_df)
-
-ex_matrix[1:2, ] %>% tfd()
-
-tfd(ex_df) == tfd(ex_matrix)
+weight_matrix[1:3, 1:5]
 ```
+
+To convert a `tf` vector to a standalone data frame with `"id"`,`"arg"`,`"value"`-columns, use `as.data.frame()`:
+
+```{r}
+weight_vec %>% 
+  as.data.frame()
+```
+

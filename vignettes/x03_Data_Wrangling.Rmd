@@ -15,12 +15,16 @@ vignette: >
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "##",
-  fig.width = 8, fig.height = 5.5)
+  fig.width = 8, 
+  fig.height = 5.5,
+  out.width = "90%"
+)
 
 library(tidyverse)
-library(ggplot2)
 library(viridisLite)
-theme_set(theme_minimal())
+
+theme_set(theme_minimal() + theme(legend.position = "bottom"))
+
 options(
   ggplot2.continuous.colour = "viridis",
   ggplot2.continuous.fill = "viridis"
@@ -36,18 +40,18 @@ pal_5 = viridis(7)[-(1:2)]
 set.seed(1221)
 ```
 
-## Data manipulation using **`tidyfun`**
+# Data manipulation using **`tidyfun`**
 
-As stated elsewhere, the goal of **`tidyfun`** is to provide accessible and well-documented software that **makes functional data analysis in `R` easy**. In this vignette, we explore some aspects of data manipulation that are possible using **`tidyfun`**, emphasizing compatibility with the `tidyverse`.
+The goal of **`tidyfun`** is to provide accessible and well-documented software that **makes functional data analysis in `R` easy**. In this vignette, we explore some aspects of data manipulation that are possible using **`tidyfun`**, emphasizing compatibility with the `tidyverse`.
 
 Other vignettes have examined the **`tfd`** & **`tfb`** data types, and how to convert common formats for functional data (e.g. matrices, long- and wide-format data frames, `fda` objects) in these new data types. Because our goal is "tidy" data manipulation for functional data analysis, the result of data conversion processes has been a data frame in which a column contains the functional data of interest. This vignette starts from that point.
 
-Throughout, we make use of some visualization tools -- these are explained in more detail in the Visualization vignette.
+Throughout, we make use of some visualization tools -- these are explained in more detail in the [visualization](https://fabian-s.github.io/tidyfun/articles/04_Visualization.html) vignette.
 
 
-## Example Data
+# Example datasets
 
-The data used in this vignette is the `tidyfun::chf_df` dataset. The data contain minute-by-minute observations of log activity counts (stored as a `tfd` vector called `activity`) over seven days for each of 47 subjects with congestive heart failure. In addition to `id` and `activity`, we observe several covariates. 
+The datasets used in this vignette are the `tidyfun::chf_df` and `tidyfun::dti_df` dataset. The first contains minute-by-minute observations of log activity counts (stored as a `tfd` vector called `activity`) over seven days for each of 47 subjects with congestive heart failure. In addition to `id` and `activity`, we observe several covariates. 
 
 ```{r view_chf}
 data(chf_df)
@@ -55,13 +59,29 @@ data(chf_df)
 chf_df
 ```
 
+A quick plot of these data is below.
+
 ```{r plot_chf}
 chf_df %>% 
   ggplot(aes(y = activity)) + geom_spaghetti(alpha = .05)
 ```
 
+The `tidyfun::dti_df` contains ractional anisotropy (FA) tract profiles for the corpus callosum (cca) and the right corticospinal tract (rcst), along with several covariates. 
 
-## Existing `tidyverse` functions
+```{r view_dti}
+data(dti_df)
+
+dti_df
+```
+
+A quick plot of the `cca` tract profiles is below.
+
+```{r plot_dti}
+dti_df %>% 
+  ggplot(aes(y = cca)) + geom_spaghetti(alpha = .05)
+```
+
+# Existing `tidyverse` functions
 
 Dataframes using `tidyfun` to store functional observations can be manipulated using tools from `dplyr`, including `select` and `filter`:
 
@@ -118,8 +138,19 @@ left_join(monday_df, friday_df, by = "id") %>%
   gather(key = day, value = activity, monday_act:friday_act)
 ```
 
+Similar tidying can be done for the DTI data.
 
-## New `tidyfun` functions
+```{r}
+dti_df %>% 
+  group_by(case, sex) %>% 
+  summarize(mean_rcst = mean(rcst, na.rm = TRUE)) %>% 
+  ggplot(aes(y = mean_rcst, color = case)) + 
+    geom_spaghetti(size = 2) + 
+    facet_grid(~sex)
+```
+
+
+# New `tidyfun` functions
 
 Some `dplyr` functions are most useful in conjunction with new functions in `tidyfun`. For example, one might use `filter` with `tf_anywhere` to filter based on the values of observed functions:
 
@@ -130,7 +161,16 @@ chf_df %>%
   geom_spaghetti()
 ```
 
-The existing `mutate` function can be combined with several `tidyfun` functions, including `tf_smooth` and `tf_zoom`.
+A second example of this functionality in the DTI data is below.
+
+```{r}
+dti_df %>% 
+  filter(tf_anywhere(cca, value < .26)) %>% 
+  ggplot(aes(y = cca)) + 
+    geom_spaghetti()
+```
+
+The existing `mutate` function can be combined with several `tidyfun` functions, including `tf_smooth`, `tf_zoom`, and `tf_deriv`.
 
 One can smooth existing observations using `tf_smooth`:
 
@@ -164,7 +204,19 @@ chf_df %>%
   geom_spaghetti()
 ```
 
-As we've seen elsewhere, it's possible to convert from `tfd` to `tfb` vectors; this can be done inside a `mutate` statement as part of a data processing pipeline:
+One can also compute derivatives as part of a processing pipeline. 
+
+```{r}
+dti_df %>%
+  mutate(
+    cca_smooth = tfb(cca, k = 15, verbose = FALSE),
+    cca_deriv = tf_derive(cca_smooth)
+  ) %>%
+  ggplot(aes(y = cca_deriv)) + 
+    geom_spaghetti()
+```
+
+Lastly, we note that it's possible to convert from `tfd` to `tfb` vectors; this can be done inside a `mutate` statement as part of a data processing pipeline:
 
 ```{r}
 chf_df %>% 
@@ -172,8 +224,7 @@ chf_df %>%
   select(id, gender, act_basis)
 ```
 
-
-## Some not-allowed tidying
+# Some not-allowed tidying
 
 Unfortunately, based on the existing infrastructure for non-standard data types in `tidyr`, some operations are not possible at this time. The most important of these to note are binds.
 
@@ -183,59 +234,4 @@ Using the datasets defined above, it would ideally be possible to combine these 
 bind_rows(monday_df, friday_df)
 ```
 
-In many cases, the need for this operation can be avoided through suitable data wrangling prior to converting functional data to a `tf` object.
-
-
-
-
-
-
-
-
-
-
-
-
-# Wrangling `tf`-objects inside data frames
-
-For a more detailed discussion of the topic of this section, please see the [`Data Manipulation`](https://fabian-s.github.io/tidyfun/articles/02_Data_Manipulation.html) vignette.
-
-
-### wrangling `tf`-objects inside data frames: `dplyr`
-
-**`dplyr`** verbs **`filter`**, **`select`**, **`mutate`**, **`summarize`** work on **`tf`**-columns - e.g.:
-
-```{r}
-dti = tibble(
-  id = refund::DTI$ID, 
-  sex = refund::DTI$sex, 
-  case = factor(ifelse(refund::DTI$case, "MS", "control")))
-
-dti$cca = tfd(refund::DTI$cca, arg = seq(0,1, l = 93))
-dti$rcst = tfd(refund::DTI$rcst, arg = seq(0, 1, l = 55))
-
-dti %>% 
-  ggplot() + 
-  geom_spaghetti(aes(y = cca, col = case, alpha = .2 + .4*(case == "control"))) +
-  facet_wrap(~ sex) + 
-  scale_alpha(guide = 'none', range = c(.2, .4))
-```
-
-
-```{r, dplyr}
-# group-wise functional means:
-dti %>% group_by(case, sex) %>% 
-  summarize(mean_rcst = mean(rcst, na.rm = TRUE)) %>% 
-  ungroup()
-# which subjects go below cca = .26:
-dti %>% filter(tf_anywhere(cca, value < .26))
-# mutate and create derived functional data
-dti %>%
-  mutate(
-    rcst_smooth = tfb(rcst, k = 15, verbose = FALSE),
-    rcst_deriv = tf_derive(rcst_smooth)
-  ) %>%
-  glimpse
-```
-
-
+In many cases, the need for this operation can be avoided through suitable data wrangling prior to converting functional data to a `tf` object. It's also possible to `bind_rows` avoid by using `rbind`, which still works. See [tidyfun/issues/53](https://github.com/fabian-s/tidyfun/issues/53) for a discussion of related issues.  

@@ -95,8 +95,8 @@
 <a href="#tidyfun" class="anchor"></a>tidyfun <img src="https://github.com/fabian-s/tidyfun/blob/master/README_files/figures/tidyfun_hex.gif?raw=true" align="right" height="150">
 </h1></div>
 
-<p>The goal of <strong><code>tidyfun</code></strong> is to provide accessible and well-documented software that <strong>makes functional data analysis in <code>R</code> easy</strong>, specifically:<br>
-data wrangling and exploratory analysis.</p>
+<p>The goal of <strong><code>tidyfun</code></strong> is to provide accessible and well-documented software that <strong>makes functional data analysis in <code>R</code> easy</strong> – specifically data wrangling and exploratory analysis. This is achieved by introducing a new data type (<code>tf</code>). Vectors of class <code>tf</code> can be operated on using many standard functions (<code>+</code>, <code>mean</code>, etc.) as well as several new functions in <code>tidyfun</code> (<code>tf_smooth</code>, <code>tf_where</code>).</p>
+<p><strong>Crucially</strong>, vectors of class <code>tf</code> can be included in data frames containing other variables, enabling data manipulation using <code>tidyverse</code> tools. This approach is connected to the conceptual framework in functional data analysis, which assumes that <em>complete functions</em> are the unit of observation; with <code>tidyfun</code>, full curves sit alongside numeric, factor, and other observations on the same subject.</p>
 <p><strong><code>tidyfun</code></strong> provides:</p>
 <ul>
 <li>new <strong>data types</strong> for representing functional data: <strong><code>tfd</code></strong> &amp; <strong><code>tfb</code></strong>
@@ -117,10 +117,34 @@ data wrangling and exploratory analysis.</p>
 <li>
 <a href="https://fabian-s.github.io/tidyfun/articles/04_Visualization.html">Visualizing</a> tidy functional data</li>
 </ul>
+<p>The result is a package that enables exploratory data analysis like the following, which computes and then smooths group-specific mean curves in the <code>dti_df</code> dataset, and plots the result:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1">dti_df</a>
+<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="co">## # A tibble: 382 x 5</span></a>
+<a class="sourceLine" id="cb1-3" data-line-number="3"><span class="co">##       id sex    case   cca                        rcst                     </span></a>
+<a class="sourceLine" id="cb1-4" data-line-number="4"><span class="co">##    &lt;dbl&gt; &lt;fct&gt;  &lt;fct&gt;  &lt;tfd_irrg&gt;                 &lt;tfd_irrg&gt;               </span></a>
+<a class="sourceLine" id="cb1-5" data-line-number="5"><span class="co">##  1  1001 female contr… 1001_1: (0.000,0.49);(0.0… 1001_1: (0.000,0.26);(0.…</span></a>
+<a class="sourceLine" id="cb1-6" data-line-number="6"><span class="co">##  2  1002 female contr… 1002_1: (0.000,0.47);(0.0… 1002_1: ( 0.22,0.44);( 0…</span></a>
+<a class="sourceLine" id="cb1-7" data-line-number="7"><span class="co">##  3  1003 male   contr… 1003_1: (0.000,0.50);(0.0… 1003_1: ( 0.22,0.42);( 0…</span></a>
+<a class="sourceLine" id="cb1-8" data-line-number="8"><span class="co">##  4  1004 male   contr… 1004_1: (0.000,0.40);(0.0… 1004_1: (0.000,0.51);(0.…</span></a>
+<a class="sourceLine" id="cb1-9" data-line-number="9"><span class="co">##  5  1005 male   contr… 1005_1: (0.000,0.40);(0.0… 1005_1: ( 0.22,0.40);( 0…</span></a>
+<a class="sourceLine" id="cb1-10" data-line-number="10"><span class="co">##  6  1006 male   contr… 1006_1: (0.000,0.45);(0.0… 1006_1: (0.056,0.47);(0.…</span></a>
+<a class="sourceLine" id="cb1-11" data-line-number="11"><span class="co">##  7  1007 male   contr… 1007_1: (0.000,0.55);(0.0… 1007_1: (0.000,0.52);(0.…</span></a>
+<a class="sourceLine" id="cb1-12" data-line-number="12"><span class="co">##  8  1008 male   contr… 1008_1: (0.000,0.45);(0.0… 1008_1: (0.000,0.33);(0.…</span></a>
+<a class="sourceLine" id="cb1-13" data-line-number="13"><span class="co">##  9  1009 male   contr… 1009_1: (0.000,0.50);(0.0… 1009_1: (0.000,0.57);(0.…</span></a>
+<a class="sourceLine" id="cb1-14" data-line-number="14"><span class="co">## 10  1010 male   contr… 1010_1: (0.000,0.46);(0.0… 1010_1: ( 0.22,0.44);( 0…</span></a>
+<a class="sourceLine" id="cb1-15" data-line-number="15"><span class="co">## # … with 372 more rows</span></a>
+<a class="sourceLine" id="cb1-16" data-line-number="16"></a>
+<a class="sourceLine" id="cb1-17" data-line-number="17">dti_df <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb1-18" data-line-number="18"><span class="st">  </span><span class="kw">group_by</span>(case, sex) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb1-19" data-line-number="19"><span class="st">  </span><span class="kw">summarize</span>(<span class="dt">mean_cca =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/mean">mean</a></span>(cca, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb1-20" data-line-number="20"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> mean_cca, <span class="dt">color =</span> case)) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb1-21" data-line-number="21"><span class="st">    </span><span class="kw"><a href="reference/ggspaghetti.html">geom_spaghetti</a></span>(<span class="dt">size =</span> <span class="dv">2</span>) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb1-22" data-line-number="22"><span class="st">    </span><span class="kw">facet_grid</span>(<span class="op">~</span>sex)</a></code></pre></div>
+<p><img src="index_files/figure-html/unnamed-chunk-1-1.png" width="90%"></p>
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1">devtools<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/devtools/topics/reexports">install_github</a></span>(<span class="st">"fabian-s/tidyfun"</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1">devtools<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/devtools/topics/reexports">install_github</a></span>(<span class="st">"fabian-s/tidyfun"</span>)</a></code></pre></div>
 </div>
 <div id="what-does-it-do" class="section level2">
 <h2 class="hasAnchor">
@@ -140,13 +164,21 @@ data wrangling and exploratory analysis.</p>
 </li>
 </ul>
 <p>are defined for <strong><code>tidyfun</code></strong>’s data structures (<a href="https://fabian-s.github.io/tidyfun/reference/index.html#section-arithmetic-logical-and-summary-functions">more</a>).</p>
-<p>The <code>tf</code> objects are basically glorified lists, so they work well as columns in data frames. That makes it a lot easier to keep your other data and functional measurements together in one object for preprocessing, exploratory analysis and description.</p>
-<p>At the same time, these objects actually behave like vectors of <em>functions</em> to some extent, i.e., they can be evaluated on any point in their domain, they can be integrated or differentiated, etc.</p>
+<p>The <code>tf</code> objects are basically glorified lists, so they work well as columns in data frames. That makes it a lot easier to keep your other data and functional measurements together in one object for preprocessing, exploratory analysis and description. At the same time, these objects actually behave like vectors of <em>functions</em> to some extent, i.e., they can be evaluated on any point in their domain, they can be integrated or differentiated, etc.</p>
+<p><a href="https://fabian-s.github.io/tidyfun/articles/x01_tf_Vectors.html">See here</a>) for more information on the operations defined for <code>tf</code> vectors.</p>
+</div>
+<div id="methods-for-converting-existing-data-to-tf" class="section level4">
+<h4 class="hasAnchor">
+<a href="#methods-for-converting-existing-data-to-tf" class="anchor"></a>Methods for converting existing data to <code>tf</code>
+</h4>
+<p><strong><code>tidyfun</code></strong> includes functions <code>tfd</code> and <code>tfb</code> for converting matrices, data frames, and some other types to <code>tf</code> vectors. It also provides <code>tf_gather</code> &amp; <code>tf_nest</code> in order to reshape tables with functional data, by going from wide to narrow or from long to short; functions like <code>as.matrix</code>, <code>tf_spread</code> &amp; <code>tf_unnest</code> can reverse these data conversions.</p>
+<p><a href="https://fabian-s.github.io/tidyfun/articles/x02_Conversion.html">See here</a> details on getting data into (and out of) the <code>tf</code> format.</p>
 </div>
 <div id="tidyverse-verbs-for-dealing-with-functional-data-inside-data-frames" class="section level4">
 <h4 class="hasAnchor">
 <a href="#tidyverse-verbs-for-dealing-with-functional-data-inside-data-frames" class="anchor"></a><code>tidyverse</code> verbs for dealing with functional data inside data frames</h4>
-<p>All <code>dplyr</code> verbs work on <code>tf</code>-columns, so you can <code>filter</code>, <code>mutate</code>, <code>summarize</code> etc functional data pretty much like conventional data.<br><strong><code>tidyfun</code></strong> also provides <code>tf_gather</code> &amp; <code>tf_spread</code>, <code>tf_nest</code> &amp; <code>tf_unnest</code> in order to reshape tables with functional data, i.e., go from wide to narrow, or from long to short, and <em>vice versa</em> (<a href="https://fabian-s.github.io/tidyfun/articles/x02_Data_Manipulation.html">see here</a>).</p>
+<p>All <code>dplyr</code> verbs work on <code>tf</code>-columns, so you can <code>filter</code>, <code>mutate</code>, <code>group_by</code> &amp; <code>summarize</code>, etc, functional data pretty much like conventional “tidy” data. <strong><code>tidyfun</code></strong> adds several functions that are useful in conjunction with these, like <code>tf_anywhere</code> and <code>tf_smooth</code>.</p>
+<p><a href="https://fabian-s.github.io/tidyfun/articles/x03_Data_Wrangling.html">See here</a> to see how you can wrangle functional data.</p>
 </div>
 <div id="new-ggplot2-geoms-and-stats-for-functional-data" class="section level4">
 <h4 class="hasAnchor">
@@ -162,7 +194,8 @@ data wrangling and exploratory analysis.</p>
 <li>
 <strong><code>geom_capellini</code></strong> for <a href="http://ggobi.github.io/ggally/index_files/figure-html/glyphs-basic-usage-1.png">glyphs</a> plots (i.e., sparklines),</li>
 </ul>
-<p>as well as new methods for <code>plot</code>, <code>lines</code> and <code>points</code> for quick and easy visualizations of functional data (<a href="https://fabian-s.github.io/tidyfun/reference/index.html#section-visualization-display">more</a>).</p>
+<p>as well as new methods for base R graphics functions <code>plot</code>, <code>lines</code> and <code>points</code> for quick and easy visualizations of functional data.</p>
+<p><a href="https://fabian-s.github.io/tidyfun/reference/index.html#section-visualization-display">See here</a> for illustrations of visualization approaches.</p>
 <hr>
 <p>Found a bug? Got a question? Missing some functionality?<br>
 Please let us know so we can make it better.</p>
