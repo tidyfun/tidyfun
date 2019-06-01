@@ -61,6 +61,9 @@
     <li>
       <a href="../articles/x03_Visualization.html">Visualization</a>
     </li>
+    <li>
+      <a href="../articles/x04_Conversion.html">Converting data to `tf`</a>
+    </li>
   </ul>
 </li>
       </ul>
@@ -86,7 +89,7 @@
       <h1>Introducing tidyfun</h1>
                         <h4 class="author">Fabian Scheipl</h4>
             
-            <h4 class="date">2019-05-27</h4>
+            <h4 class="date">2019-05-30</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/fabian-s/tidyfun/blob/master/vignettes/x01_Intro.Rmd"><code>vignettes/x01_Intro.Rmd</code></a></small>
       <div class="hidden name"><code>x01_Intro.Rmd</code></div>
@@ -141,31 +144,29 @@ data wrangling and exploratory analysis.</p>
 <a href="#example-data" class="anchor"></a>Example Data</h2>
 <p>Some example data used in this vignette (the code used to create these will be explained later) –</p>
 <p>a prepped version of the <code><a href="https://www.rdocumentation.org/packages/refund/topics/DTI">refund::DTI</a></code> dataset with 2 functional covariates:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1">dti &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/with">with</a></span>(refund<span class="op">::</span>DTI, </a>
-<a class="sourceLine" id="cb1-2" data-line-number="2">            <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(</a>
-<a class="sourceLine" id="cb1-3" data-line-number="3">              <span class="dt">id =</span> ID, </a>
-<a class="sourceLine" id="cb1-4" data-line-number="4">              <span class="dt">sex =</span> sex, </a>
-<a class="sourceLine" id="cb1-5" data-line-number="5">              <span class="dt">case =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/factor">factor</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/ifelse">ifelse</a></span>(case, <span class="st">"MS"</span>, <span class="st">"control"</span>)))</a>
-<a class="sourceLine" id="cb1-6" data-line-number="6">            ) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb1-7" data-line-number="7"><span class="st">  </span>as.tbl <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb1-8" data-line-number="8"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">cca =</span> <span class="kw"><a href="../reference/tfd.html">tfd</a></span>(DTI<span class="op">$</span>cca, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/seq">seq</a></span>(<span class="dv">0</span>,<span class="dv">1</span>, <span class="dt">l =</span> <span class="dv">93</span>)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb1-9" data-line-number="9"><span class="st">           </span><span class="kw"><a href="../reference/tfd.html">tfd</a></span>(<span class="dt">arg =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/seq">seq</a></span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dt">l =</span> <span class="dv">93</span>)),</a>
-<a class="sourceLine" id="cb1-10" data-line-number="10">         <span class="dt">rcst =</span> <span class="kw"><a href="../reference/tfd.html">tfd</a></span>(DTI<span class="op">$</span>rcst, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/seq">seq</a></span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dt">l =</span> <span class="dv">55</span>)))</a>
-<a class="sourceLine" id="cb1-11" data-line-number="11">dti</a>
-<a class="sourceLine" id="cb1-12" data-line-number="12"><span class="co">## # A tibble: 382 x 5</span></a>
-<a class="sourceLine" id="cb1-13" data-line-number="13"><span class="co">##       id sex    case   cca                        rcst                     </span></a>
-<a class="sourceLine" id="cb1-14" data-line-number="14"><span class="co">##    &lt;dbl&gt; &lt;fct&gt;  &lt;fct&gt;  &lt;tfd_reg&gt;                  &lt;tfd_irrg&gt;               </span></a>
-<a class="sourceLine" id="cb1-15" data-line-number="15"><span class="co">##  1  1001 female contr… 1001_1: (0.000,0.49);(0.0… 1001_1: (0.000,0.26);(0.…</span></a>
-<a class="sourceLine" id="cb1-16" data-line-number="16"><span class="co">##  2  1002 female contr… 1002_1: (0.000,0.47);(0.0… 1002_1: ( 0.22,0.44);( 0…</span></a>
-<a class="sourceLine" id="cb1-17" data-line-number="17"><span class="co">##  3  1003 male   contr… 1003_1: (0.000,0.50);(0.0… 1003_1: ( 0.22,0.42);( 0…</span></a>
-<a class="sourceLine" id="cb1-18" data-line-number="18"><span class="co">##  4  1004 male   contr… 1004_1: (0.000,0.40);(0.0… 1004_1: (0.000,0.51);(0.…</span></a>
-<a class="sourceLine" id="cb1-19" data-line-number="19"><span class="co">##  5  1005 male   contr… 1005_1: (0.000,0.40);(0.0… 1005_1: ( 0.22,0.40);( 0…</span></a>
-<a class="sourceLine" id="cb1-20" data-line-number="20"><span class="co">##  6  1006 male   contr… 1006_1: (0.000,0.45);(0.0… 1006_1: (0.056,0.47);(0.…</span></a>
-<a class="sourceLine" id="cb1-21" data-line-number="21"><span class="co">##  7  1007 male   contr… 1007_1: (0.000,0.55);(0.0… 1007_1: (0.000,0.52);(0.…</span></a>
-<a class="sourceLine" id="cb1-22" data-line-number="22"><span class="co">##  8  1008 male   contr… 1008_1: (0.000,0.45);(0.0… 1008_1: (0.000,0.33);(0.…</span></a>
-<a class="sourceLine" id="cb1-23" data-line-number="23"><span class="co">##  9  1009 male   contr… 1009_1: (0.000,0.50);(0.0… 1009_1: (0.000,0.57);(0.…</span></a>
-<a class="sourceLine" id="cb1-24" data-line-number="24"><span class="co">## 10  1010 male   contr… 1010_1: (0.000,0.46);(0.0… 1010_1: ( 0.22,0.44);( 0…</span></a>
-<a class="sourceLine" id="cb1-25" data-line-number="25"><span class="co">## # … with 372 more rows</span></a></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1">dti =<span class="st"> </span><span class="kw">tibble</span>(</a>
+<a class="sourceLine" id="cb1-2" data-line-number="2">  <span class="dt">id =</span> refund<span class="op">::</span>DTI<span class="op">$</span>ID, </a>
+<a class="sourceLine" id="cb1-3" data-line-number="3">  <span class="dt">sex =</span> refund<span class="op">::</span>DTI<span class="op">$</span>sex, </a>
+<a class="sourceLine" id="cb1-4" data-line-number="4">  <span class="dt">case =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/factor">factor</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/ifelse">ifelse</a></span>(refund<span class="op">::</span>DTI<span class="op">$</span>case, <span class="st">"MS"</span>, <span class="st">"control"</span>)))</a>
+<a class="sourceLine" id="cb1-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb1-6" data-line-number="6">dti<span class="op">$</span>cca =<span class="st"> </span><span class="kw"><a href="../reference/tfd.html">tfd</a></span>(refund<span class="op">::</span>DTI<span class="op">$</span>cca, <span class="dt">arg =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/seq">seq</a></span>(<span class="dv">0</span>,<span class="dv">1</span>, <span class="dt">l =</span> <span class="dv">93</span>))</a>
+<a class="sourceLine" id="cb1-7" data-line-number="7">dti<span class="op">$</span>rcst =<span class="st"> </span><span class="kw"><a href="../reference/tfd.html">tfd</a></span>(refund<span class="op">::</span>DTI<span class="op">$</span>rcst, <span class="dt">arg =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/seq">seq</a></span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dt">l =</span> <span class="dv">55</span>))</a>
+<a class="sourceLine" id="cb1-8" data-line-number="8"></a>
+<a class="sourceLine" id="cb1-9" data-line-number="9">dti</a>
+<a class="sourceLine" id="cb1-10" data-line-number="10"><span class="co">## # A tibble: 382 x 5</span></a>
+<a class="sourceLine" id="cb1-11" data-line-number="11"><span class="co">##       id sex    case   cca                        rcst                     </span></a>
+<a class="sourceLine" id="cb1-12" data-line-number="12"><span class="co">##    &lt;dbl&gt; &lt;fct&gt;  &lt;fct&gt;  &lt;tfd_irrg&gt;                 &lt;tfd_irrg&gt;               </span></a>
+<a class="sourceLine" id="cb1-13" data-line-number="13"><span class="co">##  1  1001 female contr… 1001_1: (0.000,0.49);(0.0… 1001_1: (0.000,0.26);(0.…</span></a>
+<a class="sourceLine" id="cb1-14" data-line-number="14"><span class="co">##  2  1002 female contr… 1002_1: (0.000,0.47);(0.0… 1002_1: ( 0.22,0.44);( 0…</span></a>
+<a class="sourceLine" id="cb1-15" data-line-number="15"><span class="co">##  3  1003 male   contr… 1003_1: (0.000,0.50);(0.0… 1003_1: ( 0.22,0.42);( 0…</span></a>
+<a class="sourceLine" id="cb1-16" data-line-number="16"><span class="co">##  4  1004 male   contr… 1004_1: (0.000,0.40);(0.0… 1004_1: (0.000,0.51);(0.…</span></a>
+<a class="sourceLine" id="cb1-17" data-line-number="17"><span class="co">##  5  1005 male   contr… 1005_1: (0.000,0.40);(0.0… 1005_1: ( 0.22,0.40);( 0…</span></a>
+<a class="sourceLine" id="cb1-18" data-line-number="18"><span class="co">##  6  1006 male   contr… 1006_1: (0.000,0.45);(0.0… 1006_1: (0.056,0.47);(0.…</span></a>
+<a class="sourceLine" id="cb1-19" data-line-number="19"><span class="co">##  7  1007 male   contr… 1007_1: (0.000,0.55);(0.0… 1007_1: (0.000,0.52);(0.…</span></a>
+<a class="sourceLine" id="cb1-20" data-line-number="20"><span class="co">##  8  1008 male   contr… 1008_1: (0.000,0.45);(0.0… 1008_1: (0.000,0.33);(0.…</span></a>
+<a class="sourceLine" id="cb1-21" data-line-number="21"><span class="co">##  9  1009 male   contr… 1009_1: (0.000,0.50);(0.0… 1009_1: (0.000,0.57);(0.…</span></a>
+<a class="sourceLine" id="cb1-22" data-line-number="22"><span class="co">## 10  1010 male   contr… 1010_1: (0.000,0.46);(0.0… 1010_1: ( 0.22,0.44);( 0…</span></a>
+<a class="sourceLine" id="cb1-23" data-line-number="23"><span class="co">## # … with 372 more rows</span></a></code></pre></div>
 <p>and a simple 5 element vector of functions on a regular grid:</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1">ex_data &lt;-<span class="st"> </span>dti<span class="op">$</span>cca[<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/seq">seq</a></span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dt">l =</span> <span class="dv">93</span>), interpolate =<span class="st"> </span><span class="ot">TRUE</span>]</a>
 <a class="sourceLine" id="cb2-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/colnames">rownames</a></span>(ex_data) &lt;-<span class="st"> </span>LETTERS[<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>]</a>
@@ -248,9 +249,9 @@ data wrangling and exploratory analysis.</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1">refund<span class="op">::</span>DTI<span class="op">$</span>cca <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/object.size">object.size</a></span>() <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(<span class="dt">units =</span> <span class="st">"Kb"</span>)</a>
 <a class="sourceLine" id="cb7-2" data-line-number="2"><span class="co">## 307.7 Kb</span></a>
 <a class="sourceLine" id="cb7-3" data-line-number="3">dti<span class="op">$</span>cca <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/object.size">object.size</a></span>() <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(<span class="dt">units =</span> <span class="st">"Kb"</span>)</a>
-<a class="sourceLine" id="cb7-4" data-line-number="4"><span class="co">## 339.7 Kb</span></a>
+<a class="sourceLine" id="cb7-4" data-line-number="4"><span class="co">## 765.1 Kb</span></a>
 <a class="sourceLine" id="cb7-5" data-line-number="5">dti<span class="op">$</span>cca <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/tfb.html">tfb</a></span>(<span class="dt">verbose =</span> <span class="ot">FALSE</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/object.size">object.size</a></span>() <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(<span class="dt">units =</span> <span class="st">"Kb"</span>)</a>
-<a class="sourceLine" id="cb7-6" data-line-number="6"><span class="co">## 189.8 Kb</span></a></code></pre></div>
+<a class="sourceLine" id="cb7-6" data-line-number="6"><span class="co">## 189.9 Kb</span></a></code></pre></div>
 <div id="tfb_spline-spline-basis" class="section level3">
 <h3 class="hasAnchor">
 <a href="#tfb_spline-spline-basis" class="anchor"></a><strong><code>tfb_spline</code></strong>: spline basis</h3>
@@ -646,7 +647,7 @@ data wrangling and exploratory analysis.</p>
 <a class="sourceLine" id="cb30-13" data-line-number="13">dti <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/filter">filter</a></span>(<span class="kw"><a href="../reference/tf_where.html">tf_anywhere</a></span>(cca, value <span class="op">&lt;</span><span class="st"> </span><span class="fl">.26</span>))</a>
 <a class="sourceLine" id="cb30-14" data-line-number="14"><span class="co">## # A tibble: 5 x 5</span></a>
 <a class="sourceLine" id="cb30-15" data-line-number="15"><span class="co">##      id sex   case  cca                         rcst                       </span></a>
-<a class="sourceLine" id="cb30-16" data-line-number="16"><span class="co">##   &lt;dbl&gt; &lt;fct&gt; &lt;fct&gt; &lt;tfd_reg&gt;                   &lt;tfd_irrg&gt;                 </span></a>
+<a class="sourceLine" id="cb30-16" data-line-number="16"><span class="co">##   &lt;dbl&gt; &lt;fct&gt; &lt;fct&gt; &lt;tfd_irrg&gt;                  &lt;tfd_irrg&gt;                 </span></a>
 <a class="sourceLine" id="cb30-17" data-line-number="17"><span class="co">## 1  2017 male  MS    2017_1: (0.000,0.38);(0.01… 2017_1: (0.074,0.52);(0.09…</span></a>
 <a class="sourceLine" id="cb30-18" data-line-number="18"><span class="co">## 2  2017 male  MS    2017_4: (0.000,0.34);(0.01… 2017_4: (0.000,0.62);(0.01…</span></a>
 <a class="sourceLine" id="cb30-19" data-line-number="19"><span class="co">## 3  2017 male  MS    2017_5: (0.000,0.35);(0.01… 2017_5: (0.000,0.67);(0.01…</span></a>
@@ -664,7 +665,7 @@ data wrangling and exploratory analysis.</p>
 <a class="sourceLine" id="cb30-31" data-line-number="31"><span class="co">## $ id          &lt;dbl&gt; 1001, 1002, 1003, 1004, 1005, 1006, 1007, 1008, 1009…</span></a>
 <a class="sourceLine" id="cb30-32" data-line-number="32"><span class="co">## $ sex         &lt;fct&gt; female, female, male, male, male, male, male, male, …</span></a>
 <a class="sourceLine" id="cb30-33" data-line-number="33"><span class="co">## $ case        &lt;fct&gt; control, control, control, control, control, control…</span></a>
-<a class="sourceLine" id="cb30-34" data-line-number="34"><span class="co">## $ cca         &lt;tfd_reg&gt; 1001_1: (0.000,0.49);(0.011,0.52);(0.022,0.54); …</span></a>
+<a class="sourceLine" id="cb30-34" data-line-number="34"><span class="co">## $ cca         &lt;tfd_irrg&gt; 1001_1: (0.000,0.49);(0.011,0.52);(0.022,0.54);…</span></a>
 <a class="sourceLine" id="cb30-35" data-line-number="35"><span class="co">## $ rcst        &lt;tfd_irrg&gt; 1001_1: (0.000,0.26);(0.019,0.45);(0.037,0.40);…</span></a>
 <a class="sourceLine" id="cb30-36" data-line-number="36"><span class="co">## $ rcst_smooth &lt;tfb_spln&gt; 1001_1: (0.000,0.32);(0.019,0.36);(0.037,0.39);…</span></a>
 <a class="sourceLine" id="cb30-37" data-line-number="37"><span class="co">## $ rcst_deriv  &lt;tfb_spln&gt; 1001_1: (0.000,  1.8);(0.019,  1.7);(0.037,  1.…</span></a></code></pre></div>
@@ -683,28 +684,29 @@ data wrangling and exploratory analysis.</p>
 </li>
 </ul>
 <div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb31-1" data-line-number="1"><span class="co"># spread tf out into columns for each arg</span></a>
-<a class="sourceLine" id="cb31-2" data-line-number="2">dti_wide =<span class="st"> </span>dti <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/tf_spread.html">tf_spread</a></span>(cca); dti_wide[, <span class="dv">1</span><span class="op">:</span><span class="dv">7</span>] <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">glimpse</span>()  </a>
-<a class="sourceLine" id="cb31-3" data-line-number="3"><span class="co">## Observations: 382</span></a>
-<a class="sourceLine" id="cb31-4" data-line-number="4"><span class="co">## Variables: 7</span></a>
-<a class="sourceLine" id="cb31-5" data-line-number="5"><span class="co">## $ id                     &lt;dbl&gt; 1001, 1002, 1003, 1004, 1005, 1006, 1007,…</span></a>
-<a class="sourceLine" id="cb31-6" data-line-number="6"><span class="co">## $ sex                    &lt;fct&gt; female, female, male, male, male, male, m…</span></a>
-<a class="sourceLine" id="cb31-7" data-line-number="7"><span class="co">## $ case                   &lt;fct&gt; control, control, control, control, contr…</span></a>
-<a class="sourceLine" id="cb31-8" data-line-number="8"><span class="co">## $ rcst                   &lt;tfd_irrg&gt; 1001_1: (0.000,0.26);(0.019,0.45);(0…</span></a>
-<a class="sourceLine" id="cb31-9" data-line-number="9"><span class="co">## $ cca_0                  &lt;dbl&gt; 0.4909345, 0.4721627, 0.5023738, 0.402189…</span></a>
-<a class="sourceLine" id="cb31-10" data-line-number="10"><span class="co">## $ cca_0.0108695652173913 &lt;dbl&gt; 0.5168018, 0.4868219, 0.5136516, 0.422512…</span></a>
-<a class="sourceLine" id="cb31-11" data-line-number="11"><span class="co">## $ cca_0.0217391304347826 &lt;dbl&gt; 0.5356539, 0.5022577, 0.5392542, 0.439898…</span></a>
-<a class="sourceLine" id="cb31-12" data-line-number="12"></a>
-<a class="sourceLine" id="cb31-13" data-line-number="13"><span class="co"># collect all columns into a single tf-column </span></a>
-<a class="sourceLine" id="cb31-14" data-line-number="14"><span class="co"># (... will try to guess arg from column names, name of tf from their prefix)</span></a>
-<a class="sourceLine" id="cb31-15" data-line-number="15">dti_wide <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/tf_gather.html">tf_gather</a></span>(<span class="kw">matches</span>(<span class="st">"cca_"</span>)) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">glimpse</span>()</a>
-<a class="sourceLine" id="cb31-16" data-line-number="16"><span class="co">## creating new tfd-column &lt;cca&gt;</span></a>
-<a class="sourceLine" id="cb31-17" data-line-number="17"><span class="co">## Observations: 382</span></a>
-<a class="sourceLine" id="cb31-18" data-line-number="18"><span class="co">## Variables: 5</span></a>
-<a class="sourceLine" id="cb31-19" data-line-number="19"><span class="co">## $ id   &lt;dbl&gt; 1001, 1002, 1003, 1004, 1005, 1006, 1007, 1008, 1009, 1010,…</span></a>
-<a class="sourceLine" id="cb31-20" data-line-number="20"><span class="co">## $ sex  &lt;fct&gt; female, female, male, male, male, male, male, male, male, m…</span></a>
-<a class="sourceLine" id="cb31-21" data-line-number="21"><span class="co">## $ case &lt;fct&gt; control, control, control, control, control, control, contr…</span></a>
-<a class="sourceLine" id="cb31-22" data-line-number="22"><span class="co">## $ rcst &lt;tfd_irrg&gt; 1001_1: (0.000,0.26);(0.019,0.45);(0.037,0.40); ..., 1…</span></a>
-<a class="sourceLine" id="cb31-23" data-line-number="23"><span class="co">## $ cca  &lt;tfd_reg&gt; [1]: (0.000,0.49);(0.011,0.52);(0.022,0.54); ..., [2]: …</span></a></code></pre></div>
+<a class="sourceLine" id="cb31-2" data-line-number="2">dti_wide =<span class="st"> </span>dti <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/tf_spread.html">tf_spread</a></span>(cca, <span class="dt">arg =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/seq">seq</a></span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dt">length =</span> <span class="dv">93</span>))</a>
+<a class="sourceLine" id="cb31-3" data-line-number="3">dti_wide[, <span class="dv">1</span><span class="op">:</span><span class="dv">7</span>] <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">glimpse</span>()  </a>
+<a class="sourceLine" id="cb31-4" data-line-number="4"><span class="co">## Observations: 382</span></a>
+<a class="sourceLine" id="cb31-5" data-line-number="5"><span class="co">## Variables: 7</span></a>
+<a class="sourceLine" id="cb31-6" data-line-number="6"><span class="co">## $ id                     &lt;dbl&gt; 1001, 1002, 1003, 1004, 1005, 1006, 1007,…</span></a>
+<a class="sourceLine" id="cb31-7" data-line-number="7"><span class="co">## $ sex                    &lt;fct&gt; female, female, male, male, male, male, m…</span></a>
+<a class="sourceLine" id="cb31-8" data-line-number="8"><span class="co">## $ case                   &lt;fct&gt; control, control, control, control, contr…</span></a>
+<a class="sourceLine" id="cb31-9" data-line-number="9"><span class="co">## $ rcst                   &lt;tfd_irrg&gt; 1001_1: (0.000,0.26);(0.019,0.45);(0…</span></a>
+<a class="sourceLine" id="cb31-10" data-line-number="10"><span class="co">## $ cca_0                  &lt;dbl&gt; 0.4909345, 0.4721627, 0.5023738, 0.402189…</span></a>
+<a class="sourceLine" id="cb31-11" data-line-number="11"><span class="co">## $ cca_0.0108695652173913 &lt;dbl&gt; 0.5168018, 0.4868219, 0.5136516, 0.422512…</span></a>
+<a class="sourceLine" id="cb31-12" data-line-number="12"><span class="co">## $ cca_0.0217391304347826 &lt;dbl&gt; 0.5356539, 0.5022577, 0.5392542, 0.439898…</span></a>
+<a class="sourceLine" id="cb31-13" data-line-number="13"></a>
+<a class="sourceLine" id="cb31-14" data-line-number="14"><span class="co"># collect all columns into a single tf-column </span></a>
+<a class="sourceLine" id="cb31-15" data-line-number="15"><span class="co"># (... will try to guess arg from column names, name of tf from their prefix)</span></a>
+<a class="sourceLine" id="cb31-16" data-line-number="16">dti_wide <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/tf_gather.html">tf_gather</a></span>(<span class="kw">matches</span>(<span class="st">"cca_"</span>)) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">glimpse</span>()</a>
+<a class="sourceLine" id="cb31-17" data-line-number="17"><span class="co">## creating new tfd-column &lt;cca&gt;</span></a>
+<a class="sourceLine" id="cb31-18" data-line-number="18"><span class="co">## Observations: 382</span></a>
+<a class="sourceLine" id="cb31-19" data-line-number="19"><span class="co">## Variables: 5</span></a>
+<a class="sourceLine" id="cb31-20" data-line-number="20"><span class="co">## $ id   &lt;dbl&gt; 1001, 1002, 1003, 1004, 1005, 1006, 1007, 1008, 1009, 1010,…</span></a>
+<a class="sourceLine" id="cb31-21" data-line-number="21"><span class="co">## $ sex  &lt;fct&gt; female, female, male, male, male, male, male, male, male, m…</span></a>
+<a class="sourceLine" id="cb31-22" data-line-number="22"><span class="co">## $ case &lt;fct&gt; control, control, control, control, control, control, contr…</span></a>
+<a class="sourceLine" id="cb31-23" data-line-number="23"><span class="co">## $ rcst &lt;tfd_irrg&gt; 1001_1: (0.000,0.26);(0.019,0.45);(0.037,0.40); ..., 1…</span></a>
+<a class="sourceLine" id="cb31-24" data-line-number="24"><span class="co">## $ cca  &lt;tfd_reg&gt; [1]: (0.000,0.49);(0.011,0.52);(0.022,0.54); ..., [2]: …</span></a></code></pre></div>
 <ul>
 <li>
 <code>tf_unnest:</code> <code>tf</code> <span class="math inline">\(\rightarrow\)</span> data in long format (<code>id</code>, <code>arg</code>, <code>value</code>)<br>
@@ -716,7 +718,7 @@ data wrangling and exploratory analysis.</p>
 <div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb32-1" data-line-number="1"><span class="co"># unnest tf by writing 3 loong columns id, arg, value:</span></a>
 <a class="sourceLine" id="cb32-2" data-line-number="2"><span class="co"># (will try to avoid unnecessary duplication of columns)</span></a>
 <a class="sourceLine" id="cb32-3" data-line-number="3">dti_long =<span class="st"> </span>dti <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/tf_unnest.html">tf_unnest</a></span>(cca); dti_long <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">glimpse</span>()  </a>
-<a class="sourceLine" id="cb32-4" data-line-number="4"><span class="co">## Observations: 35,526</span></a>
+<a class="sourceLine" id="cb32-4" data-line-number="4"><span class="co">## Observations: 35,490</span></a>
 <a class="sourceLine" id="cb32-5" data-line-number="5"><span class="co">## Variables: 7</span></a>
 <a class="sourceLine" id="cb32-6" data-line-number="6"><span class="co">## $ id        &lt;dbl&gt; 1001, 1001, 1001, 1001, 1001, 1001, 1001, 1001, 1001, …</span></a>
 <a class="sourceLine" id="cb32-7" data-line-number="7"><span class="co">## $ sex       &lt;fct&gt; female, female, female, female, female, female, female…</span></a>
@@ -734,7 +736,7 @@ data wrangling and exploratory analysis.</p>
 <a class="sourceLine" id="cb32-19" data-line-number="19"><span class="co">## $ sex       &lt;fct&gt; female, female, male, male, male, male, male, male, ma…</span></a>
 <a class="sourceLine" id="cb32-20" data-line-number="20"><span class="co">## $ case      &lt;fct&gt; control, control, control, control, control, control, …</span></a>
 <a class="sourceLine" id="cb32-21" data-line-number="21"><span class="co">## $ rcst      &lt;tfd_irrg&gt; 1001_1: (0.000,0.26);(0.019,0.45);(0.037,0.40); .…</span></a>
-<a class="sourceLine" id="cb32-22" data-line-number="22"><span class="co">## $ cca_value &lt;tfd_reg&gt; 1001_1: (0.000,0.49);(0.011,0.52);(0.022,0.54); ..…</span></a></code></pre></div>
+<a class="sourceLine" id="cb32-22" data-line-number="22"><span class="co">## $ cca_value &lt;tfd_irrg&gt; 1001_1: (0.000,0.49);(0.011,0.52);(0.022,0.54); .…</span></a></code></pre></div>
 <p>Note that <code>left/right_join</code>-operations as well as <code>bind_rows</code> do not currently work reliably for tables with <code>tfd</code> or <code>tfb</code>-columns, see <a href="https://github.com/fabian-s/tidyfun/issues/53">tidyfun/issues/53</a>. <code>bind_rows</code> can be easily avoided by using <code>rbind</code>, which still works, instead.</p>
 </div>
 </div>

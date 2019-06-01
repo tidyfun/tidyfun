@@ -88,13 +88,16 @@ with points for the actual evaluations." />
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/x01_Intro.html">Introducing tidyfun</a>
+      <a href="../articles/x01_tf_Vectors.html">tf Vectors and Operations</a>
     </li>
     <li>
-      <a href="../articles/x02_Data_Manipulation.html">Data Manipulation</a>
+      <a href="../articles/x02_Conversion.html">Converting data to tf</a>
     </li>
     <li>
-      <a href="../articles/x03_Visualization.html">Visualization</a>
+      <a href="../articles/x03_Data_Wrangling.html">Data Wrangling</a>
+    </li>
+    <li>
+      <a href="../articles/x04_Visualization.html">Visualization</a>
     </li>
   </ul>
 </li>
@@ -225,7 +228,7 @@ to the paired geom/stat.</p></td>
 <span class='no'>data</span>$<span class='no'>fi</span> <span class='kw'>=</span> <span class='fu'><a href='tf_jiggle.html'>tf_jiggle</a></span>(<span class='no'>data</span>$<span class='no'>f</span>)
 <span class='no'>data</span>$<span class='no'>fb</span> <span class='kw'>=</span> <span class='fu'><a href='tfb.html'>tfb</a></span>(<span class='no'>data</span>$<span class='no'>f</span>)</div><div class='output co'>#&gt; <span class='message'>Percentage of input data variability preserved in basis representation</span>
 #&gt; <span class='message'>(per functional observation, approximate):</span></div><div class='output co'>#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-#&gt;   99.60   99.70   99.90   99.83   99.90  100.00 </div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>ggplot2</span>)
+#&gt;   99.20   99.75   99.90   99.79   99.90  100.00 </div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>ggplot2</span>)
 <span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/ggplot'>ggplot</a></span>(<span class='no'>data</span>, <span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/aes'>aes</a></span>(<span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>f</span>, <span class='kw'>color</span> <span class='kw'>=</span> <span class='fu'><a href='tf_depth.html'>tf_depth</a></span>(<span class='no'>f</span>))) + <span class='fu'>geom_spaghetti</span>()</div><div class='img'><img src='ggspaghetti-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/ggplot'>ggplot</a></span>(<span class='no'>data</span>, <span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/aes'>aes</a></span>(<span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>fi</span>, <span class='kw'>shape</span> <span class='kw'>=</span> <span class='no'>col</span>, <span class='kw'>color</span> <span class='kw'>=</span> <span class='no'>col</span>)) + <span class='fu'>geom_meatballs</span>()</div><div class='img'><img src='ggspaghetti-2.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/ggplot'>ggplot</a></span>(<span class='no'>data</span>, <span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/aes'>aes</a></span>(<span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>fi</span>)) + <span class='fu'>geom_meatballs</span>(<span class='kw'>spaghetti</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>) +
   <span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/facet_wrap'>facet_wrap</a></span>(~<span class='no'>col</span>)</div><div class='img'><img src='ggspaghetti-3.png' alt='' width='700' height='433' /></div></pre>
   </div>

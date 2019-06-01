@@ -53,13 +53,16 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="articles/x01_Intro.html">Introducing tidyfun</a>
+      <a href="articles/x01_tf_Vectors.html">tf Vectors and Operations</a>
     </li>
     <li>
-      <a href="articles/x02_Data_Manipulation.html">Data Manipulation</a>
+      <a href="articles/x02_Conversion.html">Converting data to tf</a>
     </li>
     <li>
-      <a href="articles/x03_Visualization.html">Visualization</a>
+      <a href="articles/x03_Data_Wrangling.html">Data Wrangling</a>
+    </li>
+    <li>
+      <a href="articles/x04_Visualization.html">Visualization</a>
     </li>
   </ul>
 </li>
@@ -92,15 +95,28 @@
 <a href="#tidyfun" class="anchor"></a>tidyfun <img src="https://github.com/fabian-s/tidyfun/blob/master/README_files/figures/tidyfun_hex.gif?raw=true" align="right" height="150">
 </h1></div>
 
-<p><strong><code>tidyfun</code></strong> makes data wrangling and exploratory analysis of functional data easier.</p>
+<p>The goal of <strong><code>tidyfun</code></strong> is to provide accessible and well-documented software that <strong>makes functional data analysis in <code>R</code> easy</strong>, specifically:<br>
+data wrangling and exploratory analysis.</p>
 <p><strong><code>tidyfun</code></strong> provides:</p>
 <ul>
-<li>new <strong>data types</strong> for representing functional data</li>
-<li>arithmetic <strong>operators</strong>, descriptive <strong>statistics</strong> and <strong>graphics</strong> functions for such data</li>
+<li>new <strong>data types</strong> for representing functional data: <strong><code>tfd</code></strong> &amp; <strong><code>tfb</code></strong>
+</li>
+<li>arithmetic <strong>operators</strong> and descriptive <strong>statistics</strong> for such data</li>
 <li>
-<code>tidyverse</code>-verbs for handling functional data <strong>inside</strong> data frames.</li>
+<code>tidyverse</code>-verbs for handling functional data – especially <strong>inside</strong> data frames</li>
+<li>new <strong>graphics</strong> functions for <code>tf</code> vectors and tidy functional data frames</li>
 </ul>
-<p>Look <a href="https://fabian-s.github.io/tidyfun/articles/x01_Intro.html">here</a> for an introduction with examples.</p>
+<p>For detailed information on the features of <code>tidyfun</code>, check out articles on the following topics:</p>
+<ul>
+<li>
+<a href="https://fabian-s.github.io/tidyfun/articles/01_tf_Vectors.html">Representing</a> functional data as <code>tf</code> vectors, and operating on those vectors</li>
+<li>
+<a href="https://fabian-s.github.io/tidyfun/articles/02_Conversion.html">Converting</a> non-tidy functional data (matrices, “long” and “wide” data frames) to tidy functional data</li>
+<li>
+<a href="https://fabian-s.github.io/tidyfun/articles/03_Data_Wrangling.html">Wrangling</a> data frames that include functional data using <code>tidyverse</code> and <code>tidyfun</code> tools</li>
+<li>
+<a href="https://fabian-s.github.io/tidyfun/articles/04_Visualization.html">Visualizing</a> tidy functional data</li>
+</ul>
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>

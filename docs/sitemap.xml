@@ -7,6 +7,9 @@
     <loc>https://fabian-s.github.io/tidyfun/reference/chf_df.html</loc>
   </url>
   <url>
+    <loc>https://fabian-s.github.io/tidyfun/reference/dti_df.html</loc>
+  </url>
+  <url>
     <loc>https://fabian-s.github.io/tidyfun/reference/ggcapellini.html</loc>
   </url>
   <url>
@@ -97,12 +100,15 @@
     <loc>https://fabian-s.github.io/tidyfun/reference/tidyfun.html</loc>
   </url>
   <url>
-    <loc>https://fabian-s.github.io/tidyfun/articles/x01_Intro.html</loc>
+    <loc>https://fabian-s.github.io/tidyfun/articles/x01_tf_Vectors.html</loc>
   </url>
   <url>
-    <loc>https://fabian-s.github.io/tidyfun/articles/x02_Data_Manipulation.html</loc>
+    <loc>https://fabian-s.github.io/tidyfun/articles/x02_Conversion.html</loc>
   </url>
   <url>
-    <loc>https://fabian-s.github.io/tidyfun/articles/x03_Visualization.html</loc>
+    <loc>https://fabian-s.github.io/tidyfun/articles/x03_Data_Wrangling.html</loc>
+  </url>
+  <url>
+    <loc>https://fabian-s.github.io/tidyfun/articles/x04_Visualization.html</loc>
   </url>
 </urlset>

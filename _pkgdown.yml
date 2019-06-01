@@ -67,12 +67,14 @@ reference:
     desc: "Functional data sets"
     contents:
       - chf_df
+      - dti_df
   
 articles:
   - title: "Articles"
     desc: "Articles & vignettes for tidyfun"
     contents:
-    - x01_Intro
-    - x02_Data_Manipulation
-    - x03_Visualization
+    - x01_tf_Vectors
+    - x02_Conversion
+    - x03_Data_Wrangling
+    - x04_Visualization
 
