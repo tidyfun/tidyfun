@@ -140,7 +140,7 @@
 <a class="sourceLine" id="cb4-6" data-line-number="6"><span class="st">  </span>canada <span class="op">%&gt;%</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb4-7" data-line-number="7"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> precipl10, <span class="dt">color =</span> region)) <span class="op">+</span><span class="st"> </span><span class="kw"><a href="../reference/ggspaghetti.html">geom_spaghetti</a></span>() </a>
 <a class="sourceLine" id="cb4-8" data-line-number="8"></a>
-<a class="sourceLine" id="cb4-9" data-line-number="9">temp_panel <span class="op">+</span><span class="st"> </span>precip_panel</a></code></pre></div>
+<a class="sourceLine" id="cb4-9" data-line-number="9">gridExtra<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/gridExtra/topics/arrangeGrob">grid.arrange</a></span>(temp_panel, precip_panel, <span class="dt">nrow =</span> <span class="dv">1</span>)</a></code></pre></div>
 <p><img src="x02_Conversion_files/figure-html/unnamed-chunk-4-1.png" width="90%"></p>
 </div>
 <div id="from-data-frame" class="section level2">
@@ -200,21 +200,7 @@
 <a class="sourceLine" id="cb9-2" data-line-number="2"><span class="st">  </span><span class="kw">group_by</span>(id) <span class="op">%&gt;%</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb9-3" data-line-number="3"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">n_obs =</span> <span class="kw">n</span>()) <span class="op">%&gt;%</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb9-4" data-line-number="4"><span class="st">  </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/filter">filter</a></span>(n_obs <span class="op">&gt;</span><span class="st"> </span><span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb9-5" data-line-number="5"><span class="st">  </span><span class="kw"><a href="../reference/tf_nest.html">tf_nest</a></span>(logFEV1, height, <span class="dt">.arg =</span> age)</a>
-<a class="sourceLine" id="cb9-6" data-line-number="6"><span class="co">## # A tibble: 252 x 6</span></a>
-<a class="sourceLine" id="cb9-7" data-line-number="7"><span class="co">##    id     age0 height0 n_obs logFEV1                   height              </span></a>
-<a class="sourceLine" id="cb9-8" data-line-number="8"><span class="co">##    &lt;fct&gt; &lt;dbl&gt;   &lt;dbl&gt; &lt;int&gt; &lt;tfd_irrg&gt;                &lt;tfd_irrg&gt;          </span></a>
-<a class="sourceLine" id="cb9-9" data-line-number="9"><span class="co">##  1 1      9.34    1.2      7 1: ( 9.3,  0.22);(10.4, … 1: ( 9.3,1.2);(10.4…</span></a>
-<a class="sourceLine" id="cb9-10" data-line-number="10"><span class="co">##  2 2      6.59    1.13     8 2: ( 6.6,  0.31);( 7.6, … 2: ( 6.6,1.1);( 7.6…</span></a>
-<a class="sourceLine" id="cb9-11" data-line-number="11"><span class="co">##  3 3      6.91    1.18     9 3: ( 6.9,  0.43);( 8.0, … 3: ( 6.9,1.2);( 8.0…</span></a>
-<a class="sourceLine" id="cb9-12" data-line-number="12"><span class="co">##  4 4      6.76    1.15    10 4: ( 6.8, 0.058);( 7.8, … 4: ( 6.8,1.1);( 7.8…</span></a>
-<a class="sourceLine" id="cb9-13" data-line-number="13"><span class="co">##  5 5      6.50    1.11     7 5: ( 6.5,  0.03);( 7.6, … 5: ( 6.5,1.1);( 7.6…</span></a>
-<a class="sourceLine" id="cb9-14" data-line-number="14"><span class="co">##  6 6      6.90    1.24    11 6: ( 6.9,  0.26);( 8.0, … 6: ( 6.9,1.2);( 8.0…</span></a>
-<a class="sourceLine" id="cb9-15" data-line-number="15"><span class="co">##  7 7      6.43    1.18     7 7: ( 6.4,-0.030);( 7.5, … 7: ( 6.4,1.2);( 7.5…</span></a>
-<a class="sourceLine" id="cb9-16" data-line-number="16"><span class="co">##  8 8      7.19    1.27     9 8: ( 7.2,  0.27);( 8.3, … 8: ( 7.2,1.3);( 8.3…</span></a>
-<a class="sourceLine" id="cb9-17" data-line-number="17"><span class="co">##  9 9      6.90    1.17     9 9: ( 6.9,  0.16);( 8.0, … 9: ( 6.9,1.2);( 8.0…</span></a>
-<a class="sourceLine" id="cb9-18" data-line-number="18"><span class="co">## 10 10     7.79    1.13    10 10: ( 7.8,  0.15);( 8.8,… 10: ( 7.8,1.1);( 8.…</span></a>
-<a class="sourceLine" id="cb9-19" data-line-number="19"><span class="co">## # … with 242 more rows</span></a></code></pre></div>
+<a class="sourceLine" id="cb9-5" data-line-number="5"><span class="st">  </span><span class="kw"><a href="../reference/tf_nest.html">tf_nest</a></span>(logFEV1, height, <span class="dt">.arg =</span> age)</a></code></pre></div>
 </div>
 <div id="in-wide-format" class="section level3">
 <h3 class="hasAnchor">

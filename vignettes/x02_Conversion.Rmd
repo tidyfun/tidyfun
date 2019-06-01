@@ -24,7 +24,7 @@ library(tidyverse)
 library(ggplot2)
 library(viridisLite)
 
-library(patchwork)
+library(gridExtra)
 
 theme_set(theme_minimal() + theme(legend.position = "bottom"))
 
@@ -100,7 +100,7 @@ precip_panel =
   canada %>% 
   ggplot(aes(y = precipl10, color = region)) + geom_spaghetti() 
 
-temp_panel + precip_panel
+gridExtra::grid.arrange(temp_panel, precip_panel, nrow = 1)
 ```
 
 
@@ -145,7 +145,7 @@ install.packages("ALA", repos="http://R-Forge.R-project.org")
 
 useful because you can nest multiple functions, if they exist in the dataset
 
-```{r}
+```{r, eval = FALSE}
 ALA::fev1 %>% 
   group_by(id) %>% 
   mutate(n_obs = n()) %>% 
