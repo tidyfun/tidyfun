@@ -31,7 +31,7 @@ tf_smooth <- function(x, ...) {
 #' @rdname tf_smooth
 tf_smooth.tfb <- function(x, ...) {
   warning("you called tf_smooth on a tfb object, not on a tfd object -- ", 
-          "just use a smaller basis or stronger penalization.\n"
+          "just use a smaller basis or stronger penalization.\n",
           "Returning unchanged tfb object.")
   x
 }
