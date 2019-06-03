@@ -73,10 +73,19 @@ tf_jiggle <- function(f, ...) {
 #' @export
 tf_sparsify <- function(f, dropout = .5, ...) {
   stopifnot(is_tf(f))
-  tf_evals <- map(
+  nas <- map(
     tf_evaluations(f),
-    ~ifelse(runif(length(.x)) < dropout, NA, .x)
+    ~ifelse(runif(length(.x)) < dropout, TRUE, FALSE)
   )
-  tfd(tf_evals, tf_arg(f), resolution = attr(f, "resolution"), 
+  tf_evals <- map2(
+    tf_evaluations(f), nas,
+    ~ .x[!.y]
+  )
+  tf_args <- ensure_list(tf_arg(f))
+  tf_args <- map2(
+    tf_args, nas,
+    ~ .x[!.y]
+  )
+  tfd.list(tf_evals, tf_args, resolution = attr(f, "resolution"), 
       domain = tf_domain(f))
 }

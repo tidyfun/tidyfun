@@ -190,7 +190,7 @@ tfb_spline.numeric <- function(data, arg = NULL,
                                domain = NULL, penalized = TRUE, 
                                global = FALSE, resolution = NULL, ...) {
   data <- t(as.matrix(data))
-  tfb(data = data, arg = arg, domain = domain, penalized = penalized,
+  tfb_spline(data = data, arg = arg, domain = domain, penalized = penalized,
       global = global, resolution = resolution, ...)
 }
 
@@ -208,7 +208,7 @@ tfb_spline.list <- function(data, arg = NULL,
     if (all(lengths == lengths[1])) {
       data <- do.call(rbind, data)
       # dispatch to matrix method
-      return(tfb(data, arg, domain = domain, penalized = penalized, 
+      return(tfb_spline(data, arg, domain = domain, penalized = penalized, 
                  global = global, resolution = resolution, ...))
     } 
     stopifnot(
@@ -227,7 +227,7 @@ tfb_spline.list <- function(data, arg = NULL,
     funs = data
   ) %>% { tidyr::unnest(.) }
   # dispatch to data.frame method
-  ret <- tfb(data, domain = domain, penalized = penalized, 
+  ret <- tfb_spline(data, domain = domain, penalized = penalized, 
              global = global, resolution = resolution, ...)
   names(ret) <- names_data
   ret
@@ -244,7 +244,7 @@ tfb_spline.tfd <- function(data, arg = NULL,
   resolution <- resolution %||% tf_resolution(data)
   names_data <- names(data)
   data <- as.data.frame(data, arg)
-  ret <- tfb(data, domain = domain, penalized = penalized, 
+  ret <- tfb_spline(data, domain = domain, penalized = penalized, 
              global = global,  resolution = resolution, ...)
   names(ret) <- names_data
   ret
