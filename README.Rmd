@@ -51,10 +51,10 @@ The goal of **`tidyfun`** is to provide accessible and well-documented software 
 
 For detailed information on the features of `tidyfun`, check out articles on the following topics:
 
-- [Representing](https://fabian-s.github.io/tidyfun/articles/01_tf_Vectors.html) functional data as `tf` vectors, and operating on those vectors
-- [Converting](https://fabian-s.github.io/tidyfun/articles/02_Conversion.html) non-tidy functional data (matrices, "long" and "wide" data frames) to tidy functional data
-- [Wrangling](https://fabian-s.github.io/tidyfun/articles/03_Data_Wrangling.html) data frames that include functional data using `tidyverse` and `tidyfun` tools
-- [Visualizing](https://fabian-s.github.io/tidyfun/articles/04_Visualization.html) tidy functional data
+- [Representing](https://fabian-s.github.io/tidyfun/articles/x01_tf_Vectors.html) functional data as `tf` vectors, and operating on those vectors
+- [Converting](https://fabian-s.github.io/tidyfun/articles/x02_Conversion.html) non-tidy functional data (matrices, "long" and "wide" data frames) to tidy functional data
+- [Wrangling](https://fabian-s.github.io/tidyfun/articles/x03_Data_Wrangling.html) data frames that include functional data using `tidyverse` and `tidyfun` tools
+- [Visualizing](https://fabian-s.github.io/tidyfun/articles/x04_Visualization.html) tidy functional data
 
 The result is a package that enables exploratory data analysis like the following, which computes and then smooths group-specific mean curves in the `dti_df` dataset, and plots the result:
 
