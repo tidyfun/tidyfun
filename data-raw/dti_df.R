@@ -11,6 +11,7 @@ library(tibble)
 
 dti_df = tibble(
   id = refund::DTI$ID, 
+  visit = refund::DTI$visit,
   sex = refund::DTI$sex, 
   case = factor(ifelse(refund::DTI$case, "MS", "control")))
 
