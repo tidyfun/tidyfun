@@ -20,6 +20,14 @@ functional data analysis, which assumes that *complete functions* are
 the unit of observation; with `tidyfun`, full curves sit alongside
 numeric, factor, and other observations on the same subject.
 
+## Installation
+
+``` r
+devtools::install_github("fabian-s/tidyfun")
+```
+
+## Overview
+
 **`tidyfun`** provides:
 
   - new **data types** for representing functional data: **`tfd`** &
@@ -79,12 +87,6 @@ dti_df %>%
 ```
 
 <img src="README_files/figure-gfm/unnamed-chunk-1-1.png" width="90%" />
-
-## Installation
-
-``` r
-devtools::install_github("fabian-s/tidyfun")
-```
 
 ## What does it do?
 

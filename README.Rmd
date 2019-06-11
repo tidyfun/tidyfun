@@ -40,6 +40,14 @@ The goal of **`tidyfun`** is to provide accessible and well-documented software 
 
 **Crucially**, vectors of class `tf` can be included in data frames containing other variables, enabling data manipulation using `tidyverse` tools. This approach is connected to the conceptual framework in functional data analysis, which assumes that _complete functions_ are the unit of observation; with `tidyfun`, full curves sit alongside numeric, factor, and other observations on the same subject. 
 
+## Installation
+
+``` r
+devtools::install_github("fabian-s/tidyfun")
+```
+
+## Overview
+
 **`tidyfun`** provides:
 
 - new **data types** for representing functional data: **`tfd`** & **`tfb`**
@@ -67,12 +75,6 @@ dti_df %>%
     facet_grid(~sex)
 ```
 
-
-## Installation
-
-``` r
-devtools::install_github("fabian-s/tidyfun")
-```
 
 ## What does it do?
 

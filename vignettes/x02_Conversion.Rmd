@@ -57,6 +57,7 @@ The `DTI` data in the `refund` package has been a popular example in functional 
 ```{r}
 dti_df = tibble(
   id = refund::DTI$ID, 
+  visit = refund::DTI$visit,
   sex = refund::DTI$sex, 
   case = factor(ifelse(refund::DTI$case, "MS", "control")))
 

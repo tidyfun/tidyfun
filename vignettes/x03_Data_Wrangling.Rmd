@@ -152,7 +152,7 @@ dti_df %>%
 
 # New `tidyfun` functions
 
-Some `dplyr` functions are most useful in conjunction with new functions in `tidyfun`. For example, one might use `filter` with `tf_anywhere` to filter based on the values of observed functions:
+Some `dplyr` functions are useful in conjunction with new functions in `tidyfun`. For example, one might use `filter` with `tf_anywhere` to filter based on the values of observed functions:
 
 ```{r}
 chf_df %>% 

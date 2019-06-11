@@ -89,7 +89,7 @@
       <h1>Data Wrangling</h1>
                         <h4 class="author">Jeff Goldsmith</h4>
             
-            <h4 class="date">2019-06-01</h4>
+            <h4 class="date">2019-06-11</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/fabian-s/tidyfun/blob/master/vignettes/x03_Data_Wrangling.Rmd"><code>vignettes/x03_Data_Wrangling.Rmd</code></a></small>
       <div class="hidden name"><code>x03_Data_Wrangling.Rmd</code></div>
@@ -230,7 +230,7 @@
 <div id="new-tidyfun-functions" class="section level1">
 <h1 class="hasAnchor">
 <a href="#new-tidyfun-functions" class="anchor"></a>New <code>tidyfun</code> functions</h1>
-<p>Some <code>dplyr</code> functions are most useful in conjunction with new functions in <code>tidyfun</code>. For example, one might use <code>filter</code> with <code>tf_anywhere</code> to filter based on the values of observed functions:</p>
+<p>Some <code>dplyr</code> functions are useful in conjunction with new functions in <code>tidyfun</code>. For example, one might use <code>filter</code> with <code>tf_anywhere</code> to filter based on the values of observed functions:</p>
 <div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1">chf_df <span class="op">%&gt;%</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb12-2" data-line-number="2"><span class="st">  </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/filter">filter</a></span>(<span class="kw"><a href="../reference/tf_where.html">tf_anywhere</a></span>(activity, value <span class="op">&gt;</span><span class="st"> </span><span class="dv">9</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb12-3" data-line-number="3"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> activity)) <span class="op">+</span><span class="st"> </span></a>

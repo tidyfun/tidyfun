@@ -64,18 +64,13 @@ This vignette introduces the `tf` class, as well as the `tfd` and `tfb` subclass
 
 ## Example Data
 
-The code below creates some example data used in this vignette (and is explained in the [data conversion](https://fabian-s.github.io/tidyfun/articles/02_Conversion.html) vignette). 
-
-First we extract two `tf` vectors from the `tidyfun::chf_df` dataset. These vectors contain fractional anisotropy tract profiles for the corpus callosum (`cca`) and the right corticospinal tract (`rcst`). When printed, `tf` vectors show the first few `arg` and `value` pairs for each subject.  
+First we extract a `tf` vector from the `tidyfun::dti_df` dataset containing fractional anisotropy tract profiles for the corpus callosum (`cca`). When printed, `tf` vectors show the first few `arg` and `value` pairs for each subject.  
 
 ```{r load-dti}
 data("dti_df")
 
 cca = dti_df$cca
-rcst = dti_df$rcst
-
 cca
-rcst
 ```
 
 We also extract a simple 5-element vector of functions on a regular grid:
@@ -114,13 +109,14 @@ tf_evaluator(cca_five) %>% str
 tf_evaluator(cca_five) <- tf_approx_spline
 ```
 
-- **`tfd`** has subclasses for regular data with a common grid and irregular or sparse data,
-like the elements of the `rcst` vector.
+- **`tfd`** has subclasses for regular data with a common grid and irregular or sparse data. The `cca` data are irregular (values are missing for some subjects at some arguments) but the example below more clearly illustrates support for sparse and irregular data using CD4 cell counts from a longitudinal study.
 
 ```{r}
-rcst[1:2]
-rcst[1:2] %>% tf_arg() %>% str
-rcst[1:2] %>% plot(pch = "x", col = viridis(2))
+cd4_vec = tfd(refund::cd4)
+
+cd4_vec[1:2]
+cd4_vec[1:2] %>% tf_arg() %>% str
+cd4_vec[1:20] %>% plot(pch = "x", col = viridis(20))
 ```
 
 ## **`tf`** subclass: **`tfb`**
@@ -133,6 +129,7 @@ Functional data in basis representation:
     - `tfb_spline`: uses `mgcv`-spline bases 
     - `tfb_fpc`: uses functional principal components 
 - significant memory and time savings:
+
 ```{r}
 refund::DTI$cca %>% object.size() %>% print(units = "Kb")
 cca %>% object.size() %>% print(units = "Kb")
@@ -296,6 +293,7 @@ cca_five %>% plot(col = pal_5)
 cca_five %>% tf_smooth() %>% tf_derive() %>% plot(col = pal_5, ylab = "tf_derive(tf_smooth(cca_five))")
 cca_five %>% tf_integrate(definite = FALSE) %>%  plot(col = pal_5)
 ```
+
 ```{r}
 cca_five %>% tf_integrate()
 ```

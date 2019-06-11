@@ -97,6 +97,14 @@
 
 <p>The goal of <strong><code>tidyfun</code></strong> is to provide accessible and well-documented software that <strong>makes functional data analysis in <code>R</code> easy</strong> – specifically data wrangling and exploratory analysis. This is achieved by introducing a new data type (<code>tf</code>). Vectors of class <code>tf</code> can be operated on using many standard functions (<code>+</code>, <code>mean</code>, etc.) as well as several new functions in <code>tidyfun</code> (<code>tf_smooth</code>, <code>tf_where</code>).</p>
 <p><strong>Crucially</strong>, vectors of class <code>tf</code> can be included in data frames containing other variables, enabling data manipulation using <code>tidyverse</code> tools. This approach is connected to the conceptual framework in functional data analysis, which assumes that <em>complete functions</em> are the unit of observation; with <code>tidyfun</code>, full curves sit alongside numeric, factor, and other observations on the same subject.</p>
+<div id="installation" class="section level2">
+<h2 class="hasAnchor">
+<a href="#installation" class="anchor"></a>Installation</h2>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1">devtools<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/devtools/topics/reexports">install_github</a></span>(<span class="st">"fabian-s/tidyfun"</span>)</a></code></pre></div>
+</div>
+<div id="overview" class="section level2">
+<h2 class="hasAnchor">
+<a href="#overview" class="anchor"></a>Overview</h2>
 <p><strong><code>tidyfun</code></strong> provides:</p>
 <ul>
 <li>new <strong>data types</strong> for representing functional data: <strong><code>tfd</code></strong> &amp; <strong><code>tfb</code></strong>
@@ -109,42 +117,38 @@
 <p>For detailed information on the features of <code>tidyfun</code>, check out articles on the following topics:</p>
 <ul>
 <li>
-<a href="https://fabian-s.github.io/tidyfun/articles/01_tf_Vectors.html">Representing</a> functional data as <code>tf</code> vectors, and operating on those vectors</li>
+<a href="https://fabian-s.github.io/tidyfun/articles/x01_tf_Vectors.html">Representing</a> functional data as <code>tf</code> vectors, and operating on those vectors</li>
 <li>
-<a href="https://fabian-s.github.io/tidyfun/articles/02_Conversion.html">Converting</a> non-tidy functional data (matrices, “long” and “wide” data frames) to tidy functional data</li>
+<a href="https://fabian-s.github.io/tidyfun/articles/x02_Conversion.html">Converting</a> non-tidy functional data (matrices, “long” and “wide” data frames) to tidy functional data</li>
 <li>
-<a href="https://fabian-s.github.io/tidyfun/articles/03_Data_Wrangling.html">Wrangling</a> data frames that include functional data using <code>tidyverse</code> and <code>tidyfun</code> tools</li>
+<a href="https://fabian-s.github.io/tidyfun/articles/x03_Data_Wrangling.html">Wrangling</a> data frames that include functional data using <code>tidyverse</code> and <code>tidyfun</code> tools</li>
 <li>
-<a href="https://fabian-s.github.io/tidyfun/articles/04_Visualization.html">Visualizing</a> tidy functional data</li>
+<a href="https://fabian-s.github.io/tidyfun/articles/x04_Visualization.html">Visualizing</a> tidy functional data</li>
 </ul>
 <p>The result is a package that enables exploratory data analysis like the following, which computes and then smooths group-specific mean curves in the <code>dti_df</code> dataset, and plots the result:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1">dti_df</a>
-<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="co">## # A tibble: 382 x 5</span></a>
-<a class="sourceLine" id="cb1-3" data-line-number="3"><span class="co">##       id sex    case   cca                        rcst                     </span></a>
-<a class="sourceLine" id="cb1-4" data-line-number="4"><span class="co">##    &lt;dbl&gt; &lt;fct&gt;  &lt;fct&gt;  &lt;tfd_irrg&gt;                 &lt;tfd_irrg&gt;               </span></a>
-<a class="sourceLine" id="cb1-5" data-line-number="5"><span class="co">##  1  1001 female contr… 1001_1: (0.000,0.49);(0.0… 1001_1: (0.000,0.26);(0.…</span></a>
-<a class="sourceLine" id="cb1-6" data-line-number="6"><span class="co">##  2  1002 female contr… 1002_1: (0.000,0.47);(0.0… 1002_1: ( 0.22,0.44);( 0…</span></a>
-<a class="sourceLine" id="cb1-7" data-line-number="7"><span class="co">##  3  1003 male   contr… 1003_1: (0.000,0.50);(0.0… 1003_1: ( 0.22,0.42);( 0…</span></a>
-<a class="sourceLine" id="cb1-8" data-line-number="8"><span class="co">##  4  1004 male   contr… 1004_1: (0.000,0.40);(0.0… 1004_1: (0.000,0.51);(0.…</span></a>
-<a class="sourceLine" id="cb1-9" data-line-number="9"><span class="co">##  5  1005 male   contr… 1005_1: (0.000,0.40);(0.0… 1005_1: ( 0.22,0.40);( 0…</span></a>
-<a class="sourceLine" id="cb1-10" data-line-number="10"><span class="co">##  6  1006 male   contr… 1006_1: (0.000,0.45);(0.0… 1006_1: (0.056,0.47);(0.…</span></a>
-<a class="sourceLine" id="cb1-11" data-line-number="11"><span class="co">##  7  1007 male   contr… 1007_1: (0.000,0.55);(0.0… 1007_1: (0.000,0.52);(0.…</span></a>
-<a class="sourceLine" id="cb1-12" data-line-number="12"><span class="co">##  8  1008 male   contr… 1008_1: (0.000,0.45);(0.0… 1008_1: (0.000,0.33);(0.…</span></a>
-<a class="sourceLine" id="cb1-13" data-line-number="13"><span class="co">##  9  1009 male   contr… 1009_1: (0.000,0.50);(0.0… 1009_1: (0.000,0.57);(0.…</span></a>
-<a class="sourceLine" id="cb1-14" data-line-number="14"><span class="co">## 10  1010 male   contr… 1010_1: (0.000,0.46);(0.0… 1010_1: ( 0.22,0.44);( 0…</span></a>
-<a class="sourceLine" id="cb1-15" data-line-number="15"><span class="co">## # … with 372 more rows</span></a>
-<a class="sourceLine" id="cb1-16" data-line-number="16"></a>
-<a class="sourceLine" id="cb1-17" data-line-number="17">dti_df <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb1-18" data-line-number="18"><span class="st">  </span><span class="kw">group_by</span>(case, sex) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb1-19" data-line-number="19"><span class="st">  </span><span class="kw">summarize</span>(<span class="dt">mean_cca =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/mean">mean</a></span>(cca, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb1-20" data-line-number="20"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> mean_cca, <span class="dt">color =</span> case)) <span class="op">+</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb1-21" data-line-number="21"><span class="st">    </span><span class="kw"><a href="reference/ggspaghetti.html">geom_spaghetti</a></span>(<span class="dt">size =</span> <span class="dv">2</span>) <span class="op">+</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb1-22" data-line-number="22"><span class="st">    </span><span class="kw">facet_grid</span>(<span class="op">~</span>sex)</a></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1">dti_df</a>
+<a class="sourceLine" id="cb2-2" data-line-number="2"><span class="co">## # A tibble: 382 x 5</span></a>
+<a class="sourceLine" id="cb2-3" data-line-number="3"><span class="co">##       id sex    case   cca                        rcst                     </span></a>
+<a class="sourceLine" id="cb2-4" data-line-number="4"><span class="co">##    &lt;dbl&gt; &lt;fct&gt;  &lt;fct&gt;  &lt;tfd_irrg&gt;                 &lt;tfd_irrg&gt;               </span></a>
+<a class="sourceLine" id="cb2-5" data-line-number="5"><span class="co">##  1  1001 female contr… 1001_1: (0.000,0.49);(0.0… 1001_1: (0.000,0.26);(0.…</span></a>
+<a class="sourceLine" id="cb2-6" data-line-number="6"><span class="co">##  2  1002 female contr… 1002_1: (0.000,0.47);(0.0… 1002_1: ( 0.22,0.44);( 0…</span></a>
+<a class="sourceLine" id="cb2-7" data-line-number="7"><span class="co">##  3  1003 male   contr… 1003_1: (0.000,0.50);(0.0… 1003_1: ( 0.22,0.42);( 0…</span></a>
+<a class="sourceLine" id="cb2-8" data-line-number="8"><span class="co">##  4  1004 male   contr… 1004_1: (0.000,0.40);(0.0… 1004_1: (0.000,0.51);(0.…</span></a>
+<a class="sourceLine" id="cb2-9" data-line-number="9"><span class="co">##  5  1005 male   contr… 1005_1: (0.000,0.40);(0.0… 1005_1: ( 0.22,0.40);( 0…</span></a>
+<a class="sourceLine" id="cb2-10" data-line-number="10"><span class="co">##  6  1006 male   contr… 1006_1: (0.000,0.45);(0.0… 1006_1: (0.056,0.47);(0.…</span></a>
+<a class="sourceLine" id="cb2-11" data-line-number="11"><span class="co">##  7  1007 male   contr… 1007_1: (0.000,0.55);(0.0… 1007_1: (0.000,0.52);(0.…</span></a>
+<a class="sourceLine" id="cb2-12" data-line-number="12"><span class="co">##  8  1008 male   contr… 1008_1: (0.000,0.45);(0.0… 1008_1: (0.000,0.33);(0.…</span></a>
+<a class="sourceLine" id="cb2-13" data-line-number="13"><span class="co">##  9  1009 male   contr… 1009_1: (0.000,0.50);(0.0… 1009_1: (0.000,0.57);(0.…</span></a>
+<a class="sourceLine" id="cb2-14" data-line-number="14"><span class="co">## 10  1010 male   contr… 1010_1: (0.000,0.46);(0.0… 1010_1: ( 0.22,0.44);( 0…</span></a>
+<a class="sourceLine" id="cb2-15" data-line-number="15"><span class="co">## # … with 372 more rows</span></a>
+<a class="sourceLine" id="cb2-16" data-line-number="16"></a>
+<a class="sourceLine" id="cb2-17" data-line-number="17">dti_df <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb2-18" data-line-number="18"><span class="st">  </span><span class="kw">group_by</span>(case, sex) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb2-19" data-line-number="19"><span class="st">  </span><span class="kw">summarize</span>(<span class="dt">mean_cca =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/mean">mean</a></span>(cca, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb2-20" data-line-number="20"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> mean_cca, <span class="dt">color =</span> case)) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb2-21" data-line-number="21"><span class="st">    </span><span class="kw"><a href="reference/ggspaghetti.html">geom_spaghetti</a></span>(<span class="dt">size =</span> <span class="dv">2</span>) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb2-22" data-line-number="22"><span class="st">    </span><span class="kw">facet_grid</span>(<span class="op">~</span>sex)</a></code></pre></div>
 <p><img src="index_files/figure-html/unnamed-chunk-1-1.png" width="90%"></p>
-<div id="installation" class="section level2">
-<h2 class="hasAnchor">
-<a href="#installation" class="anchor"></a>Installation</h2>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1">devtools<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/devtools/topics/reexports">install_github</a></span>(<span class="st">"fabian-s/tidyfun"</span>)</a></code></pre></div>
 </div>
 <div id="what-does-it-do" class="section level2">
 <h2 class="hasAnchor">
