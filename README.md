@@ -27,7 +27,7 @@ What does it do?
 
 #### New vector-like data types for functional data
 
-**`tidyfun`** provides [new `S3`-classes for functional data](https://fabian-s.github.io/tidyfun/reference/index.html#section-tf-sub-classes-constructors-converters), either as raw data (class `tfd` for *t*idy *f*unctional *d*ata) or in basis representation (class `tfb` for *t*idy *f*unctional *b*asis data).
+**`tidyfun`** provides [new `S3`-classes for functional data](https://tidyfun.github.io/tidyfun/reference/index.html#section-tf-sub-classes-constructors-converters), either as raw data (class `tfd` for *t*idy *f*unctional *d*ata) or in basis representation (class `tfb` for *t*idy *f*unctional *b*asis data).
 
 Such `tf`-objects can be subsetted or subassigned, computed on and summarized.
 
@@ -37,7 +37,7 @@ Almost all
 -   math functions like `sum`, `log` or `abs`
 -   and statistics functions like `mean` or `sd`
 
-are defined for **`tidyfun`**'s data structures ([more](https://fabian-s.github.io/tidyfun/reference/index.html#section-arithmetic-logical-and-summary-functions)).
+are defined for **`tidyfun`**'s data structures ([more](https://tidyfun.github.io/tidyfun/reference/index.html#section-arithmetic-logical-and-summary-functions)).
 
 The `tf` objects are basically glorified lists, so they work well as columns in data frames. That makes it a lot easier to keep your other data and functional measurements together in one object for preprocessing, exploratory analysis and description.
 
@@ -57,7 +57,7 @@ All `dplyr` verbs work on `tf`-columns, so you can `filter`, `mutate`, `summariz
 -   **`gglasagna`** for [lasagna plots](https://asset.jmir.pub/assets/76aeec48564abf0e6f6da8e9cd06346d.png), with an **`order`**-aesthetic to sort the lasagna layers,
 -   **`geom_capellini`** for [glyphs](http://ggobi.github.io/ggally/index_files/figure-html/glyphs-basic-usage-1.png) plots (i.e., sparklines),
 
-as well as new methods for `plot`, `lines` and `points` for quick and easy visualizations of functional data ([more](https://fabian-s.github.io/tidyfun/reference/index.html#section-visualization-display)).
+as well as new methods for `plot`, `lines` and `points` for quick and easy visualizations of functional data ([more](https://tidyfun.github.io/tidyfun/reference/index.html#section-visualization-display)).
 
 ------------------------------------------------------------------------
 
