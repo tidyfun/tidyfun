@@ -19,7 +19,7 @@ Installation
 ------------
 
 ``` r
-devtools::install_github("fabian-s/tidyfun")
+devtools::install_github("tidyfun/tidyfun")
 ```
 
 What does it do?
@@ -46,7 +46,7 @@ At the same time, these objects actually behave like vectors of *functions* to s
 #### `tidyverse` verbs for dealing with functional data inside data frames
 
 All `dplyr` verbs work on `tf`-columns, so you can `filter`, `mutate`, `summarize` etc functional data pretty much like conventional data.
-**`tidyfun`** also provides `tf_gather` & `tf_spread`, `tf_nest` & `tf_unnest` in order to reshape tables with functional data, i.e., go from wide to narrow, or from long to short, and *vice versa* ([see here](https://fabian-s.github.io/tidyfun/articles/x02_Data_Manipulation.html)).
+**`tidyfun`** also provides `tf_gather` & `tf_spread`, `tf_nest` & `tf_unnest` in order to reshape tables with functional data, i.e., go from wide to narrow, or from long to short, and *vice versa* ([see here](https://tidyfun.github.io/tidyfun/articles/x02_Data_Manipulation.html)).
 
 #### New `ggplot2` `geoms` and `stats` for functional data
 
