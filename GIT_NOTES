@@ -1,8 +1,8 @@
 BRANCHES:
 
-- master: keep it clean,i.e., should NEVER fail R CMD check --as-cran 
+- master: keep it clean,i.e., should NEVER fail R CMD check --as-cran. 
 
-- dev: for trying out new stuff
+- dev: for developing. default branch for that reason. merge it into master once major construction work is done and bump version etc.
 
 the pkgdown site should be updated automatically if a successful Travis build 
 was done after a push to master, see 
