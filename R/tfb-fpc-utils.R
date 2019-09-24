@@ -43,6 +43,8 @@ fpc_wsvd.data.frame <- function(data, arg, pve = .995) {
   fpc_wsvd.matrix(data_mat, arg = attr(data_mat, "arg"), pve = pve)
 }
 
+#---------------------------------------------------------------------------
+
 fpc_wrapper <- function(efunctions) {
   function(arg) {
     t(efunctions[, arg, interpolate = TRUE, matrix = TRUE])

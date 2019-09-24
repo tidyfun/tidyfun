@@ -83,3 +83,11 @@ tf_zoom.tfb <- function(f, begin = tf_domain(f)[1], end = tf_domain(f)[2],
   attr(ret, "domain") <- args$dom
   ret
 }
+
+#' @rdname tf_zoom
+#' @export
+tf_zoom.tfb_fpc <-  function(f, begin = tf_domain(f)[1], end = tf_domain(f)[2], 
+                             ...) {
+  warning("zoomed-in FPC representation likely to lose orthogonality of FPC basis.")
+  NextMethod()  
+}
