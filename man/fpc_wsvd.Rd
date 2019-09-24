@@ -4,14 +4,14 @@
 \alias{fpc_wsvd}
 \title{Eigenfunctions via weighted SVD}
 \usage{
-fpc_wsvd(data, pve = 0.995)
+fpc_wsvd(data, arg, pve = 0.995)
 }
 \arguments{
-\item{data}{mueric matrix of function evaluations (each row is one curve, no NAs)}
-
-\item{pve}{percentage of variance explained for truncation lag}
+\item{data}{numeric matrix of function evaluations (each row is one curve, no NAs)}
 
 \item{arg}{numeric vector of argument values}
+
+\item{pve}{percentage of variance explained}
 }
 \value{
 a list with entries
