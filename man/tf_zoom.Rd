@@ -4,6 +4,7 @@
 \alias{tf_zoom}
 \alias{tf_zoom.tfd}
 \alias{tf_zoom.tfb}
+\alias{tf_zoom.tfb_fpc}
 \title{Functions to zoom in/out on functions}
 \usage{
 tf_zoom(f, begin, end, ...)
@@ -12,6 +13,9 @@ tf_zoom(f, begin, end, ...)
   end = tf_domain(f)[2], ...)
 
 \method{tf_zoom}{tfb}(f, begin = tf_domain(f)[1],
+  end = tf_domain(f)[2], ...)
+
+\method{tf_zoom}{tfb_fpc}(f, begin = tf_domain(f)[1],
   end = tf_domain(f)[2], ...)
 }
 \arguments{

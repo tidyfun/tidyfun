@@ -1,3 +1,7 @@
+get_args <- function(args, f) {
+  args[names(args) %in% names(formals(f))]
+}
+
 ensure_list <- function(x) if (!is.list(x)) list(x) else x
 
 unique_id <- function(x) {
@@ -153,11 +157,11 @@ compare_tf_attribs <- function(e1, e2, ignore = c("names", "id")) {
 
 # from refund
 #' @importFrom stats complete.cases
-irreg2mat <- function(ydata, binning = FALSE, maxbins = 1000) {
-  ydata <- ydata[complete.cases(ydata), ]
-  nobs <- length(unique(ydata$.id))
-  newid <- as.numeric(as.factor(ydata$.id))
-  bins <- sort(unique(ydata$.index))
+df_2_mat <- function(data, binning = FALSE, maxbins = 1000) {
+  data <- data[complete.cases(data), ]
+  nobs <- length(unique(data$id))
+  newid <- as.numeric(as.factor(data$id))
+  bins <- sort(unique(data$arg))
   if (binning && (length(bins) > maxbins)) {
     binvalues <- seq((1 - 0.001 * sign(bins[1])) * bins[1],
       (1 + 0.001 * sign(bins[length(bins)])) * bins[length(bins)],
@@ -165,8 +169,7 @@ irreg2mat <- function(ydata, binning = FALSE, maxbins = 1000) {
     )
     bins <- binvalues
     binvalues <- head(filter(binvalues, c(0.5, 0.5)), -1)
-  }
-  else {
+  } else {
     binvalues <- bins
     bins <- c(
       (1 - 0.001 * sign(bins[1])) * bins[1], bins[-length(bins)],
@@ -179,10 +182,10 @@ irreg2mat <- function(ydata, binning = FALSE, maxbins = 1000) {
       bins[length(bins)] <- 0.001
     }
   }
-  newindex <- cut(ydata$.index, breaks = bins, include.lowest = TRUE)
-  Y <- matrix(NA, nrow = nobs, ncol = nlevels(newindex))
-  colnames(Y) <- binvalues
-  attr(Y, "index") <- binvalues
-  Y[cbind(newid, as.numeric(newindex))] <- ydata$.value
-  return(Y)
+  newindex <- cut(data$arg, breaks = bins, include.lowest = TRUE)
+  data_mat <- matrix(NA, nrow = nobs, ncol = nlevels(newindex))
+  colnames(data_mat) <- binvalues
+  attr(data_mat, "arg") <- binvalues
+  data_mat[cbind(newid, as.numeric(newindex))] <- data$data
+  return(data_mat)
 }

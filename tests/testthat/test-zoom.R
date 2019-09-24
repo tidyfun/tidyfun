@@ -4,7 +4,9 @@ set.seed(123)
 x <- tf_rgp(4, arg = seq(0, 1, l = 51), nugget = .1)
 xi <- tf_sparsify(tf_jiggle(x), .2)
 xb <- tfb(x, verbose = FALSE)
-xbi <- tfb_fpc(xi, nbasis = 5)
+xbi <- tfb(xi, verbose = FALSE)
+
+xfpc <- tfb_fpc(x, verbose = FALSE)
 
 
 test_that("tf_zoom for tfd works", {
@@ -24,10 +26,13 @@ test_that("tf_zoom for tfd works", {
 })
 
 
-test_that("tf_zoom for tfb works", {
+test_that("tf_zoom for tfb_spline works", {
   expect_equal(tf_domain(tf_zoom(xb, .2, .8)), c(.2, .8))
   expect_equal(tf_domain(tf_zoom(xbi, .2, .8)), c(.2, .8))
-  expect_equivalent(as.matrix(tf_zoom(xb, 0, .5)), as.matrix(xb)[, 1:26])
+  expect_equivalent(
+    as.matrix(tf_zoom(xb, 0, .5)), 
+    as.matrix(xb)[, 1:26]
+  )
   expect_equivalent(
     as.data.frame(tf_zoom(xbi, 0, .5)),
     as.data.frame(xbi) %>% dplyr::filter(arg <= .5)
@@ -38,4 +43,22 @@ test_that("tf_zoom for tfb works", {
 
   expect_message(tf_zoom(xb, .2, seq(.3, 1, l = length(x))), "converting")
   expect_true(is_irreg(tf_zoom(xb, .2, seq(.3, 1, l = length(x)))))
+})
+
+test_that("tf_zoom for tfb_fpc works", {
+  expect_equal(tf_domain(tf_zoom(xfpc, .2, .8)), c(.2, .8))
+  expect_equivalent(
+    as.matrix(tf_zoom(xfpc, 0, .5)), 
+    as.matrix(xfpc)[, 1:26]
+  )
+  expect_equivalent(
+    as.data.frame(tf_zoom(xfpc, 0, .5)),
+    as.data.frame(xfpc) %>% dplyr::filter(arg <= .5)
+  )
+  
+  expect_error(tf_zoom(xfpc, c(.8, .1)))
+  expect_error(tf_zoom(xb, .11, .111), "no data")
+  
+  expect_message(tf_zoom(xfpc, .2, seq(.3, 1, l = length(x))), "converting")
+  expect_true(is_irreg(tf_zoom(xfpc, .2, seq(.3, 1, l = length(x)))))
 })
