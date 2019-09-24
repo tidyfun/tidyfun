@@ -209,22 +209,18 @@ plot(tfb(raw, k = 55, global = TRUE), main = "global", col = clrs)
 
 ###  **`tfb`** FPC-based
 
-- uses either 
-    - simple unregularized SVD of the data matrix ("`smooth = FALSE`")
-    - or smoothed covariance estimate from `refund::fpca.sc`
+- uses first few eigenfunctions computed from a simple unregularized (weighted) SVD of the data matrix by default
 - corresponding FPC basis and mean function saved as `tfd`-object
 - observed functions are linear combinations of those.
 
 ```{r}
-(ex_fpc <- ex %>% tfb_fpc(smooth = FALSE, pve = .999))
-(ex_fpc_smooth <- ex %>% tfb_fpc(pve = .95))
+(ex_fpc <- ex %>% tfb_fpc(pve = .999))
 ```
 
 ```{r}
 layout(t(1:2))
 ex %>% plot()
 ex_fpc  %>% plot(col = "red", ylab = "tfb_fpc(ex)")
-ex_fpc_smooth %>% lines(col = "blue")
 ```
 
 
