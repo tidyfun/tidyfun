@@ -251,7 +251,7 @@ tf_nest <- function(data, ..., .id = "id", .arg = "arg", domain = NULL,
 #' @param try_dropping should `tf_unnest` try to avoid duplicating `id` or 
 #'  `arg` columns? Defaults to TRUE. 
 #' @inheritParams tf_evaluate.data.frame
-#' @inheritParams tidyr::unnest
+#' @inheritParams tidyr::unnest_legacy
 #' @return a "long" data frame with
 #' @export
 #' @seealso tf_gather(), tf_unnest(), tf_evaluate.data.frame()
@@ -264,7 +264,7 @@ tf_unnest <- function(data, ..., .arg, .drop = NA, .id = "id", .sep = "_",
   ret <- tf_evaluate.data.frame(data, arg = .arg, !!!tfds)
   # don't unnest unevaluated tf-columns:
   preserve <- unique(c(preserve, names(ret)[map_lgl(ret, is_tf)]))
-  ret <- unnest(ret, .drop = .drop, .id = .id, .sep = .sep, 
+  ret <- tidyr::unnest_legacy(ret, .drop = .drop, .id = .id, .sep = .sep, 
     .preserve = preserve)
   
   if (try_dropping) {
