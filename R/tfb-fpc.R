@@ -76,7 +76,6 @@ tfb_fpc <- function(data, ...) UseMethod("tfb_fpc")
 #' @examples 
 #' # Apply FPCA for sparse data using refund::fpca.sc:
 #' set.seed(99290)
-#' library(magrittr)
 #' # create sparse data:
 #' data <- as.data.frame(
 #'   tf_sparsify(
