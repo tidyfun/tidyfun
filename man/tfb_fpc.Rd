@@ -54,9 +54,29 @@ the input data and return an \code{tfb_fpc} \code{tf}-object that uses the empir
 eigenfunctions as basis functions for representing the data. By default, a
 simple, not smoothed, truncated weighted SVD of the functions is used to
 compute those ("\code{method = fpc_wsvd}"). Note that this is suitable only for
-regular data all observed on the same (not necessarily equidistant) grid.\cr
-Any "factorization" method that returns a list structured like the return object
-of \code{\link[=fpc_wsvd]{fpc_wsvd()}} can be used as a method argument.
+regular data all observed on the same (not necessarily equidistant) grid. See
+Details / Example for possible alternatives and extensions. \cr
+}
+\details{
+Any "factorization" method that accepts a \code{data.frame} with
+columns \code{id}, \code{arg}, \code{value} containing the functional data and returns a
+list structured like the return object
+of \code{\link[=fpc_wsvd]{fpc_wsvd()}} can be used for the `method`` argument, see example below.
+}
+\examples{
+# Apply FPCA for sparse data using refund::fpca.sc:
+set.seed(99290)
+# create sparse data:
+data <- tf_rgp(15) \%>\% tf_sparsify() \%>\% as.data.frame()
+# wrap refund::fpca_sc for use as FPCA method in tfb_fpc:
+fpca_sc_wrapper <- function(data, arg, pve = .995, ...) {
+  data_mat <- tidyfun:::df_2_mat(data)
+  fpca <- refund::fpca.sc(Y = data_mat, 
+                          argvals = attr(data_mat, "arg"), 
+                          pve = pve, ...)
+  fpca[c("mu", "efunctions", "scores", "npc")]
+}
+tfb_fpc(data, method = fpca_sc_wrapper)
 }
 \seealso{
 \code{\link[=tfb]{tfb()}},  \code{\link[=fpc_wsvd]{fpc_wsvd()}} for FPCA options.
