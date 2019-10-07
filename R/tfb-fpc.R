@@ -34,6 +34,7 @@ new_tfb_fpc <- function(data, domain = NULL, resolution = NULL,
     basis_matrix = t(fpc),
     arg = arg,
     resolution = resolution,
+    score_variance = fpc_spec$evalues,
     class = c("tfb_fpc", "tfb", "tf")
   )
 }
