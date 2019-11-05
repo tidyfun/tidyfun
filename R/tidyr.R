@@ -247,12 +247,14 @@ tf_nest <- function(data, ..., .id = "id", .arg = "arg", domain = NULL,
 #' Similar in spirit to [tidyr::unnest()], the reverse of `tf_nest`.
 #'
 #' @param data a data frame
-#' @param .arg optional values for the `arg` argument of [tf_evaluate.data.frame()]
-#' @param try_dropping should `tf_unnest` try to avoid duplicating `id` or 
-#'  `arg` columns? Defaults to TRUE. 
+#' @param .arg optional values for the `arg` argument of
+#'   [tf_evaluate.data.frame()]
+#' @param try_dropping should `tf_unnest` try to avoid duplicating `id` or `arg`
+#'   columns? Defaults to TRUE.
 #' @inheritParams tf_evaluate.data.frame
 #' @inheritParams tidyr::unnest_legacy
-#' @return a "long" data frame with
+#' @return a "long" data frame with  `tf`-columns expanded into `id, arg, value`-
+#'   columns.
 #' @export
 #' @seealso tf_gather(), tf_unnest(), tf_evaluate.data.frame()
 #' @importFrom digest digest
@@ -261,7 +263,7 @@ tf_unnest <- function(data, ..., .arg, .drop = NA, .id = "id", .sep = "_",
                       .preserve = NULL, try_dropping = TRUE) {
   preserve <- unname(vars_select(names(data), !!!enquo(.preserve)))
   tfds <- unname(vars_select(names(data), !!!quos(...)))
-  ret <- tf_evaluate.data.frame(data, arg = .arg, !!!tfds)
+  ret <- tf_evaluate.data.frame(data, arg = .arg, !!!tfds) #! .arg not found
   # don't unnest unevaluated tf-columns:
   preserve <- unique(c(preserve, names(ret)[map_lgl(ret, is_tf)]))
   ret <- tidyr::unnest_legacy(ret, .drop = .drop, .id = .id, .sep = .sep, 

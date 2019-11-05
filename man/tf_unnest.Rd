@@ -11,7 +11,7 @@ tf_unnest(data, ..., .arg, .drop = NA, .id = "id", .sep = "_",
 \item{data}{a data frame}
 
 \item{...}{optional:  A selection of columns. If empty, all \code{tf}-variables
-are selected. You can supply bare variable names,
+in the data frame are selected. You can supply bare variable names,
 select all variables between \code{x} and \code{z} with \code{x:z}, exclude \code{y} with \code{-y}.
 For more options, see the \code{\link[dplyr:select]{dplyr::select()}} documentation.}
 

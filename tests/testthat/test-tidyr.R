@@ -52,8 +52,6 @@ test_that("tf_spread works", {
 })
 
 
-
-
 test_that("tf_nest works", {
   f1 <- tf_rgp(3, 11L)
   f2 <- tf_rgp(3, 11L)

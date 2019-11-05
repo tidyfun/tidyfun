@@ -21,7 +21,7 @@ tf_evaluate(object, arg, ...)
 \item{arg}{optional evaluation grid, defaults to \code{tf_arg(object)}.}
 
 \item{...}{optional:  A selection of columns. If empty, all \code{tf}-variables
-are selected. You can supply bare variable names,
+in the data frame are selected. You can supply bare variable names,
 select all variables between \code{x} and \code{z} with \code{x:z}, exclude \code{y} with \code{-y}.
 For more options, see the \code{\link[dplyr:select]{dplyr::select()}} documentation.}
 }
@@ -38,6 +38,19 @@ Evaluate \code{tf}s, both inside or outside a \code{data.frame}
 The \code{arg}-argument of \code{tf_evaluate.data.frame} method can be a
 list of \code{arg}-vectors or -lists used as the \code{arg} argument for the
 \code{\link[=tf_evaluate]{tf_evaluate()}}-method for the respective \code{tf}-columns in \code{object}.
+
+\strong{\code{tf_evaluate.data.frame}} has a slightly weird interface to make
+its use more intuitive -- unless the second argument is a numeric vector,
+it will interpret its second argument as a column name (i.e., as part of
+\code{...}) and not as \code{arg} (see examples).
+}
+\examples{
+d <- tibble(a = tf_rgp(3), b = tf_rgp(3))
+tf_evaluate(d) \%>\% glimpse()
+tf_evaluate(d, -b) \%>\% glimpse()
+tf_evaluate(d, a) \%>\% glimpse() #a interpreted as column specification
+a <- seq(0, 1, l = 11)
+tf_evaluate(d, a) \%>\% glimpse() #a interpreted as <arg> 
 }
 \seealso{
 This is used internally by \code{[.tf} to evaluate \code{object}.

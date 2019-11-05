@@ -98,20 +98,39 @@ evaluate_tfb_once <- function(x, arg, coefs, basis, X, resolution) {
 
 
 #' @rdname tf_evaluate
+#' @details **`tf_evaluate.data.frame`** has a slightly weird interface to make
+#'   its use more intuitive -- unless the second argument is a numeric vector,
+#'   it will interpret its second argument as a column name (i.e., as part of
+#'   `...`) and not as `arg` (see examples).
 #' @param ... optional:  A selection of columns. If empty, all `tf`-variables
-#'   are selected. You can supply bare variable names,
+#'   in the data frame are selected. You can supply bare variable names,
 #'   select all variables between `x` and `z` with `x:z`, exclude `y` with `-y`.
 #'   For more options, see the [dplyr::select()] documentation.
 #' @import tidyr
 #' @importFrom tidyselect vars_select quos
 #' @importFrom rlang quo_text
 #' @export
+#' @examples 
+#' d <- tibble(a = tf_rgp(3), b = tf_rgp(3))
+#' tf_evaluate(d) %>% glimpse()
+#' tf_evaluate(d, -b) %>% glimpse()
+#' tf_evaluate(d, a) %>% glimpse() #a interpreted as column specification
+#' a <- seq(0, 1, l = 11)
+#' tf_evaluate(d, a) %>% glimpse() #a interpreted as <arg> 
 tf_evaluate.data.frame <- function(object, arg, ...) {
-  quos <- quos(...)
-  # figure out which tf columns to evaluate
+  # figure out which tf columns to evaluate:
   tf_cols <- names(object)[map_lgl(object, is_tf)]
-  if (!is_empty(quos)) {
-    to_eval <- unname(vars_select(names(object), !!!quos))
+  tf_to_evaluate <- quos(...)
+  if (nargs() >= 2) {
+    # tricky interface: if we get more than two args, is the second one <arg>
+    # or actually a column name? 
+    if (!isTRUE(try(is.numeric(arg), silent = TRUE))) {
+      tf_to_evaluate <- c(enquo(arg),  tf_to_evaluate)
+      arg <- NULL
+    }
+  } 
+  if (!is_empty(tf_to_evaluate)) {
+    to_eval <- unname(vars_select(names(object), !!!tf_to_evaluate))
     tf_cols <- intersect(tf_cols, to_eval)
   }
   if (!length(tf_cols)) {
