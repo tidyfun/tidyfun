@@ -107,7 +107,7 @@ text(x = -.1, y = ex[,0.07], labels = names(ex), col = pal_5)
 **`tfd`** objects contain "raw" functional data: 
 
  - represented as a list of **`evaluations`** $f_i(t)|_{t=t'}$ and corresponding **`arg`**ument vector(s) $t'$
- - has a **`domain`**:  the range of valid **`arg`**s.
+ - have a **`domain`**:  the range of valid **`arg`**s.
 
 ```{r}
 ex %>% tf_evaluations() %>% str
@@ -212,6 +212,8 @@ plot(tfb(raw, k = 55, global = TRUE), main = "global", col = clrs)
 - uses first few eigenfunctions computed from a simple unregularized (weighted) SVD of the data matrix by default
 - corresponding FPC basis and mean function saved as `tfd`-object
 - observed functions are linear combinations of those.
+- amount of "smoothing" can be controlled (roughly!) by setting the 
+minimal *percentage of variance explained* `pve` 
 
 ```{r}
 (ex_fpc <- ex %>% tfb_fpc(pve = .999))
@@ -221,8 +223,12 @@ plot(tfb(raw, k = 55, global = TRUE), main = "global", col = clrs)
 layout(t(1:2))
 ex %>% plot()
 ex_fpc  %>% plot(col = "red", ylab = "tfb_fpc(ex)")
+ex  %>% tfb_fpc(pve = .1) %>% lines(col = "blue", lty = 2)
 ```
 
+`tfb_fpc` is currently only implemented for data on identical 
+(but possibly non-equidistant) grids. The **`{refunder}`** `rfr_fpca`-functions 
+provide FPCA methods for irregular and sparse data and regularized/smoothed FPCA.
 
 # `tf`-Class: Methods
 
