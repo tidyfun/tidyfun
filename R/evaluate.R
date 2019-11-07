@@ -126,9 +126,10 @@ evaluate_tfb_once <- function(x, arg, coefs, basis, X, resolution) {
 #' @importFrom rlang quo_text
 #' @export
 #' @examples 
+#' library(dplyr)
 #' a <- tf_rgp(3, arg = 7)
 #' b <- tf_rgp(3, arg = 7)
-#' d <- dplyr::tibble(a = a, b = b)
+#' d <- tibble(a = a, b = b)
 #' tf_evaluate(a) %>% str()
 #' tf_evaluate(a, arg = .5) %>% str()
 #' tf_evaluate(d) %>% glimpse()

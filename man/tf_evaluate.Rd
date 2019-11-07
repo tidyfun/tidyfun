@@ -43,9 +43,10 @@ list of \code{arg}-vectors or -lists used as the \code{arg} argument for the
 methods will be interpreted as \code{arg}.
 }
 \examples{
+library(dplyr)
 a <- tf_rgp(3, arg = 7)
 b <- tf_rgp(3, arg = 7)
-d <- dplyr::tibble(a = a, b = b)
+d <- tibble(a = a, b = b)
 tf_evaluate(a) \%>\% str()
 tf_evaluate(a, arg = .5) \%>\% str()
 tf_evaluate(d) \%>\% glimpse()
