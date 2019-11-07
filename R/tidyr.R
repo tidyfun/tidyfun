@@ -38,7 +38,7 @@ tf_gather <- function(data, ..., key = ".tfd", arg = NULL, domain = NULL,
   key_var <- quo_name(enexpr(key))
   evaluator <- quo_name(enexpr(evaluator))
   search_key <- isTRUE(key == ".tfd")
-  quos <- quos(...)
+  quos <- enquos(...)
   if (rlang::is_empty(quos)) {
     gather_vars <- names(data)
   } else {
@@ -261,9 +261,22 @@ tf_nest <- function(data, ..., .id = "id", .arg = "arg", domain = NULL,
 #' @importFrom utils data tail
 tf_unnest <- function(data, ..., .arg, .drop = NA, .id = "id", .sep = "_",
                       .preserve = NULL, try_dropping = TRUE) {
-  preserve <- unname(vars_select(names(data), !!!enquo(.preserve)))
-  tfds <- unname(vars_select(names(data), !!!quos(...)))
-  ret <- tf_evaluate.data.frame(data, arg = .arg, !!!tfds) #! .arg not found
+  ret <- tf_evaluate.data.frame(data, ..., arg = .arg)
+  preserve <- unname(vars_select(names(data), !!enquo(.preserve)))
+  ## call evaluate on these columns with these .arg
+  ## modify call and evaluate that so that empty/missing args are handled
+  ## correctly: 
+  # call <- match.call()
+  # names(call) <- gsub("data", "object", names(call)) %>% 
+  #   gsub(".arg", "arg", ., fixed = TRUE)
+  # call <- call[names(call) %in% c(names(formals(tf_evaluate.data.frame)), "")]
+  # call[[1]] <- quote(tf_evaluate.data.frame)
+  ## avoid scoping issues
+  #call$object <- data 
+  #if (!is.null(call$arg)) call$arg <- .arg
+  #ret <- eval(call)
+  
+  
   # don't unnest unevaluated tf-columns:
   preserve <- unique(c(preserve, names(ret)[map_lgl(ret, is_tf)]))
   ret <- tidyr::unnest_legacy(ret, .drop = .drop, .id = .id, .sep = .sep, 

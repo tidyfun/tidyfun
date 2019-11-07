@@ -10,12 +10,13 @@ tf_unnest(data, ..., .arg, .drop = NA, .id = "id", .sep = "_",
 \arguments{
 \item{data}{a data frame}
 
-\item{...}{optional:  A selection of columns. If empty, all \code{tf}-variables
+\item{...}{optional: a selection of \code{tf}-columns. If empty, all \code{tf}-variables
 in the data frame are selected. You can supply bare variable names,
 select all variables between \code{x} and \code{z} with \code{x:z}, exclude \code{y} with \code{-y}.
 For more options, see the \code{\link[dplyr:select]{dplyr::select()}} documentation.}
 
-\item{.arg}{optional values for the \code{arg} argument of \code{\link[=tf_evaluate.data.frame]{tf_evaluate.data.frame()}}}
+\item{.arg}{optional values for the \code{arg} argument of
+\code{\link[=tf_evaluate.data.frame]{tf_evaluate.data.frame()}}}
 
 \item{.drop}{Should additional list columns be dropped? By default,
 \code{unnest()} will drop them if unnesting the specified columns requires the
@@ -34,11 +35,12 @@ will be duplicated in the same way as atomic vectors. This has
 \code{\link[dplyr:select]{dplyr::select()}} semantics so you can preserve multiple variables with
 \code{.preserve = c(x, y)} or \code{.preserve = starts_with("list")}.}
 
-\item{try_dropping}{should \code{tf_unnest} try to avoid duplicating \code{id} or
-\code{arg} columns? Defaults to TRUE.}
+\item{try_dropping}{should \code{tf_unnest} try to avoid duplicating \code{id} or \code{arg}
+columns? Defaults to TRUE.}
 }
 \value{
-a "long" data frame with
+a "long" data frame with  \code{tf}-columns expanded into \code{id, arg, value}-
+columns.
 }
 \description{
 Similar in spirit to \code{\link[tidyr:unnest]{tidyr::unnest()}}, the reverse of \code{tf_nest}.

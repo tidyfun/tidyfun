@@ -25,8 +25,7 @@ test_that("tf_gather works", {
 })
 
 test_that("tf_spread works", {
-  d <- data_frame(g = 1:3)
-  d$f <- tf_rgp(3, 11L)
+  d <- tibble(g = 1:3, f = tf_rgp(3, 11L))
   expect_equivalent(
     tf_spread(d, f, sep = NULL)[, -1],
     as.data.frame(as.matrix(d$f))
@@ -69,14 +68,18 @@ test_that("tf_nest works", {
   expect_error(tf_nest(data, value.x:value.y), "Columns f are not constant")
 })
 
+# weird scoping problem going on -- fixed by assigning
+# data to tf_evaluate as evaluated object instead of quoted for now,
+# otherwise tfdata is not found inside test environments (related to testthat/#266?)
 test_that("tf_unnest works", {
+  set.seed(121211)
   f1 <- tf_rgp(3, 11L)
   f2 <- tf_rgp(3, 11L)
   data <- inner_join(as.data.frame(f1), as.data.frame(f2), by = c("id", "arg"))
   tfdata <- tf_nest(data)
   expect_equal(NCOL(tf_unnest(tfdata, try_dropping = FALSE)), 7)
-  expect_true(all(tf_unnest(tfdata, try_dropping = TRUE)[] == data))
-  expect_true(all(tf_unnest(tfdata, try_dropping = TRUE)[] == data))
+  expect_equivalent(as.matrix(tf_unnest(tfdata, try_dropping = TRUE)[,2:4]), 
+                    as.matrix(data[,2:4]))
   expect_message(tf_unnest(tfdata, try_dropping = TRUE), "Duplicate columns")
   expect_message(tf_unnest(tfdata, try_dropping = TRUE), "Renamed")
   expect_is(tf_unnest(tfdata, value.x, .preserve = value.y)$value.y, "tfd")
