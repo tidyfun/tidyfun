@@ -1,7 +1,7 @@
 # input homogenizers
 df_2_df <- function(data, id = 1, arg = 2, value = 3) {
   data <- na.omit(data[, c(id, arg, value)])
-  colnames(data) <- c("id", "arg", "data")
+  colnames(data) <- c("id", "arg", "value")
   stopifnot(
     nrow(data) > 0,
     is.numeric(data[[2]]),
@@ -17,7 +17,7 @@ mat_2_df <- function(x, arg) {
   df_2_df(data.frame(
     # use t(x) here so that order of vector remains unchanged...
     id = id[col(t(x))], arg = arg[row(t(x))],
-    data = as.vector(t(x)),
+    value = as.vector(t(x)),
     stringsAsFactors = FALSE
   ))
 }
@@ -79,7 +79,7 @@ fit_unpenalized <- function(data, spec_object, gam_args, arg_u, regular,
 }
 
 fit_unpenalized_ls <- function(data, spec_object, arg_u, regular) {
-  eval_list <- split(data$data, data$id)
+  eval_list <- split(data$value, data$id)
   if (regular) {
     eval_matrix <- do.call(cbind, eval_list)
     qr_basis <- qr(spec_object$X)
@@ -142,7 +142,7 @@ fit_penalized <- function(data, spec_object, gam_args, arg_u, regular, global,
 }
 
 fit_penalized_ls <- function(data, spec_object, arg_u, gam_args, regular) {
-  eval_list <- split(data$data, data$id)
+  eval_list <- split(data$value, data$id)
   index_list <- split(attr(arg_u, "index"), data$id)
   gam_args <- gam_args[names(gam_args) %in% names(formals(mgcv::magic))]
   ret <- map2(
@@ -177,7 +177,7 @@ magic_smooth_coef <- function(evaluations, index, spec_object, gam_args) {
 # fit gam for one curve, with estimated (default, sp=-1) or fixed penalization
 #  or unpenalized 
 fit_ml <- function(data, spec_object, gam_args, arg_u, penalized, sp = -1) {
-  eval_list <- split(data$data, data$id)
+  eval_list <- split(data$value, data$id)
   index_list <- split(attr(arg_u, "index"), data$id)
   arg_u$X <- spec_object$X
   if (penalized) {
@@ -244,41 +244,4 @@ fit_ml_once <- function(index, evaluations, gam_prep, sp) {
        sp = m$sp)
 }
 
-if (FALSE) {
-  # fit_penalized_global <- function(data, spec_object, gam_args) {
-  #   # by = id:   does not work due to centering per
-  #   # bs = "fs": does not work because of internal nat.param
-  #   
-  #   data$id <- factor(data$id, ordered = FALSE)
-  #   # create formula
-  #   s_term <- spec_object$call
-  #   if (!is.null(s_term$xt)) {
-  #     warning("basis specification argument `xt` is ignored if `global = TRUE`.")
-  #   }
-  #   s_term$xt <- s_term$bs
-  #   s_term$bs <- "fs"
-  #   s_term[[length(s_term) + 1]] <- as.symbol("id")
-  #   s_formula <- data ~ arg - 1
-  #   s_formula[[3]][[2]] <- s_term
-  #   # can't use "s(..., by = id") because of centering.
-  #   # set penalty on null space components of "fs" to be negligible:
-  #   gam_args$sp <- c(rep(1e-9, spec_object$null.space.dim), gam_args$sp)
-  #   m <- do.call(bam,
-  #                c(list(formula = s_formula, data = data), gam_args))
-  #   browser()
-  #   coef_list <- split(m$coefficients, 
-  #                      rep(levels(data$id), 
-  #                          each = spec_object$bs.dim))[levels(data$id)]
-  #   null_deviance <- map_dbl(split(m$y, data$id)[levels(data$id)], 
-  #     ~ sum(m$family$dev.resids(.x, mean(.x), 1))
-  #     )
-  #   fit_deviance <- map2_dbl(
-  #     split(m$y, data$id)[levels(data$id)],
-  #     split(m$family$linkinv(m$fitted), data$id)[levels(data$id)], 
-  #     ~ sum(m$family$dev.resids(.x, .y, 1))
-  #     )
-  #   pve <- (null_deviance - fit_deviance)/null_deviance
-  #   return(list(coef = coef_list, pve = pve))
-  # }
-}
   

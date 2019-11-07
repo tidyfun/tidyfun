@@ -12,9 +12,9 @@
 #' functions or the first few estimated eigenfunctions of the covariance
 #' operator of the \eqn{x(t)} (`fpc`) or wavelets (`wavelet`).
 #' 
-#' See [tfb_spline()] for spline based basis representation (the default).
-#' See [tfb_fpc()] for using an FPC representation with an orthonormal basis estimated from the
-#' data instead.
+#' See **[tfb_spline()]** for more details on spline basis representation (the default).  
+#' See **[tfb_fpc()]** for using an functional principal component
+#' representation with an orthonormal basis estimated from the data instead.
 #'
 #' @param data a `matrix`, `data.frame` or `list` of suitable shape, or another
 #'   `tf`-object containing functional data.
@@ -28,10 +28,13 @@
 #' @export
 tfb <- function(data, basis = c("spline", "fpc", "wavelet"), ...) {
   basis <- match.arg(basis)
-  switch(basis,
+  ret <- switch(basis,
          spline  = tfb_spline(data, ...),
          fpc     = tfb_fpc(data, ...),
          wavelet = tfb_wavelet(data, ...))
+  # ensure "minimal" names (principles.tidyverse.org/names-attribute.html)
+  names(ret) <- names(ret) %||% rep("", length(ret))
+  ret
 }  
 
 #' @rdname tfb

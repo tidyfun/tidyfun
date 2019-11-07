@@ -11,23 +11,23 @@
 tfb_fpc(data, ...)
 
 \method{tfb_fpc}{data.frame}(data, id = 1, arg = 2, value = 3,
-  domain = NULL, smooth = TRUE, resolution = NULL, ...)
+  domain = NULL, method = fpc_wsvd, resolution = NULL, ...)
 
 \method{tfb_fpc}{matrix}(data, arg = NULL, domain = NULL,
-  smooth = TRUE, resolution = NULL, ...)
+  method = fpc_wsvd, resolution = NULL, ...)
 
 \method{tfb_fpc}{numeric}(data, arg = NULL, domain = NULL,
-  smooth = TRUE, resolution = NULL, ...)
+  method = fpc_wsvd, resolution = NULL, ...)
 
-\method{tfb_fpc}{tf}(data, arg = NULL, smooth = TRUE, ...)
+\method{tfb_fpc}{tf}(data, arg = NULL, method = fpc_wsvd, ...)
 }
 \arguments{
 \item{data}{a \code{matrix}, \code{data.frame} or \code{list} of suitable shape, or another \code{tf}-object.}
 
-\item{...}{arguments to the call to \code{\link[refund:fpca.sc]{refund::fpca.sc()}} that computes the
-(regularized/smoothed) FPCA. Unless set by the user \code{tidyfun} uses \code{pve = .995} to
-determine the truncation levels and uses \code{bs = 15} basis functions for
-the mean function and the marginal bases for the covariance surface.}
+\item{...}{arguments to the \code{method} which computes the
+(regularized/smoothed) FPCA.
+Unless set by the user \code{tidyfun} uses proportion of variance explained
+\code{pve = .995} to determine the truncation levels.}
 
 \item{id}{The name/number of the column defining which data belong to which function.}
 
@@ -38,24 +38,49 @@ For the \code{data.frame}-method: the name/number of the column defining the eva
 
 \item{domain}{range of the \code{arg}.}
 
-\item{smooth}{use smoothed mean function and smoothed covariance surface estimates
-from \code{\link[refund:fpca.sc]{refund::fpca.sc()}} or simply perform a (truncated) PCA of the data? See Details.}
+\item{method}{the function to use that computes eigenfunctions and scores.
+Defaults to \code{\link[=fpc_wsvd]{fpc_wsvd()}}, which gives unsmoothed eigenfunctions.}
 
 \item{resolution}{resolution of the evaluation grid. See details for \code{\link[=tfd]{tfd()}}.}
 }
+\value{
+an object of class \code{tfb_fpc}, inheriting from \code{tfb}.
+The basis used by \code{tfb_fpc} is a \code{tfd}-vector containing the estimated
+mean and eigenfunctions.
+}
 \description{
-These functions perform a (functional) principal component analysis of the
-input data and return an \code{tfb_fpc} \code{tf}-object that uses the empirical
+These functions perform a (functional) principal component analysis (FPCA) of
+the input data and return an \code{tfb_fpc} \code{tf}-object that uses the empirical
 eigenfunctions as basis functions for representing the data. By default, a
-\code{smooth}ed FPCA via \code{\link[refund:fpca.sc]{refund::fpca.sc()}} is used to compute eigenfunctions and
-scores based on the smoothed empirical covariance.
-If \code{smooth =FALSE}, a fast, unregularized PCA of the data is done instead.
+simple, not smoothed, truncated weighted SVD of the functions is used to
+compute those ("\code{method = fpc_wsvd}"). Note that this is suitable only for
+regular data all observed on the same (not necessarily equidistant) grid. See
+Details / Example for possible alternatives and extensions. \cr
 }
 \details{
-ATM, the unsmoothed version does not use orthogonal basis "functions"
-for irregular / non-equidistant grids and does not work for
-incomplete/irregular data.
+Any "factorization" method that accepts a \code{data.frame} with
+columns \code{id}, \code{arg}, \code{value} containing the functional data and returns a
+list structured like the return object
+of \code{\link[=fpc_wsvd]{fpc_wsvd()}} can be used for the `method`` argument, see example below.
+}
+\examples{
+# Apply FPCA for sparse data using refund::fpca.sc:
+set.seed(99290)
+# create sparse data:
+data <- as.data.frame(
+  tf_sparsify(
+    tf_rgp(15)
+))
+# wrap refund::fpca_sc for use as FPCA method in tfb_fpc:
+fpca_sc_wrapper <- function(data, arg, pve = .995, ...) {
+  data_mat <- tidyfun:::df_2_mat(data)
+  fpca <- refund::fpca.sc(Y = data_mat, 
+                          argvals = attr(data_mat, "arg"), 
+                          pve = pve, ...)
+  fpca[c("mu", "efunctions", "scores", "npc")]
+}
+tfb_fpc(data, method = fpca_sc_wrapper)
 }
 \seealso{
-\code{\link[=tfb]{tfb()}},  \code{\link[refund:fpca.sc]{refund::fpca.sc()}} for principal components options.
+\code{\link[=tfb]{tfb()}},  \code{\link[=fpc_wsvd]{fpc_wsvd()}} for FPCA options.
 }

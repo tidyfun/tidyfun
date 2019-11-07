@@ -38,7 +38,7 @@ tf_gather <- function(data, ..., key = ".tfd", arg = NULL, domain = NULL,
   key_var <- quo_name(enexpr(key))
   evaluator <- quo_name(enexpr(evaluator))
   search_key <- isTRUE(key == ".tfd")
-  quos <- quos(...)
+  quos <- enquos(...)
   if (rlang::is_empty(quos)) {
     gather_vars <- names(data)
   } else {
@@ -247,24 +247,39 @@ tf_nest <- function(data, ..., .id = "id", .arg = "arg", domain = NULL,
 #' Similar in spirit to [tidyr::unnest()], the reverse of `tf_nest`.
 #'
 #' @param data a data frame
-#' @param .arg optional values for the `arg` argument of [tf_evaluate.data.frame()]
-#' @param try_dropping should `tf_unnest` try to avoid duplicating `id` or 
-#'  `arg` columns? Defaults to TRUE. 
+#' @param .arg optional values for the `arg` argument of
+#'   [tf_evaluate.data.frame()]
+#' @param try_dropping should `tf_unnest` try to avoid duplicating `id` or `arg`
+#'   columns? Defaults to TRUE.
 #' @inheritParams tf_evaluate.data.frame
-#' @inheritParams tidyr::unnest
-#' @return a "long" data frame with
+#' @inheritParams tidyr::unnest_legacy
+#' @return a "long" data frame with  `tf`-columns expanded into `id, arg, value`-
+#'   columns.
 #' @export
 #' @seealso tf_gather(), tf_unnest(), tf_evaluate.data.frame()
 #' @importFrom digest digest
 #' @importFrom utils data tail
 tf_unnest <- function(data, ..., .arg, .drop = NA, .id = "id", .sep = "_",
                       .preserve = NULL, try_dropping = TRUE) {
-  preserve <- unname(vars_select(names(data), !!!enquo(.preserve)))
-  tfds <- unname(vars_select(names(data), !!!quos(...)))
-  ret <- tf_evaluate.data.frame(data, arg = .arg, !!!tfds)
+  ret <- tf_evaluate.data.frame(data, ..., arg = .arg)
+  preserve <- unname(vars_select(names(data), !!enquo(.preserve)))
+  ## call evaluate on these columns with these .arg
+  ## modify call and evaluate that so that empty/missing args are handled
+  ## correctly: 
+  # call <- match.call()
+  # names(call) <- gsub("data", "object", names(call)) %>% 
+  #   gsub(".arg", "arg", ., fixed = TRUE)
+  # call <- call[names(call) %in% c(names(formals(tf_evaluate.data.frame)), "")]
+  # call[[1]] <- quote(tf_evaluate.data.frame)
+  ## avoid scoping issues
+  #call$object <- data 
+  #if (!is.null(call$arg)) call$arg <- .arg
+  #ret <- eval(call)
+  
+  
   # don't unnest unevaluated tf-columns:
   preserve <- unique(c(preserve, names(ret)[map_lgl(ret, is_tf)]))
-  ret <- unnest(ret, .drop = .drop, .id = .id, .sep = .sep, 
+  ret <- tidyr::unnest_legacy(ret, .drop = .drop, .id = .id, .sep = .sep, 
     .preserve = preserve)
   
   if (try_dropping) {

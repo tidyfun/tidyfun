@@ -17,6 +17,11 @@ covar <- read_csv(here::here("data-raw", "covariate.csv"))
 activity <- read_csv(here::here("data-raw", "activity.csv"))
 
 chf_df <- inner_join(covar, filter(activity, week == 1), by = "id") %>%
-  tf_gather(activity.1:activity.1440, key = activity)
+  tf_gather(activity.1:activity.1440, key = activity) %>% 
+  select(-week) %>% 
+  mutate(day = ordered(day, 
+    levels = c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday",
+      "Saturday", "Sunday"), 
+    labels = c("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun")))
 
 usethis::use_data(chf_df, overwrite = TRUE)

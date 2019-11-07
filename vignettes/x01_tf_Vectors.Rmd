@@ -198,23 +198,27 @@ plot(tfb(raw, k = 55, global = TRUE), main = "global", col = clrs)
 
 ###  **`tfb`** FPC-based
 
-- uses either 
-    - simple unregularized SVD of the data matrix ("`smooth = FALSE`")
-    - or smoothed covariance estimate from `refund::fpca.sc`
+- uses first few eigenfunctions computed from a simple unregularized (weighted) SVD of the data matrix by default
 - corresponding FPC basis and mean function saved as `tfd`-object
 - observed functions are linear combinations of those.
+- amount of "smoothing" can be controlled (roughly!) by setting the 
+minimal *percentage of variance explained* `pve` 
 
 ```{r}
-(cca_five_fpc <- cca_five %>% tfb_fpc(smooth = FALSE, pve = .999))
-(cca_five_fpc_smooth <- cca_five %>% tfb_fpc(pve = .95))
+(cca_five_fpc <- cca_five %>% tfb_fpc(pve = .999))
+(cca_five_fpc_lowrank <- cca_five %>% tfb_fpc(pve = .3))
 ```
 
 ```{r}
 layout(t(1:2))
 cca_five %>% plot()
 cca_five_fpc  %>% plot(col = "red", ylab = "tfb_fpc(cca_five)")
-cca_five_fpc_smooth %>% lines(col = "blue")
+cca_five_fpc_lowrank %>% lines(col = "blue")
 ```
+
+`tfb_fpc` is currently only implemented for data on identical 
+(but possibly non-equidistant) grids. The **`{refunder}`** `rfr_fpca`-functions 
+provide FPCA methods for irregular and sparse data and regularized/smoothed FPCA.
 
 
 # `tf`-Class: Methods
