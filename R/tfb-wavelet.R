@@ -1,23 +1,42 @@
 new_tfb_wavelet <- function(data, domain = NULL, levels = 6, verbose = TRUE, ...) {
   
   domain <- domain %||% range(data$arg)
-  n <- domain[2]
+  arg_u <- mgcv::uniquecombs(data$arg, ordered = TRUE)
   
-  dyadic_params <- check_dyadic(n)
-  spacing_params <- check_spacing(sort(unique(data$arg)))
-  # Use Signal Extension and grid adjustment algorithms
-  data <- grid_adjustment(data, dyadic_params, spacing_params)
+  # explicit factor-conversion to avoid reordering:
+  data$id <- factor(data$id, levels = unique(as.character(data$id)))
+  
+  n_evaluations <- table(data$id)
+  arg_list <- split(data$arg, data$id)
+  regular <- all(duplicated(arg_list)[-1])
+  
+  if (regular) {
+    dyadic_params <- check_dyadic(nrow(arg_u))
+    spacing_params <- check_spacing(sort(unique(data$arg)))
+    data <- grid_adjustment(data, dyadic_params, spacing_params)
+  } else {
+    dyadic_params <- check_dyadic(n_evaluations)
+    # check_spacing needs to handle lists to make the output similar to check_dyadic
+    spacing_params <- lapply(arg_list, check_spacing)
+    data <- grid_adjustment(data, dyadic_params, spacing_params)
+  }
+  
+
+  
+  
+  
   
   
   threshold_args <- list(...)[names(list(...)) %in% 
                                 names(formals(wavethresh::threshold.wd))]
   wd_args <- list(...)[names(list(...)) %in% names(formals(wavethresh::wd))]
   
-  fit <- fit_wavelet(data, threshold_args, wd_args, levels = levels)
+  fit <- fit_wavelet(data, threshold_args, wd_args, levels, arg_u, regular)
   
   ret <- structure(fit,
-                   
                    domain = domain,
+                   thresh_arg = threshold_arg,
+                   basis_matrix = X,
                    filter = filter,
                    class = c("tfb_wavelet", "tfb", "tf")
   )
