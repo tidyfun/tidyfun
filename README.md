@@ -63,8 +63,8 @@ articles on the following
     tidy functional data
 
 The result is a package that enables exploratory data analysis like the
-following, which computes and then smooths group-specific mean curves in
-the `dti_df` dataset, and plots the result:
+following, which computes group-specific mean curves in the `dti_df`
+dataset, and plots the result:
 
 ``` r
 library("tidyfun")
@@ -75,7 +75,7 @@ dti_df %>%
   summarize(mean_cca = mean(cca, na.rm = TRUE)) %>% 
   ggplot(aes(y = mean_cca, color = case)) + 
     geom_spaghetti(size = 2) + 
-    facet_grid(~sex)
+    facet_grid(~ sex)
 ```
 
 <img src="README_files/figure-gfm/unnamed-chunk-1-1.png" width="90%" />

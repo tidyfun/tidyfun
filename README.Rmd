@@ -67,7 +67,7 @@ For detailed information on the features of `tidyfun`, check out articles on the
 
 The result is a package that enables exploratory data analysis like the following, which computes group-specific mean curves in the `dti_df` dataset, and plots the result:
 
-```{r}
+```{r message=FALSE}
 library("tidyfun")
 data(dti_df, package = "tidyfun")
 
@@ -76,7 +76,7 @@ dti_df %>%
   summarize(mean_cca = mean(cca, na.rm = TRUE)) %>% 
   ggplot(aes(y = mean_cca, color = case)) + 
     geom_spaghetti(size = 2) + 
-    facet_grid(~sex)
+    facet_grid(~ sex)
 ```
 
 
