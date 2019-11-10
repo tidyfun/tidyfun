@@ -30,7 +30,9 @@ tf_smooth <- function(x, ...) {
 #' @export
 #' @rdname tf_smooth
 tf_smooth.tfb <- function(x, ...) {
-  message("just use a smaller base / more penalty....")
+  warning("you called tf_smooth on a tfb object, not on a tfd object -- ", 
+          "just use a smaller basis or stronger penalization.\n",
+          "Returning unchanged tfb object.")
   x
 }
 #' @importFrom stats lowess

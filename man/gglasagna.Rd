@@ -5,8 +5,7 @@
 \title{Lasagna plots for \code{tf}s using \code{ggplot2}}
 \usage{
 gglasagna(data, y, order = NULL, label = NULL, arg = NULL,
-  order_by = NULL, order_ticks = TRUE, order_ticks_color = "black",
-  order_ticks_linetype = 2, order_ticks_alpha = 0.5)
+  order_by = NULL, order_ticks = TRUE)
 }
 \arguments{
 \item{data}{the data. Duhh.}
@@ -25,13 +24,10 @@ lasagna layers. Defaults to names of \code{y}, if present, or row numbers.}
 return a scalar value to define the order of lasagna layers.}
 
 \item{order_ticks}{add horizontal lines indicating borders between levels of
-\code{order} (if discrete)? Defaults to true.}
-
-\item{order_ticks_color}{defaults to "black"}
-
-\item{order_ticks_linetype}{defaults to 2}
-
-\item{order_ticks_alpha}{defaults to 0.5}
+\code{order} (if it is a discrete variable) and labels for its levels?
+Defaults to TRUE. Supply a list of arguments (grep source code for `order_ticks_args``)
+to override default appearance of labels.
+\strong{Switch this off if you use facetting, it's a hack and will produce nonsense.}}
 }
 \value{
 a `ggplot2`` object
@@ -54,15 +50,19 @@ ordering of observations for \code{arrange(data, order, order_by(value), row_num
 \examples{
 \dontrun{
 set.seed(1221)
-data = expand.grid(group = 1:5, rep = 1:10)
-data = dplyr::mutate(data, id = paste(group, rep, sep = "-"))
-data$f = tf_rgp(50)
-data$fi = tf_sparsify(data$f)
-data$fb = tfb(data$f)
+data = expand.grid(group = factor(1:5), rep = 1:10)
+data = dplyr::mutate(data, 
+                     id = paste(group, rep, sep = "-"), 
+                     f =  tf_rgp(50),
+                     fb = tfb(f))
+
 gglasagna(data, f, label = id)
-gglasagna(data, f, label = id, order = group)
-gglasagna(data, f, label = id, order = group)
+gglasagna(data, fb, label = id, order = group)
+# order is lowest first / on top by default
 gglasagna(data, f, label = id, order = tf_depth(f))
 gglasagna(data, f, label = id, order_by = first) +
-  facet_wrap(~group, scales = "free")}
+  facet_wrap(~group, scales = "free")
+# order of layers is by "order_by" within "order":
+gglasagna(data, fb, label = id, order = group, order_by = first)
+}
 }

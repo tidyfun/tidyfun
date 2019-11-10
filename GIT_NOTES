@@ -1,11 +1,18 @@
 BRANCHES:
 
-- master: keep it clean,i.e., should NEVER fail R CMD check --as-cran 
+- master: keep it clean,i.e., should NEVER fail R CMD check --as-cran. 
 
-- dev: for trying out new stuff
+- dev: for developing. default branch for that reason. merge it into master once major construction work is done and bump version etc.
 
-To update pkgdown site, make sure the master branch is clean and the docs are
-up-to-date, then run pkgdown::build_site() and do:
+the pkgdown site should be updated automatically if a successful Travis build 
+was done after a push to master, see 
+r-bloggers.com/continuous-deployment-of-package-documentation-with-pkgdown-and-travis-ci/
+
+if not:
+- make sure the master branch is clean and the docs are up-to-date
+- run pkgdown::build_site() 
+
+- do:
 
 git commit -a -m "update pkgdown for $CURRENT_VERSION"
 git push

@@ -4,6 +4,8 @@ new_tfb_spline <- function(data, domain = NULL, penalized = TRUE, global = FALSE
   domain <- domain %||% range(data$arg)
   arg_u <- mgcv::uniquecombs(data$arg, ordered = TRUE)
   resolution <- resolution %||% get_resolution(arg_u)
+  domain <- c(round_resolution(domain[1], resolution, -1),
+              round_resolution(domain[2], resolution, 1))
   # explicit factor-conversion to avoid reordering:
   data$id <- factor(data$id, levels = unique(as.character(data$id)))
   
@@ -188,7 +190,7 @@ tfb_spline.numeric <- function(data, arg = NULL,
                                domain = NULL, penalized = TRUE, 
                                global = FALSE, resolution = NULL, ...) {
   data <- t(as.matrix(data))
-  tfb(data = data, arg = arg, domain = domain, penalized = penalized,
+  tfb_spline(data = data, arg = arg, domain = domain, penalized = penalized,
       global = global, resolution = resolution, ...)
 }
 
@@ -206,7 +208,7 @@ tfb_spline.list <- function(data, arg = NULL,
     if (all(lengths == lengths[1])) {
       data <- do.call(rbind, data)
       # dispatch to matrix method
-      return(tfb(data, arg, domain = domain, penalized = penalized, 
+      return(tfb_spline(data, arg, domain = domain, penalized = penalized, 
                  global = global, resolution = resolution, ...))
     } 
     stopifnot(
@@ -223,9 +225,9 @@ tfb_spline.list <- function(data, arg = NULL,
   data <- dplyr::tibble(
     id = unique_id(names(data)) %||% seq_along(data),
     funs = data
-  ) %>% { tidyr::unnest(.) }
+  ) %>% { tidyr::unnest_legacy(.) }
   # dispatch to data.frame method
-  ret <- tfb(data, domain = domain, penalized = penalized, 
+  ret <- tfb_spline(data, domain = domain, penalized = penalized, 
              global = global, resolution = resolution, ...)
   names(ret) <- names_data
   ret
@@ -242,7 +244,7 @@ tfb_spline.tfd <- function(data, arg = NULL,
   resolution <- resolution %||% tf_resolution(data)
   names_data <- names(data)
   data <- as.data.frame(data, arg)
-  ret <- tfb(data, domain = domain, penalized = penalized, 
+  ret <- tfb_spline(data, domain = domain, penalized = penalized, 
              global = global,  resolution = resolution, ...)
   names(ret) <- names_data
   ret

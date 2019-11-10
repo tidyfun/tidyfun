@@ -1,10 +1,15 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# tidyfun <img src="https://github.com/fabian-s/tidyfun/blob/master/README_files/figures/tidyfun_hex.gif?raw=true" align="right" height = "150" />
+# tidyfun <img src="https://github.com/tidyfun/tidyfun/blob/master/README_files/figures/tidyfun_hex.gif?raw=true" align="right" height = "150" />
+
+<!-- badges: start -->
 
 [![Build
-Status](https://travis-ci.org/fabian-s/tidyfun.svg?branch=master)](https://travis-ci.org/fabian-s/tidyfun)
+Status](https://travis-ci.org/tidyfun/tidyfun.svg?branch=master)](https://travis-ci.org/tidyfun/tidyfun)
+[![Lifecycle:
+experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
+<!-- badges: end -->
 
 The goal of **`tidyfun`** is to provide accessible and well-documented
 software that **makes functional data analysis in `R` easy** –
@@ -23,7 +28,7 @@ numeric, factor, and other observations on the same subject.
 ## Installation
 
 ``` r
-devtools::install_github("fabian-s/tidyfun")
+devtools::install_github("tidyfun/tidyfun")
 ```
 
 ## Overview
@@ -43,18 +48,18 @@ For detailed information on the features of `tidyfun`, check out
 articles on the following
     topics:
 
-  - [Representing](https://fabian-s.github.io/tidyfun/articles/x01_tf_Vectors.html)
+  - [Representing](https://tidyfun.github.io/tidyfun/articles/x01_tf_Vectors.html)
     functional data as `tf` vectors, and operating on those
     vectors
-  - [Converting](https://fabian-s.github.io/tidyfun/articles/x02_Conversion.html)
+  - [Converting](https://tidyfun.github.io/tidyfun/articles/x02_Conversion.html)
     non-tidy functional data (matrices, “long” and “wide” data frames)
     to tidy functional
     data
-  - [Wrangling](https://fabian-s.github.io/tidyfun/articles/x03_Data_Wrangling.html)
+  - [Wrangling](https://tidyfun.github.io/tidyfun/articles/x03_Data_Wrangling.html)
     data frames that include functional data using `tidyverse` and
     `tidyfun`
     tools
-  - [Visualizing](https://fabian-s.github.io/tidyfun/articles/x04_Visualization.html)
+  - [Visualizing](https://tidyfun.github.io/tidyfun/articles/x04_Visualization.html)
     tidy functional data
 
 The result is a package that enables exploratory data analysis like the
@@ -62,21 +67,8 @@ following, which computes and then smooths group-specific mean curves in
 the `dti_df` dataset, and plots the result:
 
 ``` r
-dti_df
-## # A tibble: 382 x 5
-##       id sex    case   cca                        rcst                     
-##    <dbl> <fct>  <fct>  <tfd_irrg>                 <tfd_irrg>               
-##  1  1001 female contr… 1001_1: (0.000,0.49);(0.0… 1001_1: (0.000,0.26);(0.…
-##  2  1002 female contr… 1002_1: (0.000,0.47);(0.0… 1002_1: ( 0.22,0.44);( 0…
-##  3  1003 male   contr… 1003_1: (0.000,0.50);(0.0… 1003_1: ( 0.22,0.42);( 0…
-##  4  1004 male   contr… 1004_1: (0.000,0.40);(0.0… 1004_1: (0.000,0.51);(0.…
-##  5  1005 male   contr… 1005_1: (0.000,0.40);(0.0… 1005_1: ( 0.22,0.40);( 0…
-##  6  1006 male   contr… 1006_1: (0.000,0.45);(0.0… 1006_1: (0.056,0.47);(0.…
-##  7  1007 male   contr… 1007_1: (0.000,0.55);(0.0… 1007_1: (0.000,0.52);(0.…
-##  8  1008 male   contr… 1008_1: (0.000,0.45);(0.0… 1008_1: (0.000,0.33);(0.…
-##  9  1009 male   contr… 1009_1: (0.000,0.50);(0.0… 1009_1: (0.000,0.57);(0.…
-## 10  1010 male   contr… 1010_1: (0.000,0.46);(0.0… 1010_1: ( 0.22,0.44);( 0…
-## # … with 372 more rows
+library("tidyfun")
+data(dti_df, package = "tidyfun")
 
 dti_df %>% 
   group_by(case, sex) %>% 
@@ -93,7 +85,7 @@ dti_df %>%
 #### New vector-like data types for functional data
 
 **`tidyfun`** provides [new `S3`-classes for functional
-data](https://fabian-s.github.io/tidyfun/reference/index.html#section-tf-sub-classes-constructors-converters),
+data](https://tidyfun.github.io/tidyfun/reference/index.html#section-tf-sub-classes-constructors-converters),
 either as raw data (class `tfd` for *t*idy *f*unctional *d*ata) or in
 basis representation (class `tfb` for *t*idy *f*unctional *b*asis data).
 
@@ -107,7 +99,7 @@ Almost all
   - and statistics functions like `mean` or `sd`
 
 are defined for **`tidyfun`**’s data structures
-([more](https://fabian-s.github.io/tidyfun/reference/index.html#section-arithmetic-logical-and-summary-functions)).
+([more](https://tidyfun.github.io/tidyfun/reference/index.html#section-arithmetic-logical-and-summary-functions)).
 
 The `tf` objects are basically glorified lists, so they work well as
 columns in data frames. That makes it a lot easier to keep your other
@@ -118,32 +110,32 @@ extent, i.e., they can be evaluated on any point in their domain, they
 can be integrated or differentiated, etc.
 
 [See
-here](https://fabian-s.github.io/tidyfun/articles/x01_tf_Vectors.html))
+here](https://tidyfun.github.io/tidyfun/articles/x01_tf_Vectors.html)
 for more information on the operations defined for `tf` vectors.
 
 #### Methods for converting existing data to `tf`
 
 **`tidyfun`** includes functions `tfd` and `tfb` for converting
-matrices, data frames, and some other types to `tf` vectors. It also
-provides `tf_gather` & `tf_nest` in order to reshape tables with
-functional data, by going from wide to narrow or from long to short;
-functions like `as.matrix`, `tf_spread` & `tf_unnest` can reverse these
-data conversions.
+matrices, data frames, etc. to `tf` vectors. It also provides
+`tf_gather` & `tf_nest` in order to reshape tables with functional data,
+by going from wide to narrow or from long to short; functions like
+`as.matrix`, `tf_spread` & `tf_unnest` can reverse these data
+conversions.
 
 [See
-here](https://fabian-s.github.io/tidyfun/articles/x02_Conversion.html)
+here](https://tidyfun.github.io/tidyfun/articles/x02_Conversion.html)
 details on getting data into (and out of) the `tf`
 format.
 
 #### `tidyverse` verbs for dealing with functional data inside data frames
 
 All `dplyr` verbs work on `tf`-columns, so you can `filter`, `mutate`,
-`group_by` & `summarize`, etc, functional data pretty much like
+`group_by` & `summarize`, etc., functional data pretty much like
 conventional “tidy” data. **`tidyfun`** adds several functions that are
 useful in conjunction with these, like `tf_anywhere` and `tf_smooth`.
 
 [See
-here](https://fabian-s.github.io/tidyfun/articles/x03_Data_Wrangling.html)
+here](https://tidyfun.github.io/tidyfun/articles/x03_Data_Wrangling.html)
 to see how you can wrangle functional data.
 
 #### New `ggplot2` `geoms` and `stats` for functional data
@@ -163,8 +155,11 @@ as well as new methods for base R graphics functions `plot`, `lines` and
 `points` for quick and easy visualizations of functional data.
 
 [See
-here](https://fabian-s.github.io/tidyfun/reference/index.html#section-visualization-display)
-for illustrations of visualization approaches.
+here](https://tidyfun.github.io/tidyfun/reference/index.html#section-visualization-display)
+for the documentation of the visualization approaches or take a look at
+the
+[Visualization](https://tidyfun.github.io/tidyfun/articles/x04_Visualization.html)
+vignette.
 
 -----
 

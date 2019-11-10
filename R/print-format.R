@@ -90,7 +90,7 @@ print.tfd_irreg <- function(x, n = 10, ...) {
 #' @export
 print.tfb <- function(x, n = 10, ...) {
   NextMethod()
-  cat(" in basis representation:\n using basis ", attr(x, "basis_label"), "\n")
+  cat(" in basis representation:\n using ", attr(x, "basis_label"), "\n")
   if (length(x)) {
     cat(format(x[1:min(n, length(x))], ...), sep = "\n")
     if (n < length(x)) {
@@ -115,7 +115,7 @@ format.tf <- function(x, digits = 2, nsmall = 0, width = options()$width,
     digits = digits, nsmall = nsmall, ...
   )
   if (prefix) {
-    prefix <- if (!is.null(names(x))) {
+    prefix <- if (!all(names(x) == "")) {
       names(x)[seq_along(str)]
     } else {
       paste0("[", seq_along(str), "]")

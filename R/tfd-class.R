@@ -39,6 +39,8 @@ new_tfd <- function(arg, datalist, regular, domain, evaluator, resolution) {
     arg <- list(arg[[1]])
     class <- "tfd_reg"
   }
+  # ensure "minimal" names (principles.tidyverse.org/names-attribute.html)
+  names(datalist) <- names(datalist) %||% rep("", length(datalist))
   ret <- structure(datalist,
     arg = arg,
     domain = domain,
@@ -161,23 +163,24 @@ tfd.list <- function(data, arg = NULL, domain = NULL,
   evaluator <- quo_name(enexpr(evaluator))
   vectors <- map_lgl(data, ~ is.numeric(.) & !is.array(.))
   if (all(vectors)) {
+    where_na <- map(data, is.na)
+    data <- map2(data, where_na, ~ .x[!.y])
     lengths <- vapply(data, length, numeric(1))
     regular <- all(lengths == lengths[1]) &
-      (is.numeric(arg) || all(duplicated(arg)[-1]))
-    if (regular) {
-      data <- do.call(rbind, data)
-      # dispatch to matrix method
-      args <- list(data,
-        arg = arg, domain = domain,
-        evaluator = evaluator, resolution = resolution
-      )
-      return(do.call(tfd, args))
+      (is.numeric(arg) || all(duplicated(arg)[-1])) # duplicated(NULL) == TRUE!
+    if (!regular) {
+      stopifnot(!is.null(arg), length(arg) == length(data), 
+                all(vapply(arg, length, numeric(1)) == 
+                      vapply(where_na, length, numeric(1))))
+      arg <- map2(arg, where_na, ~ .x[!.y])
     } else {
-      stopifnot(
-        !is.null(arg), length(arg) == length(data),
-        all(vapply(arg, length, numeric(1)) == lengths)
-      )
+      if (!is.null(arg)) {
+        arg <- ensure_list(arg)
+        assert_numeric(arg[[1]], finite = TRUE, any.missing = FALSE, 
+                       sorted = TRUE)
+      }
     }
+    
   }
   if (!any(vectors)) {
     dims <- map(data, dim)
@@ -204,10 +207,11 @@ tfd.list <- function(data, arg = NULL, domain = NULL,
 #' @rdname tfd
 tfd.tf <- function(data, arg = NULL, domain = NULL,
                    evaluator = NULL, resolution = NULL, ...) {
+  evaluator_name <- enexpr(evaluator)
   evaluator <- if (is_tfd(data) & is.null(evaluator)) {
     attr(data, "evaluator_name")
   } else {
-    "tf_approx_linear"
+    if (is.null(evaluator)) "tf_approx_linear" else quo_name(evaluator_name)
   }
   domain <- (domain %||% unlist(arg) %||% tf_domain(data)) %>% range()
   resolution <- resolution %||% tf_resolution(data)

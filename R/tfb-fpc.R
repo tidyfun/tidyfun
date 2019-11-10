@@ -1,67 +1,40 @@
-# data -> FPC decomp: mean, efuns, scores, values, (pve/remainder) -> tfb_fpc representation
-pc_truncated <- function(data, pve = .995) {
-  mean <- colMeans(data)
-  data_c <- t(t(data) - mean)
-  pc <- svd(data_c, nu = min(dim(data)), nv = min(dim(data)))
-  pve_observed <- cumsum(pc$d^2) / sum(pc$d^2)
-  use <- min(which(pve_observed >= pve))
-  efunctions <- pc$v[, 1:use]
-  scores <- t(qr.coef(qr(efunctions), t(data_c)))
-  list(
-    mu = mean, efunctions = efunctions,
-    scores = scores, npc = use
-  )
-}
-
-
-fpc_wrapper <- function(efunctions) {
-  function(arg) {
-    t(efunctions[, arg, interpolate = TRUE, matrix = TRUE])
-  }
-}
-
 #' @importFrom refund fpca.sc
-new_tfb_fpc <- function(data, domain = NULL, smooth = TRUE, resolution = NULL, 
-                         ...) {
-  # FIXME: rm renaming once we've cleaned up fpca.sc etc
-  # FIXME: warn if domain != range(arg), can't extrapolate FPCs
+new_tfb_fpc <- function(data, domain = NULL, resolution = NULL, 
+                        method = NULL, ...) {
+  
   arg <- sort(unique(data$arg))
-  domain <- domain %||% range(arg)
   resolution <- resolution %||% get_resolution(arg)
   data$arg <- round_resolution(data$arg, resolution)
   arg <- unique(round_resolution(arg, resolution))
-  names(data) <- c(".id", ".index", ".value")
-  if (smooth) {
-    fpca_args <-
-      modifyList(
-        list(ydata = data, nbasis = 15, pve = 0.995, useSymm = TRUE),
-        list(...)[names(list(...)) %in% names(formals(refund::fpca.sc))]
-      )
-    fpc_spec <- do.call(fpca.sc, fpca_args)
-  } else {
-    datamat <- irreg2mat(data)
-    fpca_args <-
-      modifyList(
-        list(data = datamat, pve = 0.995),
-        list(...)[names(list(...)) %in% names(formals(pc_truncated))]
-      )
-    fpc_spec <- do.call(pc_truncated, fpca_args)
+  
+  domain <- domain %||% range(arg)
+  domain <- c(round_resolution(domain[1], resolution, -1),
+              round_resolution(domain[2], resolution, 1))
+  if (!isTRUE(all.equal(domain, range(arg), 
+                        tolerance = resolution, scale = 1))) {
+    warning("domain for tfb_fpc can't be larger than observed arg-range --",
+            " extrapolating FPCs is a bad idea.\n domain reset to [", min(arg), 
+            ",", max(arg),"]")
+    domain <- range(arg)
   }
+  
+  
+  fpc_args <- get_args(list(...), method)
+  fpc_args <- c(fpc_args, list(data = data, arg = arg))
+  fpc_spec <- do.call(method, fpc_args)
   coef_list <- split(cbind(1, fpc_spec$scores), row(cbind(1, fpc_spec$scores)))
-  names(coef_list) <- levels(as.factor(data$.id))
+  names(coef_list) <- levels(as.factor(data$id))
   fpc <- rbind(fpc_spec$mu, t(fpc_spec$efunctions))
-  fpc_basis <- tfd(fpc,
-    arg = arg, evaluator = tf_approx_spline, domain = domain,
-    resolution = resolution
-  )
+  fpc_basis <- tfd(fpc, arg = arg, domain = domain, resolution = resolution)
   fpc_constructor <- fpc_wrapper(fpc_basis)
   structure(coef_list,
     domain = domain,
     basis = fpc_constructor,
-    basis_label = paste0("FPC: ", fpc_spec$npc, " components."),
+    basis_label = paste0(fpc_spec$npc, " FPCs"),
     basis_matrix = t(fpc),
     arg = arg,
     resolution = resolution,
+    score_variance = fpc_spec$evalues,
     class = c("tfb_fpc", "tfb", "tf")
   )
 }
@@ -70,47 +43,70 @@ new_tfb_fpc <- function(data, domain = NULL, smooth = TRUE, resolution = NULL,
 
 #' Functional data in FPC-basis representation
 #'
-#' These functions perform a (functional) principal component analysis of the
-#' input data and return an `tfb_fpc` `tf`-object that uses the empirical
+#' These functions perform a (functional) principal component analysis (FPCA) of
+#' the input data and return an `tfb_fpc` `tf`-object that uses the empirical
 #' eigenfunctions as basis functions for representing the data. By default, a
-#' `smooth`ed FPCA via [refund::fpca.sc()] is used to compute eigenfunctions and
-#' scores based on the smoothed empirical covariance.
-#' If `smooth =FALSE`, a fast, unregularized PCA of the data is done instead.
-#'
-#' ATM, the unsmoothed version does not use orthogonal basis "functions"
-#'   for irregular / non-equidistant grids and does not work for
-#'   incomplete/irregular data.
+#' simple, not smoothed, truncated weighted SVD of the functions is used to
+#' compute those ("`method = fpc_wsvd`"). Note that this is suitable only for
+#' regular data all observed on the same (not necessarily equidistant) grid. See
+#' Details / Example for possible alternatives and extensions. \cr
+#' 
+#' Any "factorization" method that accepts a `data.frame` with 
+#' columns `id`, `arg`, `value` containing the functional data and returns a 
+#' list structured like the return object
+#' of [fpc_wsvd()] can be used for the `method`` argument, see example below.
+#' 
 #' @export
 #' @inheritParams tfd.data.frame
-#' @param smooth use smoothed mean function and smoothed covariance surface estimates
-#'   from [refund::fpca.sc()] or simply perform a (truncated) PCA of the data? See Details.
-#' @param ... arguments to the call to [refund::fpca.sc()] that computes the
-#'  (regularized/smoothed) FPCA. Unless set by the user `tidyfun` uses `pve = .995` to
-#'  determine the truncation levels and uses `bs = 15` basis functions for
-#'  the mean function and the marginal bases for the covariance surface.
-#' @seealso [tfb()],  [refund::fpca.sc()] for principal components options. 
+#' @param method the function to use that computes eigenfunctions and scores.
+#'   Defaults to [fpc_wsvd()], which gives unsmoothed eigenfunctions. 
+#' @param ... arguments to the `method` which computes the
+#'  (regularized/smoothed) FPCA. 
+#'  Unless set by the user `tidyfun` uses proportion of variance explained 
+#'  `pve = .995` to determine the truncation levels.
+#' @return an object of class `tfb_fpc`, inheriting from `tfb`. 
+#'    The basis used by `tfb_fpc` is a `tfd`-vector containing the estimated
+#'    mean and eigenfunctions.
+#' @seealso [tfb()],  [fpc_wsvd()] for FPCA options. 
 #' @rdname tfb_fpc
 #' @export
 tfb_fpc <- function(data, ...) UseMethod("tfb_fpc")
 
 #' @rdname tfb_fpc
 #' @export
+#' @examples 
+#' # Apply FPCA for sparse data using refund::fpca.sc:
+#' set.seed(99290)
+#' # create sparse data:
+#' data <- as.data.frame(
+#'   tf_sparsify(
+#'     tf_rgp(15)
+#' ))
+#' # wrap refund::fpca_sc for use as FPCA method in tfb_fpc:
+#' fpca_sc_wrapper <- function(data, arg, pve = .995, ...) {
+#'   data_mat <- tidyfun:::df_2_mat(data)
+#'   fpca <- refund::fpca.sc(Y = data_mat, 
+#'                           argvals = attr(data_mat, "arg"), 
+#'                           pve = pve, ...)
+#'   fpca[c("mu", "efunctions", "scores", "npc")]
+#' }
+#' tfb_fpc(data, method = fpca_sc_wrapper)
 tfb_fpc.data.frame <- function(data, id = 1, arg = 2, value = 3,
-                               domain = NULL, smooth = TRUE, resolution = NULL, 
+                               domain = NULL, method = fpc_wsvd, resolution = NULL, 
                                ...) {
   data <- df_2_df(data, id, arg, value)
-  new_tfb_fpc(data, domain = domain, smooth = smooth, 
+  new_tfb_fpc(data, domain = domain, method = method, 
                resolution = resolution, ...)
 }
 
 #' @rdname tfb_fpc
 #' @export
-tfb_fpc.matrix <- function(data, arg = NULL, domain = NULL, smooth = TRUE, 
+tfb_fpc.matrix <- function(data, arg = NULL, domain = NULL, method = fpc_wsvd, 
                            resolution = NULL, ...) {
   arg <- unlist(find_arg(data, arg))
   names_data <- rownames(data)
   data <- mat_2_df(data, arg)
-  ret <- new_tfb_fpc(data, domain = domain, smooth = smooth, 
+  ret <- new_tfb_fpc(data, domain = domain, method = method,
                       resolution = resolution, ...)
   names(ret) <- names_data
   ret
@@ -118,27 +114,27 @@ tfb_fpc.matrix <- function(data, arg = NULL, domain = NULL, smooth = TRUE,
 
 #' @rdname tfb_fpc
 #' @export
-tfb_fpc.numeric <- function(data, arg = NULL, domain = NULL, smooth = TRUE, 
+tfb_fpc.numeric <- function(data, arg = NULL, domain = NULL, method = fpc_wsvd, 
                             resolution = NULL, ...) {
   data <- t(as.matrix(data))
-  tfb_fpc(data = data, arg = arg, smooth = smooth, domain = domain, 
+  tfb_fpc(data = data, arg = arg, method = method, domain = domain, 
           resolution = resolution, ...)
 }
 
 # #' @rdname tfb_fpc
 # #' @export
-# tfb_fpc.list <- function(data, arg = NULL, domain = NULL, smooth = TRUE,
+# tfb_fpc.list <- function(data, arg = NULL, domain = NULL, method = fpc_wsvd,
 # TODO
 
 #' @rdname tfb_fpc
 #' @export
-tfb_fpc.tf <- function(data, arg = NULL, smooth = TRUE, ...) {
+tfb_fpc.tf <- function(data, arg = NULL, method = fpc_wsvd, ...) {
   # TODO: major computational shortcuts possible here for tfb: reduced rank,
   #   direct inner prods of basis functions etc...
   arg <- arg %||% tf_arg(data)
   names_data <- names(data)
   ret <- tfb_fpc(as.data.frame(data, arg = arg),
-    smooth = smooth,
+    method = method,
     domain = tf_domain(data), resolution = tf_resolution(data), ...
   )
   names(ret) <- names_data

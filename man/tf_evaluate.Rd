@@ -7,27 +7,28 @@
 \alias{tf_evaluate.data.frame}
 \title{Evaluate \code{tf}s, both inside or outside a \code{data.frame}}
 \usage{
-tf_evaluate(object, arg, ...)
+tf_evaluate(object, ..., arg)
 
-\method{tf_evaluate}{tfd}(object, arg, ...)
+\method{tf_evaluate}{tfd}(object, ..., arg)
 
-\method{tf_evaluate}{tfb}(object, arg, ...)
+\method{tf_evaluate}{tfb}(object, ..., arg)
 
-\method{tf_evaluate}{data.frame}(object, arg, ...)
+\method{tf_evaluate}{data.frame}(object, ..., arg)
 }
 \arguments{
-\item{object}{an \code{tf} or a \code{data.frame}-like object with \code{tf} columns}
+\item{object}{a \code{tf}, or a \code{data.frame}-like object with \code{tf} columns.}
 
-\item{arg}{optional evaluation grid, defaults to \code{tf_arg(object)}.}
-
-\item{...}{optional:  A selection of columns. If empty, all \code{tf}-variables
-are selected. You can supply bare variable names,
+\item{...}{optional: a selection of \code{tf}-columns. If empty, all \code{tf}-variables
+in the data frame are selected. You can supply bare variable names,
 select all variables between \code{x} and \code{z} with \code{x:z}, exclude \code{y} with \code{-y}.
 For more options, see the \code{\link[dplyr:select]{dplyr::select()}} documentation.}
+
+\item{arg}{optional evaluation grid (vector or list of vectors),
+defaults to \code{tf_arg(object)}.}
 }
 \value{
 For \code{tf}-objects, a list of numeric vectors containing the function
-evaluations. For data frames, replaces \code{tf}-columns with list columns of
+evaluations. For dataframes, replaces \code{tf}-columns with list columns of
 smaller \code{data.frames} containing the functions' arguments (\code{arg}) and
 evaluations (\code{value}).
 }
@@ -38,6 +39,22 @@ Evaluate \code{tf}s, both inside or outside a \code{data.frame}
 The \code{arg}-argument of \code{tf_evaluate.data.frame} method can be a
 list of \code{arg}-vectors or -lists used as the \code{arg} argument for the
 \code{\link[=tf_evaluate]{tf_evaluate()}}-method for the respective \code{tf}-columns in \code{object}.
+\code{...} is not used for a \code{tf}-\code{object}, but a second unnamed argument to these
+methods will be interpreted as \code{arg}.
+}
+\examples{
+library(dplyr)
+a <- tf_rgp(3, arg = 7)
+b <- tf_rgp(3, arg = 7)
+d <- tibble(a = a, b = b)
+tf_evaluate(a) \%>\% str()
+tf_evaluate(a, arg = .5) \%>\% str()
+tf_evaluate(d) \%>\% glimpse()
+tf_evaluate(d, -b) \%>\% glimpse()
+tf_evaluate(d, a) \%>\% glimpse() 
+grid <- seq(0, 1, l = 11)
+# <arg> must be specified as named argument!
+tf_evaluate(d, arg = grid) \%>\% glimpse() 
 }
 \seealso{
 This is used internally by \code{[.tf} to evaluate \code{object}.

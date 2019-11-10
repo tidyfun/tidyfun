@@ -33,8 +33,8 @@ scale_colour_discrete = scale_colour_viridis_d
 scale_fill_discrete = scale_fill_viridis_d
 
 library("tidyfun")
-#try(devtools::load_all("~/fda/tidyfun"))
-#try(devtools::load_all("~/Work/fda/tidyfun"))
+data(chf_df, package = "tidyfun")
+data(dti_df, package = "tidyfun")
 
 pal_5 = viridis(7)[-(1:2)]
 set.seed(1221)
@@ -69,9 +69,9 @@ chf_df %>%
 A variant on the spaghetti plot is the meatballs plot, which shows both the "noodles" (i.e. functional observations visualized as curves) and the "meatballs" (i.e. original data visualized as points). 
 
 ```{r}
-chf_df %>% 
-  filter(id == 1, day == "Monday") %>% 
-  ggplot(aes(y = activity)) + 
+chf_df %>%
+  filter(id == 1, day == "Monday") %>%
+  ggplot(aes(y = activity)) +
   geom_meatballs()
 ```
 
