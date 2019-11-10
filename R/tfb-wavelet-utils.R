@@ -34,8 +34,11 @@ fit_wavelet <- function(data, threshold_args, wd_args, levels, arg_u, regular) {
   
   coefs <- lapply(eval_list, wd, wd_args)
   
-  coefs <- lapply(coefs, threshhold.wd, threshold_args, levels = levels)
+  if (nlevelsWT(coefs[[1]]) - 1 < levels) levels <- nlevelsWT(coefs[[1]]) - 1
+  
+  coefs <- lapply(coefs, wavethresh::threshold.wd, 
+                  threshold_args, levels = levels)
   
   fit <- lapply(coefs, wr)
-  fit
+  list(fit = fit, wd_coefs = coefs)
 }

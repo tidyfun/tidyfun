@@ -1,7 +1,11 @@
-new_tfb_wavelet <- function(data, domain = NULL, levels = 6, verbose = TRUE, ...) {
+new_tfb_wavelet <- function(data, domain = NULL, levels = 6, verbose = TRUE,
+                            resolution = NULL, ...) {
   
   domain <- domain %||% range(data$arg)
   arg_u <- mgcv::uniquecombs(data$arg, ordered = TRUE)
+  resolution <- resolution %||% get_resolution(arg_u)
+  domain <- c(round_resolution(domain[1], resolution, -1),
+              round_resolution(domain[2], resolution, 1))
   
   # explicit factor-conversion to avoid reordering:
   data$id <- factor(data$id, levels = unique(as.character(data$id)))
@@ -22,22 +26,26 @@ new_tfb_wavelet <- function(data, domain = NULL, levels = 6, verbose = TRUE, ...
   }
   
 
-  
-  
-  
-  
-  
   threshold_args <- list(...)[names(list(...)) %in% 
                                 names(formals(wavethresh::threshold.wd))]
   wd_args <- list(...)[names(list(...)) %in% names(formals(wavethresh::wd))]
   
+  if (is.null(threshold_args$type)) threshold_args$type <- "soft"
+  
   fit <- fit_wavelet(data, threshold_args, wd_args, levels, arg_u, regular)
   
-  ret <- structure(fit,
+  X <- cbind(1, ZDaub(arg_u$x, 
+                      numLevels = nlevelsWT(fit$wd_coefs[[1]]) - 1,
+                      filterNumber=fit$wd_coefs[[1]]$filter$filter.number$filter.number,
+                      resolution=16384))
+  
+  ret <- structure(fit$fit,
                    domain = domain,
-                   thresh_arg = threshold_arg,
+                   thresh_arg = threshold_args,
                    basis_matrix = X,
-                   filter = filter,
+                   resolution = resolution,
+                   filter = fit$wd_coefs[[1]]$filter,
+                   arg = arg_u$x,
                    class = c("tfb_wavelet", "tfb", "tf")
   )
   ret
