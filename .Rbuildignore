@@ -8,3 +8,5 @@
 ^GIT_NOTES$
 ^data-raw$
 attic
+^LICENSE\.md$
+^appveyor\.yml$
