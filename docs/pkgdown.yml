@@ -7,6 +7,6 @@ articles:
   x03_Data_Wrangling: x03_Data_Wrangling.html
   x04_Visualization: x04_Visualization.html
 urls:
-  reference: https://fabian-s.github.io/tidyfun/reference
-  article: https://fabian-s.github.io/tidyfun/articles
+  reference: https://tidyfun.github.io/tidyfun/reference
+  article: https://tidyfun.github.io/tidyfun/articles
 
