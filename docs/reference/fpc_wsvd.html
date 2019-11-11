@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Turn "long" tables into tidy data frames with <code>tf</code>-objects — tf_nest • tidyfun</title>
+<title>Eigenfunctions via weighted SVD — fpc_wsvd • tidyfun</title>
 
 
 <!-- jquery -->
@@ -35,13 +35,9 @@
 
 
 
-<meta property="og:title" content="Turn "long" tables into tidy data frames with <code>tf</code>-objects — tf_nest" />
-<meta property="og:description" content="Similar in spirit to tidyr::nest(). This turns tables in &quot;long&quot; format,
-where one column (.id) defines the unit of observation, one column (.arg)
-defines the evaluation of the functional observations, and other columns (...)
-define the values of the functions into a (much shorter) table containing
-tfd-objects. All other variables are checked for constancy over .id and
-appended as well." />
+<meta property="og:title" content="Eigenfunctions via weighted SVD — fpc_wsvd" />
+<meta property="og:description" content="Compute (truncated) orthonormal eigenfunctions and scores
+for data potentially on a non-equidistant grid." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -131,71 +127,48 @@ appended as well." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Turn "long" tables into tidy data frames with <code>tf</code>-objects</h1>
-    <small class="dont-index">Source: <a href='https://github.com/tidyfun/tidyfun/blob/master/R/tidyr.R'><code>R/tidyr.R</code></a></small>
-    <div class="hidden name"><code>tf_nest.Rd</code></div>
+    <h1>Eigenfunctions via weighted SVD</h1>
+    <small class="dont-index">Source: <a href='https://github.com/tidyfun/tidyfun/blob/master/R/tfb-fpc-utils.R'><code>R/tfb-fpc-utils.R</code></a></small>
+    <div class="hidden name"><code>fpc_wsvd.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Similar in spirit to <code><a href='https://tidyr.tidyverse.org/reference/nest.html'>tidyr::nest()</a></code>. This turns tables in "long" format,
-where one column (<code>.id</code>) defines the unit of observation, one column (<code>.arg</code>)
-defines the evaluation of the functional observations, and other columns (<code>...</code>)
-define the values of the functions into a (much shorter) table containing
-<code>tfd</code>-objects. All other variables are checked for constancy over <code>.id</code> and
-appended as well.</p>
+    <p>Compute (truncated) orthonormal eigenfunctions and scores
+for data potentially on a non-equidistant grid.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>tf_nest</span>(<span class='no'>data</span>, <span class='no'>...</span>, <span class='kw'>.id</span> <span class='kw'>=</span> <span class='st'>"id"</span>, <span class='kw'>.arg</span> <span class='kw'>=</span> <span class='st'>"arg"</span>, <span class='kw'>domain</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>evaluator</span> <span class='kw'>=</span> <span class='st'>"tf_approx_linear"</span>, <span class='kw'>resolution</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
+    <pre class="usage"><span class='fu'>fpc_wsvd</span>(<span class='no'>data</span>, <span class='no'>arg</span>, <span class='kw'>pve</span> <span class='kw'>=</span> <span class='fl'>0.995</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>data</th>
-      <td><p>a data frame</p></td>
+      <td><p>numeric matrix of function evaluations (each row is one curve, no NAs)</p></td>
     </tr>
     <tr>
-      <th>...</th>
-      <td><p>A selection of columns. If empty, all variables except the
-<code>.id</code> and <code>.arg</code> columns are selected. You can supply bare variable names,
-select all variables between <code>x</code> and <code>z</code> with <code>x:z</code>, exclude <code>y</code> with <code>-y</code>.
-For more options, see the <code><a href='https://dplyr.tidyverse.org/reference/select.html'>dplyr::select()</a></code> documentation.</p></td>
+      <th>arg</th>
+      <td><p>numeric vector of argument values</p></td>
     </tr>
     <tr>
-      <th>.id</th>
-      <td><p>the (bare or quoted) name of the column defining the different observations</p></td>
-    </tr>
-    <tr>
-      <th>.arg</th>
-      <td><p>the (bare or quoted) name of the column defining the <code>arg</code>-values of the observed functions</p></td>
-    </tr>
-    <tr>
-      <th>domain</th>
-      <td><p>range of the <code>arg</code>.</p></td>
-    </tr>
-    <tr>
-      <th>evaluator</th>
-      <td><p>a function accepting arguments <code>x, arg, evaluations</code>. See details for <code><a href='tfd.html'>tfd()</a></code>.</p></td>
-    </tr>
-    <tr>
-      <th>resolution</th>
-      <td><p>resolution of the evaluation grid. See details for <code><a href='tfd.html'>tfd()</a></code>.</p></td>
+      <th>pve</th>
+      <td><p>percentage of variance explained</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>a data frame with (at least) <code>.id</code> and <code>tfd</code> columns</p>
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+    <p>a list with entries</p><ul>
+<li><p>`mu`` estimated mean function (numeric vector)</p></li>
+<li><p>`efunctions`` estimated FPCs (numeric matrix, columns represent FPCs)</p></li>
+<li><p><code>scores</code> estimated FPC scores (one row per observed curve)</p></li>
+<li><p><code>npc</code> how many FPCs were returned for the given <code>pve</code> (integer)</p></li>
+</ul>
 
-    <p><code>domain</code>, <code>resolution</code> and <code>evaluator</code> can be speficied as lists or vectors
-if you're nesting multiple functional data columns with different properties.
-Because quasi-quotation is <em>such</em> a bitch, you can only specify the evaluator
-functions as strings and not as bare names here.</p>
-    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+    <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
-    <div class='dont-index'><p>tf_gather(), tf_unnest(), tfd() for <code>domain, evaluator, resolution</code></p></div>
+    <p>code adapted from / inspired by <code>wsvd()</code> function of Bioconductor
+package <code>mogsa</code> by Cheng Meng.</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
@@ -203,8 +176,7 @@ functions as strings and not as bare names here.</p>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
       <li><a href="#value">Value</a></li>
-      <li><a href="#details">Details</a></li>
-      <li><a href="#see-also">See also</a></li>
+      <li><a href="#references">References</a></li>
     </ul>
 
   </div>

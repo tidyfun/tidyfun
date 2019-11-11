@@ -7,8 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>tf Vectors and Operations • tidyfun</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- sticky kit --><script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous">
+<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
 <script src="../pkgdown.js"></script><meta property="og:title" content="tf Vectors and Operations">
 <meta property="og:description" content="">
 <meta name="twitter:card" content="summary">
@@ -30,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidyfun</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.8</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.82</span>
       </span>
     </div>
 
@@ -38,7 +39,7 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="../index.html">
-    <span class="fa fa-home fa-lg"></span>
+    <span class="fas fa fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -69,8 +70,8 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/fabian-s/tidyfun">
-    <span class="fa fa-github fa-lg"></span>
+  <a href="https://github.com/tidyfun/tidyfun">
+    <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -83,15 +84,16 @@
 <!--/.navbar -->
 
       
+
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1>tf Vectors and Operations</h1>
                         <h4 class="author">Fabian Scheipl</h4>
             
-            <h4 class="date">2019-06-11</h4>
+            <h4 class="date">2019-11-11</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/fabian-s/tidyfun/blob/master/vignettes/x01_tf_Vectors.Rmd"><code>vignettes/x01_tf_Vectors.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/tidyfun/tidyfun/blob/master/vignettes/x01_tf_Vectors.Rmd"><code>vignettes/x01_tf_Vectors.Rmd</code></a></small>
       <div class="hidden name"><code>x01_tf_Vectors.Rmd</code></div>
 
     </div>
@@ -131,7 +133,7 @@
 <h2 class="hasAnchor">
 <a href="#example-data" class="anchor"></a>Example Data</h2>
 <p>First we extract a <code>tf</code> vector from the <code><a href="../reference/dti_df.html">tidyfun::dti_df</a></code> dataset containing fractional anisotropy tract profiles for the corpus callosum (<code>cca</code>). When printed, <code>tf</code> vectors show the first few <code>arg</code> and <code>value</code> pairs for each subject.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/data">data</a></span>(<span class="st">"dti_df"</span>)</a>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/utils/data.html">data</a></span>(<span class="st">"dti_df"</span>)</a>
 <a class="sourceLine" id="cb1-2" data-line-number="2"></a>
 <a class="sourceLine" id="cb1-3" data-line-number="3">cca =<span class="st"> </span>dti_df<span class="op">$</span>cca</a>
 <a class="sourceLine" id="cb1-4" data-line-number="4">cca</a>
@@ -149,8 +151,8 @@
 <a class="sourceLine" id="cb1-16" data-line-number="16"><span class="co">## 1010_1: (0.000,0.46);(0.011,0.47);(0.022,0.48); ...</span></a>
 <a class="sourceLine" id="cb1-17" data-line-number="17"><span class="co">##     [....]   (372 not shown)</span></a></code></pre></div>
 <p>We also extract a simple 5-element vector of functions on a regular grid:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1">cca_five &lt;-<span class="st"> </span>cca[<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/seq">seq</a></span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dt">l =</span> <span class="dv">93</span>), interpolate =<span class="st"> </span><span class="ot">TRUE</span>]</a>
-<a class="sourceLine" id="cb2-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/colnames">rownames</a></span>(cca_five) &lt;-<span class="st"> </span>LETTERS[<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>]</a>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1">cca_five &lt;-<span class="st"> </span>cca[<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>, <span class="kw"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dt">l =</span> <span class="dv">93</span>), interpolate =<span class="st"> </span><span class="ot">TRUE</span>]</a>
+<a class="sourceLine" id="cb2-2" data-line-number="2"><span class="kw"><a href="https://rdrr.io/r/base/colnames.html">rownames</a></span>(cca_five) &lt;-<span class="st"> </span>LETTERS[<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>]</a>
 <a class="sourceLine" id="cb2-3" data-line-number="3">cca_five &lt;-<span class="st"> </span><span class="kw"><a href="../reference/tfd.html">tfd</a></span>(cca_five, <span class="dt">signif =</span> <span class="dv">2</span>)</a>
 <a class="sourceLine" id="cb2-4" data-line-number="4">cca_five</a>
 <a class="sourceLine" id="cb2-5" data-line-number="5"><span class="co">## tfd[5] on (0,1) based on 93 evaluations each</span></a>
@@ -161,8 +163,8 @@
 <a class="sourceLine" id="cb2-10" data-line-number="10"><span class="co">## D: (0.000,0.40);(0.011,0.42);(0.022,0.44); ...</span></a>
 <a class="sourceLine" id="cb2-11" data-line-number="11"><span class="co">## E: (0.000,0.40);(0.011,0.41);(0.022,0.40); ...</span></a></code></pre></div>
 <p>For illustration, we plot the vector <code>cca_five</code> below.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(cca_five, <span class="dt">xlim =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="op">-</span><span class="fl">0.15</span>, <span class="dv">1</span>), <span class="dt">col =</span> pal_<span class="dv">5</span>)</a>
-<a class="sourceLine" id="cb3-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/text">text</a></span>(<span class="dt">x =</span> <span class="fl">-.1</span>, <span class="dt">y =</span> cca_five[,<span class="fl">0.07</span>], <span class="dt">labels =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/names">names</a></span>(cca_five), <span class="dt">col =</span> pal_<span class="dv">5</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(cca_five, <span class="dt">xlim =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="op">-</span><span class="fl">0.15</span>, <span class="dv">1</span>), <span class="dt">col =</span> pal_<span class="dv">5</span>)</a>
+<a class="sourceLine" id="cb3-2" data-line-number="2"><span class="kw"><a href="https://rdrr.io/r/graphics/text.html">text</a></span>(<span class="dt">x =</span> <span class="fl">-.1</span>, <span class="dt">y =</span> cca_five[,<span class="fl">0.07</span>], <span class="dt">labels =</span> <span class="kw"><a href="https://rdrr.io/r/base/names.html">names</a></span>(cca_five), <span class="dt">col =</span> pal_<span class="dv">5</span>)</a></code></pre></div>
 <p><img src="x01_tf_Vectors_files/figure-html/ex-fig-1.png" width="90%"></p>
 </div>
 <div id="tf-subclass-tfd" class="section level2">
@@ -209,7 +211,7 @@
 <a class="sourceLine" id="cb6-9" data-line-number="9"><span class="co">## List of 2</span></a>
 <a class="sourceLine" id="cb6-10" data-line-number="10"><span class="co">##  $ : num [1:3] -9 -3 3</span></a>
 <a class="sourceLine" id="cb6-11" data-line-number="11"><span class="co">##  $ : num [1:4] -3 3 9 15</span></a>
-<a class="sourceLine" id="cb6-12" data-line-number="12">cd4_vec[<span class="dv">1</span><span class="op">:</span><span class="dv">20</span>] <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(<span class="dt">pch =</span> <span class="st">"x"</span>, <span class="dt">col =</span> <span class="kw">viridis</span>(<span class="dv">20</span>))</a></code></pre></div>
+<a class="sourceLine" id="cb6-12" data-line-number="12">cd4_vec[<span class="dv">1</span><span class="op">:</span><span class="dv">20</span>] <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(<span class="dt">pch =</span> <span class="st">"x"</span>, <span class="dt">col =</span> <span class="kw">viridis</span>(<span class="dv">20</span>))</a></code></pre></div>
 <p><img src="x01_tf_Vectors_files/figure-html/unnamed-chunk-3-1.png" width="90%"></p>
 </div>
 <div id="tf-subclass-tfb" class="section level2">
@@ -230,11 +232,11 @@
 </li>
 <li>significant memory and time savings:</li>
 </ul>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1">refund<span class="op">::</span>DTI<span class="op">$</span>cca <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/object.size">object.size</a></span>() <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(<span class="dt">units =</span> <span class="st">"Kb"</span>)</a>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1">refund<span class="op">::</span>DTI<span class="op">$</span>cca <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/utils/object.size.html">object.size</a></span>() <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="dt">units =</span> <span class="st">"Kb"</span>)</a>
 <a class="sourceLine" id="cb7-2" data-line-number="2"><span class="co">## 307.7 Kb</span></a>
-<a class="sourceLine" id="cb7-3" data-line-number="3">cca <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/object.size">object.size</a></span>() <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(<span class="dt">units =</span> <span class="st">"Kb"</span>)</a>
+<a class="sourceLine" id="cb7-3" data-line-number="3">cca <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/utils/object.size.html">object.size</a></span>() <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="dt">units =</span> <span class="st">"Kb"</span>)</a>
 <a class="sourceLine" id="cb7-4" data-line-number="4"><span class="co">## 765.1 Kb</span></a>
-<a class="sourceLine" id="cb7-5" data-line-number="5">cca <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/tfb.html">tfb</a></span>(<span class="dt">verbose =</span> <span class="ot">FALSE</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/object.size">object.size</a></span>() <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(<span class="dt">units =</span> <span class="st">"Kb"</span>)</a>
+<a class="sourceLine" id="cb7-5" data-line-number="5">cca <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/tfb.html">tfb</a></span>(<span class="dt">verbose =</span> <span class="ot">FALSE</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/utils/object.size.html">object.size</a></span>() <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="dt">units =</span> <span class="st">"Kb"</span>)</a>
 <a class="sourceLine" id="cb7-6" data-line-number="6"><span class="co">## 189.9 Kb</span></a></code></pre></div>
 <div id="tfb_spline-spline-basis" class="section level3">
 <h3 class="hasAnchor">
@@ -258,7 +260,7 @@
 <a class="sourceLine" id="cb8-5" data-line-number="5"><span class="co">##   95.60   96.40   96.90   97.12   98.00   98.70</span></a>
 <a class="sourceLine" id="cb8-6" data-line-number="6">cca_five_b[<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>]</a>
 <a class="sourceLine" id="cb8-7" data-line-number="7"><span class="co">## tfb[2] on (0,1) in basis representation:</span></a>
-<a class="sourceLine" id="cb8-8" data-line-number="8"><span class="co">##  using basis  s(arg, bs = "cr", k = 25) </span></a>
+<a class="sourceLine" id="cb8-8" data-line-number="8"><span class="co">##  using  s(arg, bs = "cr", k = 25) </span></a>
 <a class="sourceLine" id="cb8-9" data-line-number="9"><span class="co">## A: (0.000,0.49);(0.011,0.52);(0.022,0.54); ...</span></a>
 <a class="sourceLine" id="cb8-10" data-line-number="10"><span class="co">## B: (0.000,0.47);(0.011,0.49);(0.022,0.51); ...</span></a>
 <a class="sourceLine" id="cb8-11" data-line-number="11">cca_five[<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>] <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/tfb.html">tfb</a></span>(<span class="dt">bs =</span> <span class="st">"tp"</span>, <span class="dt">k =</span> <span class="dv">55</span>)</a>
@@ -267,16 +269,16 @@
 <a class="sourceLine" id="cb8-14" data-line-number="14"><span class="co">##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span></a>
 <a class="sourceLine" id="cb8-15" data-line-number="15"><span class="co">##   99.10   99.22   99.35   99.35   99.47   99.60</span></a>
 <a class="sourceLine" id="cb8-16" data-line-number="16"><span class="co">## tfb[2] on (0,1) in basis representation:</span></a>
-<a class="sourceLine" id="cb8-17" data-line-number="17"><span class="co">##  using basis  s(arg, bs = "tp", k = 55) </span></a>
+<a class="sourceLine" id="cb8-17" data-line-number="17"><span class="co">##  using  s(arg, bs = "tp", k = 55) </span></a>
 <a class="sourceLine" id="cb8-18" data-line-number="18"><span class="co">## A: (0.000,0.49);(0.011,0.52);(0.022,0.54); ...</span></a>
 <a class="sourceLine" id="cb8-19" data-line-number="19"><span class="co">## B: (0.000,0.47);(0.011,0.49);(0.022,0.50); ...</span></a>
-<a class="sourceLine" id="cb8-20" data-line-number="20">cca_five[<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>] <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/tfb.html">tfb</a></span>(<span class="dt">bs =</span> <span class="st">"ps"</span>, <span class="dt">m =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">2</span>,<span class="dv">1</span>), <span class="dt">family =</span> mgcv<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/mgcv/topics/Beta">betar</a></span>(<span class="dt">link =</span> <span class="st">"cloglog"</span>))</a>
+<a class="sourceLine" id="cb8-20" data-line-number="20">cca_five[<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>] <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/tfb.html">tfb</a></span>(<span class="dt">bs =</span> <span class="st">"ps"</span>, <span class="dt">m =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">2</span>,<span class="dv">1</span>), <span class="dt">family =</span> mgcv<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/mgcv/man/Beta.html">betar</a></span>(<span class="dt">link =</span> <span class="st">"cloglog"</span>))</a>
 <a class="sourceLine" id="cb8-21" data-line-number="21"><span class="co">## Percentage of input data variability preserved in basis representation</span></a>
 <a class="sourceLine" id="cb8-22" data-line-number="22"><span class="co">## (on inverse link-scale, per functional observation, approximate):</span></a>
 <a class="sourceLine" id="cb8-23" data-line-number="23"><span class="co">##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span></a>
 <a class="sourceLine" id="cb8-24" data-line-number="24"><span class="co">##   99.40   99.47   99.55   99.55   99.62   99.70</span></a>
 <a class="sourceLine" id="cb8-25" data-line-number="25"><span class="co">## tfb[2] on (0,1) in basis representation:</span></a>
-<a class="sourceLine" id="cb8-26" data-line-number="26"><span class="co">##  using basis  s(arg, bs = "ps", m = c(2, 1), k = 25) </span></a>
+<a class="sourceLine" id="cb8-26" data-line-number="26"><span class="co">##  using  s(arg, bs = "ps", m = c(2, 1), k = 25) </span></a>
 <a class="sourceLine" id="cb8-27" data-line-number="27"><span class="co">## A: (0.000,0.49);(0.011,0.51);(0.022,0.54); ...</span></a>
 <a class="sourceLine" id="cb8-28" data-line-number="28"><span class="co">## B: (0.000,0.47);(0.011,0.49);(0.022,0.51); ...</span></a></code></pre></div>
 </div>
@@ -284,15 +286,15 @@
 <h3 class="hasAnchor">
 <a href="#penalization" class="anchor"></a>Penalization:</h3>
 <p><strong>Function-specific (default), none</strong>, prespecified (<code>sp</code>), or global:</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/layout">layout</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/t">t</a></span>(<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>))</a>
-<a class="sourceLine" id="cb9-2" data-line-number="2">cca_five  <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>()</a>
-<a class="sourceLine" id="cb9-3" data-line-number="3">cca_five_b <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(<span class="dt">col =</span> <span class="st">"red"</span>)</a>
-<a class="sourceLine" id="cb9-4" data-line-number="4">cca_five <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/tfb.html">tfb</a></span>(<span class="dt">k =</span> <span class="dv">35</span>, <span class="dt">penalized =</span> <span class="ot">FALSE</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/lines">lines</a></span>(<span class="dt">col =</span> <span class="st">"blue"</span>)</a>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/graphics/layout.html">layout</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/t.html">t</a></span>(<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>))</a>
+<a class="sourceLine" id="cb9-2" data-line-number="2">cca_five  <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>()</a>
+<a class="sourceLine" id="cb9-3" data-line-number="3">cca_five_b <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(<span class="dt">col =</span> <span class="st">"red"</span>)</a>
+<a class="sourceLine" id="cb9-4" data-line-number="4">cca_five <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/tfb.html">tfb</a></span>(<span class="dt">k =</span> <span class="dv">35</span>, <span class="dt">penalized =</span> <span class="ot">FALSE</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/graphics/lines.html">lines</a></span>(<span class="dt">col =</span> <span class="st">"blue"</span>)</a>
 <a class="sourceLine" id="cb9-5" data-line-number="5"><span class="co">## Percentage of input data variability preserved in basis representation</span></a>
 <a class="sourceLine" id="cb9-6" data-line-number="6"><span class="co">## (per functional observation, approximate):</span></a>
 <a class="sourceLine" id="cb9-7" data-line-number="7"><span class="co">##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span></a>
 <a class="sourceLine" id="cb9-8" data-line-number="8"><span class="co">##    98.5    98.6    98.7    99.0    99.6    99.6</span></a>
-<a class="sourceLine" id="cb9-9" data-line-number="9">cca_five <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/tfb.html">tfb</a></span>(<span class="dt">sp =</span> <span class="fl">.001</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/lines">lines</a></span>(<span class="dt">col =</span> <span class="st">"orange"</span>)</a>
+<a class="sourceLine" id="cb9-9" data-line-number="9">cca_five <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/tfb.html">tfb</a></span>(<span class="dt">sp =</span> <span class="fl">.001</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/graphics/lines.html">lines</a></span>(<span class="dt">col =</span> <span class="st">"orange"</span>)</a>
 <a class="sourceLine" id="cb9-10" data-line-number="10"><span class="co">## Percentage of input data variability preserved in basis representation</span></a>
 <a class="sourceLine" id="cb9-11" data-line-number="11"><span class="co">## (per functional observation, approximate):</span></a></code></pre></div>
 <p><img src="x01_tf_Vectors_files/figure-html/unnamed-chunk-6-1.png" width="90%"></p>
@@ -316,15 +318,15 @@
 <li>subsample could miss small subgroups with different roughness, over-/undersmooth parts of the data, see below.</li>
 </ul>
 <p>Dataset with heterogeneous roughness:</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/layout">layout</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/t">t</a></span>(<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>))</a>
-<a class="sourceLine" id="cb11-2" data-line-number="2">clrs &lt;-<span class="st"> </span>scales<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/scales/topics/alpha">alpha</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/sample">sample</a></span>(<span class="kw">viridis</span>(<span class="dv">15</span>)), <span class="fl">.5</span>)</a>
-<a class="sourceLine" id="cb11-3" data-line-number="3"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(raw, <span class="dt">main =</span> <span class="st">"raw"</span>, <span class="dt">col =</span> clrs)</a>
-<a class="sourceLine" id="cb11-4" data-line-number="4"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(<span class="kw"><a href="../reference/tfb.html">tfb</a></span>(raw, <span class="dt">k =</span> <span class="dv">55</span>), <span class="dt">main =</span> <span class="st">"separate"</span>, <span class="dt">col =</span> clrs)</a>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/graphics/layout.html">layout</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/t.html">t</a></span>(<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>))</a>
+<a class="sourceLine" id="cb11-2" data-line-number="2">clrs &lt;-<span class="st"> </span>scales<span class="op">::</span><span class="kw"><a href="https://scales.r-lib.org//reference/alpha.html">alpha</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/sample.html">sample</a></span>(<span class="kw">viridis</span>(<span class="dv">15</span>)), <span class="fl">.5</span>)</a>
+<a class="sourceLine" id="cb11-3" data-line-number="3"><span class="kw"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(raw, <span class="dt">main =</span> <span class="st">"raw"</span>, <span class="dt">col =</span> clrs)</a>
+<a class="sourceLine" id="cb11-4" data-line-number="4"><span class="kw"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(<span class="kw"><a href="../reference/tfb.html">tfb</a></span>(raw, <span class="dt">k =</span> <span class="dv">55</span>), <span class="dt">main =</span> <span class="st">"separate"</span>, <span class="dt">col =</span> clrs)</a>
 <a class="sourceLine" id="cb11-5" data-line-number="5"><span class="co">## Percentage of input data variability preserved in basis representation</span></a>
 <a class="sourceLine" id="cb11-6" data-line-number="6"><span class="co">## (per functional observation, approximate):</span></a>
 <a class="sourceLine" id="cb11-7" data-line-number="7"><span class="co">##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span></a>
 <a class="sourceLine" id="cb11-8" data-line-number="8"><span class="co">##   72.20   88.65   94.80   92.06   96.55   97.70</span></a>
-<a class="sourceLine" id="cb11-9" data-line-number="9"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(<span class="kw"><a href="../reference/tfb.html">tfb</a></span>(raw, <span class="dt">k =</span> <span class="dv">55</span>, <span class="dt">global =</span> <span class="ot">TRUE</span>), <span class="dt">main =</span> <span class="st">"global"</span>, <span class="dt">col =</span> clrs)</a>
+<a class="sourceLine" id="cb11-9" data-line-number="9"><span class="kw"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(<span class="kw"><a href="../reference/tfb.html">tfb</a></span>(raw, <span class="dt">k =</span> <span class="dv">55</span>, <span class="dt">global =</span> <span class="ot">TRUE</span>), <span class="dt">main =</span> <span class="st">"global"</span>, <span class="dt">col =</span> clrs)</a>
 <a class="sourceLine" id="cb11-10" data-line-number="10"><span class="co">## Using global smoothing parameter sp = 3.25e-05, estimated on subsample of curves.</span></a>
 <a class="sourceLine" id="cb11-11" data-line-number="11"><span class="co">## Percentage of input data variability preserved in basis representation</span></a>
 <a class="sourceLine" id="cb11-12" data-line-number="12"><span class="co">## (per functional observation, approximate):</span></a>
@@ -336,37 +338,34 @@
 <h3 class="hasAnchor">
 <a href="#tfb-fpc-based" class="anchor"></a><strong><code>tfb</code></strong> FPC-based</h3>
 <ul>
-<li>uses either
-<ul>
-<li>simple unregularized SVD of the data matrix (“<code>smooth = FALSE</code>”)</li>
-<li>or smoothed covariance estimate from <code><a href="https://www.rdocumentation.org/packages/refund/topics/fpca.sc">refund::fpca.sc</a></code>
-</li>
-</ul>
-</li>
+<li>uses first few eigenfunctions computed from a simple unregularized (weighted) SVD of the data matrix by default</li>
 <li>corresponding FPC basis and mean function saved as <code>tfd</code>-object</li>
 <li>observed functions are linear combinations of those.</li>
+<li>amount of “smoothing” can be controlled (roughly!) by setting the minimal <em>percentage of variance explained</em> <code>pve</code>
+</li>
 </ul>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1">(cca_five_fpc &lt;-<span class="st"> </span>cca_five <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/tfb_fpc.html">tfb_fpc</a></span>(<span class="dt">smooth =</span> <span class="ot">FALSE</span>, <span class="dt">pve =</span> <span class="fl">.999</span>))</a>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1">(cca_five_fpc &lt;-<span class="st"> </span>cca_five <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/tfb_fpc.html">tfb_fpc</a></span>(<span class="dt">pve =</span> <span class="fl">.999</span>))</a>
 <a class="sourceLine" id="cb12-2" data-line-number="2"><span class="co">## tfb[5] on (0,1) in basis representation:</span></a>
-<a class="sourceLine" id="cb12-3" data-line-number="3"><span class="co">##  using basis  FPC: 4 components. </span></a>
+<a class="sourceLine" id="cb12-3" data-line-number="3"><span class="co">##  using  4 FPCs </span></a>
 <a class="sourceLine" id="cb12-4" data-line-number="4"><span class="co">## A: (0.000,0.49);(0.011,0.52);(0.022,0.54); ...</span></a>
 <a class="sourceLine" id="cb12-5" data-line-number="5"><span class="co">## B: (0.000,0.47);(0.011,0.49);(0.022,0.50); ...</span></a>
 <a class="sourceLine" id="cb12-6" data-line-number="6"><span class="co">## C: (0.000,0.50);(0.011,0.51);(0.022,0.54); ...</span></a>
 <a class="sourceLine" id="cb12-7" data-line-number="7"><span class="co">## D: (0.000,0.40);(0.011,0.42);(0.022,0.44); ...</span></a>
 <a class="sourceLine" id="cb12-8" data-line-number="8"><span class="co">## E: (0.000,0.40);(0.011,0.41);(0.022,0.40); ...</span></a>
-<a class="sourceLine" id="cb12-9" data-line-number="9">(cca_five_fpc_smooth &lt;-<span class="st"> </span>cca_five <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/tfb_fpc.html">tfb_fpc</a></span>(<span class="dt">pve =</span> <span class="fl">.95</span>))</a>
+<a class="sourceLine" id="cb12-9" data-line-number="9">(cca_five_fpc_lowrank &lt;-<span class="st"> </span>cca_five <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/tfb_fpc.html">tfb_fpc</a></span>(<span class="dt">pve =</span> <span class="fl">.3</span>))</a>
 <a class="sourceLine" id="cb12-10" data-line-number="10"><span class="co">## tfb[5] on (0,1) in basis representation:</span></a>
-<a class="sourceLine" id="cb12-11" data-line-number="11"><span class="co">##  using basis  FPC: 19 components. </span></a>
-<a class="sourceLine" id="cb12-12" data-line-number="12"><span class="co">## A: (0.000,0.49);(0.011,0.51);(0.022,0.54); ...</span></a>
-<a class="sourceLine" id="cb12-13" data-line-number="13"><span class="co">## B: (0.000,0.46);(0.011,0.49);(0.022,0.51); ...</span></a>
-<a class="sourceLine" id="cb12-14" data-line-number="14"><span class="co">## C: (0.000,0.50);(0.011,0.52);(0.022,0.55); ...</span></a>
-<a class="sourceLine" id="cb12-15" data-line-number="15"><span class="co">## D: (0.000,0.40);(0.011,0.43);(0.022,0.45); ...</span></a>
+<a class="sourceLine" id="cb12-11" data-line-number="11"><span class="co">##  using  1 FPCs </span></a>
+<a class="sourceLine" id="cb12-12" data-line-number="12"><span class="co">## A: (0.000,0.47);(0.011,0.49);(0.022,0.51); ...</span></a>
+<a class="sourceLine" id="cb12-13" data-line-number="13"><span class="co">## B: (0.000,0.48);(0.011,0.49);(0.022,0.52); ...</span></a>
+<a class="sourceLine" id="cb12-14" data-line-number="14"><span class="co">## C: (0.000,0.46);(0.011,0.48);(0.022,0.50); ...</span></a>
+<a class="sourceLine" id="cb12-15" data-line-number="15"><span class="co">## D: (0.000,0.46);(0.011,0.48);(0.022,0.49); ...</span></a>
 <a class="sourceLine" id="cb12-16" data-line-number="16"><span class="co">## E: (0.000, 0.4);(0.011, 0.4);(0.022, 0.4); ...</span></a></code></pre></div>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/layout">layout</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/t">t</a></span>(<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>))</a>
-<a class="sourceLine" id="cb13-2" data-line-number="2">cca_five <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>()</a>
-<a class="sourceLine" id="cb13-3" data-line-number="3">cca_five_fpc  <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(<span class="dt">col =</span> <span class="st">"red"</span>, <span class="dt">ylab =</span> <span class="st">"tfb_fpc(cca_five)"</span>)</a>
-<a class="sourceLine" id="cb13-4" data-line-number="4">cca_five_fpc_smooth <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/lines">lines</a></span>(<span class="dt">col =</span> <span class="st">"blue"</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/graphics/layout.html">layout</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/t.html">t</a></span>(<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>))</a>
+<a class="sourceLine" id="cb13-2" data-line-number="2">cca_five <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>()</a>
+<a class="sourceLine" id="cb13-3" data-line-number="3">cca_five_fpc  <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(<span class="dt">col =</span> <span class="st">"red"</span>, <span class="dt">ylab =</span> <span class="st">"tfb_fpc(cca_five)"</span>)</a>
+<a class="sourceLine" id="cb13-4" data-line-number="4">cca_five_fpc_lowrank <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/graphics/lines.html">lines</a></span>(<span class="dt">col =</span> <span class="st">"blue"</span>)</a></code></pre></div>
 <p><img src="x01_tf_Vectors_files/figure-html/unnamed-chunk-10-1.png" width="90%"></p>
+<p><code>tfb_fpc</code> is currently only implemented for data on identical (but possibly non-equidistant) grids. The <strong><code>{refunder}</code></strong> <code>rfr_fpca</code>-functions provide FPCA methods for irregular and sparse data and regularized/smoothed FPCA.</p>
 </div>
 </div>
 </div>
@@ -396,16 +395,18 @@
 <h3 class="hasAnchor">
 <a href="#compare-compute" class="anchor"></a>compare &amp; compute:</h3>
 <div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" data-line-number="1">cca_five[<span class="dv">1</span>] <span class="op">+</span><span class="st"> </span>cca_five[<span class="dv">1</span>] <span class="op">==</span><span class="st"> </span><span class="dv">2</span> <span class="op">*</span><span class="st"> </span>cca_five[<span class="dv">1</span>]</a>
-<a class="sourceLine" id="cb15-2" data-line-number="2"><span class="co">## [1] TRUE</span></a>
-<a class="sourceLine" id="cb15-3" data-line-number="3"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Log">log</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Log">exp</a></span>(cca_five[<span class="dv">2</span>])) <span class="op">==</span><span class="st"> </span>cca_five[<span class="dv">2</span>]</a>
-<a class="sourceLine" id="cb15-4" data-line-number="4"><span class="co">## [1] TRUE</span></a>
-<a class="sourceLine" id="cb15-5" data-line-number="5">cca_five <span class="op">-</span><span class="st"> </span>(<span class="dv">2</span><span class="op">:-</span><span class="dv">2</span>) <span class="op">!=</span><span class="st"> </span>cca_five </a>
-<a class="sourceLine" id="cb15-6" data-line-number="6"><span class="co">## [1]  TRUE  TRUE FALSE  TRUE  TRUE</span></a></code></pre></div>
+<a class="sourceLine" id="cb15-2" data-line-number="2"><span class="co">## &lt;NA&gt; </span></a>
+<a class="sourceLine" id="cb15-3" data-line-number="3"><span class="co">## TRUE</span></a>
+<a class="sourceLine" id="cb15-4" data-line-number="4"><span class="kw"><a href="https://rdrr.io/r/base/Log.html">log</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/Log.html">exp</a></span>(cca_five[<span class="dv">2</span>])) <span class="op">==</span><span class="st"> </span>cca_five[<span class="dv">2</span>]</a>
+<a class="sourceLine" id="cb15-5" data-line-number="5"><span class="co">## [1] TRUE</span></a>
+<a class="sourceLine" id="cb15-6" data-line-number="6">cca_five <span class="op">-</span><span class="st"> </span>(<span class="dv">2</span><span class="op">:-</span><span class="dv">2</span>) <span class="op">!=</span><span class="st"> </span>cca_five </a>
+<a class="sourceLine" id="cb15-7" data-line-number="7"><span class="co">##  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt; </span></a>
+<a class="sourceLine" id="cb15-8" data-line-number="8"><span class="co">##  TRUE  TRUE FALSE  TRUE  TRUE</span></a></code></pre></div>
 </div>
 <div id="summarize" class="section level3">
 <h3 class="hasAnchor">
 <a href="#summarize" class="anchor"></a>summarize:</h3>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dt">mean =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/mean">mean</a></span>(cca_five), <span class="dt">sd =</span> <span class="kw"><a href="../reference/tfsummaries.html">sd</a></span>(cca_five))</a>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dt">mean =</span> <span class="kw"><a href="https://rdrr.io/r/base/mean.html">mean</a></span>(cca_five), <span class="dt">sd =</span> <span class="kw"><a href="../reference/tfsummaries.html">sd</a></span>(cca_five))</a>
 <a class="sourceLine" id="cb16-2" data-line-number="2"><span class="co">## tfd[2] on (0,1) based on 93 evaluations each</span></a>
 <a class="sourceLine" id="cb16-3" data-line-number="3"><span class="co">## interpolation by tf_approx_spline </span></a>
 <a class="sourceLine" id="cb16-4" data-line-number="4"><span class="co">## mean: (0.000, 0.45);(0.011, 0.47);(0.022, 0.48); ...</span></a>
@@ -414,7 +415,7 @@
 <a class="sourceLine" id="cb16-7" data-line-number="7"><span class="kw"><a href="../reference/tf_depth.html">tf_depth</a></span>(cca_five) <span class="co">## Modified Band-2 Depth (à la Sun/Genton/Nychka, 2012), others to come.</span></a>
 <a class="sourceLine" id="cb16-8" data-line-number="8"><span class="co">##         B         A         C         D         E </span></a>
 <a class="sourceLine" id="cb16-9" data-line-number="9"><span class="co">## 0.6108696 0.6467391 0.6597826 0.5728261 0.5097826</span></a>
-<a class="sourceLine" id="cb16-10" data-line-number="10"><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/median">median</a></span>(cca_five) <span class="op">==</span><span class="st"> </span>cca_five[<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/which.min">which.max</a></span>(<span class="kw"><a href="../reference/tf_depth.html">tf_depth</a></span>(cca_five))]</a>
+<a class="sourceLine" id="cb16-10" data-line-number="10"><span class="kw"><a href="https://rdrr.io/r/stats/median.html">median</a></span>(cca_five) <span class="op">==</span><span class="st"> </span>cca_five[<span class="kw"><a href="https://rdrr.io/r/base/which.min.html">which.max</a></span>(<span class="kw"><a href="../reference/tf_depth.html">tf_depth</a></span>(cca_five))]</a>
 <a class="sourceLine" id="cb16-11" data-line-number="11"><span class="co">##    C </span></a>
 <a class="sourceLine" id="cb16-12" data-line-number="12"><span class="co">## TRUE</span></a></code></pre></div>
 <p>In addition, <strong><code>tidyfun</code></strong> provides methods specific for functional data:</p>
@@ -422,19 +423,19 @@
 <div id="evaluate" class="section level3">
 <h3 class="hasAnchor">
 <a href="#evaluate" class="anchor"></a>evaluate:</h3>
-<p><code>tf</code>-objects have a special <code>[</code>-operator: Its second argument specifies <code>arg</code>ument values at which to evaluate the functions and has some additional options, so it’s easy to get point values for <code>tf</code> objects:</p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" data-line-number="1">cca_five[<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/seq">seq</a></span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dt">l =</span> <span class="dv">3</span>)]</a>
+<p><code>tf</code>-objects have a special <code><a href="https://rdrr.io/r/base/Extract.html">[</a></code>-operator: Its second argument specifies <code>arg</code>ument values at which to evaluate the functions and has some additional options, so it’s easy to get point values for <code>tf</code> objects:</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" data-line-number="1">cca_five[<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>, <span class="kw"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dt">l =</span> <span class="dv">3</span>)]</a>
 <a class="sourceLine" id="cb17-2" data-line-number="2"><span class="co">##           0       0.5         1</span></a>
 <a class="sourceLine" id="cb17-3" data-line-number="3"><span class="co">## B 0.4721627 0.4984125 0.5802742</span></a>
 <a class="sourceLine" id="cb17-4" data-line-number="4"><span class="co">## A 0.4909345 0.5307563 0.5904773</span></a>
 <a class="sourceLine" id="cb17-5" data-line-number="5"><span class="co">## attr(,"arg")</span></a>
 <a class="sourceLine" id="cb17-6" data-line-number="6"><span class="co">## [1] 0.0 0.5 1.0</span></a>
-<a class="sourceLine" id="cb17-7" data-line-number="7">cca_five[<span class="st">"B"</span>, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/seq">seq</a></span>(<span class="dv">0</span>, <span class="fl">.15</span>, <span class="dt">l =</span> <span class="dv">3</span>), interpolate =<span class="st"> </span><span class="ot">FALSE</span>]</a>
+<a class="sourceLine" id="cb17-7" data-line-number="7">cca_five[<span class="st">"B"</span>, <span class="kw"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="dv">0</span>, <span class="fl">.15</span>, <span class="dt">l =</span> <span class="dv">3</span>), interpolate =<span class="st"> </span><span class="ot">FALSE</span>]</a>
 <a class="sourceLine" id="cb17-8" data-line-number="8"><span class="co">##           0 0.075 0.15</span></a>
 <a class="sourceLine" id="cb17-9" data-line-number="9"><span class="co">## B 0.4721627    NA   NA</span></a>
 <a class="sourceLine" id="cb17-10" data-line-number="10"><span class="co">## attr(,"arg")</span></a>
 <a class="sourceLine" id="cb17-11" data-line-number="11"><span class="co">## [1] 0.000 0.075 0.150</span></a>
-<a class="sourceLine" id="cb17-12" data-line-number="12">cca_five[<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/seq">seq</a></span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dt">l =</span> <span class="dv">7</span>), matrix =<span class="st"> </span><span class="ot">FALSE</span>] <span class="op">%&gt;%</span><span class="st"> </span>str</a>
+<a class="sourceLine" id="cb17-12" data-line-number="12">cca_five[<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>, <span class="kw"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dt">l =</span> <span class="dv">7</span>), matrix =<span class="st"> </span><span class="ot">FALSE</span>] <span class="op">%&gt;%</span><span class="st"> </span>str</a>
 <a class="sourceLine" id="cb17-13" data-line-number="13"><span class="co">## List of 2</span></a>
 <a class="sourceLine" id="cb17-14" data-line-number="14"><span class="co">##  $ B:Classes 'tbl_df', 'tbl' and 'data.frame':   7 obs. of  2 variables:</span></a>
 <a class="sourceLine" id="cb17-15" data-line-number="15"><span class="co">##   ..$ arg  : num [1:7] 0 0.167 0.333 0.5 0.667 ...</span></a>
@@ -446,19 +447,19 @@
 <div id="simple-local-smoothing" class="section level3">
 <h3 class="hasAnchor">
 <a href="#simple-local-smoothing" class="anchor"></a>(simple, local) smoothing</h3>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/layout">layout</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/t">t</a></span>(<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>))</a>
-<a class="sourceLine" id="cb18-2" data-line-number="2">cca_five <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(<span class="dt">alpha =</span> <span class="fl">.2</span>, <span class="dt">ylab =</span> <span class="st">"lowess"</span>)</a>
-<a class="sourceLine" id="cb18-3" data-line-number="3">cca_five <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/tf_smooth.html">tf_smooth</a></span>(<span class="st">"lowess"</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/lines">lines</a></span>(<span class="dt">col =</span> pal_<span class="dv">5</span>)</a>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/graphics/layout.html">layout</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/t.html">t</a></span>(<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>))</a>
+<a class="sourceLine" id="cb18-2" data-line-number="2">cca_five <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(<span class="dt">alpha =</span> <span class="fl">.2</span>, <span class="dt">ylab =</span> <span class="st">"lowess"</span>)</a>
+<a class="sourceLine" id="cb18-3" data-line-number="3">cca_five <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/tf_smooth.html">tf_smooth</a></span>(<span class="st">"lowess"</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/graphics/lines.html">lines</a></span>(<span class="dt">col =</span> pal_<span class="dv">5</span>)</a>
 <a class="sourceLine" id="cb18-4" data-line-number="4"><span class="co">## using f = 0.15 as smoother span for lowess</span></a>
 <a class="sourceLine" id="cb18-5" data-line-number="5"></a>
-<a class="sourceLine" id="cb18-6" data-line-number="6">cca_five <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(<span class="dt">alpha =</span> <span class="fl">.2</span>, <span class="dt">ylab =</span> <span class="st">"rolling median (k=5)"</span>)</a>
-<a class="sourceLine" id="cb18-7" data-line-number="7">cca_five <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/tf_smooth.html">tf_smooth</a></span>(<span class="st">"rollmedian"</span>, <span class="dt">k =</span> <span class="dv">5</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/lines">lines</a></span>(<span class="dt">col =</span> pal_<span class="dv">5</span>)</a>
+<a class="sourceLine" id="cb18-6" data-line-number="6">cca_five <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(<span class="dt">alpha =</span> <span class="fl">.2</span>, <span class="dt">ylab =</span> <span class="st">"rolling median (k=5)"</span>)</a>
+<a class="sourceLine" id="cb18-7" data-line-number="7">cca_five <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/tf_smooth.html">tf_smooth</a></span>(<span class="st">"rollmedian"</span>, <span class="dt">k =</span> <span class="dv">5</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/graphics/lines.html">lines</a></span>(<span class="dt">col =</span> pal_<span class="dv">5</span>)</a>
 <a class="sourceLine" id="cb18-8" data-line-number="8"><span class="co">## Warning in tf_smooth.tfd(., "rollmedian", k = 5): non-equidistant arg-</span></a>
 <a class="sourceLine" id="cb18-9" data-line-number="9"><span class="co">## values in '.' ignored by rollmedian.</span></a>
 <a class="sourceLine" id="cb18-10" data-line-number="10"><span class="co">## setting fill = 'extend' for start/end values.</span></a>
 <a class="sourceLine" id="cb18-11" data-line-number="11"></a>
-<a class="sourceLine" id="cb18-12" data-line-number="12">cca_five <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(<span class="dt">alpha =</span> <span class="fl">.2</span>, <span class="dt">ylab =</span> <span class="st">"Savitzky-Golay (quartic, 11 steps)"</span>)</a>
-<a class="sourceLine" id="cb18-13" data-line-number="13">cca_five <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/tf_smooth.html">tf_smooth</a></span>(<span class="st">"savgol"</span>, <span class="dt">fl =</span> <span class="dv">11</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/lines">lines</a></span>(<span class="dt">col =</span> pal_<span class="dv">5</span>)</a>
+<a class="sourceLine" id="cb18-12" data-line-number="12">cca_five <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(<span class="dt">alpha =</span> <span class="fl">.2</span>, <span class="dt">ylab =</span> <span class="st">"Savitzky-Golay (quartic, 11 steps)"</span>)</a>
+<a class="sourceLine" id="cb18-13" data-line-number="13">cca_five <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/tf_smooth.html">tf_smooth</a></span>(<span class="st">"savgol"</span>, <span class="dt">fl =</span> <span class="dv">11</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/graphics/lines.html">lines</a></span>(<span class="dt">col =</span> pal_<span class="dv">5</span>)</a>
 <a class="sourceLine" id="cb18-14" data-line-number="14"><span class="co">## Warning in tf_smooth.tfd(., "savgol", fl = 11): non-equidistant arg-values</span></a>
 <a class="sourceLine" id="cb18-15" data-line-number="15"><span class="co">## in '.' ignored by savgol.</span></a></code></pre></div>
 <p><img src="x01_tf_Vectors_files/figure-html/unnamed-chunk-17-1.png" width="90%"></p>
@@ -466,11 +467,11 @@
 <div id="differentiate-integrate" class="section level3">
 <h3 class="hasAnchor">
 <a href="#differentiate-integrate" class="anchor"></a>differentiate &amp; integrate:</h3>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/layout">layout</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/t">t</a></span>(<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>))</a>
-<a class="sourceLine" id="cb19-2" data-line-number="2">cca_five <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(<span class="dt">col =</span> pal_<span class="dv">5</span>)</a>
-<a class="sourceLine" id="cb19-3" data-line-number="3">cca_five <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/tf_smooth.html">tf_smooth</a></span>() <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/tf_derive.html">tf_derive</a></span>() <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(<span class="dt">col =</span> pal_<span class="dv">5</span>, <span class="dt">ylab =</span> <span class="st">"tf_derive(tf_smooth(cca_five))"</span>)</a>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/graphics/layout.html">layout</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/t.html">t</a></span>(<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>))</a>
+<a class="sourceLine" id="cb19-2" data-line-number="2">cca_five <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(<span class="dt">col =</span> pal_<span class="dv">5</span>)</a>
+<a class="sourceLine" id="cb19-3" data-line-number="3">cca_five <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/tf_smooth.html">tf_smooth</a></span>() <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/tf_derive.html">tf_derive</a></span>() <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(<span class="dt">col =</span> pal_<span class="dv">5</span>, <span class="dt">ylab =</span> <span class="st">"tf_derive(tf_smooth(cca_five))"</span>)</a>
 <a class="sourceLine" id="cb19-4" data-line-number="4"><span class="co">## using f = 0.15 as smoother span for lowess</span></a>
-<a class="sourceLine" id="cb19-5" data-line-number="5">cca_five <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/tf_integrate.html">tf_integrate</a></span>(<span class="dt">definite =</span> <span class="ot">FALSE</span>) <span class="op">%&gt;%</span><span class="st">  </span><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(<span class="dt">col =</span> pal_<span class="dv">5</span>)</a></code></pre></div>
+<a class="sourceLine" id="cb19-5" data-line-number="5">cca_five <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/tf_integrate.html">tf_integrate</a></span>(<span class="dt">definite =</span> <span class="ot">FALSE</span>) <span class="op">%&gt;%</span><span class="st">  </span><span class="kw"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(<span class="dt">col =</span> pal_<span class="dv">5</span>)</a></code></pre></div>
 <p><img src="x01_tf_Vectors_files/figure-html/unnamed-chunk-18-1.png" width="90%"></p>
 <div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" data-line-number="1">cca_five <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/tf_integrate.html">tf_integrate</a></span>()</a>
 <a class="sourceLine" id="cb20-2" data-line-number="2"><span class="co">##         B         A         C         D         E </span></a>
@@ -501,17 +502,17 @@
 <div id="zoom-query" class="section level3">
 <h3 class="hasAnchor">
 <a href="#zoom-query" class="anchor"></a>zoom &amp; query</h3>
-<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" data-line-number="1">cca_five <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(<span class="dt">xlim =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="op">-</span><span class="fl">0.15</span>, <span class="dv">1</span>), <span class="dt">col =</span> pal_<span class="dv">5</span>, <span class="dt">lwd =</span> <span class="dv">2</span>)</a>
-<a class="sourceLine" id="cb22-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/text">text</a></span>(<span class="dt">x =</span> <span class="fl">-.1</span>, <span class="dt">y =</span> cca_five[,<span class="fl">0.07</span>], <span class="dt">labels =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/names">names</a></span>(cca_five), <span class="dt">col =</span> pal_<span class="dv">5</span>, <span class="dt">cex =</span> <span class="fl">1.5</span>)</a>
-<a class="sourceLine" id="cb22-3" data-line-number="3"><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/median">median</a></span>(cca_five) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/lines">lines</a></span>(<span class="dt">col =</span> pal_<span class="dv">5</span>[<span class="dv">3</span>], <span class="dt">lwd =</span> <span class="dv">4</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" data-line-number="1">cca_five <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(<span class="dt">xlim =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="op">-</span><span class="fl">0.15</span>, <span class="dv">1</span>), <span class="dt">col =</span> pal_<span class="dv">5</span>, <span class="dt">lwd =</span> <span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb22-2" data-line-number="2"><span class="kw"><a href="https://rdrr.io/r/graphics/text.html">text</a></span>(<span class="dt">x =</span> <span class="fl">-.1</span>, <span class="dt">y =</span> cca_five[,<span class="fl">0.07</span>], <span class="dt">labels =</span> <span class="kw"><a href="https://rdrr.io/r/base/names.html">names</a></span>(cca_five), <span class="dt">col =</span> pal_<span class="dv">5</span>, <span class="dt">cex =</span> <span class="fl">1.5</span>)</a>
+<a class="sourceLine" id="cb22-3" data-line-number="3"><span class="kw"><a href="https://rdrr.io/r/stats/median.html">median</a></span>(cca_five) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/graphics/lines.html">lines</a></span>(<span class="dt">col =</span> pal_<span class="dv">5</span>[<span class="dv">3</span>], <span class="dt">lwd =</span> <span class="dv">4</span>)</a></code></pre></div>
 <p><img src="x01_tf_Vectors_files/figure-html/ex-fig2-1.png" width="90%"></p>
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" data-line-number="1">cca_five <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/tf_where.html">tf_where</a></span>(value <span class="op">==</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Extremes">max</a></span>(value), <span class="st">"first"</span>)</a>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" data-line-number="1">cca_five <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/tf_where.html">tf_where</a></span>(value <span class="op">==</span><span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span>(value), <span class="st">"first"</span>)</a>
 <a class="sourceLine" id="cb23-2" data-line-number="2"><span class="co">##          B          A          C          D          E </span></a>
 <a class="sourceLine" id="cb23-3" data-line-number="3"><span class="co">## 0.90217391 0.07608696 1.00000000 0.10869565 0.93478261</span></a>
-<a class="sourceLine" id="cb23-4" data-line-number="4">cca_five[<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"A"</span>, <span class="st">"D"</span>)] <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/tf_zoom.html">tf_zoom</a></span>(.<span class="dv">5</span>, <span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/tf_where.html">tf_where</a></span>(value <span class="op">==</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Extremes">max</a></span>(value), <span class="st">"first"</span>)</a>
+<a class="sourceLine" id="cb23-4" data-line-number="4">cca_five[<span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"A"</span>, <span class="st">"D"</span>)] <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/tf_zoom.html">tf_zoom</a></span>(.<span class="dv">5</span>, <span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/tf_where.html">tf_where</a></span>(value <span class="op">==</span><span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span>(value), <span class="st">"first"</span>)</a>
 <a class="sourceLine" id="cb23-5" data-line-number="5"><span class="co">##         A         D </span></a>
 <a class="sourceLine" id="cb23-6" data-line-number="6"><span class="co">## 0.9673913 0.9565217</span></a>
-<a class="sourceLine" id="cb23-7" data-line-number="7">cca_five <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/tf_zoom.html">tf_zoom</a></span>(<span class="fl">0.2</span>, <span class="fl">0.6</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/tf_where.html">tf_anywhere</a></span>(value <span class="op">&lt;=</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/median">median</a></span>(cca_five)[, arg])</a>
+<a class="sourceLine" id="cb23-7" data-line-number="7">cca_five <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/tf_zoom.html">tf_zoom</a></span>(<span class="fl">0.2</span>, <span class="fl">0.6</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/tf_where.html">tf_anywhere</a></span>(value <span class="op">&lt;=</span><span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/stats/median.html">median</a></span>(cca_five)[, arg])</a>
 <a class="sourceLine" id="cb23-8" data-line-number="8"><span class="co">##     B     A     C     D     E </span></a>
 <a class="sourceLine" id="cb23-9" data-line-number="9"><span class="co">##  TRUE FALSE  TRUE FALSE  TRUE</span></a></code></pre></div>
 </div>
@@ -519,6 +520,7 @@
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
+
         <div id="tocnav">
       <h2 class="hasAnchor">
 <a href="#tocnav" class="anchor"></a>Contents</h2>
@@ -539,17 +541,20 @@
 </div>
 
 
+
       <footer><div class="copyright">
-  <p>Developed by Fabian Scheipl, Jeff Goldsmith.</p>
+  <p>Developed by Fabian Scheipl, Jeff Goldsmith, Julia Wrobel.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
 </div>
+
       </footer>
 </div>
 
   
+
 
   </body>
 </html>

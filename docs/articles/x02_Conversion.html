@@ -7,8 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Converting data to tf • tidyfun</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- sticky kit --><script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous">
+<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
 <script src="../pkgdown.js"></script><meta property="og:title" content="Converting data to tf">
 <meta property="og:description" content="">
 <meta name="twitter:card" content="summary">
@@ -30,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidyfun</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.8</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.82</span>
       </span>
     </div>
 
@@ -38,7 +39,7 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="../index.html">
-    <span class="fa fa-home fa-lg"></span>
+    <span class="fas fa fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -69,8 +70,8 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/fabian-s/tidyfun">
-    <span class="fa fa-github fa-lg"></span>
+  <a href="https://github.com/tidyfun/tidyfun">
+    <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -83,15 +84,16 @@
 <!--/.navbar -->
 
       
+
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1>Converting data to tf</h1>
                         <h4 class="author">Jeff Goldsmith</h4>
             
-            <h4 class="date">2019-06-11</h4>
+            <h4 class="date">2019-11-11</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/fabian-s/tidyfun/blob/master/vignettes/x02_Conversion.Rmd"><code>vignettes/x02_Conversion.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/tidyfun/tidyfun/blob/master/vignettes/x02_Conversion.Rmd"><code>vignettes/x02_Conversion.Rmd</code></a></small>
       <div class="hidden name"><code>x02_Conversion.Rmd</code></div>
 
     </div>
@@ -110,10 +112,10 @@
 <a class="sourceLine" id="cb1-2" data-line-number="2">  <span class="dt">id =</span> refund<span class="op">::</span>DTI<span class="op">$</span>ID, </a>
 <a class="sourceLine" id="cb1-3" data-line-number="3">  <span class="dt">visit =</span> refund<span class="op">::</span>DTI<span class="op">$</span>visit,</a>
 <a class="sourceLine" id="cb1-4" data-line-number="4">  <span class="dt">sex =</span> refund<span class="op">::</span>DTI<span class="op">$</span>sex, </a>
-<a class="sourceLine" id="cb1-5" data-line-number="5">  <span class="dt">case =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/factor">factor</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/ifelse">ifelse</a></span>(refund<span class="op">::</span>DTI<span class="op">$</span>case, <span class="st">"MS"</span>, <span class="st">"control"</span>)))</a>
+<a class="sourceLine" id="cb1-5" data-line-number="5">  <span class="dt">case =</span> <span class="kw"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span>(refund<span class="op">::</span>DTI<span class="op">$</span>case, <span class="st">"MS"</span>, <span class="st">"control"</span>)))</a>
 <a class="sourceLine" id="cb1-6" data-line-number="6"></a>
-<a class="sourceLine" id="cb1-7" data-line-number="7">dti_df<span class="op">$</span>cca =<span class="st"> </span><span class="kw"><a href="../reference/tfd.html">tfd</a></span>(refund<span class="op">::</span>DTI<span class="op">$</span>cca, <span class="dt">arg =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/seq">seq</a></span>(<span class="dv">0</span>,<span class="dv">1</span>, <span class="dt">l =</span> <span class="dv">93</span>))</a>
-<a class="sourceLine" id="cb1-8" data-line-number="8">dti_df<span class="op">$</span>rcst =<span class="st"> </span><span class="kw"><a href="../reference/tfd.html">tfd</a></span>(refund<span class="op">::</span>DTI<span class="op">$</span>rcst, <span class="dt">arg =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/seq">seq</a></span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dt">l =</span> <span class="dv">55</span>))</a></code></pre></div>
+<a class="sourceLine" id="cb1-7" data-line-number="7">dti_df<span class="op">$</span>cca =<span class="st"> </span><span class="kw"><a href="../reference/tfd.html">tfd</a></span>(refund<span class="op">::</span>DTI<span class="op">$</span>cca, <span class="dt">arg =</span> <span class="kw"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="dv">0</span>,<span class="dv">1</span>, <span class="dt">l =</span> <span class="dv">93</span>))</a>
+<a class="sourceLine" id="cb1-8" data-line-number="8">dti_df<span class="op">$</span>rcst =<span class="st"> </span><span class="kw"><a href="../reference/tfd.html">tfd</a></span>(refund<span class="op">::</span>DTI<span class="op">$</span>rcst, <span class="dt">arg =</span> <span class="kw"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dt">l =</span> <span class="dv">55</span>))</a></code></pre></div>
 <p>In <code>tfd</code>, the first argument is a matrix; <code>arg</code> defines the grid over which functions are observed. The output of <code>tfd</code> is a vector, which we include in the <code>dti_df</code> data frame.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1">dti_df</a>
 <a class="sourceLine" id="cb2-2" data-line-number="2"><span class="co">## # A tibble: 382 x 6</span></a>
@@ -135,7 +137,7 @@
 <a class="sourceLine" id="cb3-2" data-line-number="2"><span class="st">  </span><span class="kw">ggplot</span>() <span class="op">+</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb3-3" data-line-number="3"><span class="st">  </span><span class="kw"><a href="../reference/ggspaghetti.html">geom_spaghetti</a></span>(<span class="kw">aes</span>(<span class="dt">y =</span> cca, <span class="dt">col =</span> case, <span class="dt">alpha =</span> <span class="fl">.2</span> <span class="op">+</span><span class="st"> </span><span class="fl">.4</span><span class="op">*</span>(case <span class="op">==</span><span class="st"> "control"</span>))) <span class="op">+</span></a>
 <a class="sourceLine" id="cb3-4" data-line-number="4"><span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span><span class="st"> </span>sex) <span class="op">+</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb3-5" data-line-number="5"><span class="st">  </span><span class="kw">scale_alpha</span>(<span class="dt">guide =</span> <span class="st">'none'</span>, <span class="dt">range =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(.<span class="dv">2</span>, <span class="fl">.4</span>))</a></code></pre></div>
+<a class="sourceLine" id="cb3-5" data-line-number="5"><span class="st">  </span><span class="kw">scale_alpha</span>(<span class="dt">guide =</span> <span class="st">'none'</span>, <span class="dt">range =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(.<span class="dv">2</span>, <span class="fl">.4</span>))</a></code></pre></div>
 <p><img src="x02_Conversion_files/figure-html/unnamed-chunk-3-1.png" width="90%"></p>
 <p>We’ll repeat the same basic process using a second, and probably even-more-perennial, functional data example: the Canadian weather data in the <code>fda</code> package. Here, functional data are stored in a three-dimensional array, with dimesions corresponding to day, station, and outcome (temperature, precipitation, and log10 precipitation).</p>
 <p>In the following, we: create a <code>tibble</code> with scalar covariates; use <code>tfd</code> to create functional data vectors; and include the resulting vectors in the dataframe. In this case, our <code>arg</code>s are days of the year, and we use <code>tf_smooth</code> to smooth the precipitation outcome. Because the matrices store functional data in columns rather than in rows, we transpose matrices in the call to <code>tfd</code>.</p>
@@ -145,9 +147,9 @@
 <a class="sourceLine" id="cb4-4" data-line-number="4">  <span class="dt">lat =</span> fda<span class="op">::</span>CanadianWeather<span class="op">$</span>coordinates[,<span class="dv">1</span>], </a>
 <a class="sourceLine" id="cb4-5" data-line-number="5">  <span class="dt">lon =</span> <span class="op">-</span>fda<span class="op">::</span>CanadianWeather<span class="op">$</span>coordinates[,<span class="dv">2</span>])</a>
 <a class="sourceLine" id="cb4-6" data-line-number="6"></a>
-<a class="sourceLine" id="cb4-7" data-line-number="7">canada<span class="op">$</span>temp =<span class="st"> </span><span class="kw"><a href="../reference/tfd.html">tfd</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/t">t</a></span>(fda<span class="op">::</span>CanadianWeather<span class="op">$</span>dailyAv[,,<span class="dv">1</span>]), <span class="dt">arg =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">365</span>)</a>
+<a class="sourceLine" id="cb4-7" data-line-number="7">canada<span class="op">$</span>temp =<span class="st"> </span><span class="kw"><a href="../reference/tfd.html">tfd</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/t.html">t</a></span>(fda<span class="op">::</span>CanadianWeather<span class="op">$</span>dailyAv[,,<span class="dv">1</span>]), <span class="dt">arg =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">365</span>)</a>
 <a class="sourceLine" id="cb4-8" data-line-number="8">canada<span class="op">$</span>precipl10 =<span class="st"> </span></a>
-<a class="sourceLine" id="cb4-9" data-line-number="9"><span class="st">  </span><span class="kw"><a href="../reference/tfd.html">tfd</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/t">t</a></span>(fda<span class="op">::</span>CanadianWeather<span class="op">$</span>dailyAv[,,<span class="dv">3</span>]), <span class="dt">arg =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">365</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb4-9" data-line-number="9"><span class="st">  </span><span class="kw"><a href="../reference/tfd.html">tfd</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/t.html">t</a></span>(fda<span class="op">::</span>CanadianWeather<span class="op">$</span>dailyAv[,,<span class="dv">3</span>]), <span class="dt">arg =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">365</span>) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb4-10" data-line-number="10"><span class="st">  </span>tf_smooth</a>
 <a class="sourceLine" id="cb4-11" data-line-number="11"><span class="co">## using f = 0.15 as smoother span for lowess</span></a></code></pre></div>
 <p>The resulting data frame is shown below.</p>
@@ -175,7 +177,7 @@
 <a class="sourceLine" id="cb6-6" data-line-number="6"><span class="st">  </span>canada <span class="op">%&gt;%</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb6-7" data-line-number="7"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> precipl10, <span class="dt">color =</span> region)) <span class="op">+</span><span class="st"> </span><span class="kw"><a href="../reference/ggspaghetti.html">geom_spaghetti</a></span>() </a>
 <a class="sourceLine" id="cb6-8" data-line-number="8"></a>
-<a class="sourceLine" id="cb6-9" data-line-number="9">gridExtra<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/gridExtra/topics/arrangeGrob">grid.arrange</a></span>(temp_panel, precip_panel, <span class="dt">nrow =</span> <span class="dv">1</span>)</a></code></pre></div>
+<a class="sourceLine" id="cb6-9" data-line-number="9">gridExtra<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/gridExtra/man/arrangeGrob.html">grid.arrange</a></span>(temp_panel, precip_panel, <span class="dt">nrow =</span> <span class="dv">1</span>)</a></code></pre></div>
 <p><img src="x02_Conversion_files/figure-html/unnamed-chunk-6-1.png" width="90%"></p>
 </div>
 <div id="conversion-from-a-data-frame" class="section level1">
@@ -186,7 +188,7 @@
 <a href="#in-long-format" class="anchor"></a>… in “long” format</h3>
 <p>“Long” format data frames containing functional data include columns containing a subject identifier, the functional argument, and the value each subject’s function takes at each argument. There are also often (but not always) non-functional covariates that are repeated within a subject. For data in this form, we use <code>tf_nest</code> to produce a data frame containing a single row for each subject.</p>
 <p>A first example is the pig weight data from the <code>SemiPar</code> package, which is a nice example from longitudinal data analysis. This includes columns for <code>id.num</code>, <code>num.weeks</code>, and <code>weight</code> – which correspond to the subject, argument, and value.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/data">data</a></span>(<span class="st">"pig.weights"</span>, <span class="dt">package =</span> <span class="st">"SemiPar"</span>)</a>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/utils/data.html">data</a></span>(<span class="st">"pig.weights"</span>, <span class="dt">package =</span> <span class="st">"SemiPar"</span>)</a>
 <a class="sourceLine" id="cb7-2" data-line-number="2"></a>
 <a class="sourceLine" id="cb7-3" data-line-number="3">pig.weights =<span class="st"> </span><span class="kw">as_tibble</span>(pig.weights)</a>
 <a class="sourceLine" id="cb7-4" data-line-number="4"></a>
@@ -230,23 +232,23 @@
 <a class="sourceLine" id="cb9-2" data-line-number="2"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> weight)) <span class="op">+</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb9-3" data-line-number="3"><span class="st">  </span><span class="kw"><a href="../reference/ggspaghetti.html">geom_spaghetti</a></span>()</a></code></pre></div>
 <p><img src="x02_Conversion_files/figure-html/unnamed-chunk-9-1.png" width="90%"></p>
-<p>A second example uses the <code><a href="https://www.rdocumentation.org/packages/ALA/topics/fev1">ALA::fev1</a></code> dataset. <code>ALA</code> is not available on CRAN but can be installed using the line below.</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/install.packages">install.packages</a></span>(<span class="st">"ALA"</span>, <span class="dt">repos=</span><span class="st">"http://R-Forge.R-project.org"</span>)</a></code></pre></div>
+<p>A second example uses the <code>ALA::fev1</code> dataset. <code>ALA</code> is not available on CRAN but can be installed using the line below.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span>(<span class="st">"ALA"</span>, <span class="dt">repos=</span><span class="st">"http://R-Forge.R-project.org"</span>)</a></code></pre></div>
 <p>In this dataset, both <code>height</code> and <code>logFEV1</code> are observed at multiple ages for each child; that is, there are two functions observed simultaneously, over a shared argument. We can use <code>tf_nest</code> to create a dataframe with a single row for each subject, which includes both non-functional covariates (like age and height at baseline), and functional observations <code>logFEV1</code> and <code>height</code>.</p>
 <div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1">ALA<span class="op">::</span>fev1 <span class="op">%&gt;%</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb11-2" data-line-number="2"><span class="st">  </span><span class="kw">group_by</span>(id) <span class="op">%&gt;%</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb11-3" data-line-number="3"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">n_obs =</span> <span class="kw">n</span>()) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb11-4" data-line-number="4"><span class="st">  </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/filter">filter</a></span>(n_obs <span class="op">&gt;</span><span class="st"> </span><span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb11-4" data-line-number="4"><span class="st">  </span><span class="kw"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(n_obs <span class="op">&gt;</span><span class="st"> </span><span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb11-5" data-line-number="5"><span class="st">  </span><span class="kw"><a href="../reference/tf_nest.html">tf_nest</a></span>(logFEV1, height, <span class="dt">.arg =</span> age)</a></code></pre></div>
 </div>
 <div id="in-wide-format" class="section level3">
 <h3 class="hasAnchor">
 <a href="#in-wide-format" class="anchor"></a>… in “wide” format</h3>
 <p>In some cases functional data are stored in “wide” format, meaning that there are separate columns for each argument, and values are stored in these columns. In this case, <code>tf_gather</code> can be use to collapse across columns to produce a function for each subject.</p>
-<p>The example below again uses the <code><a href="https://www.rdocumentation.org/packages/refund/topics/DTI">refund::DTI</a></code> dataset. We convert <code>cca</code> so that, instead of acting as a matrix, it is in “wide” format. We then use <code>tf_gather</code> to combine the <code>cca</code> observations into a function.</p>
+<p>The example below again uses the <code><a href="https://rdrr.io/pkg/refund/man/DTI.html">refund::DTI</a></code> dataset. We convert <code>cca</code> so that, instead of acting as a matrix, it is in “wide” format. We then use <code>tf_gather</code> to combine the <code>cca</code> observations into a function.</p>
 <div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1">dti_df =<span class="st"> </span></a>
 <a class="sourceLine" id="cb12-2" data-line-number="2"><span class="st">  </span>refund<span class="op">::</span>DTI <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb12-3" data-line-number="3"><span class="st">  </span>janitor<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/janitor/topics/clean_names">clean_names</a></span>() <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb12-3" data-line-number="3"><span class="st">  </span>janitor<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/janitor/man/clean_names.html">clean_names</a></span>() <span class="op">%&gt;%</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb12-4" data-line-number="4"><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span><span class="kw">starts_with</span>(<span class="st">"rcst"</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb12-5" data-line-number="5"><span class="st">  </span><span class="kw"><a href="../reference/tf_gather.html">tf_gather</a></span>(<span class="kw">starts_with</span>(<span class="st">"cca"</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb12-6" data-line-number="6"><span class="st">  </span><span class="kw">as_tibble</span>()</a>
@@ -316,9 +318,9 @@
 <a class="sourceLine" id="cb15-8" data-line-number="8"><span class="co">## 1 24.0 32.0 39.0 42.5 48.0</span></a>
 <a class="sourceLine" id="cb15-9" data-line-number="9"><span class="co">## 2 22.5 30.5 40.5 45.0 51.0</span></a>
 <a class="sourceLine" id="cb15-10" data-line-number="10"><span class="co">## 3 22.5 28.0 36.5 41.0 47.5</span></a></code></pre></div>
-<p>To convert a <code>tf</code> vector to a standalone data frame with <code>"id"</code>,<code>"arg"</code>,<code>"value"</code>-columns, use <code><a href="https://www.rdocumentation.org/packages/base/topics/as.data.frame">as.data.frame()</a></code>:</p>
+<p>To convert a <code>tf</code> vector to a standalone data frame with <code>"id"</code>,<code>"arg"</code>,<code>"value"</code>-columns, use <code><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame()</a></code>:</p>
 <div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" data-line-number="1">weight_vec <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb16-2" data-line-number="2"><span class="st">  </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/as.data.frame">as.data.frame</a></span>()</a>
+<a class="sourceLine" id="cb16-2" data-line-number="2"><span class="st">  </span><span class="kw"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span>()</a>
 <a class="sourceLine" id="cb16-3" data-line-number="3"><span class="co">## # A tibble: 432 x 3</span></a>
 <a class="sourceLine" id="cb16-4" data-line-number="4"><span class="co">##    id      arg value</span></a>
 <a class="sourceLine" id="cb16-5" data-line-number="5"><span class="co">##    &lt;ord&gt; &lt;int&gt; &lt;dbl&gt;</span></a>
@@ -338,6 +340,7 @@
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
+
         <div id="tocnav">
       <h2 class="hasAnchor">
 <a href="#tocnav" class="anchor"></a>Contents</h2>
@@ -358,17 +361,20 @@
 </div>
 
 
+
       <footer><div class="copyright">
-  <p>Developed by Fabian Scheipl, Jeff Goldsmith.</p>
+  <p>Developed by Fabian Scheipl, Jeff Goldsmith, Julia Wrobel.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
 </div>
+
       </footer>
 </div>
 
   
+
 
   </body>
 </html>
