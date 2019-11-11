@@ -9,6 +9,9 @@
 Status](https://travis-ci.org/tidyfun/tidyfun.svg?branch=master)](https://travis-ci.org/tidyfun/tidyfun)
 [![Lifecycle:
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
+[![Build
+Status](https://ci.appveyor.com/api/projects/status/github/tidyfun/tidyfun?branch=master&svg=true)](https://ci.appveyor.com/project/tidyfun/tidyfun/branch/master)
+[![codecov.io](https://codecov.io/github/tidyfun/tidyfun/coverage.svg?branch=master)](https://codecov.io/github/tidyfun/tidyfun/branch/master)
 <!-- badges: end -->
 
 The goal of **`tidyfun`** is to provide accessible and well-documented
