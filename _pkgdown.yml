@@ -1,5 +1,5 @@
 title: tidyfun
-url: https://fabian-s.github.io/tidyfun
+url: https://tidyfun.github.io/tidyfun
 
 reference:
   - title: "tf - (Sub)classes: Constructors & converters"
@@ -11,6 +11,7 @@ reference:
       - as.tfb
       - tfb_spline
       - tfb_fpc
+      - fpc_wsvd
 
   - title: "Concatenation, evaluation and indexing"
     desc: "Accessing, appending, evaluating and overwriting functional data objects"
@@ -78,3 +79,21 @@ articles:
     - x03_Data_Wrangling
     - x04_Visualization
 
+navbar:
+  type: default
+  left:
+  - text: Reference
+    href: reference/index.html
+  - text: Articles
+    menu:
+    - text: tf-Vectors and Operations
+      href: articles/x01_tf_Vectors.html
+    - text: Converting data to and from `tf`
+      href: articles/x02_Conversion.html
+    - text: Data Wrangling
+      href: articles/x03_Data_Wrangling.html
+    - text: Visulalization
+      href: articles/x04_Visualization.html
+
+development:
+  mode: auto

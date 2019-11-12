@@ -10,7 +10,9 @@ output:
 <!-- badges: start -->
 [![Build Status](https://travis-ci.org/tidyfun/tidyfun.svg?branch=master)](https://travis-ci.org/tidyfun/tidyfun)
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
-  <!-- badges: end -->
+[![Build Status](https://ci.appveyor.com/api/projects/status/github/tidyfun/tidyfun?branch=master&svg=true)](https://ci.appveyor.com/project/tidyfun/tidyfun/branch/master)
+[![codecov.io](https://codecov.io/github/tidyfun/tidyfun/coverage.svg?branch=master)](https://codecov.io/github/tidyfun/tidyfun/branch/master)
+<!-- badges: end -->
 
 
 
@@ -67,7 +69,7 @@ For detailed information on the features of `tidyfun`, check out articles on the
 
 The result is a package that enables exploratory data analysis like the following, which computes group-specific mean curves in the `dti_df` dataset, and plots the result:
 
-```{r}
+```{r message=FALSE, warning = FALSE}
 library("tidyfun")
 data(dti_df, package = "tidyfun")
 
@@ -76,7 +78,7 @@ dti_df %>%
   summarize(mean_cca = mean(cca, na.rm = TRUE)) %>% 
   ggplot(aes(y = mean_cca, color = case)) + 
     geom_spaghetti(size = 2) + 
-    facet_grid(~sex)
+    facet_grid(~ sex)
 ```
 
 
