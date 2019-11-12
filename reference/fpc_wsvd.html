@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Accessing, evaluating, subsetting and subassigning <code>tf</code> vectors — [.tf • tidyfun</title>
+<title>Eigenfunctions via weighted SVD — fpc_wsvd • tidyfun</title>
 
 
 <!-- jquery -->
@@ -35,11 +35,9 @@
 
 
 
-<meta property="og:title" content="Accessing, evaluating, subsetting and subassigning <code>tf</code> vectors — [.tf" />
-<meta property="og:description" content="These functions access, subset, replace and evaluate tf objects.
-For more information on creating tf objects and converting them to/from
-list, data.frame or matrix, see tfd() and tfb(). 
-Note that these break certain (terrible) R conventions for vector-like objects:" />
+<meta property="og:title" content="Eigenfunctions via weighted SVD — fpc_wsvd" />
+<meta property="og:description" content="Compute (truncated) orthonormal eigenfunctions and scores
+for data potentially on a non-equidistant grid." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -123,85 +121,48 @@ Note that these break certain (terrible) R conventions for vector-like objects:"
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Accessing, evaluating, subsetting and subassigning <code>tf</code> vectors</h1>
-    <small class="dont-index">Source: <a href='https://github.com/tidyfun/tidyfun/blob/master/R/brackets.R'><code>R/brackets.R</code></a></small>
-    <div class="hidden name"><code>tfbrackets.Rd</code></div>
+    <h1>Eigenfunctions via weighted SVD</h1>
+    <small class="dont-index">Source: <a href='https://github.com/tidyfun/tidyfun/blob/master/R/tfb-fpc-utils.R'><code>R/tfb-fpc-utils.R</code></a></small>
+    <div class="hidden name"><code>fpc_wsvd.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>These functions access, subset, replace and evaluate <code>tf</code> objects.
-For more information on creating <code>tf</code> objects and converting them to/from
-<code>list</code>, <code>data.frame</code> or <code>matrix</code>, see <code><a href='tfd.html'>tfd()</a></code> and <code><a href='tfb.html'>tfb()</a></code>. <br />
-Note that these break certain (terrible) R conventions for vector-like objects:<br /></p>
+    <p>Compute (truncated) orthonormal eigenfunctions and scores
+for data potentially on a non-equidistant grid.</p>
     </div>
 
-    <pre class="usage"># S3 method for tf
-[(x, i, j, interpolate = TRUE, matrix = TRUE)
-
-# S3 method for tf
-[(x, i) <- value</pre>
+    <pre class="usage"><span class='fu'>fpc_wsvd</span>(<span class='no'>data</span>, <span class='no'>arg</span>, <span class='kw'>pve</span> <span class='kw'>=</span> <span class='fl'>0.995</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>x</th>
-      <td><p>an <code>tf</code></p></td>
+      <th>data</th>
+      <td><p>numeric matrix of function evaluations (each row is one curve, no NAs)</p></td>
     </tr>
     <tr>
-      <th>i</th>
-      <td><p>index of the observations (<code>integer</code>ish, <code>character</code> or <code>logical</code>,
-usual R rules apply)</p></td>
+      <th>arg</th>
+      <td><p>numeric vector of argument values</p></td>
     </tr>
     <tr>
-      <th>j</th>
-      <td><p>The <code>arg</code> used to evaluate the functions. A (list of) <code>numeric</code>
-vectors.</p></td>
-    </tr>
-    <tr>
-      <th>interpolate</th>
-      <td><p>should functions be evaluated (i.e., inter-/extrapolated)
-for values in <code>arg</code> for which no original data is available? Only relevant for
-<code>tfd</code>, defaults to <code>TRUE</code>.</p></td>
-    </tr>
-    <tr>
-      <th>matrix</th>
-      <td><p>should the result be returned as a <code>matrix</code> or as a list of
-<code>data.frame</code>s? If <code>TRUE</code>, <code>j</code> has to be a (list of a) single vector of
-<code>arg</code>. See return value.</p></td>
-    </tr>
-    <tr>
-      <th>value</th>
-      <td><p><code>tf</code> object for subassignment. This is (currently) very strictly typed,
-i.e. only objects that are of the same class and have compatible <code>arg</code> can be
-subassigned.</p></td>
+      <th>pve</th>
+      <td><p>percentage of variance explained</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>If <code>j</code> is missing, a subset of the functions in <code>x</code> as given by
-<code>i</code>.<br /> If <code>j</code> is given and <code>matrix == TRUE</code>, a numeric matrix of function
-evaluations in which each row represents one function and each column
-represents one <code>argval</code> as given in argument <code>j</code>, with an attribute
-<code>arg</code>=<code>j</code> and row- and column-names derived from <code>x[i]</code> and <code>j</code>.<br /> If
-<code>j</code> is given and <code>matrix == FALSE</code>, a list of <code>tbl_df</code>s with columns
-<code>arg</code> = <code>j</code> and <code>value</code> = evaluations at <code>j</code> for each observation in
-<code>i</code>.</p>
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    
-<ul>
-<li><p>no argument recycling,</p></li>
-<li><p>no indexing with <code>NA</code>,</p></li>
-<li><p>no indexing with names not present in <code>x</code>,</p></li>
-<li><p>no indexing with integers <code>&gt; length(x)</code></p></li>
+    <p>a list with entries</p><ul>
+<li><p>`mu`` estimated mean function (numeric vector)</p></li>
+<li><p>`efunctions`` estimated FPCs (numeric matrix, columns represent FPCs)</p></li>
+<li><p><code>scores</code> estimated FPC scores (one row per observed curve)</p></li>
+<li><p><code>npc</code> how many FPCs were returned for the given <code>pve</code> (integer)</p></li>
 </ul>
 
-<p>All of these will trigger errors. Subassigning new elements to positions
-beyond the original length still works and will fill up the missing elements
-up to that position with <code>NAs</code>, though. This package was developed by fickle,
-rainbow-colored unicorns.</p>
+    <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
+
+    <p>code adapted from / inspired by <code>wsvd()</code> function of Bioconductor
+package <code>mogsa</code> by Cheng Meng.</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
@@ -209,7 +170,7 @@ rainbow-colored unicorns.</p>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
       <li><a href="#value">Value</a></li>
-      <li><a href="#details">Details</a></li>
+      <li><a href="#references">References</a></li>
     </ul>
 
   </div>
