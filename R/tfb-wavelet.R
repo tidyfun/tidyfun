@@ -1,19 +1,20 @@
-new_tfb_wavelet <- function(data, domain = NULL, levels = 6, verbose = TRUE,
+new_tfb_wavelet <- function(data, domain = NULL, levels = 2, verbose = TRUE,
                             resolution = NULL, ...) {
-  
   domain <- domain %||% range(data$arg)
   arg_u <- mgcv::uniquecombs(data$arg, ordered = TRUE)
   resolution <- resolution %||% get_resolution(arg_u)
-  domain <- c(round_resolution(domain[1], resolution, -1),
-              round_resolution(domain[2], resolution, 1))
-  
+  domain <- c(
+    round_resolution(domain[1], resolution, -1),
+    round_resolution(domain[2], resolution, 1)
+  )
+
   # explicit factor-conversion to avoid reordering:
   data$id <- factor(data$id, levels = unique(as.character(data$id)))
-  
+
   n_evaluations <- table(data$id)
   arg_list <- split(data$arg, data$id)
   regular <- all(duplicated(arg_list)[-1])
-  
+
   if (regular) {
     dyadic_params <- check_dyadic(nrow(arg_u))
     spacing_params <- check_spacing(sort(unique(data$arg)))
@@ -24,69 +25,95 @@ new_tfb_wavelet <- function(data, domain = NULL, levels = 6, verbose = TRUE,
     spacing_params <- lapply(arg_list, check_spacing)
     data <- grid_adjustment(data, dyadic_params, spacing_params)
   }
-  
 
-  threshold_args <- list(...)[names(list(...)) %in% 
-                                names(formals(wavethresh::threshold.wd))]
+
+  threshold_args <- list(...)[names(list(...)) %in%
+    names(formals(wavethresh::threshold.wd))]
   wd_args <- list(...)[names(list(...)) %in% names(formals(wavethresh::wd))]
+
+  if (length(wd_args) == 0) wd_args$filter.number <- 10
+  if (length(threshold_args) == 0) threshold_args$levels <- levels
   
-  if (is.null(threshold_args$type)) threshold_args$type <- "soft"
+  fit <- fit_wavelet(data, threshold_args, wd_args, arg_u, regular)
+
+  n_levels_wd <- nlevelsWT(fit$wd_coefs[[1]]) - 1
+
+  X <- cbind(1, ZDaub(arg_u$x,
+    numLevels = n_levels_wd,
+    filterNumber = fit$wd_coefs[[1]]$filter$filter.number$filter.number,
+    resolution = 16384
+  ))
+
+  coefs <- lapply(fit$wd_coefs, function(x) {
+    c(tail(x$C, 1), x$D)[1:n_levels_wd^2]
+  })
+
+  threshold_args <- unlist(c(
+    threshold_args,
+    formals(wavethresh::threshold.wd)[
+      !(names(formals(wavethresh::threshold.wd))
+        %in% names(threshold_args))
+      ]
+  ))
   
-  fit <- fit_wavelet(data, threshold_args, wd_args, levels, arg_u, regular)
+  wd_args <- unlist(c(
+    wd_args,
+    formals(wavethresh::wd)[
+      !(names(formals(wavethresh::wd))
+        %in% names(wd_args))
+      ]
+  ))
   
-  X <- cbind(1, ZDaub(arg_u$x, 
-                      numLevels = nlevelsWT(fit$wd_coefs[[1]]) - 1,
-                      filterNumber=fit$wd_coefs[[1]]$filter$filter.number$filter.number,
-                      resolution=16384))
-  
-  ret <- structure(fit$fit,
-                   domain = domain,
-                   thresh_arg = threshold_args,
-                   basis_matrix = X,
-                   resolution = resolution,
-                   filter = fit$wd_coefs[[1]]$filter,
-                   arg = arg_u$x,
-                   class = c("tfb_wavelet", "tfb", "tf")
+  ret <- structure(coefs,
+    domain = domain,
+    thresh_arg = threshold_args,
+    basis_matrix = X,
+    resolution = resolution,
+    filter = fit$wd_coefs[[1]]$filter,
+    arg = arg_u$x,
+    class = c("tfb_wavelet", "tfb", "tf")
   )
   ret
 }
 
 
 #' @param data A data.frame, matrix or tf-object.
-#' @param wavelet Every input corresponds with a wavelet function of the 
+#' @param wavelet Every input corresponds with a wavelet function of the
 #' wavethresh-package, since they have different inputs it is advised to look at
-#' the help pages: 
+#' the help pages:
 #' DWT: [wavethresh::wd(type = "wavelet")]
 #' NDWT: [wavethresh:wd(type = "station")]
 #' WPT: [wavethresh:wp()]
 #' NWPT: [wavethresh:wpst()]
 #' MWD: [wavethresh:mwd()]
 #' @param filter_number Number of vanishing moments.
-#' @param family 
-#' @param ... Arguments for thresholding. For possible Arguments look at the 
+#' @param family
+#' @param ... Arguments for thresholding. For possible Arguments look at the
 #' help pages of wavethresh::threshold.your_wavelet_method.
 #' @return a `tfb`-object
 tfb_wavelet <- function() UseMethod("tfb_wavelet")
 
 tfb_wavelet.data.frame <- function(data, id = 1, arg = 2, value = 3,
-                                   domain = NULL, levels = 6, verbose = TRUE,
+                                   domain = NULL, levels = 2, verbose = TRUE,
                                    ...) {
   data <- df_2_df(data, id, arg, value)
-  ret <- new_tfb_wavelet(data, domain = domain, levels = levels, 
-                         verbose = TRUE, ...)
+  ret <- new_tfb_wavelet(data,
+    domain = domain, levels = levels,
+    verbose = TRUE, ...
+  )
   assert_arg(tf_arg(ret), ret)
   ret
 }
 
 
 tfb_wavelet.matrix <- function() {
-  
+
 }
 
 tfb_wavelet.tfd <- function() {
-  
+
 }
 
 tfb_wavelet.tfb <- function() {
-  
+
 }

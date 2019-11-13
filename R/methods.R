@@ -33,7 +33,7 @@ tf_evaluations.tfd_irreg <- function(f) {
 #' @export
 tf_evaluations.tfb <- function(f) {
   evals <- map(f, ~ drop(attr(f, "basis_matrix") %*% .))
-  if (!inherits(f, "tfb_fpc")) {
+  if (!inherits(f, c("tfb_fpc", "tfb_wavelet"))) {
     evals <- map(evals, attr(f, "family")$linkinv)
   }
   evals

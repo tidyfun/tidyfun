@@ -75,7 +75,7 @@ tf_evaluate.tfb <- function(object, arg, ...) {
       )
     )
   }
-  if (!inherits(object, "tfb_fpc")) {
+  if (!inherits(object, c("tfb_fpc", "tfb_wavelet"))) {
     ret <- map(ret, attr(object, "family")$linkinv)
   }  
   names(ret) <- names(object)
