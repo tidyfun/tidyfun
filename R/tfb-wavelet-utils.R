@@ -32,7 +32,9 @@ fit_wavelet <- function(data, threshold_args, wd_args, arg_u, regular) {
   eval_list <- split(data$data, data$id)
   index_list <- split(attr(arg_u, "index"), data$id)
   
-  coefs <- lapply(eval_list, wd, wd_args)
+  formals(wavethresh::wd) <- wd_args
+  
+  coefs <- map(eval_list, wd)
   
   if (nlevelsWT(coefs[[1]]) - 1 < threshold_args$levels) {
     threshold_args$levels <- nlevelsWT(coefs[[1]]) - 1
@@ -40,9 +42,10 @@ fit_wavelet <- function(data, threshold_args, wd_args, arg_u, regular) {
                    threshold_args$levels))
   }
   
-  coefs <- lapply(coefs, wavethresh::threshold.wd, unlist(threshold_args))
+  formals(wavethresh::threshold.wd) <- threshold_args
+  coefs <- map(coefs, wavethresh::threshold.wd)
   
-  fit <- lapply(coefs, wr)
+  fit <- map(coefs, wr)
   list(fit = fit, wd_coefs = coefs)
 }
 

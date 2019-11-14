@@ -7,14 +7,14 @@ new_tfb_wavelet <- function(data, domain = NULL, levels = 2, verbose = TRUE,
     round_resolution(domain[1], resolution, -1),
     round_resolution(domain[2], resolution, 1)
   )
-
+  
   # explicit factor-conversion to avoid reordering:
   data$id <- factor(data$id, levels = unique(as.character(data$id)))
-
+  
   n_evaluations <- table(data$id)
   arg_list <- split(data$arg, data$id)
   regular <- all(duplicated(arg_list)[-1])
-
+  
   if (regular) {
     dyadic_params <- check_dyadic(nrow(arg_u))
     spacing_params <- check_spacing(sort(unique(data$arg)))
@@ -25,53 +25,48 @@ new_tfb_wavelet <- function(data, domain = NULL, levels = 2, verbose = TRUE,
     spacing_params <- lapply(arg_list, check_spacing)
     data <- grid_adjustment(data, dyadic_params, spacing_params)
   }
-
-
-  threshold_args <- list(...)[names(list(...)) %in%
-    names(formals(wavethresh::threshold.wd))]
-  wd_args <- list(...)[names(list(...)) %in% names(formals(wavethresh::wd))]
-
-  if (length(wd_args) == 0) wd_args$filter.number <- 10
-  if (length(threshold_args) == 0) threshold_args$levels <- levels
+  
+  
+  
+  wd_arg_names <- names(list(...))[names(list(...)) %in% 
+                                     names(formals(wavethresh::wd))]
+  if (!is.null(wd_arg_names))
+    formals(wavethresh::wd)[[wd_arg_names]] <- list(...)[[wd_arg_names]]
+  
+  threshold_arg_names <- names(list(...))[names(list(...)) %in% 
+                                            names(formals(wavethresh::threshold.wd))]
+  if (!is.null(threshold_arg_names)) {
+    formals(wavethresh::threshold.wd)[[threshold_arg_names]] <- 
+    list(...)[[threshold_arg_names]]
+    formals(wavethresh::threshold.wd)$levels <- levels
+  }
+  threshold_args <- formals(wavethresh::threshold.wd)
+  wd_args <- formals(wavethresh::wd)
   
   fit <- fit_wavelet(data, threshold_args, wd_args, arg_u, regular)
-
+  
   n_levels_wd <- nlevelsWT(fit$wd_coefs[[1]]) - 1
-
+  
   X <- cbind(1, ZDaub(arg_u$x,
-    numLevels = n_levels_wd,
-    filterNumber = fit$wd_coefs[[1]]$filter$filter.number$filter.number,
-    resolution = 16384
+                      numLevels = n_levels_wd,
+                      filterNumber = fit$wd_coefs[[1]]$filter$filter.number,
+                      resolution = 16384
   ))
-
+  
   coefs <- lapply(fit$wd_coefs, function(x) {
     c(tail(x$C, 1), x$D)[1:n_levels_wd^2]
   })
-
-  threshold_args <- unlist(c(
-    threshold_args,
-    formals(wavethresh::threshold.wd)[
-      !(names(formals(wavethresh::threshold.wd))
-        %in% names(threshold_args))
-      ]
-  ))
   
-  wd_args <- unlist(c(
-    wd_args,
-    formals(wavethresh::wd)[
-      !(names(formals(wavethresh::wd))
-        %in% names(wd_args))
-      ]
-  ))
   
   ret <- structure(coefs,
-    domain = domain,
-    thresh_arg = threshold_args,
-    basis_matrix = X,
-    resolution = resolution,
-    filter = fit$wd_coefs[[1]]$filter,
-    arg = arg_u$x,
-    class = c("tfb_wavelet", "tfb", "tf")
+                   domain = domain,
+                   thresh_arg = formals(wavethresh::threshold.wd),
+                   wd_arg = formals(wavethresh::wd),
+                   basis_matrix = X,
+                   resolution = resolution,
+                   filter = fit$wd_coefs[[1]]$filter,
+                   arg = arg_u$x,
+                   class = c("tfb_wavelet", "tfb", "tf")
   )
   ret
 }
@@ -98,8 +93,8 @@ tfb_wavelet.data.frame <- function(data, id = 1, arg = 2, value = 3,
                                    ...) {
   data <- df_2_df(data, id, arg, value)
   ret <- new_tfb_wavelet(data,
-    domain = domain, levels = levels,
-    verbose = TRUE, ...
+                         domain = domain, levels = levels,
+                         verbose = TRUE, ...
   )
   assert_arg(tf_arg(ret), ret)
   ret
@@ -107,13 +102,13 @@ tfb_wavelet.data.frame <- function(data, id = 1, arg = 2, value = 3,
 
 
 tfb_wavelet.matrix <- function() {
-
+  
 }
 
 tfb_wavelet.tfd <- function() {
-
+  
 }
 
 tfb_wavelet.tfb <- function() {
-
+  
 }

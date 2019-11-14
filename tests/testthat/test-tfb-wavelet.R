@@ -3,6 +3,8 @@ library(wavethresh)
 library(checkmate)
 library(pillar)
 library(tidyverse)
+library(mgcv)
+library(memoise)
 
 set.seed(1234)
 data <- data.frame(id = rep(1:5, 8), 
@@ -11,4 +13,5 @@ data <- data.frame(id = rep(1:5, 8),
 
 temp <- tfb_wavelet.data.frame(data)
 
+is_tfb(temp)
 temp
