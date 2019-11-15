@@ -28,20 +28,20 @@ new_tfb_wavelet <- function(data, domain = NULL, levels = 2, verbose = TRUE,
   
   
   
-  wd_arg_names <- names(list(...))[names(list(...)) %in% 
-                                     names(formals(wavethresh::wd))]
-  if (!is.null(wd_arg_names))
-    formals(wavethresh::wd)[[wd_arg_names]] <- list(...)[[wd_arg_names]]
+  wd_args <- list(...)[names(list(...)) %in% 
+                         names(formals(wavethresh::wd))]
   
-  threshold_arg_names <- names(list(...))[names(list(...)) %in% 
-                                            names(formals(wavethresh::threshold.wd))]
-  if (!is.null(threshold_arg_names)) {
-    formals(wavethresh::threshold.wd)[[threshold_arg_names]] <- 
-    list(...)[[threshold_arg_names]]
-    formals(wavethresh::threshold.wd)$levels <- levels
+  threshold_args <- list(...)[names(list(...)) %in% 
+                                names(formals(wavethresh::threshold.wd))]
+  threshold_args$levels <- levels
+  
+  if ("type" %in% names(list(...))) {
+    if (wd_args$type %in% c("wavelet", "station")) {
+      threshold_args$type <- NULL
+    } else {
+      wd_args$type <- NULL
+    }
   }
-  threshold_args <- formals(wavethresh::threshold.wd)
-  wd_args <- formals(wavethresh::wd)
   
   fit <- fit_wavelet(data, threshold_args, wd_args, arg_u, regular)
   

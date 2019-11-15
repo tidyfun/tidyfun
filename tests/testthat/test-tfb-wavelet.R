@@ -12,6 +12,9 @@ data <- data.frame(id = rep(1:5, 8),
                    value = rnorm(8*5))
 
 temp <- tfb_wavelet.data.frame(data)
+tfb_wavelet.data.frame(data, filter.number = 8, levels = 1, type = "hard",
+                       policy = "universal")
+
 
 is_tfb(temp)
 temp

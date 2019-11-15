@@ -30,11 +30,11 @@ grid_adjustment <- function(data, dyadic_params, spacing_params) {
 
 fit_wavelet <- function(data, threshold_args, wd_args, arg_u, regular) {
   eval_list <- split(data$data, data$id)
-  index_list <- split(attr(arg_u, "index"), data$id)
   
-  formals(wavethresh::wd) <- wd_args
-  
-  coefs <- map(eval_list, wd)
+  coefs <- map(eval_list, function(x) {
+    wd_args$data <- x
+    do.call(wd, wd_args, quote = TRUE)
+    })
   
   if (nlevelsWT(coefs[[1]]) - 1 < threshold_args$levels) {
     threshold_args$levels <- nlevelsWT(coefs[[1]]) - 1
@@ -42,8 +42,10 @@ fit_wavelet <- function(data, threshold_args, wd_args, arg_u, regular) {
                    threshold_args$levels))
   }
   
-  formals(wavethresh::threshold.wd) <- threshold_args
-  coefs <- map(coefs, wavethresh::threshold.wd)
+  coefs <- map(coefs, function(x) {
+    threshold_args$wd <- x
+    do.call(threshold.wd, threshold_args, quote = TRUE)
+  })
   
   fit <- map(coefs, wr)
   list(fit = fit, wd_coefs = coefs)
