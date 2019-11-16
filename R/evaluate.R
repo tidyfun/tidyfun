@@ -64,6 +64,9 @@ tf_evaluate.tfb <- function(object, arg, ...) {
       X = attr(object, "basis_matrix"),
       resolution = tf_resolution(object)
     )
+    if (is.vector(evals)) {
+      evals <- matrix(evals, nrow = 1)  
+    }
     ret <- split(evals, col(as.matrix(evals)))
   } else {
     ret <- pmap(
