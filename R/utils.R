@@ -106,14 +106,17 @@ is_equidist <- function(f) {
   unique_diffs <- map_lgl(
     ensure_list(tf_arg(f)),
     ~round_resolution(.x, attr(f, "resolution")) %>%
-      diff() %>%
-      duplicated() %>%
-      tail(-1) %>%
-      all()
+      is_equidist_numeric
   )
   all(unique_diffs)
 }
 
+is_equidist_numeric <- function(x) {
+  diff(x) %>%
+    duplicated() %>%
+    tail(-1) %>%
+    all()
+}
 
 compare_tf_attribs <- function(e1, e2, ignore = c("names", "id")) {
   # TODO: better way to check evaluator/basis functions?
