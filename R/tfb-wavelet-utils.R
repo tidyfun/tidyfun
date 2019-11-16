@@ -1,8 +1,8 @@
 check_dyadic <- function(n) {
   dyadic_params <- list()
   dyadic_params[["dyadic"]] <- round(log2(n)) == log2(n)
-  dyadic_params[["next_power"]] <- ceiling(log2(n))
-  dyadic_params[["previous_power"]] <- floor(log2(n))
+  dyadic_params[["closest_power"]] <- round(log2(n))
+  dyadic_params[["n_diff"]] <- 2^dyadic_params[["closest_power"]] - n
   dyadic_params
 }
 
@@ -12,20 +12,38 @@ check_spacing <- function(arg) {
   first_dist <- arg[2] - arg[1]
   ideal_seq <- seq(arg_range[1], arg_range[2], by = first_dist)
   # suppress warnings because possible unequal length
-  spacing_params[["equal_spacing"]] <- suppressWarnings(all(ideal_seq == arg))
+  spacing_params[["equal_spacing"]] <- is_equidist_numeric(arg)
   spacing_params[["first_offender"]] <- suppressWarnings(
     which(ideal_seq != arg)[1])
   spacing_params
 }
 
-grid_adjustment <- function(data, dyadic_params, spacing_params) {
-  # # very simple zero padding
-  # eval_list <- split(data$data, data$id)
-  # map2()
-  # wavelets::extend.series(data)
-  data
+remove_slope <- function(x, y) {
+  last_element <- length(x)
+  slope <- (y[last_element] - y[1]) / (x[last_element] - x[1])
+  intercept <- x[1] - slope * x[1]
+  f <- intercept + slope * x
+  y_desloped <- y - f
+  y_desloped <- structure(y_desloped,
+                          slope = f,
+                          original_series = y)
+  y_desloped
 }
 
+grid_adjustment <- function(data, dyadic_params, spacing_params) {
+  # get rid of global slope
+  eval_list <- split(data$data, data$id)
+  index_list <- split(data$arg, data$id)
+  
+  # if n k of off 2^J  or series not equally spaced use interpolation
+  # if off a lot use padding
+  
+  
+  map2(index_list, eval_list, function(x,y) remove_slope(x,y))
+
+  
+  data
+}
 
 
 fit_wavelet <- function(data, threshold_args, wd_args, arg_u, regular) {
@@ -38,7 +56,7 @@ fit_wavelet <- function(data, threshold_args, wd_args, arg_u, regular) {
   
   if (nlevelsWT(coefs[[1]]) - 1 < threshold_args$levels) {
     threshold_args$levels <- nlevelsWT(coefs[[1]]) - 1
-    warning(paste0("levels input is too big for the data. Using levels = ", 
+    warning(paste0("level input is too big for the data. Using levels = ", 
                    threshold_args$levels))
   }
   

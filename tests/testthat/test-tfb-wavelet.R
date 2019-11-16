@@ -16,5 +16,8 @@ tfb_wavelet.data.frame(data, filter.number = 8, levels = 1, type = "hard",
                        policy = "universal")
 
 
+tf_evaluate(temp, c(1.5, 2.3, 4))
+
 is_tfb(temp)
 temp
+

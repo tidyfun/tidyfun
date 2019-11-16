@@ -1,4 +1,4 @@
-new_tfb_wavelet <- function(data, domain = NULL, levels = 2, verbose = TRUE,
+new_tfb_wavelet <- function(data, domain = NULL, level = 2, verbose = TRUE,
                             resolution = NULL, ...) {
   domain <- domain %||% range(data$arg)
   arg_u <- mgcv::uniquecombs(data$arg, ordered = TRUE)
@@ -33,7 +33,7 @@ new_tfb_wavelet <- function(data, domain = NULL, levels = 2, verbose = TRUE,
   
   threshold_args <- list(...)[names(list(...)) %in% 
                                 names(formals(wavethresh::threshold.wd))]
-  threshold_args$levels <- levels
+  threshold_args$levels <- level
   if ("type" %in% names(list(...))) {
     wd_args$type <- NULL
     if (threshold_args$type %in% c("wavelet", "station")) {
@@ -77,27 +77,24 @@ new_tfb_wavelet <- function(data, domain = NULL, levels = 2, verbose = TRUE,
 
 
 #' @param data A data.frame, matrix or tf-object.
-#' @param wavelet Every input corresponds with a wavelet function of the
-#' wavethresh-package, since they have different inputs it is advised to look at
-#' the help pages:
-#' DWT: [wavethresh::wd(type = "wavelet")]
-#' NDWT: [wavethresh:wd(type = "station")]
-#' WPT: [wavethresh:wp()]
-#' NWPT: [wavethresh:wpst()]
-#' MWD: [wavethresh:mwd()]
-#' @param filter_number Number of vanishing moments.
+#' @param domain range of the `arg`.
+#' @param level The resolution level of the wavelet.
+#' @param resolution resolution of the evaluation grid. See details for [tfd()].
 #' @param family
-#' @param ... Arguments for thresholding. For possible Arguments look at the
-#' help pages of wavethresh::threshold.your_wavelet_method.
+#' @param ... Arguments for [wavethresh::wd] and [wavethresh::threshold.wd]. 
+#' `type` will only be handled by [wavethresh::threshold.wd].
 #' @return a `tfb`-object
 tfb_wavelet <- function() UseMethod("tfb_wavelet")
 
+#' @export
+#' @inheritParams tfd.data.frame
+#' @describeIn tfb_spline convert data frames
 tfb_wavelet.data.frame <- function(data, id = 1, arg = 2, value = 3,
-                                   domain = NULL, levels = 2, verbose = TRUE,
+                                   domain = NULL, level = 2, verbose = TRUE,
                                    ...) {
   data <- df_2_df(data, id, arg, value)
   ret <- new_tfb_wavelet(data,
-                         domain = domain, levels = levels,
+                         domain = domain, level = level,
                          verbose = TRUE, ...
   )
   assert_arg(tf_arg(ret), ret)
