@@ -52,6 +52,13 @@ fit_wavelet <- function(data, threshold_args, wd_args, arg_u, regular) {
 }
 
 
+fit_wavelet_matrix <- function(data, Z) {
+  eval_list <- split(data$data, data$id)
+  
+  
+}
+
+
 ########## R function: ZDaub ##########
 
 # Creates a Daubechies wavelet basis function
@@ -135,3 +142,10 @@ ZDaub <- function(x,range.x=range(x),numLevels=6,filterNumber=5,
 
 ############ End of ZDaub ###########
 
+predict_matrix <- function(X, arg_old, arg_new) {
+  t_X <- t(X)
+  Xnew <- bind_cols(apply(t_X, 1, function(x) approx(arg_old, x, xout = arg_new)))
+  
+  Xnew <- Xnew %>% select(contains("y")) %>% as.matrix %>% unname %>% t()
+  Xnew
+}

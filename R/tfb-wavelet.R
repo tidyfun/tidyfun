@@ -34,14 +34,14 @@ new_tfb_wavelet <- function(data, domain = NULL, levels = 2, verbose = TRUE,
   threshold_args <- list(...)[names(list(...)) %in% 
                                 names(formals(wavethresh::threshold.wd))]
   threshold_args$levels <- levels
-  
   if ("type" %in% names(list(...))) {
-    if (wd_args$type %in% c("wavelet", "station")) {
+    wd_args$type <- NULL
+    if (threshold_args$type %in% c("wavelet", "station")) {
       threshold_args$type <- NULL
-    } else {
-      wd_args$type <- NULL
+      warning("type only refers to threshold.wd(type)")
     }
   }
+  
   
   fit <- fit_wavelet(data, threshold_args, wd_args, arg_u, regular)
   
@@ -57,11 +57,15 @@ new_tfb_wavelet <- function(data, domain = NULL, levels = 2, verbose = TRUE,
     c(tail(x$C, 1), x$D)[1:n_levels_wd^2]
   })
   
+  basis_constructor <- function(arg = arg) {
+    predict_matrix(X = X, arg_old = unname(unlist(arg_u)), arg_new = arg)
+  }
   
   ret <- structure(coefs,
                    domain = domain,
                    thresh_arg = formals(wavethresh::threshold.wd),
                    wd_arg = formals(wavethresh::wd),
+                   basis = memoise(basis_constructor),
                    basis_matrix = X,
                    resolution = resolution,
                    filter = fit$wd_coefs[[1]]$filter,
