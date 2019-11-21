@@ -84,62 +84,74 @@ new_tfb_wavelet <- function(data, domain = NULL, level = 2, verbose = TRUE,
 #' @param ... Arguments for [wavethresh::wd] and [wavethresh::threshold.wd]. 
 #' `type` will only be handled by [wavethresh::threshold.wd].
 #' @return a `tfb`-object
-tfb_wavelet <- function() UseMethod("tfb_wavelet")
+tfb_wavelet <- function(data, ...) UseMethod("tfb_wavelet")
 
 #' @export
 #' @inheritParams tfd.data.frame
 #' @describeIn tfb_spline convert data frames
 tfb_wavelet.data.frame <- function(data, id = 1, arg = 2, value = 3,
                                    domain = NULL, level = 2, verbose = TRUE,
-                                   ...) {
+                                   resolution = NULL, ...) {
   data <- df_2_df(data, id, arg, value)
   ret <- new_tfb_wavelet(data,
                          domain = domain, level = level,
-                         verbose = TRUE, ...
-  )
+                         verbose = verbose, resolution = resolution, ...)
   assert_arg(tf_arg(ret), ret)
   ret
 }
 
 
-tfb_wavelet.matrix <- function(data, domain = NULL, level = 2,
-                               verbose = TRUE, ...) {
-  arg <- unlist(find_arg(data, arg))
-  data_names <- rownames(data)
-  data <- mat_2_df(data, arg)
-  ret <- new_tfb_wavelet(data, domain = NULL, level = 2,
-                         verbose = TRUE, ...)
-  names(ret) <- data_names
-  assert_arg(tf_arg(ret), ret)
-  ret
-}
+# tfb_wavelet.matrix <- function(data, domain = NULL, level = 2,
+#                                verbose = TRUE, arg = NULL,
+#                                resolution = NULL, ...) {
+#   arg <- unlist(find_arg(data, arg))
+#   data_names <- rownames(data)
+#   data <- mat_2_df(data, arg)
+#   ret <- new_tfb_wavelet(data, domain = domain, level = level,
+#                          verbose = verbose, resolution = resolution, ...)
+#   names(ret) <- data_names
+#   assert_arg(tf_arg(ret), ret)
+#   ret
+# }
 
 tfb_wavelet.tfd <- function(data, domain = NULL, level = 2,
-                            verbose = TRUE, ...) {
+                            verbose = TRUE, arg = NULL, 
+                            resolution = NULL, ...) {
   arg <- arg %||% tf_arg(data)
   domain <- domain %||% tf_domain(data)
   resolution <- resolution %||% tf_resolution(data)
   names_data <- names(data)
   data <- as.data.frame(data, arg)
-  ret <- tfb_wavelet(data, domain = NULL, level = 2,
-                     verbose = TRUE, ...)
+  ret <- tfb_wavelet(data, domain = domain, level = level,
+                     verbose = verbose, ...)
   names(ret) <- names_data
   ret
 }
 
 # tfb_wavelet.tfb <- function(data, domain = NULL, level = 2,
-#                             verbose = TRUE, ...) {
+#                             verbose = TRUE, arg = NULL, 
+#                             resolution = NULL, ...) {
 #   arg <- arg %||% tf_arg(data)
 #   resolution <- resolution %||% tf_resolution(data)
 #   domain <- domain %||% tf_domain(data)
-#   s_args <- modifyList(
-#     attr(data, "basis_args"),
-#     list(...)[names(list(...)) %in% names(formals(mgcv::s))]
+#   wd_args <- modifyList(
+#     attr(data, "wd_arg"),
+#     list(...)[names(list(...)) %in% names(formals(wavethresh::wd))]
 #   )
+#   threshold_args <- modifyList(
+#     attr(data, "thresh_arg"),
+#     list(...)[names(list(...)) %in% names(formals(wavethresh::threshold.wd))]
+#   )
+#   wd_args$data <- NULL
+#   wd_args$verbose <- NULL
+#   threshold_args$verbose <- NULL
+#   threshold_args$value <- NULL
 #   names_data <- names(data)
 #   data <- as.data.frame(data, arg = arg)
-#   ret <- do.call("tfb_wavelet", data, domain = NULL, level = 2,
-#                  verbose = TRUE, ...))
+#   ret <- do.call("tfb_wavelet", c(list(data), domain = domain, level = level,
+#                                   verbose = verbose, arg = arg, 
+#                                   resolution = resolution, 
+#                                   wd_args, threshold_args, ...))
 #   names(ret) <- names_data
 #   ret
 # }
