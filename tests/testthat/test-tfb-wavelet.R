@@ -38,7 +38,7 @@ data <- data.frame(id = rep(1:5, 8),
                    arg = rep(1:8, each = 5), 
                    value = rnorm(8*5))
 
-temp <- tfb_wavelet.data.frame(data, level = 3)
+temp <- tfb_wavelet.data.frame(data, level = 2)
 tfb_wavelet.data.frame(data, filter.number = 8, levels = 1, type = "hard",
                        policy = "universal")
 plot(temp)
@@ -58,6 +58,7 @@ woo <- data.frame(id = rep(1:100, each = 256),
 
 woo_df <- woo %>% mutate(data = f(arg) + rnorm(nrow(woo), sd = .5))
 woo_tfd <- tfd(woo_df)
+woo_ <- tfb_wavelet(woo_tfd, level = 4)
 
 test_that("tfb_wavelet defaults work for all kinds of regular input", {
   for (dat in list(woo_df, woo_tfd)) {
@@ -65,9 +66,40 @@ test_that("tfb_wavelet defaults work for all kinds of regular input", {
     expect_is(woo_, "tfb_wavelet")
     expect_equal(length(woo_), length(woo_tfd))
     expect_equivalent(tf_evaluations(woo_), tf_evaluations(woo_tfd),
-                      tolerance = 1e-3)
+                      tolerance = 1)
   }
 })
+
+
+test_that("tfb_wavelet works for different parameters", {
+  for (i in 1:10) {
+    for (j in 2:10) {
+      tfb_wavelet(woo_tfd, level = j, filter_number = i) 
+    }
+  }
+})
+
+
+
+
+woo_32768 <- data.frame(id = rep(1:100, each = 32768), 
+                        arg = rep(seq(0, 1, l = 32768), 100))
+
+woo_32786_df <- woo_32768 %>% mutate(data = f(arg) + 
+                                       rnorm(nrow(woo_32768), sd = .5))
+
+bench::mark(
+  data_256 = tfb_wavelet(woo_df), # .5s and 13.75MP
+  data_32768 = tfb_wavelet(woo_32786_df), # 1.9s and 1GB
+  data_32768 = tfb_wavelet(woo_32786_df, level = 6), # 3s and 2.77GB
+  spline_32768 = tfb_spline(woo_32786_df), # 6s and 2.63GB
+  check = FALSE
+)
+
+
+
+
+
 
 test_that("tfb_wavelet defaults work for all kinds of irregular input", {
   expect_is(tfb_wavelet(irr, verbose = FALSE), "tfb_wavelet")

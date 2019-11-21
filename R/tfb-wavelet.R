@@ -1,5 +1,5 @@
 new_tfb_wavelet <- function(data, domain = NULL, level = 2, verbose = TRUE,
-                            resolution = NULL, ...) {
+                            resolution = NULL, filter_number = 5, ...) {
   domain <- domain %||% range(data$arg)
   arg_u <- mgcv::uniquecombs(data$arg, ordered = TRUE)
   resolution <- resolution %||% get_resolution(arg_u)
@@ -28,33 +28,36 @@ new_tfb_wavelet <- function(data, domain = NULL, level = 2, verbose = TRUE,
   
   
   
-  wd_args <- list(...)[names(list(...)) %in% 
-                         names(formals(wavethresh::wd))]
+  # wd_args <- list(...)[names(list(...)) %in% 
+  #                        names(formals(wavethresh::wd))]
+  # 
+  # threshold_args <- list(...)[names(list(...)) %in% 
+  #                               names(formals(wavethresh::threshold.wd))]
+  # threshold_args$levels <- level
+  # if ("type" %in% names(list(...))) {
+  #   wd_args$type <- NULL
+  #   if (threshold_args$type %in% c("wavelet", "station")) {
+  #     threshold_args$type <- NULL
+  #     warning("type only refers to threshold.wd(type)")
+  #   }
+  # }
   
-  threshold_args <- list(...)[names(list(...)) %in% 
-                                names(formals(wavethresh::threshold.wd))]
-  threshold_args$levels <- level
-  if ("type" %in% names(list(...))) {
-    wd_args$type <- NULL
-    if (threshold_args$type %in% c("wavelet", "station")) {
-      threshold_args$type <- NULL
-      warning("type only refers to threshold.wd(type)")
-    }
-  }
   
+  # fit <- fit_wavelet(data, threshold_args, wd_args, arg_u, regular)
   
-  fit <- fit_wavelet(data, threshold_args, wd_args, arg_u, regular)
+  # n_levels_wd <- nlevelsWT(fit$wd_coefs[[1]]) - 1
   
-  n_levels_wd <- nlevelsWT(fit$wd_coefs[[1]]) - 1
   
   X <- cbind(1, ZDaub(arg_u$x,
-                      numLevels = n_levels_wd,
-                      filterNumber = fit$wd_coefs[[1]]$filter$filter.number,
+                      numLevels = level,
+                      filterNumber = filter_number,
                       resolution = 16384
   ))
   
-  coefs <- lapply(fit$wd_coefs, function(x) {
-    c(tail(x$C, 1), x$D)[1:2^n_levels_wd]
+  fit <- fit_wavelet_matrix(data, Z = X)
+  
+  coefs <- lapply(fit, function(x) {
+    x[1:2^level]
   })
   
   basis_constructor <- function(arg = arg) {
@@ -63,12 +66,14 @@ new_tfb_wavelet <- function(data, domain = NULL, level = 2, verbose = TRUE,
   
   ret <- structure(coefs,
                    domain = domain,
-                   thresh_arg = formals(wavethresh::threshold.wd),
-                   wd_arg = formals(wavethresh::wd),
+                   # thresh_arg = formals(wavethresh::threshold.wd),
+                   # wd_arg = formals(wavethresh::wd),
+                   basis_args = list(level = level, 
+                                     filter_number = filter_number),
                    basis = memoise(basis_constructor),
                    basis_matrix = X,
                    resolution = resolution,
-                   filter = fit$wd_coefs[[1]]$filter,
+                   # filter = fit$wd_coefs[[1]]$filter,
                    arg = arg_u$x,
                    class = c("tfb_wavelet", "tfb", "tf")
   )
@@ -91,7 +96,7 @@ tfb_wavelet <- function(data, ...) UseMethod("tfb_wavelet")
 #' @describeIn tfb_spline convert data frames
 tfb_wavelet.data.frame <- function(data, id = 1, arg = 2, value = 3,
                                    domain = NULL, level = 2, verbose = TRUE,
-                                   resolution = NULL, ...) {
+                                   resolution = NULL, filter_number = 5, ...) {
   data <- df_2_df(data, id, arg, value)
   ret <- new_tfb_wavelet(data,
                          domain = domain, level = level,
@@ -103,7 +108,7 @@ tfb_wavelet.data.frame <- function(data, id = 1, arg = 2, value = 3,
 
 # tfb_wavelet.matrix <- function(data, domain = NULL, level = 2,
 #                                verbose = TRUE, arg = NULL,
-#                                resolution = NULL, ...) {
+#                                resolution = NULL, filter_number = 5, ...) {
 #   arg <- unlist(find_arg(data, arg))
 #   data_names <- rownames(data)
 #   data <- mat_2_df(data, arg)
@@ -116,7 +121,7 @@ tfb_wavelet.data.frame <- function(data, id = 1, arg = 2, value = 3,
 
 tfb_wavelet.tfd <- function(data, domain = NULL, level = 2,
                             verbose = TRUE, arg = NULL, 
-                            resolution = NULL, ...) {
+                            resolution = NULL, filter_number = 5, ...) {
   arg <- arg %||% tf_arg(data)
   domain <- domain %||% tf_domain(data)
   resolution <- resolution %||% tf_resolution(data)
@@ -130,7 +135,7 @@ tfb_wavelet.tfd <- function(data, domain = NULL, level = 2,
 
 # tfb_wavelet.tfb <- function(data, domain = NULL, level = 2,
 #                             verbose = TRUE, arg = NULL, 
-#                             resolution = NULL, ...) {
+#                             resolution = NULL, filter_number = 5, ...) {
 #   arg <- arg %||% tf_arg(data)
 #   resolution <- resolution %||% tf_resolution(data)
 #   domain <- domain %||% tf_domain(data)

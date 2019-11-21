@@ -127,8 +127,8 @@ fit_wavelet_matrix <- function(data, Z) {
 # Last changed: 09 SEP 2011
 # From https://projecteuclid.org/euclid.ejs/1323785605#supplemental
 
-ZDaub <- function(x,range.x=range(x),numLevels=6,filterNumber=5,
-                  resolution=16384)
+ZDaub <- function(x, range.x = range(x), numLevels = 6, filterNumber = 5,
+                  resolution = 16384)
 {
   # Load required package:
   
