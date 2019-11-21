@@ -54,7 +54,7 @@ new_tfb_wavelet <- function(data, domain = NULL, level = 2, verbose = TRUE,
   ))
   
   coefs <- lapply(fit$wd_coefs, function(x) {
-    c(tail(x$C, 1), x$D)[1:n_levels_wd^2]
+    c(tail(x$C, 1), x$D)[1:2^n_levels_wd]
   })
   
   basis_constructor <- function(arg = arg) {
@@ -102,14 +102,44 @@ tfb_wavelet.data.frame <- function(data, id = 1, arg = 2, value = 3,
 }
 
 
-tfb_wavelet.matrix <- function() {
-  
+tfb_wavelet.matrix <- function(data, domain = NULL, level = 2,
+                               verbose = TRUE, ...) {
+  arg <- unlist(find_arg(data, arg))
+  data_names <- rownames(data)
+  data <- mat_2_df(data, arg)
+  ret <- new_tfb_wavelet(data, domain = NULL, level = 2,
+                         verbose = TRUE, ...)
+  names(ret) <- data_names
+  assert_arg(tf_arg(ret), ret)
+  ret
 }
 
-tfb_wavelet.tfd <- function() {
-  
+tfb_wavelet.tfd <- function(data, domain = NULL, level = 2,
+                            verbose = TRUE, ...) {
+  arg <- arg %||% tf_arg(data)
+  domain <- domain %||% tf_domain(data)
+  resolution <- resolution %||% tf_resolution(data)
+  names_data <- names(data)
+  data <- as.data.frame(data, arg)
+  ret <- tfb_wavelet(data, domain = NULL, level = 2,
+                     verbose = TRUE, ...)
+  names(ret) <- names_data
+  ret
 }
 
-tfb_wavelet.tfb <- function() {
-  
-}
+# tfb_wavelet.tfb <- function(data, domain = NULL, level = 2,
+#                             verbose = TRUE, ...) {
+#   arg <- arg %||% tf_arg(data)
+#   resolution <- resolution %||% tf_resolution(data)
+#   domain <- domain %||% tf_domain(data)
+#   s_args <- modifyList(
+#     attr(data, "basis_args"),
+#     list(...)[names(list(...)) %in% names(formals(mgcv::s))]
+#   )
+#   names_data <- names(data)
+#   data <- as.data.frame(data, arg = arg)
+#   ret <- do.call("tfb_wavelet", data, domain = NULL, level = 2,
+#                  verbose = TRUE, ...))
+#   names(ret) <- names_data
+#   ret
+# }
