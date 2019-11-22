@@ -30,10 +30,11 @@ new_tfb_fpc <- function(data, domain = NULL, resolution = NULL,
   structure(coef_list,
     domain = domain,
     basis = fpc_constructor,
-    basis_label = paste0("FPC: ", fpc_spec$npc, " components."),
+    basis_label = paste0(fpc_spec$npc, " FPCs"),
     basis_matrix = t(fpc),
     arg = arg,
     resolution = resolution,
+    score_variance = fpc_spec$evalues,
     class = c("tfb_fpc", "tfb", "tf")
   )
 }
@@ -47,9 +48,13 @@ new_tfb_fpc <- function(data, domain = NULL, resolution = NULL,
 #' eigenfunctions as basis functions for representing the data. By default, a
 #' simple, not smoothed, truncated weighted SVD of the functions is used to
 #' compute those ("`method = fpc_wsvd`"). Note that this is suitable only for
-#' regular data all observed on the same (not necessarily equidistant) grid.\cr
-#' Any "factorization" method that returns a list structured like the return object
-#' of [fpc_wsvd()] can be used as a method argument.
+#' regular data all observed on the same (not necessarily equidistant) grid. See
+#' Details / Example for possible alternatives and extensions. \cr
+#' 
+#' Any "factorization" method that accepts a `data.frame` with 
+#' columns `id`, `arg`, `value` containing the functional data and returns a 
+#' list structured like the return object
+#' of [fpc_wsvd()] can be used for the `method`` argument, see example below.
 #' 
 #' @export
 #' @inheritParams tfd.data.frame
@@ -69,6 +74,23 @@ tfb_fpc <- function(data, ...) UseMethod("tfb_fpc")
 
 #' @rdname tfb_fpc
 #' @export
+#' @examples 
+#' # Apply FPCA for sparse data using refund::fpca.sc:
+#' set.seed(99290)
+#' # create sparse data:
+#' data <- as.data.frame(
+#'   tf_sparsify(
+#'     tf_rgp(15)
+#' ))
+#' # wrap refund::fpca_sc for use as FPCA method in tfb_fpc:
+#' fpca_sc_wrapper <- function(data, arg, pve = .995, ...) {
+#'   data_mat <- tidyfun:::df_2_mat(data)
+#'   fpca <- refund::fpca.sc(Y = data_mat, 
+#'                           argvals = attr(data_mat, "arg"), 
+#'                           pve = pve, ...)
+#'   fpca[c("mu", "efunctions", "scores", "npc")]
+#' }
+#' tfb_fpc(data, method = fpca_sc_wrapper)
 tfb_fpc.data.frame <- function(data, id = 1, arg = 2, value = 3,
                                domain = NULL, method = fpc_wsvd, resolution = NULL, 
                                ...) {

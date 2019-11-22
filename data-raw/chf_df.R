@@ -24,4 +24,4 @@ chf_df <- inner_join(covar, filter(activity, week == 1), by = "id") %>%
       "Saturday", "Sunday"), 
     labels = c("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun")))
 
-devtools::use_data(chf_df, overwrite = TRUE)
+usethis::use_data(chf_df, overwrite = TRUE)

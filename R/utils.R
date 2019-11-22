@@ -189,6 +189,6 @@ df_2_mat <- function(data, binning = FALSE, maxbins = 1000) {
   data_mat <- matrix(NA, nrow = nobs, ncol = nlevels(newindex))
   colnames(data_mat) <- binvalues
   attr(data_mat, "arg") <- binvalues
-  data_mat[cbind(newid, as.numeric(newindex))] <- data$data
+  data_mat[cbind(newid, as.numeric(newindex))] <- data$value
   return(data_mat)
 }

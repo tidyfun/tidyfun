@@ -225,7 +225,7 @@ tfb_spline.list <- function(data, arg = NULL,
   data <- dplyr::tibble(
     id = unique_id(names(data)) %||% seq_along(data),
     funs = data
-  ) %>% { tidyr::unnest(.) }
+  ) %>% { tidyr::unnest_legacy(.) }
   # dispatch to data.frame method
   ret <- tfb_spline(data, domain = domain, penalized = penalized, 
              global = global, resolution = resolution, ...)

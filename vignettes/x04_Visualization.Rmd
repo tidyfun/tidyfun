@@ -1,0 +1,212 @@
+---
+title: "Visualization"
+author: "Jeff Goldsmith"
+date: "`r Sys.Date()`"
+output: 
+    rmarkdown::html_vignette:
+      fig_width: 12
+vignette: >
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteIndexEntry{Visualization}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "##",
+  fig.width = 8, 
+  fig.height = 5.5,
+  out.width = "90%"
+)
+
+library(tidyverse)
+library(viridisLite)
+
+theme_set(theme_minimal() + theme(legend.position = "bottom"))
+
+options(
+  ggplot2.continuous.colour = "viridis",
+  ggplot2.continuous.fill = "viridis"
+)
+scale_colour_discrete = scale_colour_viridis_d
+scale_fill_discrete = scale_fill_viridis_d
+
+library("tidyfun")
+data(chf_df, package = "tidyfun")
+data(dti_df, package = "tidyfun")
+
+pal_5 = viridis(7)[-(1:2)]
+set.seed(1221)
+```
+
+The **`tidyfun`** package is designed to facilitate **functional data analysis in `R`**, with particular emphasis on compatibility with the `tidyverse`. In this vignette, we illustrate data visualization using **`tidyfun`**.
+
+We'll draw on `tidyfun::chf_df` and `tidyfun::dti_df`, as well as the `fda::CanadianWeather` data. 
+
+# Plotting with `ggplot`
+
+`ggplot` is a powerful framework for visualization. In this section, we'll assume some basic familiarity with the package; if you're new to `ggplot`, [this primer](https://rpubs.com/hadley/ggplot-intro) may be helpful.
+
+**`tidyfun`** includes **Pasta-themed** `geom`s and plots with for functional data:
+
+- **`geom_spaghetti`** for lines
+- **`geom_meatballs`**  for (lines &) points
+- **`gglasagna`** with **`order`**-arguments to sort the lasagna layers
+- **`geom_capellini`** for little sparklines / glyphs on maps etc.
+
+## `geom_spaghetti` and `geom_meatballs`
+
+One of the most fundamental plots for functional data is the spaghetti plot, which is implemented in `tidyfun` + `ggplot` through `geom_spaghetti`:
+
+```{r plot_chf}
+chf_df %>% 
+  filter(id == 1) %>% 
+  ggplot(aes(y = activity)) + 
+  geom_spaghetti()
+```
+
+A variant on the spaghetti plot is the meatballs plot, which shows both the "noodles" (i.e. functional observations visualized as curves) and the "meatballs" (i.e. original data visualized as points). 
+
+```{r}
+chf_df %>%
+  filter(id == 1, day == "Monday") %>%
+  ggplot(aes(y = activity)) +
+  geom_meatballs()
+```
+
+## Using with other `ggplot` features
+
+The new geoms in `tidyfun` "play nicely" with standard `ggplot` aesthetics and options. 
+
+You can, for example, define the color aesthetic for plots of `tf` variables using other observations:
+
+```{r}
+chf_df %>% 
+  filter(id %in% 1:5) %>% 
+  ggplot(aes(y = activity, color = gender)) + 
+  geom_spaghetti(alpha = .2)
+```
+
+You can also use facetting:
+
+```{r}
+chf_df %>% 
+  filter(day %in% c("Monday", "Sunday")) %>% 
+  ggplot(aes(y = activity, color = gender)) + 
+  geom_spaghetti(alpha = .1) + 
+  facet_grid(~ day)
+```
+
+Another example, using the DTI data, is below. 
+
+```{r, dti-fig1}
+dti_df %>% 
+  ggplot() + 
+  geom_spaghetti(aes(y = cca, col = case, alpha = .2 + .4*(case == "control"))) +
+  facet_wrap(~ sex) + 
+  scale_alpha(guide = 'none', range = c(.2, .4))
+```
+
+Together with data manipulation tools, the integration with `ggplot` can produce useful exploratory analyses:
+
+```{r}
+chf_df %>% 
+  group_by(gender, day) %>% 
+  summarize(mean_act = mean(activity)) %>% 
+  mutate(smooth_mean = tfb(mean_act)) %>% 
+  filter(day %in% c("Monday", "Sunday")) %>% 
+  ggplot(aes(y = smooth_mean, color = gender)) + 
+  geom_spaghetti(size = 1.25, alpha = 1) + 
+  geom_meatballs(aes(y = mean_act), alpha = .1) + 
+  facet_grid(~ day)
+```
+
+## `gglasagna`
+
+Lasagna plots are "[a saucy alternative to spaghetti plosts](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2937254/)". They are a variant on a heatmaps which show functional observations in rows and use color to illustrate values taken at different arguments. 
+
+In `tidyfun`, lasagna plots are implemented through `gglasagna`. A first example, using the CHF data, is below. 
+
+```{r}
+chf_df %>% 
+  filter(day %in% c("Monday", "Sunday")) %>% 
+  gglasagna(activity)
+```
+
+A somewhat more involved example, demonstrating the `order` argument and taking advantage of facetting, is next. 
+
+```{r, dti-fig2}  
+dti_df %>% 
+  gglasagna(
+    y = cca, 
+    order = tf_integrate(cca, definite = TRUE), 
+    arg = seq(0,1, l = 101)) + 
+  theme(axis.text.y = element_text(size = 6)) + 
+  facet_wrap(~ case, ncol = 2, scales = "free")
+```
+
+## `geom_capellini`
+
+To illustrate `gemo_capellini`, we'll start with some data prep for the iconic Canadian Weather data:
+
+```{r}
+canada <- data.frame(
+  place = fda::CanadianWeather$place, 
+  region = fda::CanadianWeather$region, 
+  lat = fda::CanadianWeather$coordinates[,1], 
+  lon = -fda::CanadianWeather$coordinates[,2], 
+  region = fda::CanadianWeather$region)
+
+canada$temp <- tfd(t(fda::CanadianWeather$dailyAv[,,1]), arg = 1:365)
+canada$precipl10 <- tfd(t(fda::CanadianWeather$dailyAv[,,3]), arg = 1:365) %>%
+  tf_smooth
+
+canada_map <- 
+  data.frame(maps::map("world", "Canada", plot = FALSE)[c("x", "y")]) 
+```
+
+Now we can plot a map of Canada with annual temperature averages in red, precipitation in blue: 
+
+```{r}
+ ggplot(canada, aes(x = lon, y = lat)) + 
+   geom_capellini(aes(tf = precipl10), width = 4, height = 5, colour = "blue", 
+     line.linetype = 1) +
+   geom_capellini(aes(tf = temp), width = 4, height = 5, colour = "red",
+     line.linetype = 1) +
+   geom_path(data = canada_map, aes(x = x, y = y), alpha = .1) +
+   coord_quickmap()
+```
+
+
+# Plotting with base R
+
+**`tidyfun`** includes several extensions of base R graphics, which operate on `tf` vectors. For example, one can use `plot` to create either spaghetti or lasagna plots, and `lines` to add lines to an existing plot:
+
+```{r}
+cca = dti_df$cca %>% 
+  tfd(arg = seq(0, 1, l = 93), interpolate = TRUE)
+
+layout(t(1:2))
+
+plot(cca, type = "spaghetti")
+lines(c(median(cca), mean(cca)), col = c(2, 4))
+
+plot(cca, type = "lasagna", col = viridis(50))
+```
+
+The `plot` functions use options and can be edited in ways that are similar to other base graphics. 
+
+```{r, ex-fig2}
+cca_five = cca[1:5]
+
+cca_five %>% 
+  plot(xlim = c(-0.15, 1), col = pal_5, lwd = 2)
+
+text(x = -.1, y = cca_five[,0.07], labels = names(cca_five), col = pal_5, cex = 1.5)
+
+median(cca_five) %>% 
+  lines(col = pal_5[3], lwd = 4)
+```
+
+

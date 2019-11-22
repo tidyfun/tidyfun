@@ -32,10 +32,11 @@ fpc_wsvd.matrix <- function(data, arg, pve = .995) {
   pve_observed <- cumsum(pc$d^2) / sum(pc$d^2)
   use <- min(which(pve_observed >= pve))
   efunctions <- pc$v[, 1:use] / sqrt(w)
+  evalues <- (pc$d[1:use])^2
   scores <- t(qr.coef(qr(efunctions), t(data_wc) / sqrt(w))) #!!
   list(
     mu = mean, efunctions = efunctions,
-    scores = scores, npc = use
+    scores = scores, npc = use, evalues = evalues
   )
 }
 fpc_wsvd.data.frame <- function(data, arg, pve = .995) { 

@@ -1,108 +1,117 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://fabian-s.github.io/tidyfun/index.html</loc>
+    <loc>https://tidyfun.github.io/tidyfun/index.html</loc>
   </url>
   <url>
-    <loc>https://fabian-s.github.io/tidyfun/reference/chf_df.html</loc>
+    <loc>https://tidyfun.github.io/tidyfun/reference/chf_df.html</loc>
   </url>
   <url>
-    <loc>https://fabian-s.github.io/tidyfun/reference/ggcapellini.html</loc>
+    <loc>https://tidyfun.github.io/tidyfun/reference/dti_df.html</loc>
   </url>
   <url>
-    <loc>https://fabian-s.github.io/tidyfun/reference/gglasagna.html</loc>
+    <loc>https://tidyfun.github.io/tidyfun/reference/fpc_wsvd.html</loc>
   </url>
   <url>
-    <loc>https://fabian-s.github.io/tidyfun/reference/ggspaghetti.html</loc>
+    <loc>https://tidyfun.github.io/tidyfun/reference/ggcapellini.html</loc>
   </url>
   <url>
-    <loc>https://fabian-s.github.io/tidyfun/reference/tf_approx.html</loc>
+    <loc>https://tidyfun.github.io/tidyfun/reference/gglasagna.html</loc>
   </url>
   <url>
-    <loc>https://fabian-s.github.io/tidyfun/reference/tf_depth.html</loc>
+    <loc>https://tidyfun.github.io/tidyfun/reference/ggspaghetti.html</loc>
   </url>
   <url>
-    <loc>https://fabian-s.github.io/tidyfun/reference/tf_derive.html</loc>
+    <loc>https://tidyfun.github.io/tidyfun/reference/tf_approx.html</loc>
   </url>
   <url>
-    <loc>https://fabian-s.github.io/tidyfun/reference/tf_evaluate.html</loc>
+    <loc>https://tidyfun.github.io/tidyfun/reference/tf_depth.html</loc>
   </url>
   <url>
-    <loc>https://fabian-s.github.io/tidyfun/reference/tf_gather.html</loc>
+    <loc>https://tidyfun.github.io/tidyfun/reference/tf_derive.html</loc>
   </url>
   <url>
-    <loc>https://fabian-s.github.io/tidyfun/reference/tf_integrate.html</loc>
+    <loc>https://tidyfun.github.io/tidyfun/reference/tf_evaluate.html</loc>
   </url>
   <url>
-    <loc>https://fabian-s.github.io/tidyfun/reference/tf_jiggle.html</loc>
+    <loc>https://tidyfun.github.io/tidyfun/reference/tf_gather.html</loc>
   </url>
   <url>
-    <loc>https://fabian-s.github.io/tidyfun/reference/tf_nest.html</loc>
+    <loc>https://tidyfun.github.io/tidyfun/reference/tf_integrate.html</loc>
   </url>
   <url>
-    <loc>https://fabian-s.github.io/tidyfun/reference/tf_rgp.html</loc>
+    <loc>https://tidyfun.github.io/tidyfun/reference/tf_jiggle.html</loc>
   </url>
   <url>
-    <loc>https://fabian-s.github.io/tidyfun/reference/tf_smooth.html</loc>
+    <loc>https://tidyfun.github.io/tidyfun/reference/tf_nest.html</loc>
   </url>
   <url>
-    <loc>https://fabian-s.github.io/tidyfun/reference/tf_spread.html</loc>
+    <loc>https://tidyfun.github.io/tidyfun/reference/tf_rgp.html</loc>
   </url>
   <url>
-    <loc>https://fabian-s.github.io/tidyfun/reference/tf_unnest.html</loc>
+    <loc>https://tidyfun.github.io/tidyfun/reference/tf_smooth.html</loc>
   </url>
   <url>
-    <loc>https://fabian-s.github.io/tidyfun/reference/tf_where.html</loc>
+    <loc>https://tidyfun.github.io/tidyfun/reference/tf_spread.html</loc>
   </url>
   <url>
-    <loc>https://fabian-s.github.io/tidyfun/reference/tf_zoom.html</loc>
+    <loc>https://tidyfun.github.io/tidyfun/reference/tf_unnest.html</loc>
   </url>
   <url>
-    <loc>https://fabian-s.github.io/tidyfun/reference/tfb.html</loc>
+    <loc>https://tidyfun.github.io/tidyfun/reference/tf_where.html</loc>
   </url>
   <url>
-    <loc>https://fabian-s.github.io/tidyfun/reference/tfb_fpc.html</loc>
+    <loc>https://tidyfun.github.io/tidyfun/reference/tf_zoom.html</loc>
   </url>
   <url>
-    <loc>https://fabian-s.github.io/tidyfun/reference/tfb_spline.html</loc>
+    <loc>https://tidyfun.github.io/tidyfun/reference/tfb.html</loc>
   </url>
   <url>
-    <loc>https://fabian-s.github.io/tidyfun/reference/tfbrackets.html</loc>
+    <loc>https://tidyfun.github.io/tidyfun/reference/tfb_fpc.html</loc>
   </url>
   <url>
-    <loc>https://fabian-s.github.io/tidyfun/reference/tfconcat.html</loc>
+    <loc>https://tidyfun.github.io/tidyfun/reference/tfb_spline.html</loc>
   </url>
   <url>
-    <loc>https://fabian-s.github.io/tidyfun/reference/tfd.html</loc>
+    <loc>https://tidyfun.github.io/tidyfun/reference/tfbrackets.html</loc>
   </url>
   <url>
-    <loc>https://fabian-s.github.io/tidyfun/reference/tfdisplay.html</loc>
+    <loc>https://tidyfun.github.io/tidyfun/reference/tfconcat.html</loc>
   </url>
   <url>
-    <loc>https://fabian-s.github.io/tidyfun/reference/tfgroupgenerics.html</loc>
+    <loc>https://tidyfun.github.io/tidyfun/reference/tfd.html</loc>
   </url>
   <url>
-    <loc>https://fabian-s.github.io/tidyfun/reference/tfmethods.html</loc>
+    <loc>https://tidyfun.github.io/tidyfun/reference/tfdisplay.html</loc>
   </url>
   <url>
-    <loc>https://fabian-s.github.io/tidyfun/reference/tfsummaries.html</loc>
+    <loc>https://tidyfun.github.io/tidyfun/reference/tfgroupgenerics.html</loc>
   </url>
   <url>
-    <loc>https://fabian-s.github.io/tidyfun/reference/tftibble.html</loc>
+    <loc>https://tidyfun.github.io/tidyfun/reference/tfmethods.html</loc>
   </url>
   <url>
-    <loc>https://fabian-s.github.io/tidyfun/reference/tfviz.html</loc>
+    <loc>https://tidyfun.github.io/tidyfun/reference/tfsummaries.html</loc>
   </url>
   <url>
-    <loc>https://fabian-s.github.io/tidyfun/reference/tidyfun.html</loc>
+    <loc>https://tidyfun.github.io/tidyfun/reference/tftibble.html</loc>
   </url>
   <url>
-    <loc>https://fabian-s.github.io/tidyfun/articles/x01_Intro.html</loc>
+    <loc>https://tidyfun.github.io/tidyfun/reference/tfviz.html</loc>
   </url>
   <url>
-    <loc>https://fabian-s.github.io/tidyfun/articles/x02_Data_Manipulation.html</loc>
+    <loc>https://tidyfun.github.io/tidyfun/reference/tidyfun.html</loc>
   </url>
   <url>
-    <loc>https://fabian-s.github.io/tidyfun/articles/x03_Visualization.html</loc>
+    <loc>https://tidyfun.github.io/tidyfun/articles/x01_tf_Vectors.html</loc>
+  </url>
+  <url>
+    <loc>https://tidyfun.github.io/tidyfun/articles/x02_Conversion.html</loc>
+  </url>
+  <url>
+    <loc>https://tidyfun.github.io/tidyfun/articles/x03_Data_Wrangling.html</loc>
+  </url>
+  <url>
+    <loc>https://tidyfun.github.io/tidyfun/articles/x04_Visualization.html</loc>
   </url>
 </urlset>

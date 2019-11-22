@@ -90,7 +90,7 @@ gglasagna <- function(data, y, order = NULL, label = NULL,
     labelname <- deparse(label)
   }
   y_name <- quo_name(enquo(y))
-  data <- mutate(data, ..label = !!label, ..order = !!order, ..row = row_number())
+  data <- mutate(data, ..label = !!label, ..row = row_number(), ..order = !!order)
   tf_eval <- 
     #TODO: add .preserve for all list columns not being plotted
     tf_unnest(data, y_name, .arg = arg, .sep = "___", try_dropping = FALSE) %>%
@@ -169,6 +169,5 @@ gglasagna <- function(data, y, order = NULL, label = NULL,
    } 
   p <- p + scale_y_discrete(labelname, breaks = labeldata$breaks, 
                          labels = labeldata$labels)
-  # TODO: use another geom_line or _tile to add a colour bar for order_by_values
   p
 }
