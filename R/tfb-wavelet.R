@@ -1,5 +1,6 @@
 new_tfb_wavelet <- function(data, domain = NULL, level = 2, verbose = TRUE,
-                            resolution = NULL, filter_number = 5, ...) {
+                            resolution = NULL, filter_number = 5, 
+                            least_squares = TRUE, ...) {
   domain <- domain %||% range(data$arg)
   arg_u <- mgcv::uniquecombs(data$arg, ordered = TRUE)
   resolution <- resolution %||% get_resolution(arg_u)
@@ -11,66 +12,39 @@ new_tfb_wavelet <- function(data, domain = NULL, level = 2, verbose = TRUE,
   # explicit factor-conversion to avoid reordering:
   data$id <- factor(data$id, levels = unique(as.character(data$id)))
   
-  n_evaluations <- table(data$id)
   arg_list <- split(data$arg, data$id)
   regular <- all(duplicated(arg_list)[-1])
   
   if (regular) {
-    dyadic_params <- check_dyadic(nrow(arg_u))
-    spacing_params <- check_spacing(sort(unique(data$arg)))
-    data <- grid_adjustment(data, dyadic_params, spacing_params)
-  } else {
-    dyadic_params <- check_dyadic(n_evaluations)
-    # check_spacing needs to handle lists to make the output similar to check_dyadic
-    spacing_params <- lapply(arg_list, check_spacing)
-    data <- grid_adjustment(data, dyadic_params, spacing_params)
-  }
-  
-  
-  
-  # wd_args <- list(...)[names(list(...)) %in% 
-  #                        names(formals(wavethresh::wd))]
-  # 
-  # threshold_args <- list(...)[names(list(...)) %in% 
-  #                               names(formals(wavethresh::threshold.wd))]
-  # threshold_args$levels <- level
-  # if ("type" %in% names(list(...))) {
-  #   wd_args$type <- NULL
-  #   if (threshold_args$type %in% c("wavelet", "station")) {
-  #     threshold_args$type <- NULL
-  #     warning("type only refers to threshold.wd(type)")
-  #   }
+    interp_index <- interpolate_arg(arg_list = list(arg_u$x))
+  } #else {
+  #   interp_index <- interpolate_arg(arg_list = arg_list)
   # }
   
   
-  # fit <- fit_wavelet(data, threshold_args, wd_args, arg_u, regular)
+  X <- ZDaub(interp_index,
+             numLevels = level,
+             filterNumber = filter_number,
+             resolution = 16384)
   
-  # n_levels_wd <- nlevelsWT(fit$wd_coefs[[1]]) - 1
+  X <- scale(predict_matrix(X, interp_index, arg_u$x), center = FALSE)
   
+  fit <- fit_wavelet_matrix(data, Z = X, least_squares = TRUE)
   
-  X <- cbind(1, ZDaub(arg_u$x,
-                      numLevels = level,
-                      filterNumber = filter_number,
-                      resolution = 16384
-  ))
-  
-  fit <- fit_wavelet_matrix(data, Z = X)
-  
+  X <- cbind(1, X)
   
   basis_constructor <- function(arg = arg) {
     predict_matrix(X = X, arg_old = unname(unlist(arg_u)), arg_new = arg)
   }
   
-  ret <- structure(coefs,
+  ret <- structure(fit$fit,
                    domain = domain,
-                   # thresh_arg = formals(wavethresh::threshold.wd),
-                   # wd_arg = formals(wavethresh::wd),
                    basis_args = list(level = level, 
                                      filter_number = filter_number),
                    basis = memoise(basis_constructor),
                    basis_matrix = X,
                    resolution = resolution,
-                   # filter = fit$wd_coefs[[1]]$filter,
+                   slope_params = fit$slope_params,
                    arg = arg_u$x,
                    class = c("tfb_wavelet", "tfb", "tf")
   )

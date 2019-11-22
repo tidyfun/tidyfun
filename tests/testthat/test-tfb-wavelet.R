@@ -58,7 +58,7 @@ woo <- data.frame(id = rep(1:100, each = 256),
 
 woo_df <- woo %>% mutate(data = f(arg) + rnorm(nrow(woo), sd = .5))
 woo_tfd <- tfd(woo_df)
-woo_ <- tfb_wavelet(woo_tfd, level = 6)
+woo_ <- tfb_wavelet(woo_tfd, level = 2)
 
 test_that("tfb_wavelet defaults work for all kinds of regular input", {
   for (dat in list(woo_df, woo_tfd)) {
@@ -74,7 +74,8 @@ test_that("tfb_wavelet defaults work for all kinds of regular input", {
 test_that("tfb_wavelet works for different parameters", {
   for (i in 1:10) {
     for (j in 2:10) {
-      tfb_wavelet(woo_tfd, level = j, filter_number = i) 
+      tfb_wavelet(woo_32786_df, level = j, filter_number = i) 
+      print(paste0(i,".", j))
     }
   }
 })
@@ -98,9 +99,17 @@ bench::mark(
   check = FALSE
 )
 
+library(profvis)
+profvis(tfb_wavelet(woo_32786_df, level = 6)) 
 
 
-
+irr <- data.frame(id = rep(1:100, each = 256), 
+                  arg = sample(seq(-1, 2, l = 25600), 25600))
+irr <- irr[duplicated(irr), ]
+irr_df <- irr %>% group_by(id) %>% mutate(arg = unique(arg)) 
+  mutate(data = f(arg) + rnorm(nrow(irr), sd = .5))
+irr_tfd <- tfd(irr_df)
+irr_ <- tfb_wavelet(irr_tfd, level = 6)
 
 
 
