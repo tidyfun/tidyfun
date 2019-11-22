@@ -21,7 +21,7 @@ check_spacing <- function(arg) {
 remove_slope <- function(x, y) {
   last_element <- length(x)
   slope <- (y[last_element] - y[1]) / (x[last_element] - x[1])
-  intercept <- x[1] - slope * x[1]
+  intercept <- y[1] - slope * x[1]
   f <- intercept + slope * x
   y_desloped <- y - f
   y_desloped <- structure(y_desloped,
@@ -130,9 +130,6 @@ fit_wavelet_matrix <- function(data, Z) {
 ZDaub <- function(x, range.x = range(x), numLevels = 6, filterNumber = 5,
                   resolution = 16384)
 {
-  # Load required package:
-  
-  library(wavethresh)
   
   # Check that x within support limits:
   
@@ -206,6 +203,6 @@ predict_matrix <- function(X, arg_old, arg_new) {
   t_X <- t(X)
   Xnew <- bind_cols(apply(t_X, 1, function(x) approx(arg_old, x, xout = arg_new)))
   
-  Xnew <- Xnew %>% select(contains("y")) %>% as.matrix %>% unname %>% t()
+  Xnew <- Xnew %>% select(contains("y")) %>% as.matrix %>% unname
   Xnew
 }

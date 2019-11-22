@@ -56,9 +56,6 @@ new_tfb_wavelet <- function(data, domain = NULL, level = 2, verbose = TRUE,
   
   fit <- fit_wavelet_matrix(data, Z = X)
   
-  coefs <- lapply(fit, function(x) {
-    x[1:2^level]
-  })
   
   basis_constructor <- function(arg = arg) {
     predict_matrix(X = X, arg_old = unname(unlist(arg_u)), arg_new = arg)

@@ -38,7 +38,7 @@ data <- data.frame(id = rep(1:5, 8),
                    arg = rep(1:8, each = 5), 
                    value = rnorm(8*5))
 
-temp <- tfb_wavelet.data.frame(data, level = 2)
+temp <- tfb_wavelet.data.frame(data, level = 2, filter_number = 3)
 tfb_wavelet.data.frame(data, filter.number = 8, levels = 1, type = "hard",
                        policy = "universal")
 plot(temp)
@@ -58,7 +58,7 @@ woo <- data.frame(id = rep(1:100, each = 256),
 
 woo_df <- woo %>% mutate(data = f(arg) + rnorm(nrow(woo), sd = .5))
 woo_tfd <- tfd(woo_df)
-woo_ <- tfb_wavelet(woo_tfd, level = 4)
+woo_ <- tfb_wavelet(woo_tfd, level = 6)
 
 test_that("tfb_wavelet defaults work for all kinds of regular input", {
   for (dat in list(woo_df, woo_tfd)) {
@@ -79,7 +79,9 @@ test_that("tfb_wavelet works for different parameters", {
   }
 })
 
-
+test_that("tfb_wavelet independent of datatype", {
+  expect_equal(tfb_wavelet(woo_tfd, level = 4), tfb_wavelet(woo_df, level = 4))
+})
 
 
 woo_32768 <- data.frame(id = rep(1:100, each = 32768), 
@@ -95,6 +97,7 @@ bench::mark(
   spline_32768 = tfb_spline(woo_32786_df), # 6s and 2.63GB
   check = FALSE
 )
+
 
 
 
