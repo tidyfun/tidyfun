@@ -106,6 +106,63 @@ tf_evaluate.tfb <- function(object, ..., arg) {
   ret
 }
 
+#' @export
+#' @rdname tf_evaluate
+tf_evaluate.tfb_wavelet <- function(object, ..., arg) {
+  if (missing(arg)) {
+    if (nargs() == 1) return(tf_evaluations(object))
+    if (nargs() == 2) arg <- list(...)[[1]]
+    if (nargs() > 2) {
+      stop("too many arguments - can't use ...")
+    }
+  }
+  if (is.null(arg)) return(tf_evaluations(object))
+  arg <- ensure_list(arg)
+  assert_arg(arg, object, check_unique = FALSE)
+  coef_mat <- do.call(cbind, coef(object))
+  if (length(arg) == 1) {
+    arg <- unlist(arg)
+    evals <- evaluate_tfb_once(
+      x = arg,
+      arg = tf_arg(object),
+      coefs = coef_mat[-nrow(coef_mat),],
+      basis = attr(object, "basis"),
+      X = attr(object, "basis_matrix"),
+      resolution = tf_resolution(object)
+    )
+    
+    ret <- if (length(arg) == 1) {
+      # avoid cast to simple vector for point evaluations
+      split(evals, seq_along(evals))
+    } else {
+      split(evals, col(as.matrix(evals)))
+    }  
+    
+    ret <- pmap(list(x = ret,
+                     y = attr(object, "slope_params"), 
+                     z = coef_mat[nrow(coef_mat),]),
+                function(x, y, z) {
+                  func <- y[1] + y[2] * arg
+                  as.vector(x + as.matrix(func) %*% z)
+                })
+    
+  } else {
+    ret <- pmap(
+      list(arg, ensure_list(tf_arg(object)), coef(object)),
+      ~evaluate_tfb_once(
+        x = ..1, arg = ..2, coefs = ..3,
+        basis = attr(object, "basis"), X = attr(object, "basis_matrix"),
+        resolution = tf_resolution(object)
+      )
+    )
+  }
+  if (!inherits(object, c("tfb_fpc", "tfb_wavelet"))) {
+    ret <- map(ret, attr(object, "family")$linkinv)
+  }  
+  names(ret) <- names(object)
+  ret
+}
+
 evaluate_tfb_once <- function(x, arg, coefs, basis, X, resolution) {
   seen <- match(
     round_resolution(x, resolution),
@@ -114,7 +171,7 @@ evaluate_tfb_once <- function(x, arg, coefs, basis, X, resolution) {
   seen_index <- na.omit(seen)
   seen <- !is.na(seen)
   if (all(seen)) return(drop(X[seen_index, , drop = FALSE] %*% coefs))
-  Xnew <- X[rep(1, length(x)), ]
+  Xnew <- matrix(X[rep(1, length(x)), ], nrow = length(x))
   if (any(seen)) Xnew[seen, ] <- X[seen_index, , drop = FALSE]
   Xnew[!seen, ] <- basis(x[!seen])
   drop(Xnew %*% coefs)

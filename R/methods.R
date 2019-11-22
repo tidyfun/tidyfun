@@ -40,6 +40,16 @@ tf_evaluations.tfb <- function(f) {
 }
 
 
+#' @export
+tf_evaluations.tfb_wavelet <- function(f) {
+  evals <- map2(f, attr(f, "slope_params"), function(x, y) {
+    func <- y[1] + y[2] * attr(f, "arg")
+    X <- cbind(attr(f, "basis_matrix"), func)
+    drop(X %*% x)
+    })
+  evals
+}
+
 #' @rdname tfmethods
 #' @export
 tf_count <- function(f) UseMethod("tf_count")
