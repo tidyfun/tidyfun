@@ -27,7 +27,7 @@ interpolate_arg <- function(arg_list) {
 
 
 
-fit_wavelet_matrix <- function(data, Z, least_squares) {
+fit_wavelet <- function(data, Z, least_squares, glmnet_args) {
   eval_list <- split(data$data, data$id)
   arg_list <- split(data$arg, data$id)
   
@@ -37,12 +37,14 @@ fit_wavelet_matrix <- function(data, Z, least_squares) {
     coefs <- map2(eval_list, correction, 
                   function(x, y) {
                     Z <- cbind(1, Z, y)
-                    (t(Z) %*% x) / diag(crossprod(Z))})
+                    # Least squares fit, directly computed
+                    as.vector((t(Z) %*% x) / diag(crossprod(Z)))})
   } else {
     coefs <- map2(eval_list, correction, 
                   function(x, y) {
                     Z <- cbind(Z, y)
-                    coef(glmnet::cv.glmnet(Z, x, nlambda = 100))@x})
+                    temp_model <- do.call(glmnet::cv.glmnet, list(Z, x, glmnet_args))
+                    coef(temp_model)@x})
   }
   slope_params <- lapply(correction, function(x) 
     c(attr(x, "intercept"), attr(x, "slope")))
@@ -134,7 +136,6 @@ ZDaub <- function(x, range.x = range(x), numLevels = 6, filterNumber = 5,
 predict_matrix <- function(X, arg_old, arg_new) {
   t_X <- t(X)
   Xnew <- bind_cols(apply(t_X, 1, function(x) approx(arg_old, x, xout = arg_new)))
-  
-  Xnew <- Xnew %>% select(dplyr::contains("y")) %>% as.matrix %>% unname
+  Xnew <- unname(as.matrix(Xnew[, grepl("y", colnames(Xnew))]))
   Xnew
 }

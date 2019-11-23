@@ -58,7 +58,8 @@ woo <- data.frame(id = rep(1:100, each = 256),
 
 woo_df <- woo %>% mutate(data = f(arg) + rnorm(nrow(woo), sd = .5))
 woo_tfd <- tfd(woo_df)
-woo_ <- tfb_wavelet(woo_tfd, level = 2)
+woo_mat <- as.matrix(woo_tfd)
+woo_tfb <- tfb_wavelet(woo_tfd)
 
 test_that("tfb_wavelet defaults work for all kinds of regular input", {
   for (dat in list(woo_df, woo_tfd)) {
@@ -81,7 +82,9 @@ test_that("tfb_wavelet works for different parameters", {
 })
 
 test_that("tfb_wavelet independent of datatype", {
-  expect_equal(tfb_wavelet(woo_tfd, level = 4), tfb_wavelet(woo_df, level = 4))
+  expect_equal(tfb_wavelet(woo_tfd), tfb_wavelet(woo_df))
+  expect_equal(tfb_wavelet(woo_tfd), tfb_wavelet(woo_tfb))
+  expect_equal(tfb_wavelet(woo_tfd), tfb_wavelet(woo_mat))
 })
 
 

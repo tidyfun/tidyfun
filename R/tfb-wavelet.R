@@ -21,6 +21,12 @@ new_tfb_wavelet <- function(data, domain = NULL, level = 2, verbose = TRUE,
   #   interp_index <- interpolate_arg(arg_list = arg_list)
   # }
   
+  # Use names from glmnet, because cv.glmnet uses less inputs glmnet, but can 
+  # use glmnet arguments
+  glmnet_args <- list(...)[names(list(...)) %in% names(formals(
+    glmnet::glmnet))] 
+  if (!"nlambda" %in% names(glmnet_args)) glmnet_args$nlambda <- 100
+  
   
   X <- ZDaub(interp_index,
              numLevels = level,
@@ -29,7 +35,8 @@ new_tfb_wavelet <- function(data, domain = NULL, level = 2, verbose = TRUE,
   
   X <- scale(predict_matrix(X, interp_index, arg_u$x), center = FALSE)
   
-  fit <- fit_wavelet_matrix(data, Z = X, least_squares = TRUE)
+  fit <- fit_wavelet(data, Z = X, least_squares = least_squares,
+                            glmnet_args)
   
   X <- cbind(1, X)
   
@@ -37,10 +44,15 @@ new_tfb_wavelet <- function(data, domain = NULL, level = 2, verbose = TRUE,
     predict_matrix(X = X, arg_old = unname(unlist(arg_u)), arg_new = arg)
   }
   
+  basis_label <- paste0(filter_number, " Vanishing Moments, eval to level ",
+                        level, ", Lasso: ", !least_squares)
+  
   ret <- structure(fit$fit,
                    domain = domain,
+                   glmnet_args = glmnet_args,
                    basis_args = list(level = level, 
                                      filter_number = filter_number),
+                   basis_label = basis_label,
                    basis = memoise(basis_constructor),
                    basis_matrix = X,
                    resolution = resolution,
@@ -51,15 +63,31 @@ new_tfb_wavelet <- function(data, domain = NULL, level = 2, verbose = TRUE,
   ret
 }
 
-
-#' @param data A data.frame, matrix or tf-object.
-#' @param domain range of the `arg`.
-#' @param level The resolution level of the wavelet.
-#' @param resolution resolution of the evaluation grid. See details for [tfd()].
-#' @param family
-#' @param ... Arguments for [wavethresh::wd] and [wavethresh::threshold.wd]. 
-#' `type` will only be handled by [wavethresh::threshold.wd].
+#' Wavelet-based representation of functional data
+#' 
+#' Represent curves with wavelet bases
+#' 
+#' The `level` and `filter_number` arguments define the wavelet matrix. If 
+#' `filter_number = 1` the matrix represents the Haar Wavelet, if 
+#' `filter_number > 1` Daubechies "extremal phase" wavelets will be used 
+#' (see [wavethresh::filter.select()]). The `level` parameter defines up to which 
+#' level the wavelet is evaluated. The higher the `level` the bigger your output
+#' and the higher the variability in your curves.
+#' 
+#' If `least_squares = TRUE`, the coefficients will be estimated using a least
+#' squares, if `least_squares = FALSE` it uses [glmnet::cv.glmnet]. The default
+#' for [glmnet::cv.glmnet] is Lasso-Regression with `nlambda = 100`.
+#' 
+#' @inheritParams tfb
+#' @param level The level to which the wavelet is evaluated. Defined for 2 to 10.
+#' @param filter_number The number of vanishing moments for the wavelet. Higher
+#' numbers mean the wavelet has more variability. Possible Inputs 1 to 10.
+#' @param least_squares logical; if `TRUE` a least squares fit will be performed. 
+#' If `FALSE` [glmnet::cv.glmnet] will be used for the fit.
+#' @param ... Only used if `least_squares = TRUE`. Arguments for 
+#' [glmnet::cv.glmnet]. The default is Lasso-Regression with `nlambda = 100`.
 #' @return a `tfb`-object
+#' @references 
 tfb_wavelet <- function(data, ...) UseMethod("tfb_wavelet")
 
 #' @export
@@ -67,7 +95,8 @@ tfb_wavelet <- function(data, ...) UseMethod("tfb_wavelet")
 #' @describeIn tfb_spline convert data frames
 tfb_wavelet.data.frame <- function(data, id = 1, arg = 2, value = 3,
                                    domain = NULL, level = 2, verbose = TRUE,
-                                   resolution = NULL, filter_number = 5, ...) {
+                                   resolution = NULL, filter_number = 5, 
+                                   least_squares = TRUE, ...) {
   data <- df_2_df(data, id, arg, value)
   ret <- new_tfb_wavelet(data,
                          domain = domain, level = level,
@@ -76,58 +105,72 @@ tfb_wavelet.data.frame <- function(data, id = 1, arg = 2, value = 3,
   ret
 }
 
+#' @export
+#' @inheritParams tfd.matrix
+#' @describeIn tfb_spline convert matrices
+tfb_wavelet.matrix <- function(data, domain = NULL, verbose = TRUE, 
+                               resolution = NULL, level = 2,
+                               filter_number = 5, least_squares = TRUE, ...) {
+  arg <- unlist(find_arg(data, arg))
+  data_names <- rownames(data)
+  data <- mat_2_df(data, arg)
+  ret <- new_tfb_wavelet(data, domain = domain, level = level,
+                         verbose = verbose, resolution = resolution, 
+                         filter_number = filter_number, 
+                         least_squares = least_squares, ...)
+  names(ret) <- data_names
+  assert_arg(tf_arg(ret), ret)
+  ret
+}
 
-# tfb_wavelet.matrix <- function(data, domain = NULL, level = 2,
-#                                verbose = TRUE, arg = NULL,
-#                                resolution = NULL, filter_number = 5, ...) {
-#   arg <- unlist(find_arg(data, arg))
-#   data_names <- rownames(data)
-#   data <- mat_2_df(data, arg)
-#   ret <- new_tfb_wavelet(data, domain = domain, level = level,
-#                          verbose = verbose, resolution = resolution, ...)
-#   names(ret) <- data_names
-#   assert_arg(tf_arg(ret), ret)
-#   ret
-# }
-
-tfb_wavelet.tfd <- function(data, domain = NULL, level = 2,
-                            verbose = TRUE, arg = NULL, 
-                            resolution = NULL, filter_number = 5, ...) {
+#' @export
+#' @describeIn tfb_spline convert `tfd` (raw functional data)
+tfb_wavelet.tfd <- function(data, arg = NULL, domain = NULL, 
+                            verbose = TRUE, resolution = NULL, 
+                            level = 2, filter_number = 5, 
+                            least_squares = TRUE, ...) {
   arg <- arg %||% tf_arg(data)
   domain <- domain %||% tf_domain(data)
   resolution <- resolution %||% tf_resolution(data)
   names_data <- names(data)
-  data <- as.data.frame(data, arg)
-  ret <- tfb_wavelet(data, domain = domain, level = level,
+  data <- as.data.frame(as.data.frame(data, arg))
+  ret <- tfb_wavelet(data, domain = domain, resolution = resolution,
+                     level = level, filter_number = filter_number,
+                     least_squares = least_squares,
                      verbose = verbose, ...)
   names(ret) <- names_data
   ret
 }
 
-# tfb_wavelet.tfb <- function(data, domain = NULL, level = 2,
-#                             verbose = TRUE, arg = NULL, 
-#                             resolution = NULL, filter_number = 5, ...) {
-#   arg <- arg %||% tf_arg(data)
-#   resolution <- resolution %||% tf_resolution(data)
-#   domain <- domain %||% tf_domain(data)
-#   wd_args <- modifyList(
-#     attr(data, "wd_arg"),
-#     list(...)[names(list(...)) %in% names(formals(wavethresh::wd))]
-#   )
-#   threshold_args <- modifyList(
-#     attr(data, "thresh_arg"),
-#     list(...)[names(list(...)) %in% names(formals(wavethresh::threshold.wd))]
-#   )
-#   wd_args$data <- NULL
-#   wd_args$verbose <- NULL
-#   threshold_args$verbose <- NULL
-#   threshold_args$value <- NULL
-#   names_data <- names(data)
-#   data <- as.data.frame(data, arg = arg)
-#   ret <- do.call("tfb_wavelet", c(list(data), domain = domain, level = level,
-#                                   verbose = verbose, arg = arg, 
-#                                   resolution = resolution, 
-#                                   wd_args, threshold_args, ...))
-#   names(ret) <- names_data
-#   ret
-# }
+
+#' @export
+#' @describeIn tfb_spline convert `tfb`: modify wavelet basis or Lasso args.
+tfb_wavelet.tfb <- function(data, domain = NULL, level = 2,
+                            verbose = TRUE, arg = NULL,
+                            resolution = NULL, filter_number = 5, 
+                            least_squares = TRUE, ...) {
+  arg <- arg %||% tf_arg(data)
+  resolution <- resolution %||% tf_resolution(data)
+  domain <- domain %||% tf_domain(data)
+  
+  
+  glmnet_args <- modifyList(
+    attr(data, "basis_args"),
+    list(...)[names(list(...)) %in% names(formals(glmnet::glmnet))]
+  )
+  
+  glmnet_args <- list(glmnet_args, 
+                      list(...)[!names(list(...)) %in% names(glmnet_args)])
+  
+  
+  names_data <- names(data)
+  data <- as.data.frame(data, arg = arg)
+  ret <- do.call("tfb_wavelet", c(list(data), domain = domain, level = level,
+                                  verbose = verbose, arg = arg,
+                                  resolution = resolution, 
+                                  filter_number = filter_number,
+                                  least_squares = least_squares,
+                                  glmnet_args, ...))
+  names(ret) <- names_data
+  ret
+}
