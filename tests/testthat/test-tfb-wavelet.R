@@ -23,15 +23,6 @@ temp
 
 devtools::load_all(".")
 
-set.seed(122)
-data <- tf_rgp(10, arg = 256, scale = .005)
-
-data_w <- tfb_wavelet.data.frame(as.data.frame(data),
-                                 filter.number = 8, levels = 2, type = "hard",
-                                 policy = "universal")
-str(data_w, 1) # 49 coefs
-str(attr(data_w, "basis_matrix"))
-
 
 set.seed(1234)
 data <- data.frame(id = rep(1:5, 8), 
@@ -59,7 +50,7 @@ woo <- data.frame(id = rep(1:100, each = 256),
 woo_df <- woo %>% mutate(data = f(arg) + rnorm(nrow(woo), sd = .5))
 woo_tfd <- tfd(woo_df)
 woo_mat <- as.matrix(woo_tfd)
-woo_tfb <- tfb_wavelet(woo_tfd)
+woo_tfb <- tfb_wavelet(woo_tfd, level = 2)
 
 test_that("tfb_wavelet defaults work for all kinds of regular input", {
   for (dat in list(woo_df, woo_tfd)) {
@@ -75,7 +66,7 @@ test_that("tfb_wavelet defaults work for all kinds of regular input", {
 test_that("tfb_wavelet works for different parameters", {
   for (i in 1:10) {
     for (j in 2:10) {
-      tfb_wavelet(woo_32786_df, level = j, filter_number = i) 
+      tfb_wavelet(woo_tfd, level = j, filter_number = i) 
       print(paste0(i,".", j))
     }
   }

@@ -38,7 +38,7 @@ new_tfb_wavelet <- function(data, domain = NULL, level = 2, verbose = TRUE,
   fit <- fit_wavelet(data, Z = X, least_squares = least_squares,
                             glmnet_args)
   
-  X <- cbind(1, X)
+  X <- cbind(1, X, 1, arg_u$x)
   
   basis_constructor <- function(arg = arg) {
     predict_matrix(X = X, arg_old = unname(unlist(arg_u)), arg_new = arg)
@@ -47,7 +47,7 @@ new_tfb_wavelet <- function(data, domain = NULL, level = 2, verbose = TRUE,
   basis_label <- paste0(filter_number, " Vanishing Moments, eval to level ",
                         level, ", Lasso: ", !least_squares)
   
-  ret <- structure(fit$fit,
+  ret <- structure(fit,
                    domain = domain,
                    glmnet_args = glmnet_args,
                    basis_args = list(level = level, 
@@ -56,7 +56,6 @@ new_tfb_wavelet <- function(data, domain = NULL, level = 2, verbose = TRUE,
                    basis = memoise(basis_constructor),
                    basis_matrix = X,
                    resolution = resolution,
-                   slope_params = fit$slope_params,
                    arg = arg_u$x,
                    class = c("tfb_wavelet", "tfb", "tf")
   )
@@ -155,18 +154,18 @@ tfb_wavelet.tfb <- function(data, domain = NULL, level = 2,
   
   
   glmnet_args <- modifyList(
-    attr(data, "basis_args"),
+    as.list(attr(data, "glmnet_args")),
     list(...)[names(list(...)) %in% names(formals(glmnet::glmnet))]
   )
   
-  glmnet_args <- list(glmnet_args, 
+  glmnet_args <- c(glmnet_args, 
                       list(...)[!names(list(...)) %in% names(glmnet_args)])
   
   
   names_data <- names(data)
-  data <- as.data.frame(data, arg = arg)
+  data <- as.data.frame(as.data.frame(data, arg = arg))
   ret <- do.call("tfb_wavelet", c(list(data), domain = domain, level = level,
-                                  verbose = verbose, arg = arg,
+                                  verbose = verbose, 
                                   resolution = resolution, 
                                   filter_number = filter_number,
                                   least_squares = least_squares,

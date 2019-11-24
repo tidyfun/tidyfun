@@ -36,20 +36,19 @@ fit_wavelet <- function(data, Z, least_squares, glmnet_args) {
   if (least_squares) {
     coefs <- map2(eval_list, correction, 
                   function(x, y) {
-                    Z <- cbind(1, Z, y)
+                    Z <- cbind(1, Z)
                     # Least squares fit, directly computed
-                    as.vector((t(Z) %*% x) / diag(crossprod(Z)))})
+                    as.vector((t(Z) %*% (x - y)) / diag(crossprod(Z)))})
   } else {
     coefs <- map2(eval_list, correction, 
                   function(x, y) {
-                    Z <- cbind(Z, y)
-                    temp_model <- do.call(glmnet::cv.glmnet, list(Z, x, glmnet_args))
+                    temp_model <- do.call(glmnet::cv.glmnet, list(Z, x - y, 
+                                                                  glmnet_args))
                     coef(temp_model)@x})
   }
-  slope_params <- lapply(correction, function(x) 
-    c(attr(x, "intercept"), attr(x, "slope")))
-  
-  list(fit = coefs, slope_params = slope_params)
+  fit <- map2(correction, coefs, function(x, y)
+    c(y, attr(x, "intercept"), attr(x, "slope")))
+  fit
 }
 
 
