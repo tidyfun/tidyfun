@@ -23,10 +23,13 @@ new_tfb_wavelet <- function(data, domain = NULL, level = 2, verbose = TRUE,
   
   # Use names from glmnet, because cv.glmnet uses less inputs glmnet, but can 
   # use glmnet arguments
-  glmnet_args <- list(...)[names(list(...)) %in% names(formals(
-    glmnet::glmnet))] 
-  if (!"nlambda" %in% names(glmnet_args)) glmnet_args$nlambda <- 100
-  
+  if (!least_squares) {
+    glmnet_args <- list(...)[names(list(...)) %in% names(formals(
+      glmnet::glmnet))] 
+    if (!"nlambda" %in% names(glmnet_args)) glmnet_args$nlambda <- 100
+  } else {
+    glmnet_args <- NULL
+  }
   
   X <- ZDaub(interp_index,
              numLevels = level,
@@ -36,7 +39,7 @@ new_tfb_wavelet <- function(data, domain = NULL, level = 2, verbose = TRUE,
   X <- scale(predict_matrix(X, interp_index, arg_u$x), center = FALSE)
   
   fit <- fit_wavelet(data, Z = X, least_squares = least_squares,
-                            glmnet_args)
+                     glmnet_args)
   
   X <- cbind(1, X, 1, arg_u$x)
   
@@ -107,7 +110,7 @@ tfb_wavelet.data.frame <- function(data, id = 1, arg = 2, value = 3,
 #' @export
 #' @inheritParams tfd.matrix
 #' @describeIn tfb_spline convert matrices
-tfb_wavelet.matrix <- function(data, domain = NULL, verbose = TRUE, 
+tfb_wavelet.matrix <- function(data, arg = NULL, domain = NULL, verbose = TRUE, 
                                resolution = NULL, level = 2,
                                filter_number = 5, least_squares = TRUE, ...) {
   arg <- unlist(find_arg(data, arg))
@@ -159,7 +162,7 @@ tfb_wavelet.tfb <- function(data, domain = NULL, level = 2,
   )
   
   glmnet_args <- c(glmnet_args, 
-                      list(...)[!names(list(...)) %in% names(glmnet_args)])
+                   list(...)[!names(list(...)) %in% names(glmnet_args)])
   
   
   names_data <- names(data)

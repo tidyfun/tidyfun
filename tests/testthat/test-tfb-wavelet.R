@@ -63,7 +63,7 @@ test_that("tfb_wavelet defaults work for all kinds of regular input", {
 })
 
 
-test_that("tfb_wavelet works for different parameters", {
+test_that("tfb_wavelet works for different wavelet parameters", {
   for (i in 1:10) {
     for (j in 2:10) {
       tfb_wavelet(woo_tfd, level = j, filter_number = i) 
@@ -97,78 +97,42 @@ library(profvis)
 profvis(tfb_wavelet(woo_32786_df, level = 6)) 
 
 
-irr <- data.frame(id = rep(1:100, each = 256), 
-                  arg = sample(seq(-1, 2, l = 25600), 25600))
-irr <- irr[duplicated(irr), ]
-irr_df <- irr %>% group_by(id) %>% mutate(arg = unique(arg)) 
-  mutate(data = f(arg) + rnorm(nrow(irr), sd = .5))
+irr_grid <- data.frame(id = rep(1:100, each = 230), 
+                  arg = rep(seq(0, 1, l = 230) + rnorm(230, sd = .1), 100))
+
+irr_df <- irr_grid %>% 
+  mutate(data = f(arg) + rnorm(nrow(irr_grid), sd = .5))
 irr_tfd <- tfd(irr_df)
-irr_ <- tfb_wavelet(irr_tfd, level = 6)
+irr_mat <- as.matrix(irr_tfd)
+irr_tfb <- tfb_wavelet(irr_tfd, level = 2)
 
-
-
-test_that("tfb_wavelet defaults work for all kinds of irregular input", {
-  expect_is(tfb_wavelet(irr, verbose = FALSE), "tfb_wavelet")
-  expect_output(tfb_wavelet(irr), "100")
-  expect_equal(length(tfb_wavelet(irr, verbose = FALSE)), length(irr))
-  expect_output(tfb_wavelet(irr_df), "100")
-  for (irr_tfb in list(tfb_wavelet(irr_list, arg = tf_arg(irr), verbose = FALSE),
-                       tfb_wavelet(irr_matrix, verbose = FALSE), 
+test_that("tfb_wavelet works for irregular grids", {
+  expect_is(tfb_wavelet(irr_tfd, verbose = FALSE), "tfb_wavelet")
+  expect_equal(length(tfb_wavelet(irr_tfd, verbose = FALSE)), length(irr_tfd))
+  for (irr_tfb in list(tfb_wavelet(irr_tfd, verbose = FALSE),
+                       tfb_wavelet(irr_mat, verbose = FALSE), 
                        tfb_wavelet(irr_df, verbose = FALSE))) {
     expect_is(irr_tfb, "tfb_wavelet")
-    expect_equal(length(irr_tfb), length(irr))
-    expect_equivalent(tf_evaluate(irr_tfb, tf_arg(irr)), 
-                      tf_evaluations(irr), 
+    expect_equal(length(irr_tfb), length(irr_tfd))
+    expect_equivalent(tf_evaluate(irr_tfb, tf_arg(irr_tfd)), 
+                      tf_evaluations(irr_tfb), 
                       tolerance = 1e-1)
   }
 })
 
-context("tfb_wavelet constructor: penalization options")
 
-test_that("unpenalized tfb_wavelet works", {
-  expect_error(tfb_wavelet(narrow, k = 11, penalized = FALSE), "reduce k")
-  expect_is(tfb_wavelet(narrow, k = 8, penalized = FALSE, verbose = FALSE),
-            "tfb_wavelet")
-  expect_is(tfb_wavelet(rough, k = 15, penalized = FALSE, verbose = FALSE),
-            "tfb_wavelet")
-  
-  expect_is(tfb_wavelet(exp(woo), family = Gamma(link = "log"), 
-                        penalized = FALSE, verbose = FALSE),
-            "tfb_wavelet")
-  expect_is(
-    suppressWarnings(
-      tfb_wavelet(narrow^3, family = scat(), k = 5,
-                  penalized = FALSE, verbose = FALSE)
-    ), "tfb_wavelet")
-  
-  expect_equivalent(tfb_wavelet(irr, k = 11, penalized = FALSE, verbose = FALSE), 
-                    tfb_wavelet(irr, k = 11, verbose = FALSE),
-                    tol = 1e-1)
-  
-  # GLM case: fitting on exp-scale and transforming back:
-  expect_equivalent(
-    tfb_wavelet(exp(woo), family = gaussian(link = "log"), 
-                penalized = FALSE, verbose = FALSE) %>% 
-      log %>% as.matrix, 
-    as.matrix(woo), 
-    tolerance = .001)
-  
-  expect_message(
-    try(tfb_wavelet(woo, family = Gamma(link = "log"), penalized = FALSE),
-        silent = TRUE),
-    "non-positive")
-  expect_error(
-    suppressMessages(
-      tfb_wavelet(woo, family = Gamma(link = "log"), penalized = FALSE)
-    ),
-    "Basis representation failed")
-  
-  approx_penalized <- abs(rough - tfd(tfb(rough, k = 40, verbose = FALSE))) %>% 
-    as.matrix %>% sum
-  approx_unpenalized <- abs(rough - tfd(tfb(rough, k = 40, penalized = FALSE, 
-                                            verbose = FALSE))) %>% 
-    as.matrix %>% sum
-  expect_true(approx_penalized > approx_unpenalized)
+
+
+
+context("tfb_wavelet glmnet args")
+
+test_that("glmnet arguments work", {
+  expect_is(tfb_wavelet(woo_tfd, least_squares = FALSE), "tfb_wavelet")
+  expect_equal(length(tfb_wavelet(woo_tfd, least_squares = FALSE)), 
+               length(woo_tfd))
+  expect_equivalent(tfb_wavelet(woo_tfd, least_squares = FALSE),
+                    tfb_wavelet(woo_tfd, least_squares = FALSE, nlambda = 20),
+                    tolerance = 1e-1)
 })
 
 test_that("mgcv spline basis options work", {
