@@ -28,7 +28,7 @@ interpolate_arg <- function(arg_list) {
 
 
 fit_wavelet <- function(data, Z, penalized, glmnet_args) {
-  eval_list <- split(data$data, data$id)
+  eval_list <- split(data$value, data$id)
   arg_list <- split(data$arg, data$id)
   
   correction <- map2(arg_list, eval_list, function(x, y) remove_slope(x,y))
