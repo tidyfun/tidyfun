@@ -102,7 +102,9 @@ tfb_wavelet.data.frame <- function(data, id = 1, arg = 2, value = 3,
   data <- df_2_df(data, id, arg, value)
   ret <- new_tfb_wavelet(data,
                          domain = domain, level = level,
-                         verbose = verbose, resolution = resolution, ...)
+                         verbose = verbose, resolution = resolution, 
+                         filter_number = filter_number, 
+                         penalized = penalized, ...)
   assert_arg(tf_arg(ret), ret)
   ret
 }
