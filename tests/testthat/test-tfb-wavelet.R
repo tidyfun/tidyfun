@@ -127,11 +127,11 @@ test_that("tfb_wavelet works for irregular grids", {
 context("tfb_wavelet glmnet args")
 
 test_that("glmnet arguments work", {
-  expect_is(tfb_wavelet(woo_tfd, least_squares = FALSE), "tfb_wavelet")
-  expect_equal(length(tfb_wavelet(woo_tfd, least_squares = FALSE)), 
+  expect_is(tfb_wavelet(woo_tfd, penalized = FALSE), "tfb_wavelet")
+  expect_equal(length(tfb_wavelet(woo_tfd, penalized = FALSE)), 
                length(woo_tfd))
-  expect_equivalent(tfb_wavelet(woo_tfd, least_squares = FALSE),
-                    tfb_wavelet(woo_tfd, least_squares = FALSE, nlambda = 20),
+  expect_equivalent(tfb_wavelet(woo_tfd, penalized = FALSE),
+                    tfb_wavelet(woo_tfd, penalized = FALSE, nlambda = 20),
                     tolerance = 1e-1)
 })
 

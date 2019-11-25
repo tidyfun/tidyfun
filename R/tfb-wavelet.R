@@ -1,6 +1,6 @@
 new_tfb_wavelet <- function(data, domain = NULL, level = 2, verbose = TRUE,
                             resolution = NULL, filter_number = 5, 
-                            least_squares = TRUE, ...) {
+                            penalized = TRUE, ...) {
   domain <- domain %||% range(data$arg)
   arg_u <- mgcv::uniquecombs(data$arg, ordered = TRUE)
   resolution <- resolution %||% get_resolution(arg_u)
@@ -23,7 +23,7 @@ new_tfb_wavelet <- function(data, domain = NULL, level = 2, verbose = TRUE,
   
   # Use names from glmnet, because cv.glmnet uses less inputs glmnet, but can 
   # use glmnet arguments
-  if (!least_squares) {
+  if (!penalized) {
     glmnet_args <- list(...)[names(list(...)) %in% names(formals(
       glmnet::glmnet))] 
     if (!"nlambda" %in% names(glmnet_args)) glmnet_args$nlambda <- 100
@@ -38,7 +38,7 @@ new_tfb_wavelet <- function(data, domain = NULL, level = 2, verbose = TRUE,
   
   X <- scale(predict_matrix(X, interp_index, arg_u$x), center = FALSE)
   
-  fit <- fit_wavelet(data, Z = X, least_squares = least_squares,
+  fit <- fit_wavelet(data, Z = X, penalized = penalized,
                      glmnet_args)
   
   X <- cbind(1, X, 1, arg_u$x)
@@ -48,7 +48,7 @@ new_tfb_wavelet <- function(data, domain = NULL, level = 2, verbose = TRUE,
   }
   
   basis_label <- paste0(filter_number, " Vanishing Moments, eval to level ",
-                        level, ", Lasso: ", !least_squares)
+                        level, ", Lasso: ", !penalized)
   
   ret <- structure(fit,
                    domain = domain,
@@ -76,17 +76,17 @@ new_tfb_wavelet <- function(data, domain = NULL, level = 2, verbose = TRUE,
 #' level the wavelet is evaluated. The higher the `level` the bigger your output
 #' and the higher the variability in your curves.
 #' 
-#' If `least_squares = TRUE`, the coefficients will be estimated using a least
-#' squares, if `least_squares = FALSE` it uses [glmnet::cv.glmnet]. The default
+#' If `penalized = TRUE`, the coefficients will be estimated using a least
+#' squares, if `penalized = FALSE` it uses [glmnet::cv.glmnet]. The default
 #' for [glmnet::cv.glmnet] is Lasso-Regression with `nlambda = 100`.
 #' 
 #' @inheritParams tfb
 #' @param level The level to which the wavelet is evaluated. Defined for 2 to 10.
 #' @param filter_number The number of vanishing moments for the wavelet. Higher
 #' numbers mean the wavelet has more variability. Possible Inputs 1 to 10.
-#' @param least_squares logical; if `TRUE` a least squares fit will be performed. 
+#' @param penalized logical; if `TRUE` a least squares fit will be performed. 
 #' If `FALSE` [glmnet::cv.glmnet] will be used for the fit.
-#' @param ... Only used if `least_squares = TRUE`. Arguments for 
+#' @param ... Only used if `penalized = TRUE`. Arguments for 
 #' [glmnet::cv.glmnet]. The default is Lasso-Regression with `nlambda = 100`.
 #' @return a `tfb`-object
 #' @references 
@@ -98,7 +98,7 @@ tfb_wavelet <- function(data, ...) UseMethod("tfb_wavelet")
 tfb_wavelet.data.frame <- function(data, id = 1, arg = 2, value = 3,
                                    domain = NULL, level = 2, verbose = TRUE,
                                    resolution = NULL, filter_number = 5, 
-                                   least_squares = TRUE, ...) {
+                                   penalized = TRUE, ...) {
   data <- df_2_df(data, id, arg, value)
   ret <- new_tfb_wavelet(data,
                          domain = domain, level = level,
@@ -112,14 +112,14 @@ tfb_wavelet.data.frame <- function(data, id = 1, arg = 2, value = 3,
 #' @describeIn tfb_spline convert matrices
 tfb_wavelet.matrix <- function(data, arg = NULL, domain = NULL, verbose = TRUE, 
                                resolution = NULL, level = 2,
-                               filter_number = 5, least_squares = TRUE, ...) {
+                               filter_number = 5, penalized = TRUE, ...) {
   arg <- unlist(find_arg(data, arg))
   data_names <- rownames(data)
   data <- mat_2_df(data, arg)
   ret <- new_tfb_wavelet(data, domain = domain, level = level,
                          verbose = verbose, resolution = resolution, 
                          filter_number = filter_number, 
-                         least_squares = least_squares, ...)
+                         penalized = penalized, ...)
   names(ret) <- data_names
   assert_arg(tf_arg(ret), ret)
   ret
@@ -130,7 +130,7 @@ tfb_wavelet.matrix <- function(data, arg = NULL, domain = NULL, verbose = TRUE,
 tfb_wavelet.tfd <- function(data, arg = NULL, domain = NULL, 
                             verbose = TRUE, resolution = NULL, 
                             level = 2, filter_number = 5, 
-                            least_squares = TRUE, ...) {
+                            penalized = TRUE, ...) {
   arg <- arg %||% tf_arg(data)
   domain <- domain %||% tf_domain(data)
   resolution <- resolution %||% tf_resolution(data)
@@ -138,7 +138,7 @@ tfb_wavelet.tfd <- function(data, arg = NULL, domain = NULL,
   data <- as.data.frame(as.data.frame(data, arg))
   ret <- tfb_wavelet(data, domain = domain, resolution = resolution,
                      level = level, filter_number = filter_number,
-                     least_squares = least_squares,
+                     penalized = penalized,
                      verbose = verbose, ...)
   names(ret) <- names_data
   ret
@@ -150,7 +150,7 @@ tfb_wavelet.tfd <- function(data, arg = NULL, domain = NULL,
 tfb_wavelet.tfb <- function(data, domain = NULL, level = 2,
                             verbose = TRUE, arg = NULL,
                             resolution = NULL, filter_number = 5, 
-                            least_squares = TRUE, ...) {
+                            penalized = TRUE, ...) {
   arg <- arg %||% tf_arg(data)
   resolution <- resolution %||% tf_resolution(data)
   domain <- domain %||% tf_domain(data)
@@ -171,7 +171,7 @@ tfb_wavelet.tfb <- function(data, domain = NULL, level = 2,
                                   verbose = verbose, 
                                   resolution = resolution, 
                                   filter_number = filter_number,
-                                  least_squares = least_squares,
+                                  penalized = penalized,
                                   glmnet_args, ...))
   names(ret) <- names_data
   ret

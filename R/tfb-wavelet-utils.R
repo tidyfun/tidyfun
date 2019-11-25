@@ -27,13 +27,13 @@ interpolate_arg <- function(arg_list) {
 
 
 
-fit_wavelet <- function(data, Z, least_squares, glmnet_args) {
+fit_wavelet <- function(data, Z, penalized, glmnet_args) {
   eval_list <- split(data$data, data$id)
   arg_list <- split(data$arg, data$id)
   
   correction <- map2(arg_list, eval_list, function(x, y) remove_slope(x,y))
   
-  if (least_squares) {
+  if (penalized) {
     coefs <- map2(eval_list, correction, 
                   function(x, y) {
                     Z <- cbind(1, Z)
