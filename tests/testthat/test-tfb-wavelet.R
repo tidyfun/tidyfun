@@ -16,7 +16,7 @@ woo_mat <- as.matrix(woo_tfd)
 woo_tfb <- tfb_wavelet(woo_tfd, level = 2)
 
 test_that("tfb_wavelet defaults work for all kinds of regular input", {
-  for (dat in list(woo_df, woo_tfd)) {
+  for (dat in list(woo_df, woo_tfd, woo_mat)) {
     woo_ <- try(tfb_wavelet(dat, verbose = FALSE))
     expect_is(woo_, "tfb_wavelet")
     expect_equal(length(woo_), length(woo_tfd))
@@ -44,27 +44,27 @@ test_that("tfb_wavelet independent of datatype", {
   expect_equal(tfb_wavelet(woo_tfd), tfb_wavelet(woo_mat))
 })
 
-
-woo_32768 <- data.frame(id = rep(1:100, each = 32768), 
-                        arg = rep(seq(0, 1, l = 32768), 100))
-
-woo_32786_df <- woo_32768 %>% mutate(data = f(arg) + 
-                                       rnorm(nrow(woo_32768), sd = .5))
-
-bench::mark(
-  data_256 = tfb_wavelet(woo_df), # 19ms and 13.75MB
-  data_32768 = tfb_wavelet(woo_32786_df), # 1.9s and 1GB
-  data_32768 = tfb_wavelet(woo_32786_df, level = 6), # 12.5s and 4.41GB
-  spline_32768 = tfb_spline(woo_32786_df), # 6s and 2.63GB
-  data_256 = tfb_wavelet(woo_df, penalized = TRUE), # 5.6s and 370.MB
-  data_32768 = tfb_wavelet(woo_32786_df, penalized = TRUE), # 28s and 36.8GB
-  data_32768 = tfb_wavelet(woo_32786_df, level = 6, penalized = TRUE), # 2.26m 
-  # and 78.5GB
-  check = FALSE
-)
-
-library(profvis)
-profvis(tfb_wavelet(woo_32786_df, level = 6)) 
+# 
+# woo_32768 <- data.frame(id = rep(1:100, each = 32768), 
+#                         arg = rep(seq(0, 1, l = 32768), 100))
+# 
+# woo_32786_df <- woo_32768 %>% mutate(data = f(arg) + 
+#                                        rnorm(nrow(woo_32768), sd = .5))
+# 
+# bench::mark(
+#   data_256 = tfb_wavelet(woo_df), # 19ms and 13.75MB
+#   data_32768 = tfb_wavelet(woo_32786_df), # 1.9s and 1GB
+#   data_32768 = tfb_wavelet(woo_32786_df, level = 6), # 12.5s and 4.41GB
+#   spline_32768 = tfb_spline(woo_32786_df), # 6s and 2.63GB
+#   data_256 = tfb_wavelet(woo_df, penalized = TRUE), # 5.6s and 370.MB
+#   data_32768 = tfb_wavelet(woo_32786_df, penalized = TRUE), # 28s and 36.8GB
+#   data_32768 = tfb_wavelet(woo_32786_df, level = 6, penalized = TRUE), # 2.26m 
+#   # and 78.5GB
+#   check = FALSE
+# )
+# 
+# library(profvis)
+# profvis(tfb_wavelet(woo_32786_df, level = 6)) 
 
 context("irregular data")
 irr_grid <- data.frame(id = rep(1:100, each = 230), 

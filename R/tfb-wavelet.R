@@ -45,7 +45,7 @@ new_tfb_wavelet <- function(data, domain = NULL, level = 2, verbose = TRUE,
         glmnet_args$intercept <- TRUE
         warning("The intercept must always be included. Setting intercept=TRUE")
       }
-   }     
+    }     
   } else {
     glmnet_args <- NULL
   }
@@ -55,12 +55,17 @@ new_tfb_wavelet <- function(data, domain = NULL, level = 2, verbose = TRUE,
              filterNumber = filter_number,
              resolution = 16384)
   
-  X <- scale(predict_matrix(X, interp_index, arg_u$x), center = FALSE)
+  X <- predict_matrix(X, interp_index, arg_u$x)
   
-  fit <- fit_wavelet(data, Z = X, penalized = penalized,
-                     glmnet_args)
+  if (regular) {
+    fit <- fit_wavelet(data, Z = X, penalized = penalized,
+                       glmnet_args) 
+  } # else {
+  #   fit <- fit_wavelet_irr(data, Z = X, penalized = penalized,
+  #                          glmnet_args)
+  # }
   
-  X <- cbind(1, X, 1, arg_u$x)
+  X <- cbind(1, X, arg_u$x)
   
   basis_constructor <- function(arg = arg) {
     predict_matrix(X = X, arg_old = unname(unlist(arg_u)), arg_new = arg)

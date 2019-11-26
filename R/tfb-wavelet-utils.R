@@ -29,28 +29,52 @@ interpolate_arg <- function(arg_list) {
 
 fit_wavelet <- function(data, Z, penalized, glmnet_args) {
   eval_list <- split(data$value, data$id)
-  arg_list <- split(data$arg, data$id)
+  arg_list <- unique(data$arg)
   
-  correction <- map2(arg_list, eval_list, function(x, y) remove_slope(x,y))
+  Z <- cbind(Z, arg_list)
+  Z <- scale(Z, center = FALSE)
   
   if (!penalized) {
-    coefs <- map2(eval_list, correction, 
-                  function(x, y) {
-                    Z <- cbind(1, Z)
+    coefs <- map(eval_list, 
+                  function(x) {
                     # Least squares fit, directly computed
-                    as.vector((t(Z) %*% (x - y)) / diag(crossprod(Z)))})
+                    unname(lsfit(Z, x, intercept = TRUE)$coef)})
   } else {
-    coefs <- map2(eval_list, correction, 
+    coefs <- map(eval_list, 
                   function(x, y) {
-                    temp_model <- do.call(glmnet::cv.glmnet, c(list(Z, x - y), 
+                    temp_model <- do.call(glmnet::cv.glmnet, c(list(Z, y), 
                                                                glmnet_args))
                     as.numeric(coefficients(temp_model))
                   }
     )
   }
-  fit <- map2(correction, coefs, function(x, y)
-    c(y, attr(x, "intercept"), attr(x, "slope")))
-  fit
+  coefs
+}
+
+
+fit_wavelet_irr <- function(data, Z, penalized, glmnet_args) {
+  eval_list <- split(data$value, data$id)
+  arg_list <- split(data$arg, data$id)
+  
+  if (!penalized) {
+    coefs <- map2(arg_list, eval_list,  
+                  function(x, y) {
+                    Z <- cbind(Z, x)
+                    Z <- scale(Z, center = FALSE)
+                    # Least squares fit, directly computed
+                    lsfit(Z, y, intercept = TRUE)$coef})
+  } else {
+    coefs <- map2(arg_list, eval_list, 
+                  function(x, y) {
+                    Z <- cbind(Z, x)
+                    Z <- scale(Z, center = FALSE)
+                    temp_model <- do.call(glmnet::cv.glmnet, c(list(Z, y), 
+                                                               glmnet_args))
+                    as.numeric(coefficients(temp_model))
+                  }
+    )
+  }
+  coefs
 }
 
 
