@@ -44,7 +44,9 @@ fit_wavelet <- function(data, Z, penalized, glmnet_args) {
                   function(x, y) {
                     temp_model <- do.call(glmnet::cv.glmnet, c(list(Z, x - y), 
                                                                glmnet_args))
-                    coefficients(temp_model)@x})
+                    as.numeric(coefficients(temp_model))
+                  }
+    )
   }
   fit <- map2(correction, coefs, function(x, y)
     c(y, attr(x, "intercept"), attr(x, "slope")))
