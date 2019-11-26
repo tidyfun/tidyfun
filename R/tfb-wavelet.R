@@ -4,7 +4,7 @@ new_tfb_wavelet <- function(data, domain = NULL, level = 2, verbose = TRUE,
   
   assert_numeric(level, lower = 2, upper = 10)
   assert_numeric(filter_number, lower = 1, upper = 10)
-  assert_logical(penalized)
+  assert_flag(penalized)
   
   domain <- domain %||% range(data$arg)
   arg_u <- mgcv::uniquecombs(data$arg, ordered = TRUE)
@@ -109,6 +109,7 @@ new_tfb_wavelet <- function(data, domain = NULL, level = 2, verbose = TRUE,
 #' [glmnet::cv.glmnet]. The default is Lasso-Regression with `nlambda = 100`.
 #' @return a `tfb`-object
 #' @references 
+#' @author Sven Lorenz
 tfb_wavelet <- function(data, ...) UseMethod("tfb_wavelet")
 
 #' @export
