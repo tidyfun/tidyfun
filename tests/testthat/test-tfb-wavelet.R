@@ -1,41 +1,4 @@
-library(purrr)
-library(wavethresh)
-library(checkmate)
-library(pillar)
-library(tidyverse)
-library(mgcv)
-library(memoise)
-
-set.seed(1234)
-data <- data.frame(id = rep(1:5, 8), 
-                   arg = rep(1:8, each = 5), 
-                   value = rnorm(8*5))
-
-temp <- tfb_wavelet.data.frame(data)
-tfb_wavelet.data.frame(data, filter.number = 8, levels = 1, type = "hard",
-                       policy = "universal")
-
-
-tf_evaluate(temp, c(1.5, 2.3, 4))
-
-is_tfb(temp)
-temp
-
 devtools::load_all(".")
-
-
-set.seed(1234)
-data <- data.frame(id = rep(1:5, 8), 
-                   arg = rep(1:8, each = 5), 
-                   value = rnorm(8*5))
-
-temp <- tfb_wavelet.data.frame(data, level = 2, filter_number = 3)
-tfb_wavelet.data.frame(data, filter.number = 8, levels = 1, type = "hard",
-                       policy = "universal")
-plot(temp)
-lines(tfd(temp), col = 2)
-
-
 
 # check constructors from tfd, matrix, data.frame, list
 context("tfb_wavelet constructor: basics")
@@ -103,7 +66,7 @@ bench::mark(
 library(profvis)
 profvis(tfb_wavelet(woo_32786_df, level = 6)) 
 
-
+context("irregular data")
 irr_grid <- data.frame(id = rep(1:100, each = 230), 
                   arg = rep(seq(0, 1, l = 230) + rnorm(230, sd = .1), 100))
 
@@ -128,9 +91,6 @@ test_that("tfb_wavelet works for irregular grids", {
 })
 
 
-
-
-
 context("tfb_wavelet glmnet args")
 
 test_that("glmnet arguments work", {
@@ -151,23 +111,6 @@ test_that("glmnet arguments work", {
             "tfb_wavelet")
   expect_is(tfb_wavelet(woo_tfd, penalized = TRUE, alpha = 0),
             "tfb_wavelet")
-})
-
-test_that("mgcv spline basis options work", {
-  for (bs in c("tp", "ds", "gp", "ps")) {
-    woo_ <- try(tfb_wavelet(woo, k = 21, bs = bs, verbose = FALSE))
-    expect_is(woo_, "tfb_wavelet")
-    expect_equivalent(tf_evaluations(woo_), tf_evaluations(woo), 
-                      tolerance = 1e-2)
-    woo_spec <- environment(environment(attr(woo_, "basis"))$`_f`)$spec
-    expect_equal(woo_spec$bs.dim, 21)
-    expect_equal(class(woo_spec), 
-                 class(wooth.construct(
-                   s(x, bs = bs), data = list(x = 1:40), knots = NULL)))
-  }
-  woo_ps <- tfb_wavelet(woo, k = 21, bs = "ps", m = c(1,0), verbose = FALSE)
-  woo_spec <- environment(environment(attr(woo_ps, "basis"))$`_f`)$spec
-  woo_spec$m <- c(1, 0)
 })
 
 

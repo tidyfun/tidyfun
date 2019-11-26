@@ -95,9 +95,9 @@ new_tfb_wavelet <- function(data, domain = NULL, level = 2, verbose = TRUE,
 #' level the wavelet is evaluated. The higher the `level` the bigger your output
 #' and the higher the variability in your curves.
 #' 
-#' If `penalized = FALSE` (the default for wavelets), the coefficients will be estimated using a least
-#' squares, if `penalized = TRUE` it uses [glmnet::cv.glmnet]. The default
-#' for [glmnet::cv.glmnet] is Lasso-Regression with `nlambda = 100`.
+#' If `penalized = FALSE` (the default), the coefficients will be estimated 
+#' using a least squares, if `penalized = TRUE` it uses lasso regression with 
+#' cross-validation [glmnet::cv.glmnet]. The default is `nlambda = 100`.
 #' 
 #' @inheritParams tfb
 #' @param level The level to which the wavelet is evaluated. Defined for 2 to 10.
@@ -108,6 +108,8 @@ new_tfb_wavelet <- function(data, domain = NULL, level = 2, verbose = TRUE,
 #' @param ... Only used if `penalized = TRUE`. Arguments for 
 #' [glmnet::cv.glmnet]. The default is Lasso-Regression with `nlambda = 100`.
 #' @return a `tfb`-object
+#' @importFrom checkmate assert_numeric assert_class
+#' @importFrom wavethresh wd wr putC
 #' @references 
 #' @author Sven Lorenz
 tfb_wavelet <- function(data, ...) UseMethod("tfb_wavelet")
