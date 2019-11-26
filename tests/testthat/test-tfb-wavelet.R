@@ -65,16 +65,19 @@ test_that("tfb_wavelet defaults work for all kinds of regular input", {
 
 test_that("tfb_wavelet works for different wavelet parameters", {
   for (i in 1:10) {
-    for (j in 2:10) {
-      tfb_wavelet(woo_tfd, level = j, filter_number = i) 
-      print(paste0(i,".", j))
+    woo_tfb <- tfb_wavelet(woo_tfd, level = 2, filter_number = i) 
+    error <- mean((tf_evaluate(woo_tfb)[[1]] - filter(woo_df, id == 1)$data)^2)
+    for (j in 3:6) {
+      woo_tfb <- tfb_wavelet(woo_tfd, level = j, filter_number = i) 
+      error_1 <- mean((tf_evaluate(woo_tfb)[[1]] - filter(woo_df, id == 1)$data)^2)
+      expect_less_than(error_1, error)
+      error <- error_1
     }
   }
 })
 
 test_that("tfb_wavelet independent of datatype", {
   expect_equal(tfb_wavelet(woo_tfd), tfb_wavelet(woo_df))
-  expect_equal(tfb_wavelet(woo_tfd), tfb_wavelet(woo_tfb))
   expect_equal(tfb_wavelet(woo_tfd), tfb_wavelet(woo_mat))
 })
 
@@ -86,10 +89,14 @@ woo_32786_df <- woo_32768 %>% mutate(data = f(arg) +
                                        rnorm(nrow(woo_32768), sd = .5))
 
 bench::mark(
-  data_256 = tfb_wavelet(woo_df), # .5s and 13.75MP
+  data_256 = tfb_wavelet(woo_df), # 19ms and 13.75MB
   data_32768 = tfb_wavelet(woo_32786_df), # 1.9s and 1GB
-  data_32768 = tfb_wavelet(woo_32786_df, level = 6), # 3s and 2.77GB
+  data_32768 = tfb_wavelet(woo_32786_df, level = 6), # 12.5s and 4.41GB
   spline_32768 = tfb_spline(woo_32786_df), # 6s and 2.63GB
+  data_256 = tfb_wavelet(woo_df, penalized = TRUE), # 5.6s and 370.MB
+  data_32768 = tfb_wavelet(woo_32786_df, penalized = TRUE), # 28s and 36.8GB
+  data_32768 = tfb_wavelet(woo_32786_df, level = 6, penalized = TRUE), # 2.26m 
+  # and 78.5GB
   check = FALSE
 )
 
@@ -128,11 +135,22 @@ context("tfb_wavelet glmnet args")
 
 test_that("glmnet arguments work", {
   expect_is(tfb_wavelet(woo_tfd, penalized = TRUE), "tfb_wavelet")
+  expect_is(tfb_wavelet(woo_tfd, penalized = TRUE, level = 4), "tfb_wavelet")
+  expect_is(tfb_wavelet(woo_tfd, penalized = TRUE, level = 3, filter_number = 1),
+            "tfb_wavelet")
   expect_equal(length(tfb_wavelet(woo_tfd,  penalized = TRUE)), 
                length(woo_tfd))
-  expect_equivalent(tfb_wavelet(woo_tfd, penalized = TRUE),
-                    tfb_wavelet(woo_tfd, penalized = TRUE, nlambda = 20),
-                    tolerance = 1e-1)
+  expect_warning(tfb_wavelet(woo_tfd, penalized = TRUE, level = 5, 
+                        filter_number = 4, intercept = FALSE))
+  expect_is(tfb_wavelet(woo_tfd, penalized = TRUE, level = 6, filter_number = 1),
+            "tfb_wavelet")
+  
+  expect_is(tfb_wavelet(woo_tfd, penalized = TRUE, type.measure = "mae"),
+            "tfb_wavelet")
+  expect_is(tfb_wavelet(woo_tfd, penalized = TRUE, nfolds = 5),
+            "tfb_wavelet")
+  expect_is(tfb_wavelet(woo_tfd, penalized = TRUE, alpha = 0),
+            "tfb_wavelet")
 })
 
 test_that("mgcv spline basis options work", {
@@ -152,41 +170,4 @@ test_that("mgcv spline basis options work", {
   woo_spec$m <- c(1, 0)
 })
 
-
-test_that("global and pre-specified woothing options work", {
-  
-  rough_global <- try(tfb(rough, global = TRUE, k = 51, verbose = FALSE))
-  expect_is(rough_global, "tfb")
-  expect_true(
-    system.time(
-      tfb(c(rough, rough, rough), k = 51, verbose = FALSE)
-    )["elapsed"] > 
-      system.time(
-        tfb(c(rough, rough, rough), k = 51, global = TRUE, verbose = FALSE)
-      )["elapsed"] 
-  )
-  
-  expect_equivalent(
-    tfb(rough, sp = 1e-15, k = 51, verbose = FALSE) %>% tf_evaluations,
-    tfb(rough, penalized = FALSE, k = 51, verbose = FALSE) %>% tf_evaluations)
-  expect_equivalent(
-    tfb(rough, sp = .2, k = 75, verbose = FALSE) %>% tf_evaluations,
-    tfb(rough, sp = .2, k = 10, verbose = FALSE) %>% tf_evaluations, 
-    tol = 1e-2)
-  
-  expect_equivalent(
-    tfb(exp(rough), sp = 1e-15, k = 51, family = gaussian(link = "log"),
-        verbose = FALSE) %>%
-      tf_evaluations,
-    tfb(exp(rough), penalized = FALSE, k = 51, family = gaussian(link = "log"),
-        verbose = FALSE) %>%
-      tf_evaluations, 
-    tol = 1e-3)
-  expect_equivalent(
-    tfb(exp(rough), sp = .2, k = 75, family = gaussian(link = "log"), 
-        verbose = FALSE) %>% tf_evaluations,
-    tfb(exp(rough), sp = .2, k = 10, family = gaussian(link = "log"), 
-        verbose = FALSE) %>% tf_evaluations, 
-    tol = 1e-2)
-})
 

@@ -42,9 +42,9 @@ fit_wavelet <- function(data, Z, penalized, glmnet_args) {
   } else {
     coefs <- map2(eval_list, correction, 
                   function(x, y) {
-                    temp_model <- do.call(glmnet::cv.glmnet, list(Z, x - y, 
-                                                                  glmnet_args))
-                    coef(temp_model)@x})
+                    temp_model <- do.call(glmnet::cv.glmnet, c(list(Z, x - y), 
+                                                               glmnet_args))
+                    coefficients(temp_model)@x})
   }
   fit <- map2(correction, coefs, function(x, y)
     c(y, attr(x, "intercept"), attr(x, "slope")))
@@ -65,20 +65,20 @@ ZDaub <- function(x, range.x = range(x), numLevels = 6, filterNumber = 5,
 {
   
   # Check that x within support limits:
-  
-  if (any(x<range.x[1])|any(x>range.x[2]))
-    stop("All abscissae should be within range.x values.")
-  
-  # Ensure that the number of levels is `allowable'.
-  
-  if (!any(numLevels==(1:10)))
-    stop("Number of levels should be between 2 and 10.")
-  
-  # Ensure the resolution value is `allowable'.
-  
-  if (!any(resolution==(2^(10:20))))
-    stop("Resolution value should be a power of 2, with the
-              power between 10 and 20.")
+  # 
+  # if (any(x<range.x[1])|any(x>range.x[2]))
+  #   stop("All abscissae should be within range.x values.")
+  # 
+  # # Ensure that the number of levels is `allowable'.
+  # 
+  # if (!any(numLevels==(1:10)))
+  #   stop("Number of levels should be between 2 and 10.")
+  # 
+  # # Ensure the resolution value is `allowable'.
+  # 
+  # if (!any(resolution==(2^(10:20))))
+  #   stop("Resolution value should be a power of 2, with the
+  #             power between 10 and 20.")
   
   # Transform x to the unit interval and obtain variables
   # required for linear interpolation:

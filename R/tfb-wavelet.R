@@ -1,6 +1,11 @@
 new_tfb_wavelet <- function(data, domain = NULL, level = 2, verbose = TRUE,
                             resolution = NULL, filter_number = 5, 
                             penalized = FALSE, ...) {
+  
+  assert_numeric(level, lower = 2, upper = 10)
+  assert_numeric(filter_number, lower = 1, upper = 10)
+  assert_logical(penalized)
+  
   domain <- domain %||% range(data$arg)
   arg_u <- mgcv::uniquecombs(data$arg, ordered = TRUE)
   resolution <- resolution %||% get_resolution(arg_u)
@@ -26,7 +31,21 @@ new_tfb_wavelet <- function(data, domain = NULL, level = 2, verbose = TRUE,
   if (penalized) {
     glmnet_args <- list(...)[names(list(...)) %in% names(formals(
       glmnet::glmnet))] 
-    if (!"nlambda" %in% names(glmnet_args)) glmnet_args$nlambda <- 100
+    if (!any(grepl("nlambda|lambda", names(glmnet_args)))) 
+      glmnet_args$nlambda <- 100
+    if (!"nfolds" %in% names(glmnet_args))
+      glmnet_args$nfolds <- 10
+    if (!"alpha" %in% names(glmnet_args))
+      glmnet_args$alpha <- 1
+    if (!"family" %in% names(glmnet_args))
+      glmnet_args$family <- "gaussian"
+    # intercept needs to be TRUE
+    if ("intercept" %in% names(glmnet_args)) {
+      if (!glmnet_args$intercept) {
+        glmnet_args$intercept <- TRUE
+        warning("The intercept must always be included. Setting intercept=TRUE")
+      }
+   }     
   } else {
     glmnet_args <- NULL
   }
