@@ -41,7 +41,7 @@ fit_wavelet <- function(data, Z, penalized, glmnet_args) {
                     unname(lsfit(Z, x, intercept = TRUE)$coef)})
   } else {
     coefs <- map(eval_list, 
-                  function(x, y) {
+                  function(y) {
                     temp_model <- do.call(glmnet::cv.glmnet, c(list(Z, y), 
                                                                glmnet_args))
                     as.numeric(coefficients(temp_model))
@@ -130,7 +130,7 @@ ZDaub <- function(x, range.x = range(x), numLevels = 6, filterNumber = 5,
     # function of the Z matrix with `resolution' regularly 
     # spaced points:
     
-    putCobj <- putC(wdObj,level=0,v=0)
+    putCobj <- putC.wd(wdObj,level=0,v=0)
     putCobj$D <- putCobj$D*0
     putCobj$D[resolution-k] <- 1
     
@@ -138,7 +138,7 @@ ZDaub <- function(x, range.x = range(x), numLevels = 6, filterNumber = 5,
     # of the wr(putCobj) grid values:
     
     wtVec <- xUres - fXuRes
-    wvVec <- wr(putCobj)
+    wvVec <- wr.wd(putCobj)
     wvVec <- c(wvVec,rep(wvVec[length(wvVec)],2))
     Z[,k] <- sqrt(resolution)*((1 - wtVec)*wvVec[fXuRes+1]
                                + wtVec*wvVec[fXuRes+2])

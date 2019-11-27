@@ -1,3 +1,4 @@
+#' @importFrom wavethresh wd wr.wd putC.wd
 new_tfb_wavelet <- function(data, domain = NULL, level = 2, verbose = TRUE,
                             resolution = NULL, filter_number = 5, 
                             penalized = FALSE, ...) {
@@ -113,9 +114,7 @@ new_tfb_wavelet <- function(data, domain = NULL, level = 2, verbose = TRUE,
 #' @param ... Only used if `penalized = TRUE`. Arguments for 
 #' [glmnet::cv.glmnet]. The default is Lasso-Regression with `nlambda = 100`.
 #' @return a `tfb`-object
-#' @importFrom checkmate assert_numeric assert_class
-#' @importFrom wavethresh wd wr putC
-#' @references 
+#' @references https://projecteuclid.org/euclid.ejs/1323785605#supplemental
 #' @author Sven Lorenz
 tfb_wavelet <- function(data, ...) UseMethod("tfb_wavelet")
 
@@ -137,7 +136,6 @@ tfb_wavelet.data.frame <- function(data, id = 1, arg = 2, value = 3,
 }
 
 #' @export
-#' @inheritParams tfd.matrix
 #' @describeIn tfb_spline convert matrices
 tfb_wavelet.matrix <- function(data, arg = NULL, domain = NULL, verbose = TRUE, 
                                resolution = NULL, level = 2,

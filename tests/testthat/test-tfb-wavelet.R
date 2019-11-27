@@ -1,5 +1,3 @@
-devtools::load_all(".")
-
 # check constructors from tfd, matrix, data.frame, list
 context("tfb_wavelet constructor: basics")
 
