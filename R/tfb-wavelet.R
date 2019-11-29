@@ -23,9 +23,9 @@ new_tfb_wavelet <- function(data, domain = NULL, level = 2, verbose = TRUE,
   
   if (regular) {
     interp_index <- interpolate_arg(arg_list = list(arg_u$x))
-  } #else {
-  #   interp_index <- interpolate_arg(arg_list = arg_list)
-  # }
+  } else {
+     stop("wavelets for irregular data not implented yet.")
+  }
   
   # Use names from glmnet, because cv.glmnet uses less inputs glmnet, but can 
   # use glmnet arguments
@@ -56,8 +56,12 @@ new_tfb_wavelet <- function(data, domain = NULL, level = 2, verbose = TRUE,
              filterNumber = filter_number,
              resolution = 16384)
   
-  X <- predict_matrix(X, interp_index, arg_u$x)
-  
+  #add intercept & trend and scale before fitting
+  X <- cbind(arg_u$x, predict_matrix(X, interp_index, arg_u$x))
+  # rm constant columns (from weird irregular grids):
+  X <- X[, !apply(X, 2, function(x) min(x) == max(x))] 
+  X <- cbind(1, scale(X, center = FALSE))
+
   if (regular) {
     fit <- fit_wavelet(data, Z = X, penalized = penalized,
                        glmnet_args) 
@@ -66,7 +70,7 @@ new_tfb_wavelet <- function(data, domain = NULL, level = 2, verbose = TRUE,
   #                          glmnet_args)
   # }
   
-  X <- cbind(1, X, arg_u$x)
+  
   
   basis_constructor <- function(arg = arg) {
     predict_matrix(X = X, arg_old = unname(unlist(arg_u)), arg_new = arg)

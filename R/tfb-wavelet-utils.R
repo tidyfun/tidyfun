@@ -29,17 +29,18 @@ interpolate_arg <- function(arg_list) {
 
 fit_wavelet <- function(data, Z, penalized, glmnet_args) {
   eval_list <- split(data$value, data$id)
-  arg_list <- unique(data$arg)
-  
-  Z <- cbind(Z, arg_list)
-  Z <- scale(Z, center = FALSE)
-  
+ 
   if (!penalized) {
-    coefs <- map(eval_list, 
-                  function(x) {
-                    # Least squares fit, directly computed
-                    unname(lsfit(Z, x, intercept = TRUE)$coef)})
+    qrZ <- qr(Z)
+    coefs <- map(eval_list, function(x) {
+      coefs <- qr.coef(qrZ, x)
+      # deal with rank deficient qr:
+      coefs[is.na(coefs)] <- 0
+      coefs
+    })
+
   } else {
+    
     coefs <- map(eval_list, 
                   function(y) {
                     temp_model <- do.call(glmnet::cv.glmnet, c(list(Z, y), 
