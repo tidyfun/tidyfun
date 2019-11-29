@@ -29,7 +29,7 @@ interpolate_arg <- function(arg_list) {
 
 fit_wavelet <- function(data, Z, penalized, glmnet_args) {
   eval_list <- split(data$value, data$id)
- 
+  
   if (!penalized) {
     qrZ <- qr(Z)
     coefs <- map(eval_list, function(x) {
@@ -38,37 +38,40 @@ fit_wavelet <- function(data, Z, penalized, glmnet_args) {
       coefs[is.na(coefs)] <- 0
       coefs
     })
-
+    
   } else {
     
     coefs <- map(eval_list, 
-                  function(y) {
-                    temp_model <- do.call(glmnet::cv.glmnet, c(list(Z, y), 
-                                                               glmnet_args))
-                    as.numeric(coefficients(temp_model))
-                  }
+                 function(y) {
+                   temp_model <- do.call(glmnet::cv.glmnet, c(list(Z, y), 
+                                                              glmnet_args))
+                   as.numeric(coefficients(temp_model))
+                 }
     )
   }
   coefs
 }
 
 
-fit_wavelet_irr <- function(data, Z, penalized, glmnet_args) {
+fit_wavelet_irr <- function(data, Z, penalized, glmnet_args, arg_u) {
   eval_list <- split(data$value, data$id)
-  arg_list <- split(data$arg, data$id)
+  index_list <- split(attr(arg_u, "index"), data$id)
   
   if (!penalized) {
-    coefs <- map2(arg_list, eval_list,  
+    coefs <- map2(index_list, eval_list,
                   function(x, y) {
-                    Z <- cbind(Z, x)
-                    Z <- scale(Z, center = FALSE)
+                    qrZ <- qr(Z[x, ])
                     # Least squares fit, directly computed
-                    lsfit(Z, y, intercept = TRUE)$coef})
+                    coefs <- qr.coef(qrZ, y)
+                    # deal with rank deficient qr:
+                    coefs[is.na(coefs)] <- 0
+                    coefs
+                  }
+    )
   } else {
-    coefs <- map2(arg_list, eval_list, 
+    coefs <- map2(x = index_list, y = eval_list,
                   function(x, y) {
-                    Z <- cbind(Z, x)
-                    Z <- scale(Z, center = FALSE)
+                    Z <- Z[x, ]
                     temp_model <- do.call(glmnet::cv.glmnet, c(list(Z, y), 
                                                                glmnet_args))
                     as.numeric(coefficients(temp_model))

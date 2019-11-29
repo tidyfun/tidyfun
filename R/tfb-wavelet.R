@@ -21,11 +21,9 @@ new_tfb_wavelet <- function(data, domain = NULL, level = 2, verbose = TRUE,
   arg_list <- split(data$arg, data$id)
   regular <- all(duplicated(arg_list)[-1])
   
-  if (regular) {
-    interp_index <- interpolate_arg(arg_list = list(arg_u$x))
-  } else {
-     stop("wavelets for irregular data not implented yet.")
-  }
+
+  interp_index <- interpolate_arg(arg_list = list(arg_u$x))
+
   
   # Use names from glmnet, because cv.glmnet uses less inputs glmnet, but can 
   # use glmnet arguments
@@ -43,8 +41,8 @@ new_tfb_wavelet <- function(data, domain = NULL, level = 2, verbose = TRUE,
     # intercept needs to be TRUE
     if ("intercept" %in% names(glmnet_args)) {
       if (!glmnet_args$intercept) {
-        glmnet_args$intercept <- TRUE
-        warning("The intercept must always be included. Setting intercept=TRUE")
+        glmnet_args$intercept <- FALSE
+        warning("The intercept must always be excluded. Setting intercept=FALSE")
       }
     }     
   } else {
@@ -65,10 +63,10 @@ new_tfb_wavelet <- function(data, domain = NULL, level = 2, verbose = TRUE,
   if (regular) {
     fit <- fit_wavelet(data, Z = X, penalized = penalized,
                        glmnet_args) 
-  } # else {
-  #   fit <- fit_wavelet_irr(data, Z = X, penalized = penalized,
-  #                          glmnet_args)
-  # }
+  } else {
+    fit <- fit_wavelet_irr(data, Z = X, penalized = penalized,
+                           glmnet_args, arg_u = arg_u)
+  }
   
   
   
@@ -88,7 +86,7 @@ new_tfb_wavelet <- function(data, domain = NULL, level = 2, verbose = TRUE,
                    basis = memoise(basis_constructor),
                    basis_matrix = X,
                    resolution = resolution,
-                   arg = arg_u$x,
+                   arg = unique(round_resolution(arg_u$x, resolution)),
                    class = c("tfb_wavelet", "tfb", "tf")
   )
   ret

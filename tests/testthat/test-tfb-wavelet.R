@@ -64,7 +64,7 @@ test_that("tfb_wavelet independent of datatype", {
 # library(profvis)
 # profvis(tfb_wavelet(woo_32786_df, level = 6)) 
 
-context("irregular data")
+context("non dyadic, non equispaced data")
 irr_grid <- data.frame(id = rep(1:100, each = 230), 
                   arg = rep(seq(0, 1, l = 230) + rnorm(230, sd = .1), 100))
 
@@ -111,4 +111,24 @@ test_that("glmnet arguments work", {
             "tfb_wavelet")
 })
 
+context("tfb_wavlet works for irregular data")
+irr_grid <- data.frame(id = rep(1:100, each = 230), 
+                       arg = rep(seq(0, 1, l = 230), 100) + rnorm(230*100, 
+                                                                  sd = .1))
 
+irr_df <- irr_grid %>% 
+  mutate(data = f(arg) + rnorm(nrow(irr_grid), sd = .5))
+irr_tfd <- tfd(irr_df)
+irr_mat <- as.matrix(irr_tfd)
+irr_tfb <- tfb_wavelet(irr_tfd, level = 2)
+
+test_that("tfb_wavelet works for irregular grids", {
+  expect_is(tfb_wavelet(irr_tfd, verbose = FALSE), "tfb_wavelet")
+  expect_equal(length(tfb_wavelet(irr_tfd, verbose = FALSE)), length(irr_tfd))
+  for (irr_tfb in list(tfb_wavelet(irr_tfd, verbose = FALSE),
+                       tfb_wavelet(irr_mat, verbose = FALSE), 
+                       tfb_wavelet(irr_df, verbose = FALSE))) {
+    expect_is(irr_tfb, "tfb_wavelet")
+    expect_equal(length(irr_tfb), length(irr_tfd))
+  }
+})
