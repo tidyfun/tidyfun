@@ -15,12 +15,13 @@
 #' See **[tfb_spline()]** for more details on spline basis representation (the default).  
 #' See **[tfb_fpc()]** for using an functional principal component
 #' representation with an orthonormal basis estimated from the data instead.
+#' See **[tfb_wavelet()]** for more details on wavelet representation.
 #'
 #' @param data a `matrix`, `data.frame` or `list` of suitable shape, or another
 #'   `tf`-object containing functional data.
-#' @param basis either "`spline`" (see [tfb_spline()], the default) or "`fpc`" (see [tfb_fpc()]). 
-#'   (`wavelet` not implemented yet)
-#' @param ... further arguments for [tfb_spline()] or [tfb_fpc()]
+#' @param basis either "`spline`" (see [tfb_spline()], the default), "`fpc`" (see [tfb_fpc()]). 
+#'   or "`wavelet`" (see [tfb_wavelet()]).
+#' @param ... further arguments for [tfb_spline()], [tfb_fpc()] or [tfb_wavelet()].
 #' @return a `tfb`-object (or a `data.frame`/`matrix` for the conversion
 #'   functions, obviously.)
 #' @rdname tfb
@@ -35,8 +36,4 @@ tfb <- function(data, basis = c("spline", "fpc", "wavelet"), ...) {
   # ensure "minimal" names (principles.tidyverse.org/names-attribute.html)
   names(ret) <- names(ret) %||% rep("", length(ret))
   ret
-}  
-
-#' @rdname tfb
-tfb_wavelet <- function(data, ...) .NotYetImplemented()
-
+} 

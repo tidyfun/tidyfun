@@ -1,9 +1,13 @@
 remove_slope <- function(x, y) {
+  # linearly interpolates between first and last point and subtracts that from 
+  # the input function
   last_element <- length(x)
   slope <- (y[last_element] - y[1]) / (x[last_element] - x[1])
   intercept <- y[1] - slope * x[1]
   f <- intercept + slope * x
   y_desloped <- y - f
+  # gives back the fitted linear function at the input grid, the intercept of 
+  # the fitted function and the slope
   y_desloped <- structure(f,
                           intercept = intercept,
                           slope = slope)
@@ -12,6 +16,8 @@ remove_slope <- function(x, y) {
 
 
 interpolate_arg <- function(arg_list) {
+  # Interpolates a given input grid to the next dyadic power, so that the points
+  # have equal distance. The lowest and highest point stay the same.
   n <- vapply(arg_list, length, numeric(1))
   closest_power <- round(log2(n))
   n_diff <- 2^closest_power - n
@@ -43,7 +49,7 @@ fit_wavelet <- function(data, Z, penalized, glmnet_args) {
     
     coefs <- map(eval_list, 
                  function(y) {
-                   temp_model <- do.call(glmnet::cv.glmnet, c(list(Z, y), 
+                   temp_model <- do.call(cv.glmnet, c(list(Z, y), 
                                                               glmnet_args))
                    as.numeric(coefficients(temp_model))
                  }
@@ -54,6 +60,8 @@ fit_wavelet <- function(data, Z, penalized, glmnet_args) {
 
 
 fit_wavelet_irr <- function(data, Z, penalized, glmnet_args, arg_u) {
+  # Difference to fit_wavelet() is that only the rows in Z are used that were in
+  # the input grid of the original curve
   eval_list <- split(data$value, data$id)
   index_list <- split(attr(arg_u, "index"), data$id)
   
@@ -72,7 +80,7 @@ fit_wavelet_irr <- function(data, Z, penalized, glmnet_args, arg_u) {
     coefs <- map2(x = index_list, y = eval_list,
                   function(x, y) {
                     Z <- Z[x, ]
-                    temp_model <- do.call(glmnet::cv.glmnet, c(list(Z, y), 
+                    temp_model <- do.call(cv.glmnet, c(list(Z, y), 
                                                                glmnet_args))
                     as.numeric(coefficients(temp_model))
                   }
@@ -163,8 +171,8 @@ ZDaub <- function(x, range.x = range(x), numLevels = 6, filterNumber = 5,
 ############ End of ZDaub ###########
 
 predict_matrix <- function(X, arg_old, arg_new) {
-  t_X <- t(X)
-  Xnew <- bind_cols(apply(t_X, 1, function(x) approx(arg_old, x, xout = arg_new)))
+  # interpolates the input matrix at the new grid defined by arg_new
+  Xnew <- bind_cols(apply(X, 2, function(x) approx(arg_old, x, xout = arg_new)))
   Xnew <- unname(as.matrix(Xnew[, grepl("y", colnames(Xnew))]))
   Xnew
 }
