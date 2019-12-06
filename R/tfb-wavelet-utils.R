@@ -1,20 +1,3 @@
-remove_slope <- function(x, y) {
-  # linearly interpolates between first and last point and subtracts that from 
-  # the input function
-  last_element <- length(x)
-  slope <- (y[last_element] - y[1]) / (x[last_element] - x[1])
-  intercept <- y[1] - slope * x[1]
-  f <- intercept + slope * x
-  y_desloped <- y - f
-  # gives back the fitted linear function at the input grid, the intercept of 
-  # the fitted function and the slope
-  y_desloped <- structure(f,
-                          intercept = intercept,
-                          slope = slope)
-  y_desloped
-}
-
-
 interpolate_arg <- function(arg_list) {
   # Interpolates a given input grid to the next dyadic power, so that the points
   # have equal distance. The lowest and highest point stay the same.
