@@ -55,8 +55,8 @@ new_tfb_wavelet <- function(data, domain = NULL, level = 2,
   
   # Compute wavelet matrix
   X <- ZDaub(interp_index,
-             numLevels = level,
-             filterNumber = filter_number,
+             level = level,
+             filter_number = filter_number,
              resolution = 16384)
   
   # add intercept & trend and scale before fitting and also bring matrix back to
