@@ -45,10 +45,10 @@ new_tfb_wavelet <- function(data, domain = NULL, level = 2,
     # intercept needs to be TRUE
     if ("intercept" %in% names(glmnet_args)) {
       if (!glmnet_args$intercept) {
-        warning("The intercept must always be excluded. Setting intercept=FALSE")
+        warning("The intercept must always be included. Setting intercept=TRUE")
       }
     }
-    #glmnet_args$intercept <- FALSE
+    glmnet_args$intercept <- TRUE
   } else {
     glmnet_args <- NULL
   }
