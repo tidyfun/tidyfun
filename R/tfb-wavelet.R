@@ -45,10 +45,10 @@ new_tfb_wavelet <- function(data, domain = NULL, level = 2,
     # intercept needs to be TRUE
     if ("intercept" %in% names(glmnet_args)) {
       if (!glmnet_args$intercept) {
-        glmnet_args$intercept <- FALSE
         warning("The intercept must always be excluded. Setting intercept=FALSE")
       }
-    }     
+    }
+    #glmnet_args$intercept <- FALSE
   } else {
     glmnet_args <- NULL
   }
@@ -64,7 +64,7 @@ new_tfb_wavelet <- function(data, domain = NULL, level = 2,
   X <- cbind(arg_u$x, predict_matrix(X, interp_index, arg_u$x))
   # rm constant columns (from weird irregular grids):
   X <- X[, !apply(X, 2, function(x) min(x) == max(x))] 
-  X <- cbind(1, scale(X, center = FALSE))
+  X <- scale(X, center = FALSE)
 
   if (regular) {
     fit <- fit_wavelet(data, Z = X, penalized = penalized,
@@ -74,7 +74,7 @@ new_tfb_wavelet <- function(data, domain = NULL, level = 2,
                            glmnet_args, arg_u = arg_u)
   }
   
-  
+  X <- cbind(1, X)
   # Wrapper for estimating wavelet matrix on new grid
   basis_constructor <- function(arg = arg) {
     predict_matrix(X = X, arg_old = unname(unlist(arg_u)), arg_new = arg)

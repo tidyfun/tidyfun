@@ -22,6 +22,7 @@ fit_wavelet <- function(data, Z, penalized, glmnet_args) {
   eval_list <- split(data$value, data$id)
 
   if (!penalized) {
+    Z <- cbind(1, Z)
     qrZ <- qr(Z)
     coefs <- map(eval_list, function(x) {
       coefs <- qr.coef(qrZ, x)
@@ -52,6 +53,7 @@ fit_wavelet_irr <- function(data, Z, penalized, glmnet_args, arg_u) {
   index_list <- split(attr(arg_u, "index"), data$id)
 
   if (!penalized) {
+    Z <- cbind(1, Z)
     coefs <- map2(
       index_list, eval_list,
       function(x, y) {
