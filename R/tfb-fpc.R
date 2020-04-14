@@ -35,6 +35,7 @@ new_tfb_fpc <- function(data, domain = NULL, resolution = NULL,
     arg = arg,
     resolution = resolution,
     score_variance = fpc_spec$evalues,
+    error_variance = fpc_spec$error_var,
     class = c("tfb_fpc", "tfb", "tf")
   )
 }
