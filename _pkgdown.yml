@@ -78,6 +78,7 @@ articles:
     - x02_Conversion
     - x03_Data_Wrangling
     - x04_Visualization
+    - x05_Advice
 
 navbar:
   type: default
@@ -94,6 +95,8 @@ navbar:
       href: articles/x03_Data_Wrangling.html
     - text: Visulalization
       href: articles/x04_Visualization.html
+    - text: Advice for Developers
+      href: articles/x05_Advice.html
 
 development:
   mode: auto
