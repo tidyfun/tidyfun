@@ -4,8 +4,16 @@
 \alias{tf_unnest}
 \title{Turn data frames with \code{tf}-objects / list columns into "long" tables.}
 \usage{
-tf_unnest(data, ..., .arg, .drop = NA, .id = "id", .sep = "_",
-  .preserve = NULL, try_dropping = TRUE)
+tf_unnest(
+  data,
+  ...,
+  .arg,
+  .drop = NA,
+  .id = "id",
+  .sep = "_",
+  .preserve = NULL,
+  try_dropping = TRUE
+)
 }
 \arguments{
 \item{data}{a data frame}
@@ -39,7 +47,7 @@ will be duplicated in the same way as atomic vectors. This has
 columns? Defaults to TRUE.}
 }
 \value{
-a "long" data frame with  \code{tf}-columns expanded into \code{id, arg, value}-
+a "long" data frame with  \code{tf}-columns expanded into \verb{id, arg, value}-
 columns.
 }
 \description{

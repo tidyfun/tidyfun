@@ -10,8 +10,7 @@
 \usage{
 as.tfb(data, basis = c("spline", "fpc"), ...)
 
-\method{as.data.frame}{tfb}(x, row.names = NULL, optional = FALSE,
-  arg = NULL, ...)
+\method{as.data.frame}{tfb}(x, row.names = NULL, optional = FALSE, arg = NULL, ...)
 
 \method{as.matrix}{tfb}(x, arg = NULL, ...)
 

@@ -7,8 +7,7 @@
 \alias{\%inr\%}
 \title{Find out where functional data fulfills certain conditions.}
 \usage{
-tf_where(f, cond, return = c("all", "first", "last", "range", "any"),
-  arg)
+tf_where(f, cond, return = c("all", "first", "last", "range", "any"), arg)
 
 tf_anywhere(f, cond, arg)
 

@@ -9,14 +9,11 @@
 \usage{
 tf_zoom(f, begin, end, ...)
 
-\method{tf_zoom}{tfd}(f, begin = tf_domain(f)[1],
-  end = tf_domain(f)[2], ...)
+\method{tf_zoom}{tfd}(f, begin = tf_domain(f)[1], end = tf_domain(f)[2], ...)
 
-\method{tf_zoom}{tfb}(f, begin = tf_domain(f)[1],
-  end = tf_domain(f)[2], ...)
+\method{tf_zoom}{tfb}(f, begin = tf_domain(f)[1], end = tf_domain(f)[2], ...)
 
-\method{tf_zoom}{tfb_fpc}(f, begin = tf_domain(f)[1],
-  end = tf_domain(f)[2], ...)
+\method{tf_zoom}{tfb_fpc}(f, begin = tf_domain(f)[1], end = tf_domain(f)[2], ...)
 }
 \arguments{
 \item{f}{a \code{tf}-object}

@@ -4,8 +4,15 @@
 \alias{tf_nest}
 \title{Turn "long" tables into tidy data frames with \code{tf}-objects}
 \usage{
-tf_nest(data, ..., .id = "id", .arg = "arg", domain = NULL,
-  evaluator = "tf_approx_linear", resolution = NULL)
+tf_nest(
+  data,
+  ...,
+  .id = "id",
+  .arg = "arg",
+  domain = NULL,
+  evaluator = "tf_approx_linear",
+  resolution = NULL
+)
 }
 \arguments{
 \item{data}{a data frame}
@@ -21,7 +28,7 @@ For more options, see the \code{\link[dplyr:select]{dplyr::select()}} documentat
 
 \item{domain}{range of the \code{arg}.}
 
-\item{evaluator}{a function accepting arguments \code{x, arg, evaluations}. See details for \code{\link[=tfd]{tfd()}}.}
+\item{evaluator}{a function accepting arguments \verb{x, arg, evaluations}. See details for \code{\link[=tfd]{tfd()}}.}
 
 \item{resolution}{resolution of the evaluation grid. See details for \code{\link[=tfd]{tfd()}}.}
 }
@@ -43,5 +50,5 @@ Because quasi-quotation is \emph{such} a bitch, you can only specify the evaluat
 functions as strings and not as bare names here.
 }
 \seealso{
-tf_gather(), tf_unnest(), tfd() for \code{domain, evaluator, resolution}
+tf_gather(), tf_unnest(), tfd() for \verb{domain, evaluator, resolution}
 }

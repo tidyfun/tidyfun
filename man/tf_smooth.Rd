@@ -10,8 +10,7 @@ tf_smooth(x, ...)
 
 \method{tf_smooth}{tfb}(x, ...)
 
-\method{tf_smooth}{tfd}(x, method = c("lowess", "rollmean", "rollmedian",
-  "savgol"), ...)
+\method{tf_smooth}{tfd}(x, method = c("lowess", "rollmean", "rollmedian", "savgol"), ...)
 }
 \arguments{
 \item{x}{a \code{tf} object containing functional data}

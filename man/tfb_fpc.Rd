@@ -10,14 +10,34 @@
 \usage{
 tfb_fpc(data, ...)
 
-\method{tfb_fpc}{data.frame}(data, id = 1, arg = 2, value = 3,
-  domain = NULL, method = fpc_wsvd, resolution = NULL, ...)
+\method{tfb_fpc}{data.frame}(
+  data,
+  id = 1,
+  arg = 2,
+  value = 3,
+  domain = NULL,
+  method = fpc_wsvd,
+  resolution = NULL,
+  ...
+)
 
-\method{tfb_fpc}{matrix}(data, arg = NULL, domain = NULL,
-  method = fpc_wsvd, resolution = NULL, ...)
+\method{tfb_fpc}{matrix}(
+  data,
+  arg = NULL,
+  domain = NULL,
+  method = fpc_wsvd,
+  resolution = NULL,
+  ...
+)
 
-\method{tfb_fpc}{numeric}(data, arg = NULL, domain = NULL,
-  method = fpc_wsvd, resolution = NULL, ...)
+\method{tfb_fpc}{numeric}(
+  data,
+  arg = NULL,
+  domain = NULL,
+  method = fpc_wsvd,
+  resolution = NULL,
+  ...
+)
 
 \method{tfb_fpc}{tf}(data, arg = NULL, method = fpc_wsvd, ...)
 }

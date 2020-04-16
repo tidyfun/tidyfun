@@ -47,7 +47,7 @@ with \code{na.rm = FALSE}),
 \item \code{tf_approx_locf} for "last observation carried forward"  (i.e.,
 \code{\link[zoo:na.locf]{zoo::na.locf()}} with \code{na.rm = FALSE} and
 \item \code{tf_approx_nocb} for "next observation carried backward" (i.e.,
-\code{\link[zoo:na.locf]{zoo::na.locf()}} with \code{na.rm = FALSE, fromLast = TRUE}).
+\code{\link[zoo:na.locf]{zoo::na.locf()}} with \verb{na.rm = FALSE, fromLast = TRUE}).
 }
 
 For implementing your own, see source code of \code{tidyfun:::zoo_wrapper}.

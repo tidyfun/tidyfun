@@ -8,11 +8,9 @@
 \usage{
 tf_depth(x, depth = "MBD", na.rm = TRUE, ...)
 
-\method{tf_depth}{matrix}(x, depth = "MBD", na.rm = TRUE,
-  arg = unlist(find_arg(x, NULL)), ...)
+\method{tf_depth}{matrix}(x, depth = "MBD", na.rm = TRUE, arg = unlist(find_arg(x, NULL)), ...)
 
-\method{tf_depth}{tf}(x, depth = "MBD", na.rm = TRUE, arg = NULL,
-  ...)
+\method{tf_depth}{tf}(x, depth = "MBD", na.rm = TRUE, arg = NULL, ...)
 }
 \arguments{
 \item{x}{\code{tf} (or a matrix of evaluations)}

@@ -52,7 +52,7 @@ Note that these break certain (terrible) R conventions for vector-like objects:\
 \item no argument recycling,
 \item no indexing with \code{NA},
 \item no indexing with names not present in \code{x},
-\item no indexing with integers \code{> length(x)}
+\item no indexing with integers \verb{> length(x)}
 }
 
 All of these will trigger errors. Subassigning new elements to positions

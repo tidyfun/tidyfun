@@ -17,28 +17,58 @@ as.tfd(data, ...)
 
 as.tfd_irreg(data, ...)
 
-\method{as.data.frame}{tfd}(x, row.names = NULL, optional = FALSE,
-  arg = NULL, interpolate = FALSE, ...)
+\method{as.data.frame}{tfd}(
+  x,
+  row.names = NULL,
+  optional = FALSE,
+  arg = NULL,
+  interpolate = FALSE,
+  ...
+)
 
 \method{as.matrix}{tfd}(x, arg = NULL, interpolate = FALSE, ...)
 
 tfd(data, ...)
 
-\method{tfd}{matrix}(data, arg = NULL, domain = NULL,
-  evaluator = tf_approx_linear, resolution = NULL, ...)
+\method{tfd}{matrix}(
+  data,
+  arg = NULL,
+  domain = NULL,
+  evaluator = tf_approx_linear,
+  resolution = NULL,
+  ...
+)
 
-\method{tfd}{numeric}(data, arg = NULL, domain = NULL,
-  evaluator = tf_approx_linear, resolution = NULL, ...)
+\method{tfd}{numeric}(
+  data,
+  arg = NULL,
+  domain = NULL,
+  evaluator = tf_approx_linear,
+  resolution = NULL,
+  ...
+)
 
-\method{tfd}{data.frame}(data, id = 1, arg = 2, value = 3,
-  domain = NULL, evaluator = tf_approx_linear, resolution = NULL,
-  ...)
+\method{tfd}{data.frame}(
+  data,
+  id = 1,
+  arg = 2,
+  value = 3,
+  domain = NULL,
+  evaluator = tf_approx_linear,
+  resolution = NULL,
+  ...
+)
 
-\method{tfd}{list}(data, arg = NULL, domain = NULL,
-  evaluator = tf_approx_linear, resolution = NULL, ...)
+\method{tfd}{list}(
+  data,
+  arg = NULL,
+  domain = NULL,
+  evaluator = tf_approx_linear,
+  resolution = NULL,
+  ...
+)
 
-\method{tfd}{tf}(data, arg = NULL, domain = NULL, evaluator = NULL,
-  resolution = NULL, ...)
+\method{tfd}{tf}(data, arg = NULL, domain = NULL, evaluator = NULL, resolution = NULL, ...)
 }
 \arguments{
 \item{data}{a \code{matrix}, \code{data.frame} or \code{list} of suitable shape, or another \code{tf}-object.}
@@ -61,7 +91,7 @@ for values in \code{arg} for which no original data is available? Only relevant 
 
 \item{domain}{range of the \code{arg}.}
 
-\item{evaluator}{a function accepting arguments \code{x, arg, evaluations}. See details for \code{\link[=tfd]{tfd()}}.}
+\item{evaluator}{a function accepting arguments \verb{x, arg, evaluations}. See details for \code{\link[=tfd]{tfd()}}.}
 
 \item{resolution}{resolution of the evaluation grid. See details for \code{\link[=tfd]{tfd()}}.}
 
@@ -84,7 +114,7 @@ containing evaluations or a list of 2-column matrices/data.frames with
 }
 \details{
 \strong{\code{evaluator}}: must be the (quoted or bare) name of a
-\code{function(x, arg, evaluations)} that returns
+\verb{function(x, arg, evaluations)} that returns
 the functions' (tf_approximated/interpolated) values at locations \code{x} based on
 the \code{evaluations} available at locations \code{arg}.\cr
 Available \code{evaluator}-functions:
@@ -98,7 +128,7 @@ with \code{na.rm = FALSE}),
 \item \code{tf_approx_locf} for "last observation carried forward"  (i.e.,
 \code{\link[zoo:na.locf]{zoo::na.locf()}} with \code{na.rm = FALSE} and
 \item \code{tf_approx_nocb} for "next observation carried backward" (i.e.,
-\code{\link[zoo:na.locf]{zoo::na.locf()}} with \code{na.rm = FALSE, fromLast = TRUE}).
+\code{\link[zoo:na.locf]{zoo::na.locf()}} with \verb{na.rm = FALSE, fromLast = TRUE}).
 See \code{tidyfun:::zoo_wrapper} and \code{tidyfun:::tf_approx_linear}, which is simply
 \code{zoo_wrapper(zoo::na.tf_approx, na.rm = FALSE)}, for examples of implementations of
 this.
@@ -112,7 +142,7 @@ of 10 one smaller than smallest difference between adjacent
 arg-values rounded down to an integer-valued power
 of 10: e.g., if the smallest difference between consecutive
 arg-values is between $0.1 and 0.9999$, the resolution will be $0.01$, etc.
-In code: \code{10^(floor(log10(min(diff(<arg>))) - 1)}
+In code: \verb{10^(floor(log10(min(diff(<arg>))) - 1)}
 }
 \examples{
 #turn irregular to regular tfd

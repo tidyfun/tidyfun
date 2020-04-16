@@ -12,24 +12,67 @@
 \usage{
 tfb_spline(data, ...)
 
-\method{tfb_spline}{data.frame}(data, id = 1, arg = 2, value = 3,
-  domain = NULL, penalized = TRUE, global = FALSE,
-  resolution = NULL, ...)
+\method{tfb_spline}{data.frame}(
+  data,
+  id = 1,
+  arg = 2,
+  value = 3,
+  domain = NULL,
+  penalized = TRUE,
+  global = FALSE,
+  resolution = NULL,
+  ...
+)
 
-\method{tfb_spline}{matrix}(data, arg = NULL, domain = NULL,
-  penalized = TRUE, global = FALSE, resolution = NULL, ...)
+\method{tfb_spline}{matrix}(
+  data,
+  arg = NULL,
+  domain = NULL,
+  penalized = TRUE,
+  global = FALSE,
+  resolution = NULL,
+  ...
+)
 
-\method{tfb_spline}{numeric}(data, arg = NULL, domain = NULL,
-  penalized = TRUE, global = FALSE, resolution = NULL, ...)
+\method{tfb_spline}{numeric}(
+  data,
+  arg = NULL,
+  domain = NULL,
+  penalized = TRUE,
+  global = FALSE,
+  resolution = NULL,
+  ...
+)
 
-\method{tfb_spline}{list}(data, arg = NULL, domain = NULL,
-  penalized = TRUE, global = FALSE, resolution = NULL, ...)
+\method{tfb_spline}{list}(
+  data,
+  arg = NULL,
+  domain = NULL,
+  penalized = TRUE,
+  global = FALSE,
+  resolution = NULL,
+  ...
+)
 
-\method{tfb_spline}{tfd}(data, arg = NULL, domain = NULL,
-  penalized = TRUE, global = FALSE, resolution = NULL, ...)
+\method{tfb_spline}{tfd}(
+  data,
+  arg = NULL,
+  domain = NULL,
+  penalized = TRUE,
+  global = FALSE,
+  resolution = NULL,
+  ...
+)
 
-\method{tfb_spline}{tfb}(data, arg = NULL, domain = NULL,
-  penalized = TRUE, global = FALSE, resolution = NULL, ...)
+\method{tfb_spline}{tfb}(
+  data,
+  arg = NULL,
+  domain = NULL,
+  penalized = TRUE,
+  global = FALSE,
+  resolution = NULL,
+  ...
+)
 }
 \arguments{
 \item{data}{a \code{matrix}, \code{data.frame} or \code{list} of suitable shape, or another
@@ -97,7 +140,7 @@ accuracy (see \code{\link[mgcv:family.mgcv]{mgcv::family.mgcv()}} for what's ava
 \code{\link[mgcv:s]{mgcv::s()}}), which (drastically) reduces the computation time.
 }
 
-If \strong{\code{global == TRUE}}, the routine first takes a subset of curves (10\% of
+If \strong{\code{global == TRUE}}, the routine first takes a subset of curves (10\\% of
 curves sampled deterministically, at most 100, at least 5) on which smoothing
 parameters per curve are estimated and then uses the mean of the log
 smoothing parameter of those for all curves. This can be much faster than

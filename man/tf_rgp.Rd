@@ -4,8 +4,13 @@
 \alias{tf_rgp}
 \title{Gaussian Process random generator}
 \usage{
-tf_rgp(n, arg = 51L, scale = diff(range(arg))/10,
-  cor = c("squareexp", "wiener"), nugget = scale/200)
+tf_rgp(
+  n,
+  arg = 51L,
+  scale = diff(range(arg))/10,
+  cor = c("squareexp", "wiener"),
+  nugget = scale/200
+)
 }
 \arguments{
 \item{n}{how many realizations to draw}

@@ -4,8 +4,15 @@
 \alias{gglasagna}
 \title{Lasagna plots for \code{tf}s using \code{ggplot2}}
 \usage{
-gglasagna(data, y, order = NULL, label = NULL, arg = NULL,
-  order_by = NULL, order_ticks = TRUE)
+gglasagna(
+  data,
+  y,
+  order = NULL,
+  label = NULL,
+  arg = NULL,
+  order_by = NULL,
+  order_ticks = TRUE
+)
 }
 \arguments{
 \item{data}{the data. Duhh.}
