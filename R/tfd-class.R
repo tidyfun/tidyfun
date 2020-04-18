@@ -41,7 +41,7 @@ new_tfd <- function(arg, datalist, regular, domain, evaluator, resolution) {
   }
   # ensure "minimal" names (principles.tidyverse.org/names-attribute.html)
   names(datalist) <- names(datalist) %||% rep("", length(datalist))
-  ret <- structure(datalist,
+  ret <- vctrs::new_vctr(datalist,
     arg = arg,
     domain = domain,
     evaluator = memoise(evaluator_f),

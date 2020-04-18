@@ -84,7 +84,7 @@ new_tfb_spline <- function(data, domain = NULL, penalized = TRUE, global = FALSE
   }
   
   basis_constructor <- smooth_spec_wrapper(spec_object)
-  ret <- structure(fit[["coef"]],
+  ret <- vctrs::new_vctr(fit[["coef"]],
                    domain = domain,
                    basis = memoise(basis_constructor),
                    basis_label = deparse(s_call, width.cutoff = 60)[1],

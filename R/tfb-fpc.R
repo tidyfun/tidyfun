@@ -27,7 +27,7 @@ new_tfb_fpc <- function(data, domain = NULL, resolution = NULL,
   fpc <- rbind(fpc_spec$mu, t(fpc_spec$efunctions))
   fpc_basis <- tfd(fpc, arg = arg, domain = domain, resolution = resolution)
   fpc_constructor <- fpc_wrapper(fpc_basis)
-  structure(coef_list,
+  vctrs::new_vctr(coef_list,
     domain = domain,
     basis = fpc_constructor,
     basis_label = paste0(fpc_spec$npc, " FPCs"),
