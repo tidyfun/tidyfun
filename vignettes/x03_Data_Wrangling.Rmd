@@ -112,12 +112,14 @@ chf_df %>%
   geom_spaghetti(alpha = .05)
 ```
 
-Functions for data manipulation from `tidyr` are also supported. We illustrate by using `spread` to create new `tfd` observations of activity for each day of the week:
+Functions for data manipulation from `tidyr` are also supported. We illustrate by using `pivot_wider` to create new `tfd` observations of activity for each day of the week:
 
 ```{r}
 chf_df %>% 
   select(id, day, activity) %>% 
-  spread(key = day, value = activity)
+  pivot_wider(
+    names_from = day, 
+    values_from = activity)
 ```
 
 (Note that this has made the data less "tidy" and is therefore not generally recommended, but may be useful in some cases).
@@ -125,17 +127,20 @@ chf_df %>%
 It's also possible to join datasets based on non-functional keys. To illustrate, we'll first create a pair of datasets:
 
 ```{r}
-monday_df = filter(chf_df, day == "Monday") %>% 
+monday_df = filter(chf_df, day == "Mon") %>% 
   select(id, monday_act = activity)
-friday_df = filter(chf_df, day == "Friday") %>% 
+friday_df = filter(chf_df, day == "Fri") %>% 
   select(id, friday_act = activity)
 ```
 
-These can be joined using the `id` variable as a key (and then tidied using `gather`):
+These can be joined using the `id` variable as a key (and then tidied using `pivot_longer`):
 
 ```{r}
 left_join(monday_df, friday_df, by = "id") %>% 
-  gather(key = day, value = activity, monday_act:friday_act)
+  pivot_longer(
+    monday_act:friday_act,
+    names_to = "day", 
+    values_to = "activity")
 ```
 
 Similar tidying can be done for the DTI data.
@@ -204,7 +209,7 @@ chf_df %>%
   geom_spaghetti()
 ```
 
-One can also compute derivatives as part of a processing pipeline. 
+It's possible to compute derivatives as part of a processing pipeline. 
 
 ```{r}
 dti_df %>%
