@@ -1,6 +1,20 @@
 #' @importFrom stats var na.omit median gaussian
 new_tfb_spline <- function(data, domain = NULL, penalized = TRUE, global = FALSE,
                            resolution = NULL, verbose = TRUE, ...) {
+  
+  if (all(dim(data) == 0)) {
+    
+    ret = vctrs::new_vctr(
+      data,
+      domain = c(NA, NA),
+      arg = NA, 
+      resolution = NA,
+      family = NA, 
+      class = c("tfb", "tf"))   ## does this need tfb_spline?
+    return(ret)
+    
+  }
+  
   domain <- domain %||% range(data$arg)
   arg_u <- mgcv::uniquecombs(data$arg, ordered = TRUE)
   resolution <- resolution %||% get_resolution(arg_u)
@@ -175,11 +189,14 @@ tfb_spline.matrix <- function(data, arg = NULL,
                               domain = NULL, penalized = TRUE, 
                               global = FALSE, resolution = NULL, ...) {
   arg <- unlist(find_arg(data, arg))
-  data_names <- rownames(data)
+  
+  # ensure "unique" names (principles.tidyverse.org/names-attribute.html)
+  names_data <- rownames(data) %||% str_c("tf_", 1:nrow(data))
+  
   data <- mat_2_df(data, arg)
   ret <- new_tfb_spline(data, domain = domain, penalized = penalized,
                         global = global, resolution = resolution, ...)
-  names(ret) <- data_names
+  names(ret) <- names_data
   assert_arg(tf_arg(ret), ret)
   ret
 }
@@ -202,7 +219,10 @@ tfb_spline.list <- function(data, arg = NULL,
                             global = FALSE, resolution = NULL, ...) {
   vectors <- vapply(data, is.numeric, logical(1))
   stopifnot(all(vectors) | !any(vectors))
-  names_data <- names(data)
+  
+  # ensure "unique" names (principles.tidyverse.org/names-attribute.html)
+  names_data <- names(data) %||% str_c("tf_", 1:length(data))
+  
   if (all(vectors)) {
     lengths <- vapply(data, length, numeric(1))
     if (all(lengths == lengths[1])) {
@@ -242,7 +262,10 @@ tfb_spline.tfd <- function(data, arg = NULL,
   arg <- arg %||% tf_arg(data)
   domain <- domain %||% tf_domain(data)
   resolution <- resolution %||% tf_resolution(data)
-  names_data <- names(data)
+  
+  # ensure "unique" names (principles.tidyverse.org/names-attribute.html)
+  names_data <- names(data) %||% str_c("tf_", 1:length(data))
+  
   data <- as.data.frame(data, arg)
   ret <- tfb_spline(data, domain = domain, penalized = penalized, 
              global = global,  resolution = resolution, ...)
@@ -270,4 +293,20 @@ tfb_spline.tfb <- function(data, arg = NULL,
   ))
   names(ret) <- names_data
   ret
+}
+
+#' @export
+#' @describeIn tfb_spline convert `tfb`: default method, returning prototype when data is NULL
+tfb_spline.default = function(data, arg = NULL,
+                              domain = NULL, penalized = TRUE, 
+                              global = FALSE, resolution = NULL, ...) {
+  
+  if (!missing(data)) {
+    message("input `data` not recognized class; returning prototype of length 0")
+  }
+  
+  data = data.frame()
+  new_tfb_spline(data, domain = domain, penalized = penalized,
+                 global = global, resolution = resolution, ...)
+  
 }

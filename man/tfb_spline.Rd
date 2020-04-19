@@ -8,6 +8,7 @@
 \alias{tfb_spline.list}
 \alias{tfb_spline.tfd}
 \alias{tfb_spline.tfb}
+\alias{tfb_spline.default}
 \title{Spline-based representation of functional data}
 \usage{
 tfb_spline(data, ...)
@@ -65,6 +66,16 @@ tfb_spline(data, ...)
 )
 
 \method{tfb_spline}{tfb}(
+  data,
+  arg = NULL,
+  domain = NULL,
+  penalized = TRUE,
+  global = FALSE,
+  resolution = NULL,
+  ...
+)
+
+\method{tfb_spline}{default}(
   data,
   arg = NULL,
   domain = NULL,
@@ -161,6 +172,8 @@ directly for all curves, this is \emph{not} what's implemented here.
 \item \code{tfd}: convert \code{tfd} (raw functional data)
 
 \item \code{tfb}: convert \code{tfb}: modify basis representation, smoothing.
+
+\item \code{default}: convert \code{tfb}: default method, returning prototype when data is NULL
 }}
 
 \seealso{

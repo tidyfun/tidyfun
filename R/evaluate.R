@@ -36,7 +36,7 @@ tf_evaluate.tfd <- function(object, ..., arg) {
   if (is.null(arg)) return(tf_evaluations(object))
   arg <- ensure_list(arg)
   assert_arg(arg, object, check_unique = FALSE)
-  pmap(
+  ret <- pmap(
     list(arg, ensure_list(tf_arg(object)), tf_evaluations(object)),
     ~evaluate_tfd_once(
       new_arg = ..1, arg = ..2, evaluations = ..3,
@@ -44,6 +44,9 @@ tf_evaluate.tfd <- function(object, ..., arg) {
       resolution = tf_resolution(object)
     )
   )
+  
+  names(ret) <- names(object)
+  ret
 }
 
 evaluate_tfd_once <- function(new_arg, arg, evaluations, evaluator, resolution) {

@@ -11,6 +11,7 @@
 \alias{tfd.data.frame}
 \alias{tfd.list}
 \alias{tfd.tf}
+\alias{tfd.default}
 \title{Constructors & converters for "raw" functional data}
 \usage{
 as.tfd(data, ...)
@@ -69,9 +70,19 @@ tfd(data, ...)
 )
 
 \method{tfd}{tf}(data, arg = NULL, domain = NULL, evaluator = NULL, resolution = NULL, ...)
+
+\method{tfd}{default}(
+  data,
+  arg = NULL,
+  domain = NULL,
+  evaluator = tf_approx_linear,
+  resolution = NULL,
+  ...
+)
 }
 \arguments{
-\item{data}{a \code{matrix}, \code{data.frame} or \code{list} of suitable shape, or another \code{tf}-object.}
+\item{data}{a \code{matrix}, \code{data.frame} or \code{list} of suitable shape, or another \code{tf}-object. when
+this argument is \code{NULL} (i.e. when calling \code{tfd()}) this returns a prototype of class \code{tfd}}
 
 \item{...}{not used in \code{tfd}, except for \code{tfd.tf} -- specify \code{arg} and \code{ìnterpolate = TRUE} to
 turn an irregular \code{tfd} into a regular one, see examples.}
@@ -111,6 +122,8 @@ Various constructor and conversion methods.
 \code{tfd.list} accepts a list of vectors of identical lengths
 containing evaluations or a list of 2-column matrices/data.frames with
 \code{arg} in the first and evaluations in the second column
+
+return class prototype when argument to tfd() is NULL or not a recongised class
 }
 \details{
 \strong{\code{evaluator}}: must be the (quoted or bare) name of a

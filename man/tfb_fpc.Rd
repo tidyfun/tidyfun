@@ -6,6 +6,7 @@
 \alias{tfb_fpc.matrix}
 \alias{tfb_fpc.numeric}
 \alias{tfb_fpc.tf}
+\alias{tfb_fpc.default}
 \title{Functional data in FPC-basis representation}
 \usage{
 tfb_fpc(data, ...)
@@ -40,9 +41,19 @@ tfb_fpc(data, ...)
 )
 
 \method{tfb_fpc}{tf}(data, arg = NULL, method = fpc_wsvd, ...)
+
+\method{tfb_fpc}{default}(
+  data,
+  arg = NULL,
+  domain = NULL,
+  method = fpc_wsvd,
+  resolution = NULL,
+  ...
+)
 }
 \arguments{
-\item{data}{a \code{matrix}, \code{data.frame} or \code{list} of suitable shape, or another \code{tf}-object.}
+\item{data}{a \code{matrix}, \code{data.frame} or \code{list} of suitable shape, or another \code{tf}-object. when
+this argument is \code{NULL} (i.e. when calling \code{tfd()}) this returns a prototype of class \code{tfd}}
 
 \item{...}{arguments to the \code{method} which computes the
 (regularized/smoothed) FPCA.
@@ -83,6 +94,11 @@ columns \code{id}, \code{arg}, \code{value} containing the functional data and r
 list structured like the return object
 of \code{\link[=fpc_wsvd]{fpc_wsvd()}} can be used for the `method`` argument, see example below.
 }
+\section{Methods (by class)}{
+\itemize{
+\item \code{default}: convert \code{tfb}: default method, returning prototype when data is NULL
+}}
+
 \examples{
 # Apply FPCA for sparse data using refund::fpca.sc:
 set.seed(99290)

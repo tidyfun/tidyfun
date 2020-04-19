@@ -12,42 +12,29 @@ c_names <- function(funs) {
   if (all(names == "")) NULL else names
 }
 
-#' Concatenate `tf`-objects
-#'
-#' Functions to concatenate multiple vectors of functional data.
-#'
-#' Only allows concatenation of functions with the same domain and similar
-#' represenation, i.e., `tfb` cannot be concatenated to `tfd` and vice
-#' versa. If `tfd_reg`-objects to be concatenated are not on the same grid of
-#' `arg`, or if both `tfd_reg` and `tfd_irreg` objects are concatenated,
-#' a `tfd_irreg`-object is returned. \cr `c.tfb` will use the basis of its
-#' first argument for representing all remaining arguments and refit them
-#' accordingly if necessary.\cr `c.tfd` will use the `evaluator` of its first
-#' argument for all remaining arguments as well.\cr This means that `c(f1, f2)`
-#' is not necessarily the same as `rev(c(f2, f1))`.
-#'
-#' @param ... for `c()`: a bunch of `tf`-objects on the same domain and of
-#'   the same class. Not used for `merge`.
-#' @return an `tf`-object containing all the arguments with the same
-#'   attributes as the the first argument (see Details).
-#' @rdname tfconcat
-c.tf <- function(...) {
-  funs <- list(...)
-  compatible <- all(map_lgl(funs, is_tfd)) | all(map_lgl(funs, is_tfb))
-  if (!compatible) {
-    stop("Can't concatenate tfb & tfd objects.")
-  }
-}
 
-#' @rdname tfconcat
+
+## Need to add defaults? proxy stuff? 
+
+#' vctrs methods for tf objects
+#' @name vctrs
 #' @export
-c.tfd <- function(...) {
-  funs <- list(...)
-  if (length(funs) == 1) {
-    return(funs[[1]])
-  } else {
-    NextMethod()
-  }
+#' @export vec_ptype2.tfd
+#' @inheritParams vctrs::vec_ptype2
+vec_ptype2.tfd <- function(x, y, ...) UseMethod("vec_ptype2.tfd")
+
+#' @name vctrs
+#' @export vec_ptype2.tfb
+#' @inheritParams vctrs::vec_ptype2
+vec_ptype2.tfb <- function(x, y, ...) UseMethod("vec_ptype2.tfb")
+
+
+#' @name vctrs
+#' @method vec_ptype2.tfd tfd
+#' @export
+vec_ptype2.tfd.tfd = function(x, y, ...) {
+  
+  funs <- list(x, y)
   compatible <- do.call(rbind, map(
     funs,
     ~compare_tf_attribs(funs[[1]], .)
@@ -102,22 +89,20 @@ c.tfd <- function(...) {
   ret
 }
 
-#' @rdname tfconcat
+
+#' @name vctrs
+#' @method vec_ptype2.tfb tfb
 #' @export
-c.tfb <- function(...) {
-  funs <- list(...)
-  if (length(funs) == 1) {
-    return(funs[[1]])
-  } else {
-    NextMethod()
-  }
+vec_ptype2.tfb.tfb = function(x, y, ...) {
+
+  funs <- list(x, y)
   compatible <- do.call(rbind, map(
     funs,
     ~compare_tf_attribs(funs[[1]], .)
   ))
   stopifnot(all(compatible[, "domain"]))
   re_evals <- which(!compatible[, "arg"] |
-    !compatible[, "basis_args"])
+                      !compatible[, "basis_args"])
   if (length(re_evals)) {
     fun_names <- map(as.list(match.call())[-1], ~deparse(.)[1])
     warning(
@@ -129,8 +114,8 @@ c.tfb <- function(...) {
       ~do.call(
         tfb,
         flatten(list(list(.),
-          arg = list(tf_arg(funs[[1]])),
-          attr(funs[[1]], "basis_args")
+                     arg = list(tf_arg(funs[[1]])),
+                     attr(funs[[1]], "basis_args")
         ))
       )
     )
@@ -155,10 +140,37 @@ c.tfb <- function(...) {
   ret
 }
 
-#' @param x `tf`-object
-#' @param y `tf`-object
-#' @rdname tfconcat
+
+
+
+# minimal vec_cast implementation: https://github.com/r-spatial/sf/issues/1068
+#' @name vctrs
 #' @export
-merge.tf <- function(x, y, ...) {
-  c(x, y)
-}
+#' @inheritParams vctrs::vec_cast
+#' @param x_arg,y_arg Argument names for \code{x} and \code{y}.
+vec_cast.tfd <- function(x, to, ...) UseMethod("vec_cast.tfd")
+
+#' @name vctrs
+#' @export
+#' @inheritParams vctrs::vec_cast
+#' @param x_arg,y_arg Argument names for \code{x} and \code{y}.
+vec_cast.tfb <- function(x, to, ...) UseMethod("vec_cast.tfb")
+
+
+#' @name vctrs
+#' @export
+vec_cast.tfd.tfd <- function(x, to, ...) x
+
+
+#' @name vctrs
+#' @export
+vec_cast.tfb.tfb <- function(x, to, ...) x
+
+#' @name vctrs
+#' @export
+vec_cast.tfb.tfd <- function(x, to, ...) stop("Can't coerce tfb & tfd objects.")
+
+#' @name vctrs
+#' @export
+vec_cast.tfd.tfb <- function(x, to, ...) stop("Can't concatenate tfb & tfd objects.")
+

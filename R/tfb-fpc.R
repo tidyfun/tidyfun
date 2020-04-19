@@ -2,6 +2,19 @@
 new_tfb_fpc <- function(data, domain = NULL, resolution = NULL, 
                         method = NULL, ...) {
   
+  if (all(dim(data) == 0)) {
+    
+    ret = vctrs::new_vctr(
+      data,
+      domain = c(NA, NA),
+      arg = NA, 
+      resolution = NA,
+      score_variance = NA, 
+      class = c("tfb", "tf")) ## does this need tfb_fpc?
+    return(ret)
+    
+  }
+  
   arg <- sort(unique(data$arg))
   resolution <- resolution %||% get_resolution(arg)
   data$arg <- round_resolution(data$arg, resolution)
@@ -140,4 +153,19 @@ tfb_fpc.tf <- function(data, arg = NULL, method = fpc_wsvd, ...) {
   )
   names(ret) <- names_data
   ret
+}
+
+#' @export
+#' @describeIn tfb_fpc convert `tfb`: default method, returning prototype when data is NULL
+tfb_fpc.default = function(data, arg = NULL, domain = NULL, method = fpc_wsvd, 
+                           resolution = NULL, ...) {
+  
+  if (!missing(data)) {
+    message("input `data` not recognized class; returning prototype of length 0")
+  }
+  
+  data = data.frame()
+  new_tfb_spline(data = data, arg = arg, method = method, domain = domain, 
+                 resolution = resolution, ...)
+  
 }
