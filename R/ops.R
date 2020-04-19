@@ -46,7 +46,7 @@ fun_op <- function(x, y, op, numeric = NA) {
     }
   }
   attributes(ret) <- attr_ret
-  names(ret)[is.na(names(ret))] <- ""
+  names(ret)[is.na(names(ret))] <- "."
   ret
 }
 

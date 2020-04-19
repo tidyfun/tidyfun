@@ -191,7 +191,7 @@ tfb_spline.matrix <- function(data, arg = NULL,
   arg <- unlist(find_arg(data, arg))
   
   # ensure "unique" names (principles.tidyverse.org/names-attribute.html)
-  names_data <- rownames(data) %||% str_c("tf_", 1:nrow(data))
+  names_data <- rownames(data) %||% rep(".", nrow(data))
   
   data <- mat_2_df(data, arg)
   ret <- new_tfb_spline(data, domain = domain, penalized = penalized,
@@ -221,7 +221,7 @@ tfb_spline.list <- function(data, arg = NULL,
   stopifnot(all(vectors) | !any(vectors))
   
   # ensure "unique" names (principles.tidyverse.org/names-attribute.html)
-  names_data <- names(data) %||% str_c("tf_", 1:length(data))
+  names_data <- names(data) %||% rep(".", length(data))
   
   if (all(vectors)) {
     lengths <- vapply(data, length, numeric(1))
@@ -264,7 +264,7 @@ tfb_spline.tfd <- function(data, arg = NULL,
   resolution <- resolution %||% tf_resolution(data)
   
   # ensure "unique" names (principles.tidyverse.org/names-attribute.html)
-  names_data <- names(data) %||% str_c("tf_", 1:length(data))
+  names_data <- names(data) %||% rep(".", length(data))
   
   data <- as.data.frame(data, arg)
   ret <- tfb_spline(data, domain = domain, penalized = penalized, 

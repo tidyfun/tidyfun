@@ -114,8 +114,7 @@ chf_df %>%
 
 Functions for data manipulation from `tidyr` are also supported. We illustrate by using `pivot_wider` to create new `tfd` observations of activity for each day of the week:
 
-```{r, eval = FALSE}
-## CURRENTLY BROKEN 
+```{r}
 chf_df %>% 
   select(id, day, activity) %>% 
   pivot_wider(
