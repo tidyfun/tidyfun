@@ -220,11 +220,20 @@ tfd.list <- function(data, arg = NULL, domain = NULL,
 #' @examples
 #' #turn irregular to regular tfd
 #' #TODO: add extra function/verb for this
-#' (f <- c(tf_rgp(1, arg = seq(0,1,l=11)), tf_rgp(1, arg = seq(0,1,l=21))))
+#' 
+#' # THIS BREAKS
+#' # (f <- c(tf_rgp(1, arg = seq(0,1,l=11)), tf_rgp(1, arg = seq(0,1,l=21))))
+#' # tfd(f, interpolate = TRUE, arg = seq(0,1,l=21))
+#' 
+#' # THIS DOESN'T
+#' (f <- c(dti_df$cca[1], dti_df$rcst[2]))
 #' tfd(f, interpolate = TRUE, arg = seq(0,1,l=21))
+#' 
+#' # WHAT IN THE WHAT IS HAPPENING
 #' @rdname tfd
 tfd.tf <- function(data, arg = NULL, domain = NULL,
                    evaluator = NULL, resolution = NULL, ...) {
+  
   evaluator_name <- enexpr(evaluator)
   evaluator <- if (is_tfd(data) & is.null(evaluator)) {
     attr(data, "evaluator_name")

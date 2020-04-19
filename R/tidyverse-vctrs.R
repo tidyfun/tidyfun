@@ -39,6 +39,7 @@ vec_ptype2.tfd.tfd = function(x, y, ...) {
     funs,
     ~compare_tf_attribs(funs[[1]], .)
   ))
+  
   stopifnot(all(compatible[, "domain"]))
   make_irreg <- rep(FALSE, length(funs))
   irreg <- map_lgl(funs, is_irreg)
@@ -78,7 +79,7 @@ vec_ptype2.tfd.tfd = function(x, y, ...) {
   attr_ret$names <- {
     tmp <- unlist(flatten(map(
       funs,
-      function(x) names(x) %||% rep("", length(x))
+      function(x) names(x) %||% rep(".", length(x))
     )))
     if (all(tmp == "")) NULL else tmp
   }
@@ -160,7 +161,6 @@ vec_cast.tfb <- function(x, to, ...) UseMethod("vec_cast.tfb")
 #' @name vctrs
 #' @export
 vec_cast.tfd.tfd <- function(x, to, ...) x
-
 
 #' @name vctrs
 #' @export
