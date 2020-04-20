@@ -26,13 +26,13 @@ vec_cast.tfd(x, to, ...)
 
 vec_cast.tfb(x, to, ...)
 
-\method{vec_cast.tfd}{tfd}(x, to, ...)
+\method{vec_cast}{tfd.tfd}(x, to, ...)
 
-\method{vec_cast.tfb}{tfb}(x, to, ...)
+\method{vec_cast}{tfb.tfb}(x, to, ...)
 
-\method{vec_cast.tfb}{tfd}(x, to, ...)
+\method{vec_cast}{tfb.tfd}(x, to, ...)
 
-\method{vec_cast.tfd}{tfb}(x, to, ...)
+\method{vec_cast}{tfd.tfb}(x, to, ...)
 }
 \arguments{
 \item{x}{Vector types.}

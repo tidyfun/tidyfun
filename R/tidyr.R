@@ -21,7 +21,7 @@
 #'   See [tfd()].
 #' @inheritParams tfd
 #' @return a modified `data.frame` with a `tfd` column replacing the `...`.
-#' @importFrom rlang is_empty :=  quo_name enexpr
+#' @importFrom rlang is_empty :=  quo_name enexpr enquos !!
 #' @importFrom tidyselect vars_select
 #' @importFrom stringr str_replace
 #' @export
@@ -103,6 +103,7 @@ tf_gather <- function(data, ..., key = ".tfd", arg = NULL, domain = NULL,
 #' @param interpolate `interpolate`-argument for evaluating the functional data.
 #'   Defaults to TRUE, i.e., `tfd`s are inter/extrapolated on unobserved `arg`-values.
 #' @importFrom tidyselect vars_pull
+#' @importFrom rlang enquo !!
 #' @export
 #' @examples
 #' d <- dplyr::tibble(g = 1:3)
@@ -259,6 +260,7 @@ tf_nest <- function(data, ..., .id = "id", .arg = "arg", domain = NULL,
 #' @seealso tf_gather(), tf_unnest(), tf_evaluate.data.frame()
 #' @importFrom digest digest
 #' @importFrom utils data tail
+#' @importFrom rlang enquo !!
 tf_unnest <- function(data, ..., .arg, .drop = NA, .id = "id", .sep = "_",
                       .preserve = NULL, try_dropping = TRUE) {
   ret <- tf_evaluate.data.frame(data, ..., arg = .arg)

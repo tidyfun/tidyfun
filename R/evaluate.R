@@ -126,7 +126,7 @@ evaluate_tfb_once <- function(x, arg, coefs, basis, X, resolution) {
 #' @rdname tf_evaluate
 #' @import tidyr
 #' @importFrom tidyselect vars_select quos
-#' @importFrom rlang quo_text
+#' @importFrom rlang quo_text enquos !!!
 #' @export
 #' @examples 
 #' library(dplyr)
