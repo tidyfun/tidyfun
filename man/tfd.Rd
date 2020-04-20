@@ -160,6 +160,14 @@ In code: \verb{10^(floor(log10(min(diff(<arg>))) - 1)}
 \examples{
 #turn irregular to regular tfd
 #TODO: add extra function/verb for this
-(f <- c(tf_rgp(1, arg = seq(0,1,l=11)), tf_rgp(1, arg = seq(0,1,l=21))))
+
+# THIS BREAKS
+# (f <- c(tf_rgp(1, arg = seq(0,1,l=11)), tf_rgp(1, arg = seq(0,1,l=21))))
+# tfd(f, interpolate = TRUE, arg = seq(0,1,l=21))
+
+# THIS DOESN'T
+(f <- c(dti_df$cca[1], dti_df$rcst[2]))
 tfd(f, interpolate = TRUE, arg = seq(0,1,l=21))
+
+# WHAT IN THE WHAT IS HAPPENING
 }
