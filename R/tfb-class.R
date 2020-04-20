@@ -33,7 +33,7 @@ tfb <- function(data, basis = c("spline", "fpc", "wavelet"), ...) {
          fpc     = tfb_fpc(data, ...),
          wavelet = tfb_wavelet(data, ...))
   # ensure "minimal" names (principles.tidyverse.org/names-attribute.html)
-  names(ret) <- names(ret) %||% rep("", length(ret))
+  names(ret) <- names(ret) # %||% rep("", length(ret))
   ret
 }  
 

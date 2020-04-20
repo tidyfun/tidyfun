@@ -54,8 +54,8 @@ new_tfd <- function(arg, datalist, regular, domain, evaluator, resolution) {
     arg <- list(arg[[1]])
     class <- "tfd_reg"
   }
-  # ensure "unique" names (principles.tidyverse.org/names-attribute.html)
-  names(datalist) <- names(datalist) %||% rep(".", length(datalist))
+  # ensure "unique" names (principles.tidyverse.org/names-attribute.html) ...
+  names(datalist) <- names(datalist) # %||% rep(".", length(datalist))
   
   ret <- vctrs::new_vctr(
     datalist,

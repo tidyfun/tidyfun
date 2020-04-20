@@ -1,6 +1,6 @@
 c_names <- function(funs) {
-  fnames <- as.list(names(funs) %||% rep(".", length(funs)))
-  elnames <- map(funs, ~names(.x) %||% rep(".", length(.x)))
+  fnames <- as.list(names(funs) %||% rep("", length(funs)))
+  elnames <- map(funs, ~names(.x) %||% rep("", length(.x)))
   # always use argnames
   # argnames replace elementnames if elments have length 1
   # else paste with "."
@@ -79,7 +79,7 @@ vec_ptype2.tfd.tfd = function(x, y, ...) {
   attr_ret$names <- {
     tmp <- unlist(flatten(map(
       funs,
-      function(x) names(x) %||% rep(".", length(x))
+      function(x) names(x) %||% rep("", length(x))
     )))
     if (all(tmp == "")) NULL else tmp
   }

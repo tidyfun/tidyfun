@@ -254,7 +254,7 @@ names(cca_five) = n_cca_five
 ### summarize: 
 
 ```{r}
-c(mean(cca_five), sd(cca_five))
+c(mean = mean(cca_five), sd = sd(cca_five))
 
 tf_depth(cca_five) ## Modified Band-2 Depth (à la Sun/Genton/Nychka, 2012), others to come.
 median(cca_five) == cca_five[which.max(tf_depth(cca_five))]
