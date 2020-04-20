@@ -190,7 +190,7 @@ cca = dti_df$cca %>%
 layout(t(1:2))
 
 plot(cca, type = "spaghetti")
-lines(c(median(cca), mean(cca)), col = c(2, 4))
+lines(c(median(cca), mean = mean(cca)), col = c(2, 4))
 
 plot(cca, type = "lasagna", col = viridis(50))
 ```
