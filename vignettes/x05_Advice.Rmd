@@ -1,0 +1,93 @@
+---
+title: "Advice for Developers"
+author: "Jeff Goldsmith"
+date: "`r Sys.Date()`"
+output: 
+    rmarkdown::html_vignette:
+      fig_width: 12
+vignette: >
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteIndexEntry{Advice}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "##",
+  fig.width = 8, 
+  fig.height = 5.5,
+  out.width = "90%"
+)
+
+library(tidyverse)
+library(viridisLite)
+
+theme_set(theme_minimal() + theme(legend.position = "bottom"))
+
+options(
+  ggplot2.continuous.colour = "viridis",
+  ggplot2.continuous.fill = "viridis"
+)
+scale_colour_discrete = scale_colour_viridis_d
+scale_fill_discrete = scale_fill_viridis_d
+
+library("tidyfun")
+data(chf_df, package = "tidyfun")
+data(dti_df, package = "tidyfun")
+
+pal_5 = viridis(7)[-(1:2)]
+set.seed(1221)
+```
+
+
+**`tidyfun`** is intended to make user interactions with functional data easier. The package introduces a data class (`tf`) so that vectors of functional observations are available, similar to vectors of class `numeric` or `character`. That makes it possible to store functional data alongside other variables in a single dataframe; by extension, tools for data manipulation from the `tidyverse` and elsewhere can be used with datasets in which one or more variable is functional. 
+
+Some basic analyses are available in **`tidyfun`** -- it's possible to compute means of `tf` vectors, to expand observations using a spline basis or using functional principal components analysis. With tools like `group_by` and `summarize`, these can be powerful tools for data exploration. Other analysis approaches are included in the **`refunder`** package, and more will be added to that package over time. 
+
+There is an active research community in FDA, and there is constant development of new methods for analysis. Our hope is that the data structures in **`tidyfun`** will be useful as others as new approaches are implemented, and this page is intended to provide some advice and guidance for those implementations. 
+
+
+## Why use **`tidyfun`**
+
+There are start-up costs to using a new data class when writing code for new methods, and there should be reasons to adopt such a class. We see several benefits to using **`tidyfun`**:
+
+* Compatibility with a dataframe-centric approach to analysis
+* Supporting tools for data manipulation
+* Plotting in `ggplot` and base R
+
+Together, these make it possible to analyze functional data in a pipeline (import, exploratory analysis, visualization, and formal analysis) that is similar to those used for scalar variables. 
+
+These advantages are user-facing -- they are intended to make things easier when analyzing datasets that include functional observations. Because new methods for functional data typically involve working with "raw" observations (numeric vectors or matrices), implementing methods **`tidyfun`** will require some consideration of user interfaces, input objects, and data transformations. We believe the benefits are worth this effort.
+
+
+## Thoughts on design
+
+**`tidyfun`** will be most effective in new methods that are intended to be part of an analysis pipeline. As a starting point, we suggest addressing the following questions:
+
+* How will users' data be organized? What will input dataframes look like? What other variables will exist in addition to `tf` columns? 
+* What is a natural user interface for my function? How should users specify functional data columns? 
+* What will users expect to obtain from my function? Are there parallels with other modeling strategies? How should I organize output so that it integrates with a dataframe-centric analysis approach? 
+* Should functions support `tfd`, `tfb`, or both? Does the output class matter? 
+* Are there any supporting tools I should include? Things like `plot` or `predict`, which can be used to summarize results?
+
+At best, users will have a seamless experience across data exploration, modeling, and understanding results; **`tidyfun`** is intended to encourage that. 
+
+
+## Using **`tidyfun`** in new functions
+
+We anticipate that new methods for functional data will use raw numeric values (in vectors or matrices) for estimation and / or inference. Tools for converting `tf` vectors to matrices or other formats are available, and useful in this context. In general, we have used the following structure for functions that perform analyses:
+
+* Input objects are dataframes containing `tf` vectors
+* `tf` vectors are converted to matrices (or numeric vectors)
+* The estimation procedure is implemented using these matrices
+* Results are formatted as `tf` vectors as appropriate and returned to the user
+
+This pipeline shifts the burden for data conversion from the user to the function author, and in doing so maintains seamlessness for the user. 
+
+As an example, the `refunder::rfr_fpca` function for functional principal components analysis has two main inputs: a dataframe containing one or more `tf` variables, and the name of the variable to decompose using FPCA. Internally, the `tf` vector is converted to a matrix for estimation. The function returns a list of elements relevant for FPCA, and includes estimated functions as a `tfb` vector. There is also a `predict` method, so that FPCA expansions of new data using the estimated basis can be easily obtained by users. 
+
+
+## Keep us informed!
+
+Our hope is that **`tidyfun`** will be a useful platform for other researchers and developers. For that reason, please let us know if you use **`tidyfun`** in your own work, identify [issues](https://github.com/tidyfun/tidyfun/issues), or have suggestions.

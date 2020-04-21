@@ -227,7 +227,7 @@ tf_nest <- function(data, ..., .id = "id", .arg = "arg", domain = NULL,
   # TODO: parallelize this over evaluator, domain, resolution
   tfd_list <- pmap(
     list(value_vars, evaluator, domain, resolution),
-    ~select(data, id_var, arg_var, ..1) %>%
+    ~select(data, id_var, arg_var, !!(..1)) %>%
       tfd(evaluator = !!(..2), domain = ..3, resolution = ..4)
   )
   names(tfd_list) <- value_vars

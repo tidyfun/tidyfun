@@ -57,5 +57,5 @@ grid <- seq(0, 1, l = 11)
 tf_evaluate(d, arg = grid) \%>\% glimpse() 
 }
 \seealso{
-This is used internally by \code{[.tf} to evaluate \code{object}.
+This is used internally by \verb{[.tf} to evaluate \code{object}.
 }

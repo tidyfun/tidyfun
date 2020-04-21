@@ -81,7 +81,8 @@ dti_df %>%
     facet_grid(~ sex)
 ```
 
-<img src="README_files/figure-gfm/unnamed-chunk-1-1.png" width="90%" />
+<img src="https://raw.githubusercontent.com/tidyfun/tidyfun/dev/README_files/figure-gfm/unnamed-chunk-1-1.png" width="90%" />
+<!-- include image directly so it works for pkgdown-site as well (r-lib/pkgdown#927?)-->
 
 ## What does it do?
 

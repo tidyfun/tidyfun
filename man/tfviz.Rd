@@ -7,19 +7,35 @@
 \alias{points.tf}
 \title{Visualization functions for \code{tf}s}
 \usage{
-funplot(f, arg, n_grid = 50, points = is_irreg(f),
-  type = c("spaghetti", "lasagna"), alpha = min(1, max(0.05,
-  2/length(f))))
+funplot(
+  f,
+  arg,
+  n_grid = 50,
+  points = is_irreg(f),
+  type = c("spaghetti", "lasagna"),
+  alpha = min(1, max(0.05, 2/length(f)))
+)
 
-\method{plot}{tf}(x, y, n_grid = 50, points = is_irreg(x),
-  type = c("spaghetti", "lasagna"), alpha = min(1, max(0.05,
-  2/length(x))), ...)
+\method{plot}{tf}(
+  x,
+  y,
+  n_grid = 50,
+  points = is_irreg(x),
+  type = c("spaghetti", "lasagna"),
+  alpha = min(1, max(0.05, 2/length(x))),
+  ...
+)
 
-\method{lines}{tf}(x, arg, n_grid = 50, alpha = min(1, max(0.05,
-  2/length(x))), ...)
+\method{lines}{tf}(x, arg, n_grid = 50, alpha = min(1, max(0.05, 2/length(x))), ...)
 
-\method{points}{tf}(x, arg, n_grid = NA, alpha = min(1, max(0.05,
-  2/length(x))), interpolate = FALSE, ...)
+\method{points}{tf}(
+  x,
+  arg,
+  n_grid = NA,
+  alpha = min(1, max(0.05, 2/length(x))),
+  interpolate = FALSE,
+  ...
+)
 }
 \arguments{
 \item{f}{an \code{tf} object}

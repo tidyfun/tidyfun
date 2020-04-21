@@ -23,7 +23,9 @@ tf_evaluations <- function(f) UseMethod("tf_evaluations")
 tf_evaluations.default <- function(f) .NotYetImplemented()
 #' @export
 tf_evaluations.tfd_reg <- function(f) {
+  f_names <- names(f)
   attributes(f) <- NULL
+  names(f) <- f_names
   f
 }
 #' @export

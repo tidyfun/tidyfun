@@ -8,28 +8,82 @@
 \alias{tfb_spline.list}
 \alias{tfb_spline.tfd}
 \alias{tfb_spline.tfb}
+\alias{tfb_spline.default}
 \title{Spline-based representation of functional data}
 \usage{
 tfb_spline(data, ...)
 
-\method{tfb_spline}{data.frame}(data, id = 1, arg = 2, value = 3,
-  domain = NULL, penalized = TRUE, global = FALSE,
-  resolution = NULL, ...)
+\method{tfb_spline}{data.frame}(
+  data,
+  id = 1,
+  arg = 2,
+  value = 3,
+  domain = NULL,
+  penalized = TRUE,
+  global = FALSE,
+  resolution = NULL,
+  ...
+)
 
-\method{tfb_spline}{matrix}(data, arg = NULL, domain = NULL,
-  penalized = TRUE, global = FALSE, resolution = NULL, ...)
+\method{tfb_spline}{matrix}(
+  data,
+  arg = NULL,
+  domain = NULL,
+  penalized = TRUE,
+  global = FALSE,
+  resolution = NULL,
+  ...
+)
 
-\method{tfb_spline}{numeric}(data, arg = NULL, domain = NULL,
-  penalized = TRUE, global = FALSE, resolution = NULL, ...)
+\method{tfb_spline}{numeric}(
+  data,
+  arg = NULL,
+  domain = NULL,
+  penalized = TRUE,
+  global = FALSE,
+  resolution = NULL,
+  ...
+)
 
-\method{tfb_spline}{list}(data, arg = NULL, domain = NULL,
-  penalized = TRUE, global = FALSE, resolution = NULL, ...)
+\method{tfb_spline}{list}(
+  data,
+  arg = NULL,
+  domain = NULL,
+  penalized = TRUE,
+  global = FALSE,
+  resolution = NULL,
+  ...
+)
 
-\method{tfb_spline}{tfd}(data, arg = NULL, domain = NULL,
-  penalized = TRUE, global = FALSE, resolution = NULL, ...)
+\method{tfb_spline}{tfd}(
+  data,
+  arg = NULL,
+  domain = NULL,
+  penalized = TRUE,
+  global = FALSE,
+  resolution = NULL,
+  ...
+)
 
-\method{tfb_spline}{tfb}(data, arg = NULL, domain = NULL,
-  penalized = TRUE, global = FALSE, resolution = NULL, ...)
+\method{tfb_spline}{tfb}(
+  data,
+  arg = NULL,
+  domain = NULL,
+  penalized = TRUE,
+  global = FALSE,
+  resolution = NULL,
+  ...
+)
+
+\method{tfb_spline}{default}(
+  data,
+  arg = NULL,
+  domain = NULL,
+  penalized = TRUE,
+  global = FALSE,
+  resolution = NULL,
+  ...
+)
 }
 \arguments{
 \item{data}{a \code{matrix}, \code{data.frame} or \code{list} of suitable shape, or another
@@ -97,7 +151,7 @@ accuracy (see \code{\link[mgcv:family.mgcv]{mgcv::family.mgcv()}} for what's ava
 \code{\link[mgcv:s]{mgcv::s()}}), which (drastically) reduces the computation time.
 }
 
-If \strong{\code{global == TRUE}}, the routine first takes a subset of curves (10\% of
+If \strong{\code{global == TRUE}}, the routine first takes a subset of curves (10\\% of
 curves sampled deterministically, at most 100, at least 5) on which smoothing
 parameters per curve are estimated and then uses the mean of the log
 smoothing parameter of those for all curves. This can be much faster than
@@ -118,6 +172,8 @@ directly for all curves, this is \emph{not} what's implemented here.
 \item \code{tfd}: convert \code{tfd} (raw functional data)
 
 \item \code{tfb}: convert \code{tfb}: modify basis representation, smoothing.
+
+\item \code{default}: convert \code{tfb}: default method, returning prototype when data is NULL
 }}
 
 \seealso{

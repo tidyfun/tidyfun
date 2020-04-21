@@ -70,7 +70,7 @@ A variant on the spaghetti plot is the meatballs plot, which shows both the "noo
 
 ```{r}
 chf_df %>%
-  filter(id == 1, day == "Monday") %>%
+  filter(id == 1, day == "Mon") %>%
   ggplot(aes(y = activity)) +
   geom_meatballs()
 ```
@@ -92,7 +92,7 @@ You can also use facetting:
 
 ```{r}
 chf_df %>% 
-  filter(day %in% c("Monday", "Sunday")) %>% 
+  filter(day %in% c("Mon", "Sun")) %>% 
   ggplot(aes(y = activity, color = gender)) + 
   geom_spaghetti(alpha = .1) + 
   facet_grid(~ day)
@@ -115,7 +115,7 @@ chf_df %>%
   group_by(gender, day) %>% 
   summarize(mean_act = mean(activity)) %>% 
   mutate(smooth_mean = tfb(mean_act)) %>% 
-  filter(day %in% c("Monday", "Sunday")) %>% 
+  filter(day %in% c("Mon", "Sun")) %>% 
   ggplot(aes(y = smooth_mean, color = gender)) + 
   geom_spaghetti(size = 1.25, alpha = 1) + 
   geom_meatballs(aes(y = mean_act), alpha = .1) + 
@@ -130,7 +130,7 @@ In `tidyfun`, lasagna plots are implemented through `gglasagna`. A first example
 
 ```{r}
 chf_df %>% 
-  filter(day %in% c("Monday", "Sunday")) %>% 
+  filter(day %in% c("Mon", "Sun")) %>% 
   gglasagna(activity)
 ```
 
@@ -190,7 +190,7 @@ cca = dti_df$cca %>%
 layout(t(1:2))
 
 plot(cca, type = "spaghetti")
-lines(c(median(cca), mean(cca)), col = c(2, 4))
+lines(c(median(cca), mean = mean(cca)), col = c(2, 4))
 
 plot(cca, type = "lasagna", col = viridis(50))
 ```

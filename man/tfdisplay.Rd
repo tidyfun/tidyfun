@@ -16,8 +16,15 @@
 
 \method{print}{tfb}(x, n = 10, ...)
 
-\method{format}{tf}(x, digits = 2, nsmall = 0,
-  width = options()$width, n = 10, prefix = TRUE, ...)
+\method{format}{tf}(
+  x,
+  digits = 2,
+  nsmall = 0,
+  width = options()$width,
+  n = 10,
+  prefix = TRUE,
+  ...
+)
 }
 \arguments{
 \item{x}{any \R object (conceptually); typically numeric.}
@@ -28,10 +35,10 @@
 
 \item{digits}{how many significant digits are to be used for
     numeric and complex \code{x}.  The default, \code{NULL}, uses
-    \code{\link{getOption}("digits")}.  This is a suggestion: enough decimal
+    \code{\link[base]{getOption}("digits")}.  This is a suggestion: enough decimal
     places will be used so that the smallest (in magnitude) number has
     this many significant digits, and also to satisfy \code{nsmall}.
-    (For the interpretation for complex numbers see \code{\link{signif}}.)}
+    (For the interpretation for complex numbers see \code{\link[base]{signif}}.)}
 
 \item{nsmall}{the minimum number of digits to the right of the decimal
     point in formatting real/complex numbers in non-scientific formats.

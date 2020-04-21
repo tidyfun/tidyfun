@@ -9,13 +9,25 @@
 \usage{
 tf_integrate(f, lower, upper, ...)
 
-\method{tf_integrate}{function}(f, lower, upper, ...)
+\method{tf_integrate}{`function`}(f, lower, upper, ...)
 
-\method{tf_integrate}{tfd}(f, lower = tf_domain(f)[1],
-  upper = tf_domain(f)[2], definite = TRUE, arg, ...)
+\method{tf_integrate}{tfd}(
+  f,
+  lower = tf_domain(f)[1],
+  upper = tf_domain(f)[2],
+  definite = TRUE,
+  arg,
+  ...
+)
 
-\method{tf_integrate}{tfb}(f, lower = tf_domain(f)[1],
-  upper = tf_domain(f)[2], definite = TRUE, arg, ...)
+\method{tf_integrate}{tfb}(
+  f,
+  lower = tf_domain(f)[1],
+  upper = tf_domain(f)[2],
+  definite = TRUE,
+  arg,
+  ...
+)
 }
 \arguments{
 \item{f}{a \code{tf}-object}
@@ -44,8 +56,8 @@ Integrals of \code{tf}-objects are computed by simple quadrature (trapezoid rule
 specifically). By default the scalar definite integral
 \eqn{\int^{upper}_{lower}f(s)ds} is returned (option \code{definite = TRUE}),
 alternatively for \code{definite = FALSE} something like the \emph{anti-derivative} on
-\code{[lower, upper]}, e.g. a \code{tfd} or \code{tfb} object representing \eqn{F(t) \approx
-\int^{t}_{lower}f(s)ds}, for \eqn{t \in}\code{[lower, upper]}, is returned.
+\verb{[lower, upper]}, e.g. a \code{tfd} or \code{tfb} object representing \eqn{F(t) \approx
+\int^{t}_{lower}f(s)ds}, for \eqn{t \in}\verb{[lower, upper]}, is returned.
 }
 \section{Methods (by class)}{
 \itemize{

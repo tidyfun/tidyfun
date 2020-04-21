@@ -1,7 +1,22 @@
 #' @import memoise
 #' @import purrr
 #' @import dplyr
+#' @importFrom stringr str_c
 new_tfd <- function(arg, datalist, regular, domain, evaluator, resolution) {
+  
+  if (length(datalist) == 0) {
+    
+    ret = vctrs::new_vctr(
+      datalist,
+      arg = NA,
+      domain = c(NA, NA),
+      evaluator = memoise(evaluator),
+      evaluator_name = evaluator,
+      resolution = NA, 
+      class = c("tfd", "tf"))   ## does this need tf_reg or tf_irreg?
+    return(ret)
+    
+  }
   
   assert_string(evaluator)
   evaluator_f <- get(evaluator, mode = "function", envir = parent.frame())
@@ -39,9 +54,11 @@ new_tfd <- function(arg, datalist, regular, domain, evaluator, resolution) {
     arg <- list(arg[[1]])
     class <- "tfd_reg"
   }
-  # ensure "minimal" names (principles.tidyverse.org/names-attribute.html)
-  names(datalist) <- names(datalist) %||% rep("", length(datalist))
-  ret <- structure(datalist,
+  # ensure "unique" names (principles.tidyverse.org/names-attribute.html) ...
+  names(datalist) <- names(datalist) # %||% rep(".", length(datalist))
+  
+  ret <- vctrs::new_vctr(
+    datalist,
     arg = arg,
     domain = domain,
     evaluator = memoise(evaluator_f),
@@ -88,7 +105,8 @@ new_tfd <- function(arg, datalist, regular, domain, evaluator, resolution) {
 #' arg-values is between $0.1 and 0.9999$, the resolution will be $0.01$, etc.
 #' In code: `10^(floor(log10(min(diff(<arg>))) - 1)`
 #'
-#' @param data a `matrix`, `data.frame` or `list` of suitable shape, or another `tf`-object.
+#' @param data a `matrix`, `data.frame` or `list` of suitable shape, or another `tf`-object. when
+#' this argument is `NULL` (i.e. when calling `tfd()`) this returns a prototype of class `tfd`
 #' @param ... not used in `tfd`, except for `tfd.tf` -- specify `arg` and `ìnterpolate = TRUE` to
 #'   turn an irregular `tfd` into a regular one, see examples.
 #' @return an `tfd`-object (or a `data.frame`/`matrix` for the conversion functions, obviously.)
@@ -202,11 +220,20 @@ tfd.list <- function(data, arg = NULL, domain = NULL,
 #' @examples
 #' #turn irregular to regular tfd
 #' #TODO: add extra function/verb for this
-#' (f <- c(tf_rgp(1, arg = seq(0,1,l=11)), tf_rgp(1, arg = seq(0,1,l=21))))
+#' 
+#' # THIS BREAKS
+#' # (f <- c(tf_rgp(1, arg = seq(0,1,l=11)), tf_rgp(1, arg = seq(0,1,l=21))))
+#' # tfd(f, interpolate = TRUE, arg = seq(0,1,l=21))
+#' 
+#' # THIS DOESN'T
+#' (f <- c(dti_df$cca[1], dti_df$rcst[2]))
 #' tfd(f, interpolate = TRUE, arg = seq(0,1,l=21))
+#' 
+#' # WHAT IN THE WHAT IS HAPPENING
 #' @rdname tfd
 tfd.tf <- function(data, arg = NULL, domain = NULL,
                    evaluator = NULL, resolution = NULL, ...) {
+  
   evaluator_name <- enexpr(evaluator)
   evaluator <- if (is_tfd(data) & is.null(evaluator)) {
     attr(data, "evaluator_name")
@@ -249,3 +276,19 @@ tfd.tf <- function(data, arg = NULL, domain = NULL,
     domain = domain, evaluator = evaluator, resolution = resolution
   )
 }
+
+#' @rdname tfd
+#' @description return class prototype when argument to tfd() is NULL or not a recongised class
+#' @export
+tfd.default = function(data, arg = NULL, domain = NULL,
+                    evaluator = tf_approx_linear, resolution = NULL, ...) {
+  
+  if (!missing(data)) {
+    message("input `data` not recognized class; returning prototype of length 0")
+  }
+  
+  datalist = list()
+  new_tfd(arg, datalist, regular, domain, evaluator, resolution)
+  
+}
+

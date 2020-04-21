@@ -16,11 +16,16 @@
 \usage{
 \method{mean}{tf}(x, ...)
 
-\method{median}{tf}(x, na.rm = FALSE, depth = c("MBD", "pointwise"),
-  ...)
+\method{median}{tf}(x, na.rm = FALSE, depth = c("MBD", "pointwise"), ...)
 
-\method{quantile}{tf}(x, probs = seq(0, 1, 0.25), na.rm = FALSE,
-  names = TRUE, type = 7, ...)
+\method{quantile}{tf}(
+  x,
+  probs = seq(0, 1, 0.25),
+  na.rm = FALSE,
+  names = TRUE,
+  type = 7,
+  ...
+)
 
 sd(x, na.rm = FALSE)
 
