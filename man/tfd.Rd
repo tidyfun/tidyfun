@@ -116,7 +116,7 @@ an \code{tfd}-object (or a \code{data.frame}/\code{matrix} for the conversion fu
 \description{
 Various constructor and conversion methods.
 
-\code{tfd.data.frame} uses the first 3 columns of <data> for function information by default:
+\code{tfd.data.frame} uses the first 3 columns of \code{data} for function information by default:
 (\code{ìd}, \code{arg}, \code{value})
 
 \code{tfd.list} accepts a list of vectors of identical lengths

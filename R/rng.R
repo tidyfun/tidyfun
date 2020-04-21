@@ -44,7 +44,7 @@ tf_rgp <- function(n, arg = 51L, scale = diff(range(arg)) / 10,
 #'
 #' Randomly create some irregular functional data from regular ones.\cr
 #' **jiggle** it by randomly moving around its `arg`-values. Only for `tfd`.\cr
-#' **sparsify** it by setting (100*`dropout`)\% of its values to `NA`.
+#' **sparsify** it by setting (100*`dropout`)% of its values to `NA`.
 #'
 #' @param f a `tfd` object
 #' @importFrom stats runif
@@ -68,7 +68,7 @@ tf_jiggle <- function(f, ...) {
 }
 
 #' @rdname tf_jiggle
-#' @param dropout how many values of `f` to drop, defaults to 50\%.
+#' @param dropout how many values of `f` to drop, defaults to 50%.
 #' @param ... not used currently
 #' @export
 tf_sparsify <- function(f, dropout = .5, ...) {

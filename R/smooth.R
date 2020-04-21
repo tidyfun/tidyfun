@@ -9,13 +9,13 @@
 #'
 #'   - **`lowess`** uses a span parameter of `f` = .15 (instead of .75)
 #'   by default.
-#'   - **`rollmean`/`median`** use a window size of `k` = <number of
-#'   grid points>/20 (i.e., the nearest odd integer to that) and sets `fill=
+#'   - **`rollmean`/`median`** use a window size of `k` = $<$number of
+#'   grid points$>$/20 (i.e., the nearest odd integer to that) and sets `fill=
 #'   "extend"` (i.e., constant extrapolation to replace missing values at the
 #'   extremes of the domain) by default. Use `fill= NA` for `zoo`'s default
 #'   behavior of shortening the smoothed series.
-#'   - **`savgol`** uses a window size of `k` = <number of
-#'   grid points>/10 (i.e., the nearest odd integer to that).
+#'   - **`savgol`** uses a window size of `k` = $<$number of
+#'   grid points$>$/10 (i.e., the nearest odd integer to that).
 #'
 #' @param x a `tf` object containing functional data
 #' @param method one of "lowess" (see [stats::lowess()]), "rollmean",

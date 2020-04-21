@@ -147,7 +147,7 @@ tfd.numeric <- function(data, arg = NULL,
   return(do.call(tfd, args))
 }
 
-#' @description `tfd.data.frame` uses the first 3 columns of <data> for function information by default:
+#' @description `tfd.data.frame` uses the first 3 columns of \code{data} for function information by default:
 #' (`ìd`, `arg`, `value`)
 #' @export
 #' @rdname tfd
@@ -288,7 +288,7 @@ tfd.default = function(data, arg = NULL, domain = NULL,
   }
   
   datalist = list()
-  new_tfd(arg, datalist, regular, domain, evaluator, resolution)
+  new_tfd(arg, datalist, domain, evaluator, resolution)
   
 }
 

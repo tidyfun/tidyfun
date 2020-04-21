@@ -14,10 +14,10 @@ tf_sparsify(f, dropout = 0.5, ...)
 
 \item{...}{not used currently}
 
-\item{dropout}{how many values of \code{f} to drop, defaults to 50\\%.}
+\item{dropout}{how many values of \code{f} to drop, defaults to 50\%.}
 }
 \description{
 Randomly create some irregular functional data from regular ones.\cr
 \strong{jiggle} it by randomly moving around its \code{arg}-values. Only for \code{tfd}.\cr
-\strong{sparsify} it by setting (100*\code{dropout})\\% of its values to \code{NA}.
+\strong{sparsify} it by setting (100*\code{dropout})\% of its values to \code{NA}.
 }
