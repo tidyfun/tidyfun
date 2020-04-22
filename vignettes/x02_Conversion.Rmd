@@ -22,7 +22,7 @@ knitr::opts_chunk$set(
 
 library(tidyverse)
 library(viridisLite)
-
+library(SemiPar)
 library(gridExtra)
 
 theme_set(theme_minimal() + theme(legend.position = "bottom"))
