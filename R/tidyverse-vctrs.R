@@ -148,13 +148,11 @@ vec_ptype2.tfb.tfb = function(x, y, ...) {
 #' @name vctrs
 #' @export
 #' @inheritParams vctrs::vec_cast
-#' @param x_arg,y_arg Argument names for \code{x} and \code{y}.
 vec_cast.tfd <- function(x, to, ...) UseMethod("vec_cast.tfd")
 
 #' @name vctrs
 #' @export
 #' @inheritParams vctrs::vec_cast
-#' @param x_arg,y_arg Argument names for \code{x} and \code{y}.
 vec_cast.tfb <- function(x, to, ...) UseMethod("vec_cast.tfb")
 
 

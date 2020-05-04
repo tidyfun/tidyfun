@@ -42,8 +42,6 @@ vec_cast.tfb(x, to, ...)
 \item{...}{These dots are for future extensions and must be empty.}
 
 \item{to}{Type to cast to. If \code{NULL}, \code{x} will be returned as is.}
-
-\item{x_arg, y_arg}{Argument names for \code{x} and \code{y}.}
 }
 \description{
 vctrs methods for tf objects
