@@ -13,24 +13,97 @@ c_names <- function(funs) {
 }
 
 
+#----------------- s3 generics for tfd casting -----------------#
 
-## Need to add defaults? proxy stuff? 
-
-#' vctrs methods for tf objects
-#' @name vctrs
+#' vctrs methods for \code{tf} objects
+#' 
+#' These functions are the extensions that allow \code{tidyfun} vectors 
+#' to work with \code{vctrs}.
+#' 
+#' @rdname vctrs
+#' @import vctrs
+#' @method vec_cast tfd_reg
 #' @export
-#' @export vec_ptype2.tfd
+#' @export vec_cast.tfd_reg
+#' @inheritParams vctrs::vec_cast
+vec_cast.tfd_reg <- function(x, to, ...) UseMethod("vec_cast.tfd_reg")
+
+#' @rdname vctrs
+#' @method vec_cast tfd_irreg
+#' @export
+#' @export vec_cast.tfd_irreg
+vec_cast.tfd_irreg <- function(x, to, ...) UseMethod("vec_cast.tfd_irreg")
+
+
+#' @rdname vctrs
+#' @method vec_cast.tfd_reg tfd_reg
+#' @export
+vec_cast.tfd_reg.tfd_reg <- function(x, to, ...) { x } 
+
+#' @rdname vctrs
+#' @method vec_cast.tfd_reg tfd_irreg
+#' @export
+vec_cast.tfd_reg.tfd_irreg <- function(x, to, ...) { stop("casting irreg to reg is not allowed") }
+
+#' @rdname vctrs
+#' @method vec_cast.tfd_irreg tfd_reg
+#' @export
+vec_cast.tfd_irreg.tfd_reg <- function(x, to, ...) { 
+  
+  args = attr(x, "arg")
+  cast_x = tfd(map(.x = vctrs::vec_data(x), ~data.frame(arg = args, value = .x)))
+  as.tfd_irreg.tfd_reg(cast_x)
+  
+}
+
+#' @rdname vctrs
+#' @method vec_cast.tfd_irreg tfd_irreg
+#' @export
+vec_cast.tfd_irreg.tfd_irreg <- function(x, to, ...) { x }
+
+
+
+#----------------- s3 generics for tfd coercion -----------------#
+
+#' coercion methods for tfd objects
+#' @name vctrs
+#' @method vec_ptype2 tfd_reg
+#' @export
+#' @export vec_ptype2.tfd_reg
 #' @inheritParams vctrs::vec_ptype2
-vec_ptype2.tfd <- function(x, y, ...) UseMethod("vec_ptype2.tfd")
+vec_ptype2.tfd_reg <- function(x, y, ...) UseMethod("vec_ptype2.tfd_reg")
 
 #' @name vctrs
-#' @export vec_ptype2.tfb
-#' @inheritParams vctrs::vec_ptype2
-vec_ptype2.tfb <- function(x, y, ...) UseMethod("vec_ptype2.tfb")
-
+#' @method vec_ptype2.tfd_reg tfd_reg 
+#' @export
+vec_ptype2.tfd_reg.tfd_reg <- function(x, y, ...) { vec_ptype2.tfd.tfd(x, y, ...) }
 
 #' @name vctrs
-#' @method vec_ptype2.tfd tfd
+#' @method vec_ptype2.tfd_reg tfd_irreg
+#' @export
+vec_ptype2.tfd_reg.tfd_irreg <- function(x, y, ...) { vec_ptype2.tfd.tfd(x, y, ...) }
+
+#' @name vctrs
+#' @method vec_ptype2 tfd_irreg
+#' @export
+#' @export vec_ptype2.tfd_irreg
+#' @inheritParams vctrs::vec_ptype2
+vec_ptype2.tfd_irreg <- function(x, y, ...) UseMethod("vec_ptype2.tfd_reg")
+
+#' @name vctrs
+#' @method vec_ptype2.tfd_irreg tfd_reg
+#' @export
+vec_ptype2.tfd_irreg.tfd_reg <- function(x, y, ...) {vec_ptype2.tfd.tfd(x, y, ...)}
+
+#' @name vctrs
+#' @method vec_ptype2.tfd_irreg tfd_irreg
+#' @export
+vec_ptype2.tfd_irreg.tfd_irreg <- function(x, y, ...) {vec_ptype2.tfd.tfd(x, y, ...)}
+
+
+#----------------- main function for coersion of tfd -----------------#
+
+#' @name vctrs
 #' @export
 vec_ptype2.tfd.tfd = function(x, y, ...) {
   
@@ -91,11 +164,27 @@ vec_ptype2.tfd.tfd = function(x, y, ...) {
 }
 
 
+
+#----------------- s3 generics for tfb coercion -----------------#
+
+## this list is very incomplete! as for `tfd_reg` and `tfd_irreg`, 
+## need combinations for `tfb_spline`, `tfb_fpc`, etc
+
+#' @name vctrs
+#' @method vec_ptype2 tfd_reg
+#' @export
+#' @export vec_ptype2.tfd_reg
+#' @inheritParams vctrs::vec_ptype2
+vec_ptype2.tfb <- function(x, y, ...) UseMethod("vec_ptype2.tfb")
+
+
+#----------------- main function for coersion of tfb -----------------#
+
 #' @name vctrs
 #' @method vec_ptype2.tfb tfb
 #' @export
 vec_ptype2.tfb.tfb = function(x, y, ...) {
-
+  
   funs <- list(x, y)
   compatible <- do.call(rbind, map(
     funs,
@@ -140,35 +229,4 @@ vec_ptype2.tfb.tfb = function(x, y, ...) {
   names(ret) <- c_names(funs)
   ret
 }
-
-
-
-
-# minimal vec_cast implementation: https://github.com/r-spatial/sf/issues/1068
-#' @name vctrs
-#' @export
-#' @inheritParams vctrs::vec_cast
-vec_cast.tfd <- function(x, to, ...) UseMethod("vec_cast.tfd")
-
-#' @name vctrs
-#' @export
-#' @inheritParams vctrs::vec_cast
-vec_cast.tfb <- function(x, to, ...) UseMethod("vec_cast.tfb")
-
-
-#' @name vctrs
-#' @export
-vec_cast.tfd.tfd <- function(x, to, ...) x
-
-#' @name vctrs
-#' @export
-vec_cast.tfb.tfb <- function(x, to, ...) x
-
-#' @name vctrs
-#' @export
-vec_cast.tfb.tfd <- function(x, to, ...) stop("Can't coerce tfb & tfd objects.")
-
-#' @name vctrs
-#' @export
-vec_cast.tfd.tfb <- function(x, to, ...) stop("Can't concatenate tfb & tfd objects.")
 

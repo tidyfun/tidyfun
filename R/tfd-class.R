@@ -2,18 +2,21 @@
 #' @import purrr
 #' @import dplyr
 #' @importFrom stringr str_c
-new_tfd <- function(arg, datalist, regular, domain, evaluator, resolution) {
+new_tfd <- function(arg = numeric(), datalist = list(), regular = TRUE, domain = numeric(), 
+                    evaluator, resolution = numeric()) {
   
-  if (length(datalist) == 0) {
+  if (vctrs::vec_size(datalist) == 0 ) {
+    
+    subclass = ifelse(regular, "tfd_reg", "tfd_irreg")
     
     ret = vctrs::new_vctr(
       datalist,
-      arg = NA,
-      domain = c(NA, NA),
+      arg = numeric(),
+      domain = numeric(),
       evaluator = memoise(evaluator),
       evaluator_name = evaluator,
-      resolution = NA, 
-      class = c("tfd", "tf"))   ## does this need tf_reg or tf_irreg?
+      resolution = numeric(), 
+      class = c(subclass, "tfd", "tf")) 
     return(ret)
     
   }
@@ -221,15 +224,12 @@ tfd.list <- function(data, arg = NULL, domain = NULL,
 #' #turn irregular to regular tfd
 #' #TODO: add extra function/verb for this
 #' 
-#' # THIS BREAKS
-#' # (f <- c(tf_rgp(1, arg = seq(0,1,l=11)), tf_rgp(1, arg = seq(0,1,l=21))))
-#' # tfd(f, interpolate = TRUE, arg = seq(0,1,l=21))
+#' (f <- c(tf_rgp(1, arg = seq(0,1,l=11)), tf_rgp(1, arg = seq(0,1,l=21))))
+#' tfd(f, interpolate = TRUE, arg = seq(0,1,l=21))
 #' 
-#' # THIS DOESN'T
 #' (f <- c(dti_df$cca[1], dti_df$rcst[2]))
 #' tfd(f, interpolate = TRUE, arg = seq(0,1,l=21))
 #' 
-#' # WHAT IN THE WHAT IS HAPPENING
 #' @rdname tfd
 tfd.tf <- function(data, arg = NULL, domain = NULL,
                    evaluator = NULL, resolution = NULL, ...) {
