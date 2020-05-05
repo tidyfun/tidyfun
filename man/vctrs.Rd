@@ -14,7 +14,7 @@
 \alias{vec_ptype2.tfd_irreg}
 \alias{vec_ptype2.tfd_irreg.tfd_reg}
 \alias{vec_ptype2.tfd_irreg.tfd_irreg}
-\alias{vec_ptype2.tfd.tfd}
+\alias{vec_ptype2_tfd_tfd}
 \alias{vec_ptype2.tfb}
 \alias{vec_ptype2.tfb.tfb}
 \title{vctrs methods for \code{tf} objects}
@@ -43,7 +43,7 @@
 
 \method{vec_ptype2.tfd_irreg}{tfd_irreg}(x, y, ...)
 
-\method{vec_ptype2}{tfd.tfd}(x, y, ...)
+vec_ptype2_tfd_tfd(x, y, ...)
 
 \method{vec_ptype2}{tfd_reg}(x, y, ...)
 

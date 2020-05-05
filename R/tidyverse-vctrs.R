@@ -76,12 +76,12 @@ vec_ptype2.tfd_reg <- function(x, y, ...) UseMethod("vec_ptype2.tfd_reg")
 #' @name vctrs
 #' @method vec_ptype2.tfd_reg tfd_reg 
 #' @export
-vec_ptype2.tfd_reg.tfd_reg <- function(x, y, ...) { vec_ptype2.tfd.tfd(x, y, ...) }
+vec_ptype2.tfd_reg.tfd_reg <- function(x, y, ...) { vec_ptype2_tfd_tfd(x, y, ...) }
 
 #' @name vctrs
 #' @method vec_ptype2.tfd_reg tfd_irreg
 #' @export
-vec_ptype2.tfd_reg.tfd_irreg <- function(x, y, ...) { vec_ptype2.tfd.tfd(x, y, ...) }
+vec_ptype2.tfd_reg.tfd_irreg <- function(x, y, ...) { vec_ptype2_tfd_tfd(x, y, ...) }
 
 #' @name vctrs
 #' @method vec_ptype2 tfd_irreg
@@ -93,19 +93,19 @@ vec_ptype2.tfd_irreg <- function(x, y, ...) UseMethod("vec_ptype2.tfd_reg")
 #' @name vctrs
 #' @method vec_ptype2.tfd_irreg tfd_reg
 #' @export
-vec_ptype2.tfd_irreg.tfd_reg <- function(x, y, ...) {vec_ptype2.tfd.tfd(x, y, ...)}
+vec_ptype2.tfd_irreg.tfd_reg <- function(x, y, ...) {vec_ptype2_tfd_tfd(x, y, ...)}
 
 #' @name vctrs
 #' @method vec_ptype2.tfd_irreg tfd_irreg
 #' @export
-vec_ptype2.tfd_irreg.tfd_irreg <- function(x, y, ...) {vec_ptype2.tfd.tfd(x, y, ...)}
+vec_ptype2.tfd_irreg.tfd_irreg <- function(x, y, ...) {vec_ptype2_tfd_tfd(x, y, ...)}
 
 
 #----------------- main function for coersion of tfd -----------------#
 
 #' @name vctrs
 #' @export
-vec_ptype2.tfd.tfd = function(x, y, ...) {
+vec_ptype2_tfd_tfd = function(x, y, ...) {
   
   funs <- list(x, y)
   compatible <- do.call(rbind, map(
