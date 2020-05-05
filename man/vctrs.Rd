@@ -15,8 +15,19 @@
 \alias{vec_ptype2.tfd_irreg.tfd_reg}
 \alias{vec_ptype2.tfd_irreg.tfd_irreg}
 \alias{vec_ptype2_tfd_tfd}
-\alias{vec_ptype2.tfb}
-\alias{vec_ptype2.tfb.tfb}
+\alias{vec_cast.tfb_spline}
+\alias{vec_cast.tfb_fpc}
+\alias{vec_cast.tfb_spline.tfb_spline}
+\alias{vec_cast.tfb_spline.tfb_fpc}
+\alias{vec_cast.tfb_fpc.tfb_spline}
+\alias{vec_cast.tfb_fpc.tfb_fpc}
+\alias{vec_ptype2.tfb_spline}
+\alias{vec_ptype2.tfb_spline.tfb_spline}
+\alias{vec_ptype2.tfb_spline.tfb_fpc}
+\alias{vec_ptype2.tfb_fpc}
+\alias{vec_ptype2.tfb_fpc.tfb_spline}
+\alias{vec_ptype2.tfb_fpc.tfb_fpc}
+\alias{vec_ptype2_tfb_tfb}
 \title{vctrs methods for \code{tf} objects}
 \usage{
 \method{vec_cast}{tfd_reg}(x, to, ...)
@@ -45,9 +56,31 @@
 
 vec_ptype2_tfd_tfd(x, y, ...)
 
-\method{vec_ptype2}{tfd_reg}(x, y, ...)
+\method{vec_cast}{tfb_spline}(x, to, ...)
 
-\method{vec_ptype2.tfb}{tfb}(x, y, ...)
+\method{vec_cast}{tfb_fpc}(x, to, ...)
+
+\method{vec_cast.tfb_spline}{tfb_spline}(x, to, ...)
+
+\method{vec_cast.tfb_spline}{tfb_fpc}(x, to, ...)
+
+\method{vec_cast.tfb_fpc}{tfb_spline}(x, to, ...)
+
+\method{vec_cast.tfd_irreg}{tfd_irreg}(x, to, ...)
+
+\method{vec_ptype2}{tfb_spline}(x, y, ...)
+
+\method{vec_ptype2.tfb_spline}{tfb_spline}(x, y, ...)
+
+\method{vec_ptype2.tfb_spline}{tfb_fpc}(x, y, ...)
+
+\method{vec_ptype2}{tfb_fpc}(x, y, ...)
+
+\method{vec_ptype2.tfb_fpc}{tfb_spline}(x, y, ...)
+
+\method{vec_ptype2.tfb_fpc}{tfb_fpc}(x, y, ...)
+
+vec_ptype2_tfb_tfb(x, y, ...)
 }
 \arguments{
 \item{x}{Vectors to cast.}
@@ -61,6 +94,9 @@ dots are only for future extensions and should be empty.}
 \item{y}{Vector types.}
 }
 \description{
+These functions are the extensions that allow \code{tidyfun} vectors
+to work with \code{vctrs}.
+
 These functions are the extensions that allow \code{tidyfun} vectors
 to work with \code{vctrs}.
 }
