@@ -209,9 +209,6 @@ vec_cast.tfb_fpc.tfb_fpc <- function(x, to, ...) { x }
 
 #----------------- s3 generics for tfb coercion -----------------#
 
-## this list is very incomplete! as for `tfd_reg` and `tfd_irreg`, 
-## need combinations for `tfb_spline`, `tfb_fpc`, etc
-
 #' @name vctrs
 #' @method vec_ptype2 tfb_spline
 #' @export
@@ -227,7 +224,7 @@ vec_ptype2.tfb_spline.tfb_spline <- function(x, y, ...) {vec_ptype2_tfb_tfb(x, y
 #' @name vctrs
 #' @method vec_ptype2.tfb_spline tfb_fpc
 #' @export
-vec_ptype2.tfb_spline.tfb_fpc <- function(x, y, ...) stop("concatenateing tfb_spline & tfb_fpc objects is not allowed")
+vec_ptype2.tfb_spline.tfb_fpc <- function(x, y, ...) stop("concatenating tfb_spline & tfb_fpc objects is not allowed")
 
 #' @name vctrs
 #' @method vec_ptype2 tfb_fpc
@@ -254,32 +251,45 @@ vec_ptype2.tfb_fpc.tfb_fpc <- function(x, y, ...) {vec_ptype2_tfb_tfb(x, y, ...)
 #' @name vctrs
 #' @export
 vec_ptype2_tfb_tfb = function(x, y, ...) {
-  
   funs <- list(x, y)
   compatible <- do.call(rbind, map(
     funs,
     ~compare_tf_attribs(funs[[1]], .)
   ))
   stopifnot(all(compatible[, "domain"]))
-  re_evals <- which(!compatible[, "arg"] |
-                      !compatible[, "basis_args"])
-  if (length(re_evals)) {
-    fun_names <- map(as.list(match.call())[-1], ~deparse(.)[1])
-    warning(
-      "re-evaluating ", paste(fun_names[re_evals], collapse = ", "),
-      " using basis and arg of ", fun_names[1]
-    )
-    funs <- map_at(
-      funs, re_evals,
-      ~do.call(
-        tfb,
-        flatten(list(list(.),
-                     arg = list(tf_arg(funs[[1]])),
-                     attr(funs[[1]], "basis_args")
-        ))
+  
+  
+  if(inherits(funs[[1]], "tfb_spline")) {
+    re_evals <- which(!compatible[, "arg"] |
+                        !compatible[, "basis_args"])
+    if (length(re_evals)) {
+      fun_names <- map(as.list(match.call())[-1], ~deparse(.)[1])
+      warning(
+        "re-evaluating ", paste(fun_names[re_evals], collapse = ", "),
+        " using basis and arg of ", fun_names[1]
       )
-    )
+      
+      funs <- map_at(
+        funs, re_evals,
+        ~do.call(
+          tfb,
+          flatten(list(list(.), # converts to tfb then back to tfd
+                       arg = list(tf_arg(funs[[1]])),
+                       attr(funs[[1]], "basis_args")
+          ))
+        )
+      )
+      message("after funs in tfb_tfb function")
+    }
+  }else{
+    re_evals <- which(!compatible[, "arg"] |
+                        !compatible[, "basis_matrix"])
+    
+    if (length(re_evals)){
+      stop("concatenation not yet implemented for tfb_fpc vectors with different bases")
+    }
   }
+    
   if (!all(compatible[, "resolution"])) {
     warning(
       "inputs have different resolutions, result has ",
@@ -297,6 +307,9 @@ vec_ptype2_tfb_tfb = function(x, y, ...) {
   ret <- flatten(funs)
   attributes(ret) <- attr_ret
   names(ret) <- c_names(funs)
+  forget(attr(ret, "basis"))
+  
+  message("finished tfb_tfb function")
   ret
   
 }
