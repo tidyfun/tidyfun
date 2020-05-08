@@ -1,15 +1,18 @@
 #' @importFrom stats var na.omit median gaussian
-new_tfb_spline <- function(data, domain = NULL, penalized = TRUE, global = FALSE,
-                           resolution = NULL, verbose = TRUE, ...) {
+new_tfb_spline <- function(data, domain = numeric(), arg = numeric(), 
+                           resolution = numeric(),
+                           family = character(), 
+                           penalized = TRUE, global = FALSE,
+                           verbose = TRUE, ...) {
   
-  if (all(dim(data) == 0)) {
+  if (vctrs::vec_size(data) == 0) {
     
     ret = vctrs::new_vctr(
       data,
-      domain = numeric(),
-      arg = numeric(), 
-      resolution = numeric(),
-      family = character(), 
+      domain = domain,
+      arg = arg, 
+      resolution = resolution,
+      family = family, 
       class = c("tfb_spline", "tfb", "tf"))  
     return(ret)
     
@@ -284,11 +287,20 @@ tfb_spline.tfb <- function(data, arg = NULL,
     list(...)[names(list(...)) %in% names(formals(mgcv::s))]
   )
   names_data <- names(data)
-  data <- as.data.frame(data, arg = arg)
-  ret <- do.call("tfb_spline", c(list(data),
-                                 domain = domain, global = global, 
-                                 penalized = penalized, resolution = resolution, s_args
-  ))
+  if(vctrs::vec_size(data) == 0){
+    #data = rep(0, )
+    # maybe try to make an empty vector that won't break anything like matrix algebra?
+    
+    ret <- new_tfb_spline(data, arg = arg, domain = domain, penalized = penalized,
+                          global = global, resolution = resolution, s_args)
+  }else{
+    data <- as.data.frame(data, arg = arg)
+    ret <- do.call("tfb_spline", c(list(data),
+                                   domain = domain, global = global,
+                                   penalized = penalized, resolution = resolution, s_args
+    ))
+  }
+  
   names(ret) <- names_data
   ret
 }

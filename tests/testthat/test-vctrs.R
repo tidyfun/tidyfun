@@ -3,19 +3,28 @@ context("vctrs")
 x = tf_rgp(1, arg = seq(0, 1, l = 11))
 y = tf_rgp(1, arg = seq(0, 1, l = 21))
 
-cca = dti_df$cca
-cca_tfb = cca %>% tfb()
-
 rcst = dti_df$cca
 
-test_that("concatenation behaves", {
+test_that("concatenation behaves for tfd", {
   expect_is(c(x, y), "tfd_irreg")
   expect_is(c(cca[1], rcst[1]), "tfd_irreg")
   expect_is(c(x, x), "tfd_reg")
-  expect_is(c(cca_tfb[1], cca_tfb[2]), "tfb")
   expect_error(c(x, tfb(x)))
   expect_numeric(tf_evaluate(c(x, y)[1])[[1]])
+})
+
+cca = dti_df$cca
+tfb_k10 = cca %>% tfb(k = 10)
+tfb_k20 = cca %>% tfb(k = 20)
+z = tf_rgp(10, arg = seq(0, 1, l = 11)) %>% tfb_fpc()
+z2 = z %>% tfb_fpc(npc = 10)
+
+test_that("concatenation behaves for tfb", {
+  expect_is(c(cca_tfb[1], cca_tfb[2]), "tfb_spline")
+  expect_is(c(tfb(x), tfb(x)), "tfb_spline")
+  expect_is(c(z, z), "tfb_fpc")
   
-  ## this is still problematic -- need more vctrs!
-  expect_error(c(tfb(x), tfb(x)))
+  expect_warning(c(tfb_k10, tfb_k20))
+  expect_error(c(tfb_k10, tfb_fpc(z)))
+  expect_error(c(z, z2))
 })

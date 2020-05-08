@@ -189,7 +189,13 @@ vec_cast.tfb_fpc <- function(x, to, ...) UseMethod("vec_cast.tfb_fpc")
 #' @rdname vctrs
 #' @method vec_cast.tfb_spline tfb_spline
 #' @export
-vec_cast.tfb_spline.tfb_spline <- function(x, to, ...) { x } 
+vec_cast.tfb_spline.tfb_spline <- function(x, to, ...) { 
+  attributes_to = flatten(list(list(x), 
+                        arg = list(tf_arg(to)),
+                        attr(to, "basis_args")))
+  do.call(tfb, attributes_to)
+
+} 
 
 #' @rdname vctrs
 #' @method vec_cast.tfb_spline tfb_fpc
@@ -258,7 +264,6 @@ vec_ptype2_tfb_tfb = function(x, y, ...) {
   ))
   stopifnot(all(compatible[, "domain"]))
   
-  
   if(inherits(funs[[1]], "tfb_spline")) {
     re_evals <- which(!compatible[, "arg"] |
                         !compatible[, "basis_args"])
@@ -279,7 +284,6 @@ vec_ptype2_tfb_tfb = function(x, y, ...) {
           ))
         )
       )
-      message("after funs in tfb_tfb function")
     }
   }else{
     re_evals <- which(!compatible[, "arg"] |
@@ -309,7 +313,6 @@ vec_ptype2_tfb_tfb = function(x, y, ...) {
   names(ret) <- c_names(funs)
   forget(attr(ret, "basis"))
   
-  message("finished tfb_tfb function")
   ret
   
 }
