@@ -6,11 +6,11 @@ new_tfb_spline <- function(data, domain = NULL, penalized = TRUE, global = FALSE
     
     ret = vctrs::new_vctr(
       data,
-      domain = c(NA, NA),
-      arg = NA, 
-      resolution = NA,
-      family = NA, 
-      class = c("tfb", "tf"))   ## does this need tfb_spline?
+      domain = numeric(),
+      arg = numeric(), 
+      resolution = numeric(),
+      family = character(), 
+      class = c("tfb_spline", "tfb", "tf"))  
     return(ret)
     
   }
@@ -155,7 +155,6 @@ new_tfb_spline <- function(data, domain = NULL, penalized = TRUE, global = FALSE
 #' sparse data, it would be preferable to estimate a joint smoothing parameter
 #' directly for all curves, this is *not* what's implemented here.
 #' 
-#' @inheritParams tfb
 #' @param global Defaults to `FALSE`. 
 #' If `TRUE` and `penalized = TRUE`, all functions share the same smoothing
 #'   parameter (see Details).
@@ -168,7 +167,6 @@ new_tfb_spline <- function(data, domain = NULL, penalized = TRUE, global = FALSE
 tfb_spline <- function(data, ...) UseMethod("tfb_spline")
 
 #' @export
-#' @inheritParams tfd.data.frame
 #' @param penalized should the coefficients of the basis representation be estimated
 #'   via [mgcv::magic()] (default) or ordinary least squares.
 #' @describeIn tfb_spline convert data frames

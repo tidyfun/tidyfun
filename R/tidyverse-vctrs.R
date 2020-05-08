@@ -227,7 +227,7 @@ vec_ptype2.tfb_spline.tfb_spline <- function(x, y, ...) {vec_ptype2_tfb_tfb(x, y
 #' @name vctrs
 #' @method vec_ptype2.tfb_spline tfb_fpc
 #' @export
-vec_ptype2.tfb_spline.tfb_fpc <- function(x, y, ...) stop("Can't concatenate tfb_spline & tfb_fpc objects.")
+vec_ptype2.tfb_spline.tfb_fpc <- function(x, y, ...) stop("concatenateing tfb_spline & tfb_fpc objects is not allowed")
 
 #' @name vctrs
 #' @method vec_ptype2 tfb_fpc
@@ -239,7 +239,7 @@ vec_ptype2.tfb_fpc <- function(x, y, ...) UseMethod("vec_ptype2.tfb_fpc")
 #' @name vctrs
 #' @method vec_ptype2.tfb_fpc tfb_spline
 #' @export
-vec_ptype2.tfb_fpc.tfb_spline <- function(x, y, ...) stop("Can't concatenate tfb_spline & tfb_fpc objects.")
+vec_ptype2.tfb_fpc.tfb_spline <- function(x, y, ...) stop("concatenating tfb_spline & tfb_fpc objects is not allowed")
 
 
 #' @name vctrs
@@ -298,5 +298,6 @@ vec_ptype2_tfb_tfb = function(x, y, ...) {
   attributes(ret) <- attr_ret
   names(ret) <- c_names(funs)
   ret
+  
 }
 

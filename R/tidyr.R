@@ -19,7 +19,6 @@
 #'   is found, this is used instead. You also get a message about this.
 #' @param arg If not provided, will be guessed from the column names as well.
 #'   See [tfd()].
-#' @inheritParams tfd
 #' @return a modified `data.frame` with a `tfd` column replacing the `...`.
 #' @importFrom rlang is_empty :=  quo_name enexpr
 #' @importFrom tidyselect vars_select
@@ -171,7 +170,6 @@ tf_spread <- function(data, value, arg, sep = "_", interpolate = TRUE) {
 #'   For more options, see the [dplyr::select()] documentation.
 #' @param .id the (bare or quoted) name of the column defining the different observations
 #' @param .arg the (bare or quoted) name of the column defining the `arg`-values of the observed functions
-#' @inheritParams tfd
 #' @return a data frame with (at least) `.id` and `tfd` columns
 #' @export
 #' @seealso tf_gather(), tf_unnest(), tfd() for `domain, evaluator, resolution`

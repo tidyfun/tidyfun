@@ -6,11 +6,11 @@ new_tfb_fpc <- function(data, domain = NULL, resolution = NULL,
     
     ret = vctrs::new_vctr(
       data,
-      domain = c(NA, NA),
-      arg = NA, 
-      resolution = NA,
-      score_variance = NA, 
-      class = c("tfb", "tf")) ## does this need tfb_fpc?
+      domain = numeric(),
+      arg = numeric(), 
+      resolution = numeric(),
+      score_variance = numeric(), 
+      class = c("tfb_fpc", "tfb", "tf")) 
     return(ret)
     
   }
@@ -71,7 +71,6 @@ new_tfb_fpc <- function(data, domain = NULL, resolution = NULL,
 #' of [fpc_wsvd()] can be used for the `method`` argument, see example below.
 #' 
 #' @export
-#' @inheritParams tfd.data.frame
 #' @param method the function to use that computes eigenfunctions and scores.
 #'   Defaults to [fpc_wsvd()], which gives unsmoothed eigenfunctions. 
 #' @param ... arguments to the `method` which computes the

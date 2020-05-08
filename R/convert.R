@@ -52,7 +52,6 @@ as.matrix.tfd <- function(x, arg = NULL, interpolate = FALSE, ...) {
 #-------------------------------------------------------------------------------
 
 #' @rdname tfb
-#' @inheritParams tfb
 #' @export
 as.tfb <- function(data, basis = c("spline", "fpc"), ...) tfb(data, basis, ...)
 
