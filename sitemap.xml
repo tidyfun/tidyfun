@@ -76,9 +76,6 @@
     <loc>https://tidyfun.github.io/tidyfun/reference/tfbrackets.html</loc>
   </url>
   <url>
-    <loc>https://tidyfun.github.io/tidyfun/reference/tfconcat.html</loc>
-  </url>
-  <url>
     <loc>https://tidyfun.github.io/tidyfun/reference/tfd.html</loc>
   </url>
   <url>
@@ -103,6 +100,9 @@
     <loc>https://tidyfun.github.io/tidyfun/reference/tidyfun.html</loc>
   </url>
   <url>
+    <loc>https://tidyfun.github.io/tidyfun/reference/vctrs.html</loc>
+  </url>
+  <url>
     <loc>https://tidyfun.github.io/tidyfun/articles/x01_tf_Vectors.html</loc>
   </url>
   <url>
@@ -113,5 +113,8 @@
   </url>
   <url>
     <loc>https://tidyfun.github.io/tidyfun/articles/x04_Visualization.html</loc>
+  </url>
+  <url>
+    <loc>https://tidyfun.github.io/tidyfun/articles/x05_Advice.html</loc>
   </url>
 </urlset>
