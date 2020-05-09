@@ -1,11 +1,13 @@
 pandoc: 2.3.1
-pkgdown: 1.4.1
+pkgdown: 1.5.1
 pkgdown_sha: ~
 articles:
   x01_tf_Vectors: x01_tf_Vectors.html
   x02_Conversion: x02_Conversion.html
   x03_Data_Wrangling: x03_Data_Wrangling.html
   x04_Visualization: x04_Visualization.html
+  x05_Advice: x05_Advice.html
+last_built: 2020-05-09T19:37Z
 urls:
   reference: https://tidyfun.github.io/tidyfun/reference
   article: https://tidyfun.github.io/tidyfun/articles

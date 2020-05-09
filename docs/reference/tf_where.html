@@ -10,23 +10,27 @@
 
 
 <!-- jquery -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous" />
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script>
+
+<!-- bootstrap-toc -->
+<link rel="stylesheet" href="../bootstrap-toc.css">
+<script src="../bootstrap-toc.js"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script>
 
 <!-- headroom.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -43,7 +47,6 @@ get a logical flag for each function if the condition is TRUE anywhere,
 see below.
 in_range and its infix-equivalent return TRUE for all
 values in f that are within the range of values in r." />
-<meta name="twitter:card" content="summary" />
 
 
 
@@ -61,7 +64,7 @@ values in f that are within the range of values in r." />
 
   </head>
 
-  <body>
+  <body data-spy="scroll" data-target="#toc">
     <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -75,7 +78,7 @@ values in f that are within the range of values in r." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidyfun</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.82</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.83</span>
       </span>
     </div>
 
@@ -101,14 +104,17 @@ values in f that are within the range of values in r." />
       <a href="../articles/x03_Data_Wrangling.html">Data Wrangling</a>
     </li>
     <li>
-      <a href="../articles/x04_Visualization.html">Visulalization</a>
+      <a href="../articles/x04_Visualization.html">Visualization</a>
+    </li>
+    <li>
+      <a href="../articles/x05_Advice.html">Advice for Developers</a>
     </li>
   </ul>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/tidyfun/tidyfun">
+  <a href="https://github.com/tidyfun/tidyfun/">
     <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
@@ -141,8 +147,7 @@ see below.</p>
 values in <code>f</code> that are within the range of values in <code>r</code>.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>tf_where</span>(<span class='no'>f</span>, <span class='no'>cond</span>, <span class='kw'>return</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"all"</span>, <span class='st'>"first"</span>, <span class='st'>"last"</span>, <span class='st'>"range"</span>, <span class='st'>"any"</span>),
-  <span class='no'>arg</span>)
+    <pre class="usage"><span class='fu'>tf_where</span>(<span class='no'>f</span>, <span class='no'>cond</span>, <span class='kw'>return</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"all"</span>, <span class='st'>"first"</span>, <span class='st'>"last"</span>, <span class='st'>"range"</span>, <span class='st'>"any"</span>), <span class='no'>arg</span>)
 
 <span class='fu'>tf_anywhere</span>(<span class='no'>f</span>, <span class='no'>cond</span>, <span class='no'>arg</span>)
 
@@ -217,13 +222,9 @@ Any condition evaluates to <code>NA</code> on <code>NA</code>-entries in <code>f
 #&gt; 2  -0.4 0.2
 #&gt; 3  -0.2 0.0
 #&gt; 4  -0.2 0.0</div><div class='input'>  <span class='no'>a</span> <span class='kw'>&lt;-</span> <span class='fl'>1</span>
-  <span class='fu'>tf_where</span>(<span class='no'>lin</span>, <span class='no'>value</span> <span class='kw'>&gt;</span> <span class='no'>a</span>, <span class='st'>"first"</span>)</div><div class='output co'>#&gt;                 
-#&gt;  NA 0.6 0.4 0.4 </div><div class='input'>  <span class='fu'>tf_where</span>(<span class='no'>lin</span>, <span class='no'>value</span> <span class='kw'>&lt;</span> <span class='no'>a</span>, <span class='st'>"last"</span>)</div><div class='output co'>#&gt;                 
-#&gt; 0.8 0.4 0.2 0.2 </div><div class='input'>  <span class='fu'>tf_where</span>(<span class='no'>lin</span>, <span class='no'>value</span> <span class='kw'>&gt;</span> <span class='fl'>2</span>, <span class='st'>"any"</span>)</div><div class='output co'>#&gt;                         
-#&gt; FALSE FALSE  TRUE  TRUE </div><div class='input'>  <span class='fu'>tf_anywhere</span>(<span class='no'>lin</span>, <span class='no'>value</span> <span class='kw'>&gt;</span> <span class='fl'>2</span>)</div><div class='output co'>#&gt;                         
-#&gt; FALSE FALSE  TRUE  TRUE </div><div class='input'>
+  <span class='fu'>tf_where</span>(<span class='no'>lin</span>, <span class='no'>value</span> <span class='kw'>&gt;</span> <span class='no'>a</span>, <span class='st'>"first"</span>)</div><div class='output co'>#&gt; [1]  NA 0.6 0.4 0.4</div><div class='input'>  <span class='fu'>tf_where</span>(<span class='no'>lin</span>, <span class='no'>value</span> <span class='kw'>&lt;</span> <span class='no'>a</span>, <span class='st'>"last"</span>)</div><div class='output co'>#&gt; [1] 0.8 0.4 0.2 0.2</div><div class='input'>  <span class='fu'>tf_where</span>(<span class='no'>lin</span>, <span class='no'>value</span> <span class='kw'>&gt;</span> <span class='fl'>2</span>, <span class='st'>"any"</span>)</div><div class='output co'>#&gt; [1] FALSE FALSE  TRUE  TRUE</div><div class='input'>  <span class='fu'>tf_anywhere</span>(<span class='no'>lin</span>, <span class='no'>value</span> <span class='kw'>&gt;</span> <span class='fl'>2</span>)</div><div class='output co'>#&gt; [1] FALSE FALSE  TRUE  TRUE</div><div class='input'>
   <span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span>(<span class='fl'>4353</span>)
-  <span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span>(<span class='no'>f</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='tf_rgp.html'>tf_rgp</a></span>(<span class='fl'>5</span>, <span class='fl'>11L</span>), <span class='kw'>pch</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/character.html'>as.character</a></span>(<span class='fl'>1</span>:<span class='fl'>5</span>), <span class='kw'>points</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='img'><img src='tf_where-1.png' alt='' width='700' height='433' /></div><div class='input'>  <span class='fu'>tf_where</span>(<span class='no'>f</span>, <span class='no'>value</span> <span class='kw'>==</span> <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span>(<span class='no'>value</span>))</div><div class='output co'>#&gt; [[1]]
+  <span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='no'>f</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='tf_rgp.html'>tf_rgp</a></span>(<span class='fl'>5</span>, <span class='fl'>11L</span>), <span class='kw'>pch</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/character.html'>as.character</a></span>(<span class='fl'>1</span>:<span class='fl'>5</span>), <span class='kw'>points</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='img'><img src='tf_where-1.png' alt='' width='700' height='433' /></div><div class='input'>  <span class='fu'>tf_where</span>(<span class='no'>f</span>, <span class='no'>value</span> <span class='kw'>==</span> <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span>(<span class='no'>value</span>))</div><div class='output co'>#&gt; [[1]]
 #&gt; [1] 0
 #&gt; 
 #&gt; [[2]]
@@ -299,18 +300,12 @@ Any condition evaluates to <code>NA</code> on <code>NA</code>-entries in <code>f
 #&gt; [[5]]
 #&gt; [1] 1
 #&gt; </div><div class='input'>  <span class='co'># does the function ever exceed 1:</span>
-  <span class='fu'>tf_anywhere</span>(<span class='no'>f</span>, <span class='no'>value</span> <span class='kw'>&gt;</span> <span class='fl'>1</span>)</div><div class='output co'>#&gt;                               
-#&gt; FALSE  TRUE FALSE  TRUE FALSE </div></pre>
+  <span class='fu'>tf_anywhere</span>(<span class='no'>f</span>, <span class='no'>value</span> <span class='kw'>&gt;</span> <span class='fl'>1</span>)</div><div class='output co'>#&gt; [1] FALSE  TRUE FALSE  TRUE FALSE</div></pre>
   </div>
-  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
-    <h2>Contents</h2>
-    <ul class="nav nav-pills nav-stacked">
-      <li><a href="#arguments">Arguments</a></li>
-      <li><a href="#value">Value</a></li>
-      <li><a href="#details">Details</a></li>
-      <li><a href="#examples">Examples</a></li>
-    </ul>
-
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
+    <nav id="toc" data-toggle="toc" class="sticky-top">
+      <h2 data-toc-skip>Contents</h2>
+    </nav>
   </div>
 </div>
 
@@ -321,7 +316,7 @@ Any condition evaluates to <code>NA</code> on <code>NA</code>-entries in <code>f
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
 </div>
 
       </footer>
