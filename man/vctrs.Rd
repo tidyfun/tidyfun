@@ -66,7 +66,7 @@ vec_ptype2_tfd_tfd(x, y, ...)
 
 \method{vec_cast.tfb_fpc}{tfb_spline}(x, to, ...)
 
-\method{vec_cast.tfd_irreg}{tfd_irreg}(x, to, ...)
+\method{vec_cast.tfb_fpc}{tfb_fpc}(x, to, ...)
 
 \method{vec_ptype2}{tfb_spline}(x, y, ...)
 
@@ -88,8 +88,8 @@ vec_ptype2_tfb_tfb(x, y, ...)
 \item{to}{Type to cast to. If \code{NULL}, \code{x} will be returned as is.}
 
 \item{...}{For \code{vec_cast_common()}, vectors to cast. For
-\code{vec_cast()}, \code{vec_cast_default()}, and \code{vec_restore()}, these
-dots are only for future extensions and should be empty.}
+\code{vec_cast()} and \code{vec_restore()}, these dots are only for future
+extensions and should be empty.}
 
 \item{y}{Vector types.}
 }

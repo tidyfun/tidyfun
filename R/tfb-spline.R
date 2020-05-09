@@ -1,7 +1,6 @@
 #' @importFrom stats var na.omit median gaussian
 new_tfb_spline <- function(data, domain = numeric(), arg = numeric(), 
                            resolution = numeric(),
-                           family = character(), 
                            penalized = TRUE, global = FALSE,
                            verbose = TRUE, ...) {
   
@@ -12,7 +11,7 @@ new_tfb_spline <- function(data, domain = numeric(), arg = numeric(),
       domain = domain,
       arg = arg, 
       resolution = resolution,
-      family = family, 
+      family = character(), 
       class = c("tfb_spline", "tfb", "tf"))  
     return(ret)
     

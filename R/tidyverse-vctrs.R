@@ -208,7 +208,7 @@ vec_cast.tfb_spline.tfb_fpc <- function(x, to, ...) { stop("casting tfb_fpc to t
 vec_cast.tfb_fpc.tfb_spline <- function(x, to, ...) { stop("casting tfb_spline to tfb_fpc is not allowed")}
 
 #' @rdname vctrs
-#' @method vec_cast.tfd_irreg tfd_irreg
+#' @method vec_cast.tfb_fpc tfb_fpc
 #' @export
 vec_cast.tfb_fpc.tfb_fpc <- function(x, to, ...) { x }
 
