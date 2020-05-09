@@ -77,6 +77,7 @@ new_tfb_fpc <- function(data, domain = NULL, resolution = NULL,
 #'  (regularized/smoothed) FPCA. 
 #'  Unless set by the user `tidyfun` uses proportion of variance explained 
 #'  `pve = .995` to determine the truncation levels.
+#' @inheritParams tfb
 #' @return an object of class `tfb_fpc`, inheriting from `tfb`. 
 #'    The basis used by `tfb_fpc` is a `tfd`-vector containing the estimated
 #'    mean and eigenfunctions.
@@ -87,6 +88,7 @@ tfb_fpc <- function(data, ...) UseMethod("tfb_fpc")
 
 #' @rdname tfb_fpc
 #' @export
+#' @inheritParams tfd.data.frame
 #' @examples 
 #' # Apply FPCA for sparse data using refund::fpca.sc:
 #' set.seed(99290)

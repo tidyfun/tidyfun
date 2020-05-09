@@ -32,6 +32,12 @@ is found, this is used instead. You also get a message about this.}
 
 \item{arg}{If not provided, will be guessed from the column names as well.
 See \code{\link[=tfd]{tfd()}}.}
+
+\item{domain}{range of the \code{arg}.}
+
+\item{evaluator}{a function accepting arguments \verb{x, arg, evaluations}. See details for \code{\link[=tfd]{tfd()}}.}
+
+\item{resolution}{resolution of the evaluation grid. See details for \code{\link[=tfd]{tfd()}}.}
 }
 \value{
 a modified \code{data.frame} with a \code{tfd} column replacing the \code{...}.

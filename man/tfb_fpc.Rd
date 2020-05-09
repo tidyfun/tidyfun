@@ -52,13 +52,26 @@ tfb_fpc(data, ...)
 )
 }
 \arguments{
+\item{data}{a \code{matrix}, \code{data.frame} or \code{list} of suitable shape, or another
+\code{tf}-object containing functional data.}
+
 \item{...}{arguments to the \code{method} which computes the
 (regularized/smoothed) FPCA.
 Unless set by the user \code{tidyfun} uses proportion of variance explained
 \code{pve = .995} to determine the truncation levels.}
 
+\item{id}{The name/number of the column defining which data belong to which function.}
+
+\item{arg}{optional vector of argument values}
+
+\item{value}{The name/number of the column containing the function evaluations.}
+
+\item{domain}{range of the \code{arg}.}
+
 \item{method}{the function to use that computes eigenfunctions and scores.
 Defaults to \code{\link[=fpc_wsvd]{fpc_wsvd()}}, which gives unsmoothed eigenfunctions.}
+
+\item{resolution}{resolution of the evaluation grid. See details for \code{\link[=tfd]{tfd()}}.}
 }
 \value{
 an object of class \code{tfb_fpc}, inheriting from \code{tfb}.

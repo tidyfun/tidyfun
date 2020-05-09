@@ -164,6 +164,7 @@ new_tfb_spline <- function(data, domain = numeric(), arg = numeric(),
 #'   [mgcv::magic()] or [mgcv::gam.fit()] (if `penalized` is TRUE). If not user-specified here,
 #'   `tidyfun` uses `k = 25` cubic regression spline basis functions 
 #'   (i.e., `bs = "cr"`) by default, but this should (!) be set appropriately.
+#' @inheritParams tfb
 #' @return a `tfb`-object
 #' @seealso [mgcv::smooth.terms()] for spline basis options. 
 tfb_spline <- function(data, ...) UseMethod("tfb_spline")
@@ -171,6 +172,7 @@ tfb_spline <- function(data, ...) UseMethod("tfb_spline")
 #' @export
 #' @param penalized should the coefficients of the basis representation be estimated
 #'   via [mgcv::magic()] (default) or ordinary least squares.
+#' @inheritParams tfd.data.frame
 #' @describeIn tfb_spline convert data frames
 tfb_spline.data.frame <- function(data, id = 1, arg = 2, value = 3,
                                   domain = NULL, penalized = TRUE, 

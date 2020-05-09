@@ -86,10 +86,21 @@ tfb_spline(data, ...)
 )
 }
 \arguments{
+\item{data}{a \code{matrix}, \code{data.frame} or \code{list} of suitable shape, or another
+\code{tf}-object containing functional data.}
+
 \item{...}{arguments to the calls to \code{\link[mgcv:s]{mgcv::s()}} setting up the basis and
 \code{\link[mgcv:magic]{mgcv::magic()}} or \code{\link[mgcv:gam.fit]{mgcv::gam.fit()}} (if \code{penalized} is TRUE). If not user-specified here,
 \code{tidyfun} uses \code{k = 25} cubic regression spline basis functions
 (i.e., \code{bs = "cr"}) by default, but this should (!) be set appropriately.}
+
+\item{id}{The name/number of the column defining which data belong to which function.}
+
+\item{arg}{optional vector of argument values}
+
+\item{value}{The name/number of the column containing the function evaluations.}
+
+\item{domain}{range of the \code{arg}.}
 
 \item{penalized}{should the coefficients of the basis representation be estimated
 via \code{\link[mgcv:magic]{mgcv::magic()}} (default) or ordinary least squares.}
@@ -97,6 +108,8 @@ via \code{\link[mgcv:magic]{mgcv::magic()}} (default) or ordinary least squares.
 \item{global}{Defaults to \code{FALSE}.
 If \code{TRUE} and \code{penalized = TRUE}, all functions share the same smoothing
 parameter (see Details).}
+
+\item{resolution}{resolution of the evaluation grid. See details for \code{\link[=tfd]{tfd()}}.}
 }
 \value{
 a \code{tfb}-object
