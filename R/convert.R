@@ -36,7 +36,7 @@ as.data.frame.tfd <- function(x, row.names = NULL, optional = FALSE,
   tmp <- x[, arg, interpolate = interpolate, matrix = FALSE]
   id <- unique_id(names(x)) %||% seq_along(x)
   id <- ordered(id, levels = id) # don't reshuffle
-  tidyr::unnest_legacy(bind_rows(list(id = id, data = tmp)))
+  tidyr::unnest(tibble::tibble(id = id, data = tmp), cols = data)
 }
 
 #' @rdname tfd
@@ -70,7 +70,7 @@ as.data.frame.tfb <- function(x, row.names = NULL, optional = FALSE,
   tmp <- x[, arg, matrix = FALSE]
   id <- unique_id(names(x)) %||% seq_along(x)
   id <- ordered(id, levels = id) # don't reshuffle
-  tidyr::unnest_legacy(bind_rows(list(id = id, data = tmp)))
+  tidyr::unnest(tibble::tibble(id = id, data = tmp), cols = data)
 }
 
 #' @rdname tfb
