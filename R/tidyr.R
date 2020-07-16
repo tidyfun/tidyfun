@@ -218,7 +218,7 @@ tf_nest <- function(data, ..., .id = "id", .arg = "arg", domain = NULL,
     select_if(isTRUE)
   if (ncol(not_constant)) {
     stop(
-      "Columns ", paste(names(not_constant), collapse = ", "),
+      "Can't nest - columns ", paste(names(not_constant), collapse = ", "),
       " are not constant for all levels of the id-variable."
     )
   }
@@ -244,7 +244,13 @@ tf_nest <- function(data, ..., .id = "id", .arg = "arg", domain = NULL,
 
 #' Turn data frames with `tf`-objects / list columns into "long" tables.
 #'
-#' Similar in spirit to [tidyr::unnest()], the reverse of `tf_nest`.
+#' Similar in spirit to [tidyr::unnest()], the reverse of [tf_nest()].
+#' Caution -- uses slightly different defaults for names of unnested columns
+#' than `tidyr::unnest()`.  
+#' **Add an ID column to your data before unnesting!** If your nested data does
+#' not include an ID column with a unique identifier for each row, you will not
+#' be able to match arg-value pairs to different functions after unnesting, see 
+#' `.id`-argument below.
 #'
 #' @param data a data frame
 #' @param .arg optional values for the `arg` argument of
@@ -252,39 +258,24 @@ tf_nest <- function(data, ..., .id = "id", .arg = "arg", domain = NULL,
 #' @param try_dropping should `tf_unnest` try to avoid duplicating `id` or `arg`
 #'   columns? Defaults to TRUE.
 #' @inheritParams tf_evaluate.data.frame
-#' @inheritParams tidyr::unnest_legacy
+#' @inheritParams tidyr::unnest
 #' @return a "long" data frame with  `tf`-columns expanded into `id, arg, value`-
 #'   columns.
 #' @export
-#' @seealso tf_gather(), tf_unnest(), tf_evaluate.data.frame()
+#' @seealso tf_gather(), tf_nest(), tf_evaluate.data.frame()
 #' @importFrom digest digest
 #' @importFrom utils data tail
-tf_unnest <- function(data, ..., .arg, .drop = NA, .id = "id", .sep = "_",
-                      .preserve = NULL, try_dropping = TRUE) {
-  ret <- tf_evaluate.data.frame(data, ..., arg = .arg)
-  preserve <- unname(vars_select(names(data), !!enquo(.preserve)))
-  ## call evaluate on these columns with these .arg
-  ## modify call and evaluate that so that empty/missing args are handled
-  ## correctly: 
-  # call <- match.call()
-  # names(call) <- gsub("data", "object", names(call)) %>% 
-  #   gsub(".arg", "arg", ., fixed = TRUE)
-  # call <- call[names(call) %in% c(names(formals(tf_evaluate.data.frame)), "")]
-  # call[[1]] <- quote(tf_evaluate.data.frame)
-  ## avoid scoping issues
-  #call$object <- data 
-  #if (!is.null(call$arg)) call$arg <- .arg
-  #ret <- eval(call)
-  
-  
-  # don't unnest unevaluated tf-columns:
-  preserve <- unique(c(preserve, names(ret)[map_lgl(ret, is_tf)]))
-  ret <- tidyr::unnest_legacy(ret, .drop = .drop, .id = .id, .sep = .sep, 
-    .preserve = preserve)
+tf_unnest <- function(data, cols, .arg, .id = "id", keep_empty = FALSE,
+                      ptype = NULL, names_sep = "_",
+                      names_repair = "check_unique", try_dropping = TRUE) {
+  ret <- tf_evaluate.data.frame(data, !!enquo(cols), arg = .arg) %>% 
+    tidyr::unnest(cols = !!enquo(cols), keep_empty = keep_empty,
+                  ptype = ptype, names_sep = names_sep, 
+                  names_repair = names_repair)
   
   if (try_dropping) {
     # drop duplicated arg/id columns if possible:
-    arg_pattern <- paste0(.sep, "arg$")
+    arg_pattern <- paste0(names_sep, "arg$")
     same_arg <- ret %>%
       select(c(matches("^arg$"), matches(!!!arg_pattern))) %>%
       # stackoverflow.com/questions/7585316
@@ -295,7 +286,7 @@ tf_unnest <- function(data, ..., .arg, .drop = NA, .id = "id", .sep = "_",
       {
         row.names(.)[which(.)]
       }
-    id_pattern <- paste0(.sep, "id$")
+    id_pattern <- paste0(names_sep, "id$")
     same_id <- ret %>%
       select(c(matches("^id$", ignore.case = FALSE), matches(!!!id_pattern))) %>%
       # stackoverflow.com/questions/7585316

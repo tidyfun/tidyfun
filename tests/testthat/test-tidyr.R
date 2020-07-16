@@ -40,7 +40,7 @@ test_that("tf_spread works", {
   expect_error(tf_spread(d), "More than one")
   expect_equivalent(
     tf_spread(d, fb, sep = NULL)[, - (1:2)],
-    as.data.frame(as.matrix(d$fb))
+    as.data.frame(as.matrix.tfb(d$fb))
   )
   d$fi <- tf_jiggle(tf_rgp(3, 11L))
   expect_error(tf_spread(d, fi), "need explicit <arg>")
@@ -65,7 +65,7 @@ test_that("tf_nest works", {
   data <- bind_cols(data, g = rep(g, e = tf_count(f1)))
   expect_equal(tf_nest(data, value.x:value.y)$g, g)
   data <- bind_cols(data, f = rep(rnorm(nrow(data))))
-  expect_error(tf_nest(data, value.x:value.y), "Columns f are not constant")
+  expect_error(tf_nest(data, value.x:value.y), "Can't nest")
 })
 
 # weird scoping problem going on -- fixed by assigning
@@ -77,10 +77,13 @@ test_that("tf_unnest works", {
   f2 <- tf_rgp(3, 11L)
   data <- inner_join(as.data.frame(f1), as.data.frame(f2), by = c("id", "arg"))
   tfdata <- tf_nest(data)
-  expect_equal(NCOL(tf_unnest(tfdata, try_dropping = FALSE)), 7)
-  expect_equivalent(as.matrix(tf_unnest(tfdata, try_dropping = TRUE)[,2:4]), 
+  expect_equal(NCOL(tf_unnest(tfdata, cols = c(value.x, value.y), try_dropping = FALSE)), 5)
+  expect_equivalent(as.matrix(tf_unnest(tfdata, cols = c(value.x, value.y), try_dropping = TRUE)[2:4]), 
                     as.matrix(data[,2:4]))
-  expect_message(tf_unnest(tfdata, try_dropping = TRUE), "Duplicate columns")
-  expect_message(tf_unnest(tfdata, try_dropping = TRUE), "Renamed")
-  expect_is(tf_unnest(tfdata, value.x, .preserve = value.y)$value.y, "tfd")
+  expect_message(tf_unnest(tfdata, cols = c(value.x, value.y), try_dropping = TRUE), 
+                 "Duplicate column")
+  expect_message(tf_unnest(tfdata, cols = c(value.x, value.y), try_dropping = TRUE), 
+                 "Renamed")
+  expect_is(tf_unnest(tfdata, value.x)$value.y, 
+            "tfd")
 })

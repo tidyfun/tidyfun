@@ -49,8 +49,9 @@ StatTf <- ggproto("StatTf", Stat,
   },
   compute_layer = function(self, data, params, layout) {
     stopifnot(is_tf(pull(data, y)))
-    tf_eval <-
-      suppressMessages(tf_unnest(data, y, .arg = params$arg, .sep = "___")) %>%
+    tf_eval <- suppressMessages(
+      mutate(data, y___id = names(y) %||% seq_along(y)) %>% 
+      tf_unnest(y, .arg = params$arg, names_sep = "___")) %>%
       select(-group) %>%
       rename(group = y___id, x = y___arg, y = y___value)
     tf_eval

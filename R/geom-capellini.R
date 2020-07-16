@@ -61,7 +61,9 @@ StatCapellini <- ggproto("StatCapellini", Stat,
   compute_layer = function(self, data, params, layout) {
     stopifnot(is_tf(pull(data, tf)))
     tf_eval <-
-      suppressMessages(tf_unnest(data, tf, .arg = params$arg, .sep = "___")) %>%
+      suppressMessages(
+        mutate(data, tf___id = names(tf) %||% seq_along(tf)) %>% 
+          tf_unnest(tf, .arg = params$arg, names_sep = "___")) %>% 
       select(-group) %>%
       rename(group = tf___id, arg = tf___arg, value = tf___value) %>%
       mutate(

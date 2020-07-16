@@ -60,7 +60,7 @@ test_that("unpenalized tfb_spline works", {
   expect_equivalent(
     tfb_spline(exp(smoo), family = gaussian(link = "log"), 
                penalized = FALSE, verbose = FALSE) %>% 
-      log %>% as.matrix, 
+      log %>% as.matrix.tfb, 
     as.matrix(smoo), 
     tolerance = .001)
   

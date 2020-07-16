@@ -93,7 +93,7 @@ gglasagna <- function(data, y, order = NULL, label = NULL,
   data <- mutate(data, ..label = !!label, ..row = row_number(), ..order = !!order)
   tf_eval <- 
     #TODO: add .preserve for all list columns not being plotted
-    tf_unnest(data, y_name, .arg = arg, .sep = "___", try_dropping = FALSE) %>%
+    tf_unnest(data, y_name, .arg = arg, names_sep = "___", try_dropping = FALSE) %>%
     rename(..y = matches("___id"), ..x = matches("___arg"), ..fill = matches("___value"))
   order_by_label <- enexpr(order_by)
   if (has_order_by) {
@@ -120,7 +120,7 @@ gglasagna <- function(data, y, order = NULL, label = NULL,
    # mutate(..y = as.numeric(..y)) %>% 
     rename(!!y_name := ..fill)
   labeldata <- with(tf_eval, 
-                  data_frame(breaks = unique(..y), 
+                  tibble(breaks = unique(..y), 
                              labels = ..label[!duplicated(..y)]))
 
   p <- ggplot(tf_eval) +

@@ -6,42 +6,67 @@
 \usage{
 tf_unnest(
   data,
-  ...,
+  cols,
   .arg,
-  .drop = NA,
   .id = "id",
-  .sep = "_",
-  .preserve = NULL,
+  keep_empty = FALSE,
+  ptype = NULL,
+  names_sep = "_",
+  names_repair = "check_unique",
   try_dropping = TRUE
 )
 }
 \arguments{
 \item{data}{a data frame}
 
-\item{...}{optional: a selection of \code{tf}-columns. If empty, all \code{tf}-variables
-in the data frame are selected. You can supply bare variable names,
-select all variables between \code{x} and \code{z} with \code{x:z}, exclude \code{y} with \code{-y}.
-For more options, see the \code{\link[dplyr:select]{dplyr::select()}} documentation.}
+\item{cols}{<\code{\link[tidyr:tidyr_tidy_select]{tidy-select}}> Columns to unnest.
+
+If you \code{unnest()} multiple columns, parallel entries must be of
+compatible sizes, i.e. they're either equal or length 1 (following the
+standard tidyverse recycling rules).}
 
 \item{.arg}{optional values for the \code{arg} argument of
 \code{\link[=tf_evaluate.data.frame]{tf_evaluate.data.frame()}}}
 
-\item{.drop}{Should additional list columns be dropped? By default,
-\code{unnest()} will drop them if unnesting the specified columns requires the
-rows to be duplicated.}
+\item{.id}{\Sexpr[results=rd, stage=render]{lifecycle::badge("deprecated")}:
+convert \code{df \%>\% unnest(x, .id = "id")} to \verb{df \%>\% mutate(id = names(x)) \%>\% unnest(x))}.}
 
-\item{.id}{Data frame identifier - if supplied, will create a new column with
-name \code{.id}, giving a unique identifier. This is most useful if the list
-column is named.}
+\item{keep_empty}{By default, you get one row of output for each element
+of the list your unchopping/unnesting. This means that if there's a
+size-0 element (like \code{NULL} or an empty data frame), that entire row
+will be dropped from the output. If you want to preserve all rows,
+use \code{keep_empty = TRUE} to replace size-0 elements with a single row
+of missing values.}
 
-\item{.sep}{If non-\code{NULL}, the names of unnested data frame columns will
-combine the name of the original list-col with the names from the nested
-data frame, separated by \code{.sep}.}
+\item{ptype}{Optionally, supply a data frame prototype for the output \code{cols},
+overriding the default that will be guessed from the combination of
+individual values.}
 
-\item{.preserve}{Optionally, list-columns to preserve in the output. These
-will be duplicated in the same way as atomic vectors. This has
-\code{\link[dplyr:select]{dplyr::select()}} semantics so you can preserve multiple variables with
-\code{.preserve = c(x, y)} or \code{.preserve = starts_with("list")}.}
+\item{names_sep}{If \code{NULL}, the default, the names will be left
+as is. In \code{nest()}, inner names will come from the former outer names;
+in \code{unnest()}, the new outer names will come from the inner names.
+
+If a string, the inner and outer names will be used together. In \code{nest()},
+the names of the new outer columns will be formed by pasting together the
+outer and the inner column names, separated by \code{names_sep}. In \code{unnest()},
+the new inner names will have the outer names (+ \code{names_sep}) automatically
+stripped. This makes \code{names_sep} roughly symmetric between nesting and
+unnesting.}
+
+\item{names_repair}{Used to check that output data frame has valid
+names. Must be one of the following options:
+\itemize{
+\item "minimal": no name repair or checks, beyond basic existence,
+\item "unique": make sure names are unique and not empty,
+\item "check_unique": (the default), no name repair, but check they are unique,
+\item "universal": make the names unique and syntactic
+\item a function: apply custom name repair.
+\item \link[tidyr]{tidyr_legacy}: use the name repair from tidyr 0.8.
+\item a formula: a purrr-style anonymous function (see \code{\link[rlang:as_function]{rlang::as_function()}})
+}
+
+See \code{\link[vctrs:vec_as_names]{vctrs::vec_as_names()}} for more details on these terms and the
+strategies used to enforce them.}
 
 \item{try_dropping}{should \code{tf_unnest} try to avoid duplicating \code{id} or \code{arg}
 columns? Defaults to TRUE.}
@@ -51,8 +76,14 @@ a "long" data frame with  \code{tf}-columns expanded into \verb{id, arg, value}-
 columns.
 }
 \description{
-Similar in spirit to \code{\link[tidyr:nest]{tidyr::unnest()}}, the reverse of \code{tf_nest}.
+Similar in spirit to \code{\link[tidyr:nest]{tidyr::unnest()}}, the reverse of \code{\link[=tf_nest]{tf_nest()}}.
+Caution -- uses slightly different defaults for names of unnested columns
+than \code{tidyr::unnest()}.
+\strong{Add an ID column to your data before unnesting!} If your nested data does
+not include an ID column with a unique identifier for each row, you will not
+be able to match arg-value pairs to different functions after unnesting, see
+\code{.id}-argument below.
 }
 \seealso{
-tf_gather(), tf_unnest(), tf_evaluate.data.frame()
+tf_gather(), tf_nest(), tf_evaluate.data.frame()
 }
