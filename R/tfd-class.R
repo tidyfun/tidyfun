@@ -102,11 +102,11 @@ new_tfd <- function(arg = numeric(), datalist = list(), regular = TRUE, domain =
 #' treated as identical. E.g., if an evaluation of $f(t)$ is available at $t=1$
 #' and a function value is requested at $t = 1.01$, $f(1)$ will be returned if
 #' `resolution` < .01. By default, resolution will be set to an integer-valued power
-#' of 10 one smaller than smallest difference between adjacent
-#' arg-values rounded down to an integer-valued power
+#' of 10 one smaller than the smallest difference between adjacent
+#' `arg`-values rounded down to an integer-valued power
 #' of 10: e.g., if the smallest difference between consecutive
-#' arg-values is between $0.1 and 0.9999$, the resolution will be $0.01$, etc.
-#' In code: `10^(floor(log10(min(diff(<arg>))) - 1)`
+#' `arg`-values is between $0.1$ and $0.9999$, the resolution will be $0.01$, etc.
+#' In code: `resolution = 10^(floor(log10(min(diff(<arg>))) - 1)`
 #'
 #' @param data a `matrix`, `data.frame` or `list` of suitable shape, or another `tf`-object. when
 #' this argument is `NULL` (i.e. when calling `tfd()`) this returns a prototype of class `tfd`
@@ -118,8 +118,12 @@ tfd <- function(data, ...) UseMethod("tfd")
 
 #' @export
 #' @rdname tfd
-#' @param arg `numeric`, or list of `numeric`s. The evaluation grid. See Details.
-#'  For the `data.frame`-method: the name/number of the column defining the evaluation grid.
+#' @param arg `numeric`, or list of `numeric`s. The evaluation grid. See Details on its 
+#' interplay with `resolution`. 
+#'  For the `data.frame`-method: the name/number of the column defining the
+#'  evaluation grid. The `matrix` method will try to guess suitable `arg`-values
+#'  from the column names of `data` if `arg` is not supplied. Other methods fall back on 
+#'  integer sequences (`1:<length of data>`) as the default if not provided.
 #' @param domain range of the `arg`.
 #' @param evaluator a function accepting arguments `x, arg, evaluations`. See details for [tfd()].
 #' @param resolution resolution of the evaluation grid. See details for [tfd()].
@@ -195,11 +199,13 @@ tfd.list <- function(data, arg = NULL, domain = NULL,
                       vapply(where_na, length, numeric(1))))
       arg <- map2(arg, where_na, ~ .x[!.y])
     } else {
-      if (!is.null(arg)) {
-        arg <- ensure_list(arg)
-        assert_numeric(arg[[1]], finite = TRUE, any.missing = FALSE, 
-                       sorted = TRUE)
+      if (is.null(arg)) {
+        warning("No argument values supplied, using index positions.")
+        arg <- map(data, seq_along)
       }
+      arg <- ensure_list(arg)
+      assert_numeric(arg[[1]], finite = TRUE, any.missing = FALSE, 
+                     sorted = TRUE)
     }
     
   }
