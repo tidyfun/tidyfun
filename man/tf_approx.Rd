@@ -39,7 +39,7 @@ The list:
 \itemize{
 \item \code{tf_approx_linear} for linear interpolation without extrapolation (i.e.,
 \code{\link[zoo:na.approx]{zoo::na.approx()}} with \code{na.rm = FALSE})  -- this is the default,
-\item \code{tf_approx_spline} for cubic spline interpolation, (i.e., \code{\link[zoo:na.spline]{zoo::na.spline()}}
+\item \code{tf_approx_spline} for cubic spline interpolation, (i.e., \code{\link[zoo:na.approx]{zoo::na.spline()}}
 with \code{na.rm = FALSE}),
 \item \code{tf_approx_none} in order to not inter-/extrapolate ever (i.e., \code{\link[zoo:na.fill]{zoo::na.fill()}} with \code{fill = NA})
 \item \code{tf_approx_fill_extend} for linear interpolation and constant extrapolation

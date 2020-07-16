@@ -1,5 +1,5 @@
 ---
-title: "Converting data to tf"
+title: "Converting to tf"
 author: "Jeff Goldsmith"
 date: "`r Sys.Date()`"
 output: 

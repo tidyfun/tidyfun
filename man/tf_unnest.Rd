@@ -51,7 +51,7 @@ a "long" data frame with  \code{tf}-columns expanded into \verb{id, arg, value}-
 columns.
 }
 \description{
-Similar in spirit to \code{\link[tidyr:unnest]{tidyr::unnest()}}, the reverse of \code{tf_nest}.
+Similar in spirit to \code{\link[tidyr:nest]{tidyr::unnest()}}, the reverse of \code{tf_nest}.
 }
 \seealso{
 tf_gather(), tf_unnest(), tf_evaluate.data.frame()
