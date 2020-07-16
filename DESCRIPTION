@@ -6,8 +6,8 @@ Description: Provides S3 classes and methods for tidy functional data.
 Depends: R (>= 3.4)
 Imports:
   checkmate, digest, dplyr, GGally, ggplot2, grid, memoise, methods, mvtnorm, mgcv, 
-  modelr, pillar, pracma, purrr, refund, rlang, stats, stringr, tidyselect, tidyr (>= 1.0.0),
-  vctrs (>= 0.2.4), zoo
+  modelr, pillar, pracma, purrr, refund, rlang, stats, stringr, tibble, 
+  tidyselect, tidyr (>= 1.0.0), vctrs (>= 0.2.4), zoo
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true

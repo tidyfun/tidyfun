@@ -80,8 +80,7 @@ NULL
 #' layout(t(1:2))
 #' plot(f2, col = 1:5)
 #' plot(cumsum(f2), col = 1:5)
-#' # use ?tf_integrate.tfd for "function-wise" integrals i.e., weighted cumulative sums...
-#' lines(f2)
+#' # use ?tf_integrate for "function-wise" integrals i.e., weighted cumulative sums...
 #' @export
 Math.tfd <- function(x, ...) {
   fun_math(x, .Generic)

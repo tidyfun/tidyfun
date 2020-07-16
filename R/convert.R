@@ -28,6 +28,7 @@ as.tfd_irreg.tfd_irreg <- function(data, ...) {
 #' @param x an `tfd` object
 #' @inheritParams [.tf
 #' @export
+#' @importFrom tibble tibble
 as.data.frame.tfd <- function(x, row.names = NULL, optional = FALSE,
                               arg = NULL, interpolate = FALSE, ...) {
   if (is.null(arg)) {
