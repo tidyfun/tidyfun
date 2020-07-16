@@ -93,8 +93,12 @@ turn an irregular \code{tfd} into a regular one, see examples.}
 
 \item{optional}{not used}
 
-\item{arg}{\code{numeric}, or list of \code{numeric}s. The evaluation grid. See Details.
-For the \code{data.frame}-method: the name/number of the column defining the evaluation grid.}
+\item{arg}{\code{numeric}, or list of \code{numeric}s. The evaluation grid. See Details on its
+interplay with \code{resolution}.
+For the \code{data.frame}-method: the name/number of the column defining the
+evaluation grid. The \code{matrix} method will try to guess suitable \code{arg}-values
+from the column names of \code{data} if \code{arg} is not supplied. Other methods fall back on
+integer sequences (\verb{1:<length of data>}) as the default if not provided.}
 
 \item{interpolate}{should functions be evaluated (i.e., inter-/extrapolated)
 for values in \code{arg} for which no original data is available? Only relevant for
@@ -134,7 +138,7 @@ Available \code{evaluator}-functions:
 \itemize{
 \item \code{tf_approx_linear} for linear interpolation without extrapolation (i.e.,
 \code{\link[zoo:na.approx]{zoo::na.approx()}} with \code{na.rm = FALSE})  -- this is the default,
-\item \code{tf_approx_spline} for cubic spline interpolation, (i.e., \code{\link[zoo:na.spline]{zoo::na.spline()}}
+\item \code{tf_approx_spline} for cubic spline interpolation, (i.e., \code{\link[zoo:na.approx]{zoo::na.spline()}}
 with \code{na.rm = FALSE}),
 \item \code{tf_approx_fill_extend} for linear interpolation and constant extrapolation
 (i.e., \code{\link[zoo:na.fill]{zoo::na.fill()}} with \code{fill = "extend"})
@@ -151,11 +155,11 @@ this.
 treated as identical. E.g., if an evaluation of $f(t)$ is available at $t=1$
 and a function value is requested at $t = 1.01$, $f(1)$ will be returned if
 \code{resolution} < .01. By default, resolution will be set to an integer-valued power
-of 10 one smaller than smallest difference between adjacent
-arg-values rounded down to an integer-valued power
+of 10 one smaller than the smallest difference between adjacent
+\code{arg}-values rounded down to an integer-valued power
 of 10: e.g., if the smallest difference between consecutive
-arg-values is between $0.1 and 0.9999$, the resolution will be $0.01$, etc.
-In code: \verb{10^(floor(log10(min(diff(<arg>))) - 1)}
+\code{arg}-values is between $0.1$ and $0.9999$, the resolution will be $0.01$, etc.
+In code: \verb{resolution = 10^(floor(log10(min(diff(<arg>))) - 1)}
 }
 \examples{
 #turn irregular to regular tfd
