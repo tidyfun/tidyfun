@@ -68,7 +68,7 @@ gglasagna <- function(data, y, order = NULL, label = NULL,
     order_ticks <- TRUE
   }
   
-  # FIXME: render errors for weird arg lenght (e.g. 93)
+  # FIXME: render errors for weird arg lengths (e.g. 93)
   stopifnot(is_tf(pull(data, !!enexpr(y))))
   has_order <- !is.null(match.call()[["order"]])
   has_order_by <- !is.null(match.call()[["order_by"]])
@@ -93,8 +93,9 @@ gglasagna <- function(data, y, order = NULL, label = NULL,
   data <- mutate(data, ..label = !!label, ..row = row_number(), ..order = !!order)
   tf_eval <- 
     #TODO: add .preserve for all list columns not being plotted
-    tf_unnest(data, y_name, .arg = arg, names_sep = "___", try_dropping = FALSE) %>%
-    rename(..y = matches("___id"), ..x = matches("___arg"), ..fill = matches("___value"))
+    mutate(data, ..y = names((enexpr(y))) %||% row_number()) %>%  #vertical position variable
+    tf_unnest(y_name, .arg = arg, names_sep = "___", try_dropping = FALSE) %>%
+    rename(..x = matches("___arg"), ..fill = matches("___value"))
   order_by_label <- enexpr(order_by)
   if (has_order_by) {
     order_by_label <- quo_name(order_by_label)
