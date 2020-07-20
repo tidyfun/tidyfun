@@ -265,9 +265,18 @@ tf_nest <- function(data, ..., .id = "id", .arg = "arg", domain = NULL,
 #' @seealso tf_gather(), tf_nest(), tf_evaluate.data.frame()
 #' @importFrom digest digest
 #' @importFrom utils data tail
+#' @importFrom rlang syms `!!!` expr_text
 tf_unnest <- function(data, cols, .arg, .id = "id", keep_empty = FALSE,
                       ptype = NULL, names_sep = "_",
                       names_repair = "check_unique", try_dropping = TRUE) {
+  
+  if (missing(cols)) {
+    tf_cols <- names(data)[map_lgl(data, is_tf)]
+    cols <- expr(c(!!!syms(tf_cols)))
+    warning(paste0("`cols` is now required.\n", "Please use `cols = ", 
+                expr_text(cols), "`"))
+  }
+  
   ret <- tf_evaluate.data.frame(data, !!enquo(cols), arg = .arg) %>% 
     tidyr::unnest(cols = !!enquo(cols), keep_empty = keep_empty,
                   ptype = ptype, names_sep = names_sep, 
