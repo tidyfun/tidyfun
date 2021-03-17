@@ -87,3 +87,12 @@ test_that("tf_unnest works", {
   expect_is(tf_unnest(tfdata, value.x)$value.y, 
             "tfd")
 })
+
+# tidyfun#109
+test_that("tf_nest / tf_unnest work with numeric id-variables", {
+  d <- tf_rgp(10) %>% as.data.frame()
+  d$id <- as.numeric(d$id) * 10
+  nested <- tf_nest(d)
+  unnested <- tf_unnest(nested, cols = value)
+  expect_equivalent(d, unnested)
+})

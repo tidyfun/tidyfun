@@ -231,9 +231,10 @@ tf_nest <- function(data, ..., .id = "id", .arg = "arg", domain = NULL,
       tfd(evaluator = !!(..2), domain = ..3, resolution = ..4)
   )
   names(tfd_list) <- value_vars
-  # re-index to make sure order is correct
-  id_index <- pull(ret, id_var)
-  if (is.factor(id_index)) id_index <- as.character(id_index)
+  # re-index to make sure order is correct,
+  # use <character> index so that numeric ids are interpreted correctly
+  # as names (f["1000",]), not index positions (f[1000, ])
+  id_index <- pull(ret, id_var) %>% as.character()
   for (v in value_vars) {
     ret[[v]] <- tfd_list[[v]][id_index, ]
   }
