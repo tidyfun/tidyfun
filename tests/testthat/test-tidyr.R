@@ -54,7 +54,7 @@ test_that("tf_spread works", {
 test_that("tf_nest works", {
   f1 <- tf_rgp(3, 11L)
   f2 <- tf_rgp(3, 11L)
-  data <- inner_join(as.data.frame(f1), as.data.frame(f2), by = c("id", "arg"))
+  data <- dplyr::inner_join(as.data.frame(f1), as.data.frame(f2), by = c("id", "arg"))
   expect_equivalent(tf_nest(data)$value.x, f1)
   expect_equivalent(tf_nest(data)$value.y, f2)
   expect_equal(names(tf_nest(data, value.x:value.y)), names(tf_nest(data)))
@@ -75,7 +75,7 @@ test_that("tf_unnest works", {
   set.seed(121211)
   f1 <- tf_rgp(3, 11L)
   f2 <- tf_rgp(3, 11L)
-  data <- inner_join(as.data.frame(f1), as.data.frame(f2), by = c("id", "arg"))
+  data <- dplyr::inner_join(as.data.frame(f1), as.data.frame(f2), by = c("id", "arg"))
   tfdata <- tf_nest(data)
   expect_equal(NCOL(tf_unnest(tfdata, cols = c(value.x, value.y), try_dropping = FALSE)), 5)
   expect_equivalent(as.matrix(tf_unnest(tfdata, cols = c(value.x, value.y), try_dropping = TRUE)[2:4]), 

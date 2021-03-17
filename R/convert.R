@@ -79,9 +79,9 @@ as.matrix.tfb <- function(x, arg = NULL, ...) {
   # check arg-vector
   # rm dplyr / tidyr, evaluate basis then mutiply with coefs
   ret <- as.data.frame(x, arg = arg) %>%
-    arrange(arg) %>%
+    dplyr::arrange(arg) %>%
     tidyr::spread(key = arg, value = value) %>%
-    select(-id) %>%
+    dplyr::select(-id) %>%
     as.matrix()
   rownames(ret) <- names(x)
   structure(ret, arg = as.numeric(colnames(ret)))
