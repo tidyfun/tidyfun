@@ -43,7 +43,12 @@ vec_cast.tfd_reg.tfd_reg <- function(x, to, ...) { x }
 #' @rdname vctrs
 #' @method vec_cast.tfd_reg tfd_irreg
 #' @export
-vec_cast.tfd_reg.tfd_irreg <- function(x, to, ...) { stop("casting irreg to reg is not allowed") }
+vec_cast.tfd_reg.tfd_irreg <- function(x, to, ...) {
+  stop("casting tfd_irreg to tfd_reg not possible -- use \n",
+    "  # tfd(<some tfd_irreg>, arg = <some vector>) \n",
+    "  to force irregular data onto a common grid. "
+  ) 
+}
 
 #' @rdname vctrs
 #' @method vec_cast.tfd_irreg tfd_reg
@@ -88,7 +93,7 @@ vec_ptype2.tfd_reg.tfd_irreg <- function(x, y, ...) { vec_ptype2_tfd_tfd(x, y, .
 #' @export
 #' @export vec_ptype2.tfd_irreg
 #' @inheritParams vctrs::vec_ptype2
-vec_ptype2.tfd_irreg <- function(x, y, ...) UseMethod("vec_ptype2.tfd_reg")
+vec_ptype2.tfd_irreg <- function(x, y, ...) UseMethod("vec_ptype2.tfd_irreg")
 
 #' @name vctrs
 #' @method vec_ptype2.tfd_irreg tfd_reg
@@ -314,6 +319,5 @@ vec_ptype2_tfb_tfb = function(x, y, ...) {
   forget(attr(ret, "basis"))
   
   ret
-  
 }
 
