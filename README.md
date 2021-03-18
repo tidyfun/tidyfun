@@ -5,13 +5,13 @@
 
 <!-- badges: start -->
 
-[![Build
-Status](https://travis-ci.org/tidyfun/tidyfun.svg?branch=master)](https://travis-ci.org/tidyfun/tidyfun)
 [![Lifecycle:
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
 [![Build
 Status](https://ci.appveyor.com/api/projects/status/github/tidyfun/tidyfun?branch=master&svg=true)](https://ci.appveyor.com/project/tidyfun/tidyfun/branch/master)
 [![codecov.io](https://codecov.io/github/tidyfun/tidyfun/coverage.svg?branch=master)](https://codecov.io/github/tidyfun/tidyfun/branch/master)
+[![R build
+status](https://github.com/tidyfun/tidyfun/workflows/R-CMD-check/badge.svg)](https://github.com/tidyfun/tidyfun/actions)
 <!-- badges: end -->
 
 The goal of **`tidyfun`** is to provide accessible and well-documented
@@ -38,31 +38,27 @@ devtools::install_github("tidyfun/tidyfun")
 
 **`tidyfun`** provides:
 
-  - new **data types** for representing functional data: **`tfd`** &
+-   new **data types** for representing functional data: **`tfd`** &
     **`tfb`**
-  - arithmetic **operators** and descriptive **statistics** for such
+-   arithmetic **operators** and descriptive **statistics** for such
     data
-  - `tidyverse`-verbs for handling functional data – especially
+-   `tidyverse`-verbs for handling functional data – especially
     **inside** data frames
-  - new **graphics** functions for `tf` vectors and tidy functional data
+-   new **graphics** functions for `tf` vectors and tidy functional data
     frames
 
 For detailed information on the features of `tidyfun`, check out
-articles on the following
-    topics:
+articles on the following topics:
 
-  - [Representing](https://tidyfun.github.io/tidyfun/articles/x01_tf_Vectors.html)
-    functional data as `tf` vectors, and operating on those
-    vectors
-  - [Converting](https://tidyfun.github.io/tidyfun/articles/x02_Conversion.html)
+-   [Representing](https://tidyfun.github.io/tidyfun/articles/x01_tf_Vectors.html)
+    functional data as `tf` vectors, and operating on those vectors
+-   [Converting](https://tidyfun.github.io/tidyfun/articles/x02_Conversion.html)
     non-tidy functional data (matrices, “long” and “wide” data frames)
-    to tidy functional
-    data
-  - [Wrangling](https://tidyfun.github.io/tidyfun/articles/x03_Data_Wrangling.html)
+    to tidy functional data
+-   [Wrangling](https://tidyfun.github.io/tidyfun/articles/x03_Data_Wrangling.html)
     data frames that include functional data using `tidyverse` and
-    `tidyfun`
-    tools
-  - [Visualizing](https://tidyfun.github.io/tidyfun/articles/x04_Visualization.html)
+    `tidyfun` tools
+-   [Visualizing](https://tidyfun.github.io/tidyfun/articles/x04_Visualization.html)
     tidy functional data
 
 The result is a package that enables exploratory data analysis like the
@@ -98,9 +94,9 @@ summarized.
 
 Almost all
 
-  - operators like `==`, `+` or `*`
-  - math functions like `sum`, `log` or `abs`
-  - and statistics functions like `mean` or `sd`
+-   operators like `==`, `+` or `*`
+-   math functions like `sum`, `log` or `abs`
+-   and statistics functions like `mean` or `sd`
 
 are defined for **`tidyfun`**’s data structures
 ([more](https://tidyfun.github.io/tidyfun/reference/index.html#section-arithmetic-logical-and-summary-functions)).
@@ -128,8 +124,7 @@ conversions.
 
 [See
 here](https://tidyfun.github.io/tidyfun/articles/x02_Conversion.html)
-details on getting data into (and out of) the `tf`
-format.
+details on getting data into (and out of) the `tf` format.
 
 #### `tidyverse` verbs for dealing with functional data inside data frames
 
@@ -146,12 +141,12 @@ to see how you can wrangle functional data.
 
 **`tidyfun`** defines **pasta-themed** `geom`s for functional data:
 
-  - **`geom_spaghetti`** for lines,
-  - **`geom_meatballs`** for (lines &) points,
-  - **`gglasagna`** for [lasagna
+-   **`geom_spaghetti`** for lines,
+-   **`geom_meatballs`** for (lines &) points,
+-   **`gglasagna`** for [lasagna
     plots](https://asset.jmir.pub/assets/76aeec48564abf0e6f6da8e9cd06346d.png),
     with an **`order`**-aesthetic to sort the lasagna layers,
-  - **`geom_capellini`** for
+-   **`geom_capellini`** for
     [glyphs](http://ggobi.github.io/ggally/index_files/figure-html/glyphs-basic-usage-1.png)
     plots (i.e., sparklines),
 
@@ -165,7 +160,7 @@ the
 [Visualization](https://tidyfun.github.io/tidyfun/articles/x04_Visualization.html)
 vignette.
 
------
+------------------------------------------------------------------------
 
 Found a bug? Got a question? Missing some functionality?  
 Please let us know so we can make it better.
