@@ -91,12 +91,14 @@ new_tfb_spline <- function(data, domain = numeric(), arg = numeric(),
     spec_object$X <- PredictMat(spec_object, data = data.frame(arg = arg_u$x))
   }
   if (verbose) {
+    pve_summary <- capture.output(summary(round(100 * fit$pve, 1)))
     message(
       "Percentage of input data variability preserved in basis representation\n(",
       if (!ls_fit) "on inverse link-scale, " else NULL,
-      "per functional observation, approximate):"
+      "per functional observation, approximate):\n",
+      pve_summary[1], "\n",
+      pve_summary[2]
     )
-    print(summary(round(100 * fit$pve, 1)))
   }
   
   basis_constructor <- smooth_spec_wrapper(spec_object)
@@ -307,13 +309,13 @@ tfb_spline.tfb <- function(data, arg = NULL,
 }
 
 #' @export
-#' @describeIn tfb_spline convert `tfb`: default method, returning prototype when data is NULL
+#' @describeIn tfb_spline convert `tfb`: default method, returning prototype when data is missing
 tfb_spline.default = function(data, arg = NULL,
                               domain = NULL, penalized = TRUE, 
                               global = FALSE, resolution = NULL, ...) {
   
   if (!missing(data)) {
-    message("input `data` not recognized class; returning prototype of length 0")
+    message("input `data` not from a recognized class; returning prototype of length 0")
   }
   
   data = data.frame()
