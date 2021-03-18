@@ -22,7 +22,7 @@ test_that("tf_evaluate.tfd works for irregular", {
   expect_error(tf_evaluate(irr, 0.5, a), "too many")
 })
 
-smoo_tfb <- tfb(smoo, penalized = FALSE)
+smoo_tfb <- tfb(smoo, penalized = FALSE, verbose = FALSE)
 
 test_that("tf_evaluate.tfb works", {
   expect_identical(tf_evaluate(smoo_tfb),

@@ -7,11 +7,13 @@ cca = dti_df$cca
 rcst = dti_df$cca
 
 test_that("concatenation behaves for tfd", {
-  expect_is(c(x, y), "tfd_irreg")
+  expect_warning(c(x, y), "different grids")
+  expect_warning(c(x, y), "different resolutions")
+  expect_is(suppressWarnings(c(x, y)), "tfd_irreg")
   expect_is(c(cca[1], rcst[1]), "tfd_irreg")
   expect_is(c(x, x), "tfd_reg")
   expect_error(c(x, tfb(x)))
-  expect_numeric(tf_evaluate(c(x, y)[1])[[1]])
+  expect_numeric(suppressWarnings(tf_evaluate(c(x, y)[1])[[1]]))
 })
 
 

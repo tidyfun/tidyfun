@@ -173,7 +173,7 @@ directly for all curves, this is \emph{not} what's implemented here.
 
 \item \code{tfb}: convert \code{tfb}: modify basis representation, smoothing.
 
-\item \code{default}: convert \code{tfb}: default method, returning prototype when data is NULL
+\item \code{default}: convert \code{tfb}: default method, returning prototype when data is missing
 }}
 
 \seealso{

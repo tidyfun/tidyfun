@@ -5,7 +5,7 @@ context("tfb_spline constructor: basics")
 
 test_that("tfb_spline defaults work for all kinds of regular input", {
   expect_is(tfb_spline(smoo, verbose = FALSE), "tfb_spline")
-  expect_output(tfb_spline(smoo), "100")
+  expect_message(tfb_spline(smoo), "100")
   expect_equal(length(tfb_spline(smoo, verbose = FALSE)), length(smoo))
   expect_equivalent(tf_evaluations(tfb_spline(smoo, verbose = FALSE)), tf_evaluations(smoo), 
                tolerance = 1e-3)
@@ -20,9 +20,9 @@ test_that("tfb_spline defaults work for all kinds of regular input", {
 
 test_that("tfb_spline defaults work for all kinds of irregular input", {
   expect_is(tfb_spline(irr, verbose = FALSE), "tfb_spline")
-  expect_output(tfb_spline(irr), "100")
+  expect_message(tfb_spline(irr), "100")
   expect_equal(length(tfb_spline(irr, verbose = FALSE)), length(irr))
-  expect_output(tfb_spline(irr_df), "100")
+  expect_message(tfb_spline(irr_df), "100")
   for (irr_tfb in list(tfb_spline(irr_list, arg = tf_arg(irr), verbose = FALSE),
                       tfb_spline(irr_matrix, verbose = FALSE), 
                       tfb_spline(irr_df, verbose = FALSE))) {

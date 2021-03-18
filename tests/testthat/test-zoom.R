@@ -1,4 +1,4 @@
-context("tf_zooming")
+context("tf_zoom")
 
 set.seed(123)
 x <- tf_rgp(4, arg = seq(0, 1, l = 51), nugget = .1)
@@ -41,24 +41,28 @@ test_that("tf_zoom for tfb_spline works", {
   expect_error(tf_zoom(xb, c(.8, .1)))
   expect_error(tf_zoom(xb, .11, .111), "no data")
 
-  expect_message(tf_zoom(xb, .2, seq(.3, 1, l = length(x))), "converting")
+  expect_message(tf_zoom(xb, .2, seq(.3, 1, l = length(x))), "converting to tfd")
   expect_true(is_irreg(tf_zoom(xb, .2, seq(.3, 1, l = length(x)))))
 })
 
 test_that("tf_zoom for tfb_fpc works", {
-  expect_equal(tf_domain(tf_zoom(xfpc, .2, .8)), c(.2, .8))
+  expect_warning(
+    tf_zoom(xfpc, .2, .8), "lose orthogonality of FPC basis")
+  expect_equal(
+    tf_domain(suppressWarnings(tf_zoom(xfpc, .2, .8))), 
+    c(.2, .8)
+  )
   expect_equivalent(
-    as.matrix(tf_zoom(xfpc, 0, .5)), 
+    suppressWarnings(as.matrix(tf_zoom(xfpc, 0, .5))), 
     as.matrix(xfpc)[, 1:26]
   )
   expect_equivalent(
-    as.data.frame(tf_zoom(xfpc, 0, .5)),
+    suppressWarnings(as.data.frame(tf_zoom(xfpc, 0, .5))),
     as.data.frame(xfpc) %>% dplyr::filter(arg <= .5)
   )
   
-  expect_error(tf_zoom(xfpc, c(.8, .1)))
-  expect_error(tf_zoom(xb, .11, .111), "no data")
-  
-  expect_message(tf_zoom(xfpc, .2, seq(.3, 1, l = length(x))), "converting")
-  expect_true(is_irreg(tf_zoom(xfpc, .2, seq(.3, 1, l = length(x)))))
+  expect_error(suppressWarnings(tf_zoom(xfpc, .8, .1)))
+  expect_error(suppressWarnings(tf_zoom(xfpc, .11, .111)), "no data")
+  expect_true(suppressWarnings(
+    is_irreg(tf_zoom(xfpc, .2, seq(.3, 1, l = length(x))))))
 })
