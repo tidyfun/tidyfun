@@ -1,5 +1,5 @@
 #' @importFrom stats var na.omit median gaussian
-#' @importFrom tools capture.output
+#' @importFrom utils capture.output
 new_tfb_spline <- function(data, domain = numeric(), arg = numeric(), 
                            resolution = numeric(),
                            penalized = TRUE, global = FALSE,
