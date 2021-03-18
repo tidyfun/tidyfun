@@ -1,14 +1,16 @@
 #' @rdname tfd
 #' @export
 as.tfd <- function(data, ...) UseMethod("as.tfd")
+#' @export
 as.tfd.default <- function(data, ...) {
   tfd(data, ...)
 }
 
 # TODO: this ignores arg, domain for now, only needed internally in c.tfd
 #' @rdname tfd
+#' @export
 as.tfd_irreg <- function(data, ...) UseMethod("as.tfd_irreg")
-
+#' @export
 as.tfd_irreg.tfd_reg <- function(data, ...) {
   arg <- ensure_list(tf_arg(data))
   ret <- map2(tf_evaluations(data), arg, ~list(arg = .y, value = .x))
@@ -17,7 +19,7 @@ as.tfd_irreg.tfd_reg <- function(data, ...) {
   class(ret)[1] <- "tfd_irreg"
   ret
 }
-
+#' @export
 as.tfd_irreg.tfd_irreg <- function(data, ...) {
   data
 }
@@ -75,6 +77,7 @@ as.data.frame.tfb <- function(x, row.names = NULL, optional = FALSE,
 }
 
 #' @rdname tfb
+#' @export
 as.matrix.tfb <- function(x, arg = NULL, ...) {
   # check arg-vector
   # rm dplyr / tidyr, evaluate basis then mutiply with coefs
