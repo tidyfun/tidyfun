@@ -66,7 +66,7 @@ chf_df %>%
   ggplot(aes(y = activity)) + geom_spaghetti(alpha = .05)
 ```
 
-The `tidyfun::dti_df` contains ractional anisotropy (FA) tract profiles for the corpus callosum (cca) and the right corticospinal tract (rcst), along with several covariates. 
+The `tidyfun::dti_df` contains fractional anisotropy (FA) tract profiles for the corpus callosum (cca) and the right corticospinal tract (rcst), along with several covariates. 
 
 ```{r view_dti}
 data(dti_df)
@@ -228,16 +228,3 @@ chf_df %>%
   mutate(act_basis = tfb(activity)) %>% 
   select(id, gender, act_basis)
 ```
-
-# Some not-allowed tidying
-
-Unfortunately, based on the existing infrastructure for non-standard data types in `dplyr`,
-some operations are not possible at this time. The most important of these to note are binds.
-
-Using the datasets defined above, it would ideally be possible to combine these using `bind_rows`, but the following code does not work:
-
-```{r, error = TRUE}
-bind_rows(monday_df, friday_df)
-```
-
-In many cases, the need for this operation can be avoided through suitable data wrangling prior to converting functional data to a `tf` object. It's also possible to avoid `bind_rows`  by using `rbind`, which still works. See [tidyfun/issues/53](https://github.com/fabian-s/tidyfun/issues/53) for a discussion of related issues.  
