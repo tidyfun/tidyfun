@@ -1,4 +1,5 @@
 #' @importFrom stats var na.omit median gaussian
+#' @importFrom tools capture.output
 new_tfb_spline <- function(data, domain = numeric(), arg = numeric(), 
                            resolution = numeric(),
                            penalized = TRUE, global = FALSE,
@@ -91,7 +92,7 @@ new_tfb_spline <- function(data, domain = numeric(), arg = numeric(),
     spec_object$X <- PredictMat(spec_object, data = data.frame(arg = arg_u$x))
   }
   if (verbose) {
-    pve_summary <- capture.output(summary(round(100 * fit$pve, 1)))
+    pve_summary <- utils::capture.output(summary(round(100 * fit$pve, 1)))
     message(
       "Percentage of input data variability preserved in basis representation\n(",
       if (!ls_fit) "on inverse link-scale, " else NULL,
