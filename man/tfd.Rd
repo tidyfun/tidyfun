@@ -127,13 +127,13 @@ Various constructor and conversion methods.
 containing evaluations or a list of 2-column matrices/data.frames with
 \code{arg} in the first and evaluations in the second column
 
-return class prototype when argument to tfd() is NULL or not a recongised class
+return class prototype when argument to tfd() is NULL or not a recognised class
 }
 \details{
 \strong{\code{evaluator}}: must be the (quoted or bare) name of a
-\verb{function(x, arg, evaluations)} that returns
-the functions' (tf_approximated/interpolated) values at locations \code{x} based on
-the \code{evaluations} available at locations \code{arg}.\cr
+function with signature \verb{function(x, arg, evaluations)} that returns
+the functions' (approximated/interpolated) values at locations \code{x} based on
+the function \code{evaluations} available at locations \code{arg}.\cr
 Available \code{evaluator}-functions:
 \itemize{
 \item \code{tf_approx_linear} for linear interpolation without extrapolation (i.e.,
@@ -152,23 +152,26 @@ this.
 }
 
 \strong{\code{resolution}}: \code{arg}-values that are equivalent up to this difference are
-treated as identical. E.g., if an evaluation of $f(t)$ is available at $t=1$
-and a function value is requested at $t = 1.01$, $f(1)$ will be returned if
+treated as identical. E.g., if an evaluation of \eqn{f(t)} is available at \eqn{t=1}
+and a function value is requested at \eqn{t = 1.01}, \eqn{f(1)} will be returned if
 \code{resolution} < .01. By default, resolution will be set to an integer-valued power
 of 10 one smaller than the smallest difference between adjacent
 \code{arg}-values rounded down to an integer-valued power
 of 10: e.g., if the smallest difference between consecutive
-\code{arg}-values is between $0.1$ and $0.9999$, the resolution will be $0.01$, etc.
+\code{arg}-values is between 0.1 and 0.9999, the resolution will be 0.01, etc.
 In code: \verb{resolution = 10^(floor(log10(min(diff(<arg>))) - 1)}
 }
 \examples{
-#turn irregular to regular tfd
-#TODO: add extra function/verb for this
+#turn irregular to regular tfd by evaluating on a common grid:
 
 (f <- c(tf_rgp(1, arg = seq(0,1,l=11)), tf_rgp(1, arg = seq(0,1,l=21))))
-tfd(f, interpolate = TRUE, arg = seq(0,1,l=21))
+tfd(f, arg = seq(0, 1, l = 21))
 
 (f <- c(dti_df$cca[1], dti_df$rcst[2]))
-tfd(f, interpolate = TRUE, arg = seq(0,1,l=21))
-
+#does not yield regular data because linear extrapolation yields NAs outside observed range:
+tfd(f, arg = seq(0, 1, l = 101)) 
+# this "works" (but may not yield sensible values..!!) for e.g. constant extrapolation:
+tfd(f, evaluator = tf_approx_fill_extend, arg = seq(0, 1, l = 101))
+plot(f, col = 2)
+lines(tfd(f, evaluator = tf_approx_fill_extend, arg = seq(0, 1, l = 151)))
 }

@@ -9,7 +9,7 @@
 \usage{
 tf_evaluate(object, ..., arg)
 
-\method{tf_evaluate}{tfd}(object, ..., arg)
+\method{tf_evaluate}{tfd}(object, ..., arg, evaluator = tf_evaluator(object))
 
 \method{tf_evaluate}{tfb}(object, ..., arg)
 
@@ -23,8 +23,11 @@ in the data frame are selected. You can supply bare variable names,
 select all variables between \code{x} and \code{z} with \code{x:z}, exclude \code{y} with \code{-y}.
 For more options, see the \code{\link[dplyr:select]{dplyr::select()}} documentation.}
 
-\item{arg}{optional evaluation grid (vector or list of vectors),
-defaults to \code{tf_arg(object)}.}
+\item{arg}{optional evaluation grid (vector or list of vectors).
+Defaults to \code{tf_arg(object)}.}
+
+\item{evaluator}{optional. The function to use for inter/extrapolating the \code{tfd}.
+Defaults to \code{tf_evaluator(object)}. See e.g. \code{\link[=tf_approx_linear]{tf_approx_linear()}} for details.}
 }
 \value{
 For \code{tf}-objects, a list of numeric vectors containing the function

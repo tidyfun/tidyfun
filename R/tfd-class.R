@@ -82,9 +82,9 @@ new_tfd <- function(arg = numeric(), datalist = list(), regular = TRUE, domain =
 #' Various constructor and conversion methods.
 #'
 #' **`evaluator`**: must be the (quoted or bare) name of a
-#' `function(x, arg, evaluations)` that returns
-#' the functions' (tf_approximated/interpolated) values at locations `x` based on
-#' the `evaluations` available at locations `arg`.\cr
+#' function with signature `function(x, arg, evaluations)` that returns
+#' the functions' (approximated/interpolated) values at locations `x` based on
+#' the function `evaluations` available at locations `arg`.\cr
 #' Available `evaluator`-functions:
 #' - `tf_approx_linear` for linear interpolation without extrapolation (i.e.,
 #' [zoo::na.approx()] with `na.rm = FALSE`)  -- this is the default,
@@ -101,13 +101,13 @@ new_tfd <- function(arg = numeric(), datalist = list(), regular = TRUE, domain =
 #' this.
 #'
 #' **`resolution`**: `arg`-values that are equivalent up to this difference are
-#' treated as identical. E.g., if an evaluation of $f(t)$ is available at $t=1$
-#' and a function value is requested at $t = 1.01$, $f(1)$ will be returned if
+#' treated as identical. E.g., if an evaluation of \eqn{f(t)} is available at \eqn{t=1}
+#' and a function value is requested at \eqn{t = 1.01}, \eqn{f(1)} will be returned if
 #' `resolution` < .01. By default, resolution will be set to an integer-valued power
 #' of 10 one smaller than the smallest difference between adjacent
 #' `arg`-values rounded down to an integer-valued power
 #' of 10: e.g., if the smallest difference between consecutive
-#' `arg`-values is between $0.1$ and $0.9999$, the resolution will be $0.01$, etc.
+#' `arg`-values is between 0.1 and 0.9999, the resolution will be 0.01, etc.
 #' In code: `resolution = 10^(floor(log10(min(diff(<arg>))) - 1)`
 #'
 #' @param data a `matrix`, `data.frame` or `list` of suitable shape, or another `tf`-object. when
@@ -150,8 +150,8 @@ tfd.numeric <- function(data, arg = NULL,
   data <- t(as.matrix(data))
   # dispatch to matrix method
   args <- list(data,
-    arg = arg, domain = domain,
-    evaluator = evaluator, resolution = resolution
+               arg = arg, domain = domain,
+               evaluator = evaluator, resolution = resolution
   )
   return(do.call(tfd, args))
 }
@@ -222,22 +222,25 @@ tfd.list <- function(data, arg = NULL, domain = NULL,
     regular <- (length(data) == 1 | all(duplicated(arg)[-1]))
   }
   new_tfd(arg, data,
-    regular = regular, domain = domain,
-    evaluator = evaluator, resolution = resolution
+          regular = regular, domain = domain,
+          evaluator = evaluator, resolution = resolution
   )
 }
 
 #' @export
 #' @examples
-#' #turn irregular to regular tfd
-#' #TODO: add extra function/verb for this
-#' 
+#' #turn irregular to regular tfd by evaluating on a common grid:
+#'
 #' (f <- c(tf_rgp(1, arg = seq(0,1,l=11)), tf_rgp(1, arg = seq(0,1,l=21))))
-#' tfd(f, interpolate = TRUE, arg = seq(0,1,l=21))
+#' tfd(f, arg = seq(0, 1, l = 21))
 #' 
 #' (f <- c(dti_df$cca[1], dti_df$rcst[2]))
-#' tfd(f, interpolate = TRUE, arg = seq(0,1,l=21))
-#' 
+#' #does not yield regular data because linear extrapolation yields NAs outside observed range:
+#' tfd(f, arg = seq(0, 1, l = 101)) 
+#' # this "works" (but may not yield sensible values..!!) for e.g. constant extrapolation:
+#' tfd(f, evaluator = tf_approx_fill_extend, arg = seq(0, 1, l = 101))
+#' plot(f, col = 2)
+#' lines(tfd(f, evaluator = tf_approx_fill_extend, arg = seq(0, 1, l = 151)))
 #' @rdname tfd
 tfd.tf <- function(data, arg = NULL, domain = NULL,
                    evaluator = NULL, resolution = NULL, ...) {
@@ -253,23 +256,24 @@ tfd.tf <- function(data, arg = NULL, domain = NULL,
   re_eval <- !is.null(arg)
   arg <- ensure_list(arg %||% tf_arg(data))
   evaluations <- if (re_eval) {
-    tf_evaluate(data, arg) 
-    } else {
-      tidyfun::tf_evaluations(data)
-    }
+    evaluator_f <- get(evaluator, mode = "function", envir = parent.frame())
+    tf_evaluate(data, arg = arg, evaluator = evaluator_f) 
+  } else {
+    tf_evaluations(data)
+  }
   if (re_eval) {
-    nas <- map(evaluations, ~which(is.na(.x)))
+    nas <- purrr::map(evaluations, ~which(is.na(.x)))
     if (length(unlist(nas))) {
       warning(length(unlist(nas)), 
               " evaluations were NA, returning irregular tfd.")
-      evaluations <- map2(evaluations, nas, ~{
+      evaluations <- purrr::map2(evaluations, nas, ~{
         if (length(.y)) {
           .x[-.y]
         } else {
           .x
         }
       })
-      arg <- map2(arg, nas, ~{
+      arg <- purrr::map2(arg, nas, ~{
         if (length(.y)) {
           .x[-.y]
         } else {
@@ -280,16 +284,16 @@ tfd.tf <- function(data, arg = NULL, domain = NULL,
   }
   names(evaluations) <- names(data)
   new_tfd(arg, evaluations,
-    regular = (length(arg) == 1),
-    domain = domain, evaluator = evaluator, resolution = resolution
+          regular = (length(arg) == 1),
+          domain = domain, evaluator = evaluator, resolution = resolution
   )
 }
 
 #' @rdname tfd
-#' @description return class prototype when argument to tfd() is NULL or not a recongised class
+#' @description return class prototype when argument to tfd() is NULL or not a recognised class
 #' @export
 tfd.default = function(data, arg = NULL, domain = NULL,
-                    evaluator = tf_approx_linear, resolution = NULL, ...) {
+                       evaluator = tf_approx_linear, resolution = NULL, ...) {
   
   if (!missing(data)) {
     message("input `data` not recognized class; returning prototype of length 0")

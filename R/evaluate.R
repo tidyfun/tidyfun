@@ -10,8 +10,10 @@
 #'   in the data frame are selected. You can supply bare variable names,
 #'   select all variables between `x` and `z` with `x:z`, exclude `y` with `-y`.
 #'   For more options, see the [dplyr::select()] documentation. 
-#' @param arg optional evaluation grid (vector or list of vectors), 
-#'   defaults to `tf_arg(object)`.
+#' @param arg optional evaluation grid (vector or list of vectors).
+#'   Defaults to `tf_arg(object)`.
+#' @param evaluator optional. The function to use for inter/extrapolating the `tfd`.
+#'   Defaults to `tf_evaluator(object)`. See e.g. [tf_approx_linear()] for details.
 #' @return For `tf`-objects, a list of numeric vectors containing the function
 #'   evaluations. For dataframes, replaces `tf`-columns with list columns of
 #'   smaller `data.frames` containing the functions' arguments (`arg`) and
@@ -25,7 +27,7 @@ tf_evaluate.default <- function(object, ..., arg) .NotYetImplemented()
 
 #' @export
 #' @rdname tf_evaluate
-tf_evaluate.tfd <- function(object, ..., arg) {
+tf_evaluate.tfd <- function(object, ..., arg, evaluator = tf_evaluator(object)) {
   if (missing(arg)) {
     if (nargs() == 1) return(tf_evaluations(object))
     if (nargs() == 2) arg <- list(...)[[1]]
@@ -40,7 +42,7 @@ tf_evaluate.tfd <- function(object, ..., arg) {
     list(arg, ensure_list(tf_arg(object)), tf_evaluations(object)),
     ~evaluate_tfd_once(
       new_arg = ..1, arg = ..2, evaluations = ..3,
-      evaluator = attr(object, "evaluator"),
+      evaluator = evaluator,
       resolution = tf_resolution(object)
     )
   )
@@ -70,7 +72,7 @@ tf_evaluate.tfb <- function(object, ..., arg) {
     if (nargs() == 1) return(tf_evaluations(object))
     if (nargs() == 2) arg <- list(...)[[1]]
     if (nargs() > 2) {
-      stop("too many arguments - can't use ...")
+      stop("too many unnamed arguments - can't use ...")
     }
   }
   if (is.null(arg)) return(tf_evaluations(object))
@@ -169,5 +171,3 @@ tf_evaluate.data.frame <- function(object, ..., arg) {
   }
   object
 }
-
-
