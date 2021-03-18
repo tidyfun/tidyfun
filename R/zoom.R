@@ -27,13 +27,13 @@ prep_tf_zoom_args <- function(f, begin, end) {
   assert_numeric(end, any.missing = FALSE, min.len = 1, max.len = length(f))
   regular <- TRUE
   # uses unique to homogenize and check regularity in one go
-  if (length(unique(begin)) == 1) {
-    begin <- rep(begin, length(f))
+  if (dplyr::n_distinct(begin) == 1) {
+    begin <- rep(begin[1], length(f))
   } else {
     regular <- FALSE
   }
-  if (length(unique(end)) == 1) {
-    end <- rep(end, length(f))
+  if (dplyr::n_distinct(end) == 1) {
+    end <- rep(end[1], length(f))
   } else {
     regular <- FALSE
   }
@@ -77,7 +77,7 @@ tf_zoom.tfb <- function(f, begin = tf_domain(f)[1], end = tf_domain(f)[2],
   use <- tf_arg(f) >= args$dom[1] & tf_arg(f) <= args$dom[2]
   if (!any(use)) stop("no data in zoom region.")
   ret <- f
-  forget(ret$basis)
+  memoise::forget(ret$basis)
   attr(ret, "basis_matrix") <- attr(f, "basis_matrix")[use, ]
   attr(ret, "arg") <- tf_arg(f)[use]
   attr(ret, "domain") <- args$dom
