@@ -177,24 +177,34 @@ is.na.tfd_irreg <- function(x) {
 
 #' @rdname tfmethods
 #' @export
-is_tf <- function(x) "tf" %in% class(x)
+is_tf <- function(x) inherits(x, "tf")
 
 #' @rdname tfmethods
 #' @export
-is_irreg <- function(x) "tfd_irreg" %in% class(x)
+is_tfd <- function(x)  inherits(x, "tfd")
+#' @rdname tfmethods
+#' @export
+is_reg <- function(x)  inherits(x, "tfd_reg")
+#' @rdname tfmethods
+#' @export
+is_tfd_reg <- is_reg
 
 #' @rdname tfmethods
 #' @export
-is_tfd <- function(x) "tfd" %in% class(x)
+is_irreg <- function(x) inherits(x,"tfd_irreg")
+#' @rdname tfmethods
+#' @export
+is_tfd_irreg <- is_irreg
+
 
 #' @rdname tfmethods
 #' @export
-is_tfb <- function(x) "tfb" %in% class(x)
+is_tfb <- function(x) inherits(x, "tfb")
 
 #' @rdname tfmethods
 #' @export
-is_tfb_spline <- function(x) "tfb_spline" %in% class(x)
+is_tfb_spline <- function(x) inherits(x, "tfb_spline")
 
 #' @rdname tfmethods
 #' @export
-is_tfb_fpc <- function(x) "tfb_fpc" %in% class(x)
+is_tfb_fpc <- function(x) inherits(x, "tfb_fpc")

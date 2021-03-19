@@ -17,8 +17,11 @@
 \alias{is.na.tf}
 \alias{is.na.tfd_irreg}
 \alias{is_tf}
-\alias{is_irreg}
 \alias{is_tfd}
+\alias{is_reg}
+\alias{is_tfd_reg}
+\alias{is_irreg}
+\alias{is_tfd_irreg}
 \alias{is_tfb}
 \alias{is_tfb_spline}
 \alias{is_tfb_fpc}
@@ -56,9 +59,15 @@ tf_resolution(f)
 
 is_tf(x)
 
+is_tfd(x)
+
+is_reg(x)
+
+is_tfd_reg(x)
+
 is_irreg(x)
 
-is_tfd(x)
+is_tfd_irreg(x)
 
 is_tfb(x)
 
