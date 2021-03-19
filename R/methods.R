@@ -112,11 +112,11 @@ tf_basis <- function(f, as_tfd = FALSE, forget = FALSE) {
 
 #' @rdname tfmethods
 #' @export
-`arg<-` <- function(x, value) UseMethod("arg<-")
+`tf_arg<-` <- function(x, value) UseMethod("tf_arg<-")
 
 #' @rdname tfmethods
 #' @export
-`arg<-.tfd_irreg` <- function(x, value) {
+`tf_arg<-.tfd_irreg` <- function(x, value) {
   assert_arg(value, x)
   ret <- map2(tf_evaluations(x), value, ~list(arg = .y, data = .x))
   attributes(ret) <- attributes(x)
@@ -126,7 +126,7 @@ tf_basis <- function(f, as_tfd = FALSE, forget = FALSE) {
 
 #' @rdname tfmethods
 #' @export
-`arg<-.tfd_reg` <- function(x, value) {
+`tf_arg<-.tfd_reg` <- function(x, value) {
   assert_arg(value, x)
   attr(x, "arg") <- value
   forget(attr(x, "evaluator"))
@@ -190,3 +190,11 @@ is_tfd <- function(x) "tfd" %in% class(x)
 #' @rdname tfmethods
 #' @export
 is_tfb <- function(x) "tfb" %in% class(x)
+
+#' @rdname tfmethods
+#' @export
+is_tfb_spline <- function(x) "tfb_spline" %in% class(x)
+
+#' @rdname tfmethods
+#' @export
+is_tfb_fpc <- function(x) "tfb_fpc" %in% class(x)

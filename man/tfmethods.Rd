@@ -8,9 +8,9 @@
 \alias{tf_evaluator}
 \alias{tf_basis}
 \alias{tf_evaluator<-}
-\alias{arg<-}
-\alias{arg<-.tfd_irreg}
-\alias{arg<-.tfd_reg}
+\alias{tf_arg<-}
+\alias{tf_arg<-.tfd_irreg}
+\alias{tf_arg<-.tfd_reg}
 \alias{tf_resolution}
 \alias{coef.tfb}
 \alias{rev.tf}
@@ -20,6 +20,8 @@
 \alias{is_irreg}
 \alias{is_tfd}
 \alias{is_tfb}
+\alias{is_tfb_spline}
+\alias{is_tfb_fpc}
 \title{Utility functions for \code{tf}-objects}
 \usage{
 tf_arg(f)
@@ -36,11 +38,11 @@ tf_basis(f, as_tfd = FALSE, forget = FALSE)
 
 tf_evaluator(x) <- value
 
-arg(x) <- value
+tf_arg(x) <- value
 
-\method{arg}{tfd_irreg}(x) <- value
+\method{tf_arg}{tfd_irreg}(x) <- value
 
-\method{arg}{tfd_reg}(x) <- value
+\method{tf_arg}{tfd_reg}(x) <- value
 
 tf_resolution(f)
 
@@ -59,6 +61,10 @@ is_irreg(x)
 is_tfd(x)
 
 is_tfb(x)
+
+is_tfb_spline(x)
+
+is_tfb_fpc(x)
 }
 \arguments{
 \item{f}{an \code{tf} object}
