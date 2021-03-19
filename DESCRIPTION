@@ -40,6 +40,7 @@ Collate:
     'gglasagna.R'
     'globals.R'
     'graphics.R'
+    'interpolate.R'
     'ops.R'
     'math.R'
     'methods.R'
