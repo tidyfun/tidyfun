@@ -42,29 +42,38 @@ tf_rgp <- function(n, arg = 51L, scale = diff(range(arg)) / 10,
 
 #' Make a `tf` (more) irregular
 #'
-#' Randomly create some irregular functional data from regular ones.\cr
-#' **jiggle** it by randomly moving around its `arg`-values. Only for `tfd`.\cr
+#' Randomly create some irregular functional data from regular ones.  
+#' **jiggle** it by randomly moving around its `arg`-values. Only for `tfd`.
 #' **sparsify** it by setting (100*`dropout`)% of its values to `NA`.
 #'
 #' @param f a `tfd` object
+#' @param amount how far away from original grid points can the new
+#' grid points lie, at most (relative to original distance to neighboring grid points).
+#' Defaults to at most 40% (0.4) of the original grid distances. Must be lower than 0.5
 #' @importFrom stats runif
 #' @export
 #' @rdname tf_jiggle
-tf_jiggle <- function(f, ...) {
+tf_jiggle <- function(f, amount = .4, ...) {
   stopifnot(is_tfd(f))
+  assert_number(amount, lower = 0, upper = .5)
   f <- as.tfd_irreg(f)
-  tf_jiggle_args <- function(arg) {
-    diffs <- diff(arg)
-    n <- length(arg)
-    tf_jiggle <- runif(n - 2, -.49, +.49) * diffs[2:(n - 1)]
-    new_args <- arg[2:(n - 1)] + tf_jiggle
-    c(
-      runif(1, arg[1], new_args[1]), new_args,
-      runif(1, new_args[n - 2], arg[n])
-    )
-  }
-  new_args <- map(tf_arg(f), tf_jiggle_args)
+  new_args <- map(tf_arg(f), tf_jiggle_args, amount = amount)
   tfd(map2(new_args, tf_evaluations(f), cbind), domain = tf_domain(f))
+}
+tf_jiggle_args <- function(arg, amount) {
+  diffs <- diff(arg)
+  n <- length(arg)
+  
+  push_left_right <- sample(c(-1, 1), n - 2, replace = TRUE)
+  use_diffs <- ifelse(push_left_right == -1, 
+                      diffs[1:(n - 2)], #push left at most 40% of distance to left
+                      diffs[2:(n - 1)]) #push right at most 40% of distance to left
+  tf_jiggle <- runif(n - 2, 0, amount) * use_diffs * push_left_right
+  new_args <- arg[2:(n - 1)] + tf_jiggle
+  c(
+    runif(1, arg[1], new_args[1]), new_args,
+    runif(1, new_args[n - 2], arg[n])
+  )
 }
 
 #' @rdname tf_jiggle

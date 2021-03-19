@@ -5,19 +5,23 @@
 \alias{tf_sparsify}
 \title{Make a \code{tf} (more) irregular}
 \usage{
-tf_jiggle(f, ...)
+tf_jiggle(f, amount = 0.4, ...)
 
 tf_sparsify(f, dropout = 0.5, ...)
 }
 \arguments{
 \item{f}{a \code{tfd} object}
 
+\item{amount}{how far away from original grid points can the new
+grid points lie, at most (relative to original distance to neighboring grid points).
+Defaults to at most 40\% (0.4) of the original grid distances. Must be lower than 0.5}
+
 \item{...}{not used currently}
 
 \item{dropout}{how many values of \code{f} to drop, defaults to 50\%.}
 }
 \description{
-Randomly create some irregular functional data from regular ones.\cr
-\strong{jiggle} it by randomly moving around its \code{arg}-values. Only for \code{tfd}.\cr
+Randomly create some irregular functional data from regular ones.
+\strong{jiggle} it by randomly moving around its \code{arg}-values. Only for \code{tfd}.
 \strong{sparsify} it by setting (100*\code{dropout})\% of its values to \code{NA}.
 }
