@@ -128,7 +128,7 @@ tf_basis <- function(f, as_tfd = FALSE, forget = FALSE) {
 #' @export
 `tf_arg<-.tfd_reg` <- function(x, value) {
   assert_arg(value, x)
-  attr(x, "arg") <- value
+  attr(x, "arg") <- ensure_list(value)
   forget(attr(x, "evaluator"))
   x
 }
