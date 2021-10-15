@@ -1,6 +1,6 @@
 #' Functional Data Depth
 #'
-#' Data tf_depth for functional data.
+#' Data depths for functional data.
 #' Currently implemented: Modified Band-2 Depth, see reference.
 #'
 #' @param x `tf` (or a matrix of evaluations)
@@ -46,6 +46,9 @@ tf_depth.tf <- function(x, depth = "MBD", na.rm = TRUE, arg = NULL, ...) {
 
 # modified band-2 tf_depth:
 mbd <- function(x, arg = seq_len(ncol(x)), ...) {
+  if (nrow(x) == 1) return(c(0.5))
+  if (nrow(x) == 2) return(c(0.5, 0.5))
+  
   # algorithm of Sun/Genton/Nychka (2012)
   ranks <- apply(x, 2, rank, na.last = "keep", ...)
   weights <- {
