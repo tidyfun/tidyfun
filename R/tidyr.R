@@ -64,8 +64,12 @@ tf_gather <- function(data, ..., key = ".tfd", arg = NULL, domain = NULL,
       colnames(tfd_data),
       "[-+]?(0|(0\\.[0-9]+)|([1-9][0-9]*\\.?[0-9]*))([eE][-+]?[0-9]+)?$", ""
     ))
+    # assume trailing 0's are padding:
+    found_key <- str_replace(found_key, "[0]+$", "")
     # assume trailing punctuation is separator:
     found_key <- str_replace(found_key, "[:punct:]$", "")
+    # check again for uniqueness of resulting value ...
+    found_key <- unique(found_key)
     if (length(found_key) == 1 & all(found_key != "")) {
       key_var <- found_key
       message("creating new tfd-column <", key_var, ">")

@@ -22,6 +22,8 @@ test_that("tf_gather works", {
     attr(tf_gather(d1, evaluator = tf_approx_spline)$cca, "evaluator_name"),
     "tf_approx_spline"
   )
+  
+  expect_equal(names(tf_gather(d1)), "cca")
 })
 
 test_that("tf_spread works", {
