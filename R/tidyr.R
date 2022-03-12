@@ -99,8 +99,8 @@ tf_gather <- function(data, ..., key = ".tfd", arg = NULL, domain = NULL,
 #'   documentation. Also works without this if there's only one `tf` in `data`,
 #'   see examples.
 #' @param arg (Semi-)optional. A vector of `arg`-values on which to evaluate the
-#'   functions. If not provided, uses the default `arg`s. Needs to be
-#'   specified for `f_irreg`.
+#'   functions. If not provided, uses the default `arg`s. Must be
+#'   specified for `tf_irreg`.
 #' @param sep separating character used to create column names for the new columns,
 #'   defaults to `"_"` for column names "<name of the `tf`>_<`arg`-value>".
 #'   Set to NULL to get column names that only contain the `arg`-value.
@@ -141,7 +141,8 @@ tf_spread <- function(data, value, arg, sep = "_", interpolate = TRUE) {
   }
   if (missing(arg)) {
     if (is_irreg(tf)) {
-      stop("need explicit <arg> for irregular ", sQuote(tf_var), ".")
+      stop("need explicit <arg> for irregular ", sQuote(tf_var), " -- otherwise
+           irregular grids can produce extremely wide dataframes.")
     }
     arg <- tf_arg(tf)
   }
