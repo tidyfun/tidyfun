@@ -32,7 +32,7 @@ tf_depth.matrix <- function(x, depth = "MBD", na.rm = TRUE,
 }
 #' @export
 #' @rdname tf_depth
-tf_depth.tf <- function(x, depth = "MBD", na.rm = TRUE, arg = NULL, ...) {
+tf_depth.tf <- function(x, depth = "MBD", na.rm = TRUE, arg = tf_arg(x), ...) {
   if (!missing(arg)) assert_arg_vector(arg, x)
   # TODO: warn if irreg?
   if (na.rm) x <- x[!is.na(x)]
@@ -44,7 +44,7 @@ tf_depth.tf <- function(x, depth = "MBD", na.rm = TRUE, arg = NULL, ...) {
 
 #-------------------------------------------------------------------------------
 
-# modified band-2 tf_depth:
+# modified band-2 depth:
 mbd <- function(x, arg = seq_len(ncol(x)), ...) {
   if (nrow(x) == 1) return(c(0.5))
   if (nrow(x) == 2) return(c(0.5, 0.5))

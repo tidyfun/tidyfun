@@ -34,9 +34,11 @@ test_that("tf_spread works", {
   )
   expect_equivalent(tf_spread(d, f), tf_spread(d, -g))
   expect_equivalent(tf_spread(d, f), tf_spread(d))
+  expect_warning(tf_spread(d, f, arg = seq(0, 1, l = 20), sep = NULL), 
+                 "interpolate = FALSE")
   expect_equivalent(
-    tf_spread(d, f, arg = seq(0, 1, l = 20), sep = NULL)[, -1],
-    as.data.frame(d$f[, seq(0, 1, l = 20), interpolate = TRUE])
+    suppressWarnings(tf_spread(d, f, arg = seq(0, 1, l = 20), sep = NULL)[, -1]),
+    suppressWarnings(as.data.frame(d$f[, seq(0, 1, l = 20), interpolate = FALSE]))
   )
   d$fb <- tfb(tf_rgp(3, 11L))
   expect_error(tf_spread(d), "More than one")

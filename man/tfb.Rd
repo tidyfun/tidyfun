@@ -2,15 +2,12 @@
 % Please edit documentation in R/convert.R, R/tfb-class.R
 \name{as.tfb}
 \alias{as.tfb}
-\alias{as.data.frame.tfb}
 \alias{as.matrix.tfb}
 \alias{tfb}
 \alias{tfb_wavelet}
 \title{Constructors & convertors for functional data in basis representation}
 \usage{
 as.tfb(data, basis = c("spline", "fpc"), ...)
-
-\method{as.data.frame}{tfb}(x, row.names = NULL, optional = FALSE, arg = NULL, ...)
 
 \method{as.matrix}{tfb}(x, arg = NULL, ...)
 
@@ -26,14 +23,6 @@ tfb_wavelet(data, ...)
 (\code{wavelet} not implemented yet)}
 
 \item{...}{further arguments for \code{\link[=tfb_spline]{tfb_spline()}} or \code{\link[=tfb_fpc]{tfb_fpc()}}}
-
-\item{x}{an \code{tfb} object}
-
-\item{row.names}{not used}
-
-\item{optional}{not used}
-
-\item{arg}{optional vector of argument values}
 }
 \value{
 a \code{tfb}-object (or a \code{data.frame}/\code{matrix} for the conversion

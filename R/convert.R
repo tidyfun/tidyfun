@@ -25,22 +25,20 @@ as.tfd_irreg.tfd_irreg <- function(data, ...) {
 }
 
 #' @rdname tfd
-#' @param row.names not used
-#' @param optional not used
-#' @param x an `tfd` object
-#' @inheritParams [.tf
+#' @inheritParams as.data.frame
+#' @param optional not used!
+#' @param x a `tf` object
+#' @return a one-column `data.frame` with a `tf`-column containing `x`
 #' @export
-#' @importFrom tibble tibble
-as.data.frame.tfd <- function(x, row.names = NULL, optional = FALSE,
-                              arg = NULL, interpolate = FALSE, ...) {
-  if (is.null(arg)) {
-    arg <- ensure_list(tf_arg(x))
-  }
-  tmp <- x[, arg, interpolate = interpolate, matrix = FALSE]
-  id <- unique_id(names(x)) %||% seq_along(x)
-  id <- ordered(id, levels = id) # don't reshuffle
-  tidyr::unnest(tibble::tibble(id = id, data = tmp), cols = data)
+as.data.frame.tf <- function(x, row.names = NULL, optional = FALSE, ...) {
+  colname <- deparse(substitute(x))
+  ret <- data.frame(tmp = 1:length(x), row.names = row.names)
+  ret[[colname]] <- x
+  ret[, colname, drop = FALSE]
 }
+#as.data.frame.tfd <- as.data.frame.tf #TODO: y we need dis?
+#as.data.frame.tfb <- as.data.frame.tf
+
 
 #' @rdname tfd
 #' @export
@@ -60,28 +58,11 @@ as.tfb <- function(data, basis = c("spline", "fpc"), ...) tfb(data, basis, ...)
 
 
 #' @rdname tfb
-#' @param row.names not used
-#' @param optional not used
-#' @param x an `tfb` object
-#' @param arg optional vector of argument values
 #' @export
-as.data.frame.tfb <- function(x, row.names = NULL, optional = FALSE,
-                              arg = NULL, ...) {
-  if (is.null(arg)) {
-    arg <- ensure_list(tf_arg(x))
-  }
-  tmp <- x[, arg, matrix = FALSE]
-  id <- unique_id(names(x)) %||% seq_along(x)
-  id <- ordered(id, levels = id) # don't reshuffle
-  tidyr::unnest(tibble::tibble(id = id, data = tmp), cols = data)
-}
-
-#' @rdname tfb
-#' @export
-as.matrix.tfb <- function(x, arg = NULL, ...) {
+as.matrix.tfb <- function(x, arg = tf_arg(x), ...) {
   # check arg-vector
   # rm dplyr / tidyr, evaluate basis then mutiply with coefs
-  ret <- as.data.frame(x, arg = arg) %>%
+  ret <- tf_unnest(x, arg = arg) %>%
     dplyr::arrange(arg) %>%
     tidyr::spread(key = arg, value = value) %>%
     dplyr::select(-id) %>%

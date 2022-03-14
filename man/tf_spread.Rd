@@ -5,7 +5,7 @@
 \title{Spread a \code{tf}-column into many columns representing the
 function evaluations.}
 \usage{
-tf_spread(data, value, arg, sep = "_", interpolate = TRUE)
+tf_spread(data, value, arg, sep = "_", interpolate = FALSE)
 }
 \arguments{
 \item{data}{a data frame with at least one \code{tf}-column}
@@ -16,15 +16,15 @@ documentation. Also works without this if there's only one \code{tf} in \code{da
 see examples.}
 
 \item{arg}{(Semi-)optional. A vector of \code{arg}-values on which to evaluate the
-functions. If not provided, uses the default \code{arg}s. Needs to be
-specified for \code{f_irreg}.}
+functions. If not provided, uses the default \code{arg}s. Must be
+specified for \code{tf_irreg}.}
 
 \item{sep}{separating character used to create column names for the new columns,
 defaults to \code{"_"} for column names "<name of the \code{tf}>_<\code{arg}-value>".
 Set to NULL to get column names that only contain the \code{arg}-value.}
 
 \item{interpolate}{\code{interpolate}-argument for evaluating the functional data.
-Defaults to TRUE, i.e., \code{tfd}s are inter/extrapolated on unobserved \code{arg}-values.}
+Defaults to FALSE, i.e., \code{tfd}s are \emph{not} inter/extrapolated on unobserved \code{arg}-values.}
 }
 \description{
 Similar in spirit to \code{\link[tidyr:spread]{tidyr::spread()}}, but does NOT shorten,

@@ -27,7 +27,7 @@ tf_depth(x, depth = "MBD", na.rm = TRUE, ...)
 vector of tf_depth values
 }
 \description{
-Data tf_depth for functional data.
+Data depths for functional data.
 Currently implemented: Modified Band-2 Depth, see reference.
 }
 \references{

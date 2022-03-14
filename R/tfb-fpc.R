@@ -93,10 +93,7 @@ tfb_fpc <- function(data, ...) UseMethod("tfb_fpc")
 #' # Apply FPCA for sparse data using refund::fpca.sc:
 #' set.seed(99290)
 #' # create sparse data:
-#' data <- as.data.frame(
-#'   tf_sparsify(
-#'     tf_rgp(15)
-#' ))
+#' data <- tf_rgp(15) |> tf_sparsify() |> tf_unnest()
 #' # wrap refund::fpca_sc for use as FPCA method in tfb_fpc:
 #' fpca_sc_wrapper <- function(data, arg, pve = .995, ...) {
 #'   data_mat <- tidyfun:::df_2_mat(data)
@@ -148,7 +145,7 @@ tfb_fpc.tf <- function(data, arg = NULL, method = fpc_wsvd, ...) {
   #   direct inner prods of basis functions etc...
   arg <- arg %||% tf_arg(data)
   names_data <- names(data)
-  ret <- tfb_fpc(as.data.frame(data, arg = arg),
+  ret <- tfb_fpc(tf_unnest(data, arg = arg),
     method = method,
     domain = tf_domain(data), resolution = tf_resolution(data), ...
   )

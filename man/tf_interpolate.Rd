@@ -40,7 +40,7 @@ you'll be better off doing FPCA-based imputation or other model-based
 approaches.
 }
 \examples{
-# thinning out a very densely observed tfd
+# thinning out a densely observed tfd
 (dense <- tf_rgp(10, arg = seq(0, 1, l = 1001)))
 (less_dense <- tf_interpolate(dense, arg = seq(0, 1, l = 101)))
 

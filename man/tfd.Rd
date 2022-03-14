@@ -3,7 +3,7 @@
 \name{as.tfd}
 \alias{as.tfd}
 \alias{as.tfd_irreg}
-\alias{as.data.frame.tfd}
+\alias{as.data.frame.tf}
 \alias{as.matrix.tfd}
 \alias{tfd}
 \alias{tfd.matrix}
@@ -18,14 +18,7 @@ as.tfd(data, ...)
 
 as.tfd_irreg(data, ...)
 
-\method{as.data.frame}{tfd}(
-  x,
-  row.names = NULL,
-  optional = FALSE,
-  arg = NULL,
-  interpolate = FALSE,
-  ...
-)
+\method{as.data.frame}{tf}(x, row.names = NULL, optional = FALSE, ...)
 
 \method{as.matrix}{tfd}(x, arg = NULL, interpolate = FALSE, ...)
 
@@ -87,11 +80,9 @@ this argument is \code{NULL} (i.e. when calling \code{tfd()}) this returns a pro
 \item{...}{not used in \code{tfd}, except for \code{tfd.tf} -- specify \code{arg} and \code{ìnterpolate = TRUE} to
 turn an irregular \code{tfd} into a regular one, see examples.}
 
-\item{x}{an \code{tfd} object}
+\item{x}{a \code{tf} object}
 
-\item{row.names}{not used}
-
-\item{optional}{not used}
+\item{optional}{not used!}
 
 \item{arg}{\code{numeric}, or list of \code{numeric}s. The evaluation grid. See Details on its
 interplay with \code{resolution}.
@@ -99,10 +90,6 @@ For the \code{data.frame}-method: the name/number of the column defining the
 evaluation grid. The \code{matrix} method will try to guess suitable \code{arg}-values
 from the column names of \code{data} if \code{arg} is not supplied. Other methods fall back on
 integer sequences (\verb{1:<length of data>}) as the default if not provided.}
-
-\item{interpolate}{should functions be evaluated (i.e., inter-/extrapolated)
-for values in \code{arg} for which no original data is available? Only relevant for
-\code{tfd}, defaults to \code{TRUE}.}
 
 \item{domain}{range of the \code{arg}.}
 
@@ -115,6 +102,8 @@ for values in \code{arg} for which no original data is available? Only relevant 
 \item{value}{The name/number of the column containing the function evaluations.}
 }
 \value{
+a one-column \code{data.frame} with a \code{tf}-column containing \code{x}
+
 an \code{tfd}-object (or a \code{data.frame}/\code{matrix} for the conversion functions, obviously.)
 }
 \description{

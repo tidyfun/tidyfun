@@ -51,17 +51,17 @@ funplot <- function(f, arg, n_grid = 50, points = is_irreg(f),
     arg <- prep_plotting_arg(f, n_grid)
   }
   d <- if (is_tfd(f)) {
-    as.data.frame(f, arg = arg, interpolate = TRUE)
+    tf_unnest(f, arg = arg, interpolate = TRUE)
   } else {
-    as.data.frame(f, arg = arg)
+    tf_unnest(f, arg = arg)
   }
 
   if (type == "spaghetti") {
-    p <- ggplot(d, aes(x = arg, y = data, group = id)) +
+    p <- ggplot(d, aes(x = arg, y = value, group = id)) +
       geom_line(alpha = alpha)
     if (points) {
       p <- p +
-        geom_point(data = as.data.frame(f, arg = tf_arg(f)), alpha = alpha)
+        geom_point(data = tf_unnest(f, arg = tf_arg(f)), alpha = alpha)
     }
   }
   if (type == "lasagna") {
@@ -71,11 +71,11 @@ funplot <- function(f, arg, n_grid = 50, points = is_irreg(f),
       mutate(xmax = c(arg[-1], max(arg) + mean(diff(arg))))
     p <- ggplot(d, aes(
       y = id_num, xmin = arg, xmax = xmax,
-      ymin = id_num - .5, ymax = id_num + .5, fill = data
+      ymin = id_num - .5, ymax = id_num + .5, fill = value
     )) +
       geom_rect(colour = NA) +
       scale_fill_gradient2(deparse(substitute(f)),
-        midpoint = median(d$data, na.rm = TRUE)
+        midpoint = median(d$value, na.rm = TRUE)
       ) +
       scale_y_continuous(name = "id", breaks = seq_along(f), labels = names(f))
   }
