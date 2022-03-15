@@ -28,9 +28,9 @@ test_that("basic derivatives work", {
   expect_equivalent(tf_derive(cubic)[, dgrid], square[, dgrid], tolerance = .1)
   expect_equivalent(tf_derive(cubic_irreg)[, dgrid], square[, dgrid], tolerance = .1)
   expect_equivalent(tf_derive(cubic_b)[, dgrid], square[, dgrid], tolerance = .1)
-  expect_equivalent(tf_derive(cubic, 2)[, dgrid], lin[, dgrid], tolerance = .1)
-  expect_equivalent(tf_derive(cubic_irreg, 2)[, dgrid], lin[, dgrid], tolerance = .1)
-  expect_equivalent(tf_derive(cubic_b, 2)[, dgrid], lin[, dgrid], tolerance = .1)
+  expect_equivalent(tf_derive(cubic, order = 2)[, dgrid], lin[, dgrid], tolerance = .1)
+  expect_equivalent(tf_derive(cubic_irreg, order = 2)[, dgrid], lin[, dgrid], tolerance = .1)
+  expect_equivalent(tf_derive(cubic_b, order = 2)[, dgrid], lin[, dgrid], tolerance = .1)
 })
 
 test_that("basic definite integration works", {

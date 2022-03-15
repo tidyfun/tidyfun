@@ -43,13 +43,15 @@ test_that("tf_spread works", {
   d$fb <- tfb(tf_rgp(3, 11L))
   expect_error(tf_spread(d), "More than one")
   expect_equivalent(
-    tf_spread(d, fb, sep = NULL)[, - (1:2)],
+    tf_spread(d, fb, sep = NULL)[, -(1:2)],
     as.data.frame(as.matrix.tfb(d$fb))
   )
+  set.seed(1312)
   d$fi <- tf_jiggle(tf_rgp(3, 11L))
-  expect_error(tf_spread(d, fi), "need explicit <arg>")
+  expect_warning(tf_spread(d, fi), "no explicit <arg>")
+  expect_true(suppressWarnings(ncol(tf_spread(d, fi)) == 36))
   expect_equivalent(
-    tf_spread(d, fi, arg = seq(0, 1, l = 20), sep = NULL)[, -(1:3)],
+    tf_spread(d, fi, arg = seq(0, 1, l = 20), sep = NULL, interpolate = TRUE)[, -(1:3)],
     as.data.frame(as.matrix(d$fi, arg = seq(0, 1, l = 20), interpolate = TRUE))
   )
 })
@@ -58,7 +60,7 @@ test_that("tf_spread works", {
 test_that("tf_nest works", {
   f1 <- tf_rgp(3, 11L)
   f2 <- tf_rgp(3, 11L)
-  data <- dplyr::inner_join(as.data.frame(f1), as.data.frame(f2), by = c("id", "arg"))
+  data <- dplyr::inner_join(tf_unnest(f1), tf_unnest(f2), by = c("id", "arg"))
   expect_equivalent(tf_nest(data)$value.x, f1)
   expect_equivalent(tf_nest(data)$value.y, f2)
   expect_equal(names(tf_nest(data, value.x:value.y)), names(tf_nest(data)))
@@ -79,22 +81,18 @@ test_that("tf_unnest works", {
   set.seed(121211)
   f1 <- tf_rgp(3, 11L)
   f2 <- tf_rgp(3, 11L)
-  data <- dplyr::inner_join(as.data.frame(f1), as.data.frame(f2), by = c("id", "arg"))
+  data <- dplyr::inner_join(tf_unnest(f1), tf_unnest(f2), by = c("id", "arg"))
   tfdata <- tf_nest(data)
-  expect_equal(NCOL(tf_unnest(tfdata, cols = c(value.x, value.y), try_dropping = FALSE)), 5)
-  expect_equivalent(as.matrix(tf_unnest(tfdata, cols = c(value.x, value.y), try_dropping = TRUE)[2:4]), 
+  expect_equal(NCOL(tf_unnest(tfdata, cols = c(value.x, value.y))), 5)
+  expect_equivalent(as.matrix(tf_unnest(tfdata, cols = c(value.x, value.y))[-c(1, 4)]), 
                     as.matrix(data[,2:4]))
-  expect_message(tf_unnest(tfdata, cols = c(value.x, value.y), try_dropping = TRUE), 
-                 "Duplicate column")
-  expect_message(tf_unnest(tfdata, cols = c(value.x, value.y), try_dropping = TRUE), 
-                 "Renamed")
   expect_is(tf_unnest(tfdata, value.x)$value.y, 
             "tfd")
 })
 
 # tidyfun#109
 test_that("tf_nest / tf_unnest work with numeric id-variables", {
-  d <- tf_rgp(10) %>% as.data.frame()
+  d <- tf_rgp(10) %>% tf_unnest()
   d$id <- as.numeric(d$id) * 10
   nested <- tf_nest(d)
   unnested <- tf_unnest(nested, cols = value)
