@@ -123,7 +123,7 @@ plot.tf <- function(x, y, n_grid = 50, points = is_irreg(x),
     if (points) {
       pointsargs <- modifyList(
         list(
-          x = x, arg = NULL,
+          x = x, 
           n_grid = NA, points = TRUE, interpolate = FALSE,
           pch = 19, ol = rgb(0, 0, 0, alpha)
         ),
