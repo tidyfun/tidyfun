@@ -17,13 +17,16 @@
 #'   *Journal of the American Statistical Association*, **104**, 718-734.
 #' @export
 #' @rdname tf_depth
-tf_depth <- function(x, depth = "MBD", na.rm = TRUE, ...) {
+tf_depth <- function(x, arg, depth = "MBD", na.rm = TRUE, ...) {
   UseMethod("tf_depth")
 }
 #' @export
 #' @rdname tf_depth
-tf_depth.matrix <- function(x, depth = "MBD", na.rm = TRUE,
-                            arg = unlist(find_arg(x, NULL)), ...) {
+tf_depth.matrix <- function(x, arg, depth = "MBD", na.rm = TRUE, ...) {
+  if (missing(arg)) arg <- unlist(find_arg(x, arg = NULL))
+  assert_numeric(arg, finite = TRUE, any.missing = FALSE, len = ncol(x), 
+                 unique = TRUE, sorted = TRUE)
+  
   depth <- match.arg(depth)
   # TODO: this ignores na.rm -- should it?
   switch(depth,
@@ -32,7 +35,7 @@ tf_depth.matrix <- function(x, depth = "MBD", na.rm = TRUE,
 }
 #' @export
 #' @rdname tf_depth
-tf_depth.tf <- function(x, depth = "MBD", na.rm = TRUE, arg = tf_arg(x), ...) {
+tf_depth.tf <- function(x, arg, depth = "MBD", na.rm = TRUE, ...) {
   if (!missing(arg)) assert_arg_vector(arg, x)
   # TODO: warn if irreg?
   if (na.rm) x <- x[!is.na(x)]
