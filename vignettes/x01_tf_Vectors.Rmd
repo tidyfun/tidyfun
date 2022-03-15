@@ -33,8 +33,6 @@ scale_colour_discrete = scale_colour_viridis_d
 scale_fill_discrete = scale_fill_viridis_d
 
 library("tidyfun")
-#try(devtools::load_all("~/fda/tidyfun"))
-#try(devtools::load_all("~/Work/fda/tidyfun"))
 
 pal_5 = viridis(7)[-(1:2)]
 set.seed(1221)
@@ -113,7 +111,7 @@ tf_evaluator(cca_five) <- tf_approx_spline
 - **`tfd`** has two subclasses: one for regular data with a common grid and one for irregular or sparse data. The `cca` data are irregular (values are missing for some subjects at some arguments) but the example below more clearly illustrates support for sparse and irregular data using CD4 cell counts from a longitudinal study.
 
 ```{r}
-cd4_vec = tfd(refund::cd4)
+cd4_vec <- tfd(refund::cd4)
 
 cd4_vec[1:2]
 cd4_vec[1:2] %>% tf_arg() %>% str
