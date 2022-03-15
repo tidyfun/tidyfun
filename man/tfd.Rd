@@ -20,7 +20,7 @@ as.tfd_irreg(data, ...)
 
 \method{as.data.frame}{tf}(x, row.names = NULL, optional = FALSE, ...)
 
-\method{as.matrix}{tfd}(x, arg = NULL, interpolate = FALSE, ...)
+\method{as.matrix}{tfd}(x, arg, interpolate = FALSE, ...)
 
 tfd(data, ...)
 
@@ -82,6 +82,9 @@ turn an irregular \code{tfd} into a regular one, see examples.}
 
 \item{x}{a \code{tf} object}
 
+\item{row.names}{\code{NULL} or a character vector giving the row
+    names for the data frame.  Missing values are not allowed.}
+
 \item{optional}{not used!}
 
 \item{arg}{\code{numeric}, or list of \code{numeric}s. The evaluation grid. See Details on its
@@ -91,15 +94,19 @@ evaluation grid. The \code{matrix} method will try to guess suitable \code{arg}-
 from the column names of \code{data} if \code{arg} is not supplied. Other methods fall back on
 integer sequences (\verb{1:<length of data>}) as the default if not provided.}
 
+\item{interpolate}{should functions be evaluated (i.e., inter-/extrapolated)
+for values in \code{arg} for which no original data is available? Only relevant for
+\code{tfd}, defaults to \code{TRUE}.}
+
 \item{domain}{range of the \code{arg}.}
 
 \item{evaluator}{a function accepting arguments \verb{x, arg, evaluations}. See details for \code{\link[=tfd]{tfd()}}.}
 
 \item{resolution}{resolution of the evaluation grid. See details for \code{\link[=tfd]{tfd()}}.}
 
-\item{id}{The name/number of the column defining which data belong to which function.}
+\item{id}{The name or number of the column defining which data belong to which function.}
 
-\item{value}{The name/number of the column containing the function evaluations.}
+\item{value}{The name or number of the column containing the function evaluations.}
 }
 \value{
 a one-column \code{data.frame} with a \code{tf}-column containing \code{x}
@@ -110,7 +117,7 @@ an \code{tfd}-object (or a \code{data.frame}/\code{matrix} for the conversion fu
 Various constructor and conversion methods.
 
 \code{tfd.data.frame} uses the first 3 columns of \code{data} for function information by default:
-(\code{ìd}, \code{arg}, \code{value})
+(\code{id}, \code{arg}, \code{value})
 
 \code{tfd.list} accepts a list of vectors of identical lengths
 containing evaluations or a list of 2-column matrices/data.frames with

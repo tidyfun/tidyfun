@@ -266,12 +266,13 @@ tf_nest <- function(data, ..., .id = "id", .arg = "arg", domain = NULL,
 #'   [tf_evaluate()]
 #' @param interpolate return function values for `arg`-values not on original grid?
 #'   Defaults to `TRUE`. 
+#' @param ... not used currently   
 #' @inheritParams tidyr::unnest
 #' @return a "long" data frame with `tf`-columns expanded into `arg, value`-
 #'   columns.
 #' @seealso tf_gather(), tf_nest(), tf_evaluate.data.frame()
 #' @export 
-tf_unnest <- function(data, cols, arg, interpolate = TRUE) {
+tf_unnest <- function(data, cols, arg, interpolate = TRUE, ...) {
   UseMethod("tf_unnest")
 }
 
@@ -279,7 +280,7 @@ tf_unnest <- function(data, cols, arg, interpolate = TRUE) {
 #' @importFrom tibble tibble
 #' @importFrom tidyr unnest
 #' @rdname tf_unnest
-tf_unnest.tf <- function(data, cols, arg, interpolate = TRUE) {
+tf_unnest.tf <- function(data, cols, arg, interpolate = TRUE, ...) {
     if (missing(arg)) {
       arg <- ensure_list(tf_arg(data))
     }
@@ -299,7 +300,7 @@ tf_unnest.tf <- function(data, cols, arg, interpolate = TRUE) {
 #' @rdname tf_unnest
 tf_unnest.data.frame <- function(data, cols, arg, interpolate = TRUE, 
                                  keep_empty = FALSE, ptype = NULL, 
-                                 names_sep = "_", names_repair = "check_unique") {
+                                 names_sep = "_", names_repair = "check_unique", ...) {
   
   if (missing(cols)) {
     tf_cols <- names(data)[map_lgl(data, is_tf)]

@@ -9,7 +9,7 @@
 \usage{
 as.tfb(data, basis = c("spline", "fpc"), ...)
 
-\method{as.matrix}{tfb}(x, arg = NULL, ...)
+\method{as.matrix}{tfb}(x, arg, ...)
 
 tfb(data, basis = c("spline", "fpc", "wavelet"), ...)
 
@@ -23,6 +23,10 @@ tfb_wavelet(data, ...)
 (\code{wavelet} not implemented yet)}
 
 \item{...}{further arguments for \code{\link[=tfb_spline]{tfb_spline()}} or \code{\link[=tfb_fpc]{tfb_fpc()}}}
+
+\item{x}{a \link{tfb} object to be converted}
+
+\item{arg}{a grid of argument values to evaluate on}
 }
 \value{
 a \code{tfb}-object (or a \code{data.frame}/\code{matrix} for the conversion

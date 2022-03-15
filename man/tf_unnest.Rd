@@ -6,9 +6,9 @@
 \alias{tf_unnest.data.frame}
 \title{Turn (data frames with) \code{tf}-objects / list columns into "long" tables.}
 \usage{
-tf_unnest(data, cols, arg, interpolate = TRUE)
+tf_unnest(data, cols, arg, interpolate = TRUE, ...)
 
-\method{tf_unnest}{tf}(data, cols, arg, interpolate = TRUE)
+\method{tf_unnest}{tf}(data, cols, arg, interpolate = TRUE, ...)
 
 \method{tf_unnest}{data.frame}(
   data,
@@ -18,7 +18,8 @@ tf_unnest(data, cols, arg, interpolate = TRUE)
   keep_empty = FALSE,
   ptype = NULL,
   names_sep = "_",
-  names_repair = "check_unique"
+  names_repair = "check_unique",
+  ...
 )
 }
 \arguments{
@@ -35,6 +36,8 @@ standard tidyverse recycling rules).}
 
 \item{interpolate}{return function values for \code{arg}-values not on original grid?
 Defaults to \code{TRUE}.}
+
+\item{...}{not used currently}
 
 \item{keep_empty}{By default, you get one row of output for each element
 of the list your unchopping/unnesting. This means that if there's a
