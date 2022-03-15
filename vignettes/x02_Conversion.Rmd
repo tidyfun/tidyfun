@@ -1,6 +1,6 @@
 ---
-title: "Converting to tf"
-author: "Jeff Goldsmith"
+title: "Converting to & from `tf`"
+author: "Jeff Goldsmith, Fabian Scheipl"
 date: "`r Sys.Date()`"
 output: 
     rmarkdown::html_vignette:
@@ -35,8 +35,6 @@ scale_colour_discrete = scale_colour_viridis_d
 scale_fill_discrete = scale_fill_viridis_d
 
 library("tidyfun")
-#try(devtools::load_all("~/fda/tidyfun"))
-#try(devtools::load_all("~/Work/fda/tidyfun"))
 
 pal_5 = viridis(7)[-(1:2)]
 set.seed(1221)
@@ -81,9 +79,9 @@ dti_df %>%
   scale_alpha(guide = 'none', range = c(.2, .4))
 ```
 
-We'll repeat the same basic process using a second, and probably even-more-perennial, functional data example: the Canadian weather data in the `fda` package. Here, functional data are stored in a three-dimensional array, with dimesions corresponding to day, station, and outcome (temperature, precipitation, and log10 precipitation).
+We'll repeat the same basic process using a second, and probably even-more-perennial, functional data example: the Canadian weather data in the `fda` package. Here, functional data are stored in a three-dimensional array, with dimensions corresponding to day, station, and outcome (temperature, precipitation, and log10 precipitation).
 
-In the following, we: create a `tibble` with scalar covariates; use `tfd` to create functional data vectors; and include the resulting vectors in the dataframe. In this case, our `arg`s are days of the year, and we use `tf_smooth` to smooth the precipitation outcome. Because the matrices store functional data in columns rather than in rows, we transpose matrices in the call to `tfd`. 
+In the following, we first create a `tibble` with scalar covariates, then use `tfd` to create functional data vectors, and finally include the resulting vectors in the dataframe. In this case, our `arg`s are days of the year, and we use `tf_smooth` to smooth the precipitation outcome. Because the original data matrices record the different observations in the columns instead of the rows, we have to use their transpose in the call to `tfd`:
 
 ```{r}
 canada = tibble(
@@ -119,7 +117,7 @@ gridExtra::grid.arrange(temp_panel, precip_panel, nrow = 1)
 ```
 
 
-# Conversion from a data frame
+# Conversion to `tf` from a data frame
 
 ### ... in "long" format
 
@@ -163,10 +161,29 @@ In this dataset, both `height` and `logFEV1` are observed at multiple ages for e
 
 ```{r, eval = FALSE}
 ALA::fev1 %>% 
+  glimpse()
+## Rows: 1,994
+## Columns: 6
+## $ id      <fct> 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, …
+## $ age     <dbl> 9.3415, 10.3929, 11.4524, 12.4600, 13.4182, 15.4743, 16.3723, 6.5873, 7.6496, 12.7392, 13.7741, 14.6940, 15.…
+## $ height  <dbl> 1.20, 1.28, 1.33, 1.42, 1.48, 1.50, 1.52, 1.13, 1.19, 1.49, 1.53, 1.55, 1.56, 1.57, 1.57, 1.18, 1.23, 1.30, …
+## $ age0    <dbl> 9.3415, 9.3415, 9.3415, 9.3415, 9.3415, 9.3415, 9.3415, 6.5873, 6.5873, 6.5873, 6.5873, 6.5873, 6.5873, 6.58…
+## $ height0 <dbl> 1.20, 1.20, 1.20, 1.20, 1.20, 1.20, 1.20, 1.13, 1.13, 1.13, 1.13, 1.13, 1.13, 1.13, 1.13, 1.18, 1.18, 1.18, …
+## $ logFEV1 <dbl> 0.21511, 0.37156, 0.48858, 0.75142, 0.83291, 0.89200, 0.87129, 0.30748, 0.35066, 0.75612, 0.86710, 1.04732, …
+ALA::fev1 %>% 
   group_by(id) %>% 
   mutate(n_obs = n()) %>% 
   filter(n_obs > 1) %>% 
-  tf_nest(logFEV1, height, .arg = age)
+  tf_nest(logFEV1, height, .arg = age) %>%
+  glimpse()
+## Rows: 252
+## Columns: 6
+## $ id      <fct> 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 15, 16, 18, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 3…
+## $ age0    <dbl> 9.3415, 6.5873, 6.9131, 6.7598, 6.5024, 6.8994, 6.4339, 7.1869, 6.8966, 7.7892, 7.6140, 7.5483, 7.8412, 6.50…
+## $ height0 <dbl> 1.20, 1.13, 1.18, 1.15, 1.11, 1.24, 1.18, 1.27, 1.17, 1.13, 1.32, 1.25, 1.25, 1.20, 1.19, 1.24, 1.21, 1.23, …
+## $ n_obs   <int> 7, 8, 9, 10, 7, 11, 7, 9, 9, 10, 6, 3, 5, 11, 12, 10, 9, 8, 12, 2, 2, 11, 11, 7, 9, 11, 11, 4, 2, 12, 3, 9, …
+## $ logFEV1 <tfd_irrg> [<9.3415, 10.3929, 11.4524, 12.4600, 13.4182, 15.4743, 16.3723>, <0.21511, 0.37156, 0.48858, 0.75142, 0…
+## $ height  <tfd_irrg> [<9.3415, 10.3929, 11.4524, 12.4600, 13.4182, 15.4743, 16.3723>, <1.20, 1.28, 1.33, 1.42, 1.48, 1.50, 1…
 ```
 
 
@@ -193,9 +210,9 @@ dti_df =
 
 # Reversing the conversion
 
-**`tidyfun`** includes a wide range of tools for exploratory analysis and visualization, but some analysis approaches require data to be stored in more traditional formats. Several functions are available to aid in this conversion.
+**`tidyfun`** includes a wide range of tools for exploratory analysis and visualization, but many analysis approaches require data to be stored in more traditional formats. Several functions are available to aid in this conversion.
 
-## Conversion to data frames
+## Conversion from `tf` to data frames
 
 The functions `tf_unnest` and `tf_spread` reverse the operations in `tf_nest` and `tf_gather`, respectively -- that is, they take a data frame with a functional observation and produce long or wide data frames. We'll illustrate these with the `pig_df` data set. 
 

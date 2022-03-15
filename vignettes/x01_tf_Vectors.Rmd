@@ -50,7 +50,8 @@ This vignette introduces the `tf` class, as well as the `tfd` and `tfb` subclass
 
 - an abstract superclass for functional data in 2 forms:
     - as (argument, value)-tuples: subclass **`tfd`**, also irregular or sparse
-    - or in basis representation: subclass **`tfb`**
+    - or in basis representation: subclass **`tfb`** represents each observed function as a weighted sum
+    of a fixed dictionary of known "basis functions".
     
 - basically, a `list` of numeric vectors  
   (... since `list`s work well as columns of data frames ...)
@@ -109,7 +110,7 @@ tf_evaluator(cca_five) %>% str
 tf_evaluator(cca_five) <- tf_approx_spline
 ```
 
-- **`tfd`** has subclasses for regular data with a common grid and irregular or sparse data. The `cca` data are irregular (values are missing for some subjects at some arguments) but the example below more clearly illustrates support for sparse and irregular data using CD4 cell counts from a longitudinal study.
+- **`tfd`** has two subclasses: one for regular data with a common grid and one for irregular or sparse data. The `cca` data are irregular (values are missing for some subjects at some arguments) but the example below more clearly illustrates support for sparse and irregular data using CD4 cell counts from a longitudinal study.
 
 ```{r}
 cd4_vec = tfd(refund::cd4)
@@ -124,7 +125,7 @@ cd4_vec[1:20] %>% plot(pch = "x", col = viridis(20))
 Functional data in basis representation: 
 
  - represented as a list of **`coefficients`** and a common **`basis_matrix`** of basis function evaluations on a vector of `arg`-values.
- - contains a **`basis`** function that defines how to compute the basis for new **`arg`**s and how to differentiate or integrate it.
+ - contains a **`basis`** function that defines how to evaluate the basis functions for new **`arg`**s and how to differentiate or integrate it.
 - (internal) flavors: 
     - `tfb_spline`: uses `mgcv`-spline bases 
     - `tfb_fpc`: uses functional principal components 
