@@ -5,13 +5,13 @@
 #'
 #' - thinning out dense grids to make data smaller 
 #' - filling out sparse grids to make derivatives/integrals and locating extrema or zero crossings more
-#' accurate (.. if the interpolation works well) 
-#' - making irregular functional data into more regular data. 
+#' accurate (... *if* the interpolation works well ...) 
+#' - making irregular functional data into (more) regular data. 
 #'
 #' This is really just syntactic sugar for `tf<d|b>(object, arg = arg)`.
-#' To reliably get irregular data onto a regular, common grid, 
+#' To reliably impute very irregular data on a regular, common grid, 
 #' you'll be better off doing FPCA-based imputation or other model-based
-#' approaches.
+#' approaches in most cases.
 #'
 #' @param object an object inheriting from `tf`
 #' @param arg a vector of argument values on which to evaluate the functions in
@@ -29,12 +29,12 @@
 #' # filling out sparse data (use a suitable evaluator -function!)
 #' sparse <- tf_rgp(10, arg = seq(0, 5, l = 21))
 #' plot(sparse)
-#' tfd(sparse, evaluator= tf_approx_spline) %>%   #change eval. for better interpolation
-#'   tf_interpolate(arg = seq(0, 5, l = 201)) %>%
+#' tfd(sparse, evaluator= tf_approx_spline) |>   #change eval. for better interpolation
+#'   tf_interpolate(arg = seq(0, 5, l = 201)) |>
 #'   lines(col = 2)
 #'
 #' set.seed(1860)
-#' (sparse_irregular <- tf_rgp(5) %>%  tf_sparsify(.5) %>% tf_jiggle())
+#' (sparse_irregular <- tf_rgp(5) |>  tf_sparsify(.5) |> tf_jiggle())
 #' tf_interpolate(sparse_irregular, arg = seq(0, 1, l = 51))
 #' 
 tf_interpolate <- function(object, arg, ...) UseMethod("tf_interpolate")
