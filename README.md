@@ -7,11 +7,11 @@
 
 [![Lifecycle:
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
-[![Build
-Status](https://ci.appveyor.com/api/projects/status/github/tidyfun/tidyfun?branch=master&svg=true)](https://ci.appveyor.com/project/tidyfun/tidyfun/branch/master)
-[![codecov.io](https://codecov.io/github/tidyfun/tidyfun/coverage.svg?branch=master)](https://codecov.io/github/tidyfun/tidyfun/branch/master)
 [![R build
 status](https://github.com/tidyfun/tidyfun/workflows/R-CMD-check/badge.svg)](https://github.com/tidyfun/tidyfun/actions)
+[![codecov.io](https://codecov.io/github/tidyfun/tidyfun/coverage.svg?branch=master)](https://codecov.io/github/tidyfun/tidyfun/branch/master)
+[![MIT
+license](http://img.shields.io/badge/license-MIT-brightgreen.svg)](https://opensource.org/licenses/MIT)
 <!-- badges: end -->
 
 The goal of **`tidyfun`** is to provide accessible and well-documented

@@ -30,7 +30,7 @@ range, though, this is not checked.}
 \item{arg}{optional \code{arg}-values on which to evaluate \code{f} and check \code{cond},
 defaults to \code{tf_arg(f)}.}
 
-\item{r}{used to specify a range, only the minimum and maximum of \code{r} are used.}
+\item{r}{numeric vector used to specify a range, only the minimum and maximum of \code{r} are used.}
 }
 \value{
 depends on  \code{return}:
@@ -49,8 +49,8 @@ and returns the argument values for which that condition is true.\cr
 get a logical flag for each function if the condition is \code{TRUE} \emph{anywhere},
 see below.
 
-\code{in_range} and its infix-equivalent return \code{TRUE} for all
-values in \code{f} that are within the range of values in \code{r}.
+\code{in_range} and its infix-equivalent \verb{\%inr\%} return \code{TRUE} for all
+values in the numeric vector \code{f} that are within the range of values in \code{r}.
 }
 \details{
 Entries in \code{f} that do not fulfill \code{cond} anywhere yield \code{numeric(0)}.\cr

@@ -39,7 +39,7 @@ Various constructor and conversion methods.
 \code{tfb} is a wrapper for functions that set up spline-, principal component- or
 wavelet-based representations of functional data. For all three, the input
 data \eqn{x_i(t)} are represented as weighted sums of a set of common basis
-functions \eqn{B_k(t); k = 1,\\dots, K} identical for all observations and
+functions \eqn{B_k(t); k = 1,\dots, K} identical for all observations and
 weight or coefficient vectors \eqn{b_i = (b_{i1}, \dots, b_{iK})} estimated
 for each observation: \eqn{x_i(t) \approx \sum_k B_k(t) b_{ik}}. Depending on
 the value of \code{basis}, the basis functions \eqn{B(t)} will either be \code{spline}
