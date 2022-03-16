@@ -2,22 +2,28 @@
 % Please edit documentation in R/tidyr.R
 \name{tf_unnest}
 \alias{tf_unnest}
-\title{Turn data frames with \code{tf}-objects / list columns into "long" tables.}
+\alias{tf_unnest.tf}
+\alias{tf_unnest.data.frame}
+\title{Turn (data frames with) \code{tf}-objects / list columns into "long" tables.}
 \usage{
-tf_unnest(
+tf_unnest(data, cols, arg, interpolate = TRUE, ...)
+
+\method{tf_unnest}{tf}(data, cols, arg, interpolate = TRUE, ...)
+
+\method{tf_unnest}{data.frame}(
   data,
   cols,
-  .arg,
-  .id = "id",
+  arg,
+  interpolate = TRUE,
   keep_empty = FALSE,
   ptype = NULL,
   names_sep = "_",
   names_repair = "check_unique",
-  try_dropping = TRUE
+  ...
 )
 }
 \arguments{
-\item{data}{a data frame}
+\item{data}{a data.frame or a \code{tf}-object}
 
 \item{cols}{<\code{\link[tidyr:tidyr_tidy_select]{tidy-select}}> Columns to unnest.
 
@@ -25,11 +31,13 @@ If you \code{unnest()} multiple columns, parallel entries must be of
 compatible sizes, i.e. they're either equal or length 1 (following the
 standard tidyverse recycling rules).}
 
-\item{.arg}{optional values for the \code{arg} argument of
-\code{\link[=tf_evaluate.data.frame]{tf_evaluate.data.frame()}}}
+\item{arg}{optional values for the \code{arg} argument of
+\code{\link[=tf_evaluate]{tf_evaluate()}}}
 
-\item{.id}{\Sexpr[results=rd, stage=render]{lifecycle::badge("deprecated")}:
-convert \code{df \%>\% unnest(x, .id = "id")} to \verb{df \%>\% mutate(id = names(x)) \%>\% unnest(x))}.}
+\item{interpolate}{return function values for \code{arg}-values not on original grid?
+Defaults to \code{TRUE}.}
+
+\item{...}{not used currently}
 
 \item{keep_empty}{By default, you get one row of output for each element
 of the list your unchopping/unnesting. This means that if there's a
@@ -38,9 +46,9 @@ will be dropped from the output. If you want to preserve all rows,
 use \code{keep_empty = TRUE} to replace size-0 elements with a single row
 of missing values.}
 
-\item{ptype}{Optionally, supply a data frame prototype for the output \code{cols},
-overriding the default that will be guessed from the combination of
-individual values.}
+\item{ptype}{Optionally, a named list of column name-prototype pairs to
+coerce \code{cols} to, overriding the default that will be guessed from
+combining the individual values.}
 
 \item{names_sep}{If \code{NULL}, the default, the names will be left
 as is. In \code{nest()}, inner names will come from the former outer names;
@@ -67,22 +75,23 @@ names. Must be one of the following options:
 
 See \code{\link[vctrs:vec_as_names]{vctrs::vec_as_names()}} for more details on these terms and the
 strategies used to enforce them.}
-
-\item{try_dropping}{should \code{tf_unnest} try to avoid duplicating \code{id} or \code{arg}
-columns? Defaults to TRUE.}
 }
 \value{
-a "long" data frame with  \code{tf}-columns expanded into \verb{id, arg, value}-
+a "long" data frame with \code{tf}-columns expanded into \verb{arg, value}-
 columns.
 }
 \description{
 Similar in spirit to \code{\link[tidyr:nest]{tidyr::unnest()}}, the reverse of \code{\link[=tf_nest]{tf_nest()}}.
-Caution -- uses slightly different defaults for names of unnested columns
+The \code{tf}-method simply turns a single \code{tfd} or \code{tfb} vector into a "long" \code{\link[=tibble]{tibble()}}.
+}
+\details{
+\itemize{
+\item Caution -- uses slightly different defaults for names of unnested columns
 than \code{tidyr::unnest()}.
-\strong{Add an ID column to your data before unnesting!} If your nested data does
-not include an ID column with a unique identifier for each row, you will not
-be able to match arg-value pairs to different functions after unnesting, see
-\code{.id}-argument below.
+\item For \code{data.frames}, \strong{make sure to have an ID column in your data before unnesting!}
+If it does not include an ID column with a unique identifier for each row, you will not
+be able to match arg-value pairs to the different functions after unnesting.
+}
 }
 \seealso{
 tf_gather(), tf_nest(), tf_evaluate.data.frame()

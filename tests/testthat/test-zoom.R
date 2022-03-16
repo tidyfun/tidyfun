@@ -14,8 +14,8 @@ test_that("tf_zoom for tfd works", {
   expect_equal(tf_domain(tf_zoom(xi, .2, .8)), c(.2, .8))
   expect_equivalent(as.matrix(tf_zoom(x, 0, .5)), as.matrix(x)[, 1:26])
   expect_equivalent(
-    as.data.frame(tf_zoom(xi, 0, .5)),
-    as.data.frame(xi) %>% dplyr::filter(arg <= .5)
+    tf_unnest(tf_zoom(xi, 0, .5)),
+    tf_unnest(xi) %>% dplyr::filter(arg <= .5)
   )
 
   expect_error(tf_zoom(x, c(.8, .1)))
@@ -34,8 +34,8 @@ test_that("tf_zoom for tfb_spline works", {
     as.matrix(xb)[, 1:26]
   )
   expect_equivalent(
-    as.data.frame(tf_zoom(xbi, 0, .5)),
-    as.data.frame(xbi) %>% dplyr::filter(arg <= .5)
+    tf_unnest(tf_zoom(xbi, 0, .5)),
+    tf_unnest(xbi) %>% dplyr::filter(arg <= .5)
   )
 
   expect_error(tf_zoom(xb, c(.8, .1)))
@@ -57,8 +57,8 @@ test_that("tf_zoom for tfb_fpc works", {
     as.matrix(xfpc)[, 1:26]
   )
   expect_equivalent(
-    suppressWarnings(as.data.frame(tf_zoom(xfpc, 0, .5))),
-    as.data.frame(xfpc) %>% dplyr::filter(arg <= .5)
+    suppressWarnings(tf_unnest(tf_zoom(xfpc, 0, .5))),
+    tf_unnest(xfpc) %>% dplyr::filter(arg <= .5)
   )
   
   expect_error(suppressWarnings(tf_zoom(xfpc, .8, .1)))

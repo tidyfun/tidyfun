@@ -271,7 +271,7 @@ tfb_spline.tfd <- function(data, arg = NULL,
   # ensure "unique" names (principles.tidyverse.org/names-attribute.html)
   names_data <- names(data) # %||% rep(".", length(data))
   
-  data <- as.data.frame(data, arg)
+  data <- tf_unnest(data, arg = arg)
   ret <- tfb_spline(data, domain = domain, penalized = penalized, 
              global = global,  resolution = resolution, ...)
   names(ret) <- names_data
@@ -291,14 +291,14 @@ tfb_spline.tfb <- function(data, arg = NULL,
     list(...)[names(list(...)) %in% names(formals(mgcv::s))]
   )
   names_data <- names(data)
-  if(vctrs::vec_size(data) == 0){
+  if (vctrs::vec_size(data) == 0){
     #data = rep(0, )
     # maybe try to make an empty vector that won't break anything like matrix algebra?
     
     ret <- new_tfb_spline(data, arg = arg, domain = domain, penalized = penalized,
                           global = global, resolution = resolution, s_args)
-  }else{
-    data <- as.data.frame(data, arg = arg)
+  } else {
+    data <- tf_unnest(data, arg = arg)
     ret <- do.call("tfb_spline", c(list(data),
                                    domain = domain, global = global,
                                    penalized = penalized, resolution = resolution, s_args

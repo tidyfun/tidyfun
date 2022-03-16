@@ -60,11 +60,11 @@ tfb_fpc(data, ...)
 Unless set by the user \code{tidyfun} uses proportion of variance explained
 \code{pve = .995} to determine the truncation levels.}
 
-\item{id}{The name/number of the column defining which data belong to which function.}
+\item{id}{The name or number of the column defining which data belong to which function.}
 
-\item{arg}{optional vector of argument values}
+\item{arg}{a grid of argument values to evaluate on}
 
-\item{value}{The name/number of the column containing the function evaluations.}
+\item{value}{The name or number of the column containing the function evaluations.}
 
 \item{domain}{range of the \code{arg}.}
 
@@ -102,10 +102,7 @@ of \code{\link[=fpc_wsvd]{fpc_wsvd()}} can be used for the `method`` argument, s
 # Apply FPCA for sparse data using refund::fpca.sc:
 set.seed(99290)
 # create sparse data:
-data <- as.data.frame(
-  tf_sparsify(
-    tf_rgp(15)
-))
+data <- tf_rgp(15) |> tf_sparsify() |> tf_unnest()
 # wrap refund::fpca_sc for use as FPCA method in tfb_fpc:
 fpca_sc_wrapper <- function(data, arg, pve = .995, ...) {
   data_mat <- tidyfun:::df_2_mat(data)

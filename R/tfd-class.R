@@ -157,20 +157,21 @@ tfd.numeric <- function(data, arg = NULL,
 }
 
 #' @description `tfd.data.frame` uses the first 3 columns of \code{data} for function information by default:
-#' (`ìd`, `arg`, `value`)
+#' (`id`, `arg`, `value`)
 #' @export
 #' @rdname tfd
-#' @param id The name/number of the column defining which data belong to which function.
-#' @param value The name/number of the column containing the function evaluations.
+#' @param id The name or number of the column defining which data belong to which function.
+#' @param value The name or number of the column containing the function evaluations.
 tfd.data.frame <- function(data, id = 1, arg = 2, value = 3, domain = NULL,
                            evaluator = tf_approx_linear, 
                            resolution = NULL, ...) {
+  stopifnot(
+    is.numeric(data[[arg]]),
+    is.numeric(data[[value]])
+  )
   evaluator <- quo_name(enexpr(evaluator))
   data <- na.omit(data[, c(id, arg, value)])
-  stopifnot(
-    is.numeric(data[[2]]),
-    is.numeric(data[[3]])
-  )
+  
   # make factor conversion explicit to avoid reordering
   id <- factor(data[[1]], levels = as.factor(unique(data[[1]])))
   datalist <- split(data[[3]], id)

@@ -94,11 +94,11 @@ tfb_spline(data, ...)
 \code{tidyfun} uses \code{k = 25} cubic regression spline basis functions
 (i.e., \code{bs = "cr"}) by default, but this should (!) be set appropriately.}
 
-\item{id}{The name/number of the column defining which data belong to which function.}
+\item{id}{The name or number of the column defining which data belong to which function.}
 
-\item{arg}{optional vector of argument values}
+\item{arg}{a grid of argument values to evaluate on}
 
-\item{value}{The name/number of the column containing the function evaluations.}
+\item{value}{The name or number of the column containing the function evaluations.}
 
 \item{domain}{range of the \code{arg}.}
 

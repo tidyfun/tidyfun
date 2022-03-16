@@ -7,30 +7,32 @@
 \alias{tf_integrate.tfb}
 \title{Integrals and Anti-Derivatives of Functional Data}
 \usage{
-tf_integrate(f, lower, upper, ...)
+tf_integrate(f, arg, lower, upper, ...)
 
-\method{tf_integrate}{`function`}(f, lower, upper, ...)
+\method{tf_integrate}{`function`}(f, arg, lower, upper, ...)
 
 \method{tf_integrate}{tfd}(
   f,
+  arg,
   lower = tf_domain(f)[1],
   upper = tf_domain(f)[2],
   definite = TRUE,
-  arg,
   ...
 )
 
 \method{tf_integrate}{tfb}(
   f,
+  arg,
   lower = tf_domain(f)[1],
   upper = tf_domain(f)[2],
   definite = TRUE,
-  arg,
   ...
 )
 }
 \arguments{
 \item{f}{a \code{tf}-object}
+
+\item{arg}{(optional) grid to use for the quadrature.}
 
 \item{lower}{lower limits of the integration range. For \code{definite=TRUE}, this
 can be a vector of the same length as \code{f}.}
@@ -43,8 +45,6 @@ as \code{f}.}
 
 \item{definite}{should the definite integral  be returned (default) or the
 antiderivative. See Description.}
-
-\item{arg}{grid to use for the quadrature.}
 }
 \value{
 For \code{definite = TRUE}, the definite integrals of the functions in

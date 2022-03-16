@@ -97,6 +97,11 @@ geom_spaghetti <- function(mapping = NULL, data = NULL,
 #' @usage NULL
 #' @format NULL
 GeomSpaghetti <- ggproto("GeomSpaghetti", Geom,
+  setup_params = function(data, params) {
+    # TODO: implement proper "orientation" - see extending ggplot vignette
+    params$flipped_aes <- FALSE
+    params
+  },
   setup_data = function(data, params) {
     GeomLine$setup_data(data, params)
   },

@@ -6,28 +6,28 @@
 \alias{tf_depth.tf}
 \title{Functional Data Depth}
 \usage{
-tf_depth(x, depth = "MBD", na.rm = TRUE, ...)
+tf_depth(x, arg, depth = "MBD", na.rm = TRUE, ...)
 
-\method{tf_depth}{matrix}(x, depth = "MBD", na.rm = TRUE, arg = unlist(find_arg(x, NULL)), ...)
+\method{tf_depth}{matrix}(x, arg, depth = "MBD", na.rm = TRUE, ...)
 
-\method{tf_depth}{tf}(x, depth = "MBD", na.rm = TRUE, arg = NULL, ...)
+\method{tf_depth}{tf}(x, arg, depth = "MBD", na.rm = TRUE, ...)
 }
 \arguments{
 \item{x}{\code{tf} (or a matrix of evaluations)}
+
+\item{arg}{grid of evaluation points}
 
 \item{depth}{currently available: "MBD", i.e. modified band depth}
 
 \item{na.rm}{TRUE remove missing observations?}
 
 \item{...}{further arguments handed to the function computing the respective tf_depth.}
-
-\item{arg}{grid of evaluation points}
 }
 \value{
 vector of tf_depth values
 }
 \description{
-Data tf_depth for functional data.
+Data depths for functional data.
 Currently implemented: Modified Band-2 Depth, see reference.
 }
 \references{

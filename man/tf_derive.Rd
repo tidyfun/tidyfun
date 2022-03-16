@@ -8,23 +8,23 @@
 \alias{tf_derive.tfb_fpc}
 \title{Differentiating functional data: approximating derivative functions}
 \usage{
-tf_derive(f, order = 1, arg = NULL, ...)
+tf_derive(f, arg, order = 1, ...)
 
-\method{tf_derive}{matrix}(f, order = 1, arg = NULL, ...)
+\method{tf_derive}{matrix}(f, arg, order = 1, ...)
 
-\method{tf_derive}{tfd}(f, order = 1, arg = NULL, ...)
+\method{tf_derive}{tfd}(f, arg, order = 1, ...)
 
-\method{tf_derive}{tfb_spline}(f, order = 1, arg = NULL, ...)
+\method{tf_derive}{tfb_spline}(f, arg, order = 1, ...)
 
-\method{tf_derive}{tfb_fpc}(f, order = 1, arg = NULL, ...)
+\method{tf_derive}{tfb_fpc}(f, arg, order = 1, ...)
 }
 \arguments{
 \item{f}{a \code{tf}-object}
 
-\item{order}{order of differentiation. Maximal value for \code{tfb_spline} is 2.}
-
 \item{arg}{grid to use for the finite differences.
 Not the \code{arg} of the returned object for \code{tfd}-inputs, see Details.}
+
+\item{order}{order of differentiation. Maximal value for \code{tfb_spline} is 2.}
 
 \item{...}{not used}
 }

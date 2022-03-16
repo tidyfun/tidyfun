@@ -42,16 +42,16 @@ quad_trapez <- function(arg, evaluations) {
 #' @param ... not used
 #' @return a `tf` (with slightly different `arg` or `basis` for the derivatives, see Details)
 #' @export
-tf_derive <- function(f, order = 1, arg = NULL, ...) UseMethod("tf_derive")
+tf_derive <- function(f, arg, order = 1, ...) UseMethod("tf_derive")
 
 #' @export
-tf_derive.default <- function(f, order = 1, arg = NULL, ...) .NotYetImplemented()
+tf_derive.default <- function(f, arg, order = 1, ...) .NotYetImplemented()
 
 #' @export
 #' @describeIn tf_derive row-wise finite differences
-tf_derive.matrix <- function(f, order = 1, arg = NULL, ...) {
-  arg <- arg %||% seq_len(ncol(f))
-  assert_numeric(arg, any.missing = FALSE, len = ncol(f), 
+tf_derive.matrix <- function(f, arg, order = 1, ...) {
+  if (missing(arg)) arg <- unlist(find_arg(f))
+  assert_numeric(arg, any.missing = FALSE, finite = TRUE, len = ncol(f), 
                  sorted = TRUE, unique = TRUE)
   ret <- derive_matrix(data = f, order = order, arg = arg)
   structure(ret[[1]], arg = ret[[2]])
@@ -59,14 +59,16 @@ tf_derive.matrix <- function(f, order = 1, arg = NULL, ...) {
 
 #' @export
 #' @describeIn tf_derive derivatives by finite differencing.
-tf_derive.tfd <- function(f, order = 1, arg = NULL, ...) {
+tf_derive.tfd <- function(f, arg, order = 1, ...) {
   # TODO: should this interpolate back to the original grid?
   # shortens the domain (slightly), for now.
   # this is necessary so that we don't get NAs when trying to evaluate derivs over
   # their default domain etc.
-  if (is_irreg(f)) warning("differentiating irregular data could be sketchy.")
+  if (is_irreg(f)) {
+    warning("Differentiating over irregular grids can be unstable.")
+  }  
   assert_count(order)
-  data <- as.matrix(f, arg = arg, interpolate = TRUE)
+  data <- as.matrix(f, arg, interpolate = TRUE)
   arg <- as.numeric(colnames(data))
   derived <- derive_matrix(data, arg, order)
   ret <- tfd(derived$data, derived$arg,
@@ -78,7 +80,7 @@ tf_derive.tfd <- function(f, order = 1, arg = NULL, ...) {
 }
 #' @export
 #' @describeIn tf_derive derivatives by finite differencing.
-tf_derive.tfb_spline <- function(f, order = 1, arg = NULL, ...) {
+tf_derive.tfb_spline <- function(f, arg, order = 1, ...) {
   # TODO: make this work for iterated application tf_derive(tf_derive(fb))
   if (!is.null(attr(f, "basis_deriv"))) {
     stop("Can't integrate or derive previously integrated or derived tfb_spline.")
@@ -86,9 +88,10 @@ tf_derive.tfb_spline <- function(f, order = 1, arg = NULL, ...) {
   if (attr(f, "family")$link != "identity") {
     stop("Can't integrate or derive tfb_spline with non-identity link function.")
   }  
-  if (is.null(arg)) {
+  if (missing(arg)) {
     arg <- tf_arg(f)
-  } else assert_arg(arg, f)
+  } 
+  assert_arg(arg, f)
   assert_choice(order, choices = c(-1, 1, 2))
   s_args <- attr(f, "basis_args")
   s_call <- as.call(c(quote(s), quote(arg), s_args))
@@ -108,13 +111,13 @@ tf_derive.tfb_spline <- function(f, order = 1, arg = NULL, ...) {
 }
 #' @export
 #' @describeIn tf_derive derivatives by finite differencing.
-tf_derive.tfb_fpc <- function(f, order = 1, arg = NULL, ...) {
+tf_derive.tfb_fpc <- function(f, arg, order = 1, ...) {
   efunctions <- environment(attr(f, "basis"))$efunctions
   environment(attr(f, "basis")) <- new.env()
   new_basis <- if (order > 0) {
-    tf_derive(efunctions, order = order, arg = arg)
+    tf_derive(efunctions, arg, order = order)
   } else {
-    tf_integrate(efunctions, definite = FALSE, arg = arg, ...)
+    tf_integrate(efunctions, arg, definite = FALSE, ...)
   }
   environment(attr(f, "basis"))$efunctions <- new_basis
   attr(f, "basis_matrix") <- t(as.matrix(new_basis))
@@ -134,7 +137,7 @@ tf_derive.tfb_fpc <- function(f, order = 1, arg = NULL, ...) {
 #' `[lower, upper]`, e.g. a `tfd` or `tfb` object representing \eqn{F(t) \approx
 #' \int^{t}_{lower}f(s)ds}, for \eqn{t \in}`[lower, upper]`, is returned.
 #' @inheritParams tf_derive
-#' @param arg grid to use for the quadrature.
+#' @param arg (optional) grid to use for the quadrature. 
 #' @param lower lower limits of the integration range. For `definite=TRUE`, this
 #'   can be a vector of the same length as `f`.
 #' @param upper upper limits of the integration range (but see `definite` arg /
@@ -146,25 +149,24 @@ tf_derive.tfb_fpc <- function(f, order = 1, arg = NULL, ...) {
 #'   `f`. For `definite = FALSE` and `tf`-inputs, a `tf` object containing their
 #'   anti-derivatives
 #' @export
-tf_integrate <- function(f, lower, upper, ...) {
+tf_integrate <- function(f, arg, lower, upper, ...) {
   UseMethod("tf_integrate")
 }
 #' @export
-tf_integrate.default <- function(f, lower, upper, ...) .NotYetImplemented()
+tf_integrate.default <- function(f, arg, lower, upper, ...) .NotYetImplemented()
 #' @describeIn tf_integrate integrating R-functions (a wrapper for [stats::integrate()]) 
 #' @export
-tf_integrate.function <- function(f, lower, upper, ...) {
+tf_integrate.function <- function(f, arg, lower, upper, ...) {
   stats::integrate(f, lower, upper, ...)
 }  
 #' @describeIn tf_integrate integrating [tfd()] objects
 #' @export
-tf_integrate.tfd <- function(f, lower = tf_domain(f)[1], upper = tf_domain(f)[2],
-                             definite = TRUE, arg, ...) {
+tf_integrate.tfd <- function(f, arg, lower = tf_domain(f)[1], upper = tf_domain(f)[2],
+                             definite = TRUE, ...) {
   if (missing(arg)) {
     arg <- tf_arg(f)
-  } else {
-    assert_arg(arg, f)
-  }
+  } 
+  assert_arg(arg, f)
   arg <- ensure_list(arg)
   assert_numeric(lower,
     lower = tf_domain(f)[1], upper = tf_domain(f)[2],
@@ -208,13 +210,12 @@ tf_integrate.tfd <- function(f, lower = tf_domain(f)[1], upper = tf_domain(f)[2]
 }
 #' @describeIn tf_integrate integrating [tfd()] objects
 #' @export
-tf_integrate.tfb <- function(f, lower = tf_domain(f)[1], upper = tf_domain(f)[2],
-                             definite = TRUE, arg, ...) {
+tf_integrate.tfb <- function(f, arg, lower = tf_domain(f)[1], upper = tf_domain(f)[2],
+                             definite = TRUE, ...) {
   if (missing(arg)) {
     arg <- tf_arg(f)
-  } else {
-    assert_arg(arg, f)
-  }
+  } 
+  assert_arg(arg, f)
   assert_numeric(lower,
     lower = tf_domain(f)[1], upper = tf_domain(f)[2],
     any.missing = FALSE

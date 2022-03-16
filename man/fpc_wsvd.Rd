@@ -2,9 +2,15 @@
 % Please edit documentation in R/tfb-fpc-utils.R
 \name{fpc_wsvd}
 \alias{fpc_wsvd}
+\alias{fpc_wsvd.matrix}
+\alias{fpc_wsvd.data.frame}
 \title{Eigenfunctions via weighted SVD}
 \usage{
 fpc_wsvd(data, arg, pve = 0.995)
+
+\method{fpc_wsvd}{matrix}(data, arg, pve = 0.995)
+
+\method{fpc_wsvd}{data.frame}(data, arg, pve = 0.995)
 }
 \arguments{
 \item{data}{numeric matrix of function evaluations (each row is one curve, no NAs)}
@@ -29,4 +35,7 @@ for data potentially on a non-equidistant grid.
 \references{
 code adapted from / inspired by \code{wsvd()} function of Bioconductor
 package \code{mogsa} by Cheng Meng.
+}
+\author{
+Cheng Meng, Fabian Scheipl
 }

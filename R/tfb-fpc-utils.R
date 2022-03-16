@@ -12,11 +12,12 @@
 #' - `npc` how many FPCs were returned for the given `pve` (integer)
 #' @references code adapted from / inspired by `wsvd()` function of Bioconductor
 #'   package `mogsa` by Cheng Meng. 
-# code adapted from mogsa::wsvd by Cheng Meng
+#' @author Cheng Meng, Fabian Scheipl   
 fpc_wsvd <- function(data, arg, pve = .995) {
   UseMethod("fpc_wsvd")
 }
-  
+#' @rdname fpc_wsvd
+#' @export  
 fpc_wsvd.matrix <- function(data, arg, pve = .995) {  
   assert_matrix(data, mode = "numeric", any.missing = FALSE, 
                 min.cols = 2, min.rows = 1)
@@ -39,6 +40,8 @@ fpc_wsvd.matrix <- function(data, arg, pve = .995) {
     scores = scores, npc = use, evalues = evalues
   )
 }
+#' @rdname fpc_wsvd
+#' @export
 fpc_wsvd.data.frame <- function(data, arg, pve = .995) { 
   data_mat <- df_2_mat(data)
   fpc_wsvd.matrix(data_mat, arg = attr(data_mat, "arg"), pve = pve)

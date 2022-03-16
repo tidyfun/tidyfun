@@ -105,7 +105,7 @@ tf_gather <- function(data, ..., key = ".tfd", arg = NULL, domain = NULL,
 #'   defaults to `"_"` for column names "<name of the `tf`>_<`arg`-value>".
 #'   Set to NULL to get column names that only contain the `arg`-value.
 #' @param interpolate `interpolate`-argument for evaluating the functional data.
-#'   Defaults to TRUE, i.e., `tfd`s are inter/extrapolated on unobserved `arg`-values.
+#'   Defaults to FALSE, i.e., `tfd`s are *not* inter/extrapolated on unobserved `arg`-values.
 #' @importFrom tidyselect vars_pull
 #' @export
 #' @examples
@@ -114,7 +114,7 @@ tf_gather <- function(data, ..., key = ".tfd", arg = NULL, domain = NULL,
 #' tf_spread(d, f)
 #' tf_spread(d, -g)
 #' tf_spread(d)
-tf_spread <- function(data, value, arg, sep = "_", interpolate = TRUE) {
+tf_spread <- function(data, value, arg, sep = "_", interpolate = FALSE) {
   if (missing(value)) {
     tf_cols <- which(map_lgl(data, is_tf))
     if (length(tf_cols) == 0) {
@@ -140,11 +140,13 @@ tf_spread <- function(data, value, arg, sep = "_", interpolate = TRUE) {
     return(data)
   }
   if (missing(arg)) {
-    if (is_irreg(tf)) {
-      stop("need explicit <arg> for irregular ", sQuote(tf_var), " -- otherwise
-           irregular grids can produce extremely wide dataframes.")
-    }
     arg <- tf_arg(tf)
+    if (is_irreg(tf)) {
+      arg <- unlist(arg) %>% unique() %>% sort() 
+      warning("no explicit <arg> for irregular ", sQuote(tf_var), 
+              " provided-- using all ", length(arg), 
+              " distinct observed argument values.")
+    }
   }
   tf_eval <- tf[, arg, matrix = TRUE, interpolate = interpolate] %>%
     as.data.frame()
@@ -248,33 +250,57 @@ tf_nest <- function(data, ..., .id = "id", .arg = "arg", domain = NULL,
 
 #-------------------------------------------------------------------------------
 
-#' Turn data frames with `tf`-objects / list columns into "long" tables.
+#' Turn (data frames with) `tf`-objects / list columns into "long" tables.
 #'
 #' Similar in spirit to [tidyr::unnest()], the reverse of [tf_nest()].
-#' Caution -- uses slightly different defaults for names of unnested columns
+#' The `tf`-method simply turns a single `tfd` or `tfb` vector into a "long" [tibble()].
+#' 
+#' - Caution -- uses slightly different defaults for names of unnested columns
 #' than `tidyr::unnest()`.  
-#' **Add an ID column to your data before unnesting!** If your nested data does
-#' not include an ID column with a unique identifier for each row, you will not
-#' be able to match arg-value pairs to different functions after unnesting, see 
-#' `.id`-argument below.
+#' - For `data.frames`, **make sure to have an ID column in your data before unnesting!** 
+#' If it does not include an ID column with a unique identifier for each row, you will not
+#' be able to match arg-value pairs to the different functions after unnesting.
 #'
-#' @param data a data frame
-#' @param .arg optional values for the `arg` argument of
-#'   [tf_evaluate.data.frame()]
-#' @param try_dropping should `tf_unnest` try to avoid duplicating `id` or `arg`
-#'   columns? Defaults to TRUE.
-#' @inheritParams tf_evaluate.data.frame
+#' @param data a data.frame or a `tf`-object
+#' @param arg optional values for the `arg` argument of
+#'   [tf_evaluate()]
+#' @param interpolate return function values for `arg`-values not on original grid?
+#'   Defaults to `TRUE`. 
+#' @param ... not used currently   
 #' @inheritParams tidyr::unnest
-#' @return a "long" data frame with  `tf`-columns expanded into `id, arg, value`-
+#' @return a "long" data frame with `tf`-columns expanded into `arg, value`-
 #'   columns.
-#' @export
 #' @seealso tf_gather(), tf_nest(), tf_evaluate.data.frame()
+#' @export 
+tf_unnest <- function(data, cols, arg, interpolate = TRUE, ...) {
+  UseMethod("tf_unnest")
+}
+
+#' @export
+#' @importFrom tibble tibble
+#' @importFrom tidyr unnest
+#' @rdname tf_unnest
+tf_unnest.tf <- function(data, cols, arg, interpolate = TRUE, ...) {
+    if (missing(arg)) {
+      arg <- ensure_list(tf_arg(data))
+    }
+    tmp <- data[, arg, matrix = FALSE, interpolate = interpolate]
+    id <- unique_id(names(data)) %||% seq_along(data)
+    id <- ordered(id, levels = id) # don't reshuffle
+    tidyr::unnest(tibble::tibble(id = id, data = tmp), cols = data)
+}
+#tf_unnest.tfd <- tf_unnest.tf
+#tf_unnest.tfb <- tf_unnest.tf
+#tf_unnest.tfb_fpc <- tf_unnest.tf
+
+#' @export
 #' @importFrom digest digest
 #' @importFrom utils data tail
 #' @importFrom rlang syms `!!!` expr_text
-tf_unnest <- function(data, cols, .arg, .id = "id", keep_empty = FALSE,
-                      ptype = NULL, names_sep = "_",
-                      names_repair = "check_unique", try_dropping = TRUE) {
+#' @rdname tf_unnest
+tf_unnest.data.frame <- function(data, cols, arg, interpolate = TRUE, 
+                                 keep_empty = FALSE, ptype = NULL, 
+                                 names_sep = "_", names_repair = "check_unique", ...) {
   
   if (missing(cols)) {
     tf_cols <- names(data)[map_lgl(data, is_tf)]
@@ -283,59 +309,9 @@ tf_unnest <- function(data, cols, .arg, .id = "id", keep_empty = FALSE,
                 expr_text(cols), "`"))
   }
   
-  ret <- tf_evaluate.data.frame(data, !!enquo(cols), arg = .arg) %>% 
+  ret <- tf_evaluate.data.frame(data, !!enquo(cols), arg = arg) %>% 
     tidyr::unnest(cols = !!enquo(cols), keep_empty = keep_empty,
                   ptype = ptype, names_sep = names_sep, 
                   names_repair = names_repair)
-  
-  if (try_dropping) {
-    # drop duplicated arg/id columns if possible:
-    arg_pattern <- paste0(names_sep, "arg$")
-    same_arg <- ret %>%
-      select(c(matches("^arg$"), matches(!!!arg_pattern))) %>%
-      # stackoverflow.com/questions/7585316
-      summarize_all(digest::digest) %>%
-      t() %>%
-      duplicated() %>%
-      tail(-1) %>%
-      {
-        row.names(.)[which(.)]
-      }
-    id_pattern <- paste0(names_sep, "id$")
-    same_id <- ret %>%
-      select(c(matches("^id$", ignore.case = FALSE), matches(!!!id_pattern))) %>%
-      # stackoverflow.com/questions/7585316
-      summarize_all(function(x) digest::digest(as.character(x))) %>%
-      t() %>%
-      duplicated() %>%
-      tail(-1) %>%
-      {
-        row.names(.)[which(.)]
-      }
-    if (length(same_arg)) ret <- ret %>% select(-!!same_arg)
-    if (length(same_id)) ret <- ret %>% select(-!!same_id)
-    if (length(c(same_arg, same_id))) {
-      message(
-        "Duplicate column", ifelse(length(c(same_arg, same_id)) > 1, "s ", " "),
-        paste(same_arg, collapse = ", "), " ", paste(same_id, collapse = ", "),
-        " created by unnesting were dropped."
-      )
-      # only rename left over columns if there was more than one and we don't
-      # overwrite anything by doing so
-      one_arg_left <- 
-        length(vars_select(names(ret), matches(!!!arg_pattern))) == 1
-      if (!("arg" %in% names(ret)) & one_arg_left & length(same_arg)) {
-        new_arg <- select(ret, matches(!!!arg_pattern)) %>% names()
-        ret <- rename(ret, arg = !!new_arg)
-        message("Renamed ", sQuote(new_arg), " to 'arg'.")
-      }
-      one_id_left <- length(vars_select(names(ret), matches(!!!id_pattern))) == 1
-      if (!("id" %in% names(ret)) & one_id_left & length(same_id)) {
-        new_id <- select(ret, matches(!!!id_pattern)) %>% names()
-        ret <- rename(ret, id = !!new_id)
-        message("Renamed ", sQuote(new_id), " to 'id'.")
-      }
-    }
-  }
   ret
 }

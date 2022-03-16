@@ -1,7 +1,6 @@
 # History files
 .Rhistory
 .Rapp.history
-
 # Session Data files
 .RData
 # Example code in package build process
@@ -10,8 +9,11 @@
 /*.tar.gz
 # Output files from R CMD check
 /*.Rcheck/
+
 # RStudio files
 .Rproj.user/
+tidyfun.Rproj
+
 # produced vignettes
 vignettes/*.html
 vignettes/*.pdf

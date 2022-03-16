@@ -3,7 +3,7 @@
 \name{as.tfd}
 \alias{as.tfd}
 \alias{as.tfd_irreg}
-\alias{as.data.frame.tfd}
+\alias{as.data.frame.tf}
 \alias{as.matrix.tfd}
 \alias{tfd}
 \alias{tfd.matrix}
@@ -18,16 +18,9 @@ as.tfd(data, ...)
 
 as.tfd_irreg(data, ...)
 
-\method{as.data.frame}{tfd}(
-  x,
-  row.names = NULL,
-  optional = FALSE,
-  arg = NULL,
-  interpolate = FALSE,
-  ...
-)
+\method{as.data.frame}{tf}(x, row.names = NULL, optional = FALSE, ...)
 
-\method{as.matrix}{tfd}(x, arg = NULL, interpolate = FALSE, ...)
+\method{as.matrix}{tfd}(x, arg, interpolate = FALSE, ...)
 
 tfd(data, ...)
 
@@ -87,11 +80,12 @@ this argument is \code{NULL} (i.e. when calling \code{tfd()}) this returns a pro
 \item{...}{not used in \code{tfd}, except for \code{tfd.tf} -- specify \code{arg} and \code{ìnterpolate = TRUE} to
 turn an irregular \code{tfd} into a regular one, see examples.}
 
-\item{x}{an \code{tfd} object}
+\item{x}{a \code{tf} object}
 
-\item{row.names}{not used}
+\item{row.names}{\code{NULL} or a character vector giving the row
+    names for the data frame.  Missing values are not allowed.}
 
-\item{optional}{not used}
+\item{optional}{not used!}
 
 \item{arg}{\code{numeric}, or list of \code{numeric}s. The evaluation grid. See Details on its
 interplay with \code{resolution}.
@@ -110,18 +104,20 @@ for values in \code{arg} for which no original data is available? Only relevant 
 
 \item{resolution}{resolution of the evaluation grid. See details for \code{\link[=tfd]{tfd()}}.}
 
-\item{id}{The name/number of the column defining which data belong to which function.}
+\item{id}{The name or number of the column defining which data belong to which function.}
 
-\item{value}{The name/number of the column containing the function evaluations.}
+\item{value}{The name or number of the column containing the function evaluations.}
 }
 \value{
+a one-column \code{data.frame} with a \code{tf}-column containing \code{x}
+
 an \code{tfd}-object (or a \code{data.frame}/\code{matrix} for the conversion functions, obviously.)
 }
 \description{
 Various constructor and conversion methods.
 
 \code{tfd.data.frame} uses the first 3 columns of \code{data} for function information by default:
-(\code{ìd}, \code{arg}, \code{value})
+(\code{id}, \code{arg}, \code{value})
 
 \code{tfd.list} accepts a list of vectors of identical lengths
 containing evaluations or a list of 2-column matrices/data.frames with
