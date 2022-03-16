@@ -1,6 +1,6 @@
 ---
 title: "Data Wrangling"
-author: "Jeff Goldsmith"
+author: "Jeff Goldsmith, Fabian Scheipl"
 date: "`r Sys.Date()`"
 output: 
     rmarkdown::html_vignette:
