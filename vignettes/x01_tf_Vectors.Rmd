@@ -1,13 +1,13 @@
 ---
 title: "tf Vectors and Operations"
-author: "Fabian Scheipl"
+author: "Jeff Goldsmith, Fabian Scheipl"
 date: "`r Sys.Date()`"
 output: 
     rmarkdown::html_vignette:
       fig_width: 12
 vignette: >
   %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteIndexEntry{Introducing tf vectors}
+  %\VignetteIndexEntry{tf Vectors and Operations}
   %\VignetteEncoding{UTF-8}
 ---
 
@@ -328,7 +328,8 @@ cca_five %>% tf_where(value == max(value), "first")
 cca_five[c("A", "D")] %>% tf_zoom(.5, 1) %>% tf_where(value == max(value), "first")
 
 # which f_i(t) are below the functional median anywhere for 0.2 < t < 0.6?
-cca_five %>% tf_zoom(0.2, 0.6) %>% tf_anywhere(value <= median(cca_five)[, arg])
+# (t() needed here so we're comparing column vectors to column vectors...)
+cca_five %>% tf_zoom(0.2, 0.6) %>% tf_anywhere(value <= t(median(cca_five)[, arg]))
 ```
 
 
