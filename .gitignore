@@ -31,4 +31,6 @@ inst/doc
 
 # complete data files in /data-raw/
 /data-raw/*.csv
-docs
+
+#pkgdown folder
+docs/
