@@ -321,8 +321,13 @@ median(cca_five) %>% lines(col = pal_5[3], lwd = 4)
 ```
 
 ```{r}
+# where are the first maxima of these functions?
 cca_five %>% tf_where(value == max(value), "first")
+
+# where are the first maxima of the later part (t > .5) of these functions?
 cca_five[c("A", "D")] %>% tf_zoom(.5, 1) %>% tf_where(value == max(value), "first")
+
+# which f_i(t) are below the functional median anywhere for 0.2 < t < 0.6?
 cca_five %>% tf_zoom(0.2, 0.6) %>% tf_anywhere(value <= median(cca_five)[, arg])
 ```
 
