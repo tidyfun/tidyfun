@@ -12,7 +12,7 @@
 #' the usual `dplyr` tricks are available, see examples.\cr
 #' Any condition evaluates to `NA` on `NA`-entries in `f`.
 #'
-#' @param f a `tf` object
+#' @param f a `tf` object  
 #' @param cond a logical expression on `value` that defines the condition about
 #'   the function values, see examples and details.
 #' @param return for each entry in `f`, `tf_where` either returns *all* `arg` for
@@ -54,7 +54,7 @@
 #'   tf_anywhere(f, value > 1)
 #' @export
 tf_where <- function(f, cond, 
-                     return = c("all", "first", "last", "range", "any"),arg) {
+                     return = c("all", "first", "last", "range", "any"), arg) {
   if (missing(arg)) {
     arg <- tf_arg(f)
   }
@@ -63,7 +63,7 @@ tf_where <- function(f, cond,
   cond <- enquo(cond)
   where_at <- map(
     f[, arg, matrix = FALSE],
-    ~filter(.x, !!cond) %>% pull(arg)
+    ~ filter(.x, !!cond) %>% pull(arg)
   )
   if (return == "first") {
     where_at <- map_if(where_at, ~length(.x) > 0, min)
@@ -102,9 +102,9 @@ tf_anywhere <- function(f, cond, arg) {
   eval(call, parent.frame())
 }
 
-#' @description `in_range` and its infix-equivalent return `TRUE` for all
-#'    values in `f` that are within the range of values in `r`.
-#' @param r used to specify a range, only the minimum and maximum of `r` are used.
+#' @description `in_range` and its infix-equivalent `%inr%` return `TRUE` for all
+#'    values in the numeric vector `f` that are within the range of values in `r`.
+#' @param r numeric vector used to specify a range, only the minimum and maximum of `r` are used.
 #' @rdname tf_where
 #' @export
 in_range <- function(f, r) {
