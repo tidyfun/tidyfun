@@ -19,6 +19,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -31,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidyfun</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.83</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.95</span>
       </span>
     </div>
 
@@ -41,7 +43,7 @@
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -67,8 +69,8 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/tidyfun/tidyfun/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+  <a href="https://github.com/tidyfun/tidyfun/" class="external-link">
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -82,15 +84,15 @@
 
       
 
-      </header><div class="row">
+      </header><script src="x05_Advice_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Advice for Developers</h1>
-                        <h4 class="author">Jeff Goldsmith</h4>
+                        <h4 data-toc-skip class="author">Jeff Goldsmith</h4>
             
-            <h4 class="date">2020-05-09</h4>
+            <h4 data-toc-skip class="date">2022-03-16</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/tidyfun/tidyfun/blob/master/vignettes/x05_Advice.Rmd"><code>vignettes/x05_Advice.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/tidyfun/tidyfun/blob/HEAD/vignettes/x05_Advice.Rmd" class="external-link"><code>vignettes/x05_Advice.Rmd</code></a></small>
       <div class="hidden name"><code>x05_Advice.Rmd</code></div>
 
     </div>
@@ -100,9 +102,8 @@
 <p><strong><code>tidyfun</code></strong> is intended to make user interactions with functional data easier. The package introduces a data class (<code>tf</code>) so that vectors of functional observations are available, similar to vectors of class <code>numeric</code> or <code>character</code>. That makes it possible to store functional data alongside other variables in a single dataframe; by extension, tools for data manipulation from the <code>tidyverse</code> and elsewhere can be used with datasets in which one or more variable is functional.</p>
 <p>Some basic analyses are available in <strong><code>tidyfun</code></strong> – it’s possible to compute means of <code>tf</code> vectors, to expand observations using a spline basis or using functional principal components analysis. With tools like <code>group_by</code> and <code>summarize</code>, these can be powerful tools for data exploration. Other analysis approaches are included in the <strong><code>refunder</code></strong> package, and more will be added to that package over time.</p>
 <p>There is an active research community in FDA, and there is constant development of new methods for analysis. Our hope is that the data structures in <strong><code>tidyfun</code></strong> will be useful as others as new approaches are implemented, and this page is intended to provide some advice and guidance for those implementations.</p>
-<div id="why-use-tidyfun" class="section level2">
-<h2 class="hasAnchor">
-<a href="#why-use-tidyfun" class="anchor"></a>Why use <strong><code>tidyfun</code></strong>
+<div class="section level2">
+<h2 id="why-use-tidyfun">Why use <strong><code>tidyfun</code></strong><a class="anchor" aria-label="anchor" href="#why-use-tidyfun"></a>
 </h2>
 <p>There are start-up costs to using a new data class when writing code for new methods, and there should be reasons to adopt such a class. We see several benefits to using <strong><code>tidyfun</code></strong>:</p>
 <ul>
@@ -113,9 +114,9 @@
 <p>Together, these make it possible to analyze functional data in a pipeline (import, exploratory analysis, visualization, and formal analysis) that is similar to those used for scalar variables.</p>
 <p>These advantages are user-facing – they are intended to make things easier when analyzing datasets that include functional observations. Because new methods for functional data typically involve working with “raw” observations (numeric vectors or matrices), implementing methods <strong><code>tidyfun</code></strong> will require some consideration of user interfaces, input objects, and data transformations. We believe the benefits are worth this effort.</p>
 </div>
-<div id="thoughts-on-design" class="section level2">
-<h2 class="hasAnchor">
-<a href="#thoughts-on-design" class="anchor"></a>Thoughts on design</h2>
+<div class="section level2">
+<h2 id="thoughts-on-design">Thoughts on design<a class="anchor" aria-label="anchor" href="#thoughts-on-design"></a>
+</h2>
 <p><strong><code>tidyfun</code></strong> will be most effective in new methods that are intended to be part of an analysis pipeline. As a starting point, we suggest addressing the following questions:</p>
 <ul>
 <li>How will users’ data be organized? What will input dataframes look like? What other variables will exist in addition to <code>tf</code> columns?</li>
@@ -126,9 +127,9 @@
 </ul>
 <p>At best, users will have a seamless experience across data exploration, modeling, and understanding results; <strong><code>tidyfun</code></strong> is intended to encourage that.</p>
 </div>
-<div id="using-tidyfun-in-new-functions" class="section level2">
-<h2 class="hasAnchor">
-<a href="#using-tidyfun-in-new-functions" class="anchor"></a>Using <strong><code>tidyfun</code></strong> in new functions</h2>
+<div class="section level2">
+<h2 id="using-tidyfun-in-new-functions">Using <strong><code>tidyfun</code></strong> in new functions<a class="anchor" aria-label="anchor" href="#using-tidyfun-in-new-functions"></a>
+</h2>
 <p>We anticipate that new methods for functional data will use raw numeric values (in vectors or matrices) for estimation and / or inference. Tools for converting <code>tf</code> vectors to matrices or other formats are available, and useful in this context. In general, we have used the following structure for functions that perform analyses:</p>
 <ul>
 <li>Input objects are dataframes containing <code>tf</code> vectors</li>
@@ -140,10 +141,10 @@
 <p>This pipeline shifts the burden for data conversion from the user to the function author, and in doing so maintains seamlessness for the user.</p>
 <p>As an example, the <code>refunder::rfr_fpca</code> function for functional principal components analysis has two main inputs: a dataframe containing one or more <code>tf</code> variables, and the name of the variable to decompose using FPCA. Internally, the <code>tf</code> vector is converted to a matrix for estimation. The function returns a list of elements relevant for FPCA, and includes estimated functions as a <code>tfb</code> vector. There is also a <code>predict</code> method, so that FPCA expansions of new data using the estimated basis can be easily obtained by users.</p>
 </div>
-<div id="keep-us-informed" class="section level2">
-<h2 class="hasAnchor">
-<a href="#keep-us-informed" class="anchor"></a>Keep us informed!</h2>
-<p>Our hope is that <strong><code>tidyfun</code></strong> will be a useful platform for other researchers and developers. For that reason, please let us know if you use <strong><code>tidyfun</code></strong> in your own work, identify <a href="https://github.com/tidyfun/tidyfun/issues">issues</a>, or have suggestions.</p>
+<div class="section level2">
+<h2 id="keep-us-informed">Keep us informed!<a class="anchor" aria-label="anchor" href="#keep-us-informed"></a>
+</h2>
+<p>Our hope is that <strong><code>tidyfun</code></strong> will be a useful platform for other researchers and developers. For that reason, please let us know if you use <strong><code>tidyfun</code></strong> in your own work, identify <a href="https://github.com/tidyfun/tidyfun/issues" class="external-link">issues</a>, or have suggestions.</p>
 </div>
   </div>
 
@@ -158,11 +159,13 @@
 
 
       <footer><div class="copyright">
-  <p>Developed by Fabian Scheipl, Jeff Goldsmith, Julia Wrobel.</p>
+  <p></p>
+<p>Developed by Fabian Scheipl, Jeff Goldsmith, Julia Wrobel.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
 </div>
 
       </footer>
@@ -170,6 +173,8 @@
 
   
 
+
+  
 
   </body>
 </html>

@@ -5,13 +5,13 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Converting data to tf • tidyfun</title>
+<title>Converting to &amp; from `tf` • tidyfun</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../pkgdown.js"></script><meta property="og:title" content="Converting data to tf">
+<script src="../pkgdown.js"></script><meta property="og:title" content="Converting to &amp; from `tf`">
 <meta property="og:description" content="tidyfun">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -19,6 +19,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -31,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidyfun</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.83</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.95</span>
       </span>
     </div>
 
@@ -41,7 +43,7 @@
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -67,8 +69,8 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/tidyfun/tidyfun/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+  <a href="https://github.com/tidyfun/tidyfun/" class="external-link">
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -82,15 +84,16 @@
 
       
 
-      </header><div class="row">
+      </header><script src="x02_Conversion_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip>Converting data to tf</h1>
-                        <h4 class="author">Jeff Goldsmith</h4>
+      <h1 data-toc-skip>Converting to &amp; from <code>tf</code>
+</h1>
+                        <h4 data-toc-skip class="author">Jeff Goldsmith, Fabian Scheipl</h4>
             
-            <h4 class="date">2020-05-09</h4>
+            <h4 data-toc-skip class="date">2022-03-16</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/tidyfun/tidyfun/blob/master/vignettes/x02_Conversion.Rmd"><code>vignettes/x02_Conversion.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/tidyfun/tidyfun/blob/HEAD/vignettes/x02_Conversion.Rmd" class="external-link"><code>vignettes/x02_Conversion.Rmd</code></a></small>
       <div class="hidden name"><code>x02_Conversion.Rmd</code></div>
 
     </div>
@@ -99,238 +102,310 @@
     
 <p>Functional data have often been stored in matrices or data frames. Although these structures have sufficed for some purposes, they are cumbersome or impossible to use with modern tools for data wrangling.</p>
 <p>In this vignette, we illustrate how to convert data from common structures to <code>tf</code> objects. Throughout, functional data vectors are stored as columns in a data frame to facilitate subsequent wrangling and analysis.</p>
-<div id="conversion-from-matrices" class="section level1">
-<h1 class="hasAnchor">
-<a href="#conversion-from-matrices" class="anchor"></a>Conversion from matrices</h1>
+<div class="section level2">
+<h2 id="conversion-from-matrices">Conversion from matrices<a class="anchor" aria-label="anchor" href="#conversion-from-matrices"></a>
+</h2>
 <p>One of the most common structures for storing functional data has been a matrix. Especially when subjects are observed over the same (regular or irregular) grid, it is natural to observations on a subject in rows (or columns) of a matrix. Matrices, however, are difficult to wrangle along with data in a data frame, leading to confusing and easy-to-break subsetting across several objects.</p>
 <p>In the following examples, we’ll use <code>tfd</code> to get a <code>tf</code> vector from matrices. The <code>tfd</code> function expects data to be organized so that each row is the functional observation for a single subject. It’s possible to focus only on the resulting <code>tf</code> vector, but in keeping with the broader goals of <code>tidyfun</code> we’ll add these as columns to a data frame.</p>
 <p>The <code>DTI</code> data in the <code>refund</code> package has been a popular example in functional data analysis. In the code below, we create a data frame (or <code>tibble</code>) containing scalar covariates, and then add columns for the <code>cca</code> and <code>rcst</code> track profiles. This code was used to create the <code><a href="../reference/dti_df.html">tidyfun::dti_df</a></code> dataset included in the package.</p>
-<div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="no">dti_df</span> <span class="kw">=</span> <span class="fu">tibble</span>(
-  <span class="kw">id</span> <span class="kw">=</span> <span class="kw pkg">refund</span><span class="kw ns">::</span><span class="no"><a href="https://rdrr.io/pkg/refund/man/DTI.html">DTI</a></span>$<span class="no">ID</span>,
-  <span class="kw">visit</span> <span class="kw">=</span> <span class="kw pkg">refund</span><span class="kw ns">::</span><span class="no"><a href="https://rdrr.io/pkg/refund/man/DTI.html">DTI</a></span>$<span class="no">visit</span>,
-  <span class="kw">sex</span> <span class="kw">=</span> <span class="kw pkg">refund</span><span class="kw ns">::</span><span class="no"><a href="https://rdrr.io/pkg/refund/man/DTI.html">DTI</a></span>$<span class="no">sex</span>,
-  <span class="kw">case</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span>(<span class="kw pkg">refund</span><span class="kw ns">::</span><span class="no"><a href="https://rdrr.io/pkg/refund/man/DTI.html">DTI</a></span>$<span class="no">case</span>, <span class="st">"MS"</span>, <span class="st">"control"</span>)))
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">dti_df</span> <span class="op">=</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span>
+  id <span class="op">=</span> <span class="fu">refund</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/refund/man/DTI.html" class="external-link">DTI</a></span><span class="op">$</span><span class="va">ID</span>, 
+  visit <span class="op">=</span> <span class="fu">refund</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/refund/man/DTI.html" class="external-link">DTI</a></span><span class="op">$</span><span class="va">visit</span>,
+  sex <span class="op">=</span> <span class="fu">refund</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/refund/man/DTI.html" class="external-link">DTI</a></span><span class="op">$</span><span class="va">sex</span>, 
+  case <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="fu">refund</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/refund/man/DTI.html" class="external-link">DTI</a></span><span class="op">$</span><span class="va">case</span>, <span class="st">"MS"</span>, <span class="st">"control"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
 
-<span class="no">dti_df</span>$<span class="no">cca</span> <span class="kw">=</span> <span class="fu"><a href="../reference/tfd.html">tfd</a></span>(<span class="kw pkg">refund</span><span class="kw ns">::</span><span class="no"><a href="https://rdrr.io/pkg/refund/man/DTI.html">DTI</a></span>$<span class="no">cca</span>, <span class="kw">arg</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="fl">0</span>,<span class="fl">1</span>, <span class="kw">l</span> <span class="kw">=</span> <span class="fl">93</span>))
-<span class="no">dti_df</span>$<span class="no">rcst</span> <span class="kw">=</span> <span class="fu"><a href="../reference/tfd.html">tfd</a></span>(<span class="kw pkg">refund</span><span class="kw ns">::</span><span class="no"><a href="https://rdrr.io/pkg/refund/man/DTI.html">DTI</a></span>$<span class="no">rcst</span>, <span class="kw">arg</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="fl">0</span>, <span class="fl">1</span>, <span class="kw">l</span> <span class="kw">=</span> <span class="fl">55</span>))</pre></body></html></div>
+<span class="va">dti_df</span><span class="op">$</span><span class="va">cca</span> <span class="op">=</span> <span class="fu"><a href="../reference/tfd.html">tfd</a></span><span class="op">(</span><span class="fu">refund</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/refund/man/DTI.html" class="external-link">DTI</a></span><span class="op">$</span><span class="va">cca</span>, arg <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">1</span>, l <span class="op">=</span> <span class="fl">93</span><span class="op">)</span><span class="op">)</span>
+<span class="va">dti_df</span><span class="op">$</span><span class="va">rcst</span> <span class="op">=</span> <span class="fu"><a href="../reference/tfd.html">tfd</a></span><span class="op">(</span><span class="fu">refund</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/refund/man/DTI.html" class="external-link">DTI</a></span><span class="op">$</span><span class="va">rcst</span>, arg <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, l <span class="op">=</span> <span class="fl">55</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p>In <code>tfd</code>, the first argument is a matrix; <code>arg</code> defines the grid over which functions are observed. The output of <code>tfd</code> is a vector, which we include in the <code>dti_df</code> data frame.</p>
-<div class="sourceCode" id="cb2"><html><body><pre class="r"><span class="no">dti_df</span>
-<span class="co">## # A tibble: 382 x 6</span>
-<span class="co">##       id visit sex   case                                                  cca</span>
-<span class="co">##    &lt;dbl&gt; &lt;int&gt; &lt;fct&gt; &lt;fct&gt;                                          &lt;tfd_irrg&gt;</span>
-<span class="co">##  1  1001     1 fema… cont… 1001_1: (0.000,0.49);(0.011,0.52);(0.022,0.54); ...</span>
-<span class="co">##  2  1002     1 fema… cont… 1002_1: (0.000,0.47);(0.011,0.49);(0.022,0.50); ...</span>
-<span class="co">##  3  1003     1 male  cont… 1003_1: (0.000,0.50);(0.011,0.51);(0.022,0.54); ...</span>
-<span class="co">##  4  1004     1 male  cont… 1004_1: (0.000,0.40);(0.011,0.42);(0.022,0.44); ...</span>
-<span class="co">##  5  1005     1 male  cont… 1005_1: (0.000,0.40);(0.011,0.41);(0.022,0.40); ...</span>
-<span class="co">##  6  1006     1 male  cont… 1006_1: (0.000,0.45);(0.011,0.45);(0.022,0.46); ...</span>
-<span class="co">##  7  1007     1 male  cont… 1007_1: (0.000,0.55);(0.011,0.56);(0.022,0.56); ...</span>
-<span class="co">##  8  1008     1 male  cont… 1008_1: (0.000,0.45);(0.011,0.48);(0.022,0.50); ...</span>
-<span class="co">##  9  1009     1 male  cont… 1009_1: (0.000,0.50);(0.011,0.51);(0.022,0.52); ...</span>
-<span class="co">## 10  1010     1 male  cont… 1010_1: (0.000,0.46);(0.011,0.47);(0.022,0.48); ...</span>
-<span class="co">## # … with 372 more rows, and 1 more variable: rcst &lt;tfd_irrg&gt;</span></pre></body></html></div>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">dti_df</span>
+<span class="co">## <span style="color: #949494;"># A tibble: 382 × 6</span></span>
+<span class="co">##       id visit sex    case                                                  cca</span>
+<span class="co">##    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>                                          <span style="color: #949494; font-style: italic;">&lt;tfd_irrg&gt;</span></span>
+<span class="co">## <span style="color: #BCBCBC;"> 1</span>  <span style="text-decoration: underline;">1</span>001     1 female control  [1]: (0.000,0.49);(0.011,0.52);(0.022,0.54); ...</span>
+<span class="co">## <span style="color: #BCBCBC;"> 2</span>  <span style="text-decoration: underline;">1</span>002     1 female control  [2]: (0.000,0.47);(0.011,0.49);(0.022,0.50); ...</span>
+<span class="co">## <span style="color: #BCBCBC;"> 3</span>  <span style="text-decoration: underline;">1</span>003     1 male   control  [3]: (0.000,0.50);(0.011,0.51);(0.022,0.54); ...</span>
+<span class="co">## <span style="color: #BCBCBC;"> 4</span>  <span style="text-decoration: underline;">1</span>004     1 male   control  [4]: (0.000,0.40);(0.011,0.42);(0.022,0.44); ...</span>
+<span class="co">## <span style="color: #BCBCBC;"> 5</span>  <span style="text-decoration: underline;">1</span>005     1 male   control  [5]: (0.000,0.40);(0.011,0.41);(0.022,0.40); ...</span>
+<span class="co">## <span style="color: #BCBCBC;"> 6</span>  <span style="text-decoration: underline;">1</span>006     1 male   control  [6]: (0.000,0.45);(0.011,0.45);(0.022,0.46); ...</span>
+<span class="co">## <span style="color: #BCBCBC;"> 7</span>  <span style="text-decoration: underline;">1</span>007     1 male   control  [7]: (0.000,0.55);(0.011,0.56);(0.022,0.56); ...</span>
+<span class="co">## <span style="color: #BCBCBC;"> 8</span>  <span style="text-decoration: underline;">1</span>008     1 male   control  [8]: (0.000,0.45);(0.011,0.48);(0.022,0.50); ...</span>
+<span class="co">## <span style="color: #BCBCBC;"> 9</span>  <span style="text-decoration: underline;">1</span>009     1 male   control  [9]: (0.000,0.50);(0.011,0.51);(0.022,0.52); ...</span>
+<span class="co">## <span style="color: #BCBCBC;">10</span>  <span style="text-decoration: underline;">1</span>010     1 male   control [10]: (0.000,0.46);(0.011,0.47);(0.022,0.48); ...</span>
+<span class="co">## <span style="color: #949494;"># … with 372 more rows, and 1 more variable: rcst &lt;tfd_irrg&gt;</span></span></code></pre></div>
 <p>Finally, we’ll make a quick spaghetti plot to illustrate that the complete functional data is included in each <code>tf</code> column.</p>
-<div class="sourceCode" id="cb3"><html><body><pre class="r"><span class="no">dti_df</span> <span class="kw">%&gt;%</span>
-  <span class="fu">ggplot</span>() +
-  <span class="fu"><a href="../reference/ggspaghetti.html">geom_spaghetti</a></span>(<span class="fu">aes</span>(<span class="kw">y</span> <span class="kw">=</span> <span class="no">cca</span>, <span class="kw">col</span> <span class="kw">=</span> <span class="no">case</span>, <span class="kw">alpha</span> <span class="kw">=</span> <span class="fl">.2</span> + <span class="fl">.4</span>*(<span class="no">case</span> <span class="kw">==</span> <span class="st">"control"</span>))) +
-  <span class="fu">facet_wrap</span>(~ <span class="no">sex</span>) +
-  <span class="fu">scale_alpha</span>(<span class="kw">guide</span> <span class="kw">=</span> <span class="st">'none'</span>, <span class="kw">range</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">.2</span>, <span class="fl">.4</span>))</pre></body></html></div>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">dti_df</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> 
+  <span class="fu"><a href="../reference/ggspaghetti.html">geom_spaghetti</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">cca</span>, col <span class="op">=</span> <span class="va">case</span>, alpha <span class="op">=</span> <span class="fl">.2</span> <span class="op">+</span> <span class="fl">.4</span><span class="op">*</span><span class="op">(</span><span class="va">case</span> <span class="op">==</span> <span class="st">"control"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap</a></span><span class="op">(</span><span class="op">~</span> <span class="va">sex</span><span class="op">)</span> <span class="op">+</span> 
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_alpha.html" class="external-link">scale_alpha</a></span><span class="op">(</span>guide <span class="op">=</span> <span class="st">'none'</span>, range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.2</span>, <span class="fl">.4</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p><img src="x02_Conversion_files/figure-html/unnamed-chunk-3-1.png" width="90%"></p>
-<p>We’ll repeat the same basic process using a second, and probably even-more-perennial, functional data example: the Canadian weather data in the <code>fda</code> package. Here, functional data are stored in a three-dimensional array, with dimesions corresponding to day, station, and outcome (temperature, precipitation, and log10 precipitation).</p>
-<p>In the following, we: create a <code>tibble</code> with scalar covariates; use <code>tfd</code> to create functional data vectors; and include the resulting vectors in the dataframe. In this case, our <code>arg</code>s are days of the year, and we use <code>tf_smooth</code> to smooth the precipitation outcome. Because the matrices store functional data in columns rather than in rows, we transpose matrices in the call to <code>tfd</code>.</p>
-<div class="sourceCode" id="cb4"><html><body><pre class="r"><span class="no">canada</span> <span class="kw">=</span> <span class="fu">tibble</span>(
-  <span class="kw">place</span> <span class="kw">=</span> <span class="kw pkg">fda</span><span class="kw ns">::</span><span class="no"><a href="https://rdrr.io/pkg/fda/man/CanadianWeather.html">CanadianWeather</a></span>$<span class="no">place</span>,
-  <span class="kw">region</span> <span class="kw">=</span> <span class="kw pkg">fda</span><span class="kw ns">::</span><span class="no"><a href="https://rdrr.io/pkg/fda/man/CanadianWeather.html">CanadianWeather</a></span>$<span class="no">region</span>,
-  <span class="kw">lat</span> <span class="kw">=</span> <span class="kw pkg">fda</span><span class="kw ns">::</span><span class="no"><a href="https://rdrr.io/pkg/fda/man/CanadianWeather.html">CanadianWeather</a></span>$<span class="no">coordinates</span>[,<span class="fl">1</span>],
-  <span class="kw">lon</span> <span class="kw">=</span> -<span class="kw pkg">fda</span><span class="kw ns">::</span><span class="no"><a href="https://rdrr.io/pkg/fda/man/CanadianWeather.html">CanadianWeather</a></span>$<span class="no">coordinates</span>[,<span class="fl">2</span>])
+<p>We’ll repeat the same basic process using a second, and probably even-more-perennial, functional data example: the Canadian weather data in the <code>fda</code> package. Here, functional data are stored in a three-dimensional array, with dimensions corresponding to day, station, and outcome (temperature, precipitation, and log10 precipitation).</p>
+<p>In the following, we first create a <code>tibble</code> with scalar covariates, then use <code>tfd</code> to create functional data vectors, and finally include the resulting vectors in the dataframe. In this case, our <code>arg</code>s are days of the year, and we use <code>tf_smooth</code> to smooth the precipitation outcome. Because the original data matrices record the different observations in the columns instead of the rows, we have to use their transpose in the call to <code>tfd</code>:</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">canada</span> <span class="op">=</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span>
+  place <span class="op">=</span> <span class="fu">fda</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/fda/man/CanadianWeather.html" class="external-link">CanadianWeather</a></span><span class="op">$</span><span class="va">place</span>, 
+  region <span class="op">=</span> <span class="fu">fda</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/fda/man/CanadianWeather.html" class="external-link">CanadianWeather</a></span><span class="op">$</span><span class="va">region</span>, 
+  lat <span class="op">=</span> <span class="fu">fda</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/fda/man/CanadianWeather.html" class="external-link">CanadianWeather</a></span><span class="op">$</span><span class="va">coordinates</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span>, 
+  lon <span class="op">=</span> <span class="op">-</span><span class="fu">fda</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/fda/man/CanadianWeather.html" class="external-link">CanadianWeather</a></span><span class="op">$</span><span class="va">coordinates</span><span class="op">[</span>,<span class="fl">2</span><span class="op">]</span><span class="op">)</span>
 
-<span class="no">canada</span>$<span class="no">temp</span> <span class="kw">=</span> <span class="fu"><a href="../reference/tfd.html">tfd</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span>(<span class="kw pkg">fda</span><span class="kw ns">::</span><span class="no"><a href="https://rdrr.io/pkg/fda/man/CanadianWeather.html">CanadianWeather</a></span>$<span class="no">dailyAv</span>[,,<span class="fl">1</span>]), <span class="kw">arg</span> <span class="kw">=</span> <span class="fl">1</span>:<span class="fl">365</span>)
-<span class="no">canada</span>$<span class="no">precipl10</span> <span class="kw">=</span>
-  <span class="fu"><a href="../reference/tfd.html">tfd</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span>(<span class="kw pkg">fda</span><span class="kw ns">::</span><span class="no"><a href="https://rdrr.io/pkg/fda/man/CanadianWeather.html">CanadianWeather</a></span>$<span class="no">dailyAv</span>[,,<span class="fl">3</span>]), <span class="kw">arg</span> <span class="kw">=</span> <span class="fl">1</span>:<span class="fl">365</span>) <span class="kw">%&gt;%</span>
-  <span class="no">tf_smooth</span>
-<span class="co">## using f = 0.15 as smoother span for lowess</span></pre></body></html></div>
+<span class="va">canada</span><span class="op">$</span><span class="va">temp</span> <span class="op">=</span> <span class="fu"><a href="../reference/tfd.html">tfd</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="fu">fda</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/fda/man/CanadianWeather.html" class="external-link">CanadianWeather</a></span><span class="op">$</span><span class="va">dailyAv</span><span class="op">[</span>,,<span class="fl">1</span><span class="op">]</span><span class="op">)</span>, arg <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">365</span><span class="op">)</span>
+<span class="va">canada</span><span class="op">$</span><span class="va">precipl10</span> <span class="op">=</span> 
+  <span class="fu"><a href="../reference/tfd.html">tfd</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="fu">fda</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/fda/man/CanadianWeather.html" class="external-link">CanadianWeather</a></span><span class="op">$</span><span class="va">dailyAv</span><span class="op">[</span>,,<span class="fl">3</span><span class="op">]</span><span class="op">)</span>, arg <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">365</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="va">tf_smooth</span>
+<span class="co">## using f = 0.15 as smoother span for lowess</span></code></pre></div>
 <p>The resulting data frame is shown below.</p>
-<div class="sourceCode" id="cb5"><html><body><pre class="r"><span class="no">canada</span>
-<span class="co">## # A tibble: 35 x 6</span>
-<span class="co">##    place region   lat   lon                                      temp</span>
-<span class="co">##    &lt;chr&gt; &lt;chr&gt;  &lt;dbl&gt; &lt;dbl&gt;                                 &lt;tfd_reg&gt;</span>
-<span class="co">##  1 St. … Atlan…  47.3 -52.4   St. Johns: (1, -4);(2, -3);(3, -3); ...</span>
-<span class="co">##  2 Hali… Atlan…  44.4 -63.4     Halifax: (1, -4);(2, -4);(3, -5); ...</span>
-<span class="co">##  3 Sydn… Atlan…  46.1 -60.1      Sydney: (1, -4);(2, -4);(3, -5); ...</span>
-<span class="co">##  4 Yarm… Atlan…  43.5 -66.1    Yarmouth: (1, -1);(2, -2);(3, -2); ...</span>
-<span class="co">##  5 Char… Atlan…  42.5 -80.2  Charlottvl: (1, -6);(2, -6);(3, -7); ...</span>
-<span class="co">##  6 Fred… Atlan…  45.6 -66.4 Fredericton: (1, -8);(2, -8);(3, -9); ...</span>
-<span class="co">##  7 Sche… Atlan…  54.5 -64.5 Scheffervll: (1,-22);(2,-23);(3,-23); ...</span>
-<span class="co">##  8 Arvi… Atlan…  48.3 -71.1      Arvida: (1,-14);(2,-14);(3,-15); ...</span>
-<span class="co">##  9 Bago… Atlan…  48.2 -70.5 Bagottville: (1,-15);(2,-15);(3,-16); ...</span>
-<span class="co">## 10 Queb… Atlan…  46.5 -71.1      Quebec: (1,-11);(2,-11);(3,-12); ...</span>
-<span class="co">## # … with 25 more rows, and 1 more variable: precipl10 &lt;tfd_reg&gt;</span></pre></body></html></div>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">canada</span>
+<span class="co">## <span style="color: #949494;"># A tibble: 35 × 6</span></span>
+<span class="co">##    place       region     lat   lon                               temp</span>
+<span class="co">##    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>                          <span style="color: #949494; font-style: italic;">&lt;tfd_reg&gt;</span></span>
+<span class="co">## <span style="color: #BCBCBC;"> 1</span> St. Johns   Atlantic  47.3 -<span style="color: #BB0000;">52.4</span>  [1]: (1, -4);(2, -3);(3, -3); ...</span>
+<span class="co">## <span style="color: #BCBCBC;"> 2</span> Halifax     Atlantic  44.4 -<span style="color: #BB0000;">63.4</span>  [2]: (1, -4);(2, -4);(3, -5); ...</span>
+<span class="co">## <span style="color: #BCBCBC;"> 3</span> Sydney      Atlantic  46.1 -<span style="color: #BB0000;">60.1</span>  [3]: (1, -4);(2, -4);(3, -5); ...</span>
+<span class="co">## <span style="color: #BCBCBC;"> 4</span> Yarmouth    Atlantic  43.5 -<span style="color: #BB0000;">66.1</span>  [4]: (1, -1);(2, -2);(3, -2); ...</span>
+<span class="co">## <span style="color: #BCBCBC;"> 5</span> Charlottvl  Atlantic  42.5 -<span style="color: #BB0000;">80.2</span>  [5]: (1, -6);(2, -6);(3, -7); ...</span>
+<span class="co">## <span style="color: #BCBCBC;"> 6</span> Fredericton Atlantic  45.6 -<span style="color: #BB0000;">66.4</span>  [6]: (1, -8);(2, -8);(3, -9); ...</span>
+<span class="co">## <span style="color: #BCBCBC;"> 7</span> Scheffervll Atlantic  54.5 -<span style="color: #BB0000;">64.5</span>  [7]: (1,-22);(2,-23);(3,-23); ...</span>
+<span class="co">## <span style="color: #BCBCBC;"> 8</span> Arvida      Atlantic  48.3 -<span style="color: #BB0000;">71.1</span>  [8]: (1,-14);(2,-14);(3,-15); ...</span>
+<span class="co">## <span style="color: #BCBCBC;"> 9</span> Bagottville Atlantic  48.2 -<span style="color: #BB0000;">70.5</span>  [9]: (1,-15);(2,-15);(3,-16); ...</span>
+<span class="co">## <span style="color: #BCBCBC;">10</span> Quebec      Atlantic  46.5 -<span style="color: #BB0000;">71.1</span> [10]: (1,-11);(2,-11);(3,-12); ...</span>
+<span class="co">## <span style="color: #949494;"># … with 25 more rows, and 1 more variable: precipl10 &lt;tfd_reg&gt;</span></span></code></pre></div>
 <p>A plot containing both functional observations is shown below.</p>
-<div class="sourceCode" id="cb6"><html><body><pre class="r"><span class="no">temp_panel</span> <span class="kw">=</span>
-  <span class="no">canada</span> <span class="kw">%&gt;%</span>
-  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="kw">y</span> <span class="kw">=</span> <span class="no">temp</span>, <span class="kw">color</span> <span class="kw">=</span> <span class="no">region</span>)) + <span class="fu"><a href="../reference/ggspaghetti.html">geom_spaghetti</a></span>()
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">temp_panel</span> <span class="op">=</span>
+  <span class="va">canada</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">temp</span>, color <span class="op">=</span> <span class="va">region</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="../reference/ggspaghetti.html">geom_spaghetti</a></span><span class="op">(</span><span class="op">)</span> 
 
-<span class="no">precip_panel</span> <span class="kw">=</span>
-  <span class="no">canada</span> <span class="kw">%&gt;%</span>
-  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="kw">y</span> <span class="kw">=</span> <span class="no">precipl10</span>, <span class="kw">color</span> <span class="kw">=</span> <span class="no">region</span>)) + <span class="fu"><a href="../reference/ggspaghetti.html">geom_spaghetti</a></span>()
+<span class="va">precip_panel</span> <span class="op">=</span>
+  <span class="va">canada</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">precipl10</span>, color <span class="op">=</span> <span class="va">region</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="../reference/ggspaghetti.html">geom_spaghetti</a></span><span class="op">(</span><span class="op">)</span> 
 
-<span class="kw pkg">gridExtra</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/gridExtra/man/arrangeGrob.html">grid.arrange</a></span>(<span class="no">temp_panel</span>, <span class="no">precip_panel</span>, <span class="kw">nrow</span> <span class="kw">=</span> <span class="fl">1</span>)</pre></body></html></div>
+<span class="fu">gridExtra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/gridExtra/man/arrangeGrob.html" class="external-link">grid.arrange</a></span><span class="op">(</span><span class="va">temp_panel</span>, <span class="va">precip_panel</span>, nrow <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></code></pre></div>
 <p><img src="x02_Conversion_files/figure-html/unnamed-chunk-6-1.png" width="90%"></p>
 </div>
-<div id="conversion-from-a-data-frame" class="section level1">
-<h1 class="hasAnchor">
-<a href="#conversion-from-a-data-frame" class="anchor"></a>Conversion from a data frame</h1>
-<div id="in-long-format" class="section level3">
-<h3 class="hasAnchor">
-<a href="#in-long-format" class="anchor"></a>… in “long” format</h3>
+<div class="section level2">
+<h2 id="conversion-to-tf-from-a-data-frame">Conversion to <code>tf</code> from a data frame<a class="anchor" aria-label="anchor" href="#conversion-to-tf-from-a-data-frame"></a>
+</h2>
+<div class="section level4">
+<h4 id="in-long-format">… in “long” format<a class="anchor" aria-label="anchor" href="#in-long-format"></a>
+</h4>
 <p>“Long” format data frames containing functional data include columns containing a subject identifier, the functional argument, and the value each subject’s function takes at each argument. There are also often (but not always) non-functional covariates that are repeated within a subject. For data in this form, we use <code>tf_nest</code> to produce a data frame containing a single row for each subject.</p>
 <p>A first example is the pig weight data from the <code>SemiPar</code> package, which is a nice example from longitudinal data analysis. This includes columns for <code>id.num</code>, <code>num.weeks</code>, and <code>weight</code> – which correspond to the subject, argument, and value.</p>
-<div class="sourceCode" id="cb7"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span>(<span class="st">"pig.weights"</span>, <span class="kw">package</span> <span class="kw">=</span> <span class="st">"SemiPar"</span>)
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"pig.weights"</span>, package <span class="op">=</span> <span class="st">"SemiPar"</span><span class="op">)</span>
 
-<span class="no">pig.weights</span> <span class="kw">=</span> <span class="fu">as_tibble</span>(<span class="no">pig.weights</span>)
+<span class="va">pig.weights</span> <span class="op">=</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span><span class="va">pig.weights</span><span class="op">)</span>
 
-<span class="no">pig.weights</span>
-<span class="co">## # A tibble: 432 x 3</span>
+<span class="va">pig.weights</span>
+<span class="co">## <span style="color: #949494;"># A tibble: 432 × 3</span></span>
 <span class="co">##    id.num num.weeks weight</span>
-<span class="co">##     &lt;int&gt;     &lt;int&gt;  &lt;dbl&gt;</span>
-<span class="co">##  1      1         1   24  </span>
-<span class="co">##  2      1         2   32  </span>
-<span class="co">##  3      1         3   39  </span>
-<span class="co">##  4      1         4   42.5</span>
-<span class="co">##  5      1         5   48  </span>
-<span class="co">##  6      1         6   54.5</span>
-<span class="co">##  7      1         7   61  </span>
-<span class="co">##  8      1         8   65  </span>
-<span class="co">##  9      1         9   72  </span>
-<span class="co">## 10      2         1   22.5</span>
-<span class="co">## # … with 422 more rows</span></pre></body></html></div>
+<span class="co">##     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="co">## <span style="color: #BCBCBC;"> 1</span>      1         1   24  </span>
+<span class="co">## <span style="color: #BCBCBC;"> 2</span>      1         2   32  </span>
+<span class="co">## <span style="color: #BCBCBC;"> 3</span>      1         3   39  </span>
+<span class="co">## <span style="color: #BCBCBC;"> 4</span>      1         4   42.5</span>
+<span class="co">## <span style="color: #BCBCBC;"> 5</span>      1         5   48  </span>
+<span class="co">## <span style="color: #BCBCBC;"> 6</span>      1         6   54.5</span>
+<span class="co">## <span style="color: #BCBCBC;"> 7</span>      1         7   61  </span>
+<span class="co">## <span style="color: #BCBCBC;"> 8</span>      1         8   65  </span>
+<span class="co">## <span style="color: #BCBCBC;"> 9</span>      1         9   72  </span>
+<span class="co">## <span style="color: #BCBCBC;">10</span>      2         1   22.5</span>
+<span class="co">## <span style="color: #949494;"># … with 422 more rows</span></span></code></pre></div>
 <p>We create <code>pig_df</code> by nesting weight within subject. The result is a data frame containing a single row for each pig, and columns for <code>id.num</code> and the <code>weight</code> function.</p>
-<div class="sourceCode" id="cb8"><html><body><pre class="r"><span class="no">pig_df</span> <span class="kw">=</span>
-  <span class="no">pig.weights</span> <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="../reference/tf_nest.html">tf_nest</a></span>(<span class="no">weight</span>, <span class="kw">.id</span> <span class="kw">=</span> <span class="no">id.num</span>, <span class="kw">.arg</span> <span class="kw">=</span> <span class="no">num.weeks</span>)
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">pig_df</span> <span class="op">=</span> 
+  <span class="va">pig.weights</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu"><a href="../reference/tf_nest.html">tf_nest</a></span><span class="op">(</span><span class="va">weight</span>, .id <span class="op">=</span> <span class="va">id.num</span>, .arg <span class="op">=</span> <span class="va">num.weeks</span><span class="op">)</span>
 
-<span class="no">pig_df</span>
-<span class="co">## # A tibble: 48 x 2</span>
-<span class="co">##    id.num                        weight</span>
-<span class="co">##     &lt;int&gt;                     &lt;tfd_reg&gt;</span>
-<span class="co">##  1      1  1: (1,24);(2,32);(3,39); ...</span>
-<span class="co">##  2      2  2: (1,22);(2,30);(3,40); ...</span>
-<span class="co">##  3      3  3: (1,22);(2,28);(3,36); ...</span>
-<span class="co">##  4      4  4: (1,24);(2,32);(3,40); ...</span>
-<span class="co">##  5      5  5: (1,24);(2,32);(3,37); ...</span>
-<span class="co">##  6      6  6: (1,23);(2,30);(3,36); ...</span>
-<span class="co">##  7      7  7: (1,22);(2,28);(3,36); ...</span>
-<span class="co">##  8      8  8: (1,24);(2,30);(3,38); ...</span>
-<span class="co">##  9      9  9: (1,20);(2,28);(3,33); ...</span>
-<span class="co">## 10     10 10: (1,26);(2,32);(3,40); ...</span>
-<span class="co">## # … with 38 more rows</span></pre></body></html></div>
+<span class="va">pig_df</span>
+<span class="co">## <span style="color: #949494;"># A tibble: 48 × 2</span></span>
+<span class="co">##    id.num                          weight</span>
+<span class="co">##     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>                       <span style="color: #949494; font-style: italic;">&lt;tfd_reg&gt;</span></span>
+<span class="co">## <span style="color: #BCBCBC;"> 1</span>      1  [1]: (1,24);(2,32);(3,39); ...</span>
+<span class="co">## <span style="color: #BCBCBC;"> 2</span>      2  [2]: (1,22);(2,30);(3,40); ...</span>
+<span class="co">## <span style="color: #BCBCBC;"> 3</span>      3  [3]: (1,22);(2,28);(3,36); ...</span>
+<span class="co">## <span style="color: #BCBCBC;"> 4</span>      4  [4]: (1,24);(2,32);(3,40); ...</span>
+<span class="co">## <span style="color: #BCBCBC;"> 5</span>      5  [5]: (1,24);(2,32);(3,37); ...</span>
+<span class="co">## <span style="color: #BCBCBC;"> 6</span>      6  [6]: (1,23);(2,30);(3,36); ...</span>
+<span class="co">## <span style="color: #BCBCBC;"> 7</span>      7  [7]: (1,22);(2,28);(3,36); ...</span>
+<span class="co">## <span style="color: #BCBCBC;"> 8</span>      8  [8]: (1,24);(2,30);(3,38); ...</span>
+<span class="co">## <span style="color: #BCBCBC;"> 9</span>      9  [9]: (1,20);(2,28);(3,33); ...</span>
+<span class="co">## <span style="color: #BCBCBC;">10</span>     10 [10]: (1,26);(2,32);(3,40); ...</span>
+<span class="co">## <span style="color: #949494;"># … with 38 more rows</span></span></code></pre></div>
 <p>We’ll make a quick plot to show the result.</p>
-<div class="sourceCode" id="cb9"><html><body><pre class="r"><span class="no">pig_df</span> <span class="kw">%&gt;%</span>
-  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="kw">y</span> <span class="kw">=</span> <span class="no">weight</span>)) +
-  <span class="fu"><a href="../reference/ggspaghetti.html">geom_spaghetti</a></span>()</pre></body></html></div>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">pig_df</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">weight</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> 
+  <span class="fu"><a href="../reference/ggspaghetti.html">geom_spaghetti</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <p><img src="x02_Conversion_files/figure-html/unnamed-chunk-9-1.png" width="90%"></p>
 <p>A second example uses the <code>ALA::fev1</code> dataset. <code>ALA</code> is not available on CRAN but can be installed using the line below.</p>
-<div class="sourceCode" id="cb10"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span>(<span class="st">"ALA"</span>, <span class="kw">repos</span><span class="kw">=</span><span class="st">"http://R-Forge.R-project.org"</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"ALA"</span>, repos<span class="op">=</span><span class="st">"http://R-Forge.R-project.org"</span><span class="op">)</span></code></pre></div>
 <p>In this dataset, both <code>height</code> and <code>logFEV1</code> are observed at multiple ages for each child; that is, there are two functions observed simultaneously, over a shared argument. We can use <code>tf_nest</code> to create a dataframe with a single row for each subject, which includes both non-functional covariates (like age and height at baseline), and functional observations <code>logFEV1</code> and <code>height</code>.</p>
-<div class="sourceCode" id="cb11"><html><body><pre class="r"><span class="kw pkg">ALA</span><span class="kw ns">::</span><span class="no">fev1</span> <span class="kw">%&gt;%</span>
-  <span class="fu">group_by</span>(<span class="no">id</span>) <span class="kw">%&gt;%</span>
-  <span class="fu">mutate</span>(<span class="kw">n_obs</span> <span class="kw">=</span> <span class="fu">n</span>()) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(<span class="no">n_obs</span> <span class="kw">&gt;</span> <span class="fl">1</span>) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="../reference/tf_nest.html">tf_nest</a></span>(<span class="no">logFEV1</span>, <span class="no">height</span>, <span class="kw">.arg</span> <span class="kw">=</span> <span class="no">age</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">ALA</span><span class="fu">::</span><span class="va">fev1</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="op">)</span>
+<span class="co">## Rows: 1,994</span>
+<span class="co">## Columns: 6</span>
+<span class="co">## $ id      &lt;fct&gt; 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, …</span>
+<span class="co">## $ age     &lt;dbl&gt; 9.3415, 10.3929, 11.4524, 12.4600, 13.4182, 15.4743, 16.3723, 6.5873, 7.6496, 12.7392, 13.7741, 14.6940, 15.…</span>
+<span class="co">## $ height  &lt;dbl&gt; 1.20, 1.28, 1.33, 1.42, 1.48, 1.50, 1.52, 1.13, 1.19, 1.49, 1.53, 1.55, 1.56, 1.57, 1.57, 1.18, 1.23, 1.30, …</span>
+<span class="co">## $ age0    &lt;dbl&gt; 9.3415, 9.3415, 9.3415, 9.3415, 9.3415, 9.3415, 9.3415, 6.5873, 6.5873, 6.5873, 6.5873, 6.5873, 6.5873, 6.58…</span>
+<span class="co">## $ height0 &lt;dbl&gt; 1.20, 1.20, 1.20, 1.20, 1.20, 1.20, 1.20, 1.13, 1.13, 1.13, 1.13, 1.13, 1.13, 1.13, 1.13, 1.18, 1.18, 1.18, …</span>
+<span class="co">## $ logFEV1 &lt;dbl&gt; 0.21511, 0.37156, 0.48858, 0.75142, 0.83291, 0.89200, 0.87129, 0.30748, 0.35066, 0.75612, 0.86710, 1.04732, …</span>
+<span class="fu">ALA</span><span class="fu">::</span><span class="va">fev1</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">id</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>n_obs <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">n_obs</span> <span class="op">&gt;</span> <span class="fl">1</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu"><a href="../reference/tf_nest.html">tf_nest</a></span><span class="op">(</span><span class="va">logFEV1</span>, <span class="va">height</span>, .arg <span class="op">=</span> <span class="va">age</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="op">)</span>
+<span class="co">## Rows: 252</span>
+<span class="co">## Columns: 6</span>
+<span class="co">## $ id      &lt;fct&gt; 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 15, 16, 18, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 3…</span>
+<span class="co">## $ age0    &lt;dbl&gt; 9.3415, 6.5873, 6.9131, 6.7598, 6.5024, 6.8994, 6.4339, 7.1869, 6.8966, 7.7892, 7.6140, 7.5483, 7.8412, 6.50…</span>
+<span class="co">## $ height0 &lt;dbl&gt; 1.20, 1.13, 1.18, 1.15, 1.11, 1.24, 1.18, 1.27, 1.17, 1.13, 1.32, 1.25, 1.25, 1.20, 1.19, 1.24, 1.21, 1.23, …</span>
+<span class="co">## $ n_obs   &lt;int&gt; 7, 8, 9, 10, 7, 11, 7, 9, 9, 10, 6, 3, 5, 11, 12, 10, 9, 8, 12, 2, 2, 11, 11, 7, 9, 11, 11, 4, 2, 12, 3, 9, …</span>
+<span class="co">## $ logFEV1 &lt;tfd_irrg&gt; [&lt;9.3415, 10.3929, 11.4524, 12.4600, 13.4182, 15.4743, 16.3723&gt;, &lt;0.21511, 0.37156, 0.48858, 0.75142, 0…</span>
+<span class="co">## $ height  &lt;tfd_irrg&gt; [&lt;9.3415, 10.3929, 11.4524, 12.4600, 13.4182, 15.4743, 16.3723&gt;, &lt;1.20, 1.28, 1.33, 1.42, 1.48, 1.50, 1…</span></code></pre></div>
 </div>
-<div id="in-wide-format" class="section level3">
-<h3 class="hasAnchor">
-<a href="#in-wide-format" class="anchor"></a>… in “wide” format</h3>
+<div class="section level4">
+<h4 id="in-wide-format">… in “wide” format<a class="anchor" aria-label="anchor" href="#in-wide-format"></a>
+</h4>
 <p>In some cases functional data are stored in “wide” format, meaning that there are separate columns for each argument, and values are stored in these columns. In this case, <code>tf_gather</code> can be use to collapse across columns to produce a function for each subject.</p>
-<p>The example below again uses the <code><a href="https://rdrr.io/pkg/refund/man/DTI.html">refund::DTI</a></code> dataset. We convert <code>cca</code> so that, instead of acting as a matrix, it is in “wide” format. We then use <code>tf_gather</code> to combine the <code>cca</code> observations into a function.</p>
-<div class="sourceCode" id="cb12"><html><body><pre class="r"><span class="no">dti_df</span> <span class="kw">=</span>
-  <span class="kw pkg">refund</span><span class="kw ns">::</span><span class="no"><a href="https://rdrr.io/pkg/refund/man/DTI.html">DTI</a></span> <span class="kw">%&gt;%</span>
-  <span class="kw pkg">janitor</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/janitor/man/clean_names.html">clean_names</a></span>() <span class="kw">%&gt;%</span>
-  <span class="fu">select</span>(-<span class="fu">starts_with</span>(<span class="st">"rcst"</span>)) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="../reference/tf_gather.html">tf_gather</a></span>(<span class="fu">starts_with</span>(<span class="st">"cca"</span>)) <span class="kw">%&gt;%</span>
-  <span class="fu">as_tibble</span>()
-<span class="co">## creating new tfd-column &lt;cca&gt;</span></pre></body></html></div>
+<p>The example below again uses the <code><a href="https://rdrr.io/pkg/refund/man/DTI.html" class="external-link">refund::DTI</a></code> dataset. We convert <code>cca</code> so that, instead of acting as a matrix, it is in “wide” format. We then use <code>tf_gather</code> to combine the <code>cca</code> observations into a function.</p>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">dti_df</span> <span class="op">=</span> 
+  <span class="fu">refund</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/refund/man/DTI.html" class="external-link">DTI</a></span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu">janitor</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/janitor/man/clean_names.html" class="external-link">clean_names</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="op">-</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html" class="external-link">starts_with</a></span><span class="op">(</span><span class="st">"rcst"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu"><a href="../reference/tf_gather.html">tf_gather</a></span><span class="op">(</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html" class="external-link">starts_with</a></span><span class="op">(</span><span class="st">"cca"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span><span class="op">)</span>
+<span class="co">## creating new tfd-column &lt;cca&gt;</span></code></pre></div>
 </div>
 </div>
-<div id="other-formats" class="section level1">
-<h1 class="hasAnchor">
-<a href="#other-formats" class="anchor"></a>Other formats</h1>
+<div class="section level2">
+<h2 id="other-formats">Other formats<a class="anchor" aria-label="anchor" href="#other-formats"></a>
+</h2>
 <p><code>fda</code> and <code>fd</code> coming soon …</p>
 </div>
-<div id="reversing-the-conversion" class="section level1">
-<h1 class="hasAnchor">
-<a href="#reversing-the-conversion" class="anchor"></a>Reversing the conversion</h1>
-<p><strong><code>tidyfun</code></strong> includes a wide range of tools for exploratory analysis and visualization, but some analysis approaches require data to be stored in more traditional formats. Several functions are available to aid in this conversion.</p>
-<div id="conversion-to-data-frames" class="section level2">
-<h2 class="hasAnchor">
-<a href="#conversion-to-data-frames" class="anchor"></a>Conversion to data frames</h2>
+<div class="section level2">
+<h2 id="reversing-the-conversion">Reversing the conversion<a class="anchor" aria-label="anchor" href="#reversing-the-conversion"></a>
+</h2>
+<p><strong><code>tidyfun</code></strong> includes a wide range of tools for exploratory analysis and visualization, but many analysis approaches require data to be stored in more traditional formats. Several functions are available to aid in this conversion.</p>
+<div class="section level3">
+<h3 id="conversion-from-tf-to-data-frames">Conversion from <code>tf</code> to data frames<a class="anchor" aria-label="anchor" href="#conversion-from-tf-to-data-frames"></a>
+</h3>
 <p>The functions <code>tf_unnest</code> and <code>tf_spread</code> reverse the operations in <code>tf_nest</code> and <code>tf_gather</code>, respectively – that is, they take a data frame with a functional observation and produce long or wide data frames. We’ll illustrate these with the <code>pig_df</code> data set.</p>
 <p>First, to produce a long-format dataf rame, one can use <code>tf_unnest</code>:</p>
-<div class="sourceCode" id="cb13"><html><body><pre class="r"><span class="no">pig_df</span> <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="../reference/tf_unnest.html">tf_unnest</a></span>()
-<span class="co">## # A tibble: 432 x 4</span>
-<span class="co">##    id.num weight_id weight_arg weight_value</span>
-<span class="co">##     &lt;int&gt; &lt;chr&gt;          &lt;int&gt;        &lt;dbl&gt;</span>
-<span class="co">##  1      1 1                  1         24  </span>
-<span class="co">##  2      1 1                  2         32  </span>
-<span class="co">##  3      1 1                  3         39  </span>
-<span class="co">##  4      1 1                  4         42.5</span>
-<span class="co">##  5      1 1                  5         48  </span>
-<span class="co">##  6      1 1                  6         54.5</span>
-<span class="co">##  7      1 1                  7         61  </span>
-<span class="co">##  8      1 1                  8         65  </span>
-<span class="co">##  9      1 1                  9         72  </span>
-<span class="co">## 10      2 2                  1         22.5</span>
-<span class="co">## # … with 422 more rows</span></pre></body></html></div>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">pig_df</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu"><a href="../reference/tf_unnest.html">tf_unnest</a></span><span class="op">(</span><span class="op">)</span>
+<span class="co">## Warning in tf_unnest.data.frame(.): `cols` is now required.</span>
+<span class="co">## Please use `cols = c(weight)`</span>
+<span class="co">## <span style="color: #949494;"># A tibble: 432 × 3</span></span>
+<span class="co">##    id.num weight_arg weight_value</span>
+<span class="co">##     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="co">## <span style="color: #BCBCBC;"> 1</span>      1          1         24  </span>
+<span class="co">## <span style="color: #BCBCBC;"> 2</span>      1          2         32  </span>
+<span class="co">## <span style="color: #BCBCBC;"> 3</span>      1          3         39  </span>
+<span class="co">## <span style="color: #BCBCBC;"> 4</span>      1          4         42.5</span>
+<span class="co">## <span style="color: #BCBCBC;"> 5</span>      1          5         48  </span>
+<span class="co">## <span style="color: #BCBCBC;"> 6</span>      1          6         54.5</span>
+<span class="co">## <span style="color: #BCBCBC;"> 7</span>      1          7         61  </span>
+<span class="co">## <span style="color: #BCBCBC;"> 8</span>      1          8         65  </span>
+<span class="co">## <span style="color: #BCBCBC;"> 9</span>      1          9         72  </span>
+<span class="co">## <span style="color: #BCBCBC;">10</span>      2          1         22.5</span>
+<span class="co">## <span style="color: #949494;"># … with 422 more rows</span></span></code></pre></div>
 <p>To produce a wide-format data frame, one can use <code>tf_spread</code>:</p>
-<div class="sourceCode" id="cb14"><html><body><pre class="r"><span class="no">pig_df</span> <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="../reference/tf_spread.html">tf_spread</a></span>()
-<span class="co">## # A tibble: 48 x 10</span>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">pig_df</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu"><a href="../reference/tf_spread.html">tf_spread</a></span><span class="op">(</span><span class="op">)</span>
+<span class="co">## <span style="color: #949494;"># A tibble: 48 × 10</span></span>
 <span class="co">##    id.num weight_1 weight_2 weight_3 weight_4 weight_5 weight_6 weight_7</span>
-<span class="co">##     &lt;int&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;</span>
-<span class="co">##  1      1     24       32       39       42.5     48       54.5     61  </span>
-<span class="co">##  2      2     22.5     30.5     40.5     45       51       58.5     64  </span>
-<span class="co">##  3      3     22.5     28       36.5     41       47.5     55       61  </span>
-<span class="co">##  4      4     24       31.5     39.5     44.5     51       56       59.5</span>
-<span class="co">##  5      5     24.5     31.5     37       42.5     48       54       58  </span>
-<span class="co">##  6      6     23       30       35.5     41       48       51.5     56.5</span>
-<span class="co">##  7      7     22.5     28.5     36       43.5     47       53.5     59.5</span>
-<span class="co">##  8      8     23.5     30.5     38       41       48.5     55       59.5</span>
-<span class="co">##  9      9     20       27.5     33       39       43.5     49       54.5</span>
-<span class="co">## 10     10     25.5     32.5     39.5     47       53       58.5     63  </span>
-<span class="co">## # … with 38 more rows, and 2 more variables: weight_8 &lt;dbl&gt;, weight_9 &lt;dbl&gt;</span></pre></body></html></div>
+<span class="co">##  <span style="color: #BCBCBC;">*</span>  <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="co">## <span style="color: #BCBCBC;"> 1</span>      1     24       32       39       42.5     48       54.5     61  </span>
+<span class="co">## <span style="color: #BCBCBC;"> 2</span>      2     22.5     30.5     40.5     45       51       58.5     64  </span>
+<span class="co">## <span style="color: #BCBCBC;"> 3</span>      3     22.5     28       36.5     41       47.5     55       61  </span>
+<span class="co">## <span style="color: #BCBCBC;"> 4</span>      4     24       31.5     39.5     44.5     51       56       59.5</span>
+<span class="co">## <span style="color: #BCBCBC;"> 5</span>      5     24.5     31.5     37       42.5     48       54       58  </span>
+<span class="co">## <span style="color: #BCBCBC;"> 6</span>      6     23       30       35.5     41       48       51.5     56.5</span>
+<span class="co">## <span style="color: #BCBCBC;"> 7</span>      7     22.5     28.5     36       43.5     47       53.5     59.5</span>
+<span class="co">## <span style="color: #BCBCBC;"> 8</span>      8     23.5     30.5     38       41       48.5     55       59.5</span>
+<span class="co">## <span style="color: #BCBCBC;"> 9</span>      9     20       27.5     33       39       43.5     49       54.5</span>
+<span class="co">## <span style="color: #BCBCBC;">10</span>     10     25.5     32.5     39.5     47       53       58.5     63  </span>
+<span class="co">## <span style="color: #949494;"># … with 38 more rows, and 2 more variables: weight_8 &lt;dbl&gt;, weight_9 &lt;dbl&gt;</span></span></code></pre></div>
 </div>
-<div id="converting-back-to-a-matrix-or-data-frame" class="section level2">
-<h2 class="hasAnchor">
-<a href="#converting-back-to-a-matrix-or-data-frame" class="anchor"></a>Converting back to a matrix or data frame</h2>
+<div class="section level3">
+<h3 id="converting-back-to-a-matrix-or-data-frame">Converting back to a matrix or data frame<a class="anchor" aria-label="anchor" href="#converting-back-to-a-matrix-or-data-frame"></a>
+</h3>
 <p>To convert <code>tf</code> vector to a matrix, use <code>as.matrix</code>:</p>
-<div class="sourceCode" id="cb15"><html><body><pre class="r"><span class="no">weight_vec</span> <span class="kw">=</span> <span class="no">pig_df</span>$<span class="no">weight</span>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">weight_vec</span> <span class="op">=</span> <span class="va">pig_df</span><span class="op">$</span><span class="va">weight</span>
 
-<span class="no">weight_matrix</span> <span class="kw">=</span>
-  <span class="no">weight_vec</span> <span class="kw">%&gt;%</span> <span class="no">as.matrix</span>
+<span class="va">weight_matrix</span> <span class="op">=</span> 
+  <span class="va">weight_vec</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="va">as.matrix</span>
 
-<span class="no">weight_matrix</span>[<span class="fl">1</span>:<span class="fl">3</span>, <span class="fl">1</span>:<span class="fl">5</span>]
+<span class="va">weight_matrix</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span>
 <span class="co">##      1    2    3    4    5</span>
 <span class="co">## 1 24.0 32.0 39.0 42.5 48.0</span>
 <span class="co">## 2 22.5 30.5 40.5 45.0 51.0</span>
-<span class="co">## 3 22.5 28.0 36.5 41.0 47.5</span></pre></body></html></div>
-<p>To convert a <code>tf</code> vector to a standalone data frame with <code>"id"</code>,<code>"arg"</code>,<code>"value"</code>-columns, use <code><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame()</a></code>:</p>
-<div class="sourceCode" id="cb16"><html><body><pre class="r"><span class="no">weight_vec</span> <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span>()
-<span class="co">## # A tibble: 432 x 3</span>
-<span class="co">##    id      arg value</span>
-<span class="co">##    &lt;ord&gt; &lt;int&gt; &lt;dbl&gt;</span>
-<span class="co">##  1 1         1  24  </span>
-<span class="co">##  2 1         2  32  </span>
-<span class="co">##  3 1         3  39  </span>
-<span class="co">##  4 1         4  42.5</span>
-<span class="co">##  5 1         5  48  </span>
-<span class="co">##  6 1         6  54.5</span>
-<span class="co">##  7 1         7  61  </span>
-<span class="co">##  8 1         8  65  </span>
-<span class="co">##  9 1         9  72  </span>
-<span class="co">## 10 2         1  22.5</span>
-<span class="co">## # … with 422 more rows</span></pre></body></html></div>
+<span class="co">## 3 22.5 28.0 36.5 41.0 47.5</span></code></pre></div>
+<p>To convert a <code>tf</code> vector to a standalone data frame with <code>"id"</code>,<code>"arg"</code>,<code>"value"</code>-columns, use <code><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame()</a></code>:</p>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">weight_vec</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="op">)</span>
+<span class="co">##                                .</span>
+<span class="co">## 1   1: (1,24);(2,32);(3,39); ...</span>
+<span class="co">## 2   2: (1,22);(2,30);(3,40); ...</span>
+<span class="co">## 3   3: (1,22);(2,28);(3,36); ...</span>
+<span class="co">## 4   4: (1,24);(2,32);(3,40); ...</span>
+<span class="co">## 5   5: (1,24);(2,32);(3,37); ...</span>
+<span class="co">## 6   6: (1,23);(2,30);(3,36); ...</span>
+<span class="co">## 7   7: (1,22);(2,28);(3,36); ...</span>
+<span class="co">## 8   8: (1,24);(2,30);(3,38); ...</span>
+<span class="co">## 9   9: (1,20);(2,28);(3,33); ...</span>
+<span class="co">## 10 10: (1,26);(2,32);(3,40); ...</span>
+<span class="co">## 11 11: (1,24);(2,31);(3,40); ...</span>
+<span class="co">## 12 12: (1,24);(2,29);(3,39); ...</span>
+<span class="co">## 13 13: (1,24);(2,30);(3,36); ...</span>
+<span class="co">## 14 14: (1,22);(2,30);(3,37); ...</span>
+<span class="co">## 15 15: (1,25);(2,32);(3,38); ...</span>
+<span class="co">## 16 16: (1,22);(2,28);(3,34); ...</span>
+<span class="co">## 17 17: (1,31);(2,38);(3,48); ...</span>
+<span class="co">## 18 18: (1,28);(2,32);(3,36); ...</span>
+<span class="co">## 19 19: (1,30);(2,37);(3,45); ...</span>
+<span class="co">## 20 20: (1,26);(2,32);(3,40); ...</span>
+<span class="co">## 21 21: (1,26);(2,32);(3,40); ...</span>
+<span class="co">## 22 22: (1,28);(2,36);(3,42); ...</span>
+<span class="co">## 23 23: (1,26);(2,34);(3,42); ...</span>
+<span class="co">## 24 24: (1,28);(2,34);(3,41); ...</span>
+<span class="co">## 25 25: (1,22);(2,27);(3,34); ...</span>
+<span class="co">## 26 26: (1,22);(2,26);(3,32); ...</span>
+<span class="co">## 27 27: (1,24);(2,29);(3,36); ...</span>
+<span class="co">## 28 28: (1,22);(2,30);(3,36); ...</span>
+<span class="co">## 29 29: (1,28);(2,34);(3,42); ...</span>
+<span class="co">## 30 30: (1,24);(2,28);(3,33); ...</span>
+<span class="co">## 31 31: (1,24);(2,30);(3,38); ...</span>
+<span class="co">## 32 32: (1,24);(2,32);(3,40); ...</span>
+<span class="co">## 33 33: (1,24);(2,32);(3,39); ...</span>
+<span class="co">## 34 34: (1,24);(2,32);(3,40); ...</span>
+<span class="co">## 35 35: (1,24);(2,32);(3,38); ...</span>
+<span class="co">## 36 36: (1,24);(2,32);(3,40); ...</span>
+<span class="co">## 37 37: (1,24);(2,32);(3,38); ...</span>
+<span class="co">## 38 38: (1,26);(2,33);(3,42); ...</span>
+<span class="co">## 39 39: (1,26);(2,32);(3,39); ...</span>
+<span class="co">## 40 40: (1,25);(2,31);(3,36); ...</span>
+<span class="co">## 41 41: (1,26);(2,30);(3,33); ...</span>
+<span class="co">## 42 42: (1,24);(2,32);(3,39); ...</span>
+<span class="co">## 43 43: (1,24);(2,31);(3,38); ...</span>
+<span class="co">## 44 44: (1,27);(2,34);(3,42); ...</span>
+<span class="co">## 45 45: (1,31);(2,39);(3,48); ...</span>
+<span class="co">## 46 46: (1,27);(2,34);(3,40); ...</span>
+<span class="co">## 47 47: (1,30);(2,37);(3,46); ...</span>
+<span class="co">## 48 48: (1,28);(2,36);(3,42); ...</span></code></pre></div>
 </div>
 </div>
   </div>
@@ -346,11 +421,13 @@
 
 
       <footer><div class="copyright">
-  <p>Developed by Fabian Scheipl, Jeff Goldsmith, Julia Wrobel.</p>
+  <p></p>
+<p>Developed by Fabian Scheipl, Jeff Goldsmith, Julia Wrobel.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
 </div>
 
       </footer>
@@ -358,6 +435,8 @@
 
   
 
+
+  
 
   </body>
 </html>

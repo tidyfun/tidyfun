@@ -19,6 +19,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-home">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -31,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">tidyfun</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.83</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.95</span>
       </span>
     </div>
 
@@ -41,7 +43,7 @@
   <a href="reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -67,8 +69,8 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/tidyfun/tidyfun/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+  <a href="https://github.com/tidyfun/tidyfun/" class="external-link">
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -84,22 +86,22 @@
 
       </header><div class="row">
   <div class="contents col-md-9">
-<div id="tidyfun" class="section level1">
-<div class="page-header"><h1 class="hasAnchor">
-<a href="#tidyfun" class="anchor"></a>tidyfun <img src="https://github.com/tidyfun/tidyfun/blob/master/README_files/figures/tidyfun_hex.gif?raw=true" align="right" height="150">
+<div class="section level1">
+<div class="page-header"><h1 id="tidyfun-">tidyfun <img src="https://github.com/tidyfun/tidyfun/blob/master/README_files/figures/tidyfun_hex.gif?raw=true" align="right" height="150"><a class="anchor" aria-label="anchor" href="#tidyfun-"></a>
 </h1></div>
 <!-- badges: start -->
 
-<p>The goal of <strong><code>tidyfun</code></strong> is to provide accessible and well-documented software that <strong>makes functional data analysis in <code>R</code> easy</strong> – specifically data wrangling and exploratory analysis. This is achieved by introducing a new data type (<code>tf</code>). Vectors of class <code>tf</code> can be operated on using many standard functions (<code><a href="https://rdrr.io/r/base/Arithmetic.html">+</a></code>, <code>mean</code>, etc.) as well as several new functions in <code>tidyfun</code> (<code>tf_smooth</code>, <code>tf_where</code>).</p>
+<p>The goal of <strong><code>tidyfun</code></strong> is to provide accessible and well-documented software that <strong>makes functional data analysis in <code>R</code> easy</strong> – specifically data wrangling and exploratory analysis. This is achieved by introducing a new data type (<code>tf</code>). Vectors of class <code>tf</code> can be operated on using many standard functions (<code>+</code>, <code>mean</code>, etc.) as well as several new functions in <code>tidyfun</code> (<code>tf_smooth</code>, <code>tf_where</code>).</p>
 <p><strong>Crucially</strong>, vectors of class <code>tf</code> can be included in data frames containing other variables, enabling data manipulation using <code>tidyverse</code> tools. This approach is connected to the conceptual framework in functional data analysis, which assumes that <em>complete functions</em> are the unit of observation; with <code>tidyfun</code>, full curves sit alongside numeric, factor, and other observations on the same subject.</p>
-<div id="installation" class="section level2">
-<h2 class="hasAnchor">
-<a href="#installation" class="anchor"></a>Installation</h2>
-<div class="sourceCode" id="cb1"><pre class="r"><span class="kw pkg">devtools</span><span class="kw ns">::</span><span class="fu"><a href="https://devtools.r-lib.org//reference/remote-reexports.html">install_github</a></span>(<span class="st">"tidyfun/tidyfun"</span>)</pre></div>
+<div class="section level2">
+<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
+</h2>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"tidyfun/tidyfun"</span><span class="op">)</span></code></pre></div>
 </div>
-<div id="overview" class="section level2">
-<h2 class="hasAnchor">
-<a href="#overview" class="anchor"></a>Overview</h2>
+<div class="section level2">
+<h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
+</h2>
 <p><strong><code>tidyfun</code></strong> provides:</p>
 <ul>
 <li>new <strong>data types</strong> for representing functional data: <strong><code>tfd</code></strong> &amp; <strong><code>tfb</code></strong>
@@ -121,28 +123,29 @@
 <a href="https://tidyfun.github.io/tidyfun/articles/x04_Visualization.html">Visualizing</a> tidy functional data</li>
 </ul>
 <p>The result is a package that enables exploratory data analysis like the following, which computes group-specific mean curves in the <code>dti_df</code> dataset, and plots the result:</p>
-<div class="sourceCode" id="cb2"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="st">"tidyfun"</span>)
-<span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span>(<span class="no">dti_df</span>, <span class="kw">package</span> <span class="kw">=</span> <span class="st">"tidyfun"</span>)
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/tidyfun/tidyfun" class="external-link">"tidyfun"</a></span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">dti_df</span>, package <span class="op">=</span> <span class="st">"tidyfun"</span><span class="op">)</span>
 
-<span class="no">dti_df</span> <span class="kw">%&gt;%</span>
-  <span class="fu">group_by</span>(<span class="no">case</span>, <span class="no">sex</span>) <span class="kw">%&gt;%</span>
-  <span class="fu">summarize</span>(<span class="kw">mean_cca</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span>(<span class="no">cca</span>, <span class="kw">na.rm</span> <span class="kw">=</span> <span class="fl">TRUE</span>)) <span class="kw">%&gt;%</span>
-  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="kw">y</span> <span class="kw">=</span> <span class="no">mean_cca</span>, <span class="kw">color</span> <span class="kw">=</span> <span class="no">case</span>)) +
-    <span class="fu"><a href="reference/ggspaghetti.html">geom_spaghetti</a></span>(<span class="kw">size</span> <span class="kw">=</span> <span class="fl">2</span>) +
-    <span class="fu">facet_grid</span>(~ <span class="no">sex</span>)</pre></div>
+<span class="va">dti_df</span> <span class="op">%&gt;%</span> 
+  <span class="fu">group_by</span><span class="op">(</span><span class="va">case</span>, <span class="va">sex</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">summarize</span><span class="op">(</span>mean_cca <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">cca</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>y <span class="op">=</span> <span class="va">mean_cca</span>, color <span class="op">=</span> <span class="va">case</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> 
+    <span class="fu"><a href="reference/ggspaghetti.html">geom_spaghetti</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="op">+</span> 
+    <span class="fu">facet_grid</span><span class="op">(</span><span class="op">~</span> <span class="va">sex</span><span class="op">)</span></code></pre></div>
 <p><img src="https://raw.githubusercontent.com/tidyfun/tidyfun/dev/README_files/figure-gfm/unnamed-chunk-1-1.png" width="90%"><!-- include image directly so it works for pkgdown-site as well (r-lib/pkgdown#927?)--></p>
 </div>
-<div id="what-does-it-do" class="section level2">
-<h2 class="hasAnchor">
-<a href="#what-does-it-do" class="anchor"></a>What does it do?</h2>
-<div id="new-vector-like-data-types-for-functional-data" class="section level4">
-<h4 class="hasAnchor">
-<a href="#new-vector-like-data-types-for-functional-data" class="anchor"></a>New vector-like data types for functional data</h4>
+<div class="section level2">
+<h2 id="what-does-it-do">What does it do?<a class="anchor" aria-label="anchor" href="#what-does-it-do"></a>
+</h2>
+<div class="section level4">
+<h4 id="new-vector-like-data-types-for-functional-data">New vector-like data types for functional data<a class="anchor" aria-label="anchor" href="#new-vector-like-data-types-for-functional-data"></a>
+</h4>
 <p><strong><code>tidyfun</code></strong> provides <a href="https://tidyfun.github.io/tidyfun/reference/index.html#section-tf-sub-classes-constructors-converters">new <code>S3</code>-classes for functional data</a>, either as raw data (class <code>tfd</code> for <em>t</em>idy <em>f</em>unctional <em>d</em>ata) or in basis representation (class <code>tfb</code> for <em>t</em>idy <em>f</em>unctional <em>b</em>asis data).</p>
 <p>Such <code>tf</code>-objects can be subsetted or subassigned, computed on and summarized.</p>
 <p>Almost all</p>
 <ul>
-<li>operators like <code><a href="https://rdrr.io/r/base/Comparison.html">==</a></code>, <code><a href="https://rdrr.io/r/base/Arithmetic.html">+</a></code> or <code><a href="https://rdrr.io/r/base/Arithmetic.html">*</a></code>
+<li>operators like <code>==</code>, <code>+</code> or <code>*</code>
 </li>
 <li>math functions like <code>sum</code>, <code>log</code> or <code>abs</code>
 </li>
@@ -153,22 +156,23 @@
 <p>The <code>tf</code> objects are basically glorified lists, so they work well as columns in data frames. That makes it a lot easier to keep your other data and functional measurements together in one object for preprocessing, exploratory analysis and description. At the same time, these objects actually behave like vectors of <em>functions</em> to some extent, i.e., they can be evaluated on any point in their domain, they can be integrated or differentiated, etc.</p>
 <p><a href="https://tidyfun.github.io/tidyfun/articles/x01_tf_Vectors.html">See here</a> for more information on the operations defined for <code>tf</code> vectors.</p>
 </div>
-<div id="methods-for-converting-existing-data-to-tf" class="section level4">
-<h4 class="hasAnchor">
-<a href="#methods-for-converting-existing-data-to-tf" class="anchor"></a>Methods for converting existing data to <code>tf</code>
+<div class="section level4">
+<h4 id="methods-for-converting-existing-data-to-tf">Methods for converting existing data to <code>tf</code>
+<a class="anchor" aria-label="anchor" href="#methods-for-converting-existing-data-to-tf"></a>
 </h4>
 <p><strong><code>tidyfun</code></strong> includes functions <code>tfd</code> and <code>tfb</code> for converting matrices, data frames, etc. to <code>tf</code> vectors. It also provides <code>tf_gather</code> &amp; <code>tf_nest</code> in order to reshape tables with functional data, by going from wide to narrow or from long to short; functions like <code>as.matrix</code>, <code>tf_spread</code> &amp; <code>tf_unnest</code> can reverse these data conversions.</p>
 <p><a href="https://tidyfun.github.io/tidyfun/articles/x02_Conversion.html">See here</a> details on getting data into (and out of) the <code>tf</code> format.</p>
 </div>
-<div id="tidyverse-verbs-for-dealing-with-functional-data-inside-data-frames" class="section level4">
-<h4 class="hasAnchor">
-<a href="#tidyverse-verbs-for-dealing-with-functional-data-inside-data-frames" class="anchor"></a><code>tidyverse</code> verbs for dealing with functional data inside data frames</h4>
+<div class="section level4">
+<h4 id="tidyverse-verbs-for-dealing-with-functional-data-inside-data-frames">
+<code>tidyverse</code> verbs for dealing with functional data inside data frames<a class="anchor" aria-label="anchor" href="#tidyverse-verbs-for-dealing-with-functional-data-inside-data-frames"></a>
+</h4>
 <p>All <code>dplyr</code> verbs work on <code>tf</code>-columns, so you can <code>filter</code>, <code>mutate</code>, <code>group_by</code> &amp; <code>summarize</code>, etc., functional data pretty much like conventional “tidy” data. <strong><code>tidyfun</code></strong> adds several functions that are useful in conjunction with these, like <code>tf_anywhere</code> and <code>tf_smooth</code>.</p>
 <p><a href="https://tidyfun.github.io/tidyfun/articles/x03_Data_Wrangling.html">See here</a> to see how you can wrangle functional data.</p>
 </div>
-<div id="new-ggplot2-geoms-and-stats-for-functional-data" class="section level4">
-<h4 class="hasAnchor">
-<a href="#new-ggplot2-geoms-and-stats-for-functional-data" class="anchor"></a>New <code>ggplot2</code> <code>geoms</code> and <code>stats</code> for functional data</h4>
+<div class="section level4">
+<h4 id="new-ggplot2-geoms-and-stats-for-functional-data">New <code>ggplot2</code> <code>geoms</code> and <code>stats</code> for functional data<a class="anchor" aria-label="anchor" href="#new-ggplot2-geoms-and-stats-for-functional-data"></a>
+</h4>
 <p><strong><code>tidyfun</code></strong> defines <strong>pasta-themed</strong> <code>geom</code>s for functional data:</p>
 <ul>
 <li>
@@ -176,9 +180,9 @@
 <li>
 <strong><code>geom_meatballs</code></strong> for (lines &amp;) points,</li>
 <li>
-<strong><code>gglasagna</code></strong> for <a href="https://asset.jmir.pub/assets/76aeec48564abf0e6f6da8e9cd06346d.png">lasagna plots</a>, with an <strong><code>order</code></strong>-aesthetic to sort the lasagna layers,</li>
+<strong><code>gglasagna</code></strong> for <a href="https://asset.jmir.pub/assets/76aeec48564abf0e6f6da8e9cd06346d.png" class="external-link">lasagna plots</a>, with an <strong><code>order</code></strong>-aesthetic to sort the lasagna layers,</li>
 <li>
-<strong><code>geom_capellini</code></strong> for <a href="http://ggobi.github.io/ggally/index_files/figure-html/glyphs-basic-usage-1.png">glyphs</a> plots (i.e., sparklines),</li>
+<strong><code>geom_capellini</code></strong> for <a href="http://ggobi.github.io/ggally/index_files/figure-html/glyphs-basic-usage-1.png" class="external-link">glyphs</a> plots (i.e., sparklines),</li>
 </ul>
 <p>as well as new methods for base R graphics functions <code>plot</code>, <code>lines</code> and <code>points</code> for quick and easy visualizations of functional data.</p>
 <p><a href="https://tidyfun.github.io/tidyfun/reference/index.html#section-visualization-display">See here</a> for the documentation of the visualization approaches or take a look at the <a href="https://tidyfun.github.io/tidyfun/articles/x04_Visualization.html">Visualization</a> vignette.</p>
@@ -192,23 +196,31 @@ Please let us know so we can make it better.</p>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <div class="links">
-<h2>Links</h2>
+<h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
-<li>Browse source code at <br><a href="https://github.com/tidyfun/tidyfun/">https://​github.com/​tidyfun/​tidyfun/​</a>
-</li>
-<li>Report a bug at <br><a href="https://github.com/tidyfun/tidyfun/issues">https://​github.com/​tidyfun/​tidyfun/​issues</a>
-</li>
+<li><a href="https://github.com/tidyfun/tidyfun/" class="external-link">Browse source code</a></li>
+<li><a href="https://github.com/tidyfun/tidyfun/issues" class="external-link">Report a bug</a></li>
 </ul>
 </div>
+
 <div class="license">
-<h2>License</h2>
+<h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
 <li><a href="LICENSE.html">Full license</a></li>
-<li><small><a href="https://opensource.org/licenses/mit-license.php">MIT</a> + file <a href="LICENSE-text.html">LICENSE</a></small></li>
+<li><small><a href="https://opensource.org/licenses/mit-license.php" class="external-link">MIT</a> + file <a href="LICENSE-text.html">LICENSE</a></small></li>
 </ul>
 </div>
+
+
+<div class="citation">
+<h2 data-toc-skip>Citation</h2>
+<ul class="list-unstyled">
+<li><a href="authors.html#citation">Citing tidyfun</a></li>
+</ul>
+</div>
+
 <div class="developers">
-<h2>Developers</h2>
+<h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
 <li>Fabian Scheipl <br><small class="roles"> Author, maintainer </small>  </li>
 <li>Jeff Goldsmith <br><small class="roles"> Author </small>  </li>
@@ -216,25 +228,28 @@ Please let us know so we can make it better.</p>
 </ul>
 </div>
 
-  <div class="dev-status">
-<h2>Dev status</h2>
+<div class="dev-status">
+<h2 data-toc-skip>Dev status</h2>
 <ul class="list-unstyled">
-<li><a href="https://travis-ci.org/tidyfun/tidyfun"><img src="https://travis-ci.org/tidyfun/tidyfun.svg?branch=master" alt="Build Status"></a></li>
-<li><a href="https://www.tidyverse.org/lifecycle/#experimental"><img src="https://img.shields.io/badge/lifecycle-experimental-orange.svg" alt="Lifecycle: experimental"></a></li>
-<li><a href="https://ci.appveyor.com/project/tidyfun/tidyfun/branch/master"><img src="https://ci.appveyor.com/api/projects/status/github/tidyfun/tidyfun?branch=master&amp;svg=true" alt="Build Status"></a></li>
-<li><a href="https://codecov.io/github/tidyfun/tidyfun/branch/master"><img src="https://codecov.io/github/tidyfun/tidyfun/coverage.svg?branch=master" alt="codecov.io"></a></li>
+<li><a href="https://www.tidyverse.org/lifecycle/#experimental" class="external-link"><img src="https://img.shields.io/badge/lifecycle-experimental-orange.svg" alt="Lifecycle: experimental"></a></li>
+<li><a href="https://github.com/tidyfun/tidyfun/actions" class="external-link"><img src="https://github.com/tidyfun/tidyfun/workflows/R-CMD-check/badge.svg" alt="R build status"></a></li>
+<li><a href="https://codecov.io/github/tidyfun/tidyfun/branch/master" class="external-link"><img src="https://codecov.io/github/tidyfun/tidyfun/coverage.svg?branch=master" alt="codecov.io"></a></li>
+<li><a href="https://opensource.org/licenses/MIT" class="external-link"><img src="http://img.shields.io/badge/license-MIT-brightgreen.svg" alt="MIT license"></a></li>
 </ul>
 </div>
-</div>
+
+  </div>
 </div>
 
 
       <footer><div class="copyright">
-  <p>Developed by Fabian Scheipl, Jeff Goldsmith, Julia Wrobel.</p>
+  <p></p>
+<p>Developed by Fabian Scheipl, Jeff Goldsmith, Julia Wrobel.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
 </div>
 
       </footer>
@@ -242,6 +257,8 @@ Please let us know so we can make it better.</p>
 
   
 
+
+  
 
   </body>
 </html>

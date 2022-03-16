@@ -1,6 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://tidyfun.github.io/tidyfun/404.html</loc>
+  </url>
+  <url>
+    <loc>https://tidyfun.github.io/tidyfun/LICENSE-text.html</loc>
+  </url>
+  <url>
+    <loc>https://tidyfun.github.io/tidyfun/LICENSE.html</loc>
+  </url>
+  <url>
+    <loc>https://tidyfun.github.io/tidyfun/articles/index.html</loc>
+  </url>
+  <url>
+    <loc>https://tidyfun.github.io/tidyfun/articles/x01_tf_Vectors.html</loc>
+  </url>
+  <url>
+    <loc>https://tidyfun.github.io/tidyfun/articles/x02_Conversion.html</loc>
+  </url>
+  <url>
+    <loc>https://tidyfun.github.io/tidyfun/articles/x03_Data_Wrangling.html</loc>
+  </url>
+  <url>
+    <loc>https://tidyfun.github.io/tidyfun/articles/x04_Visualization.html</loc>
+  </url>
+  <url>
+    <loc>https://tidyfun.github.io/tidyfun/articles/x05_Advice.html</loc>
+  </url>
+  <url>
+    <loc>https://tidyfun.github.io/tidyfun/authors.html</loc>
+  </url>
+  <url>
     <loc>https://tidyfun.github.io/tidyfun/index.html</loc>
   </url>
   <url>
@@ -22,6 +52,9 @@
     <loc>https://tidyfun.github.io/tidyfun/reference/ggspaghetti.html</loc>
   </url>
   <url>
+    <loc>https://tidyfun.github.io/tidyfun/reference/index.html</loc>
+  </url>
+  <url>
     <loc>https://tidyfun.github.io/tidyfun/reference/tf_approx.html</loc>
   </url>
   <url>
@@ -38,6 +71,9 @@
   </url>
   <url>
     <loc>https://tidyfun.github.io/tidyfun/reference/tf_integrate.html</loc>
+  </url>
+  <url>
+    <loc>https://tidyfun.github.io/tidyfun/reference/tf_interpolate.html</loc>
   </url>
   <url>
     <loc>https://tidyfun.github.io/tidyfun/reference/tf_jiggle.html</loc>
@@ -101,20 +137,5 @@
   </url>
   <url>
     <loc>https://tidyfun.github.io/tidyfun/reference/vctrs.html</loc>
-  </url>
-  <url>
-    <loc>https://tidyfun.github.io/tidyfun/articles/x01_tf_Vectors.html</loc>
-  </url>
-  <url>
-    <loc>https://tidyfun.github.io/tidyfun/articles/x02_Conversion.html</loc>
-  </url>
-  <url>
-    <loc>https://tidyfun.github.io/tidyfun/articles/x03_Data_Wrangling.html</loc>
-  </url>
-  <url>
-    <loc>https://tidyfun.github.io/tidyfun/articles/x04_Visualization.html</loc>
-  </url>
-  <url>
-    <loc>https://tidyfun.github.io/tidyfun/articles/x05_Advice.html</loc>
   </url>
 </urlset>
