@@ -62,5 +62,6 @@ Collate:
     'where.R'
     'zoom.R'
 VignetteBuilder: knitr
-URL: https://github.com/tidyfun/tidyfun
+URL: https://github.com/tidyfun/tidyfun,
+    https://tidyfun.github.io/tidyfun
 BugReports: https://github.com/tidyfun/tidyfun/issues

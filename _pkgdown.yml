@@ -1,83 +1,71 @@
 title: tidyfun
 url: https://tidyfun.github.io/tidyfun
-
 reference:
-  - title: "tf - (Sub)classes: Constructors & converters"
-    desc: "Defining, evaluating and converting functional data objects"
-    contents:
-      - tfd
-      - as.tfd
-      - tfb
-      - as.tfb
-      - tfb_spline
-      - tfb_fpc
-      - fpc_wsvd
-
-  - title: "Evaluation and indexing"
-    desc: "Accessing, appending, evaluating and overwriting functional data objects"
-    contents: 
-      - index.tf
-      - tf_approx_linear
-      - tf_evaluate
-      
-  - title: "Arithmetic, logical and summary functions"
-    desc: "Functionality for computing with and comparing functional data"
-    contents:
-       - Ops.tf
-       - tfsummaries
-       - tf_depth
-       
-       
-  - title: "Differentiation & integration"
-    contents:
-       - tf_derive
-       - tf_integrate
-       
-  - title: "Wrangling"
-    desc: "Reshaping and transforming tf-objects inside data frames"
-    contents:
-      - tf_gather
-      - tf_spread
-      - tf_nest
-      - tf_unnest
-    
-  - title: "Visualization & Display"
-    desc: "Graphics functions and print formats"
-    contents:
-      - plot.tf
-      - geom_spaghetti
-      - gglasagna
-      - geom_capellini
-      - print.tf
-      - type_sum.tf
-  
-  - title: "Utilities"
-    desc: "Utility functions"
-    contents:
-      - tf_where
-      - tf_zoom
-      - tf_smooth
-      - tf_arg
-      - tf_rgp
-      - tf_jiggle
-
-
-  - title: "Data Sets"
-    desc: "Functional data sets"
-    contents:
-      - chf_df
-      - dti_df
-  
+- title: 'tf - (Sub)classes: Constructors & converters'
+  desc: Defining, evaluating and converting functional data objects
+  contents:
+  - tfd
+  - as.tfd
+  - tfb
+  - as.tfb
+  - tfb_spline
+  - tfb_fpc
+  - fpc_wsvd
+- title: Evaluation and indexing
+  desc: Accessing, appending, evaluating and overwriting functional data objects
+  contents:
+  - index.tf
+  - tf_approx_linear
+  - tf_evaluate
+- title: Arithmetic, logical and summary functions
+  desc: Functionality for computing with and comparing functional data
+  contents:
+  - Ops.tf
+  - tfsummaries
+  - tf_depth
+- title: Differentiation & integration
+  contents:
+  - tf_derive
+  - tf_integrate
+- title: Wrangling
+  desc: Reshaping and transforming tf-objects inside data frames
+  contents:
+  - tf_gather
+  - tf_spread
+  - tf_nest
+  - tf_unnest
+- title: Visualization & Display
+  desc: Graphics functions and print formats
+  contents:
+  - plot.tf
+  - geom_spaghetti
+  - gglasagna
+  - geom_capellini
+  - print.tf
+  - type_sum.tf
+- title: Utilities
+  desc: Utility functions
+  contents:
+  - tf_where
+  - tf_zoom
+  - tf_smooth
+  - tf_arg
+  - tf_rgp
+  - tf_jiggle
+- title: Data Sets
+  desc: Functional data sets
+  contents:
+  - chf_df
+  - dti_df
 articles:
-  - title: "Articles"
-    desc: "Articles & vignettes for tidyfun"
-    contents:
-    - x01_tf_Vectors
-    - x02_Conversion
-    - x03_Data_Wrangling
-    - x04_Visualization
-    - x05_Advice
-
+- title: Articles
+  desc: Articles & vignettes for tidyfun
+  contents:
+  - x01_tf_Vectors
+  - x02_Conversion
+  - x03_Data_Wrangling
+  - x04_Visualization
+  - x05_Advice
 navbar:
   type: default
   left:
@@ -95,6 +83,6 @@ navbar:
       href: articles/x04_Visualization.html
     - text: Advice for Developers
       href: articles/x05_Advice.html
-
 development:
   mode: auto
+

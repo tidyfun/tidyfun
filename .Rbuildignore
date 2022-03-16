@@ -12,3 +12,4 @@ attic
 ^appveyor\.yml$
 ^codecov\.yml$
 ^\.github$
+^pkgdown$
