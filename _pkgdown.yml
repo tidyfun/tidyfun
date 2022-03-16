@@ -17,6 +17,7 @@ reference:
   - index.tf
   - tf_approx_linear
   - tf_evaluate
+  - tf_interpolate
 - title: Arithmetic, logical and summary functions
   desc: Functionality for computing with and comparing functional data
   contents:
@@ -52,6 +53,8 @@ reference:
   - tf_arg
   - tf_rgp
   - tf_jiggle
+  - tidyfun
+  - vctrs 
 - title: Data Sets
   desc: Functional data sets
   contents:
