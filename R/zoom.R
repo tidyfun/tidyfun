@@ -23,8 +23,10 @@ tf_zoom <- function(f, begin, end, ...) {
 }
 
 prep_tf_zoom_args <- function(f, begin, end) {
-  assert_numeric(begin, any.missing = FALSE, min.len = 1, max.len = length(f))
-  assert_numeric(end, any.missing = FALSE, min.len = 1, max.len = length(f))
+  assert_numeric(begin, any.missing = FALSE, min.len = 1, max.len = length(f),
+                 lower = tf_domain(f)[1], upper = tf_domain(f)[2])
+  assert_numeric(end, any.missing = FALSE, min.len = 1, max.len = length(f),
+                 lower = tf_domain(f)[1], upper = tf_domain(f)[2])
   regular <- TRUE
   # uses unique to homogenize and check regularity in one go
   if (dplyr::n_distinct(begin) == 1) {
