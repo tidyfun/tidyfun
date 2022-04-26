@@ -5,6 +5,7 @@
 \alias{tf_evaluations}
 \alias{tf_count}
 \alias{tf_domain}
+\alias{tf_domain<-}
 \alias{tf_evaluator}
 \alias{tf_basis}
 \alias{tf_evaluator<-}
@@ -34,6 +35,8 @@ tf_evaluations(f)
 tf_count(f)
 
 tf_domain(f)
+
+tf_domain(x) <- value
 
 tf_evaluator(f, forget = FALSE)
 
@@ -78,18 +81,20 @@ is_tfb_fpc(x)
 \arguments{
 \item{f}{an \code{tf} object}
 
+\item{x}{an \code{tf} object}
+
+\item{value}{\strong{for \verb{tf_evaluator<-}:} (bare or quoted) name of a function that
+can be used to interpolate an \code{tfd}. Needs to accept vector arguments \code{x},
+\code{arg}, \code{evaluations} and return evaluations of the function defined by
+\code{arg}, \code{evaluations} at \code{x}. \cr
+\strong{for \verb{tf_arg<-}:} (list of) new \code{arg}-values. \cr
+\strong{for \verb{td_domain<-}:} sorted numeric vector with the 2 new endpoints of
+the domain.}
+
 \item{forget}{extract the evaluator or basis-creating function without its cache?
 See \code{\link[memoise:forget]{memoise::forget()}}. Defaults to \code{FALSE}.}
 
 \item{as_tfd}{should the basis be returned as a \code{tfd} evaluated on \code{tf_arg(f)}? Defaults to FALSE.}
-
-\item{x}{an \code{tf} object}
-
-\item{value}{\strong{for \verb{evaluator<-}:} (bare or quoted) name of a function that
-can be used to interpolate an \code{tfd}. Needs to accept vector arguments \code{x},
-\code{arg}, \code{evaluations} and return evaluations of the function defined by
-\code{arg}, \code{evaluations} at \code{x}
-\strong{for \verb{arg<-}:} a (list of) new \code{arg}-values}
 
 \item{object}{as usual}
 
