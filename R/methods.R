@@ -62,6 +62,14 @@ tf_domain <- function(f) {
   stopifnot(inherits(f, "tf"))
   attr(f, "domain")
 }
+#' @rdname tfmethods
+#' @export
+`tf_domain<-` <- function(x, value) {
+  stopifnot(inherits(x, "tf"))
+  assert_numeric(value, any.missing = FALSE, len = 2, unique = TRUE, sorted = TRUE)
+  tf_zoom(f = x, begin = value[1], end = value[2])
+}
+
 
 #' @rdname tfmethods
 #' @param forget extract the evaluator or basis-creating function without its cache?
