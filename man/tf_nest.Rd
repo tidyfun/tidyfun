@@ -22,9 +22,11 @@ tf_nest(
 select all variables between \code{x} and \code{z} with \code{x:z}, exclude \code{y} with \code{-y}.
 For more options, see the \code{\link[dplyr:select]{dplyr::select()}} documentation.}
 
-\item{.id}{the (bare or quoted) name of the column defining the different observations}
+\item{.id}{the (bare or quoted) name of the column defining the different
+observations. Defaults to "id".}
 
-\item{.arg}{the (bare or quoted) name of the column defining the \code{arg}-values of the observed functions}
+\item{.arg}{the (bare or quoted) name of the column defining the \code{arg}-values
+of the observed functions. Defaults to "arg".}
 
 \item{domain}{range of the \code{arg}.}
 
@@ -38,13 +40,13 @@ a data frame with (at least) \code{.id} and \code{tfd} columns
 \description{
 Similar in spirit to \code{\link[tidyr:nest]{tidyr::nest()}}. This turns tables in "long" format,
 where one column (\code{.id}) defines the unit of observation, one column (\code{.arg})
-defines the evaluation of the functional observations, and other columns (\code{...})
-define the values of the functions into a (much shorter) table containing
+defines the evaluation grids of the functional observations, and other columns (\code{...})
+define the values of the functions at those points into a (much shorter) table containing
 \code{tfd}-objects. All other variables are checked for constancy over \code{.id} and
 appended as well.
 }
 \details{
-\code{domain}, \code{resolution} and \code{evaluator} can be speficied as lists or vectors
+\code{domain}, \code{resolution} and \code{evaluator} can be specified as lists or vectors
 if you're nesting multiple functional data columns with different properties.
 Because quasi-quotation is \emph{such} a bitch, you can only specify the evaluator
 functions as strings and not as bare names here.

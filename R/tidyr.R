@@ -99,13 +99,17 @@ tf_gather <- function(data, ..., key = ".tfd", arg = NULL, domain = NULL,
 #'   documentation. Also works without this if there's only one `tf` in `data`,
 #'   see examples.
 #' @param arg (Semi-)optional. A vector of `arg`-values on which to evaluate the
-#'   functions. If not provided, uses the default `arg`s. Must be
-#'   specified for `tf_irreg`.
+#'   functions. If not provided, uses the default `arg`s. Should be
+#'   specified for `tf_irreg`, otherwise *all* observed gridpoint are used for 
+#'   *every* function.
 #' @param sep separating character used to create column names for the new columns,
 #'   defaults to `"_"` for column names "<name of the `tf`>_<`arg`-value>".
 #'   Set to NULL to get column names that only contain the `arg`-value.
 #' @param interpolate `interpolate`-argument for evaluating the functional data.
-#'   Defaults to FALSE, i.e., `tfd`s are *not* inter/extrapolated on unobserved `arg`-values.
+#'   Defaults to FALSE, i.e., `tfd`s are *not* inter/extrapolated on unobserved
+#'    `arg`-values.
+#' @return a wider dataframe with the `tf`-column spread out into many columns
+#'   each containing the functional measurements for one `arg`-value.   
 #' @importFrom tidyselect vars_pull
 #' @export
 #' @examples
@@ -161,12 +165,12 @@ tf_spread <- function(data, value, arg, sep = "_", interpolate = FALSE) {
 #'
 #' Similar in spirit to [tidyr::nest()]. This turns tables in "long" format,
 #' where one column (`.id`) defines the unit of observation, one column (`.arg`)
-#' defines the evaluation of the functional observations, and other columns (`...`)
-#' define the values of the functions into a (much shorter) table containing
+#' defines the evaluation grids of the functional observations, and other columns (`...`)
+#' define the values of the functions at those points into a (much shorter) table containing
 #' `tfd`-objects. All other variables are checked for constancy over `.id` and
 #' appended as well.
 #'
-#' `domain`, `resolution` and `evaluator` can be speficied as lists or vectors
+#' `domain`, `resolution` and `evaluator` can be specified as lists or vectors
 #' if you're nesting multiple functional data columns with different properties.
 #' Because quasi-quotation is *such* a bitch, you can only specify the evaluator
 #' functions as strings and not as bare names here.
@@ -176,8 +180,10 @@ tf_spread <- function(data, value, arg, sep = "_", interpolate = FALSE) {
 #'   `.id` and `.arg` columns are selected. You can supply bare variable names,
 #'   select all variables between `x` and `z` with `x:z`, exclude `y` with `-y`.
 #'   For more options, see the [dplyr::select()] documentation.
-#' @param .id the (bare or quoted) name of the column defining the different observations
-#' @param .arg the (bare or quoted) name of the column defining the `arg`-values of the observed functions
+#' @param .id the (bare or quoted) name of the column defining the different 
+#'   observations. Defaults to "id".
+#' @param .arg the (bare or quoted) name of the column defining the `arg`-values
+#'   of the observed functions. Defaults to "arg".
 #' @inheritParams tfd
 #' @return a data frame with (at least) `.id` and `tfd` columns
 #' @export
@@ -289,9 +295,6 @@ tf_unnest.tf <- function(data, cols, arg, interpolate = TRUE, ...) {
     id <- ordered(id, levels = id) # don't reshuffle
     tidyr::unnest(tibble::tibble(id = id, data = tmp), cols = data)
 }
-#tf_unnest.tfd <- tf_unnest.tf
-#tf_unnest.tfb <- tf_unnest.tf
-#tf_unnest.tfb_fpc <- tf_unnest.tf
 
 #' @export
 #' @importFrom digest digest

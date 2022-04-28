@@ -16,15 +16,21 @@ documentation. Also works without this if there's only one \code{tf} in \code{da
 see examples.}
 
 \item{arg}{(Semi-)optional. A vector of \code{arg}-values on which to evaluate the
-functions. If not provided, uses the default \code{arg}s. Must be
-specified for \code{tf_irreg}.}
+functions. If not provided, uses the default \code{arg}s. Should be
+specified for \code{tf_irreg}, otherwise \emph{all} observed gridpoint are used for
+\emph{every} function.}
 
 \item{sep}{separating character used to create column names for the new columns,
 defaults to \code{"_"} for column names "<name of the \code{tf}>_<\code{arg}-value>".
 Set to NULL to get column names that only contain the \code{arg}-value.}
 
 \item{interpolate}{\code{interpolate}-argument for evaluating the functional data.
-Defaults to FALSE, i.e., \code{tfd}s are \emph{not} inter/extrapolated on unobserved \code{arg}-values.}
+Defaults to FALSE, i.e., \code{tfd}s are \emph{not} inter/extrapolated on unobserved
+\code{arg}-values.}
+}
+\value{
+a wider dataframe with the \code{tf}-column spread out into many columns
+each containing the functional measurements for one \code{arg}-value.
 }
 \description{
 Similar in spirit to \code{\link[tidyr:spread]{tidyr::spread()}}, but does NOT shorten,
