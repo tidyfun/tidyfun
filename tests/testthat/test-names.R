@@ -13,6 +13,4 @@ test_that("names work", {
     c("mean", "sd"))
   expect_equal((1:5 * cca_five[1]) %>% names, NULL)
   expect_equal((3 + cca_five[1]) %>% names, "A")
-  expect_error(names(cca_five[1]) <- "")
-  expect_error(c(median(cca), mean(cca)))
 })
