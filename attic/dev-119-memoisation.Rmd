@@ -1,0 +1,196 @@
+---
+output: github_document
+---
+
+```{r setup}
+devtools::load_all()
+library(rbenchmark)
+library(profvis)
+```
+
+```{r data, cache = TRUE}
+set.seed(1312)
+n <- 100
+g <- 1000
+arg <- seq(0, 1, l = g)
+
+tfd_lin <- tf_rgp(n = n, arg = arg) |> tfd(resolution = 1e-16)
+tfd_sp <- tfd(tfd_lin, evaluator = tf_approx_spline)
+tfd_const <- tfd(tfd_lin, evaluator = tf_approx_locf)
+
+tfb_cr10 <- rep(tfb(tfd_lin, k = 10), times = 100)
+tfb_tp10 <- rep(tfb(tfd_lin, k = 10, bs = "tp"), times = 100) 
+tfb_cr50 <- rep(tfb(tfd_lin, k = 50), times = 100)  
+tfb_ps50 <- rep(tfb(tfd_lin, k = 50, bs = "ps"), times = 100) 
+tfb_tp50 <- rep(tfb(tfd_lin, k = 50, bs = "tp"), times = 100) 
+
+domain <- tf_domain(tfd_lin)
+rez <- tf_resolution(tfd_lin)
+arg_new <- tfd_lin[1] |> tf_jiggle() |> tf_arg()
+```
+
+
+# "'ere be pointers!"-weirdness
+
+```{r}
+f <- tfd_lin 
+pryr::object_size(attr(f, "evaluator"))
+bla <- tf_evaluate(f, arg_new)
+pryr::object_size(attr(f, "evaluator"))
+pryr::object_size(attr(tfd_lin, "evaluator"))
+
+# evaluating `f` also changes `tfd_lin` -- their evaluator functions have
+#     the same execution env holding the cache of previously used args and computed values:
+identical(
+  environment(attr(f, "evaluator")), 
+  environment(attr(tfd_lin, "evaluator"))
+)
+
+memoise::forget(attr(f, "evaluator"))
+pryr::object_size(attr(f, "evaluator"))
+# !! forgetting/ resetting cache does not restore original object size at all. WTF.
+```
+
+# benchmark time/memory for tfb and tfd_reg with/without memoization
+
+## profiling: un-cached evaluation vs cached evalutatio
+
+- eval on never-seen-before grid and then once more on the same, cached grid
+- compare times, memory I/O, object sizes:
+
+```{r prof-compare-tfd, eval = FALSE}
+f <- tfd_const
+memoise::forget(attr(f, "evaluator"))
+pryr::object_size(attr(f, "evaluator"))
+
+(p_no_memo <- profvis(tf_evaluate(f, arg = arg_new)))
+pryr::object_size(attr(f, "evaluator"))
+
+(p_memo <- profvis(tf_evaluate(f, arg = arg_new)))
+memoise::forget(attr(f, "evaluator"))
+pryr::object_size(attr(f, "evaluator"))
+```
+
+for `n  = 100, g = 1000`:
+
+f | time (ms) | memory (MB) | evaluator size (MB)
+--|------|--------|-------
+`tfd_lin:` |  140 vs 40 | -0/+68 vs 0/+13 | 0.334 vs 1.175
+`tfd_sp:` |  140 vs 50 | 0/+70 vs 0/+16 | 0.342 vs 1.183
+`tfd_const:` |  120 vs 50 | 0/+62 vs 0/+18 | 0.342 vs 1.184
+
+```{r prof-compare-tfb, eval = FALSE}
+f <- tfb_tp50
+memoise::forget(attr(f, "basis"))
+pryr::object_size(attr(f, "basis"))
+
+(p_no_memo <- profvis(tf_evaluate(f, arg = arg_new)))
+pryr::object_size(attr(f, "basis"))
+
+(p_memo <- profvis(tf_evaluate(f, arg = arg_new)))
+memoise::forget(attr(f, "basis"))
+pryr::object_size(attr(f, "basis"))
+```
+
+for `n  = 1000, g = 1000` (`tfb` too fast for `n  = 100`!)
+
+f | time (ms) | memory (MB) | basis evaluator size (MB)
+--|------|--------|-------
+`tfb_cr10` |  120 vs 130 (!!)  |  31 vs 31    | 3.835 vs 0.648 (!!) 
+`tfb_cr50` |  110 vs 110    |  31 vs 27    | 4.224 vs 1.329 (!!)
+`tfb_ps50` |  120 vs 140 (!!)   |  27 vs 30 | 4.22 vs 1.324 (!!)     
+`tfb_tp50` |  180 vs 140    |  39 vs 31 | 4.61 vs 1.714 (!!)     
+
+
+# different method, same idea
+
+```{r, bench-tfd}
+eval_tfd <- function(f, arg = arg_new, reps = 20, memo = TRUE) {
+  #evaluate and delete memoized result
+  for(i in 1:reps) {
+    f[, arg]
+    if(!memo) memoise::forget(attr(f, "evaluator"))
+  }
+  memoise::forget(attr(f, "evaluator"))
+  NULL
+}  
+
+memoise::forget(attr(tfd_lin, "evaluator"))
+bench::mark(
+  no = eval_tfd(tfd_lin, memo = FALSE),
+  yes =  eval_tfd(tfd_lin),
+  iterations = 1
+)
+
+memoise::forget(attr(tfd_sp, "evaluator"))
+bench::mark(
+  no = eval_tfd(tfd_sp, memo = FALSE),
+  yes =  eval_tfd(tfd_sp),
+  iterations = 1
+)
+
+memoise::forget(attr(tfd_const, "evaluator"))
+bench::mark(
+  no = eval_tfd(tfd_const, memo = FALSE),
+  yes =  eval_tfd(tfd_const),
+  iterations = 1
+)
+```
+
+`tfd`: fully memoized interpolation is
+
+- 3x faster
+- 3-4x times memory 
+
+```{r, bench-tfb}
+eval_tfb <- function(f, arg = arg_new, reps = 20, memo = TRUE) {
+  #evaluate and delete memoized result
+  for(i in 1:reps) {
+    f[, arg]
+    if(!memo) memoise::forget(attr(f, "basis"))
+  }
+  memoise::forget(attr(f, "basis"))
+  NULL
+}  
+
+memoise::forget(attr(tfb_cr10, "basis"))
+bench::mark(
+  no = eval_tfb(tfb_cr10[1:n], memo = FALSE),
+  yes =  eval_tfb(tfb_cr10[1:n]),
+  iterations = 1
+)
+
+memoise::forget(attr(tfb_cr50[1:n], "basis"))
+bench::mark(
+  no = eval_tfb(tfb_cr50[1:n], memo = FALSE),
+  yes =  eval_tfb(tfb_cr50[1:n]),
+  iterations = 1
+)
+
+memoise::forget(attr(tfb_ps50[1:n], "basis"))
+bench::mark(
+  no = eval_tfb(tfb_ps50[1:n], memo = FALSE),
+  yes =  eval_tfb(tfb_ps50[1:n]),
+  iterations = 1
+)
+
+memoise::forget(attr(tfb_tp10[1:n], "basis"))
+bench::mark(
+  no = eval_tfb(tfb_tp10[1:n], memo = FALSE),
+  yes =  eval_tfb(tfb_tp10[1:n]),
+  iterations = 1
+)
+
+memoise::forget(attr(tfb_tp50[1:n], "basis"))
+bench::mark(
+  no = eval_tfb(tfb_tp50[1:n], memo = FALSE),
+  yes =  eval_tfb(tfb_tp50[1:n]),
+  iterations = 1
+)
+```
+
+
+`tfd`: fully memoized interpolation performance depends on *type* of basis
+
+- small differences for "cr", "ps"
+- for `tp`: >2x faster (strongly depending on $k$), for large $k$ 50% more memory.
