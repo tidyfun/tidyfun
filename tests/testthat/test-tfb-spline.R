@@ -88,15 +88,12 @@ test_that("mgcv spline basis options work", {
     expect_is(smoo_, "tfb_spline")
     expect_equivalent(tf_evaluations(smoo_), tf_evaluations(smoo), 
                       tolerance = 1e-2)
-    smoo_spec <- environment(environment(attr(smoo_, "basis"))$`_f`)$spec
+    smoo_spec <- environment(attr(smoo_, "basis"))$spec
     expect_equal(smoo_spec$bs.dim, 21)
     expect_equal(class(smoo_spec), 
                  class(smooth.construct(
                    s(x, bs = bs), data = list(x = 1:40), knots = NULL)))
   }
-  smoo_ps <- tfb_spline(smoo, k = 21, bs = "ps", m = c(1,0), verbose = FALSE)
-  smoo_spec <- environment(environment(attr(smoo_ps, "basis"))$`_f`)$spec
-  smoo_spec$m <- c(1, 0)
 })
 
 

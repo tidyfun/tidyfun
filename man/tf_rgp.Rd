@@ -15,9 +15,9 @@ tf_rgp(
 \arguments{
 \item{n}{how many realizations to draw}
 
-\item{arg}{vector of evaluation points (\code{arg} of the return object).
-Defaults to (0, 0.02, 0.04, ..., 1). If a single \strong{integer} (don't forget the \code{L}...), creates a grid
-of the given length over (0,1).}
+\item{arg}{vector of evaluation points (\code{arg} of the return object). Defaults
+to (0, 0.02, 0.04, ..., 1). If given as a single \strong{integer} (don't forget
+the \code{L}...), creates a  regular grid of that length over (0,1).}
 
 \item{scale}{scale parameter (see Description). Defaults to the width of the
 domain divided by 10.}

@@ -1,4 +1,3 @@
-#' @import memoise
 #' @import purrr
 #' @importFrom dplyr arrange bind_cols desc filter group_by id lead left_join 
 #' @importFrom dplyr mutate n_distinct pull rename row_number select select_if 
@@ -15,7 +14,7 @@ new_tfd <- function(arg = numeric(), datalist = list(), regular = TRUE, domain =
       datalist,
       arg = numeric(),
       domain = numeric(),
-      evaluator = memoise(evaluator),
+      evaluator = evaluator,
       evaluator_name = evaluator,
       resolution = numeric(), 
       class = c(subclass, "tfd", "tf")) 
@@ -66,7 +65,7 @@ new_tfd <- function(arg = numeric(), datalist = list(), regular = TRUE, domain =
     datalist,
     arg = arg,
     domain = domain,
-    evaluator = memoise(evaluator_f),
+    evaluator = evaluator_f,
     evaluator_name = evaluator,
     resolution = resolution, # maybe turn this into a <global> option?
     class = c(class, "tfd", "tf")

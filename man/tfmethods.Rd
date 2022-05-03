@@ -38,9 +38,9 @@ tf_domain(f)
 
 tf_domain(x) <- value
 
-tf_evaluator(f, forget = FALSE)
+tf_evaluator(f)
 
-tf_basis(f, as_tfd = FALSE, forget = FALSE)
+tf_basis(f, as_tfd = FALSE)
 
 tf_evaluator(x) <- value
 
@@ -90,9 +90,6 @@ can be used to interpolate an \code{tfd}. Needs to accept vector arguments \code
 \strong{for \verb{tf_arg<-}:} (list of) new \code{arg}-values. \cr
 \strong{for \verb{td_domain<-}:} sorted numeric vector with the 2 new endpoints of
 the domain.}
-
-\item{forget}{extract the evaluator or basis-creating function without its cache?
-See \code{\link[memoise:forget]{memoise::forget()}}. Defaults to \code{FALSE}.}
 
 \item{as_tfd}{should the basis be returned as a \code{tfd} evaluated on \code{tf_arg(f)}? Defaults to FALSE.}
 

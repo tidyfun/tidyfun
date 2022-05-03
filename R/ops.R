@@ -40,7 +40,6 @@ fun_op <- function(x, y, op, numeric = NA) {
         attr_ret$evaluator_name
       )
     }
-    forget(attr_ret$evaluator)
     if ("tfd_irreg" %in% attr_ret$class) {
       ret <- map2(arg_ret, ret, ~list(arg = .x, value = .y))
     }

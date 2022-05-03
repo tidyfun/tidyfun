@@ -72,23 +72,18 @@ tf_domain <- function(f) {
 
 
 #' @rdname tfmethods
-#' @param forget extract the evaluator or basis-creating function without its cache?
-#'   See [memoise::forget()]. Defaults to `FALSE`.
 #' @export
-tf_evaluator <- function(f, forget = FALSE) {
+tf_evaluator <- function(f) {
   stopifnot(inherits(f, "tfd"))
-  ret <- attr(f, "evaluator")
-  if (forget) forget(ret)
-  ret
+  attr(f, "evaluator")
 }
 
 #' @rdname tfmethods
 #' @param as_tfd should the basis be returned as a `tfd` evaluated on `tf_arg(f)`? Defaults to FALSE.
 #' @export
-tf_basis <- function(f, as_tfd = FALSE, forget = FALSE) {
+tf_basis <- function(f, as_tfd = FALSE) {
   stopifnot(inherits(f, "tfb"))
   basis <- attr(f, "basis")
-  if (forget) forget(basis)
   if (!as_tfd) return(basis)
   basis(tf_arg(f)) %>% t() %>% tfd(arg = tf_arg(f))
 }
@@ -116,7 +111,7 @@ tf_basis <- function(f, as_tfd = FALSE, forget = FALSE) {
     c("x", "arg", "evaluations")
   )
   attr(x, "evaluator_name") <- value
-  attr(x, "evaluator") <- memoise(evaluator)
+  attr(x, "evaluator") <- evaluator
   x
 }
 
@@ -130,7 +125,6 @@ tf_basis <- function(f, as_tfd = FALSE, forget = FALSE) {
   assert_arg(value, x)
   ret <- map2(tf_evaluations(x), value, ~list(arg = .y, data = .x))
   attributes(ret) <- attributes(x)
-  forget(attr(ret, "evaluator"))
   ret
 }
 
@@ -139,7 +133,6 @@ tf_basis <- function(f, as_tfd = FALSE, forget = FALSE) {
 `tf_arg<-.tfd_reg` <- function(x, value) {
   assert_arg(value, x)
   attr(x, "arg") <- ensure_list(value)
-  forget(attr(x, "evaluator"))
   x
 }
 

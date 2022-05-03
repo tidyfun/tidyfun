@@ -77,7 +77,6 @@ tf_zoom.tfb <- function(f, begin = tf_domain(f)[1], end = tf_domain(f)[2],
   use <- tf_arg(f) >= args$dom[1] & tf_arg(f) <= args$dom[2]
   if (!any(use)) stop("no data in zoom region.")
   ret <- f
-  memoise::forget(ret$basis)
   attr(ret, "basis_matrix") <- attr(f, "basis_matrix")[use, ]
   attr(ret, "arg") <- tf_arg(f)[use]
   attr(ret, "domain") <- args$dom
