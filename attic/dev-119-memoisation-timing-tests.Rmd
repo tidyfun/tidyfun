@@ -1,0 +1,23 @@
+---
+output: github_document
+---
+
+
+```{r times-tests}
+for (t in list.files("~/fda/tidyfun/tests/testthat", full.names = T)[-1]) {
+   git2r::checkout(branch = "119-no-memo") #@975f15
+   devtools::load_all()
+   t_no <- replicate(10, 
+                     system.time(
+                        testthat::test_file(t, reporter = FailReporter)
+                        )["elapsed"])
+   git2r::checkout(branch = "dev") # @ba48336f
+   devtools::load_all()
+   t_yes <- replicate(10, 
+                      system.time(
+                         testthat::test_file(t, reporter = FailReporter)
+                        )["elapsed"])
+   cat(t, ":\n ") 
+   print(summary(t_no/t_yes))
+}
+```
