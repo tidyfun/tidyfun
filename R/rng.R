@@ -8,9 +8,9 @@
 #' with `scale` parameter s and `nugget` effect n.
 #'
 #' @param n how many realizations to draw
-#' @param arg vector of evaluation points (`arg` of the return object).
-#'   Defaults to (0, 0.02, 0.04, ..., 1). If a single **integer** (don't forget the `L`...), creates a grid
-#'   of the given length over (0,1).
+#' @param arg vector of evaluation points (`arg` of the return object). Defaults
+#'   to (0, 0.02, 0.04, ..., 1). If given as a single **integer** (don't forget
+#'   the `L`...), creates a  regular grid of that length over (0,1).
 #' @param scale scale parameter (see Description). Defaults to the width of the
 #'   domain divided by 10.
 #' @param cor type of correlation structure to use. Currently available:

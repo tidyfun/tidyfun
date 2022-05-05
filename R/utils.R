@@ -132,13 +132,7 @@ compare_tf_attribs <- function(e1, e2, ignore = c("names", "id")) {
         # the function bodies all look the same since they share a common
         # wrapper.... Fingers crossed relevant differences get picked up by
         # differences in the label or basis attributes...
-        if (is.memoised(a)) {
-          identical(environment(a)[["_f"]], environment(b)[["_f"]],
-            ignore.environment = TRUE
-          )
-        } else {
-          identical(a, b, ignore.environment = TRUE)
-        }
+        identical(a, b, ignore.environment = TRUE)
       } else {
         if (is.list(a)) {
           all(unlist(map2(a, ensure_list(b), .compare)))

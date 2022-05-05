@@ -2,7 +2,6 @@
 fun_math <- function(x, op) {
   attr_ret <- attributes(x)
   ret <- map(tf_evaluations(x), ~do.call(op, list(x = .x)))
-  forget(attr_ret$evaluator)
   if (is_irreg(x)) {
     ret <- map2(tf_arg(x), ret, ~list(arg = .x, value = .y))
   }

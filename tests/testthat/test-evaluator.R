@@ -35,12 +35,12 @@ test_that("re-assigning & extracting evaluator works", {
   tf_evaluator(f_lin) <- tf_approx_spline
   tf_evaluator(f_curve) <- tf_approx_spline
   expect_equivalent(
-    body(environment(tf_evaluator(f_lin))[["_f"]]),
-    body(tf_approx_spline)
+    body(environment(tf_evaluator(f_lin))[["f"]]),
+    body(environment(tf_approx_spline)[["f"]])
   )
   expect_equivalent(
-    body(environment(tf_evaluator(f_lin))[["_f"]]),
-    body(environment(tf_evaluator(f_curve))[["_f"]])
+    body(environment(tf_evaluator(f_lin))[["f"]]),
+    body(environment(tf_evaluator(f_curve))[["f"]])
   )
 })
 
@@ -59,17 +59,6 @@ test_that("evaluator tf_approx_spline works", {
   )
   expect_identical(lin, tf_evaluate(f_lin, grid)[[1]])
   expect_equal(2 * new_grid, tf_evaluate(f_lin, new_grid)[[1]])
-})
-
-test_that("memoisation works", {
-  slow_tf_approx <- function(x, arg, evaluations) {
-    Sys.sleep(0.2)
-    tf_approx_linear(x, arg, evaluations)
-  }
-  tf_evaluator(f_lin) <- slow_tf_approx
-  t1 <- system.time(tf_evaluate(f_lin, new_grid))[3]
-  t2 <- system.time(tf_evaluate(f_lin, new_grid))[3]
-  expect_true(t1 > 10 * t2)
 })
 
 test_that("multiple arg-vectors work for tfb", {

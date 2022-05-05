@@ -105,7 +105,7 @@ new_tfb_spline <- function(data, domain = numeric(), arg = numeric(),
   basis_constructor <- smooth_spec_wrapper(spec_object)
   ret <- vctrs::new_vctr(fit[["coef"]],
                    domain = domain,
-                   basis = memoise(basis_constructor),
+                   basis = basis_constructor,
                    basis_label = deparse(s_call, width.cutoff = 60)[1],
                    basis_args = s_args,
                    basis_matrix = spec_object$X,

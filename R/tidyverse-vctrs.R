@@ -164,7 +164,6 @@ vec_ptype2_tfd_tfd = function(x, y, ...) {
   ret <- flatten(funs)
   attributes(ret) <- attr_ret
   names(ret) <- c_names(funs)
-  forget(attr(ret, "evaluator"))
   ret
 }
 
@@ -316,8 +315,6 @@ vec_ptype2_tfb_tfb = function(x, y, ...) {
   ret <- flatten(funs)
   attributes(ret) <- attr_ret
   names(ret) <- c_names(funs)
-  forget(attr(ret, "basis"))
-  
   ret
 }
 

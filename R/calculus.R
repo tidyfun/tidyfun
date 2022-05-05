@@ -101,7 +101,7 @@ tf_derive.tfb_spline <- function(f, arg, order = 1, ...) {
   )
   eps <- min(diff(arg)) / 1000
   basis_constructor <- smooth_spec_wrapper(spec_object, deriv = order, eps = eps)
-  attr(f, "basis") <- memoise::memoise(basis_constructor)
+  attr(f, "basis") <- basis_constructor
   attr(f, "basis_label") <- deparse(s_call, width.cutoff = 60)[1]
   attr(f, "basis_args") <- s_args
   attr(f, "basis_matrix") <- basis_constructor(arg)
