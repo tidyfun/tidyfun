@@ -31,7 +31,7 @@ gathered columns in this case. If a common prefix of all column names
 is found, this is used instead. You also get a message about this.}
 
 \item{arg}{If not provided, will be guessed from the column names as well.
-See \code{\link[=tfd]{tfd()}}.}
+See \code{\link[tf:tfd]{tf::tfd()}}.}
 }
 \value{
 a modified \code{data.frame} with a \code{tfd} column replacing the \code{...}.
@@ -51,5 +51,5 @@ tf_gather(d, arg = seq(0, 1, l = 10))$cca
 tf_gather(d2, -id) # tf_gather(d2, matches("cca")); tf_gather(d2, -1); etc
 }
 \seealso{
-dplyr::select() tfd() tf_nest() tf_unnest()
+dplyr::select() tf::tfd() tf_nest() tf_unnest()
 }

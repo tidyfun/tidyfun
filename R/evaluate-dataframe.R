@@ -16,6 +16,7 @@
 #'   smaller `data.frames` containing the functions' arguments (`arg`) and
 #'   evaluations (`value`) and returns the modified nested dataframe.
 #' @export
+#' @import tf
 #' @importFrom tidyselect vars_select quos
 #' @importFrom rlang enquos quo_text
 tf_evaluate.data.frame <- function(object, ..., arg) {
@@ -31,12 +32,12 @@ tf_evaluate.data.frame <- function(object, ..., arg) {
     return(object)
   }
   if (!missing(arg) && !is.null(arg)) {
-    arg <- ensure_list(arg)
+    arg <- tf:::ensure_list(arg)
     if (length(arg) == 1 & length(tf_cols) > 1) {
       arg <- replicate(length(tf_cols), arg, simplify = FALSE)
     }
   } else {
-    arg <- map(object[tf_cols], ~ensure_list(tf_arg(.)))
+    arg <- map(object[tf_cols], ~tf:::ensure_list(tf_arg(.)))
   }
   stopifnot(length(arg) == length(tf_cols))
   names(arg) <- tf_cols

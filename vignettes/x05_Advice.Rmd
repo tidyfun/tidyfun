@@ -41,9 +41,11 @@ set.seed(1221)
 ```
 
 
-**`tidyfun`** is intended to make user interactions with functional data easier. The package introduces a data class (`tf`) so that vectors of functional observations are available, similar to vectors of class `numeric` or `character`. That makes it possible to store functional data alongside other variables in a single dataframe; by extension, tools for data manipulation from the `tidyverse` and elsewhere can be used with datasets in which one or more variable is functional. 
+**`tidyfun`** is intended to make user interactions with functional data easier. The package depends on package **`tf`**, which defines a data class (`tf`) so that vectors of functional observations are available, similar to vectors of class `numeric` or `character`^[This class and its subclasses and methods are defined in a separate package without **`tidyverse`**-dependencies in order to make package maintenance a little easier and to increase uptake among people who don't want to rely on **`tidyverse`** packages.]
 
-Some basic analyses are available in **`tidyfun`** -- it's possible to compute means of `tf` vectors, to expand observations using a spline basis or using functional principal components analysis. With tools like `group_by` and `summarize`, these can be powerful tools for data exploration. Other analysis approaches are included in the **`refunder`** package, and more will be added to that package over time. 
+Such classes make it possible to store functional data alongside other variables in a single dataframe; by extension, tools for data manipulation from the `tidyverse` and elsewhere can be used with datasets in which one or more variable is functional. 
+
+Many basic analyses are available in **`tidyfun`** -- it's possible to compute mean functions and other summary statistics of `tf` vectors, to expand observations using a spline basis or using functional principal components analysis. With tools like `group_by` and `summarize`, these can be powerful tools for data exploration. Other analysis approaches are included in the **`refunder`** package, and more will be added to that package over time. 
 
 There is an active research community in FDA, and there is constant development of new methods for analysis. Our hope is that the data structures in **`tidyfun`** will be useful as others as new approaches are implemented, and this page is intended to provide some advice and guidance for those implementations. 
 
@@ -58,7 +60,7 @@ There are start-up costs to using a new data class when writing code for new met
 
 Together, these make it possible to analyze functional data in a pipeline (import, exploratory analysis, visualization, and formal analysis) that is similar to those used for scalar variables. 
 
-These advantages are user-facing -- they are intended to make things easier when analyzing datasets that include functional observations. Because new methods for functional data typically involve working with "raw" observations (numeric vectors or matrices), implementing methods **`tidyfun`** will require some consideration of user interfaces, input objects, and data transformations. We believe the benefits are worth this effort.
+These advantages are user-facing -- they are intended to make things easier when analyzing datasets that include functional observations. Because new methods for functional data typically involve working with "raw" observations (numeric vectors or matrices), implementing methods for **`tidyfun`** will require some consideration of user interfaces, input objects, and data transformations. We believe the benefits are worth this effort.
 
 
 ## Thoughts on design

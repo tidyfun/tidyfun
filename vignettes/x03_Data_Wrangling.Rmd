@@ -218,19 +218,20 @@ We can also convert from `tfd` to `tfb` inside a `mutate` statement as part of a
 ```{r}
 dti_df <- dti_df %>%
   mutate(
-    cca_fpc = tfb_fpc(cca, arg = seq(0, 1, l = 93), pve = .9)
+    cca_tfb = tfb(cca, k = 25)
   )  
 ```
 
 It's also possible to compute derivatives as part of a processing pipeline:
 ```{r}
-dti_df %>%
+dti_df[1:10, ] %>%
   mutate(
     cca_raw_deriv = tf_derive(cca),
-    cca_fpc_deriv = tf_derive(cca_fpc)
+    cca_tfb_deriv = tf_derive(cca_tfb)
   ) %>%
   ggplot() + 
-    geom_spaghetti(aes(y = cca_raw_deriv), alpha = .2, lwd = .1, col = "blue") +
-    geom_spaghetti(aes(y = cca_fpc_deriv), alpha = .2, lwd = .1, col = "red")
+    geom_spaghetti(aes(y = cca_raw_deriv), alpha = .3, lwd = .3, col = "blue") +
+    geom_spaghetti(aes(y = cca_tfb_deriv), alpha = .3, lwd = .3, col = "red") +
+    ylab("d/dt f(t)")
 ```
 

@@ -18,14 +18,14 @@
 #'   gathered columns in this case. If a common prefix of all column names
 #'   is found, this is used instead. You also get a message about this.
 #' @param arg If not provided, will be guessed from the column names as well.
-#'   See [tfd()].
+#'   See [tf::tfd()].
 #' @inheritParams tfd
 #' @return a modified `data.frame` with a `tfd` column replacing the `...`.
 #' @importFrom rlang is_empty :=  quo_name enexpr
 #' @importFrom tidyselect vars_select
 #' @importFrom stringr str_replace
 #' @export
-#' @seealso dplyr::select() tfd() tf_nest() tf_unnest()
+#' @seealso dplyr::select() tf::tfd() tf_nest() tf_unnest()
 #' @examples
 #' (d <- dplyr::as.tbl(data.frame(refund::DTI[1:5,]$cca[, 1:10])))
 #' tf_gather(d)
@@ -288,7 +288,7 @@ tf_unnest <- function(data, cols, arg, interpolate = TRUE, ...) {
 #' @rdname tf_unnest
 tf_unnest.tf <- function(data, cols, arg, interpolate = TRUE, ...) {
     if (missing(arg)) {
-      arg <- ensure_list(tf_arg(data))
+      arg <- tf:::ensure_list(tf_arg(data))
     }
     tmp <- data[, arg, matrix = FALSE, interpolate = interpolate]
     id <- unique_id(names(data)) %||% seq_along(data)
@@ -297,7 +297,6 @@ tf_unnest.tf <- function(data, cols, arg, interpolate = TRUE, ...) {
 }
 
 #' @export
-#' @importFrom digest digest
 #' @importFrom utils data tail
 #' @importFrom rlang syms `!!!` expr_text
 #' @rdname tf_unnest

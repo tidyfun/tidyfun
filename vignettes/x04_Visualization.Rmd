@@ -148,7 +148,7 @@ dti_df %>%
 
 ## `geom_capellini`
 
-To illustrate `gemo_capellini`, we'll start with some data prep for the iconic Canadian Weather data:
+To illustrate `geom_capellini`, we'll start with some data prep for the iconic Canadian Weather data:
 
 ```{r}
 canada <- data.frame(
