@@ -39,7 +39,7 @@ scale_type.tf <- function(x) "identity"
 #' @rdname ggspaghetti
 #' @usage NULL
 #' @format NULL
-StatTf <- ggproto("StatTf", Stat,
+StatTf <- ggplot2::ggproto("StatTf", ggplot2::Stat,
   required_aes = "y",
   setup_params = function(data, params) {
     if (is.null(params$arg)) {
@@ -70,7 +70,7 @@ StatTf <- ggproto("StatTf", Stat,
 stat_tf <- function(mapping = NULL, data = NULL, geom = "spaghetti",
                     position = "identity", na.rm = TRUE, show.legend = NA,
                     inherit.aes = TRUE, arg = NULL, ...) {
-  layer(
+  ggplot2::layer(
     stat = StatTf, data = data, mapping = mapping, geom = geom,
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
     params = list(na.rm = na.rm, arg = arg, ...)
@@ -86,7 +86,7 @@ stat_tf <- function(mapping = NULL, data = NULL, geom = "spaghetti",
 geom_spaghetti <- function(mapping = NULL, data = NULL,
                            position = "identity", na.rm = TRUE, show.legend = NA,
                            inherit.aes = TRUE, arg = NULL, ...) {
-  layer(
+  ggplot2::layer(
     stat = StatTf, data = data, mapping = mapping, geom = "spaghetti",
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
     params = list(na.rm = na.rm, arg = arg, ...)
@@ -96,7 +96,7 @@ geom_spaghetti <- function(mapping = NULL, data = NULL,
 #' @rdname ggspaghetti
 #' @usage NULL
 #' @format NULL
-GeomSpaghetti <- ggproto("GeomSpaghetti", Geom,
+GeomSpaghetti <- ggplot2::ggproto("GeomSpaghetti", ggplot2::Geom,
   setup_params = function(data, params) {
     # TODO: implement proper "orientation" - see extending ggplot vignette
     params$flipped_aes <- FALSE
@@ -108,11 +108,11 @@ GeomSpaghetti <- ggproto("GeomSpaghetti", Geom,
   draw_group = function(data, panel_params, coord) {
     GeomLine$draw_panel(data, panel_params, coord)
   },
-  default_aes = aes(
+  default_aes = ggplot2::aes(
     colour = "black", size = 0.5,
     linetype = 1, alpha = 0.5
   ),
-  draw_key = GeomLine$draw_key,
+  draw_key = ggplot2::GeomLine$draw_key,
   required_aes = c("y")
 )
 
@@ -126,7 +126,7 @@ geom_meatballs <- function(mapping = NULL, data = NULL,
                            position = "identity", na.rm = TRUE, show.legend = NA,
                            inherit.aes = TRUE, arg = NULL, spaghetti = TRUE, 
                            ...) {
-  layer(
+  ggplot2::layer(
     stat = StatTf, data = data, mapping = mapping, geom = "meatballs",
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
     params = list(na.rm = na.rm, arg = arg, spaghetti = spaghetti, ...)
@@ -136,7 +136,7 @@ geom_meatballs <- function(mapping = NULL, data = NULL,
 #' @rdname ggspaghetti
 #' @usage NULL
 #' @format NULL
-GeomMeatballs <- ggproto("GeomMeatball", Geom,
+GeomMeatballs <- ggplot2::ggproto("GeomMeatball", ggplot2::Geom,
   setup_data = function(data, params) {
     GeomLine$setup_data(data, params)
   },
@@ -146,10 +146,10 @@ GeomMeatballs <- ggproto("GeomMeatball", Geom,
       GeomPoint$draw_panel(data, panel_params, coord)
     )
   },
-  default_aes = aes(
+  default_aes = ggplot2::aes(
     colour = "black", size = 0.5,
     linetype = 1, alpha = 0.5, shape = 19, fill = NA, stroke = 0.5
   ),
-  draw_key = GeomLine$draw_key,
+  draw_key = ggplot2::GeomLine$draw_key,
   required_aes = c("y")
 )

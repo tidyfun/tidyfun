@@ -27,12 +27,6 @@ observations. Defaults to "id".}
 
 \item{.arg}{the (bare or quoted) name of the column defining the \code{arg}-values
 of the observed functions. Defaults to "arg".}
-
-\item{domain}{range of the \code{arg}.}
-
-\item{evaluator}{a function accepting arguments \verb{x, arg, evaluations}. See details for \code{\link[=tfd]{tfd()}}.}
-
-\item{resolution}{resolution of the evaluation grid. See details for \code{\link[=tfd]{tfd()}}.}
 }
 \value{
 a data frame with (at least) \code{.id} and \code{tfd} columns
