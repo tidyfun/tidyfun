@@ -117,6 +117,7 @@ GeomSpaghetti <- ggplot2::ggproto("GeomSpaghetti", ggplot2::Geom,
   required_aes = c("y")
 )
 
+#-------------------------------------------------------------------------------
 
 #' @export
 #' @rdname ggspaghetti
