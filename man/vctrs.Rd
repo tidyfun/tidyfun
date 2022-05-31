@@ -90,8 +90,6 @@ vec_ptype2_tfb_tfb(x, y, ...)
 \item{...}{For \code{vec_cast_common()}, vectors to cast. For
 \code{vec_cast()}, \code{vec_cast_default()}, and \code{vec_restore()}, these
 dots are only for future extensions and should be empty.}
-
-\item{y}{Vector types.}
 }
 \description{
 These functions are the extensions that allow \code{tidyfun} vectors

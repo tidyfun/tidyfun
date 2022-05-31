@@ -60,7 +60,7 @@ stat_errorband <- function(mapping = NULL, data = NULL, geom = "errorbar",
 # geom --------------------------------------------------------------------
 
 #' @export
-#' @rdname ggspaghetti
+#' @rdname ggerrorband
 #' @format NULL
 #' @param arg where to evaluate `tf` -- defaults to the default ;)
 geom_errorband <- function(mapping = NULL, data = NULL,
@@ -74,7 +74,7 @@ geom_errorband <- function(mapping = NULL, data = NULL,
 
 }
 #' @export
-#' @rdname ggspaghetti
+#' @rdname ggerrorband
 #' @usage NULL
 #' @format NULL
 GeomErrorband <- ggproto("GeomErrorband", Geom,
