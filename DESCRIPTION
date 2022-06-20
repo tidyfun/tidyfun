@@ -11,7 +11,7 @@ Imports:
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.0
 Suggests: 
     data.table,
     fda,
@@ -27,6 +27,41 @@ Suggests:
     viridisLite,
     covr
 Roxygen: list(markdown = TRUE)
+Collate:
+    'approx.R'
+    'brackets.R'
+    'calculus.R'
+    'convert.R'
+    'datasets.R'
+    'depth.R'
+    'evaluate.R'
+    'geom-capellini.R'
+    'geom-errorband.R'
+    'geom-spaghetti.R'
+    'gglasagna.R'
+    'globals.R'
+    'graphics.R'
+    'interpolate.R'
+    'ops.R'
+    'math.R'
+    'methods.R'
+    'print-format.R'
+    'rng.R'
+    'smooth.R'
+    'summarize.R'
+    'tfb-spline.R'
+    'tfb-class.R'
+    'tfd-class.R'
+    'tf-s4.R'
+    'tfb-fpc-utils.R'
+    'tfb-fpc.R'
+    'tfb-spline-utils.R'
+    'tidyfun-package.r'
+    'tidyr.R'
+    'tidyverse-vctrs.R'
+    'utils.R'
+    'where.R'
+    'zoom.R'
 VignetteBuilder: knitr
 URL: https://github.com/tidyfun/tidyfun,
     https://tidyfun.github.io/tidyfun
