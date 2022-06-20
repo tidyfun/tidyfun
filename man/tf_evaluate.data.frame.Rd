@@ -7,6 +7,8 @@
 \method{tf_evaluate}{data.frame}(object, ..., arg)
 }
 \arguments{
+\item{object}{a \code{data.frame}-like object with \code{tf} columns.}
+
 \item{...}{optional: a selection of \code{tf}-columns. If empty, all \code{tf}-variables
 in the data frame are selected. You can supply bare variable names,
 select all variables between \code{x} and \code{z} with \code{x:z}, exclude \code{y} with \code{-y}.
@@ -14,8 +16,6 @@ For more options, see the \code{\link[dplyr:select]{dplyr::select()}} documentat
 
 \item{arg}{optional evaluation grid (vector or list of vectors).
 Defaults to \code{tf_arg(object)}.}
-
-\item{a}{\code{data.frame}-like object with \code{tf} columns.}
 }
 \value{
 Replaces \code{tf}-columns with list columns of

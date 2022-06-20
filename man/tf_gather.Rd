@@ -25,13 +25,19 @@ If empty, all variables are selected. You can supply bare variable names,
 select all variables between x and z with x:z, exclude y with -y. For more
 options, see the \code{\link[dplyr:select]{dplyr::select()}} documentation.}
 
-\item{key}{the name of the created \code{tfd}-column. Defaults to \code{".tfd"}, and
+\item{key}{the name of the created \code{tfd}-column. Defaults to \code{".tfd"}, but
 the function will try to guess the name based on the column names of the
 gathered columns in this case. If a common prefix of all column names
 is found, this is used instead. You also get a message about this.}
 
-\item{arg}{If not provided, will be guessed from the column names as well.
-See \code{\link[tf:tfd]{tf::tfd()}}.}
+\item{arg}{optional. Argument values for the functions. If not provided, will be guessed from the column names as well.
+See also \code{\link[tf:tfd]{tf::tfd()}}.}
+
+\item{domain}{optional. Range of possible \code{arg}-values. See \code{\link[tf:tfd]{tf::tfd()}} for details.}
+
+\item{evaluator}{optional. A function accepting arguments x, arg, evaluations. See \code{\link[tf:tfd]{tf::tfd()}} for details.}
+
+\item{resolution}{optional. Resolution of the evaluation grid in \code{arg}. See \code{\link[tf:tfd]{tf::tfd()}} for details.}
 }
 \value{
 a modified \code{data.frame} with a \code{tfd} column replacing the \code{...}.

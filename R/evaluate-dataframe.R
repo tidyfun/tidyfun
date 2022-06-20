@@ -5,7 +5,7 @@
 #'   [tf::tf_evaluate()]-method for the respective `tf`-columns in `object`.
 #'   `...` is not used for a `tf`-`object`, but a second unnamed argument to these
 #'   methods will be interpreted as `arg`.
-#' @param a `data.frame`-like object with `tf` columns.
+#' @param object a `data.frame`-like object with `tf` columns.
 #' @param ... optional: a selection of `tf`-columns. If empty, all `tf`-variables
 #'   in the data frame are selected. You can supply bare variable names,
 #'   select all variables between `x` and `z` with `x:z`, exclude `y` with `-y`.
@@ -19,9 +19,10 @@
 #' @import tf
 #' @importFrom tidyselect vars_select quos
 #' @importFrom rlang enquos quo_text
+#' @importFrom purrr map map_lgl pmap
 tf_evaluate.data.frame <- function(object, ..., arg) {
   # figure out which tf columns to evaluate:
-  tf_cols <- names(object)[map_lgl(object, is_tf)]
+  tf_cols <- names(object)[purrr::map_lgl(object, is_tf)]
   tf_to_evaluate <- enquos(...)
   if (!is_empty(tf_to_evaluate)) {
     tf_to_evaluate <- unname(vars_select(names(object), !!!tf_to_evaluate))
@@ -32,12 +33,12 @@ tf_evaluate.data.frame <- function(object, ..., arg) {
     return(object)
   }
   if (!missing(arg) && !is.null(arg)) {
-    arg <- tf:::ensure_list(arg)
+    arg <- tf::ensure_list(arg)
     if (length(arg) == 1 & length(tf_cols) > 1) {
       arg <- replicate(length(tf_cols), arg, simplify = FALSE)
     }
   } else {
-    arg <- map(object[tf_cols], ~tf:::ensure_list(tf_arg(.)))
+    arg <- purrr::map(object[tf_cols], ~tf::ensure_list(tf_arg(.)))
   }
   stopifnot(length(arg) == length(tf_cols))
   names(arg) <- tf_cols

@@ -20,8 +20,11 @@
 #'   Defaults to 2/(no. of observations). Lower is more transparent.
 #' @return for `funplot`: the `ggplot`-object for further modification. For the
 #'  others: the plotted `tf`-object, invisibly.
-#' @import ggplot2
+#' @import dplyr 
+#' @import ggplot2 
+#' @import checkmate
 #' @importFrom modelr seq_range
+#' @importFrom stats median
 #' @seealso [tf::plot.tf()]
 #' @export
 funplot <- function(f, arg, n_grid = 50, points = is_irreg(f),
@@ -32,7 +35,7 @@ funplot <- function(f, arg, n_grid = 50, points = is_irreg(f),
   assert_flag(points)
   type <- match.arg(type)
   if (missing(arg)) {
-    arg <- tf:::prep_plotting_arg(f, n_grid)
+    arg <- tf::prep_plotting_arg(f, n_grid)
   }
   d <- if (is_tfd(f)) {
     tf_unnest(f, arg = arg, interpolate = TRUE)

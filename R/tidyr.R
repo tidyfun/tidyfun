@@ -13,13 +13,15 @@
 #'   If empty, all variables are selected. You can supply bare variable names,
 #'   select all variables between x and z with x:z, exclude y with -y. For more
 #'   options, see the [dplyr::select()] documentation.
-#' @param key the name of the created `tfd`-column. Defaults to `".tfd"`, and
+#' @param key the name of the created `tfd`-column. Defaults to `".tfd"`, but
 #'   the function will try to guess the name based on the column names of the
 #'   gathered columns in this case. If a common prefix of all column names
 #'   is found, this is used instead. You also get a message about this.
-#' @param arg If not provided, will be guessed from the column names as well.
-#'   See [tf::tfd()].
-#' @inheritParams tfd
+#' @param arg optional. Argument values for the functions. If not provided, will be guessed from the column names as well.
+#'   See also [tf::tfd()].
+#' @param evaluator optional. A function accepting arguments x, arg, evaluations. See [tf::tfd()] for details.
+#' @param domain optional. Range of possible `arg`-values. See [tf::tfd()] for details.
+#' @param resolution optional. Resolution of the evaluation grid in `arg`. See [tf::tfd()] for details.
 #' @return a modified `data.frame` with a `tfd` column replacing the `...`.
 #' @importFrom rlang is_empty :=  quo_name enexpr
 #' @importFrom tidyselect vars_select
@@ -184,7 +186,7 @@ tf_spread <- function(data, value, arg, sep = "_", interpolate = FALSE) {
 #'   observations. Defaults to "id".
 #' @param .arg the (bare or quoted) name of the column defining the `arg`-values
 #'   of the observed functions. Defaults to "arg".
-#' @inheritParams tfd
+#' @inheritParams tf_gather
 #' @return a data frame with (at least) `.id` and `tfd` columns
 #' @export
 #' @seealso tf_gather(), tf_unnest(), tfd() for `domain, evaluator, resolution`
@@ -288,7 +290,7 @@ tf_unnest <- function(data, cols, arg, interpolate = TRUE, ...) {
 #' @rdname tf_unnest
 tf_unnest.tf <- function(data, cols, arg, interpolate = TRUE, ...) {
     if (missing(arg)) {
-      arg <- tf:::ensure_list(tf_arg(data))
+      arg <- tf::ensure_list(tf_arg(data))
     }
     tmp <- data[, arg, matrix = FALSE, interpolate = interpolate]
     id <- unique_id(names(data)) %||% seq_along(data)
