@@ -21,9 +21,6 @@ jobs:
         with:
           use-public-rspm: true
       
-      - name: install-tf
-        run: Rscript -e "install.packages('remotes'); remotes::install_github('tidyfun/tf')"
-      
       - uses: r-lib/actions/setup-r-dependencies@v1
         with:
           extra-packages: rcmdcheck

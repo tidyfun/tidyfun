@@ -28,6 +28,8 @@ Suggests:
     viridisLite,
     covr
 Roxygen: list(markdown = TRUE)
+Remotes:  
+    tidyfun/tf
 VignetteBuilder: knitr
 URL: https://github.com/tidyfun/tidyfun,
     https://tidyfun.github.io/tidyfun
