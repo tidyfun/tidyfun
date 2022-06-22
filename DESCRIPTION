@@ -2,11 +2,11 @@ Package: tidyfun
 Title: Tools for Tidy Functional Data
 Version: 0.0.97
 Authors@R: c(person("Fabian", "Scheipl", email = "fabian.scheipl@googlemail.com", role = c("aut", "cre")), person("Jeff", "Goldsmith", role = c("aut")), person("Julia", "Wrobel", role = c("aut")))
-Description: A package for representing, visualizing, describing and wrangling tidy functional data, based on the tf-package.
+Description: Representing, visualizing, describing and wrangling tidy functional data, based on {tf}.
 Depends: R (>= 4.1), tf
 Imports:
   checkmate, dplyr, GGally, ggplot2, grid, 
-  modelr, pillar, pracma, purrr, refund, rlang, stats, stringr, tibble, 
+  modelr, pillar, purrr, rlang, stats, stringr, tibble, 
   tidyselect, tidyr (>= 1.0.0) 
 License: MIT + file LICENSE
 Encoding: UTF-8
@@ -20,6 +20,7 @@ Suggests:
     knitr,
     maps,
     mgcv,
+    refund,
     rmarkdown,
     scales,
     SemiPar,
@@ -32,5 +33,5 @@ Remotes:
     tidyfun/tf
 VignetteBuilder: knitr
 URL: https://github.com/tidyfun/tidyfun,
-    https://tidyfun.github.io/tidyfun
+    https://tidyfun.github.io/tidyfun/
 BugReports: https://github.com/tidyfun/tidyfun/issues

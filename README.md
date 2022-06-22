@@ -6,7 +6,7 @@
 <!-- badges: start -->
 
 [![Lifecycle:
-experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
+experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html)
 [![R build
 status](https://github.com/tidyfun/tidyfun/workflows/R-CMD-check/badge.svg)](https://github.com/tidyfun/tidyfun/actions)
 [![codecov.io](https://codecov.io/github/tidyfun/tidyfun/coverage.svg?branch=master)](https://codecov.io/github/tidyfun/tidyfun/branch/master)
@@ -84,10 +84,12 @@ dti_df %>%
 
 #### New vector-like data types for functional data
 
-**`tidyfun`** provides [new `S3`-classes for functional
+**`tidyfun`** introduces [new `S3`-classes for functional
 data](https://tidyfun.github.io/tidyfun/reference/index.html#section-tf-sub-classes-constructors-converters),
 either as raw data (class `tfd` for *t*idy *f*unctional *d*ata) or in
-basis representation (class `tfb` for *t*idy *f*unctional *b*asis data).
+basis representation (class `tfb` for *t*idy *f*unctional *b*asis data),
+defined in the underlying [**`{tf}`**](https://github.com/tidyfun/tf)
+package.
 
 Such `tf`-objects can be subsetted or subassigned, computed on and
 summarized.
@@ -112,6 +114,7 @@ can be integrated or differentiated, etc.
 [See
 here](https://tidyfun.github.io/tidyfun/articles/x01_tf_Vectors.html)
 for more information on the operations defined for `tf` vectors.
+<!-- TODO: link developer vignette here as well, eventually -->
 
 #### Methods for converting existing data to `tf`
 
@@ -147,7 +150,7 @@ to see how you can wrangle functional data.
     plots](https://asset.jmir.pub/assets/76aeec48564abf0e6f6da8e9cd06346d.png),
     with an **`order`**-aesthetic to sort the lasagna layers,
 -   **`geom_capellini`** for
-    [glyphs](http://ggobi.github.io/ggally/index_files/figure-html/glyphs-basic-usage-1.png)
+    [glyphs](http://ggobi.github.io/ggally/articles/glyph_files/figure-html/glyphs-basic-usage-1.png)
     plots (i.e., sparklines),
 
 as well as new methods for base R graphics functions `plot`, `lines` and

@@ -46,7 +46,7 @@ The goal of **`tidyfun`** is to provide accessible and well-documented software 
 
 Other vignettes have examined the **`tfd`** & **`tfb`** data types, and how to convert common formats for functional data (e.g. matrices, long- and wide-format data frames, `fda` objects) in these new data types. Because our goal is "tidy" data manipulation for functional data analysis, the result of data conversion processes has been a data frame in which a column contains the functional data of interest. This vignette starts from that point.
 
-Throughout, we make use of some visualization tools -- these are explained in more detail in the [visualization](https://fabian-s.github.io/tidyfun/articles/04_Visualization.html) vignette.
+Throughout, we make use of some visualization tools -- these are explained in more detail in the [visualization](https://tidyfun.github.io/tidyfun/articles/x04_Visualization.html) vignette.
 
 
 # Example datasets
