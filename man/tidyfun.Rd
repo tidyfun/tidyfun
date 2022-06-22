@@ -7,15 +7,15 @@
 \description{
 \code{tidyfun} makes data wrangling and exploratory analysis for functional data
 in \code{R} easier.\cr\cr
-\code{tidyfun} provides:
+\code{tidyfun} is based on the classes and methods defined in package \code{tf} and provides:
 }
 \details{
 \itemize{
-\item new data types for representing functional data: \code{\link[=tfd]{tfd()}} & \code{\link[=tfb]{tfb()}}
-\item arithmetic operators (\code{\link[=Ops.tf]{Ops.tf()}}),
-\item descriptive statistics: e.g. \code{\link[=mean.tf]{mean.tf()}}, \code{\link[=median.tf]{median.tf()}}
-\item and graphics functions for such data: \code{\link[=plot.tf]{plot.tf()}}, \code{\link[=geom_spaghetti]{geom_spaghetti()}}, \code{\link[=gglasagna]{gglasagna()}}
-\item functions to do smoothing (\code{\link[=tf_smooth.tfd]{tf_smooth.tfd()}}), differentiation and integration (\code{\link[=tf_derive.tfd]{tf_derive.tfd()}})
+\item new data types for representing functional data: \code{\link[tf:tfd]{tf::tfd()}} & \code{\link[tf:tfb]{tf::tfb()}}
+\item arithmetic operators (\code{\link[tf:tfgroupgenerics]{tf::Ops.tf()}}),
+\item descriptive statistics: e.g. \code{\link[tf:tfsummaries]{tf::mean.tf()}}, \code{\link[tf:tfsummaries]{tf::median.tf()}}
+\item and graphics functions for such data: \code{\link[tf:tfviz]{tf::plot.tf()}}, \code{\link[=geom_spaghetti]{geom_spaghetti()}}, \code{\link[=gglasagna]{gglasagna()}}
+\item functions to do smoothing (\code{\link[tf:tf_smooth]{tf::tf_smooth.tfd()}}), differentiation and integration (\code{\link[tf:tf_derive]{tf::tf_derive.tfd()}})
 \item \code{tidyverse}-verbs for handling functional data inside data frames: \code{\link[=tf_gather]{tf_gather()}} etc.
 \cr\cr
 \cr

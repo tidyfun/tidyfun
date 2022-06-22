@@ -48,11 +48,11 @@ We'll draw on `tidyfun::chf_df` and `tidyfun::dti_df`, as well as the `fda::Cana
 
 `ggplot` is a powerful framework for visualization. In this section, we'll assume some basic familiarity with the package; if you're new to `ggplot`, [this primer](https://rpubs.com/hadley/ggplot-intro) may be helpful.
 
-**`tidyfun`** includes **Pasta-themed** `geom`s and plots with for functional data:
+**`tidyfun`** includes **pasta-themed** `geom`s and plots for functional data:
 
 - **`geom_spaghetti`** for lines
 - **`geom_meatballs`**  for (lines &) points
-- **`gglasagna`** with **`order`**-arguments to sort the lasagna layers
+- **`gglasagna`** for heatmaps, with an **`order`**-argument for arranging lasagna layers / heat map rows.
 - **`geom_capellini`** for little sparklines / glyphs on maps etc.
 
 ## `geom_spaghetti` and `geom_meatballs`
@@ -62,16 +62,16 @@ One of the most fundamental plots for functional data is the spaghetti plot, whi
 ```{r plot_chf}
 chf_df %>% 
   filter(id == 1) %>% 
-  ggplot(aes(y = activity)) + 
+  ggplot(aes(tf = activity)) + 
   geom_spaghetti()
 ```
 
-A variant on the spaghetti plot is the meatballs plot, which shows both the "noodles" (i.e. functional observations visualized as curves) and the "meatballs" (i.e. original data visualized as points). 
+A variant on the spaghetti plot is the meatballs plot, which shows both the "noodles" (i.e. functional observations visualized as curves) and the "meatballs" (i.e. observed data values visualized as points). 
 
 ```{r}
 chf_df %>%
   filter(id == 1, day == "Mon") %>%
-  ggplot(aes(y = activity)) +
+  ggplot(aes(tf = activity)) +
   geom_meatballs()
 ```
 
@@ -84,7 +84,7 @@ You can, for example, define the color aesthetic for plots of `tf` variables usi
 ```{r}
 chf_df %>% 
   filter(id %in% 1:5) %>% 
-  ggplot(aes(y = activity, color = gender)) + 
+  ggplot(aes(tf = activity, color = gender)) + 
   geom_spaghetti(alpha = .2)
 ```
 
@@ -93,7 +93,7 @@ You can also use facetting:
 ```{r}
 chf_df %>% 
   filter(day %in% c("Mon", "Sun")) %>% 
-  ggplot(aes(y = activity, color = gender)) + 
+  ggplot(aes(tf = activity, color = gender)) + 
   geom_spaghetti(alpha = .1) + 
   facet_grid(~ day)
 ```
@@ -103,12 +103,13 @@ Another example, using the DTI data, is below.
 ```{r, dti-fig1}
 dti_df %>% 
   ggplot() + 
-  geom_spaghetti(aes(y = cca, col = case, alpha = .2 + .4*(case == "control"))) +
+  geom_spaghetti(aes(tf = cca, col = case, alpha = .2 + .4*(case == "control"))) +
   facet_wrap(~ sex) + 
   scale_alpha(guide = 'none', range = c(.2, .4))
 ```
 
-Together with data manipulation tools, the integration with `ggplot` can produce useful exploratory analyses:
+Together with **`tidyfun`**'s tools for functional data wrangling and summary statistics, the integration with `ggplot2` can produce useful exploratory analyses, 
+like the plot below showing group-wise smoothed and unsmoothed mean activity profiles:
 
 ```{r}
 chf_df %>% 
@@ -116,15 +117,15 @@ chf_df %>%
   summarize(mean_act = mean(activity)) %>% 
   mutate(smooth_mean = tfb(mean_act)) %>% 
   filter(day %in% c("Mon", "Sun")) %>% 
-  ggplot(aes(y = smooth_mean, color = gender)) + 
+  ggplot(aes(tf = smooth_mean, color = gender)) + 
   geom_spaghetti(size = 1.25, alpha = 1) + 
-  geom_meatballs(aes(y = mean_act), alpha = .1) + 
+  geom_meatballs(aes(tf = mean_act), alpha = .1) + 
   facet_grid(~ day)
 ```
 
 ## `gglasagna`
 
-Lasagna plots are "[a saucy alternative to spaghetti plosts](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2937254/)". They are a variant on a heatmaps which show functional observations in rows and use color to illustrate values taken at different arguments. 
+Lasagna plots are "[a saucy alternative to spaghetti plots](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2937254/)". They are a variant on a heatmaps which show functional observations in rows and use color to illustrate values taken at different arguments. 
 
 In `tidyfun`, lasagna plots are implemented through `gglasagna`. A first example, using the CHF data, is below. 
 
@@ -134,12 +135,12 @@ chf_df %>%
   gglasagna(activity)
 ```
 
-A somewhat more involved example, demonstrating the `order` argument and taking advantage of facetting, is next. 
+A somewhat more involved example, demonstrating the `order` argument and taking advantage of facets, is next. 
 
 ```{r, dti-fig2}  
 dti_df %>% 
   gglasagna(
-    y = cca, 
+    tf = cca, 
     order = tf_integrate(cca, definite = TRUE), 
     arg = seq(0,1, l = 101)) + 
   theme(axis.text.y = element_text(size = 6)) + 
@@ -148,7 +149,7 @@ dti_df %>%
 
 ## `geom_capellini`
 
-To illustrate `gemo_capellini`, we'll start with some data prep for the iconic Canadian Weather data:
+To illustrate `geom_capellini`, we'll start with some data prep for the iconic Canadian Weather data:
 
 ```{r}
 canada <- data.frame(
@@ -195,8 +196,7 @@ lines(c(median(cca), mean = mean(cca)), col = c(2, 4))
 plot(cca, type = "lasagna", col = viridis(50))
 ```
 
-The `plot` functions use options and can be edited in ways that are similar to other base graphics. 
-
+These `plot` methods use all the same graphics options and can be edited like other base graphics:
 ```{r, ex-fig2}
 cca_five = cca[1:5]
 

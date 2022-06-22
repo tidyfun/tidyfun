@@ -134,10 +134,10 @@ to the paired geom/stat.}
 }
 \description{
 Plots a miniature glyph or sparkline for each entry of a \code{tf}-object.
-(Capellini are tiny little spaghetti noodles.) Aesthetics \code{x} and \code{y}
+(Capellini are tiny spaghetti -- \emph{angel hair} pasta.) Aesthetics \code{x} and \code{y}
 specify the location of the glyphs, the \code{tf} aesthetic defines their shapes.
-I realize the naming is weird -- \code{geom_cappelini},  \code{geom_cappellini} and
-\code{geom_capelini} will work too...
+To accommodate all my fellow idiots, \code{geom_cappelini},  \code{geom_cappellini} and
+\code{geom_capelini} also work.
 }
 \section{\code{tf} aesthetic}{
 

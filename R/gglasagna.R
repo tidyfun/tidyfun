@@ -14,11 +14,11 @@ is.discrete <- function(x) {
 #' - and the row number of the observations.
 #'
 #' i.e., lowest values are on top so that by default the first layer is the first
-#' observation in `data` and the vertical order of the layers corresponds to the
-#' ordering of observations for `arrange(data, order, order_by(value), row_number())`.
+#' observation in `data` and the vertical order of the layers is the
+#' ordering of observations obtained by `dplyr::arrange(data, order, order_by(value), row_number())`.
 #'
 #' @param data the data. Duhh.
-#' @param y bare name of the `tf` column to visualize
+#' @param tf bare name of the `tf` column to visualize
 #' @param order (optional) bare name of a column in `data` to define vertical
 #'   order of lasagna layers.
 #' @param label (optional) bare name of a column in `data` to define labels for
@@ -34,6 +34,7 @@ is.discrete <- function(x) {
 #' @return a `ggplot2`` object
 #' @export
 #' @importFrom grid unit grobTree textGrob gpar 
+#' @importFrom rlang `%||%`
 #' @examples
 #' \dontrun{
 #' set.seed(1221)
@@ -52,7 +53,7 @@ is.discrete <- function(x) {
 #' # order of layers is by "order_by" within "order":
 #' gglasagna(data, fb, label = id, order = group, order_by = first)
 #' }
-gglasagna <- function(data, y, order = NULL, label = NULL,
+gglasagna <- function(data, tf, order = NULL, label = NULL,
                       arg = NULL, order_by = NULL, 
                       order_ticks = TRUE) {
   order_ticks_args <- list(
@@ -69,7 +70,7 @@ gglasagna <- function(data, y, order = NULL, label = NULL,
   }
   
   # FIXME: render errors for weird arg lengths (e.g. 93)
-  stopifnot(is_tf(pull(data, !!enexpr(y))))
+  stopifnot(is_tf(pull(data, !!enexpr(tf))))
   has_order <- !is.null(match.call()[["order"]])
   has_order_by <- !is.null(match.call()[["order_by"]])
   order_label <- enexpr(order)
@@ -83,17 +84,17 @@ gglasagna <- function(data, y, order = NULL, label = NULL,
   }
   has_label <- !is.null(match.call()[["label"]])
   if (!has_label) {
-    label <- bquote(names(.(enexpr(y))) %||% row_number())
+    label <- bquote(names(.(enexpr(tf))) %||% row_number())
     labelname <- ""
   } else {
     label <- match.call()$label
     labelname <- deparse(label)
   }
-  y_name <- quo_name(enquo(y))
+  y_name <- quo_name(enquo(tf))
   data <- mutate(data, ..label = !!label, ..row = row_number(), ..order = !!order)
   tf_eval <- 
     #TODO: add .preserve for all list columns not being plotted
-    mutate(data, ..y = names((enexpr(y))) %||% row_number()) %>%  #vertical position variable
+    mutate(data, ..y = names((enexpr(tf))) %||% row_number()) %>%  #vertical position variable
     tf_unnest(y_name, .arg = arg, names_sep = "___", try_dropping = FALSE) %>%
     rename(..x = matches("___arg"), ..fill = matches("___value"))
   order_by_label <- enexpr(order_by)

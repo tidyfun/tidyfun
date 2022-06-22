@@ -1,10 +1,10 @@
 #' Glyph plots for `tf` objects
 #'
 #' Plots a miniature glyph or sparkline for each entry of a `tf`-object.
-#' (Capellini are tiny little spaghetti noodles.) Aesthetics `x` and `y`
+#' (Capellini are tiny spaghetti -- *angel hair* pasta.) Aesthetics `x` and `y`
 #' specify the location of the glyphs, the `tf` aesthetic defines their shapes.
-#' I realize the naming is weird -- `geom_cappelini`,  `geom_cappellini` and
-#' `geom_capelini` will work too...
+#' To accommodate all my fellow idiots, `geom_cappelini`,  `geom_cappellini` and
+#' `geom_capelini` also work. 
 #'
 #' @section `tf` aesthetic:
 #'   Mandatory. Used to designate a column of class `tf` to be visualized as glyphs.
@@ -39,12 +39,12 @@
 NULL
 
 #' @export
-#' @importFrom ggplot2 ggproto Stat Geom
+#' @importFrom ggplot2 ggproto Stat Geom aes
 #' @importFrom GGally rescale11 rescale01
 #' @rdname ggcapellini
 #' @usage NULL
 #' @format NULL
-StatCapellini <- ggproto("StatCapellini", Stat,
+StatCapellini <- ggplot2::ggproto("StatCapellini", ggplot2::Stat,
   required_aes = c("x", "y", "tf"),
   setup_params = function(data, params) {
     if (is.null(params$arg)) {
@@ -81,7 +81,7 @@ StatCapellini <- ggproto("StatCapellini", Stat,
   # because layer() only checks compute_panel & compute_group
   compute_panel = function(self, data, scales, arg,
                              add_lines, add_boxes, width, height) {
-    Stat$compute_panel(self, data, scales)
+    ggplot2::Stat$compute_panel(self, data, scales)
   }
 )
 
@@ -94,7 +94,7 @@ stat_capellini <- function(mapping = NULL, data = NULL, geom = "capellini",
                            position = "identity", na.rm = TRUE, show.legend = NA,
                            inherit.aes = TRUE, arg = NULL, add_lines = FALSE,
                            add_boxes = TRUE, width = NULL, height = NULL, ...) {
-  layer(
+  ggplot2::layer(
     stat = StatCapellini, data = data, mapping = mapping, geom = geom,
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
     params = list(
@@ -137,7 +137,7 @@ geom_capellini <-
            box.linetype = 1, box.fill = NA, box.size = .1, box.alpha = .1,
            line.colour = "black", line.linetype = 2, line.size = .3, 
            line.alpha = .5) {
-  layer(
+    ggplot2::layer(
     stat = StatCapellini, data = data, mapping = mapping, geom = "capellini",
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
     params = list(
@@ -168,7 +168,7 @@ geom_cappelini <- geom_capellini
 #' @rdname ggcapellini
 #' @usage NULL
 #' @format NULL
-GeomCapellini <- ggproto("GeomCapellini", Geom,
+GeomCapellini <- ggplot2::ggproto("GeomCapellini", ggplot2::Geom,
   setup_data = function(data, params) {
     GeomPath$setup_data(data, params)
   },
@@ -199,7 +199,7 @@ GeomCapellini <- ggproto("GeomCapellini", Geom,
         xmax = data$xgrid[1] + data$width[1] / 2,
         ymin = data$ygrid[1] - data$height[1] / 2,
         ymax = data$ygrid[1] + data$height[1] / 2,
-        colour = box.colour, # scales::alpha("black", .1),
+        colour = box.colour,
         linetype = box.linetype,
         fill = box.fill,
         alpha = box.alpha,
@@ -215,9 +215,9 @@ GeomCapellini <- ggproto("GeomCapellini", Geom,
       glyph_grob
     )
   },
-  default_aes = aes(
+  default_aes = ggplot2::aes(
     colour = "black", size = 0.5,
     linetype = 1, alpha = 0.5
   ),
-  draw_key = GeomPath$draw_key
+  draw_key = ggplot2::GeomPath$draw_key
 )

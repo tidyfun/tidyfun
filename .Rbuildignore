@@ -13,3 +13,5 @@ attic
 ^codecov\.yml$
 ^\.github$
 ^pkgdown$
+^doc$
+^Meta$

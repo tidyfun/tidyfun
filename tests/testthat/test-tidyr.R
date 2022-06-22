@@ -44,7 +44,7 @@ test_that("tf_spread works", {
   expect_error(tf_spread(d), "More than one")
   expect_equivalent(
     tf_spread(d, fb, sep = NULL)[, -(1:2)],
-    as.data.frame(as.matrix.tfb(d$fb))
+    as.data.frame(as.matrix(d$fb))
   )
   set.seed(1312)
   d$fi <- tf_jiggle(tf_rgp(3, 11L))

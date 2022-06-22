@@ -99,7 +99,7 @@ Plots a line for each entry of a \code{tf}-object.
 \code{geom_spaghetti} does spaghetti plots, \code{geom_meatballs} does spaghetti plots
 with points for the actual evaluations.
 }
-\section{\code{y} aesthetic}{
+\section{\code{tf} aesthetic}{
 
 Mandatory. Used to designate a column of class \code{tf} to be visualized.
 }
@@ -111,9 +111,12 @@ data$f = tf_rgp(10)
 data$fi = tf_jiggle(data$f)
 data$fb = tfb(data$f)
 library(ggplot2)
-ggplot(data, aes(y = f, color = tf_depth(f))) + geom_spaghetti()
-ggplot(data, aes(y = fi, shape = col, color = col)) + geom_meatballs()
-ggplot(data, aes(y = fi)) + geom_meatballs(spaghetti = FALSE) +
+ggplot(data, aes(tf = f, color = tf_depth(f))) + geom_spaghetti()
+ggplot(data, aes(tf = fi, shape = col, color = col)) + geom_meatballs()
+ggplot(data, aes(tf = fi)) + geom_meatballs(spaghetti = FALSE) +
   facet_wrap(~col)
+}
+\seealso{
+\code{\link[=geom_cappelini]{geom_cappelini()}} for glyph plots, \code{\link[=gglasagna]{gglasagna()}} for heatmaps.
 }
 \keyword{datasets}
