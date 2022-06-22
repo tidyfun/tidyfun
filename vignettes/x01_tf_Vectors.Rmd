@@ -229,15 +229,15 @@ numerical or logical vectors for `tf`-vectors as well, so you can:
 
 ```{r}
 cca_five[1:2]
-cca_five[1:2] = cca_five[2:1]
+cca_five[1:2] <- cca_five[2:1]
 cca_five
 ```
 
 ### compare & compute:
 
 ```{r, echo = FALSE}
-n_cca_five = names(cca_five)
-cca_five = unname(cca_five)
+n_cca_five <- names(cca_five)
+cca_five <- unname(cca_five)
 ```
 
 ```{r}
@@ -247,7 +247,7 @@ cca_five - (2:-2) != cca_five
 ```
 
 ```{r, echo = FALSE}
-names(cca_five) = n_cca_five
+names(cca_five) <- n_cca_five
 ```
 
 ### summarize: 

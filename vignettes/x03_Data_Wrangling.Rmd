@@ -63,7 +63,7 @@ A quick plot of the first 5 curves:
 
 ```{r plot_chf}
 chf_df[1:5,] %>% 
-  ggplot(aes(y = activity)) + geom_spaghetti(alpha = .1)
+  ggplot(aes(tf = activity)) + geom_spaghetti(alpha = .1)
 ```
 
 The `tidyfun::dti_df` contains fractional anisotropy (FA) tract profiles for the corpus callosum (cca) and the right corticospinal tract (rcst), along with several covariates. 
@@ -78,7 +78,7 @@ A quick plot of the `cca` tract profiles is below.
 
 ```{r plot_dti}
 dti_df %>% 
-  ggplot(aes(y = cca)) + geom_spaghetti(alpha = .05)
+  ggplot(aes(tf = cca)) + geom_spaghetti(alpha = .05)
 ```
 
 # Existing `tidyverse` functions
@@ -89,7 +89,7 @@ Dataframes using `tidyfun` to store functional observations can be manipulated u
 chf_df %>% 
   select(id, day, activity) %>% 
   filter(day == "Mon") %>% 
-  ggplot(aes(y = activity)) + 
+  ggplot(aes(tf = activity)) + 
   geom_spaghetti(alpha = .05) 
 ```
 
@@ -99,7 +99,7 @@ daily averages of these activity profiles:
 chf_df %>% 
   group_by(day) %>% 
   summarize(mean_act = mean(activity)) %>% 
-  ggplot(aes(y = mean_act, color = day)) + 
+  ggplot(aes(tf = mean_act, color = day)) + 
   geom_spaghetti()
 ```
 
@@ -108,7 +108,7 @@ One can `mutate` functional observations -- here we exponentiate the log activit
 ```{r}
 chf_df[1:5,] %>% 
   mutate(exp_act = exp(activity)) %>% 
-  ggplot(aes(y = exp_act)) + 
+  ggplot(aes(tf = exp_act)) + 
   geom_spaghetti(alpha = .2)
 ```
 
@@ -150,7 +150,7 @@ gender and case status:
 dti_df %>% 
   group_by(case, sex) %>% 
   summarize(mean_rcst = mean(rcst, na.rm = TRUE)) %>% 
-  ggplot(aes(y = mean_rcst, color = case)) + 
+  ggplot(aes(tf = mean_rcst, color = case)) + 
     geom_spaghetti(size = 2) + 
     facet_grid(~sex)
 ```
@@ -166,7 +166,7 @@ like_to_move_it_move_it <- chf_df %>%
 glimpse(like_to_move_it_move_it)
 
 like_to_move_it_move_it %>% 
-  ggplot(aes(y = activity)) + 
+  ggplot(aes(tf = activity)) + 
   geom_spaghetti(aes(colour = id))
 ```
 
@@ -175,7 +175,7 @@ A second example of this functionality in the DTI data is below.
 ```{r}
 dti_df %>% 
   filter(tf_anywhere(cca, value < .26)) %>% 
-  ggplot(aes(y = cca)) + 
+  ggplot(aes(tf = cca)) + 
     geom_spaghetti()
 ```
 
@@ -187,7 +187,7 @@ One can smooth existing observations using `tf_smooth`:
 chf_df %>% 
   filter(id == 1) %>% 
   mutate(smooth_act = tf_smooth(activity)) %>% 
-  ggplot(aes(y = smooth_act)) + 
+  ggplot(aes(tf = smooth_act)) + 
   geom_spaghetti()
 ```
 
@@ -198,9 +198,9 @@ chf_df %>%
   group_by(day) %>% 
   summarize(mean_act = mean(activity)) %>% 
   mutate(smooth_mean = tf_smooth(mean_act)) %>% 
-  ggplot(aes(y = mean_act, color = day)) + 
+  ggplot(aes(tf = mean_act, color = day)) + 
   geom_spaghetti(alpha = .2) + 
-  geom_spaghetti(aes(y = smooth_mean), size = 2)
+  geom_spaghetti(aes(tf = smooth_mean), size = 2)
 ```
 
 One can also extract observations over a subset of the full domain using `tf_zoom`:
@@ -209,7 +209,7 @@ One can also extract observations over a subset of the full domain using `tf_zoo
 chf_df %>% 
   filter(id == 1) %>% 
   mutate(daytime_act = tf_zoom(activity, 360, 1200)) %>% 
-  ggplot(aes(y = daytime_act)) + 
+  ggplot(aes(tf = daytime_act)) + 
   geom_spaghetti(alpha = .2)
 ```
 
@@ -230,8 +230,8 @@ dti_df[1:10, ] %>%
     cca_tfb_deriv = tf_derive(cca_tfb)
   ) %>%
   ggplot() + 
-    geom_spaghetti(aes(y = cca_raw_deriv), alpha = .3, lwd = .3, col = "blue") +
-    geom_spaghetti(aes(y = cca_tfb_deriv), alpha = .3, lwd = .3, col = "red") +
+    geom_spaghetti(aes(tf = cca_raw_deriv), alpha = .3, lwd = .3, col = "blue") +
+    geom_spaghetti(aes(tf = cca_tfb_deriv), alpha = .3, lwd = .3, col = "red") +
     ylab("d/dt f(t)")
 ```
 
