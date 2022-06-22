@@ -34,3 +34,5 @@ inst/doc
 
 #pkgdown folder
 docs/
+/doc/
+/Meta/
