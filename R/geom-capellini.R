@@ -1,10 +1,10 @@
 #' Glyph plots for `tf` objects
 #'
 #' Plots a miniature glyph or sparkline for each entry of a `tf`-object.
-#' (Capellini are tiny little spaghetti noodles.) Aesthetics `x` and `y`
+#' (Capellini are tiny spaghetti -- *angel hair* pasta.) Aesthetics `x` and `y`
 #' specify the location of the glyphs, the `tf` aesthetic defines their shapes.
-#' I realize the naming is weird -- `geom_cappelini`,  `geom_cappellini` and
-#' `geom_capelini` will work too...
+#' To accommodate all my fellow idiots, `geom_cappelini`,  `geom_cappellini` and
+#' `geom_capelini` also work. 
 #'
 #' @section `tf` aesthetic:
 #'   Mandatory. Used to designate a column of class `tf` to be visualized as glyphs.

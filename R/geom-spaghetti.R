@@ -4,7 +4,7 @@
 #' `geom_spaghetti` does spaghetti plots, `geom_meatballs` does spaghetti plots
 #' with points for the actual evaluations.
 #'
-#' @section `y` aesthetic:
+#' @section `tf` aesthetic:
 #'   Mandatory. Used to designate a column of class `tf` to be visualized.
 #' @examples
 #' set.seed(1221)
@@ -13,22 +13,17 @@
 #' data$fi = tf_jiggle(data$f)
 #' data$fb = tfb(data$f)
 #' library(ggplot2)
-#' ggplot(data, aes(y = f, color = tf_depth(f))) + geom_spaghetti()
-#' ggplot(data, aes(y = fi, shape = col, color = col)) + geom_meatballs()
-#' ggplot(data, aes(y = fi)) + geom_meatballs(spaghetti = FALSE) +
+#' ggplot(data, aes(tf = f, color = tf_depth(f))) + geom_spaghetti()
+#' ggplot(data, aes(tf = fi, shape = col, color = col)) + geom_meatballs()
+#' ggplot(data, aes(tf = fi)) + geom_meatballs(spaghetti = FALSE) +
 #'   facet_wrap(~col)
 #' @name ggspaghetti
+#' @seealso [geom_cappelini()] for glyph plots, [gglasagna()] for heatmaps.
 NULL
-
-# FIXME
-# > ggplot(data, aes(y = f, color = tf_depth(f))) + geom_spaghetti() +
-#   + annotate("text", x = 1.05, y = runif(10), label = 1:10)
-# Error: evaluation nested too deeply: infinite recursion / options(expressions=)?
-#   Error during wrapup: evaluation nested too deeply: infinite recursion / options(expressions=)?
 
 #' @export
 is.finite.tf <- function(x) {
-  map(tf_evaluations(x), ~all(is.finite(x) | !is.na(x)))
+  map_lgl(tf_evaluations(x), ~all(is.finite(.) | !is.na(.)))
 }  
 
 #' @export
@@ -40,21 +35,21 @@ scale_type.tf <- function(x) "identity"
 #' @rdname ggspaghetti
 #' @usage NULL
 #' @format NULL
-StatTf <- ggplot2::ggproto("StatTf", ggplot2::Stat,
-  required_aes = "y",
+StatTf <- ggproto("StatTf", Stat,
+  required_aes = "tf",
   setup_params = function(data, params) {
     if (is.null(params$arg)) {
-      params$arg <- list(tf_arg(pull(data, y)))
+      params$arg <- list(tf_arg(pull(data, tf)))
     }
     params
   },
   compute_layer = function(self, data, params, layout) {
-    stopifnot(is_tf(pull(data, y)))
+    stopifnot(is_tf(pull(data, tf)))
     tf_eval <- suppressMessages(
-      mutate(data, y___id = names(y) %||% seq_along(y)) %>% 
-      tf_unnest(y, .arg = params$arg, names_sep = "___")) %>%
+      mutate(data, tf____id = names(tf) %||% seq_along(tf)) %>% 
+      tf_unnest(tf, .arg = params$arg, names_sep = "____")) %>%
       select(-group) %>%
-      rename(group = y___id, x = y___arg, y = y___value)
+      rename(group = tf____id, x = tf____arg, y = tf____value)
     tf_eval
   },
   # need this so arg, spaghetti gets recognized as valid parameters
@@ -113,8 +108,8 @@ GeomSpaghetti <- ggplot2::ggproto("GeomSpaghetti", ggplot2::Geom,
     colour = "black", size = 0.5,
     linetype = 1, alpha = 0.5
   ),
-  draw_key = ggplot2::GeomLine$draw_key,
-  required_aes = c("y")
+  draw_key = GeomLine$draw_key,
+  required_aes = c("x", "y", "group")
 )
 
 #-------------------------------------------------------------------------------
@@ -152,6 +147,6 @@ GeomMeatballs <- ggplot2::ggproto("GeomMeatball", ggplot2::Geom,
     colour = "black", size = 0.5,
     linetype = 1, alpha = 0.5, shape = 19, fill = NA, stroke = 0.5
   ),
-  draw_key = ggplot2::GeomLine$draw_key,
-  required_aes = c("y")
+  draw_key = GeomLine$draw_key,
+  required_aes = c("x", "y", "group")
 )

@@ -6,7 +6,7 @@
 \usage{
 gglasagna(
   data,
-  y,
+  tf,
   order = NULL,
   label = NULL,
   arg = NULL,
@@ -17,7 +17,7 @@ gglasagna(
 \arguments{
 \item{data}{the data. Duhh.}
 
-\item{y}{bare name of the \code{tf} column to visualize}
+\item{tf}{bare name of the \code{tf} column to visualize}
 
 \item{order}{(optional) bare name of a column in \code{data} to define vertical
 order of lasagna layers.}
@@ -51,8 +51,8 @@ The vertical order of the lasagna layers is \strong{increasing} in
 }
 
 i.e., lowest values are on top so that by default the first layer is the first
-observation in \code{data} and the vertical order of the layers corresponds to the
-ordering of observations for \code{arrange(data, order, order_by(value), row_number())}.
+observation in \code{data} and the vertical order of the layers is the
+ordering of observations obtained by \code{dplyr::arrange(data, order, order_by(value), row_number())}.
 }
 \examples{
 \dontrun{
