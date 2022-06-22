@@ -1,8 +1,8 @@
 Package: tidyfun
 Title: Tools for Tidy Functional Data
-Version: 0.0.96
+Version: 0.0.97
 Authors@R: c(person("Fabian", "Scheipl", email = "fabian.scheipl@googlemail.com", role = c("aut", "cre")), person("Jeff", "Goldsmith", role = c("aut")), person("Julia", "Wrobel", role = c("aut")))
-Description: Provides S3 classes and methods for representing, visualizing and wrangling tidy functional data.
+Description: A package for representing, visualizing, describing and wrangling tidy functional data, based on the tf-package.
 Depends: R (>= 4.1), tf
 Imports:
   checkmate, dplyr, GGally, ggplot2, grid, 
@@ -19,6 +19,7 @@ Suggests:
     gridExtra,
     knitr,
     maps,
+    mgcv,
     rmarkdown,
     scales,
     SemiPar,
