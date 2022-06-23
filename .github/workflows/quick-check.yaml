@@ -6,7 +6,7 @@ on:
   pull_request:
     branches: [dev]
 
-name: R-CMD-check-release
+name: quick-check
 
 jobs:
   R-CMD-check:
@@ -20,7 +20,7 @@ jobs:
       - uses: r-lib/actions/setup-r@v1
         with:
           use-public-rspm: true
-      
+
       - uses: r-lib/actions/setup-r-dependencies@v1
         with:
           extra-packages: rcmdcheck
