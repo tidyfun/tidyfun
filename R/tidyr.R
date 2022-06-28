@@ -23,6 +23,7 @@
 #' @param domain optional. Range of possible `arg`-values. See [tf::tfd()] for details.
 #' @param resolution optional. Resolution of the evaluation grid in `arg`. See [tf::tfd()] for details.
 #' @return a modified `data.frame` with a `tfd` column replacing the `...`.
+#' @import dplyr
 #' @importFrom rlang is_empty :=  quo_name enexpr
 #' @importFrom tidyselect vars_select
 #' @importFrom stringr str_replace

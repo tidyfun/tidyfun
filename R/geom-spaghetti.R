@@ -18,6 +18,7 @@
 #' ggplot(data, aes(tf = fi)) + geom_meatballs(spaghetti = FALSE) +
 #'   facet_wrap(~col)
 #' @name ggspaghetti
+#' @import ggplot2
 #' @seealso [geom_cappelini()] for glyph plots, [gglasagna()] for heatmaps.
 NULL
 
