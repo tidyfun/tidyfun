@@ -4,30 +4,28 @@ reference:
 - title: 'tf - (Sub)classes: Constructors & converters'
   desc: Defining, evaluating and converting functional data objects
   contents:
-  - tfd
-  - as.tfd
-  - tfb
-  - as.tfb
-  - tfb_spline
-  - tfb_fpc
-  - fpc_wsvd
+  - tf::tfd
+  - tf::tfb
+  - tf::tfb_spline
+  - tf::tfb_fpc
+  - tf::fpc_wsvd
 - title: Evaluation and indexing
   desc: Accessing, appending, evaluating and overwriting functional data objects
   contents:
-  - index.tf
-  - tf_approx_linear
-  - tf_evaluate
-  - tf_interpolate
+  - tf::tfbrackets
+  - tf::tf_approx_linear
+  - tf::tf_evaluate
+  - tf::tf_interpolate
 - title: Arithmetic, logical and summary functions
   desc: Functionality for computing with and comparing functional data
   contents:
-  - Ops.tf
-  - tfsummaries
-  - tf_depth
+  - tf::Ops.tf
+  - tf::tfsummaries
+  - tf::tf_depth
 - title: Differentiation & integration
   contents:
-  - tf_derive
-  - tf_integrate
+  - tf::tf_derive
+  - tf::tf_integrate
 - title: Wrangling
   desc: Reshaping and transforming tf-objects inside data frames
   contents:
@@ -38,7 +36,7 @@ reference:
 - title: Visualization & Display
   desc: Graphics functions and print formats
   contents:
-  - plot.tf
+  - tf::plot.tf
   - geom_spaghetti
   - gglasagna
   - geom_capellini
@@ -47,14 +45,14 @@ reference:
 - title: Utilities
   desc: Utility functions
   contents:
-  - tf_where
-  - tf_zoom
-  - tf_smooth
-  - tf_arg
-  - tf_rgp
-  - tf_jiggle
+  - tf::tf_where
+  - tf::tf_zoom
+  - tf::tf_smooth
+  - tf::tf_arg
+  - tf::tf_rgp
+  - tf::tf_jiggle
   - tidyfun
-  - vctrs 
+  - tf::vctrs 
 - title: Data Sets
   desc: Functional data sets
   contents:
@@ -72,6 +70,8 @@ articles:
 navbar:
   type: default
   left:
+  - icon: fa-github
+    href: https://github.com/tidyfun/tidyfun
   - text: Reference
     href: reference/index.html
   - text: Articles
