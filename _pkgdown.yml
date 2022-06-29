@@ -13,7 +13,7 @@ reference:
   desc: Accessing, appending, evaluating and overwriting functional data objects
   contents:
   - tf::tfbrackets
-  - tf::tf_approx_linear
+  - tf::tf_approx
   - tf::tf_evaluate
   - tf::tf_interpolate
 - title: Arithmetic, logical and summary functions
