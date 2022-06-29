@@ -18,6 +18,7 @@
 #' ggplot(data, aes(tf = fi)) + geom_meatballs(spaghetti = FALSE) +
 #'   facet_wrap(~col)
 #' @name ggspaghetti
+#' @family tidyfun visualization
 #' @import ggplot2
 #' @seealso [geom_cappelini()] for glyph plots, [gglasagna()] for heatmaps.
 NULL
@@ -34,6 +35,7 @@ scale_type.tf <- function(x) "identity"
 #' @importFrom ggplot2 ggproto Stat Geom
 #' @importFrom dplyr pull
 #' @rdname ggspaghetti
+#' @family tidyfun visualization
 #' @usage NULL
 #' @format NULL
 StatTf <- ggproto("StatTf", Stat,
@@ -62,6 +64,7 @@ StatTf <- ggproto("StatTf", Stat,
 
 #' @export
 #' @rdname ggspaghetti
+#' @family tidyfun visualization
 #' @inheritParams ggplot2::stat_identity
 #' @param na.rm remove NAs? defaults to `TRUE`
 stat_tf <- function(mapping = NULL, data = NULL, geom = "spaghetti",
@@ -78,6 +81,7 @@ stat_tf <- function(mapping = NULL, data = NULL, geom = "spaghetti",
 
 #' @export
 #' @rdname ggspaghetti
+#' @family tidyfun visualization
 #' @format NULL
 #' @param arg where to evaluate `tf` -- defaults to the default ;)
 geom_spaghetti <- function(mapping = NULL, data = NULL,
@@ -91,6 +95,7 @@ geom_spaghetti <- function(mapping = NULL, data = NULL,
 }
 #' @export
 #' @rdname ggspaghetti
+#' @family tidyfun visualization
 #' @usage NULL
 #' @format NULL
 GeomSpaghetti <- ggplot2::ggproto("GeomSpaghetti", ggplot2::Geom,
@@ -117,6 +122,7 @@ GeomSpaghetti <- ggplot2::ggproto("GeomSpaghetti", ggplot2::Geom,
 
 #' @export
 #' @rdname ggspaghetti
+#' @family tidyfun visualization
 #' @format NULL
 #' @importFrom grid gList
 #' @param spaghetti plot noodles along with meatballs? defaults to true.
@@ -132,6 +138,7 @@ geom_meatballs <- function(mapping = NULL, data = NULL,
 }
 #' @export
 #' @rdname ggspaghetti
+#' @family tidyfun visualization
 #' @usage NULL
 #' @format NULL
 GeomMeatballs <- ggplot2::ggproto("GeomMeatball", ggplot2::Geom,

@@ -9,6 +9,7 @@
 #' @param x object of class tf
 #' @param ... ignored
 #' @rdname tftibble
+#' @family tidyfun print
 #' @importFrom pillar type_sum obj_sum pillar_shaft
 #' @details see [pillar::type_sum()]
 type_sum.tf <- function(x, ...) {

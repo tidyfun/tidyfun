@@ -173,5 +173,38 @@ ggplot(canada, aes(x = lon, y = lat, colour = region)) +
 }
 \seealso{
 GGally::glyphs
+
+Other tidyfun visualization: 
+\code{\link{gglasagna}()},
+\code{\link{ggspaghetti}}
+
+Other tidyfun visualization: 
+\code{\link{gglasagna}()},
+\code{\link{ggspaghetti}}
+
+Other tidyfun visualization: 
+\code{\link{gglasagna}()},
+\code{\link{ggspaghetti}}
+
+Other tidyfun visualization: 
+\code{\link{gglasagna}()},
+\code{\link{ggspaghetti}}
+
+Other tidyfun visualization: 
+\code{\link{gglasagna}()},
+\code{\link{ggspaghetti}}
+
+Other tidyfun visualization: 
+\code{\link{gglasagna}()},
+\code{\link{ggspaghetti}}
+
+Other tidyfun visualization: 
+\code{\link{gglasagna}()},
+\code{\link{ggspaghetti}}
+
+Other tidyfun visualization: 
+\code{\link{gglasagna}()},
+\code{\link{ggspaghetti}}
 }
+\concept{tidyfun visualization}
 \keyword{datasets}

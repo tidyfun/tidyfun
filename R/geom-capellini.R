@@ -35,6 +35,7 @@
 #'     line.linetype = 1, box.fill = "white", box.alpha=.5, box.colour = NA)
 #' }
 #' @name ggcapellini
+#' @family tidyfun visualization
 #' @seealso GGally::glyphs
 NULL
 
@@ -42,6 +43,7 @@ NULL
 #' @importFrom ggplot2 ggproto Stat Geom aes
 #' @importFrom GGally rescale11 rescale01
 #' @rdname ggcapellini
+#' @family tidyfun visualization
 #' @usage NULL
 #' @format NULL
 StatCapellini <- ggplot2::ggproto("StatCapellini", ggplot2::Stat,
@@ -88,6 +90,7 @@ StatCapellini <- ggplot2::ggproto("StatCapellini", ggplot2::Stat,
 
 #' @export
 #' @rdname ggcapellini
+#' @family tidyfun visualization
 #' @inheritParams ggplot2::stat_identity
 #' @param na.rm remove NAs? defaults to `TRUE`
 stat_capellini <- function(mapping = NULL, data = NULL, geom = "capellini",
@@ -129,6 +132,7 @@ stat_capellini <- function(mapping = NULL, data = NULL, geom = "capellini",
 #' @param line.linetype aesthetic property of the reference line
 #' @param line.size aesthetic property of of the reference line
 #' @param line.alpha aesthetic property of the reference line
+#' @family tidyfun visualization
 geom_capellini <- 
   function(mapping = NULL, data = NULL, stat = "capellini",
            position = "identity", ..., na.rm = TRUE, show.legend = NA,
@@ -153,19 +157,23 @@ geom_capellini <-
 #' @export
 #' @rdname ggcapellini
 #' @usage NULL
+#' @family tidyfun visualization
 geom_cappellini <- geom_capellini
 #' @export
 #' @usage NULL
 #' @rdname ggcapellini
+#' @family tidyfun visualization
 geom_capelini <- geom_capellini
 #' @export
 #' @usage NULL
 #' @rdname ggcapellini
+#' @family tidyfun visualization
 geom_cappelini <- geom_capellini
 
 
 #' @export
 #' @rdname ggcapellini
+#' @family tidyfun visualization
 #' @usage NULL
 #' @format NULL
 GeomCapellini <- ggplot2::ggproto("GeomCapellini", ggplot2::Geom,

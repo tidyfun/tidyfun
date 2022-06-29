@@ -28,7 +28,8 @@
 #' @importFrom tidyselect vars_select
 #' @importFrom stringr str_replace
 #' @export
-#' @seealso dplyr::select() tf::tfd() tf_nest() tf_unnest()
+#' @seealso dplyr::select() 
+#' @family tidyfun data wrangling functions
 #' @examples
 #' (d <- dplyr::as.tbl(data.frame(refund::DTI[1:5,]$cca[, 1:10])))
 #' tf_gather(d)
@@ -115,6 +116,7 @@ tf_gather <- function(data, ..., key = ".tfd", arg = NULL, domain = NULL,
 #'   each containing the functional measurements for one `arg`-value.   
 #' @importFrom tidyselect vars_pull
 #' @export
+#' @family tidyfun data wrangling functions
 #' @examples
 #' d <- dplyr::tibble(g = 1:3)
 #' d$f <- tf_rgp(3, 11L)
@@ -190,7 +192,8 @@ tf_spread <- function(data, value, arg, sep = "_", interpolate = FALSE) {
 #' @inheritParams tf_gather
 #' @return a data frame with (at least) `.id` and `tfd` columns
 #' @export
-#' @seealso tf_gather(), tf_unnest(), tfd() for `domain, evaluator, resolution`
+#' @family tidyfun data wrangling functions
+#' @seealso tfd() for `domain, evaluator, resolution`
 tf_nest <- function(data, ..., .id = "id", .arg = "arg", domain = NULL,
                     evaluator = "tf_approx_linear", resolution = NULL) {
   stopifnot(!missing(data))
@@ -279,8 +282,9 @@ tf_nest <- function(data, ..., .id = "id", .arg = "arg", domain = NULL,
 #' @inheritParams tidyr::unnest
 #' @return a "long" data frame with `tf`-columns expanded into `arg, value`-
 #'   columns.
-#' @seealso tf_gather(), tf_nest(), tf_evaluate.data.frame()
+#' @seealso tf_evaluate.data.frame()
 #' @export 
+#' @family tidyfun data wrangling functions
 tf_unnest <- function(data, cols, arg, interpolate = TRUE, ...) {
   UseMethod("tf_unnest")
 }

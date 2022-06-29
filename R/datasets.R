@@ -10,6 +10,7 @@
 #' Populations" by Huang et al.; these data are public,
 #' with download information in the paper.
 #' @keywords data
+#' @family tidyfun datasets
 NULL
 
 
@@ -27,4 +28,5 @@ NULL
 #' include the following acknowledgment: “The MRI/DTI data were collected 
 #' at Johns Hopkins University and the Kennedy-Krieger Institute"
 #' @keywords data
+#' @family tidyfun datasets
 NULL

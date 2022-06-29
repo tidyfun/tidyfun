@@ -73,3 +73,9 @@ gglasagna(data, f, label = id, order_by = first) +
 gglasagna(data, fb, label = id, order = group, order_by = first)
 }
 }
+\seealso{
+Other tidyfun visualization: 
+\code{\link{ggcapellini}},
+\code{\link{ggspaghetti}}
+}
+\concept{tidyfun visualization}

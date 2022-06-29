@@ -20,6 +20,7 @@
 #' @importFrom tidyselect vars_select quos
 #' @importFrom rlang enquos quo_text
 #' @importFrom purrr map map_lgl pmap
+#' @family tidyfun data wrangling
 tf_evaluate.data.frame <- function(object, ..., arg) {
   # figure out which tf columns to evaluate:
   tf_cols <- names(object)[purrr::map_lgl(object, is_tf)]

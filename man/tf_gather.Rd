@@ -57,5 +57,11 @@ tf_gather(d, arg = seq(0, 1, l = 10))$cca
 tf_gather(d2, -id) # tf_gather(d2, matches("cca")); tf_gather(d2, -1); etc
 }
 \seealso{
-dplyr::select() tf::tfd() tf_nest() tf_unnest()
+dplyr::select()
+
+Other tidyfun data wrangling functions: 
+\code{\link{tf_nest}()},
+\code{\link{tf_spread}()},
+\code{\link{tf_unnest}()}
 }
+\concept{tidyfun data wrangling functions}

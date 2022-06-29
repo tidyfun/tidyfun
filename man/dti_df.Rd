@@ -18,4 +18,9 @@ If you use this data as an example in written work, please
 include the following acknowledgment: “The MRI/DTI data were collected
 at Johns Hopkins University and the Kennedy-Krieger Institute"
 }
+\seealso{
+Other tidyfun datasets: 
+\code{\link{chf_df}}
+}
+\concept{tidyfun datasets}
 \keyword{data}

@@ -23,3 +23,4 @@ Summarize tidy functional data for tibble
 \details{
 see \code{\link[pillar:type_sum]{pillar::type_sum()}}
 }
+\concept{tidyfun print}

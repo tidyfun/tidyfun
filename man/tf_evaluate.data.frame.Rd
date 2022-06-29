@@ -32,3 +32,4 @@ list of \code{arg}-vectors or -lists used as the \code{arg} argument for the
 \code{...} is not used for a \code{tf}-\code{object}, but a second unnamed argument to these
 methods will be interpreted as \code{arg}.
 }
+\concept{tidyfun data wrangling}

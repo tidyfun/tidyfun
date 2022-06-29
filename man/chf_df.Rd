@@ -12,4 +12,9 @@ to Accelerometry-Measured Physical Activity in Clinical
 Populations" by Huang et al.; these data are public,
 with download information in the paper.
 }
+\seealso{
+Other tidyfun datasets: 
+\code{\link{dti_df}}
+}
+\concept{tidyfun datasets}
 \keyword{data}

@@ -35,6 +35,7 @@ is.discrete <- function(x) {
 #' @export
 #' @importFrom grid unit grobTree textGrob gpar 
 #' @importFrom rlang `%||%`
+#' @family tidyfun visualization
 #' @examples
 #' \dontrun{
 #' set.seed(1221)
