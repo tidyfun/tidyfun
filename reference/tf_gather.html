@@ -20,12 +20,18 @@ containing the functional measurements of the columns given in ....'><!-- mathja
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidyfun</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.95</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.97</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav"><li>
+  <a href="https://github.com/tidyfun/tidyfun" class="external-link">
+    <span class="fa fa-github"></span>
+     
+  </a>
+</li>
+<li>
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
@@ -78,15 +84,15 @@ containing the functional measurements of the columns given in <code>...</code>.
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">tf_gather</span><span class="op">(</span>
-  <span class="va">data</span>,
-  <span class="va">...</span>,
-  key <span class="op">=</span> <span class="st">".tfd"</span>,
-  arg <span class="op">=</span> <span class="cn">NULL</span>,
-  domain <span class="op">=</span> <span class="cn">NULL</span>,
-  evaluator <span class="op">=</span> <span class="va">tf_approx_linear</span>,
-  resolution <span class="op">=</span> <span class="cn">NULL</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">tf_gather</span><span class="op">(</span></span>
+<span>  <span class="va">data</span>,</span>
+<span>  <span class="va">...</span>,</span>
+<span>  key <span class="op">=</span> <span class="st">".tfd"</span>,</span>
+<span>  arg <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  domain <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  evaluator <span class="op">=</span> <span class="va">tf_approx_linear</span>,</span>
+<span>  resolution <span class="op">=</span> <span class="cn">NULL</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -94,6 +100,8 @@ containing the functional measurements of the columns given in <code>...</code>.
     <dl><dt>data</dt>
 <dd><p>a data frame -- note that <code>dplyr</code> does not handle matrix columns well,
 if <code>data</code> contains more than one of those, <code>tf_gather</code> will fail...</p></dd>
+
+
 <dt>...</dt>
 <dd><p>A selection of columns to collect as a <code>tfd</code> object. Each column
 represents measurements of a functional variable at a specific <code>arg</code>-val.
@@ -101,33 +109,51 @@ Can also be the name of a matrix-valued column, but see above.
 If empty, all variables are selected. You can supply bare variable names,
 select all variables between x and z with x:z, exclude y with -y. For more
 options, see the <code><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">dplyr::select()</a></code> documentation.</p></dd>
+
+
 <dt>key</dt>
-<dd><p>the name of the created <code>tfd</code>-column. Defaults to <code>".tfd"</code>, and
+<dd><p>the name of the created <code>tfd</code>-column. Defaults to <code>".tfd"</code>, but
 the function will try to guess the name based on the column names of the
 gathered columns in this case. If a common prefix of all column names
 is found, this is used instead. You also get a message about this.</p></dd>
+
+
 <dt>arg</dt>
-<dd><p>If not provided, will be guessed from the column names as well.
-See <code><a href="tfd.html">tfd()</a></code>.</p></dd>
+<dd><p>optional. Argument values for the functions. If not provided, will be guessed from the column names as well.
+See also <code><a href="https://tidyfun.github.io/tf/reference/tfd.html" class="external-link">tf::tfd()</a></code>.</p></dd>
+
+
 <dt>domain</dt>
-<dd><p>range of the <code>arg</code>.</p></dd>
+<dd><p>optional. Range of possible <code>arg</code>-values. See <code><a href="https://tidyfun.github.io/tf/reference/tfd.html" class="external-link">tf::tfd()</a></code> for details.</p></dd>
+
+
 <dt>evaluator</dt>
-<dd><p>a function accepting arguments <code>x, arg, evaluations</code>. See details for <code><a href="tfd.html">tfd()</a></code>.</p></dd>
+<dd><p>optional. A function accepting arguments x, arg, evaluations. See <code><a href="https://tidyfun.github.io/tf/reference/tfd.html" class="external-link">tf::tfd()</a></code> for details.</p></dd>
+
+
 <dt>resolution</dt>
-<dd><p>resolution of the evaluation grid. See details for <code><a href="tfd.html">tfd()</a></code>.</p></dd>
+<dd><p>optional. Resolution of the evaluation grid in <code>arg</code>. See <code><a href="https://tidyfun.github.io/tf/reference/tfd.html" class="external-link">tf::tfd()</a></code> for details.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>a modified <code>data.frame</code> with a <code>tfd</code> column replacing the <code>...</code>.</p>
+    
+
+<p>a modified <code>data.frame</code> with a <code>tfd</code> column replacing the <code>...</code>.</p>
     </div>
     <div id="see-also">
     <h2>See also</h2>
-    <div class="dont-index"><p>dplyr::select() tfd() tf_nest() tf_unnest()</p></div>
+    <div class="dont-index"><p>dplyr::select()</p>
+<p>Other tidyfun data wrangling functions: 
+<code><a href="tf_evaluate.data.frame.html">tf_evaluate.data.frame</a>()</code>,
+<code><a href="tf_nest.html">tf_nest</a>()</code>,
+<code><a href="tf_spread.html">tf_spread</a>()</code>,
+<code><a href="tf_unnest.html">tf_unnest</a>()</code></p></div>
     </div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="op">(</span><span class="va">d</span> <span class="op">&lt;-</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/tbl_df.html" class="external-link">as.tbl</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="fu">refund</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/refund/man/DTI.html" class="external-link">DTI</a></span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>,<span class="op">]</span><span class="op">$</span><span class="va">cca</span><span class="op">[</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">]</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="op">(</span><span class="va">d</span> <span class="op">&lt;-</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/tbl_df.html" class="external-link">as.tbl</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="fu">refund</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/refund/man/DTI.html" class="external-link">DTI</a></span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>,<span class="op">]</span><span class="op">$</span><span class="va">cca</span><span class="op">[</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">]</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>`as.tbl()` was deprecated in dplyr 1.0.0.</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> Please use `tibble::as_tibble()` instead.</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #555555;">This warning is displayed once every 8 hours.</span></span>
@@ -140,7 +166,7 @@ See <code><a href="tfd.html">tfd()</a></code>.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> 0.502 0.514 0.539 0.574 0.603 0.634 0.636 0.635 0.620  0.609</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> 0.402 0.423 0.440 0.460 0.475 0.499 0.517 0.555 0.583  0.601</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> 0.402 0.406 0.399 0.386 0.409 0.425 0.430 0.445 0.487  0.510</span>
-<span class="r-in"><span class="fu">tf_gather</span><span class="op">(</span><span class="va">d</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu">tf_gather</span><span class="op">(</span><span class="va">d</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> creating new tfd-column &lt;cca&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 5 × 1</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                                 cca</span>
@@ -150,7 +176,7 @@ See <code><a href="tfd.html">tfd()</a></code>.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> [3]: (1,0.5);(2,0.5);(3,0.5); ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> [4]: (1,0.4);(2,0.4);(3,0.4); ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> [5]: (1,0.4);(2,0.4);(3,0.4); ...</span>
-<span class="r-in"><span class="fu">tf_gather</span><span class="op">(</span><span class="va">d</span>, key <span class="op">=</span> <span class="st">"cca_tf"</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu">tf_gather</span><span class="op">(</span><span class="va">d</span>, key <span class="op">=</span> <span class="st">"cca_tf"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 5 × 1</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                              cca_tf</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                           <span style="color: #949494; font-style: italic;">&lt;tfd_reg&gt;</span></span>
@@ -159,7 +185,7 @@ See <code><a href="tfd.html">tfd()</a></code>.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> [3]: (1,0.5);(2,0.5);(3,0.5); ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> [4]: (1,0.4);(2,0.4);(3,0.4); ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> [5]: (1,0.4);(2,0.4);(3,0.4); ...</span>
-<span class="r-in"><span class="fu">tf_gather</span><span class="op">(</span><span class="va">d</span>, arg <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, l <span class="op">=</span> <span class="fl">10</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="va">cca</span></span>
+<span class="r-in"><span><span class="fu">tf_gather</span><span class="op">(</span><span class="va">d</span>, arg <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, l <span class="op">=</span> <span class="fl">10</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="va">cca</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> creating new tfd-column &lt;cca&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> tfd[5] on (0,1) based on 10 evaluations each</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> interpolation by tf_approx_linear </span>
@@ -168,7 +194,7 @@ See <code><a href="tfd.html">tfd()</a></code>.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [3]: (0.00,0.50);(0.11,0.51);(0.22,0.54); ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [4]: (0.00,0.40);(0.11,0.42);(0.22,0.44); ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [5]: (0.00,0.40);(0.11,0.41);(0.22,0.40); ...</span>
-<span class="r-in"><span class="op">(</span><span class="va">d2</span> <span class="op">&lt;-</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind.html" class="external-link">bind_cols</a></span><span class="op">(</span>id <span class="op">=</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/rownames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">d</span><span class="op">)</span>, <span class="va">d</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="op">(</span><span class="va">d2</span> <span class="op">&lt;-</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind.html" class="external-link">bind_cols</a></span><span class="op">(</span>id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">d</span><span class="op">)</span>, <span class="va">d</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 5 × 11</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   id    cca_1 cca_2 cca_3 cca_4 cca_5 cca_6 cca_7 cca_8 cca_9 cca_10</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
@@ -177,7 +203,7 @@ See <code><a href="tfd.html">tfd()</a></code>.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> 3     0.502 0.514 0.539 0.574 0.603 0.634 0.636 0.635 0.620  0.609</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> 4     0.402 0.423 0.440 0.460 0.475 0.499 0.517 0.555 0.583  0.601</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> 5     0.402 0.406 0.399 0.386 0.409 0.425 0.430 0.445 0.487  0.510</span>
-<span class="r-in"><span class="fu">tf_gather</span><span class="op">(</span><span class="va">d2</span>, <span class="op">-</span><span class="va">id</span><span class="op">)</span> <span class="co"># tf_gather(d2, matches("cca")); tf_gather(d2, -1); etc</span></span>
+<span class="r-in"><span><span class="fu">tf_gather</span><span class="op">(</span><span class="va">d2</span>, <span class="op">-</span><span class="va">id</span><span class="op">)</span> <span class="co"># tf_gather(d2, matches("cca")); tf_gather(d2, -1); etc</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> creating new tfd-column &lt;cca&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 5 × 2</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   id                                  cca</span>
@@ -201,7 +227,7 @@ See <code><a href="tfd.html">tfd()</a></code>.</p></dd>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
 </div>
 
       </footer></div>

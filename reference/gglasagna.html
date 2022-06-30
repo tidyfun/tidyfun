@@ -17,12 +17,18 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidyfun</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.95</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.97</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav"><li>
+  <a href="https://github.com/tidyfun/tidyfun" class="external-link">
+    <span class="fa fa-github"></span>
+     
+  </a>
+</li>
+<li>
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
@@ -72,44 +78,59 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">gglasagna</span><span class="op">(</span>
-  <span class="va">data</span>,
-  <span class="va">y</span>,
-  order <span class="op">=</span> <span class="cn">NULL</span>,
-  label <span class="op">=</span> <span class="cn">NULL</span>,
-  arg <span class="op">=</span> <span class="cn">NULL</span>,
-  order_by <span class="op">=</span> <span class="cn">NULL</span>,
-  order_ticks <span class="op">=</span> <span class="cn">TRUE</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">gglasagna</span><span class="op">(</span></span>
+<span>  <span class="va">data</span>,</span>
+<span>  <span class="va">tf</span>,</span>
+<span>  order <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  label <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  arg <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  order_by <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  order_ticks <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>data</dt>
 <dd><p>the data. Duhh.</p></dd>
-<dt>y</dt>
+
+
+<dt>tf</dt>
 <dd><p>bare name of the <code>tf</code> column to visualize</p></dd>
+
+
 <dt>order</dt>
 <dd><p>(optional) bare name of a column in <code>data</code> to define vertical
 order of lasagna layers.</p></dd>
+
+
 <dt>label</dt>
 <dd><p>(optional) bare name of a column in <code>data</code> to define labels for
 lasagna layers. Defaults to names of <code>y</code>, if present, or row numbers.</p></dd>
+
+
 <dt>arg</dt>
 <dd><p><code>arg</code> to evaluate <code>y</code> om</p></dd>
+
+
 <dt>order_by</dt>
 <dd><p>a function applied to each row in <code>y[, arg]</code> that must
 return a scalar value to define the order of lasagna layers.</p></dd>
+
+
 <dt>order_ticks</dt>
 <dd><p>add horizontal lines indicating borders between levels of
 <code>order</code> (if it is a discrete variable) and labels for its levels?
 Defaults to TRUE. Supply a list of arguments (grep source code for `order_ticks_args``)
 to override default appearance of labels.
 <strong>Switch this off if you use facetting, it's a hack and will produce nonsense.</strong></p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>a `ggplot2`` object</p>
+    
+
+<p>a `ggplot2`` object</p>
     </div>
     <div id="details">
     <h2>Details</h2>
@@ -117,29 +138,35 @@ to override default appearance of labels.
 <li><p>the values returned by <code>order_by</code> (if provided),</p></li>
 <li><p>and the row number of the observations.</p></li>
 </ul><p>i.e., lowest values are on top so that by default the first layer is the first
-observation in <code>data</code> and the vertical order of the layers corresponds to the
-ordering of observations for <code>arrange(data, order, order_by(value), row_number())</code>.</p>
+observation in <code>data</code> and the vertical order of the layers is the
+ordering of observations obtained by <code>dplyr::arrange(data, order, order_by(value), row_number())</code>.</p>
+    </div>
+    <div id="see-also">
+    <h2>See also</h2>
+    <div class="dont-index"><p>Other tidyfun visualization: 
+<code><a href="ggcapellini.html">ggcapellini</a></code>,
+<code><a href="ggspaghetti.html">ggspaghetti</a></code></p></div>
     </div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1221</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">data</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/expand.grid.html" class="external-link">expand.grid</a></span><span class="op">(</span>group <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">)</span>, rep <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">data</span> <span class="op">=</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span><span class="va">data</span>, </span>
-<span class="r-in">                     id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="va">group</span>, <span class="va">rep</span>, sep <span class="op">=</span> <span class="st">"-"</span><span class="op">)</span>, </span>
-<span class="r-in">                     f <span class="op">=</span>  <span class="fu"><a href="tf_rgp.html">tf_rgp</a></span><span class="op">(</span><span class="fl">50</span><span class="op">)</span>,</span>
-<span class="r-in">                     fb <span class="op">=</span> <span class="fu"><a href="tfb.html">tfb</a></span><span class="op">(</span><span class="va">f</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu">gglasagna</span><span class="op">(</span><span class="va">data</span>, <span class="va">f</span>, label <span class="op">=</span> <span class="va">id</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu">gglasagna</span><span class="op">(</span><span class="va">data</span>, <span class="va">fb</span>, label <span class="op">=</span> <span class="va">id</span>, order <span class="op">=</span> <span class="va">group</span><span class="op">)</span></span>
-<span class="r-in"><span class="co"># order is lowest first / on top by default</span></span>
-<span class="r-in"><span class="fu">gglasagna</span><span class="op">(</span><span class="va">data</span>, <span class="va">f</span>, label <span class="op">=</span> <span class="va">id</span>, order <span class="op">=</span> <span class="fu"><a href="tf_depth.html">tf_depth</a></span><span class="op">(</span><span class="va">f</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu">gglasagna</span><span class="op">(</span><span class="va">data</span>, <span class="va">f</span>, label <span class="op">=</span> <span class="va">id</span>, order_by <span class="op">=</span> <span class="va">first</span><span class="op">)</span> <span class="op">+</span></span>
-<span class="r-in">  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap</a></span><span class="op">(</span><span class="op">~</span><span class="va">group</span>, scales <span class="op">=</span> <span class="st">"free"</span><span class="op">)</span></span>
-<span class="r-in"><span class="co"># order of layers is by "order_by" within "order":</span></span>
-<span class="r-in"><span class="fu">gglasagna</span><span class="op">(</span><span class="va">data</span>, <span class="va">fb</span>, label <span class="op">=</span> <span class="va">id</span>, order <span class="op">=</span> <span class="va">group</span>, order_by <span class="op">=</span> <span class="va">first</span><span class="op">)</span></span>
-<span class="r-in"><span class="op">}</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1221</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">data</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/expand.grid.html" class="external-link">expand.grid</a></span><span class="op">(</span>group <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">)</span>, rep <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">data</span> <span class="op">=</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span><span class="va">data</span>, </span></span>
+<span class="r-in"><span>                     id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="va">group</span>, <span class="va">rep</span>, sep <span class="op">=</span> <span class="st">"-"</span><span class="op">)</span>, </span></span>
+<span class="r-in"><span>                     f <span class="op">=</span>  <span class="fu"><a href="https://tidyfun.github.io/tf/reference/tf_rgp.html" class="external-link">tf_rgp</a></span><span class="op">(</span><span class="fl">50</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                     fb <span class="op">=</span> <span class="fu"><a href="https://tidyfun.github.io/tf/reference/tfb.html" class="external-link">tfb</a></span><span class="op">(</span><span class="va">f</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu">gglasagna</span><span class="op">(</span><span class="va">data</span>, <span class="va">f</span>, label <span class="op">=</span> <span class="va">id</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">gglasagna</span><span class="op">(</span><span class="va">data</span>, <span class="va">fb</span>, label <span class="op">=</span> <span class="va">id</span>, order <span class="op">=</span> <span class="va">group</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co"># order is lowest first / on top by default</span></span></span>
+<span class="r-in"><span><span class="fu">gglasagna</span><span class="op">(</span><span class="va">data</span>, <span class="va">f</span>, label <span class="op">=</span> <span class="va">id</span>, order <span class="op">=</span> <span class="fu"><a href="https://tidyfun.github.io/tf/reference/tf_depth.html" class="external-link">tf_depth</a></span><span class="op">(</span><span class="va">f</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">gglasagna</span><span class="op">(</span><span class="va">data</span>, <span class="va">f</span>, label <span class="op">=</span> <span class="va">id</span>, order_by <span class="op">=</span> <span class="va">first</span><span class="op">)</span> <span class="op">+</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap</a></span><span class="op">(</span><span class="op">~</span><span class="va">group</span>, scales <span class="op">=</span> <span class="st">"free"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co"># order of layers is by "order_by" within "order":</span></span></span>
+<span class="r-in"><span><span class="fu">gglasagna</span><span class="op">(</span><span class="va">data</span>, <span class="va">fb</span>, label <span class="op">=</span> <span class="va">id</span>, order <span class="op">=</span> <span class="va">group</span>, order_by <span class="op">=</span> <span class="va">first</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -154,7 +181,7 @@ ordering of observations for <code>arrange(data, order, order_by(value), row_num
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
 </div>
 
       </footer></div>

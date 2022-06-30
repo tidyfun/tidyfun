@@ -33,12 +33,18 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidyfun</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.95</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.97</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
+<li>
+  <a href="https://github.com/tidyfun/tidyfun" class="external-link">
+    <span class="fa fa-github"></span>
+     
+  </a>
+</li>
 <li>
   <a href="../reference/index.html">Reference</a>
 </li>
@@ -90,7 +96,7 @@
       <h1 data-toc-skip>tf Vectors and Operations</h1>
                         <h4 data-toc-skip class="author">Jeff Goldsmith, Fabian Scheipl</h4>
             
-            <h4 data-toc-skip class="date">2022-03-16</h4>
+            <h4 data-toc-skip class="date">2022-06-30</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/tidyfun/tidyfun/blob/HEAD/vignettes/x01_tf_Vectors.Rmd" class="external-link"><code>vignettes/x01_tf_Vectors.Rmd</code></a></small>
       <div class="hidden name"><code>x01_tf_Vectors.Rmd</code></div>
@@ -136,40 +142,40 @@
 </h3>
 <p>First we extract a <code>tf</code> vector from the <code><a href="../reference/dti_df.html">tidyfun::dti_df</a></code> dataset containing fractional anisotropy tract profiles for the corpus callosum (<code>cca</code>). When printed, <code>tf</code> vectors show the first few <code>arg</code> and <code>value</code> pairs for each subject.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"dti_df"</span><span class="op">)</span>
-
-<span class="va">cca</span> <span class="op">=</span> <span class="va">dti_df</span><span class="op">$</span><span class="va">cca</span>
-<span class="va">cca</span>
-<span class="co">## tfd[382] on (0,1) based on 73 to 93 (mean: 93) evaluations each</span>
-<span class="co">## inter-/extrapolation by tf_approx_linear </span>
-<span class="co">## 1001_1: (0.000,0.49);(0.011,0.52);(0.022,0.54); ...</span>
-<span class="co">## 1002_1: (0.000,0.47);(0.011,0.49);(0.022,0.50); ...</span>
-<span class="co">## 1003_1: (0.000,0.50);(0.011,0.51);(0.022,0.54); ...</span>
-<span class="co">## 1004_1: (0.000,0.40);(0.011,0.42);(0.022,0.44); ...</span>
-<span class="co">## 1005_1: (0.000,0.40);(0.011,0.41);(0.022,0.40); ...</span>
-<span class="co">## 1006_1: (0.000,0.45);(0.011,0.45);(0.022,0.46); ...</span>
-<span class="co">## 1007_1: (0.000,0.55);(0.011,0.56);(0.022,0.56); ...</span>
-<span class="co">## 1008_1: (0.000,0.45);(0.011,0.48);(0.022,0.50); ...</span>
-<span class="co">## 1009_1: (0.000,0.50);(0.011,0.51);(0.022,0.52); ...</span>
-<span class="co">## 1010_1: (0.000,0.46);(0.011,0.47);(0.022,0.48); ...</span>
-<span class="co">##     [....]   (372 not shown)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"dti_df"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">cca</span> <span class="op">=</span> <span class="va">dti_df</span><span class="op">$</span><span class="va">cca</span></span>
+<span><span class="va">cca</span></span>
+<span><span class="co">## tfd[382] on (0,1) based on 73 to 93 (mean: 93) evaluations each</span></span>
+<span><span class="co">## inter-/extrapolation by tf_approx_linear </span></span>
+<span><span class="co">## 1001_1: (0.000,0.49);(0.011,0.52);(0.022,0.54); ...</span></span>
+<span><span class="co">## 1002_1: (0.000,0.47);(0.011,0.49);(0.022,0.50); ...</span></span>
+<span><span class="co">## 1003_1: (0.000,0.50);(0.011,0.51);(0.022,0.54); ...</span></span>
+<span><span class="co">## 1004_1: (0.000,0.40);(0.011,0.42);(0.022,0.44); ...</span></span>
+<span><span class="co">## 1005_1: (0.000,0.40);(0.011,0.41);(0.022,0.40); ...</span></span>
+<span><span class="co">## 1006_1: (0.000,0.45);(0.011,0.45);(0.022,0.46); ...</span></span>
+<span><span class="co">## 1007_1: (0.000,0.55);(0.011,0.56);(0.022,0.56); ...</span></span>
+<span><span class="co">## 1008_1: (0.000,0.45);(0.011,0.48);(0.022,0.50); ...</span></span>
+<span><span class="co">## 1009_1: (0.000,0.50);(0.011,0.51);(0.022,0.52); ...</span></span>
+<span><span class="co">## 1010_1: (0.000,0.46);(0.011,0.47);(0.022,0.48); ...</span></span>
+<span><span class="co">##     [....]   (372 not shown)</span></span></code></pre></div>
 <p>We also extract a simple 5-element vector of functions on a regular grid:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">cca_five</span> <span class="op">&lt;-</span> <span class="va">cca</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, l <span class="op">=</span> <span class="fl">93</span><span class="op">)</span>, interpolate <span class="op">=</span> <span class="cn">TRUE</span><span class="op">]</span>
-<span class="fu"><a href="https://tibble.tidyverse.org/reference/rownames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">cca_five</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">LETTERS</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span>
-<span class="va">cca_five</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/tfd.html">tfd</a></span><span class="op">(</span><span class="va">cca_five</span>, signif <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>
-<span class="va">cca_five</span>
-<span class="co">## tfd[5] on (0,1) based on 93 evaluations each</span>
-<span class="co">## interpolation by tf_approx_linear </span>
-<span class="co">## A: (0.000,0.49);(0.011,0.52);(0.022,0.54); ...</span>
-<span class="co">## B: (0.000,0.47);(0.011,0.49);(0.022,0.50); ...</span>
-<span class="co">## C: (0.000,0.50);(0.011,0.51);(0.022,0.54); ...</span>
-<span class="co">## D: (0.000,0.40);(0.011,0.42);(0.022,0.44); ...</span>
-<span class="co">## E: (0.000,0.40);(0.011,0.41);(0.022,0.40); ...</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">cca_five</span> <span class="op">&lt;-</span> <span class="va">cca</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, l <span class="op">=</span> <span class="fl">93</span><span class="op">)</span>, interpolate <span class="op">=</span> <span class="cn">TRUE</span><span class="op">]</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">cca_five</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">LETTERS</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span></span>
+<span><span class="va">cca_five</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tidyfun.github.io/tf/reference/tfd.html" class="external-link">tfd</a></span><span class="op">(</span><span class="va">cca_five</span>, signif <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
+<span><span class="va">cca_five</span></span>
+<span><span class="co">## tfd[5] on (0,1) based on 93 evaluations each</span></span>
+<span><span class="co">## interpolation by tf_approx_linear </span></span>
+<span><span class="co">## A: (0.000,0.49);(0.011,0.52);(0.022,0.54); ...</span></span>
+<span><span class="co">## B: (0.000,0.47);(0.011,0.49);(0.022,0.50); ...</span></span>
+<span><span class="co">## C: (0.000,0.50);(0.011,0.51);(0.022,0.54); ...</span></span>
+<span><span class="co">## D: (0.000,0.40);(0.011,0.42);(0.022,0.44); ...</span></span>
+<span><span class="co">## E: (0.000,0.40);(0.011,0.41);(0.022,0.40); ...</span></span></code></pre></div>
 <p>For illustration, we plot the vector <code>cca_five</code> below.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">cca_five</span>, xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">0.15</span>, <span class="fl">1</span><span class="op">)</span>, col <span class="op">=</span> <span class="va">pal_5</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/text.html" class="external-link">text</a></span><span class="op">(</span>x <span class="op">=</span> <span class="op">-</span><span class="fl">.1</span>, y <span class="op">=</span> <span class="va">cca_five</span><span class="op">[</span>,<span class="fl">0.07</span><span class="op">]</span>, labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">cca_five</span><span class="op">)</span>, col <span class="op">=</span> <span class="va">pal_5</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">cca_five</span>, xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">0.15</span>, <span class="fl">1</span><span class="op">)</span>, col <span class="op">=</span> <span class="va">pal_5</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/text.html" class="external-link">text</a></span><span class="op">(</span>x <span class="op">=</span> <span class="op">-</span><span class="fl">.1</span>, y <span class="op">=</span> <span class="va">cca_five</span><span class="op">[</span>,<span class="fl">0.07</span><span class="op">]</span>, labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">cca_five</span><span class="op">)</span>, col <span class="op">=</span> <span class="va">pal_5</span><span class="op">)</span></span></code></pre></div>
 <p><img src="x01_tf_Vectors_files/figure-html/ex-fig-1.png" width="90%"></p>
 </div>
 <div class="section level3">
@@ -183,43 +189,41 @@
 <li>has a <strong><code>domain</code></strong>: the range of valid <strong><code>arg</code></strong>s.</li>
 </ul>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">cca_five</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/tfmethods.html">tf_evaluations</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="va">str</span>
-<span class="co">## List of 5</span>
-<span class="co">##  $ A: num [1:93] 0.491 0.517 0.536 0.555 0.593 ...</span>
-<span class="co">##  $ B: num [1:93] 0.472 0.487 0.502 0.523 0.552 ...</span>
-<span class="co">##  $ C: num [1:93] 0.502 0.514 0.539 0.574 0.603 ...</span>
-<span class="co">##  $ D: num [1:93] 0.402 0.423 0.44 0.46 0.475 ...</span>
-<span class="co">##  $ E: num [1:93] 0.402 0.406 0.399 0.386 0.409 ...</span>
-<span class="va">cca_five</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/tfmethods.html">tf_arg</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="va">str</span>
-<span class="co">##  num [1:93] 0 0.0109 0.0217 0.0326 0.0435 ...</span>
-<span class="va">cca_five</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/tfmethods.html">tf_domain</a></span><span class="op">(</span><span class="op">)</span> 
-<span class="co">## [1] 0 1</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">cca_five</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://tidyfun.github.io/tf/reference/tfmethods.html" class="external-link">tf_evaluations</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="va">str</span></span>
+<span><span class="co">## List of 5</span></span>
+<span><span class="co">##  $ A: num [1:93] 0.491 0.517 0.536 0.555 0.593 ...</span></span>
+<span><span class="co">##  $ B: num [1:93] 0.472 0.487 0.502 0.523 0.552 ...</span></span>
+<span><span class="co">##  $ C: num [1:93] 0.502 0.514 0.539 0.574 0.603 ...</span></span>
+<span><span class="co">##  $ D: num [1:93] 0.402 0.423 0.44 0.46 0.475 ...</span></span>
+<span><span class="co">##  $ E: num [1:93] 0.402 0.406 0.399 0.386 0.409 ...</span></span>
+<span><span class="va">cca_five</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://tidyfun.github.io/tf/reference/tfmethods.html" class="external-link">tf_arg</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="va">str</span></span>
+<span><span class="co">##  num [1:93] 0 0.0109 0.0217 0.0326 0.0435 ...</span></span>
+<span><span class="va">cca_five</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://tidyfun.github.io/tf/reference/tfmethods.html" class="external-link">tf_domain</a></span><span class="op">(</span><span class="op">)</span> </span>
+<span><span class="co">## [1] 0 1</span></span></code></pre></div>
 <ul>
 <li>each <strong><code>tfd</code></strong>-vector contains an <strong><code>evaluator</code></strong> function that defines how to inter-/extrapolate <code>evaluations</code> between <code>arg</code>s (and remembers results of previous calls)</li>
 </ul>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/tfmethods.html">tf_evaluator</a></span><span class="op">(</span><span class="va">cca_five</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="va">str</span>
-<span class="co">## function (x, arg, evaluations)  </span>
-<span class="co">##  - attr(*, "memoised")= logi TRUE</span>
-<span class="co">##  - attr(*, "class")= chr [1:2] "memoised" "function"</span>
-<span class="fu"><a href="../reference/tfmethods.html">tf_evaluator</a></span><span class="op">(</span><span class="va">cca_five</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">tf_approx_spline</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://tidyfun.github.io/tf/reference/tfmethods.html" class="external-link">tf_evaluator</a></span><span class="op">(</span><span class="va">cca_five</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="va">str</span></span>
+<span><span class="co">## function (x, arg, evaluations)</span></span>
+<span><span class="fu"><a href="https://tidyfun.github.io/tf/reference/tfmethods.html" class="external-link">tf_evaluator</a></span><span class="op">(</span><span class="va">cca_five</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">tf_approx_spline</span></span></code></pre></div>
 <ul>
 <li>
 <strong><code>tfd</code></strong> has two subclasses: one for regular data with a common grid and one for irregular or sparse data. The <code>cca</code> data are irregular (values are missing for some subjects at some arguments) but the example below more clearly illustrates support for sparse and irregular data using CD4 cell counts from a longitudinal study.</li>
 </ul>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">cd4_vec</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/tfd.html">tfd</a></span><span class="op">(</span><span class="fu">refund</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/refund/man/cd4.html" class="external-link">cd4</a></span><span class="op">)</span>
-
-<span class="va">cd4_vec</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">]</span>
-<span class="co">## tfd[2] on (-18,42) based on 3 to 4 (mean: 4) evaluations each</span>
-<span class="co">## inter-/extrapolation by tf_approx_linear </span>
-<span class="co">## [1]: (-9,548);(-3,893);( 3,657)</span>
-<span class="co">## [2]: (-3,752);( 3,459);( 9,181); ...</span>
-<span class="va">cd4_vec</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">]</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/tfmethods.html">tf_arg</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="va">str</span>
-<span class="co">## List of 2</span>
-<span class="co">##  $ : num [1:3] -9 -3 3</span>
-<span class="co">##  $ : num [1:4] -3 3 9 15</span>
-<span class="va">cd4_vec</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">20</span><span class="op">]</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>pch <span class="op">=</span> <span class="st">"x"</span>, col <span class="op">=</span> <span class="fu">viridis</span><span class="op">(</span><span class="fl">20</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">cd4_vec</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tidyfun.github.io/tf/reference/tfd.html" class="external-link">tfd</a></span><span class="op">(</span><span class="fu">refund</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/refund/man/cd4.html" class="external-link">cd4</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">cd4_vec</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">]</span></span>
+<span><span class="co">## tfd[2] on (-18,42) based on 3 to 4 (mean: 4) evaluations each</span></span>
+<span><span class="co">## inter-/extrapolation by tf_approx_linear </span></span>
+<span><span class="co">## [1]: (-9,548);(-3,893);( 3,657)</span></span>
+<span><span class="co">## [2]: (-3,752);( 3,459);( 9,181); ...</span></span>
+<span><span class="va">cd4_vec</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">]</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://tidyfun.github.io/tf/reference/tfmethods.html" class="external-link">tf_arg</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="va">str</span></span>
+<span><span class="co">## List of 2</span></span>
+<span><span class="co">##  $ : num [1:3] -9 -3 3</span></span>
+<span><span class="co">##  $ : num [1:4] -3 3 9 15</span></span>
+<span><span class="va">cd4_vec</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">20</span><span class="op">]</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>pch <span class="op">=</span> <span class="st">"x"</span>, col <span class="op">=</span> <span class="fu">viridis</span><span class="op">(</span><span class="fl">20</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="x01_tf_Vectors_files/figure-html/unnamed-chunk-3-1.png" width="90%"></p>
 </div>
 <div class="section level3">
@@ -241,18 +245,18 @@
 <li>significant memory and time savings:</li>
 </ul>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu">refund</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/refund/man/DTI.html" class="external-link">DTI</a></span><span class="op">$</span><span class="va">cca</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/utils/object.size.html" class="external-link">object.size</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span>units <span class="op">=</span> <span class="st">"Kb"</span><span class="op">)</span>
-<span class="co">## 307.7 Kb</span>
-<span class="va">cca</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/utils/object.size.html" class="external-link">object.size</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span>units <span class="op">=</span> <span class="st">"Kb"</span><span class="op">)</span>
-<span class="co">## 765.2 Kb</span>
-<span class="va">cca</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/tfb.html">tfb</a></span><span class="op">(</span>verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/utils/object.size.html" class="external-link">object.size</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span>units <span class="op">=</span> <span class="st">"Kb"</span><span class="op">)</span>
-<span class="co">## 192.2 Kb</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">refund</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/refund/man/DTI.html" class="external-link">DTI</a></span><span class="op">$</span><span class="va">cca</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/utils/object.size.html" class="external-link">object.size</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span>units <span class="op">=</span> <span class="st">"Kb"</span><span class="op">)</span></span>
+<span><span class="co">## 307.7 Kb</span></span>
+<span><span class="va">cca</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/utils/object.size.html" class="external-link">object.size</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span>units <span class="op">=</span> <span class="st">"Kb"</span><span class="op">)</span></span>
+<span><span class="co">## 782.4 Kb</span></span>
+<span><span class="va">cca</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://tidyfun.github.io/tf/reference/tfb.html" class="external-link">tfb</a></span><span class="op">(</span>verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/utils/object.size.html" class="external-link">object.size</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span>units <span class="op">=</span> <span class="st">"Kb"</span><span class="op">)</span></span>
+<span><span class="co">## 182.8 Kb</span></span></code></pre></div>
 <div class="section level4">
 <h4 id="tfb_spline-spline-basis">
 <strong><code>tfb_spline</code></strong>: spline basis<a class="anchor" aria-label="anchor" href="#tfb_spline-spline-basis"></a>
 </h4>
 <ul>
-<li>default for <code><a href="../reference/tfb.html">tfb()</a></code>
+<li>default for <code><a href="https://tidyfun.github.io/tf/reference/tfb.html" class="external-link">tfb()</a></code>
 </li>
 <li>accepts all arguments of <code>mgcv</code>’s <code>s()</code>-syntax: control basis type <code>bs</code>, basis dimension <code>k</code>, penalty order <code>m</code>
 </li>
@@ -264,53 +268,53 @@
 </li>
 </ul>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">cca_five_b</span> <span class="op">&lt;-</span> <span class="va">cca_five</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/tfb.html">tfb</a></span><span class="op">(</span><span class="op">)</span>
-<span class="co">## Percentage of input data variability preserved in basis representation</span>
-<span class="co">## (per functional observation, approximate):</span>
-<span class="co">##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span>
-<span class="co">##   95.60   96.40   96.90   97.12   98.00   98.70</span>
-<span class="va">cca_five_b</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">]</span>
-<span class="co">## tfb[2] on (0,1) in basis representation:</span>
-<span class="co">##  using  s(arg, bs = "cr", k = 25) </span>
-<span class="co">## A: (0.000,0.49);(0.011,0.52);(0.022,0.54); ...</span>
-<span class="co">## B: (0.000,0.47);(0.011,0.49);(0.022,0.51); ...</span>
-<span class="va">cca_five</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">]</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/tfb.html">tfb</a></span><span class="op">(</span>bs <span class="op">=</span> <span class="st">"tp"</span>, k <span class="op">=</span> <span class="fl">55</span><span class="op">)</span>
-<span class="co">## Percentage of input data variability preserved in basis representation</span>
-<span class="co">## (per functional observation, approximate):</span>
-<span class="co">##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span>
-<span class="co">##   99.10   99.22   99.35   99.35   99.47   99.60</span>
-<span class="co">## tfb[2] on (0,1) in basis representation:</span>
-<span class="co">##  using  s(arg, bs = "tp", k = 55) </span>
-<span class="co">## A: (0.000,0.49);(0.011,0.52);(0.022,0.54); ...</span>
-<span class="co">## B: (0.000,0.47);(0.011,0.49);(0.022,0.50); ...</span>
-<span class="va">cca_five</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">]</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/tfb.html">tfb</a></span><span class="op">(</span>bs <span class="op">=</span> <span class="st">"ps"</span>, m <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">1</span><span class="op">)</span>, family <span class="op">=</span> <span class="fu">mgcv</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/mgcv/man/Beta.html" class="external-link">betar</a></span><span class="op">(</span>link <span class="op">=</span> <span class="st">"cloglog"</span><span class="op">)</span><span class="op">)</span>
-<span class="co">## Percentage of input data variability preserved in basis representation</span>
-<span class="co">## (on inverse link-scale, per functional observation, approximate):</span>
-<span class="co">##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span>
-<span class="co">##   99.40   99.47   99.55   99.55   99.62   99.70</span>
-<span class="co">## tfb[2] on (0,1) in basis representation:</span>
-<span class="co">##  using  s(arg, bs = "ps", m = c(2, 1), k = 25) </span>
-<span class="co">## A: (0.000,0.49);(0.011,0.51);(0.022,0.54); ...</span>
-<span class="co">## B: (0.000,0.47);(0.011,0.49);(0.022,0.51); ...</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">cca_five_b</span> <span class="op">&lt;-</span> <span class="va">cca_five</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://tidyfun.github.io/tf/reference/tfb.html" class="external-link">tfb</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">## Percentage of input data variability preserved in basis representation</span></span>
+<span><span class="co">## (per functional observation, approximate):</span></span>
+<span><span class="co">##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span></span>
+<span><span class="co">##   95.60   96.40   96.90   97.12   98.00   98.70</span></span>
+<span><span class="va">cca_five_b</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">]</span></span>
+<span><span class="co">## tfb[2] on (0,1) in basis representation:</span></span>
+<span><span class="co">##  using  s(arg, bs = "cr", k = 25) </span></span>
+<span><span class="co">## A: (0.000,0.49);(0.011,0.52);(0.022,0.54); ...</span></span>
+<span><span class="co">## B: (0.000,0.47);(0.011,0.49);(0.022,0.51); ...</span></span>
+<span><span class="va">cca_five</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">]</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://tidyfun.github.io/tf/reference/tfb.html" class="external-link">tfb</a></span><span class="op">(</span>bs <span class="op">=</span> <span class="st">"tp"</span>, k <span class="op">=</span> <span class="fl">55</span><span class="op">)</span></span>
+<span><span class="co">## Percentage of input data variability preserved in basis representation</span></span>
+<span><span class="co">## (per functional observation, approximate):</span></span>
+<span><span class="co">##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span></span>
+<span><span class="co">##   99.10   99.22   99.35   99.35   99.47   99.60</span></span>
+<span><span class="co">## tfb[2] on (0,1) in basis representation:</span></span>
+<span><span class="co">##  using  s(arg, bs = "tp", k = 55) </span></span>
+<span><span class="co">## A: (0.000,0.49);(0.011,0.52);(0.022,0.54); ...</span></span>
+<span><span class="co">## B: (0.000,0.47);(0.011,0.49);(0.022,0.50); ...</span></span>
+<span><span class="va">cca_five</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">]</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://tidyfun.github.io/tf/reference/tfb.html" class="external-link">tfb</a></span><span class="op">(</span>bs <span class="op">=</span> <span class="st">"ps"</span>, m <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">1</span><span class="op">)</span>, family <span class="op">=</span> <span class="fu">mgcv</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/mgcv/man/Beta.html" class="external-link">betar</a></span><span class="op">(</span>link <span class="op">=</span> <span class="st">"cloglog"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">## Percentage of input data variability preserved in basis representation</span></span>
+<span><span class="co">## (on inverse link-scale, per functional observation, approximate):</span></span>
+<span><span class="co">##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span></span>
+<span><span class="co">##   99.40   99.47   99.55   99.55   99.62   99.70</span></span>
+<span><span class="co">## tfb[2] on (0,1) in basis representation:</span></span>
+<span><span class="co">##  using  s(arg, bs = "ps", m = c(2, 1), k = 25) </span></span>
+<span><span class="co">## A: (0.000,0.49);(0.011,0.51);(0.022,0.54); ...</span></span>
+<span><span class="co">## B: (0.000,0.47);(0.011,0.49);(0.022,0.51); ...</span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="penalization">Penalization:<a class="anchor" aria-label="anchor" href="#penalization"></a>
 </h4>
 <p><strong>Function-specific (default), none</strong>, prespecified (<code>sp</code>), or global:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/layout.html" class="external-link">layout</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span>
-<span class="va">cca_five</span>  <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="op">)</span>
-<span class="va">cca_five_b</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>col <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span>
-<span class="va">cca_five</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/tfb.html">tfb</a></span><span class="op">(</span>k <span class="op">=</span> <span class="fl">35</span>, penalized <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span>col <span class="op">=</span> <span class="st">"blue"</span><span class="op">)</span>
-<span class="co">## Percentage of input data variability preserved in basis representation</span>
-<span class="co">## (per functional observation, approximate):</span>
-<span class="co">##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span>
-<span class="co">##    98.5    98.6    98.7    99.0    99.6    99.6</span>
-<span class="va">cca_five</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/tfb.html">tfb</a></span><span class="op">(</span>sp <span class="op">=</span> <span class="fl">.001</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span>col <span class="op">=</span> <span class="st">"orange"</span><span class="op">)</span>
-<span class="co">## Percentage of input data variability preserved in basis representation</span>
-<span class="co">## (per functional observation, approximate):</span>
-<span class="co">##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span>
-<span class="co">##   72.60   75.90   76.50   76.54   77.20   80.50</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/layout.html" class="external-link">layout</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">cca_five</span>  <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">cca_five_b</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>col <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span></span>
+<span><span class="va">cca_five</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://tidyfun.github.io/tf/reference/tfb.html" class="external-link">tfb</a></span><span class="op">(</span>k <span class="op">=</span> <span class="fl">35</span>, penalized <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span>col <span class="op">=</span> <span class="st">"blue"</span><span class="op">)</span></span>
+<span><span class="co">## Percentage of input data variability preserved in basis representation</span></span>
+<span><span class="co">## (per functional observation, approximate):</span></span>
+<span><span class="co">##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span></span>
+<span><span class="co">##    98.5    98.6    98.7    99.0    99.6    99.6</span></span>
+<span><span class="va">cca_five</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://tidyfun.github.io/tf/reference/tfb.html" class="external-link">tfb</a></span><span class="op">(</span>sp <span class="op">=</span> <span class="fl">.001</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span>col <span class="op">=</span> <span class="st">"orange"</span><span class="op">)</span></span>
+<span><span class="co">## Percentage of input data variability preserved in basis representation</span></span>
+<span><span class="co">## (per functional observation, approximate):</span></span>
+<span><span class="co">##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span></span>
+<span><span class="co">##   72.60   75.90   76.50   76.54   77.20   80.50</span></span></code></pre></div>
 <p><img src="x01_tf_Vectors_files/figure-html/unnamed-chunk-6-1.png" width="90%"></p>
 <p><strong>“Global” smoothing</strong>:</p>
 <ol style="list-style-type: decimal">
@@ -331,20 +335,20 @@
 </ul>
 <p>Dataset with heterogeneous roughness:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/layout.html" class="external-link">layout</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">)</span><span class="op">)</span>
-<span class="va">clrs</span> <span class="op">&lt;-</span> <span class="fu">scales</span><span class="fu">::</span><span class="fu"><a href="https://scales.r-lib.org/reference/alpha.html" class="external-link">alpha</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu">viridis</span><span class="op">(</span><span class="fl">15</span><span class="op">)</span><span class="op">)</span>, <span class="fl">.5</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">raw</span>, main <span class="op">=</span> <span class="st">"raw"</span>, col <span class="op">=</span> <span class="va">clrs</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="../reference/tfb.html">tfb</a></span><span class="op">(</span><span class="va">raw</span>, k <span class="op">=</span> <span class="fl">55</span><span class="op">)</span>, main <span class="op">=</span> <span class="st">"separate"</span>, col <span class="op">=</span> <span class="va">clrs</span><span class="op">)</span>
-<span class="co">## Percentage of input data variability preserved in basis representation</span>
-<span class="co">## (per functional observation, approximate):</span>
-<span class="co">##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span>
-<span class="co">##   72.20   88.65   94.80   92.06   96.55   97.70</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="../reference/tfb.html">tfb</a></span><span class="op">(</span><span class="va">raw</span>, k <span class="op">=</span> <span class="fl">55</span>, global <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, main <span class="op">=</span> <span class="st">"global"</span>, col <span class="op">=</span> <span class="va">clrs</span><span class="op">)</span>
-<span class="co">## Using global smoothing parameter sp = 3.25e-05, estimated on subsample of curves.</span>
-<span class="co">## Percentage of input data variability preserved in basis representation</span>
-<span class="co">## (per functional observation, approximate):</span>
-<span class="co">##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span>
-<span class="co">##   71.20   80.35   86.40   86.46   95.00   96.90</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/layout.html" class="external-link">layout</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">clrs</span> <span class="op">&lt;-</span> <span class="fu">scales</span><span class="fu">::</span><span class="fu"><a href="https://scales.r-lib.org/reference/alpha.html" class="external-link">alpha</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu">viridis</span><span class="op">(</span><span class="fl">15</span><span class="op">)</span><span class="op">)</span>, <span class="fl">.5</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">raw</span>, main <span class="op">=</span> <span class="st">"raw"</span>, col <span class="op">=</span> <span class="va">clrs</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="https://tidyfun.github.io/tf/reference/tfb.html" class="external-link">tfb</a></span><span class="op">(</span><span class="va">raw</span>, k <span class="op">=</span> <span class="fl">55</span><span class="op">)</span>, main <span class="op">=</span> <span class="st">"separate"</span>, col <span class="op">=</span> <span class="va">clrs</span><span class="op">)</span></span>
+<span><span class="co">## Percentage of input data variability preserved in basis representation</span></span>
+<span><span class="co">## (per functional observation, approximate):</span></span>
+<span><span class="co">##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span></span>
+<span><span class="co">##   72.20   88.65   94.80   92.06   96.55   97.70</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="https://tidyfun.github.io/tf/reference/tfb.html" class="external-link">tfb</a></span><span class="op">(</span><span class="va">raw</span>, k <span class="op">=</span> <span class="fl">55</span>, global <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, main <span class="op">=</span> <span class="st">"global"</span>, col <span class="op">=</span> <span class="va">clrs</span><span class="op">)</span></span>
+<span><span class="co">## Using global smoothing parameter sp = 3.25e-05, estimated on subsample of curves.</span></span>
+<span><span class="co">## Percentage of input data variability preserved in basis representation</span></span>
+<span><span class="co">## (per functional observation, approximate):</span></span>
+<span><span class="co">##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span></span>
+<span><span class="co">##   71.20   80.35   86.40   86.46   95.00   96.90</span></span></code></pre></div>
 <p><img src="x01_tf_Vectors_files/figure-html/unnamed-chunk-8-1.png" width="90%"></p>
 </div>
 <div class="section level4">
@@ -359,27 +363,27 @@
 </li>
 </ul>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="op">(</span><span class="va">cca_five_fpc</span> <span class="op">&lt;-</span> <span class="va">cca_five</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/tfb_fpc.html">tfb_fpc</a></span><span class="op">(</span>pve <span class="op">=</span> <span class="fl">.999</span><span class="op">)</span><span class="op">)</span>
-<span class="co">## tfb[5] on (0,1) in basis representation:</span>
-<span class="co">##  using  4 FPCs </span>
-<span class="co">## A: (0.000,0.49);(0.011,0.52);(0.022,0.54); ...</span>
-<span class="co">## B: (0.000,0.47);(0.011,0.49);(0.022,0.50); ...</span>
-<span class="co">## C: (0.000,0.50);(0.011,0.51);(0.022,0.54); ...</span>
-<span class="co">## D: (0.000,0.40);(0.011,0.42);(0.022,0.44); ...</span>
-<span class="co">## E: (0.000,0.40);(0.011,0.41);(0.022,0.40); ...</span>
-<span class="op">(</span><span class="va">cca_five_fpc_lowrank</span> <span class="op">&lt;-</span> <span class="va">cca_five</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/tfb_fpc.html">tfb_fpc</a></span><span class="op">(</span>pve <span class="op">=</span> <span class="fl">.3</span><span class="op">)</span><span class="op">)</span>
-<span class="co">## tfb[5] on (0,1) in basis representation:</span>
-<span class="co">##  using  1 FPCs </span>
-<span class="co">## A: (0.000,0.47);(0.011,0.49);(0.022,0.51); ...</span>
-<span class="co">## B: (0.000,0.48);(0.011,0.49);(0.022,0.52); ...</span>
-<span class="co">## C: (0.000,0.46);(0.011,0.48);(0.022,0.50); ...</span>
-<span class="co">## D: (0.000,0.46);(0.011,0.48);(0.022,0.49); ...</span>
-<span class="co">## E: (0.000, 0.4);(0.011, 0.4);(0.022, 0.4); ...</span></code></pre></div>
+<code class="sourceCode R"><span><span class="op">(</span><span class="va">cca_five_fpc</span> <span class="op">&lt;-</span> <span class="va">cca_five</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://tidyfun.github.io/tf/reference/tfb_fpc.html" class="external-link">tfb_fpc</a></span><span class="op">(</span>pve <span class="op">=</span> <span class="fl">.999</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">## tfb[5] on (0,1) in basis representation:</span></span>
+<span><span class="co">##  using  4 FPCs </span></span>
+<span><span class="co">## A: (0.000,0.49);(0.011,0.52);(0.022,0.54); ...</span></span>
+<span><span class="co">## B: (0.000,0.47);(0.011,0.49);(0.022,0.50); ...</span></span>
+<span><span class="co">## C: (0.000,0.50);(0.011,0.51);(0.022,0.54); ...</span></span>
+<span><span class="co">## D: (0.000,0.40);(0.011,0.42);(0.022,0.44); ...</span></span>
+<span><span class="co">## E: (0.000,0.40);(0.011,0.41);(0.022,0.40); ...</span></span>
+<span><span class="op">(</span><span class="va">cca_five_fpc_lowrank</span> <span class="op">&lt;-</span> <span class="va">cca_five</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://tidyfun.github.io/tf/reference/tfb_fpc.html" class="external-link">tfb_fpc</a></span><span class="op">(</span>pve <span class="op">=</span> <span class="fl">.3</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">## tfb[5] on (0,1) in basis representation:</span></span>
+<span><span class="co">##  using  1 FPCs </span></span>
+<span><span class="co">## A: (0.000,0.47);(0.011,0.49);(0.022,0.51); ...</span></span>
+<span><span class="co">## B: (0.000,0.48);(0.011,0.49);(0.022,0.52); ...</span></span>
+<span><span class="co">## C: (0.000,0.46);(0.011,0.48);(0.022,0.50); ...</span></span>
+<span><span class="co">## D: (0.000,0.46);(0.011,0.48);(0.022,0.49); ...</span></span>
+<span><span class="co">## E: (0.000, 0.4);(0.011, 0.4);(0.022, 0.4); ...</span></span></code></pre></div>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/layout.html" class="external-link">layout</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span>
-<span class="va">cca_five</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="op">)</span>
-<span class="va">cca_five_fpc</span>  <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>col <span class="op">=</span> <span class="st">"red"</span>, ylab <span class="op">=</span> <span class="st">"tfb_fpc(cca_five)"</span><span class="op">)</span>
-<span class="va">cca_five_fpc_lowrank</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span>col <span class="op">=</span> <span class="st">"blue"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/layout.html" class="external-link">layout</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">cca_five</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">cca_five_fpc</span>  <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>col <span class="op">=</span> <span class="st">"red"</span>, ylab <span class="op">=</span> <span class="st">"tfb_fpc(cca_five)"</span><span class="op">)</span></span>
+<span><span class="va">cca_five_fpc_lowrank</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span>col <span class="op">=</span> <span class="st">"blue"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="x01_tf_Vectors_files/figure-html/unnamed-chunk-10-1.png" width="90%"></p>
 <p><code>tfb_fpc</code> is currently only implemented for data on identical (but possibly non-equidistant) grids. The <strong><code>{refunder}</code></strong> <code>rfr_fpca</code>-functions provide FPCA methods for irregular and sparse data and regularized/smoothed FPCA.</p>
 </div>
@@ -394,48 +398,48 @@
 <h4 id="subset-subassign">subset &amp; subassign:<a class="anchor" aria-label="anchor" href="#subset-subassign"></a>
 </h4>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">cca_five</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">]</span>
-<span class="co">## tfd[2] on (0,1) based on 93 evaluations each</span>
-<span class="co">## interpolation by tf_approx_spline </span>
-<span class="co">## A: (0.000,0.49);(0.011,0.52);(0.022,0.54); ...</span>
-<span class="co">## B: (0.000,0.47);(0.011,0.49);(0.022,0.50); ...</span>
-<span class="va">cca_five</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">]</span> <span class="op">=</span> <span class="va">cca_five</span><span class="op">[</span><span class="fl">2</span><span class="op">:</span><span class="fl">1</span><span class="op">]</span>
-<span class="va">cca_five</span>
-<span class="co">## tfd[5] on (0,1) based on 93 evaluations each</span>
-<span class="co">## interpolation by tf_approx_spline </span>
-<span class="co">## B: (0.000,0.47);(0.011,0.49);(0.022,0.50); ...</span>
-<span class="co">## A: (0.000,0.49);(0.011,0.52);(0.022,0.54); ...</span>
-<span class="co">## C: (0.000,0.50);(0.011,0.51);(0.022,0.54); ...</span>
-<span class="co">## D: (0.000,0.40);(0.011,0.42);(0.022,0.44); ...</span>
-<span class="co">## E: (0.000,0.40);(0.011,0.41);(0.022,0.40); ...</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">cca_five</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">]</span></span>
+<span><span class="co">## tfd[2] on (0,1) based on 93 evaluations each</span></span>
+<span><span class="co">## interpolation by tf_approx_spline </span></span>
+<span><span class="co">## A: (0.000,0.49);(0.011,0.52);(0.022,0.54); ...</span></span>
+<span><span class="co">## B: (0.000,0.47);(0.011,0.49);(0.022,0.50); ...</span></span>
+<span><span class="va">cca_five</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">cca_five</span><span class="op">[</span><span class="fl">2</span><span class="op">:</span><span class="fl">1</span><span class="op">]</span></span>
+<span><span class="va">cca_five</span></span>
+<span><span class="co">## tfd[5] on (0,1) based on 93 evaluations each</span></span>
+<span><span class="co">## interpolation by tf_approx_spline </span></span>
+<span><span class="co">## B: (0.000,0.47);(0.011,0.49);(0.022,0.50); ...</span></span>
+<span><span class="co">## A: (0.000,0.49);(0.011,0.52);(0.022,0.54); ...</span></span>
+<span><span class="co">## C: (0.000,0.50);(0.011,0.51);(0.022,0.54); ...</span></span>
+<span><span class="co">## D: (0.000,0.40);(0.011,0.42);(0.022,0.44); ...</span></span>
+<span><span class="co">## E: (0.000,0.40);(0.011,0.41);(0.022,0.40); ...</span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="compare-compute">compare &amp; compute:<a class="anchor" aria-label="anchor" href="#compare-compute"></a>
 </h4>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">cca_five</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">+</span> <span class="va">cca_five</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">==</span> <span class="fl">2</span> <span class="op">*</span> <span class="va">cca_five</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>
-<span class="co">## [1] TRUE</span>
-<span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">exp</a></span><span class="op">(</span><span class="va">cca_five</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span><span class="op">)</span> <span class="op">==</span> <span class="va">cca_five</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span>
-<span class="co">## [1] TRUE</span>
-<span class="va">cca_five</span> <span class="op">-</span> <span class="op">(</span><span class="fl">2</span><span class="op">:</span><span class="op">-</span><span class="fl">2</span><span class="op">)</span> <span class="op">!=</span> <span class="va">cca_five</span> 
-<span class="co">## [1]  TRUE  TRUE FALSE  TRUE  TRUE</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">cca_five</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">+</span> <span class="va">cca_five</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">==</span> <span class="fl">2</span> <span class="op">*</span> <span class="va">cca_five</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span></span>
+<span><span class="co">## [1] TRUE</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">exp</a></span><span class="op">(</span><span class="va">cca_five</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span><span class="op">)</span> <span class="op">==</span> <span class="va">cca_five</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span></span>
+<span><span class="co">## [1] TRUE</span></span>
+<span><span class="va">cca_five</span> <span class="op">-</span> <span class="op">(</span><span class="fl">2</span><span class="op">:</span><span class="op">-</span><span class="fl">2</span><span class="op">)</span> <span class="op">!=</span> <span class="va">cca_five</span> </span>
+<span><span class="co">## [1]  TRUE  TRUE FALSE  TRUE  TRUE</span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="summarize">summarize:<a class="anchor" aria-label="anchor" href="#summarize"></a>
 </h4>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>mean <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">cca_five</span><span class="op">)</span>, sd <span class="op">=</span> <span class="fu"><a href="../reference/tfsummaries.html">sd</a></span><span class="op">(</span><span class="va">cca_five</span><span class="op">)</span><span class="op">)</span>
-<span class="co">## tfd[2] on (0,1) based on 93 evaluations each</span>
-<span class="co">## interpolation by tf_approx_spline </span>
-<span class="co">## mean: (0.000, 0.45);(0.011, 0.47);(0.022, 0.48); ...</span>
-<span class="co">## sd: (0.000,0.049);(0.011,0.052);(0.022,0.062); ...</span>
-
-<span class="fu"><a href="../reference/tf_depth.html">tf_depth</a></span><span class="op">(</span><span class="va">cca_five</span><span class="op">)</span> <span class="co">## Modified Band-2 Depth (à la Sun/Genton/Nychka, 2012), others to come.</span>
-<span class="co">##         B         A         C         D         E </span>
-<span class="co">## 0.6108696 0.6467391 0.6597826 0.5728261 0.5097826</span>
-<span class="fu"><a href="https://rdrr.io/r/stats/median.html" class="external-link">median</a></span><span class="op">(</span><span class="va">cca_five</span><span class="op">)</span> <span class="op">==</span> <span class="va">cca_five</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/which.min.html" class="external-link">which.max</a></span><span class="op">(</span><span class="fu"><a href="../reference/tf_depth.html">tf_depth</a></span><span class="op">(</span><span class="va">cca_five</span><span class="op">)</span><span class="op">)</span><span class="op">]</span>
-<span class="co">##    C </span>
-<span class="co">## TRUE</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>mean <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">cca_five</span><span class="op">)</span>, sd <span class="op">=</span> <span class="fu">sd</span><span class="op">(</span><span class="va">cca_five</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">## tfd[2] on (0,1) based on 93 evaluations each</span></span>
+<span><span class="co">## interpolation by tf_approx_spline </span></span>
+<span><span class="co">## mean: (0.000, 0.45);(0.011, 0.47);(0.022, 0.48); ...</span></span>
+<span><span class="co">## sd: (0.000,0.049);(0.011,0.052);(0.022,0.062); ...</span></span>
+<span></span>
+<span><span class="fu"><a href="https://tidyfun.github.io/tf/reference/tf_depth.html" class="external-link">tf_depth</a></span><span class="op">(</span><span class="va">cca_five</span><span class="op">)</span> <span class="co">## Modified Band-2 Depth (à la Sun/Genton/Nychka, 2012), others to come.</span></span>
+<span><span class="co">##         B         A         C         D         E </span></span>
+<span><span class="co">## 0.6108696 0.6467391 0.6597826 0.5728261 0.5097826</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/stats/median.html" class="external-link">median</a></span><span class="op">(</span><span class="va">cca_five</span><span class="op">)</span> <span class="op">==</span> <span class="va">cca_five</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/which.min.html" class="external-link">which.max</a></span><span class="op">(</span><span class="fu"><a href="https://tidyfun.github.io/tf/reference/tf_depth.html" class="external-link">tf_depth</a></span><span class="op">(</span><span class="va">cca_five</span><span class="op">)</span><span class="op">)</span><span class="op">]</span></span>
+<span><span class="co">##    C </span></span>
+<span><span class="co">## TRUE</span></span></code></pre></div>
 <p>In addition, <strong><code>tidyfun</code></strong> provides methods specific for functional data:</p>
 </div>
 <div class="section level4">
@@ -443,108 +447,108 @@
 </h4>
 <p><code>tf</code>-objects have a special <code>[</code>-operator: Its second argument specifies <code>arg</code>ument values at which to evaluate the functions and has some additional options, so it’s easy to get point values for <code>tf</code> objects:</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">cca_five</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, l <span class="op">=</span> <span class="fl">3</span><span class="op">)</span><span class="op">]</span>
-<span class="co">##           0       0.5         1</span>
-<span class="co">## B 0.4721627 0.4984125 0.5802742</span>
-<span class="co">## A 0.4909345 0.5307563 0.5904773</span>
-<span class="co">## attr(,"arg")</span>
-<span class="co">## [1] 0.0 0.5 1.0</span>
-<span class="va">cca_five</span><span class="op">[</span><span class="st">"B"</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">.15</span>, l <span class="op">=</span> <span class="fl">3</span><span class="op">)</span>, interpolate <span class="op">=</span> <span class="cn">FALSE</span><span class="op">]</span>
-<span class="co">##           0 0.075 0.15</span>
-<span class="co">## B 0.4721627    NA   NA</span>
-<span class="co">## attr(,"arg")</span>
-<span class="co">## [1] 0.000 0.075 0.150</span>
-<span class="va">cca_five</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, l <span class="op">=</span> <span class="fl">7</span><span class="op">)</span>, matrix <span class="op">=</span> <span class="cn">FALSE</span><span class="op">]</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="va">str</span>
-<span class="co">## List of 2</span>
-<span class="co">##  $ B: tibble [7 × 2] (S3: tbl_df/tbl/data.frame)</span>
-<span class="co">##   ..$ arg  : num [1:7] 0 0.167 0.333 0.5 0.667 ...</span>
-<span class="co">##   ..$ value: num [1:7] 0.472 0.475 0.476 0.498 0.475 ...</span>
-<span class="co">##  $ A: tibble [7 × 2] (S3: tbl_df/tbl/data.frame)</span>
-<span class="co">##   ..$ arg  : num [1:7] 0 0.167 0.333 0.5 0.667 ...</span>
-<span class="co">##   ..$ value: num [1:7] 0.491 0.521 0.504 0.531 0.472 ...</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">cca_five</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, l <span class="op">=</span> <span class="fl">3</span><span class="op">)</span><span class="op">]</span></span>
+<span><span class="co">##           0       0.5         1</span></span>
+<span><span class="co">## B 0.4721627 0.4984125 0.5802742</span></span>
+<span><span class="co">## A 0.4909345 0.5307563 0.5904773</span></span>
+<span><span class="co">## attr(,"arg")</span></span>
+<span><span class="co">## [1] 0.0 0.5 1.0</span></span>
+<span><span class="va">cca_five</span><span class="op">[</span><span class="st">"B"</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">.15</span>, l <span class="op">=</span> <span class="fl">3</span><span class="op">)</span>, interpolate <span class="op">=</span> <span class="cn">FALSE</span><span class="op">]</span></span>
+<span><span class="co">##           0 0.075 0.15</span></span>
+<span><span class="co">## B 0.4721627    NA   NA</span></span>
+<span><span class="co">## attr(,"arg")</span></span>
+<span><span class="co">## [1] 0.000 0.075 0.150</span></span>
+<span><span class="va">cca_five</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, l <span class="op">=</span> <span class="fl">7</span><span class="op">)</span>, matrix <span class="op">=</span> <span class="cn">FALSE</span><span class="op">]</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="va">str</span></span>
+<span><span class="co">## List of 2</span></span>
+<span><span class="co">##  $ B:'data.frame':   7 obs. of  2 variables:</span></span>
+<span><span class="co">##   ..$ arg  : num [1:7] 0 0.167 0.333 0.5 0.667 ...</span></span>
+<span><span class="co">##   ..$ value: num [1:7] 0.472 0.475 0.476 0.498 0.475 ...</span></span>
+<span><span class="co">##  $ A:'data.frame':   7 obs. of  2 variables:</span></span>
+<span><span class="co">##   ..$ arg  : num [1:7] 0 0.167 0.333 0.5 0.667 ...</span></span>
+<span><span class="co">##   ..$ value: num [1:7] 0.491 0.521 0.504 0.531 0.472 ...</span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="simple-local-smoothing">(simple, local) smoothing<a class="anchor" aria-label="anchor" href="#simple-local-smoothing"></a>
 </h4>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/layout.html" class="external-link">layout</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">)</span><span class="op">)</span>
-<span class="va">cca_five</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>alpha <span class="op">=</span> <span class="fl">.2</span>, ylab <span class="op">=</span> <span class="st">"lowess"</span><span class="op">)</span>
-<span class="va">cca_five</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/tf_smooth.html">tf_smooth</a></span><span class="op">(</span><span class="st">"lowess"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span>col <span class="op">=</span> <span class="va">pal_5</span><span class="op">)</span>
-<span class="co">## using f = 0.15 as smoother span for lowess</span>
-
-<span class="va">cca_five</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>alpha <span class="op">=</span> <span class="fl">.2</span>, ylab <span class="op">=</span> <span class="st">"rolling median (k=5)"</span><span class="op">)</span>
-<span class="va">cca_five</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/tf_smooth.html">tf_smooth</a></span><span class="op">(</span><span class="st">"rollmedian"</span>, k <span class="op">=</span> <span class="fl">5</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span>col <span class="op">=</span> <span class="va">pal_5</span><span class="op">)</span>
-<span class="co">## Warning in tf_smooth.tfd(., "rollmedian", k = 5): non-equidistant arg-values in</span>
-<span class="co">## '.' ignored by rollmedian.</span>
-<span class="co">## setting fill = 'extend' for start/end values.</span>
-
-<span class="va">cca_five</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>alpha <span class="op">=</span> <span class="fl">.2</span>, ylab <span class="op">=</span> <span class="st">"Savitzky-Golay (quartic, 11 steps)"</span><span class="op">)</span>
-<span class="va">cca_five</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/tf_smooth.html">tf_smooth</a></span><span class="op">(</span><span class="st">"savgol"</span>, fl <span class="op">=</span> <span class="fl">11</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span>col <span class="op">=</span> <span class="va">pal_5</span><span class="op">)</span>
-<span class="co">## Warning in tf_smooth.tfd(., "savgol", fl = 11): non-equidistant arg-values in</span>
-<span class="co">## '.' ignored by savgol.</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/layout.html" class="external-link">layout</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">cca_five</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>alpha <span class="op">=</span> <span class="fl">.2</span>, ylab <span class="op">=</span> <span class="st">"lowess"</span><span class="op">)</span></span>
+<span><span class="va">cca_five</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://tidyfun.github.io/tf/reference/tf_smooth.html" class="external-link">tf_smooth</a></span><span class="op">(</span><span class="st">"lowess"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span>col <span class="op">=</span> <span class="va">pal_5</span><span class="op">)</span></span>
+<span><span class="co">## using f = 0.15 as smoother span for lowess</span></span>
+<span></span>
+<span><span class="va">cca_five</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>alpha <span class="op">=</span> <span class="fl">.2</span>, ylab <span class="op">=</span> <span class="st">"rolling median (k=5)"</span><span class="op">)</span></span>
+<span><span class="va">cca_five</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://tidyfun.github.io/tf/reference/tf_smooth.html" class="external-link">tf_smooth</a></span><span class="op">(</span><span class="st">"rollmedian"</span>, k <span class="op">=</span> <span class="fl">5</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span>col <span class="op">=</span> <span class="va">pal_5</span><span class="op">)</span></span>
+<span><span class="co">## Warning in tf_smooth.tfd(., "rollmedian", k = 5): non-equidistant arg-values in</span></span>
+<span><span class="co">## '.' ignored by rollmedian.</span></span>
+<span><span class="co">## setting fill = 'extend' for start/end values.</span></span>
+<span></span>
+<span><span class="va">cca_five</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>alpha <span class="op">=</span> <span class="fl">.2</span>, ylab <span class="op">=</span> <span class="st">"Savitzky-Golay (quartic, 11 steps)"</span><span class="op">)</span></span>
+<span><span class="va">cca_five</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://tidyfun.github.io/tf/reference/tf_smooth.html" class="external-link">tf_smooth</a></span><span class="op">(</span><span class="st">"savgol"</span>, fl <span class="op">=</span> <span class="fl">11</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span>col <span class="op">=</span> <span class="va">pal_5</span><span class="op">)</span></span>
+<span><span class="co">## Warning in tf_smooth.tfd(., "savgol", fl = 11): non-equidistant arg-values in</span></span>
+<span><span class="co">## '.' ignored by savgol.</span></span></code></pre></div>
 <p><img src="x01_tf_Vectors_files/figure-html/unnamed-chunk-17-1.png" width="90%"></p>
 </div>
 <div class="section level4">
 <h4 id="differentiate-integrate">differentiate &amp; integrate:<a class="anchor" aria-label="anchor" href="#differentiate-integrate"></a>
 </h4>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/layout.html" class="external-link">layout</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">)</span><span class="op">)</span>
-<span class="va">cca_five</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>col <span class="op">=</span> <span class="va">pal_5</span><span class="op">)</span>
-<span class="va">cca_five</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/tf_smooth.html">tf_smooth</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/tf_derive.html">tf_derive</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>col <span class="op">=</span> <span class="va">pal_5</span>, ylab <span class="op">=</span> <span class="st">"tf_derive(tf_smooth(cca_five))"</span><span class="op">)</span>
-<span class="co">## using f = 0.15 as smoother span for lowess</span>
-<span class="va">cca_five</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/tf_integrate.html">tf_integrate</a></span><span class="op">(</span>definite <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>col <span class="op">=</span> <span class="va">pal_5</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/layout.html" class="external-link">layout</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">cca_five</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>col <span class="op">=</span> <span class="va">pal_5</span><span class="op">)</span></span>
+<span><span class="va">cca_five</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://tidyfun.github.io/tf/reference/tf_smooth.html" class="external-link">tf_smooth</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://tidyfun.github.io/tf/reference/tf_derive.html" class="external-link">tf_derive</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>col <span class="op">=</span> <span class="va">pal_5</span>, ylab <span class="op">=</span> <span class="st">"tf_derive(tf_smooth(cca_five))"</span><span class="op">)</span></span>
+<span><span class="co">## using f = 0.15 as smoother span for lowess</span></span>
+<span><span class="va">cca_five</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://tidyfun.github.io/tf/reference/tf_integrate.html" class="external-link">tf_integrate</a></span><span class="op">(</span>definite <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>col <span class="op">=</span> <span class="va">pal_5</span><span class="op">)</span></span></code></pre></div>
 <p><img src="x01_tf_Vectors_files/figure-html/unnamed-chunk-18-1.png" width="90%"></p>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">cca_five</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/tf_integrate.html">tf_integrate</a></span><span class="op">(</span><span class="op">)</span>
-<span class="co">##         B         A         C         D         E </span>
-<span class="co">## 0.5202229 0.5266713 0.5090638 0.5308612 0.4661378</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">cca_five</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://tidyfun.github.io/tf/reference/tf_integrate.html" class="external-link">tf_integrate</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">##         B         A         C         D         E </span></span>
+<span><span class="co">## 0.5202229 0.5266713 0.5090638 0.5308612 0.4661378</span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="query">query<a class="anchor" aria-label="anchor" href="#query"></a>
 </h4>
 <p><strong><code>tidyfun</code></strong> makes it easy to find (ranges of) <code>arg</code>uments <span class="math inline">\(t\)</span> satisfying a condition on <code>value</code> <span class="math inline">\(f(t)\)</span> (and <code>arg</code>ument <span class="math inline">\(t\)</span>):</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">cca_five</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/tf_where.html">tf_anywhere</a></span><span class="op">(</span><span class="va">value</span> <span class="op">&gt;</span> <span class="fl">.65</span><span class="op">)</span>
-<span class="co">##     B     A     C     D     E </span>
-<span class="co">## FALSE  TRUE  TRUE FALSE FALSE</span>
-<span class="va">cca_five</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">]</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/tf_where.html">tf_where</a></span><span class="op">(</span><span class="va">value</span> <span class="op">&gt;</span> <span class="fl">.6</span>, <span class="st">"all"</span><span class="op">)</span>
-<span class="co">## $B</span>
-<span class="co">## [1] 0.07608696 0.89130435 0.90217391 0.91304348 0.92391304 0.96739130 0.97826087</span>
-<span class="co">## </span>
-<span class="co">## $A</span>
-<span class="co">##  [1] 0.05434783 0.06521739 0.07608696 0.08695652 0.09782609 0.10869565</span>
-<span class="co">##  [7] 0.11956522 0.13043478 0.14130435 0.95652174 0.96739130 0.97826087</span>
-<span class="va">cca_five</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/tf_where.html">tf_where</a></span><span class="op">(</span><span class="va">value</span> <span class="op">&gt;</span> <span class="fl">.6</span>, <span class="st">"range"</span><span class="op">)</span>
-<span class="co">##        begin       end</span>
-<span class="co">## A 0.05434783 0.9782609</span>
-<span class="va">cca_five</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/tf_where.html">tf_where</a></span><span class="op">(</span><span class="va">value</span> <span class="op">&gt;</span> <span class="fl">.6</span> <span class="op">&amp;</span> <span class="va">arg</span> <span class="op">&gt;</span> <span class="fl">.5</span>, <span class="st">"first"</span><span class="op">)</span>
-<span class="co">##         B         A         C         D         E </span>
-<span class="co">## 0.8913043 0.9565217 0.9565217 0.9347826 0.9347826</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">cca_five</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://tidyfun.github.io/tf/reference/tf_where.html" class="external-link">tf_anywhere</a></span><span class="op">(</span><span class="va">value</span> <span class="op">&gt;</span> <span class="fl">.65</span><span class="op">)</span></span>
+<span><span class="co">##     B     A     C     D     E </span></span>
+<span><span class="co">## FALSE  TRUE  TRUE FALSE FALSE</span></span>
+<span><span class="va">cca_five</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">]</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://tidyfun.github.io/tf/reference/tf_where.html" class="external-link">tf_where</a></span><span class="op">(</span><span class="va">value</span> <span class="op">&gt;</span> <span class="fl">.6</span>, <span class="st">"all"</span><span class="op">)</span></span>
+<span><span class="co">## $B</span></span>
+<span><span class="co">## [1] 0.07608696 0.89130435 0.90217391 0.91304348 0.92391304 0.96739130 0.97826087</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## $A</span></span>
+<span><span class="co">##  [1] 0.05434783 0.06521739 0.07608696 0.08695652 0.09782609 0.10869565</span></span>
+<span><span class="co">##  [7] 0.11956522 0.13043478 0.14130435 0.95652174 0.96739130 0.97826087</span></span>
+<span><span class="va">cca_five</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://tidyfun.github.io/tf/reference/tf_where.html" class="external-link">tf_where</a></span><span class="op">(</span><span class="va">value</span> <span class="op">&gt;</span> <span class="fl">.6</span>, <span class="st">"range"</span><span class="op">)</span></span>
+<span><span class="co">##        begin       end</span></span>
+<span><span class="co">## A 0.05434783 0.9782609</span></span>
+<span><span class="va">cca_five</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://tidyfun.github.io/tf/reference/tf_where.html" class="external-link">tf_where</a></span><span class="op">(</span><span class="va">value</span> <span class="op">&gt;</span> <span class="fl">.6</span> <span class="op">&amp;</span> <span class="va">arg</span> <span class="op">&gt;</span> <span class="fl">.5</span>, <span class="st">"first"</span><span class="op">)</span></span>
+<span><span class="co">##         B         A         C         D         E </span></span>
+<span><span class="co">## 0.8913043 0.9565217 0.9565217 0.9347826 0.9347826</span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="zoom-query">zoom &amp; query<a class="anchor" aria-label="anchor" href="#zoom-query"></a>
 </h4>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">cca_five</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">0.15</span>, <span class="fl">1</span><span class="op">)</span>, col <span class="op">=</span> <span class="va">pal_5</span>, lwd <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/text.html" class="external-link">text</a></span><span class="op">(</span>x <span class="op">=</span> <span class="op">-</span><span class="fl">.1</span>, y <span class="op">=</span> <span class="va">cca_five</span><span class="op">[</span>,<span class="fl">0.07</span><span class="op">]</span>, labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">cca_five</span><span class="op">)</span>, col <span class="op">=</span> <span class="va">pal_5</span>, cex <span class="op">=</span> <span class="fl">1.5</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/stats/median.html" class="external-link">median</a></span><span class="op">(</span><span class="va">cca_five</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span>col <span class="op">=</span> <span class="va">pal_5</span><span class="op">[</span><span class="fl">3</span><span class="op">]</span>, lwd <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">cca_five</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">0.15</span>, <span class="fl">1</span><span class="op">)</span>, col <span class="op">=</span> <span class="va">pal_5</span>, lwd <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/text.html" class="external-link">text</a></span><span class="op">(</span>x <span class="op">=</span> <span class="op">-</span><span class="fl">.1</span>, y <span class="op">=</span> <span class="va">cca_five</span><span class="op">[</span>,<span class="fl">0.07</span><span class="op">]</span>, labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">cca_five</span><span class="op">)</span>, col <span class="op">=</span> <span class="va">pal_5</span>, cex <span class="op">=</span> <span class="fl">1.5</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/stats/median.html" class="external-link">median</a></span><span class="op">(</span><span class="va">cca_five</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span>col <span class="op">=</span> <span class="va">pal_5</span><span class="op">[</span><span class="fl">3</span><span class="op">]</span>, lwd <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span></code></pre></div>
 <p><img src="x01_tf_Vectors_files/figure-html/ex-fig2-1.png" width="90%"></p>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># where are the first maxima of these functions?</span>
-<span class="va">cca_five</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/tf_where.html">tf_where</a></span><span class="op">(</span><span class="va">value</span> <span class="op">==</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">value</span><span class="op">)</span>, <span class="st">"first"</span><span class="op">)</span>
-<span class="co">##          B          A          C          D          E </span>
-<span class="co">## 0.90217391 0.07608696 1.00000000 0.10869565 0.93478261</span>
-
-<span class="co"># where are the first maxima of the later part (t &gt; .5) of these functions?</span>
-<span class="va">cca_five</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A"</span>, <span class="st">"D"</span><span class="op">)</span><span class="op">]</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/tf_zoom.html">tf_zoom</a></span><span class="op">(</span><span class="fl">.5</span>, <span class="fl">1</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/tf_where.html">tf_where</a></span><span class="op">(</span><span class="va">value</span> <span class="op">==</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">value</span><span class="op">)</span>, <span class="st">"first"</span><span class="op">)</span>
-<span class="co">##         A         D </span>
-<span class="co">## 0.9673913 0.9565217</span>
-
-<span class="co"># which f_i(t) are below the functional median anywhere for 0.2 &lt; t &lt; 0.6?</span>
-<span class="co"># (t() needed here so we're comparing column vectors to column vectors...)</span>
-<span class="va">cca_five</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/tf_zoom.html">tf_zoom</a></span><span class="op">(</span><span class="fl">0.2</span>, <span class="fl">0.6</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/tf_where.html">tf_anywhere</a></span><span class="op">(</span><span class="va">value</span> <span class="op">&lt;=</span> <span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/median.html" class="external-link">median</a></span><span class="op">(</span><span class="va">cca_five</span><span class="op">)</span><span class="op">[</span>, <span class="va">arg</span><span class="op">]</span><span class="op">)</span><span class="op">)</span>
-<span class="co">##     B     A     C     D     E </span>
-<span class="co">##  TRUE FALSE  TRUE FALSE  TRUE</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># where are the first maxima of these functions?</span></span>
+<span><span class="va">cca_five</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://tidyfun.github.io/tf/reference/tf_where.html" class="external-link">tf_where</a></span><span class="op">(</span><span class="va">value</span> <span class="op">==</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">value</span><span class="op">)</span>, <span class="st">"first"</span><span class="op">)</span></span>
+<span><span class="co">##          B          A          C          D          E </span></span>
+<span><span class="co">## 0.90217391 0.07608696 1.00000000 0.10869565 0.93478261</span></span>
+<span></span>
+<span><span class="co"># where are the first maxima of the later part (t &gt; .5) of these functions?</span></span>
+<span><span class="va">cca_five</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A"</span>, <span class="st">"D"</span><span class="op">)</span><span class="op">]</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://tidyfun.github.io/tf/reference/tf_zoom.html" class="external-link">tf_zoom</a></span><span class="op">(</span><span class="fl">.5</span>, <span class="fl">1</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://tidyfun.github.io/tf/reference/tf_where.html" class="external-link">tf_where</a></span><span class="op">(</span><span class="va">value</span> <span class="op">==</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">value</span><span class="op">)</span>, <span class="st">"first"</span><span class="op">)</span></span>
+<span><span class="co">##         A         D </span></span>
+<span><span class="co">## 0.9673913 0.9565217</span></span>
+<span></span>
+<span><span class="co"># which f_i(t) are below the functional median anywhere for 0.2 &lt; t &lt; 0.6?</span></span>
+<span><span class="co"># (t() needed here so we're comparing column vectors to column vectors...)</span></span>
+<span><span class="va">cca_five</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://tidyfun.github.io/tf/reference/tf_zoom.html" class="external-link">tf_zoom</a></span><span class="op">(</span><span class="fl">0.2</span>, <span class="fl">0.6</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://tidyfun.github.io/tf/reference/tf_where.html" class="external-link">tf_anywhere</a></span><span class="op">(</span><span class="va">value</span> <span class="op">&lt;=</span> <span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/median.html" class="external-link">median</a></span><span class="op">(</span><span class="va">cca_five</span><span class="op">)</span><span class="op">[</span>, <span class="va">arg</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">##     B     A     C     D     E </span></span>
+<span><span class="co">##  TRUE FALSE  TRUE FALSE  TRUE</span></span></code></pre></div>
 </div>
 </div>
   </div>
@@ -566,7 +570,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
 </div>
 
       </footer>

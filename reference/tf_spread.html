@@ -21,12 +21,18 @@ containing the functional measurements."><!-- mathjax --><script src="https://cd
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidyfun</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.95</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.97</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav"><li>
+  <a href="https://github.com/tidyfun/tidyfun" class="external-link">
+    <span class="fa fa-github"></span>
+     
+  </a>
+</li>
+<li>
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
@@ -79,58 +85,84 @@ containing the functional measurements.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">tf_spread</span><span class="op">(</span><span class="va">data</span>, <span class="va">value</span>, <span class="va">arg</span>, sep <span class="op">=</span> <span class="st">"_"</span>, interpolate <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">tf_spread</span><span class="op">(</span><span class="va">data</span>, <span class="va">value</span>, <span class="va">arg</span>, sep <span class="op">=</span> <span class="st">"_"</span>, interpolate <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>data</dt>
 <dd><p>a data frame with at least one <code>tf</code>-column</p></dd>
+
+
 <dt>value</dt>
 <dd><p>the name of the <code>tf</code>-column to 'spread'/evaluate.
 You can supply bare variable names etc., see the <code><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">dplyr::select()</a></code>
 documentation. Also works without this if there's only one <code>tf</code> in <code>data</code>,
 see examples.</p></dd>
+
+
 <dt>arg</dt>
 <dd><p>(Semi-)optional. A vector of <code>arg</code>-values on which to evaluate the
-functions. If not provided, uses the default <code>arg</code>s. Must be
-specified for <code>tf_irreg</code>.</p></dd>
+functions. If not provided, uses the default <code>arg</code>s. Should be
+specified for <code>tf_irreg</code>, otherwise <em>all</em> observed gridpoint are used for
+<em>every</em> function.</p></dd>
+
+
 <dt>sep</dt>
 <dd><p>separating character used to create column names for the new columns,
 defaults to <code>"_"</code> for column names "&lt;name of the <code>tf</code>&gt;_&lt;<code>arg</code>-value&gt;".
 Set to NULL to get column names that only contain the <code>arg</code>-value.</p></dd>
+
+
 <dt>interpolate</dt>
 <dd><p><code>interpolate</code>-argument for evaluating the functional data.
-Defaults to FALSE, i.e., <code>tfd</code>s are <em>not</em> inter/extrapolated on unobserved <code>arg</code>-values.</p></dd>
+Defaults to FALSE, i.e., <code>tfd</code>s are <em>not</em> inter/extrapolated on unobserved
+<code>arg</code>-values.</p></dd>
+
 </dl></div>
+    <div id="value">
+    <h2>Value</h2>
+    
+
+<p>a wider dataframe with the <code>tf</code>-column spread out into many columns
+each containing the functional measurements for one <code>arg</code>-value.</p>
+    </div>
+    <div id="see-also">
+    <h2>See also</h2>
+    <div class="dont-index"><p>Other tidyfun data wrangling functions: 
+<code><a href="tf_evaluate.data.frame.html">tf_evaluate.data.frame</a>()</code>,
+<code><a href="tf_gather.html">tf_gather</a>()</code>,
+<code><a href="tf_nest.html">tf_nest</a>()</code>,
+<code><a href="tf_unnest.html">tf_unnest</a>()</code></p></div>
+    </div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">d</span> <span class="op">&lt;-</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span>g <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">d</span><span class="op">$</span><span class="va">f</span> <span class="op">&lt;-</span> <span class="fu"><a href="tf_rgp.html">tf_rgp</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">11L</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu">tf_spread</span><span class="op">(</span><span class="va">d</span>, <span class="va">f</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">d</span> <span class="op">&lt;-</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span>g <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">d</span><span class="op">$</span><span class="va">f</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tidyfun.github.io/tf/reference/tf_rgp.html" class="external-link">tf_rgp</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">11L</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">tf_spread</span><span class="op">(</span><span class="va">d</span>, <span class="va">f</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 3 × 12</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       g    f_0  f_0.1  f_0.2  f_0.3  f_0.4  f_0.5  f_0.6  f_0.7   f_0.8  f_0.9</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span>     1  0.236 -<span style="color: #BB0000;">0.235</span> -<span style="color: #BB0000;">0.920</span> -<span style="color: #BB0000;">1.44</span>  -<span style="color: #BB0000;">1.68</span>  -<span style="color: #BB0000;">1.81</span>  -<span style="color: #BB0000;">1.82</span>  -<span style="color: #BB0000;">1.27</span>   0.041<span style="text-decoration: underline;">9</span>  1.72 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span>     2 -<span style="color: #BB0000;">1.18</span>  -<span style="color: #BB0000;">1.65</span>  -<span style="color: #BB0000;">2.07</span>  -<span style="color: #BB0000;">2.08</span>  -<span style="color: #BB0000;">1.71</span>  -<span style="color: #BB0000;">1.25</span>  -<span style="color: #BB0000;">0.828</span> -<span style="color: #BB0000;">0.360</span>  0.140   0.785</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span>     3 -<span style="color: #BB0000;">0.133</span> -<span style="color: #BB0000;">0.579</span> -<span style="color: #BB0000;">0.597</span> -<span style="color: #BB0000;">0.425</span> -<span style="color: #BB0000;">0.445</span> -<span style="color: #BB0000;">0.379</span> -<span style="color: #BB0000;">0.196</span> -<span style="color: #BB0000;">0.180</span> -<span style="color: #BB0000;">0.530</span>  -<span style="color: #BB0000;">1.03</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       g    f_0  f_0.1  f_0.2  f_0.3  f_0.4   f_0.5  f_0.6  f_0.7  f_0.8  f_0.9</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span>     1  1.37   1.51   1.30   0.705  0.216  0.220   0.601  1.10   1.49   1.43 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span>     2  0.352  0.432 -<span style="color: #BB0000;">0.216</span> -<span style="color: #BB0000;">1.09</span>  -<span style="color: #BB0000;">1.54</span>  -<span style="color: #BB0000;">1.52</span>   -<span style="color: #BB0000;">1.05</span>  -<span style="color: #BB0000;">0.211</span>  0.696  1.41 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span>     3 -<span style="color: #BB0000;">1.05</span>  -<span style="color: #BB0000;">1.06</span>  -<span style="color: #BB0000;">0.899</span> -<span style="color: #BB0000;">0.646</span> -<span style="color: #BB0000;">0.322</span> -<span style="color: #BB0000;">0.068</span><span style="color: #BB0000; text-decoration: underline;">1</span> -<span style="color: #BB0000;">0.211</span> -<span style="color: #BB0000;">0.621</span> -<span style="color: #BB0000;">0.771</span> -<span style="color: #BB0000;">0.741</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 1 more variable: f_1 &lt;dbl&gt;</span></span>
-<span class="r-in"><span class="fu">tf_spread</span><span class="op">(</span><span class="va">d</span>, <span class="op">-</span><span class="va">g</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu">tf_spread</span><span class="op">(</span><span class="va">d</span>, <span class="op">-</span><span class="va">g</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 3 × 12</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       g    f_0  f_0.1  f_0.2  f_0.3  f_0.4  f_0.5  f_0.6  f_0.7   f_0.8  f_0.9</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span>     1  0.236 -<span style="color: #BB0000;">0.235</span> -<span style="color: #BB0000;">0.920</span> -<span style="color: #BB0000;">1.44</span>  -<span style="color: #BB0000;">1.68</span>  -<span style="color: #BB0000;">1.81</span>  -<span style="color: #BB0000;">1.82</span>  -<span style="color: #BB0000;">1.27</span>   0.041<span style="text-decoration: underline;">9</span>  1.72 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span>     2 -<span style="color: #BB0000;">1.18</span>  -<span style="color: #BB0000;">1.65</span>  -<span style="color: #BB0000;">2.07</span>  -<span style="color: #BB0000;">2.08</span>  -<span style="color: #BB0000;">1.71</span>  -<span style="color: #BB0000;">1.25</span>  -<span style="color: #BB0000;">0.828</span> -<span style="color: #BB0000;">0.360</span>  0.140   0.785</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span>     3 -<span style="color: #BB0000;">0.133</span> -<span style="color: #BB0000;">0.579</span> -<span style="color: #BB0000;">0.597</span> -<span style="color: #BB0000;">0.425</span> -<span style="color: #BB0000;">0.445</span> -<span style="color: #BB0000;">0.379</span> -<span style="color: #BB0000;">0.196</span> -<span style="color: #BB0000;">0.180</span> -<span style="color: #BB0000;">0.530</span>  -<span style="color: #BB0000;">1.03</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       g    f_0  f_0.1  f_0.2  f_0.3  f_0.4   f_0.5  f_0.6  f_0.7  f_0.8  f_0.9</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span>     1  1.37   1.51   1.30   0.705  0.216  0.220   0.601  1.10   1.49   1.43 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span>     2  0.352  0.432 -<span style="color: #BB0000;">0.216</span> -<span style="color: #BB0000;">1.09</span>  -<span style="color: #BB0000;">1.54</span>  -<span style="color: #BB0000;">1.52</span>   -<span style="color: #BB0000;">1.05</span>  -<span style="color: #BB0000;">0.211</span>  0.696  1.41 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span>     3 -<span style="color: #BB0000;">1.05</span>  -<span style="color: #BB0000;">1.06</span>  -<span style="color: #BB0000;">0.899</span> -<span style="color: #BB0000;">0.646</span> -<span style="color: #BB0000;">0.322</span> -<span style="color: #BB0000;">0.068</span><span style="color: #BB0000; text-decoration: underline;">1</span> -<span style="color: #BB0000;">0.211</span> -<span style="color: #BB0000;">0.621</span> -<span style="color: #BB0000;">0.771</span> -<span style="color: #BB0000;">0.741</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 1 more variable: f_1 &lt;dbl&gt;</span></span>
-<span class="r-in"><span class="fu">tf_spread</span><span class="op">(</span><span class="va">d</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu">tf_spread</span><span class="op">(</span><span class="va">d</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 3 × 12</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       g    f_0  f_0.1  f_0.2  f_0.3  f_0.4  f_0.5  f_0.6  f_0.7   f_0.8  f_0.9</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span>     1  0.236 -<span style="color: #BB0000;">0.235</span> -<span style="color: #BB0000;">0.920</span> -<span style="color: #BB0000;">1.44</span>  -<span style="color: #BB0000;">1.68</span>  -<span style="color: #BB0000;">1.81</span>  -<span style="color: #BB0000;">1.82</span>  -<span style="color: #BB0000;">1.27</span>   0.041<span style="text-decoration: underline;">9</span>  1.72 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span>     2 -<span style="color: #BB0000;">1.18</span>  -<span style="color: #BB0000;">1.65</span>  -<span style="color: #BB0000;">2.07</span>  -<span style="color: #BB0000;">2.08</span>  -<span style="color: #BB0000;">1.71</span>  -<span style="color: #BB0000;">1.25</span>  -<span style="color: #BB0000;">0.828</span> -<span style="color: #BB0000;">0.360</span>  0.140   0.785</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span>     3 -<span style="color: #BB0000;">0.133</span> -<span style="color: #BB0000;">0.579</span> -<span style="color: #BB0000;">0.597</span> -<span style="color: #BB0000;">0.425</span> -<span style="color: #BB0000;">0.445</span> -<span style="color: #BB0000;">0.379</span> -<span style="color: #BB0000;">0.196</span> -<span style="color: #BB0000;">0.180</span> -<span style="color: #BB0000;">0.530</span>  -<span style="color: #BB0000;">1.03</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       g    f_0  f_0.1  f_0.2  f_0.3  f_0.4   f_0.5  f_0.6  f_0.7  f_0.8  f_0.9</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span>     1  1.37   1.51   1.30   0.705  0.216  0.220   0.601  1.10   1.49   1.43 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span>     2  0.352  0.432 -<span style="color: #BB0000;">0.216</span> -<span style="color: #BB0000;">1.09</span>  -<span style="color: #BB0000;">1.54</span>  -<span style="color: #BB0000;">1.52</span>   -<span style="color: #BB0000;">1.05</span>  -<span style="color: #BB0000;">0.211</span>  0.696  1.41 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span>     3 -<span style="color: #BB0000;">1.05</span>  -<span style="color: #BB0000;">1.06</span>  -<span style="color: #BB0000;">0.899</span> -<span style="color: #BB0000;">0.646</span> -<span style="color: #BB0000;">0.322</span> -<span style="color: #BB0000;">0.068</span><span style="color: #BB0000; text-decoration: underline;">1</span> -<span style="color: #BB0000;">0.211</span> -<span style="color: #BB0000;">0.621</span> -<span style="color: #BB0000;">0.771</span> -<span style="color: #BB0000;">0.741</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 1 more variable: f_1 &lt;dbl&gt;</span></span>
 </code></pre></div>
     </div>
@@ -146,7 +178,7 @@ Defaults to FALSE, i.e., <code>tfd</code>s are <em>not</em> inter/extrapolated o
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
 </div>
 
       </footer></div>

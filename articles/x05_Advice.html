@@ -33,12 +33,18 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidyfun</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.95</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.97</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
+<li>
+  <a href="https://github.com/tidyfun/tidyfun" class="external-link">
+    <span class="fa fa-github"></span>
+     
+  </a>
+</li>
 <li>
   <a href="../reference/index.html">Reference</a>
 </li>
@@ -90,7 +96,7 @@
       <h1 data-toc-skip>Advice for Developers</h1>
                         <h4 data-toc-skip class="author">Jeff Goldsmith</h4>
             
-            <h4 data-toc-skip class="date">2022-03-16</h4>
+            <h4 data-toc-skip class="date">2022-06-30</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/tidyfun/tidyfun/blob/HEAD/vignettes/x05_Advice.Rmd" class="external-link"><code>vignettes/x05_Advice.Rmd</code></a></small>
       <div class="hidden name"><code>x05_Advice.Rmd</code></div>
@@ -99,8 +105,9 @@
 
     
     
-<p><strong><code>tidyfun</code></strong> is intended to make user interactions with functional data easier. The package introduces a data class (<code>tf</code>) so that vectors of functional observations are available, similar to vectors of class <code>numeric</code> or <code>character</code>. That makes it possible to store functional data alongside other variables in a single dataframe; by extension, tools for data manipulation from the <code>tidyverse</code> and elsewhere can be used with datasets in which one or more variable is functional.</p>
-<p>Some basic analyses are available in <strong><code>tidyfun</code></strong> – it’s possible to compute means of <code>tf</code> vectors, to expand observations using a spline basis or using functional principal components analysis. With tools like <code>group_by</code> and <code>summarize</code>, these can be powerful tools for data exploration. Other analysis approaches are included in the <strong><code>refunder</code></strong> package, and more will be added to that package over time.</p>
+<p><strong><code>tidyfun</code></strong> is intended to make user interactions with functional data easier. The package depends on package <strong><code>tf</code></strong>, which defines a data class (<code>tf</code>) so that vectors of functional observations are available, similar to vectors of class <code>numeric</code> or <code>character</code><a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a></p>
+<p>Such classes make it possible to store functional data alongside other variables in a single dataframe; by extension, tools for data manipulation from the <code>tidyverse</code> and elsewhere can be used with datasets in which one or more variable is functional.</p>
+<p>Many basic analyses are available in <strong><code>tidyfun</code></strong> – it’s possible to compute mean functions and other summary statistics of <code>tf</code> vectors, to expand observations using a spline basis or using functional principal components analysis. With tools like <code>group_by</code> and <code>summarize</code>, these can be powerful tools for data exploration. Other analysis approaches are included in the <strong><code>refunder</code></strong> package, and more will be added to that package over time.</p>
 <p>There is an active research community in FDA, and there is constant development of new methods for analysis. Our hope is that the data structures in <strong><code>tidyfun</code></strong> will be useful as others as new approaches are implemented, and this page is intended to provide some advice and guidance for those implementations.</p>
 <div class="section level2">
 <h2 id="why-use-tidyfun">Why use <strong><code>tidyfun</code></strong><a class="anchor" aria-label="anchor" href="#why-use-tidyfun"></a>
@@ -112,7 +119,7 @@
 <li>Plotting in <code>ggplot</code> and base R</li>
 </ul>
 <p>Together, these make it possible to analyze functional data in a pipeline (import, exploratory analysis, visualization, and formal analysis) that is similar to those used for scalar variables.</p>
-<p>These advantages are user-facing – they are intended to make things easier when analyzing datasets that include functional observations. Because new methods for functional data typically involve working with “raw” observations (numeric vectors or matrices), implementing methods <strong><code>tidyfun</code></strong> will require some consideration of user interfaces, input objects, and data transformations. We believe the benefits are worth this effort.</p>
+<p>These advantages are user-facing – they are intended to make things easier when analyzing datasets that include functional observations. Because new methods for functional data typically involve working with “raw” observations (numeric vectors or matrices), implementing methods for <strong><code>tidyfun</code></strong> will require some consideration of user interfaces, input objects, and data transformations. We believe the benefits are worth this effort.</p>
 </div>
 <div class="section level2">
 <h2 id="thoughts-on-design">Thoughts on design<a class="anchor" aria-label="anchor" href="#thoughts-on-design"></a>
@@ -146,6 +153,12 @@
 </h2>
 <p>Our hope is that <strong><code>tidyfun</code></strong> will be a useful platform for other researchers and developers. For that reason, please let us know if you use <strong><code>tidyfun</code></strong> in your own work, identify <a href="https://github.com/tidyfun/tidyfun/issues" class="external-link">issues</a>, or have suggestions.</p>
 </div>
+<div class="footnotes">
+<hr>
+<ol>
+<li id="fn1"><p>This class and its subclasses and methods are defined in a separate package without <strong><code>tidyverse</code></strong>-dependencies in order to make package maintenance a little easier and to increase uptake among people who don’t want to rely on <strong><code>tidyverse</code></strong> packages.<a href="#fnref1" class="footnote-back">↩︎</a></p></li>
+</ol>
+</div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -165,7 +178,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
 </div>
 
       </footer>

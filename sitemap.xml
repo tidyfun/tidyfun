@@ -40,9 +40,6 @@
     <loc>https://tidyfun.github.io/tidyfun/reference/dti_df.html</loc>
   </url>
   <url>
-    <loc>https://tidyfun.github.io/tidyfun/reference/fpc_wsvd.html</loc>
-  </url>
-  <url>
     <loc>https://tidyfun.github.io/tidyfun/reference/ggcapellini.html</loc>
   </url>
   <url>
@@ -55,37 +52,13 @@
     <loc>https://tidyfun.github.io/tidyfun/reference/index.html</loc>
   </url>
   <url>
-    <loc>https://tidyfun.github.io/tidyfun/reference/tf_approx.html</loc>
-  </url>
-  <url>
-    <loc>https://tidyfun.github.io/tidyfun/reference/tf_depth.html</loc>
-  </url>
-  <url>
-    <loc>https://tidyfun.github.io/tidyfun/reference/tf_derive.html</loc>
-  </url>
-  <url>
-    <loc>https://tidyfun.github.io/tidyfun/reference/tf_evaluate.html</loc>
+    <loc>https://tidyfun.github.io/tidyfun/reference/tf_evaluate.data.frame.html</loc>
   </url>
   <url>
     <loc>https://tidyfun.github.io/tidyfun/reference/tf_gather.html</loc>
   </url>
   <url>
-    <loc>https://tidyfun.github.io/tidyfun/reference/tf_integrate.html</loc>
-  </url>
-  <url>
-    <loc>https://tidyfun.github.io/tidyfun/reference/tf_interpolate.html</loc>
-  </url>
-  <url>
-    <loc>https://tidyfun.github.io/tidyfun/reference/tf_jiggle.html</loc>
-  </url>
-  <url>
     <loc>https://tidyfun.github.io/tidyfun/reference/tf_nest.html</loc>
-  </url>
-  <url>
-    <loc>https://tidyfun.github.io/tidyfun/reference/tf_rgp.html</loc>
-  </url>
-  <url>
-    <loc>https://tidyfun.github.io/tidyfun/reference/tf_smooth.html</loc>
   </url>
   <url>
     <loc>https://tidyfun.github.io/tidyfun/reference/tf_spread.html</loc>
@@ -94,48 +67,9 @@
     <loc>https://tidyfun.github.io/tidyfun/reference/tf_unnest.html</loc>
   </url>
   <url>
-    <loc>https://tidyfun.github.io/tidyfun/reference/tf_where.html</loc>
-  </url>
-  <url>
-    <loc>https://tidyfun.github.io/tidyfun/reference/tf_zoom.html</loc>
-  </url>
-  <url>
-    <loc>https://tidyfun.github.io/tidyfun/reference/tfb.html</loc>
-  </url>
-  <url>
-    <loc>https://tidyfun.github.io/tidyfun/reference/tfb_fpc.html</loc>
-  </url>
-  <url>
-    <loc>https://tidyfun.github.io/tidyfun/reference/tfb_spline.html</loc>
-  </url>
-  <url>
-    <loc>https://tidyfun.github.io/tidyfun/reference/tfbrackets.html</loc>
-  </url>
-  <url>
-    <loc>https://tidyfun.github.io/tidyfun/reference/tfd.html</loc>
-  </url>
-  <url>
-    <loc>https://tidyfun.github.io/tidyfun/reference/tfdisplay.html</loc>
-  </url>
-  <url>
-    <loc>https://tidyfun.github.io/tidyfun/reference/tfgroupgenerics.html</loc>
-  </url>
-  <url>
-    <loc>https://tidyfun.github.io/tidyfun/reference/tfmethods.html</loc>
-  </url>
-  <url>
-    <loc>https://tidyfun.github.io/tidyfun/reference/tfsummaries.html</loc>
-  </url>
-  <url>
     <loc>https://tidyfun.github.io/tidyfun/reference/tftibble.html</loc>
   </url>
   <url>
-    <loc>https://tidyfun.github.io/tidyfun/reference/tfviz.html</loc>
-  </url>
-  <url>
     <loc>https://tidyfun.github.io/tidyfun/reference/tidyfun.html</loc>
-  </url>
-  <url>
-    <loc>https://tidyfun.github.io/tidyfun/reference/vctrs.html</loc>
   </url>
 </urlset>
