@@ -55,6 +55,7 @@ functions as strings and not as bare names here.
 tfd() for \verb{domain, evaluator, resolution}
 
 Other tidyfun data wrangling functions: 
+\code{\link{tf_evaluate.data.frame}()},
 \code{\link{tf_gather}()},
 \code{\link{tf_spread}()},
 \code{\link{tf_unnest}()}

@@ -32,4 +32,11 @@ list of \code{arg}-vectors or -lists used as the \code{arg} argument for the
 \code{...} is not used for a \code{tf}-\code{object}, but a second unnamed argument to these
 methods will be interpreted as \code{arg}.
 }
-\concept{tidyfun data wrangling}
+\seealso{
+Other tidyfun data wrangling functions: 
+\code{\link{tf_gather}()},
+\code{\link{tf_nest}()},
+\code{\link{tf_spread}()},
+\code{\link{tf_unnest}()}
+}
+\concept{tidyfun data wrangling functions}

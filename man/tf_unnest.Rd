@@ -98,6 +98,7 @@ be able to match arg-value pairs to the different functions after unnesting.
 tf_evaluate.data.frame()
 
 Other tidyfun data wrangling functions: 
+\code{\link{tf_evaluate.data.frame}()},
 \code{\link{tf_gather}()},
 \code{\link{tf_nest}()},
 \code{\link{tf_spread}()}
