@@ -11,9 +11,7 @@ output:
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html)
 [![R build status](https://github.com/tidyfun/tidyfun/workflows/R-CMD-check/badge.svg)](https://github.com/tidyfun/tidyfun/actions)
 [![codecov.io](https://codecov.io/github/tidyfun/tidyfun/coverage.svg?branch=master)](https://codecov.io/github/tidyfun/tidyfun/branch/master)
-[![MIT
-license](http://img.shields.io/badge/license-MIT-brightgreen.svg)]( https://opensource.org/licenses/MIT)
-[![R-CMD-check](https://github.com/tidyfun/tidyfun/workflows/R-CMD-check/badge.svg)](https://github.com/tidyfun/tidyfun/actions)
+[![MIT license](http://img.shields.io/badge/license-MIT-brightgreen.svg)]( https://opensource.org/licenses/MIT)
 <!-- badges: end -->
 
 
