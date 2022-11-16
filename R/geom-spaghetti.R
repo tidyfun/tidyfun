@@ -1,8 +1,10 @@
 #' Spaghetti plots for `tf` objects
 #'
 #' Plots a line for each entry of a `tf`-object.
-#' `geom_spaghetti` does spaghetti plots, `geom_meatballs` does spaghetti plots
+#' `geom_spaghetti` does spaghetti (i.e. "hairball") plots, `geom_meatballs` does spaghetti plots
 #' with points for the actual evaluations.
+#'
+#' "Flipped" aesthetics are currently not implemented for these geoms.
 #'
 #' @section `tf` aesthetic:
 #'   Mandatory. Used to designate a column of class `tf` to be visualized.
@@ -41,6 +43,7 @@ scale_type.tf <- function(x) "identity"
 StatTf <- ggproto("StatTf", Stat,
   required_aes = "tf",
   setup_params = function(data, params) {
+    browser()
     if (is.null(params$arg)) {
       params$arg <- list(tf_arg(pull(data, tf)))
     }
@@ -50,7 +53,7 @@ StatTf <- ggproto("StatTf", Stat,
     stopifnot(is_tf(pull(data, tf)))
     tf_eval <- suppressMessages(
       mutate(data, tf____id = names(tf) %||% seq_along(tf)) %>% 
-      tf_unnest(tf, .arg = params$arg, names_sep = "____")) %>%
+      tf_unnest(tf, arg = params$arg, names_sep = "____")) %>%
       select(-group) %>%
       rename(group = tf____id, x = tf____arg, y = tf____value)
     tf_eval

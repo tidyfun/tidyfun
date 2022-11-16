@@ -65,7 +65,7 @@ StatCapellini <- ggplot2::ggproto("StatCapellini", ggplot2::Stat,
     tf_eval <-
       suppressMessages(
         mutate(data, tf___id = names(tf) %||% seq_along(tf)) %>% 
-          tf_unnest(tf, .arg = params$arg, names_sep = "___")) %>% 
+          tf_unnest(tf, arg = params$arg, names_sep = "___")) %>% 
       select(-group) %>%
       rename(group = tf___id, arg = tf___arg, value = tf___value) %>%
       mutate(
