@@ -89,21 +89,24 @@ rather than combining with them. This is most useful for helper functions
 that define both data and aesthetics and shouldn't inherit behaviour from
 the default plot specification, e.g. \code{\link[ggplot2:borders]{borders()}}.}
 
-\item{arg}{where to evaluate \code{tf} -- defaults to the default ;)}
+\item{arg}{where to evaluate the functions in \code{y} -- defaults to the default ;)}
 
 \item{...}{Other arguments passed on to \code{\link[ggplot2:layer]{layer()}}. These are
 often aesthetics, used to set an aesthetic to a fixed value, like
 \code{colour = "red"} or \code{size = 3}. They may also be parameters
 to the paired geom/stat.}
 
-\item{spaghetti}{plot noodles along with meatballs? defaults to true.}
+\item{spaghetti}{plot noodles along with meatballs? defaults to TRUE.}
 }
 \description{
 Plots a line for each entry of a \code{tf}-object.
-\code{geom_spaghetti} does spaghetti plots, \code{geom_meatballs} does spaghetti plots
-with points for the actual evaluations.
+\code{geom_spaghetti} does spaghetti (i.e. "hairball") plots, \code{geom_meatballs}
+does spaghetti plots with points for the actual evaluations.
 }
-\section{\code{tf} aesthetic}{
+\details{
+"Flipped" aesthetics are not implemented for these geoms.
+}
+\section{\code{y} aesthetic}{
 
 Mandatory. Used to designate a column of class \code{tf} to be visualized.
 }
@@ -115,9 +118,9 @@ data$f = tf_rgp(10)
 data$fi = tf_jiggle(data$f)
 data$fb = tfb(data$f)
 library(ggplot2)
-ggplot(data, aes(tf = f, color = tf_depth(f))) + geom_spaghetti()
-ggplot(data, aes(tf = fi, shape = col, color = col)) + geom_meatballs()
-ggplot(data, aes(tf = fi)) + geom_meatballs(spaghetti = FALSE) +
+ggplot(data, aes(y = f, color = tf_depth(f))) + geom_spaghetti()
+ggplot(data, aes(y = fi, shape = col, color = col)) + geom_meatballs()
+ggplot(data, aes(y = fi)) + geom_meatballs(spaghetti = FALSE) +
   facet_wrap(~col)
 }
 \seealso{
