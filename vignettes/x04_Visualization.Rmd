@@ -54,6 +54,7 @@ We'll draw on `tidyfun::chf_df` and `tidyfun::dti_df`, as well as the `fda::Cana
 - **`geom_meatballs`**  for (lines &) points
 - **`gglasagna`** for heatmaps, with an **`order`**-argument for arranging lasagna layers / heat map rows.
 - **`geom_capellini`** for little sparklines / glyphs on maps etc.
+- **`geom_errorband`** -- a functional data version of `geom_ribbon`
 
 ## `geom_spaghetti` and `geom_meatballs`
 
@@ -121,6 +122,22 @@ chf_df %>%
   geom_spaghetti(size = 1.25, alpha = 1) + 
   geom_meatballs(aes(y = mean_act), alpha = .1) + 
   facet_grid(~ day)
+```
+
+... or the plot below showing group-wise mean functions +/- twice their pointwise standard errors:
+```{r}
+chf_df %>% 
+  group_by(gender, day) %>% 
+  summarize(mean_act = mean(activity),
+            sd_act = sd(activity)) %>% 
+  group_by(gender, day) %>% 
+  mutate(upper_act = mean_act + 2 * sd_act,
+         lower_act = mean_act - 2 * sd_act) %>% 
+  filter(day %in% c("Mon", "Sun")) %>% 
+  ggplot(aes(y = mean_act, color = gender, fill = gender)) + 
+  geom_spaghetti(alpha = 1) + 
+  geom_errorband(aes(ymax = upper_act, ymin = lower_act), alpha = .3) + 
+  facet_grid(day ~ gender)
 ```
 
 ## `gglasagna`
