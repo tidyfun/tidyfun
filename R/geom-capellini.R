@@ -1,8 +1,8 @@
 #' Glyph plots for `tf` objects
 #'
-#' Plots a miniature glyph or sparkline for each entry of a `tf`-object.
+#' Plots a miniature glyph / sparkline for each entry of a `tf`-object.
 #' (Capellini are tiny spaghetti -- *angel hair* pasta.) Aesthetics `x` and `y`
-#' specify the location of the glyphs, the `tf` aesthetic defines their shapes.
+#' specify the location of the glyphs, the `tf` aesthetic defines their shapes.  
 #' To accommodate all my fellow idiots, `geom_cappelini`,  `geom_cappellini` and
 #' `geom_capelini` also work. 
 #'
@@ -36,14 +36,13 @@
 #' }
 #' @name ggcapellini
 #' @family tidyfun visualization
-#' @seealso GGally::glyphs
+#' @seealso [GGally::glyphs]
 NULL
 
 #' @export
 #' @importFrom ggplot2 ggproto Stat Geom aes
 #' @importFrom GGally rescale11 rescale01
 #' @rdname ggcapellini
-#' @family tidyfun visualization
 #' @usage NULL
 #' @format NULL
 StatCapellini <- ggplot2::ggproto("StatCapellini", ggplot2::Stat,
@@ -90,7 +89,6 @@ StatCapellini <- ggplot2::ggproto("StatCapellini", ggplot2::Stat,
 
 #' @export
 #' @rdname ggcapellini
-#' @family tidyfun visualization
 #' @inheritParams ggplot2::stat_identity
 #' @param na.rm remove NAs? defaults to `TRUE`
 stat_capellini <- function(mapping = NULL, data = NULL, geom = "capellini",
@@ -132,7 +130,6 @@ stat_capellini <- function(mapping = NULL, data = NULL, geom = "capellini",
 #' @param line.linetype aesthetic property of the reference line
 #' @param line.size aesthetic property of of the reference line
 #' @param line.alpha aesthetic property of the reference line
-#' @family tidyfun visualization
 geom_capellini <- 
   function(mapping = NULL, data = NULL, stat = "capellini",
            position = "identity", ..., na.rm = TRUE, show.legend = NA,
@@ -157,23 +154,19 @@ geom_capellini <-
 #' @export
 #' @rdname ggcapellini
 #' @usage NULL
-#' @family tidyfun visualization
 geom_cappellini <- geom_capellini
 #' @export
 #' @usage NULL
 #' @rdname ggcapellini
-#' @family tidyfun visualization
 geom_capelini <- geom_capellini
 #' @export
 #' @usage NULL
 #' @rdname ggcapellini
-#' @family tidyfun visualization
 geom_cappelini <- geom_capellini
 
 
 #' @export
 #' @rdname ggcapellini
-#' @family tidyfun visualization
 #' @usage NULL
 #' @format NULL
 GeomCapellini <- ggplot2::ggproto("GeomCapellini", ggplot2::Geom,
