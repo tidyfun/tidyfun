@@ -10,7 +10,7 @@ Imports:
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.2.0
+RoxygenNote: 7.2.3
 Suggests: 
     data.table,
     fda,
@@ -28,7 +28,7 @@ Suggests:
     viridisLite,
     covr
 Roxygen: list(markdown = TRUE)
-Remotes:  
+Remotes: 
     tidyfun/tf
 VignetteBuilder: knitr
 URL: https://github.com/tidyfun/tidyfun,
