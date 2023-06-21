@@ -90,13 +90,14 @@
 
       
 
-      </header><script src="x01_tf_Vectors_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>tf Vectors and Operations</h1>
-                        <h4 data-toc-skip class="author">Jeff Goldsmith, Fabian Scheipl</h4>
+                        <h4 data-toc-skip class="author">Jeff Goldsmith,
+Fabian Scheipl</h4>
             
-            <h4 data-toc-skip class="date">2022-06-30</h4>
+            <h4 data-toc-skip class="date">2023-06-21</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/tidyfun/tidyfun/blob/HEAD/vignettes/x01_tf_Vectors.Rmd" class="external-link"><code>vignettes/x01_tf_Vectors.Rmd</code></a></small>
       <div class="hidden name"><code>x01_tf_Vectors.Rmd</code></div>
@@ -105,7 +106,10 @@
 
     
     
-<p>This vignette introduces the <code>tf</code> class, as well as the <code>tfd</code> and <code>tfb</code> subclasses, and focuses on vectors of this class. It also illustrates operations for <code>tf</code> vectors.</p>
+<p>This vignette introduces the <code>tf</code> class, as well as the
+<code>tfd</code> and <code>tfb</code> subclasses, and focuses on vectors
+of this class. It also illustrates operations for <code>tf</code>
+vectors.</p>
 <div class="section level2">
 <h2 id="tf-class-definition">
 <code>tf</code>-Class: Definition<a class="anchor" aria-label="anchor" href="#tf-class-definition"></a>
@@ -114,21 +118,28 @@
 <h3 id="tf-class">
 <code>tf</code>-class<a class="anchor" aria-label="anchor" href="#tf-class"></a>
 </h3>
-<p><strong><code>tf</code></strong> is a new data type for (vectors of) functional data:</p>
+<p><strong><code>tf</code></strong> is a new data type for (vectors of)
+functional data:</p>
 <ul>
 <li>
 <p>an abstract superclass for functional data in 2 forms:</p>
 <ul>
-<li>as (argument, value)-tuples: subclass <strong><code>tfd</code></strong>, also irregular or sparse</li>
-<li>or in basis representation: subclass <strong><code>tfb</code></strong> represents each observed function as a weighted sum of a fixed dictionary of known “basis functions”.</li>
+<li>as (argument, value)-tuples: subclass
+<strong><code>tfd</code></strong>, also irregular or sparse</li>
+<li>or in basis representation: subclass
+<strong><code>tfb</code></strong> represents each observed function as a
+weighted sum of a fixed dictionary of known “basis functions”.</li>
 </ul>
 </li>
 <li><p>basically, a <code>list</code> of numeric vectors<br>
-(… since <code>list</code>s work well as columns of data frames …)</p></li>
+(… since <code>list</code>s work well as columns of data frames
+…)</p></li>
 <li>
-<p>with additional attributes that define <em>function-like</em> behavior:</p>
+<p>with additional attributes that define <em>function-like</em>
+behavior:</p>
 <ul>
-<li>how to <strong>evaluate</strong> the given “functions” for new arguments</li>
+<li>how to <strong>evaluate</strong> the given “functions” for new
+arguments</li>
 <li>their <strong>domain</strong>
 </li>
 <li>the <strong>resolution</strong> of the argument values</li>
@@ -140,7 +151,11 @@
 <div class="section level3">
 <h3 id="example-data">Example Data<a class="anchor" aria-label="anchor" href="#example-data"></a>
 </h3>
-<p>First we extract a <code>tf</code> vector from the <code><a href="../reference/dti_df.html">tidyfun::dti_df</a></code> dataset containing fractional anisotropy tract profiles for the corpus callosum (<code>cca</code>). When printed, <code>tf</code> vectors show the first few <code>arg</code> and <code>value</code> pairs for each subject.</p>
+<p>First we extract a <code>tf</code> vector from the
+<code><a href="../reference/dti_df.html">tidyfun::dti_df</a></code> dataset containing fractional anisotropy
+tract profiles for the corpus callosum (<code>cca</code>). When printed,
+<code>tf</code> vectors show the first few <code>arg</code> and
+<code>value</code> pairs for each subject.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"dti_df"</span><span class="op">)</span></span>
 <span></span>
@@ -159,7 +174,8 @@
 <span><span class="co">## 1009_1: (0.000,0.50);(0.011,0.51);(0.022,0.52); ...</span></span>
 <span><span class="co">## 1010_1: (0.000,0.46);(0.011,0.47);(0.022,0.48); ...</span></span>
 <span><span class="co">##     [....]   (372 not shown)</span></span></code></pre></div>
-<p>We also extract a simple 5-element vector of functions on a regular grid:</p>
+<p>We also extract a simple 5-element vector of functions on a regular
+grid:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cca_five</span> <span class="op">&lt;-</span> <span class="va">cca</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, l <span class="op">=</span> <span class="fl">93</span><span class="op">)</span>, interpolate <span class="op">=</span> <span class="cn">TRUE</span><span class="op">]</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">cca_five</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">LETTERS</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span></span>
@@ -180,13 +196,18 @@
 </div>
 <div class="section level3">
 <h3 id="tf-subclass-tfd">
-<strong><code>tf</code></strong> subclass: <strong><code>tfd</code></strong><a class="anchor" aria-label="anchor" href="#tf-subclass-tfd"></a>
+<strong><code>tf</code></strong> subclass:
+<strong><code>tfd</code></strong><a class="anchor" aria-label="anchor" href="#tf-subclass-tfd"></a>
 </h3>
-<p><strong><code>tfd</code></strong> objects contain “raw” functional data:</p>
+<p><strong><code>tfd</code></strong> objects contain “raw” functional
+data:</p>
 <ul>
-<li>represented as a list of <strong><code>evaluations</code></strong> <span class="math inline">\(f_i(t)|_{t=t'}\)</span> and corresponding <strong><code>arg</code></strong>ument vector(s) <span class="math inline">\(t'\)</span>
+<li>represented as a list of <strong><code>evaluations</code></strong>
+<span class="math inline">\(f_i(t)|_{t=t'}\)</span> and
+corresponding <strong><code>arg</code></strong>ument vector(s) <span class="math inline">\(t'\)</span>
 </li>
-<li>has a <strong><code>domain</code></strong>: the range of valid <strong><code>arg</code></strong>s.</li>
+<li>has a <strong><code>domain</code></strong>: the range of valid
+<strong><code>arg</code></strong>s.</li>
 </ul>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cca_five</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://tidyfun.github.io/tf/reference/tfmethods.html" class="external-link">tf_evaluations</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="va">str</span></span>
@@ -201,7 +222,10 @@
 <span><span class="va">cca_five</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://tidyfun.github.io/tf/reference/tfmethods.html" class="external-link">tf_domain</a></span><span class="op">(</span><span class="op">)</span> </span>
 <span><span class="co">## [1] 0 1</span></span></code></pre></div>
 <ul>
-<li>each <strong><code>tfd</code></strong>-vector contains an <strong><code>evaluator</code></strong> function that defines how to inter-/extrapolate <code>evaluations</code> between <code>arg</code>s (and remembers results of previous calls)</li>
+<li>each <strong><code>tfd</code></strong>-vector contains an
+<strong><code>evaluator</code></strong> function that defines how to
+inter-/extrapolate <code>evaluations</code> between <code>arg</code>s
+(and remembers results of previous calls)</li>
 </ul>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://tidyfun.github.io/tf/reference/tfmethods.html" class="external-link">tf_evaluator</a></span><span class="op">(</span><span class="va">cca_five</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="va">str</span></span>
@@ -209,7 +233,12 @@
 <span><span class="fu"><a href="https://tidyfun.github.io/tf/reference/tfmethods.html" class="external-link">tf_evaluator</a></span><span class="op">(</span><span class="va">cca_five</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">tf_approx_spline</span></span></code></pre></div>
 <ul>
 <li>
-<strong><code>tfd</code></strong> has two subclasses: one for regular data with a common grid and one for irregular or sparse data. The <code>cca</code> data are irregular (values are missing for some subjects at some arguments) but the example below more clearly illustrates support for sparse and irregular data using CD4 cell counts from a longitudinal study.</li>
+<strong><code>tfd</code></strong> has two subclasses: one for
+regular data with a common grid and one for irregular or sparse data.
+The <code>cca</code> data are irregular (values are missing for some
+subjects at some arguments) but the example below more clearly
+illustrates support for sparse and irregular data using CD4 cell counts
+from a longitudinal study.</li>
 </ul>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cd4_vec</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tidyfun.github.io/tf/reference/tfd.html" class="external-link">tfd</a></span><span class="op">(</span><span class="fu">refund</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/refund/man/cd4.html" class="external-link">cd4</a></span><span class="op">)</span></span>
@@ -228,12 +257,18 @@
 </div>
 <div class="section level3">
 <h3 id="tf-subclass-tfb">
-<strong><code>tf</code></strong> subclass: <strong><code>tfb</code></strong><a class="anchor" aria-label="anchor" href="#tf-subclass-tfb"></a>
+<strong><code>tf</code></strong> subclass:
+<strong><code>tfb</code></strong><a class="anchor" aria-label="anchor" href="#tf-subclass-tfb"></a>
 </h3>
 <p>Functional data in basis representation:</p>
 <ul>
-<li>represented as a list of <strong><code>coefficients</code></strong> and a common <strong><code>basis_matrix</code></strong> of basis function evaluations on a vector of <code>arg</code>-values.</li>
-<li>contains a <strong><code>basis</code></strong> function that defines how to evaluate the basis functions for new <strong><code>arg</code></strong>s and how to differentiate or integrate it.</li>
+<li>represented as a list of <strong><code>coefficients</code></strong>
+and a common <strong><code>basis_matrix</code></strong> of basis
+function evaluations on a vector of <code>arg</code>-values.</li>
+<li>contains a <strong><code>basis</code></strong> function that defines
+how to evaluate the basis functions for new
+<strong><code>arg</code></strong>s and how to differentiate or integrate
+it.</li>
 <li>(internal) flavors:
 <ul>
 <li>
@@ -250,7 +285,7 @@
 <span><span class="va">cca</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/utils/object.size.html" class="external-link">object.size</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span>units <span class="op">=</span> <span class="st">"Kb"</span><span class="op">)</span></span>
 <span><span class="co">## 782.4 Kb</span></span>
 <span><span class="va">cca</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://tidyfun.github.io/tf/reference/tfb.html" class="external-link">tfb</a></span><span class="op">(</span>verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/utils/object.size.html" class="external-link">object.size</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span>units <span class="op">=</span> <span class="st">"Kb"</span><span class="op">)</span></span>
-<span><span class="co">## 182.8 Kb</span></span></code></pre></div>
+<span><span class="co">## 183 Kb</span></span></code></pre></div>
 <div class="section level4">
 <h4 id="tfb_spline-spline-basis">
 <strong><code>tfb_spline</code></strong>: spline basis<a class="anchor" aria-label="anchor" href="#tfb_spline-spline-basis"></a>
@@ -258,12 +293,15 @@
 <ul>
 <li>default for <code><a href="https://tidyfun.github.io/tf/reference/tfb.html" class="external-link">tfb()</a></code>
 </li>
-<li>accepts all arguments of <code>mgcv</code>’s <code>s()</code>-syntax: control basis type <code>bs</code>, basis dimension <code>k</code>, penalty order <code>m</code>
+<li>accepts all arguments of <code>mgcv</code>’s
+<code>s()</code>-syntax: control basis type <code>bs</code>, basis
+dimension <code>k</code>, penalty order <code>m</code>
 </li>
 <li>also does non-Gaussian fits: <code>family</code> argument
 <ul>
 <li>all exponential families</li>
-<li>but also: <span class="math inline">\(t\)</span>-distribution, ZI-Poisson, Beta, …</li>
+<li>but also: <span class="math inline">\(t\)</span>-distribution,
+ZI-Poisson, Beta, …</li>
 </ul>
 </li>
 </ul>
@@ -300,7 +338,8 @@
 <div class="section level4">
 <h4 id="penalization">Penalization:<a class="anchor" aria-label="anchor" href="#penalization"></a>
 </h4>
-<p><strong>Function-specific (default), none</strong>, prespecified (<code>sp</code>), or global:</p>
+<p><strong>Function-specific (default), none</strong>, prespecified
+(<code>sp</code>), or global:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/layout.html" class="external-link">layout</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">cca_five</span>  <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="op">)</span></span>
@@ -319,7 +358,8 @@
 <p><strong>“Global” smoothing</strong>:</p>
 <ol style="list-style-type: decimal">
 <li>estimate smoothing parameters for subsample (~10%) of curves</li>
-<li>apply geometric mean of estimated smoothing parameters to smooth <em>all</em> curves</li>
+<li>apply geometric mean of estimated smoothing parameters to smooth
+<em>all</em> curves</li>
 </ol>
 <p><strong>Advantages:</strong></p>
 <ul>
@@ -328,10 +368,13 @@
 </ul>
 <p><strong>Disadvantages</strong></p>
 <ul>
-<li>no real borrowing of information across curves (very sparse or functional fragment data, e.g.)</li>
-<li>still requires more observations than basis functions <em>per curve</em>
+<li>no real borrowing of information across curves (very sparse or
+functional fragment data, e.g.)</li>
+<li>still requires more observations than basis functions <em>per
+curve</em>
 </li>
-<li>subsample could miss small subgroups with different roughness, over-/undersmooth parts of the data, see below.</li>
+<li>subsample could miss small subgroups with different roughness,
+over-/undersmooth parts of the data, see below.</li>
 </ul>
 <p>Dataset with heterogeneous roughness:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
@@ -356,10 +399,13 @@
 <strong><code>tfb</code></strong> FPC-based<a class="anchor" aria-label="anchor" href="#tfb-fpc-based"></a>
 </h4>
 <ul>
-<li>uses first few eigenfunctions computed from a simple unregularized (weighted) SVD of the data matrix by default</li>
-<li>corresponding FPC basis and mean function saved as <code>tfd</code>-object</li>
+<li>uses first few eigenfunctions computed from a simple unregularized
+(weighted) SVD of the data matrix by default</li>
+<li>corresponding FPC basis and mean function saved as
+<code>tfd</code>-object</li>
 <li>observed functions are linear combinations of those.</li>
-<li>amount of “smoothing” can be controlled (roughly!) by setting the minimal <em>percentage of variance explained</em> <code>pve</code>
+<li>amount of “smoothing” can be controlled (roughly!) by setting the
+minimal <em>percentage of variance explained</em> <code>pve</code>
 </li>
 </ul>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
@@ -385,7 +431,11 @@
 <span><span class="va">cca_five_fpc</span>  <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>col <span class="op">=</span> <span class="st">"red"</span>, ylab <span class="op">=</span> <span class="st">"tfb_fpc(cca_five)"</span><span class="op">)</span></span>
 <span><span class="va">cca_five_fpc_lowrank</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span>col <span class="op">=</span> <span class="st">"blue"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="x01_tf_Vectors_files/figure-html/unnamed-chunk-10-1.png" width="90%"></p>
-<p><code>tfb_fpc</code> is currently only implemented for data on identical (but possibly non-equidistant) grids. The <strong><code>{refunder}</code></strong> <code>rfr_fpca</code>-functions provide FPCA methods for irregular and sparse data and regularized/smoothed FPCA.</p>
+<p><code>tfb_fpc</code> is currently only implemented for data on
+identical (but possibly non-equidistant) grids. The
+<strong><code>{refunder}</code></strong> <code>rfr_fpca</code>-functions
+provide FPCA methods for irregular and sparse data and
+regularized/smoothed FPCA.</p>
 </div>
 </div>
 </div>
@@ -393,7 +443,9 @@
 <h2 id="tf-class-methods">
 <code>tf</code>-Class: Methods<a class="anchor" aria-label="anchor" href="#tf-class-methods"></a>
 </h2>
-<p><strong><code>tidyfun</code></strong> implements almost all types of operations that are available for conventional numerical or logical vectors for <code>tf</code>-vectors as well, so you can:</p>
+<p><strong><code>tidyfun</code></strong> implements almost all types of
+operations that are available for conventional numerical or logical
+vectors for <code>tf</code>-vectors as well, so you can:</p>
 <div class="section level4">
 <h4 id="subset-subassign">subset &amp; subassign:<a class="anchor" aria-label="anchor" href="#subset-subassign"></a>
 </h4>
@@ -440,12 +492,16 @@
 <span><span class="fu"><a href="https://rdrr.io/r/stats/median.html" class="external-link">median</a></span><span class="op">(</span><span class="va">cca_five</span><span class="op">)</span> <span class="op">==</span> <span class="va">cca_five</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/which.min.html" class="external-link">which.max</a></span><span class="op">(</span><span class="fu"><a href="https://tidyfun.github.io/tf/reference/tf_depth.html" class="external-link">tf_depth</a></span><span class="op">(</span><span class="va">cca_five</span><span class="op">)</span><span class="op">)</span><span class="op">]</span></span>
 <span><span class="co">##    C </span></span>
 <span><span class="co">## TRUE</span></span></code></pre></div>
-<p>In addition, <strong><code>tidyfun</code></strong> provides methods specific for functional data:</p>
+<p>In addition, <strong><code>tidyfun</code></strong> provides methods
+specific for functional data:</p>
 </div>
 <div class="section level4">
 <h4 id="evaluate">evaluate:<a class="anchor" aria-label="anchor" href="#evaluate"></a>
 </h4>
-<p><code>tf</code>-objects have a special <code>[</code>-operator: Its second argument specifies <code>arg</code>ument values at which to evaluate the functions and has some additional options, so it’s easy to get point values for <code>tf</code> objects:</p>
+<p><code>tf</code>-objects have a special <code>[</code>-operator: Its
+second argument specifies <code>arg</code>ument values at which to
+evaluate the functions and has some additional options, so it’s easy to
+get point values for <code>tf</code> objects:</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cca_five</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, l <span class="op">=</span> <span class="fl">3</span><span class="op">)</span><span class="op">]</span></span>
 <span><span class="co">##           0       0.5         1</span></span>
@@ -506,7 +562,9 @@
 <div class="section level4">
 <h4 id="query">query<a class="anchor" aria-label="anchor" href="#query"></a>
 </h4>
-<p><strong><code>tidyfun</code></strong> makes it easy to find (ranges of) <code>arg</code>uments <span class="math inline">\(t\)</span> satisfying a condition on <code>value</code> <span class="math inline">\(f(t)\)</span> (and <code>arg</code>ument <span class="math inline">\(t\)</span>):</p>
+<p><strong><code>tidyfun</code></strong> makes it easy to find (ranges
+of) <code>arg</code>uments <span class="math inline">\(t\)</span>
+satisfying a condition on <code>value</code> <span class="math inline">\(f(t)\)</span> (and <code>arg</code>ument <span class="math inline">\(t\)</span>):</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cca_five</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://tidyfun.github.io/tf/reference/tf_where.html" class="external-link">tf_anywhere</a></span><span class="op">(</span><span class="va">value</span> <span class="op">&gt;</span> <span class="fl">.65</span><span class="op">)</span></span>
 <span><span class="co">##     B     A     C     D     E </span></span>
@@ -570,7 +628,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>

@@ -90,14 +90,15 @@
 
       
 
-      </header><script src="x02_Conversion_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Converting to &amp; from <code>tf</code>
 </h1>
-                        <h4 data-toc-skip class="author">Jeff Goldsmith, Fabian Scheipl</h4>
+                        <h4 data-toc-skip class="author">Jeff Goldsmith,
+Fabian Scheipl</h4>
             
-            <h4 data-toc-skip class="date">2022-06-30</h4>
+            <h4 data-toc-skip class="date">2023-06-21</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/tidyfun/tidyfun/blob/HEAD/vignettes/x02_Conversion.Rmd" class="external-link"><code>vignettes/x02_Conversion.Rmd</code></a></small>
       <div class="hidden name"><code>x02_Conversion.Rmd</code></div>
@@ -106,14 +107,35 @@
 
     
     
-<p>Functional data have often been stored in matrices or data frames. Although these structures have sufficed for some purposes, they are cumbersome or impossible to use with modern tools for data wrangling.</p>
-<p>In this vignette, we illustrate how to convert data from common structures to <code>tf</code> objects. Throughout, functional data vectors are stored as columns in a data frame to facilitate subsequent wrangling and analysis.</p>
+<p>Functional data have often been stored in matrices or data frames.
+Although these structures have sufficed for some purposes, they are
+cumbersome or impossible to use with modern tools for data
+wrangling.</p>
+<p>In this vignette, we illustrate how to convert data from common
+structures to <code>tf</code> objects. Throughout, functional data
+vectors are stored as columns in a data frame to facilitate subsequent
+wrangling and analysis.</p>
 <div class="section level2">
 <h2 id="conversion-from-matrices">Conversion from matrices<a class="anchor" aria-label="anchor" href="#conversion-from-matrices"></a>
 </h2>
-<p>One of the most common structures for storing functional data has been a matrix. Especially when subjects are observed over the same (regular or irregular) grid, it is natural to observations on a subject in rows (or columns) of a matrix. Matrices, however, are difficult to wrangle along with data in a data frame, leading to confusing and easy-to-break subsetting across several objects.</p>
-<p>In the following examples, we’ll use <code>tfd</code> to get a <code>tf</code> vector from matrices. The <code>tfd</code> function expects data to be organized so that each row is the functional observation for a single subject. It’s possible to focus only on the resulting <code>tf</code> vector, but in keeping with the broader goals of <code>tidyfun</code> we’ll add these as columns to a data frame.</p>
-<p>The <code>DTI</code> data in the <code>refund</code> package has been a popular example in functional data analysis. In the code below, we create a data frame (or <code>tibble</code>) containing scalar covariates, and then add columns for the <code>cca</code> and <code>rcst</code> track profiles. This code was used to create the <code><a href="../reference/dti_df.html">tidyfun::dti_df</a></code> dataset included in the package.</p>
+<p>One of the most common structures for storing functional data has
+been a matrix. Especially when subjects are observed over the same
+(regular or irregular) grid, it is natural to observations on a subject
+in rows (or columns) of a matrix. Matrices, however, are difficult to
+wrangle along with data in a data frame, leading to confusing and
+easy-to-break subsetting across several objects.</p>
+<p>In the following examples, we’ll use <code>tfd</code> to get a
+<code>tf</code> vector from matrices. The <code>tfd</code> function
+expects data to be organized so that each row is the functional
+observation for a single subject. It’s possible to focus only on the
+resulting <code>tf</code> vector, but in keeping with the broader goals
+of <code>tidyfun</code> we’ll add these as columns to a data frame.</p>
+<p>The <code>DTI</code> data in the <code>refund</code> package has been
+a popular example in functional data analysis. In the code below, we
+create a data frame (or <code>tibble</code>) containing scalar
+covariates, and then add columns for the <code>cca</code> and
+<code>rcst</code> track profiles. This code was used to create the
+<code><a href="../reference/dti_df.html">tidyfun::dti_df</a></code> dataset included in the package.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dti_df</span> <span class="op">=</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span></span>
 <span>  id <span class="op">=</span> <span class="fu">refund</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/refund/man/DTI.html" class="external-link">DTI</a></span><span class="op">$</span><span class="va">ID</span>, </span>
@@ -123,7 +145,10 @@
 <span></span>
 <span><span class="va">dti_df</span><span class="op">$</span><span class="va">cca</span> <span class="op">=</span> <span class="fu"><a href="https://tidyfun.github.io/tf/reference/tfd.html" class="external-link">tfd</a></span><span class="op">(</span><span class="fu">refund</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/refund/man/DTI.html" class="external-link">DTI</a></span><span class="op">$</span><span class="va">cca</span>, arg <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">1</span>, l <span class="op">=</span> <span class="fl">93</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">dti_df</span><span class="op">$</span><span class="va">rcst</span> <span class="op">=</span> <span class="fu"><a href="https://tidyfun.github.io/tf/reference/tfd.html" class="external-link">tfd</a></span><span class="op">(</span><span class="fu">refund</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/refund/man/DTI.html" class="external-link">DTI</a></span><span class="op">$</span><span class="va">rcst</span>, arg <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, l <span class="op">=</span> <span class="fl">55</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p>In <code>tfd</code>, the first argument is a matrix; <code>arg</code> defines the grid over which functions are observed. The output of <code>tfd</code> is a vector, which we include in the <code>dti_df</code> data frame.</p>
+<p>In <code>tfd</code>, the first argument is a matrix; <code>arg</code>
+defines the grid over which functions are observed. The output of
+<code>tfd</code> is a vector, which we include in the
+<code>dti_df</code> data frame.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dti_df</span></span>
 <span><span class="co">## <span style="color: #949494;"># A tibble: 382 × 6</span></span></span>
@@ -139,17 +164,35 @@
 <span><span class="co">## <span style="color: #BCBCBC;"> 8</span>  <span style="text-decoration: underline;">1</span>008     1 male   control  [8]: (0.000,0.45);(0.011,0.48);(0.022,0.50); ...</span></span>
 <span><span class="co">## <span style="color: #BCBCBC;"> 9</span>  <span style="text-decoration: underline;">1</span>009     1 male   control  [9]: (0.000,0.50);(0.011,0.51);(0.022,0.52); ...</span></span>
 <span><span class="co">## <span style="color: #BCBCBC;">10</span>  <span style="text-decoration: underline;">1</span>010     1 male   control [10]: (0.000,0.46);(0.011,0.47);(0.022,0.48); ...</span></span>
-<span><span class="co">## <span style="color: #949494;"># … with 372 more rows, and 1 more variable: rcst &lt;tfd_irrg&gt;</span></span></span></code></pre></div>
-<p>Finally, we’ll make a quick spaghetti plot to illustrate that the complete functional data is included in each <code>tf</code> column.</p>
+<span><span class="co">## <span style="color: #949494;"># ℹ 372 more rows</span></span></span>
+<span><span class="co">## <span style="color: #949494;"># ℹ 1 more variable: rcst &lt;tfd_irrg&gt;</span></span></span></code></pre></div>
+<p>Finally, we’ll make a quick spaghetti plot to illustrate that the
+complete functional data is included in each <code>tf</code> column.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dti_df</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> </span>
 <span>  <span class="fu"><a href="../reference/ggspaghetti.html">geom_spaghetti</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>tf <span class="op">=</span> <span class="va">cca</span>, col <span class="op">=</span> <span class="va">case</span>, alpha <span class="op">=</span> <span class="fl">.2</span> <span class="op">+</span> <span class="fl">.4</span><span class="op">*</span><span class="op">(</span><span class="va">case</span> <span class="op">==</span> <span class="st">"control"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap</a></span><span class="op">(</span><span class="op">~</span> <span class="va">sex</span><span class="op">)</span> <span class="op">+</span> </span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_alpha.html" class="external-link">scale_alpha</a></span><span class="op">(</span>guide <span class="op">=</span> <span class="st">'none'</span>, range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.2</span>, <span class="fl">.4</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_alpha.html" class="external-link">scale_alpha</a></span><span class="op">(</span>guide <span class="op">=</span> <span class="st">'none'</span>, range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.2</span>, <span class="fl">.4</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">## Warning: Using the `size` aesthetic with geom_line was deprecated in ggplot2 3.4.0.</span></span>
+<span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Please use the `linewidth` aesthetic instead.</span></span>
+<span><span class="co">## <span style="color: #555555;">This warning is displayed once every 8 hours.</span></span></span>
+<span><span class="co">## <span style="color: #555555;">Call `lifecycle::last_lifecycle_warnings()` to see where this warning was</span></span></span>
+<span><span class="co">## <span style="color: #555555;">generated.</span></span></span></code></pre></div>
 <p><img src="x02_Conversion_files/figure-html/unnamed-chunk-3-1.png" width="90%"></p>
-<p>We’ll repeat the same basic process using a second, and probably even-more-perennial, functional data example: the Canadian weather data in the <code>fda</code> package. Here, functional data are stored in a three-dimensional array, with dimensions corresponding to day, station, and outcome (temperature, precipitation, and log10 precipitation).</p>
-<p>In the following, we first create a <code>tibble</code> with scalar covariates, then use <code>tfd</code> to create functional data vectors, and finally include the resulting vectors in the dataframe. In this case, our <code>arg</code>s are days of the year, and we use <code>tf_smooth</code> to smooth the precipitation outcome. Because the original data matrices record the different observations in the columns instead of the rows, we have to use their transpose in the call to <code>tfd</code>:</p>
+<p>We’ll repeat the same basic process using a second, and probably
+even-more-perennial, functional data example: the Canadian weather data
+in the <code>fda</code> package. Here, functional data are stored in a
+three-dimensional array, with dimensions corresponding to day, station,
+and outcome (temperature, precipitation, and log10 precipitation).</p>
+<p>In the following, we first create a <code>tibble</code> with scalar
+covariates, then use <code>tfd</code> to create functional data vectors,
+and finally include the resulting vectors in the dataframe. In this
+case, our <code>arg</code>s are days of the year, and we use
+<code>tf_smooth</code> to smooth the precipitation outcome. Because the
+original data matrices record the different observations in the columns
+instead of the rows, we have to use their transpose in the call to
+<code>tfd</code>:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">canada</span> <span class="op">=</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span></span>
 <span>  place <span class="op">=</span> <span class="fu">fda</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/fda/man/CanadianWeather.html" class="external-link">CanadianWeather</a></span><span class="op">$</span><span class="va">place</span>, </span>
@@ -178,7 +221,8 @@
 <span><span class="co">## <span style="color: #BCBCBC;"> 8</span> Arvida      Atlantic  48.3 -<span style="color: #BB0000;">71.1</span>  [8]: (1,-14);(2,-14);(3,-15); ...</span></span>
 <span><span class="co">## <span style="color: #BCBCBC;"> 9</span> Bagottville Atlantic  48.2 -<span style="color: #BB0000;">70.5</span>  [9]: (1,-15);(2,-15);(3,-16); ...</span></span>
 <span><span class="co">## <span style="color: #BCBCBC;">10</span> Quebec      Atlantic  46.5 -<span style="color: #BB0000;">71.1</span> [10]: (1,-11);(2,-11);(3,-12); ...</span></span>
-<span><span class="co">## <span style="color: #949494;"># … with 25 more rows, and 1 more variable: precipl10 &lt;tfd_reg&gt;</span></span></span></code></pre></div>
+<span><span class="co">## <span style="color: #949494;"># ℹ 25 more rows</span></span></span>
+<span><span class="co">## <span style="color: #949494;"># ℹ 1 more variable: precipl10 &lt;tfd_reg&gt;</span></span></span></code></pre></div>
 <p>A plot containing both functional observations is shown below.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">temp_panel</span> <span class="op">=</span></span>
@@ -198,8 +242,17 @@
 <div class="section level4">
 <h4 id="in-long-format">… in “long” format<a class="anchor" aria-label="anchor" href="#in-long-format"></a>
 </h4>
-<p>“Long” format data frames containing functional data include columns containing a subject identifier, the functional argument, and the value each subject’s function takes at each argument. There are also often (but not always) non-functional covariates that are repeated within a subject. For data in this form, we use <code>tf_nest</code> to produce a data frame containing a single row for each subject.</p>
-<p>A first example is the pig weight data from the <code>SemiPar</code> package, which is a nice example from longitudinal data analysis. This includes columns for <code>id.num</code>, <code>num.weeks</code>, and <code>weight</code> – which correspond to the subject, argument, and value.</p>
+<p>“Long” format data frames containing functional data include columns
+containing a subject identifier, the functional argument, and the value
+each subject’s function takes at each argument. There are also often
+(but not always) non-functional covariates that are repeated within a
+subject. For data in this form, we use <code>tf_nest</code> to produce a
+data frame containing a single row for each subject.</p>
+<p>A first example is the pig weight data from the <code>SemiPar</code>
+package, which is a nice example from longitudinal data analysis. This
+includes columns for <code>id.num</code>, <code>num.weeks</code>, and
+<code>weight</code> – which correspond to the subject, argument, and
+value.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"pig.weights"</span>, package <span class="op">=</span> <span class="st">"SemiPar"</span><span class="op">)</span></span>
 <span></span>
@@ -219,8 +272,10 @@
 <span><span class="co">## <span style="color: #BCBCBC;"> 8</span>      1         8   65  </span></span>
 <span><span class="co">## <span style="color: #BCBCBC;"> 9</span>      1         9   72  </span></span>
 <span><span class="co">## <span style="color: #BCBCBC;">10</span>      2         1   22.5</span></span>
-<span><span class="co">## <span style="color: #949494;"># … with 422 more rows</span></span></span></code></pre></div>
-<p>We create <code>pig_df</code> by nesting weight within subject. The result is a data frame containing a single row for each pig, and columns for <code>id.num</code> and the <code>weight</code> function.</p>
+<span><span class="co">## <span style="color: #949494;"># ℹ 422 more rows</span></span></span></code></pre></div>
+<p>We create <code>pig_df</code> by nesting weight within subject. The
+result is a data frame containing a single row for each pig, and columns
+for <code>id.num</code> and the <code>weight</code> function.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pig_df</span> <span class="op">=</span> </span>
 <span>  <span class="va">pig.weights</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
@@ -240,17 +295,73 @@
 <span><span class="co">## <span style="color: #BCBCBC;"> 8</span>      8  [8]: (1,24);(2,30);(3,38); ...</span></span>
 <span><span class="co">## <span style="color: #BCBCBC;"> 9</span>      9  [9]: (1,20);(2,28);(3,33); ...</span></span>
 <span><span class="co">## <span style="color: #BCBCBC;">10</span>     10 [10]: (1,26);(2,32);(3,40); ...</span></span>
-<span><span class="co">## <span style="color: #949494;"># … with 38 more rows</span></span></span></code></pre></div>
+<span><span class="co">## <span style="color: #949494;"># ℹ 38 more rows</span></span></span></code></pre></div>
 <p>We’ll make a quick plot to show the result.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pig_df</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>tf <span class="op">=</span> <span class="va">weight</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
-<span>  <span class="fu"><a href="../reference/ggspaghetti.html">geom_spaghetti</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/ggspaghetti.html">geom_spaghetti</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">## Warning: Unknown or uninitialised column: `linewidth`.</span></span>
+<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
+<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
+<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
+<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
+<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
+<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
+<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
+<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
+<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
+<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
+<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
+<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
+<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
+<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
+<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
+<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
+<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
+<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
+<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
+<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
+<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
+<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
+<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
+<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
+<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
+<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
+<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
+<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
+<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
+<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
+<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
+<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
+<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
+<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
+<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
+<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
+<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
+<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
+<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
+<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
+<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
+<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
+<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
+<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
+<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
+<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
+<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span></code></pre></div>
 <p><img src="x02_Conversion_files/figure-html/unnamed-chunk-9-1.png" width="90%"></p>
-<p>A second example uses the <code>ALA::fev1</code> dataset. <code>ALA</code> is not available on CRAN but can be installed using the line below.</p>
+<p>A second example uses the <code>ALA::fev1</code> dataset.
+<code>ALA</code> is not available on CRAN but can be installed using the
+line below.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"ALA"</span>, repos<span class="op">=</span><span class="st">"http://R-Forge.R-project.org"</span><span class="op">)</span></span></code></pre></div>
-<p>In this dataset, both <code>height</code> and <code>logFEV1</code> are observed at multiple ages for each child; that is, there are two functions observed simultaneously, over a shared argument. We can use <code>tf_nest</code> to create a dataframe with a single row for each subject, which includes both non-functional covariates (like age and height at baseline), and functional observations <code>logFEV1</code> and <code>height</code>.</p>
+<p>In this dataset, both <code>height</code> and <code>logFEV1</code>
+are observed at multiple ages for each child; that is, there are two
+functions observed simultaneously, over a shared argument. We can use
+<code>tf_nest</code> to create a dataframe with a single row for each
+subject, which includes both non-functional covariates (like age and
+height at baseline), and functional observations <code>logFEV1</code>
+and <code>height</code>.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">ALA</span><span class="fu">::</span><span class="va">fev1</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="op">)</span></span>
@@ -280,12 +391,18 @@
 <div class="section level4">
 <h4 id="in-wide-format">… in “wide” format<a class="anchor" aria-label="anchor" href="#in-wide-format"></a>
 </h4>
-<p>In some cases functional data are stored in “wide” format, meaning that there are separate columns for each argument, and values are stored in these columns. In this case, <code>tf_gather</code> can be use to collapse across columns to produce a function for each subject.</p>
-<p>The example below again uses the <code><a href="https://rdrr.io/pkg/refund/man/DTI.html" class="external-link">refund::DTI</a></code> dataset. We convert <code>cca</code> so that, instead of acting as a matrix, it is in “wide” format. We then use <code>tf_gather</code> to combine the <code>cca</code> observations into a function.</p>
+<p>In some cases functional data are stored in “wide” format, meaning
+that there are separate columns for each argument, and values are stored
+in these columns. In this case, <code>tf_gather</code> can be use to
+collapse across columns to produce a function for each subject.</p>
+<p>The example below again uses the <code><a href="https://rdrr.io/pkg/refund/man/DTI.html" class="external-link">refund::DTI</a></code> dataset. We
+convert <code>cca</code> so that, instead of acting as a matrix, it is
+in “wide” format. We then use <code>tf_gather</code> to combine the
+<code>cca</code> observations into a function.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dti_df</span> <span class="op">=</span> </span>
 <span>  <span class="fu">refund</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/refund/man/DTI.html" class="external-link">DTI</a></span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu">janitor</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/janitor/man/clean_names.html" class="external-link">clean_names</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu">janitor</span><span class="fu">::</span><span class="fu"><a href="https://sfirke.github.io/janitor/reference/clean_names.html" class="external-link">clean_names</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="op">-</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html" class="external-link">starts_with</a></span><span class="op">(</span><span class="st">"rcst"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="../reference/tf_gather.html">tf_gather</a></span><span class="op">(</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html" class="external-link">starts_with</a></span><span class="op">(</span><span class="st">"cca"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span><span class="op">)</span></span>
@@ -300,12 +417,20 @@
 <div class="section level2">
 <h2 id="reversing-the-conversion">Reversing the conversion<a class="anchor" aria-label="anchor" href="#reversing-the-conversion"></a>
 </h2>
-<p><strong><code>tidyfun</code></strong> includes a wide range of tools for exploratory analysis and visualization, but many analysis approaches require data to be stored in more traditional formats. Several functions are available to aid in this conversion.</p>
+<p><strong><code>tidyfun</code></strong> includes a wide range of tools
+for exploratory analysis and visualization, but many analysis approaches
+require data to be stored in more traditional formats. Several functions
+are available to aid in this conversion.</p>
 <div class="section level3">
 <h3 id="conversion-from-tf-to-data-frames">Conversion from <code>tf</code> to data frames<a class="anchor" aria-label="anchor" href="#conversion-from-tf-to-data-frames"></a>
 </h3>
-<p>The functions <code>tf_unnest</code> and <code>tf_spread</code> reverse the operations in <code>tf_nest</code> and <code>tf_gather</code>, respectively – that is, they take a data frame with a functional observation and produce long or wide data frames. We’ll illustrate these with the <code>pig_df</code> data set.</p>
-<p>First, to produce a long-format dataf rame, one can use <code>tf_unnest</code>:</p>
+<p>The functions <code>tf_unnest</code> and <code>tf_spread</code>
+reverse the operations in <code>tf_nest</code> and
+<code>tf_gather</code>, respectively – that is, they take a data frame
+with a functional observation and produce long or wide data frames.
+We’ll illustrate these with the <code>pig_df</code> data set.</p>
+<p>First, to produce a long-format dataf rame, one can use
+<code>tf_unnest</code>:</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pig_df</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="../reference/tf_unnest.html">tf_unnest</a></span><span class="op">(</span><span class="op">)</span></span>
@@ -324,8 +449,9 @@
 <span><span class="co">## <span style="color: #BCBCBC;"> 8</span>      1          8         65  </span></span>
 <span><span class="co">## <span style="color: #BCBCBC;"> 9</span>      1          9         72  </span></span>
 <span><span class="co">## <span style="color: #BCBCBC;">10</span>      2          1         22.5</span></span>
-<span><span class="co">## <span style="color: #949494;"># … with 422 more rows</span></span></span></code></pre></div>
-<p>To produce a wide-format data frame, one can use <code>tf_spread</code>:</p>
+<span><span class="co">## <span style="color: #949494;"># ℹ 422 more rows</span></span></span></code></pre></div>
+<p>To produce a wide-format data frame, one can use
+<code>tf_spread</code>:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pig_df</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="../reference/tf_spread.html">tf_spread</a></span><span class="op">(</span><span class="op">)</span></span>
@@ -342,12 +468,14 @@
 <span><span class="co">## <span style="color: #BCBCBC;"> 8</span>      8     23.5     30.5     38       41       48.5     55       59.5</span></span>
 <span><span class="co">## <span style="color: #BCBCBC;"> 9</span>      9     20       27.5     33       39       43.5     49       54.5</span></span>
 <span><span class="co">## <span style="color: #BCBCBC;">10</span>     10     25.5     32.5     39.5     47       53       58.5     63  </span></span>
-<span><span class="co">## <span style="color: #949494;"># … with 38 more rows, and 2 more variables: weight_8 &lt;dbl&gt;, weight_9 &lt;dbl&gt;</span></span></span></code></pre></div>
+<span><span class="co">## <span style="color: #949494;"># ℹ 38 more rows</span></span></span>
+<span><span class="co">## <span style="color: #949494;"># ℹ 2 more variables: weight_8 &lt;dbl&gt;, weight_9 &lt;dbl&gt;</span></span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="converting-back-to-a-matrix-or-data-frame">Converting back to a matrix or data frame<a class="anchor" aria-label="anchor" href="#converting-back-to-a-matrix-or-data-frame"></a>
 </h3>
-<p>To convert <code>tf</code> vector to a matrix, use <code>as.matrix</code>:</p>
+<p>To convert <code>tf</code> vector to a matrix, use
+<code>as.matrix</code>:</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">weight_vec</span> <span class="op">=</span> <span class="va">pig_df</span><span class="op">$</span><span class="va">weight</span></span>
 <span></span>
@@ -359,7 +487,9 @@
 <span><span class="co">## 1 24.0 32.0 39.0 42.5 48.0</span></span>
 <span><span class="co">## 2 22.5 30.5 40.5 45.0 51.0</span></span>
 <span><span class="co">## 3 22.5 28.0 36.5 41.0 47.5</span></span></code></pre></div>
-<p>To convert a <code>tf</code> vector to a standalone data frame with <code>"id"</code>,<code>"arg"</code>,<code>"value"</code>-columns, use <code><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame()</a></code>:</p>
+<p>To convert a <code>tf</code> vector to a standalone data frame with
+<code>"id"</code>,<code>"arg"</code>,<code>"value"</code>-columns, use
+<code><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame()</a></code>:</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">weight_vec</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="op">)</span></span>
@@ -433,7 +563,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>

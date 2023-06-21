@@ -90,13 +90,14 @@
 
       
 
-      </header><script src="x05_Advice_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Advice for Developers</h1>
-                        <h4 data-toc-skip class="author">Jeff Goldsmith</h4>
+                        <h4 data-toc-skip class="author">Jeff
+Goldsmith</h4>
             
-            <h4 data-toc-skip class="date">2022-06-30</h4>
+            <h4 data-toc-skip class="date">2023-06-21</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/tidyfun/tidyfun/blob/HEAD/vignettes/x05_Advice.Rmd" class="external-link"><code>vignettes/x05_Advice.Rmd</code></a></small>
       <div class="hidden name"><code>x05_Advice.Rmd</code></div>
@@ -105,58 +106,126 @@
 
     
     
-<p><strong><code>tidyfun</code></strong> is intended to make user interactions with functional data easier. The package depends on package <strong><code>tf</code></strong>, which defines a data class (<code>tf</code>) so that vectors of functional observations are available, similar to vectors of class <code>numeric</code> or <code>character</code><a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a></p>
-<p>Such classes make it possible to store functional data alongside other variables in a single dataframe; by extension, tools for data manipulation from the <code>tidyverse</code> and elsewhere can be used with datasets in which one or more variable is functional.</p>
-<p>Many basic analyses are available in <strong><code>tidyfun</code></strong> – it’s possible to compute mean functions and other summary statistics of <code>tf</code> vectors, to expand observations using a spline basis or using functional principal components analysis. With tools like <code>group_by</code> and <code>summarize</code>, these can be powerful tools for data exploration. Other analysis approaches are included in the <strong><code>refunder</code></strong> package, and more will be added to that package over time.</p>
-<p>There is an active research community in FDA, and there is constant development of new methods for analysis. Our hope is that the data structures in <strong><code>tidyfun</code></strong> will be useful as others as new approaches are implemented, and this page is intended to provide some advice and guidance for those implementations.</p>
+<p><strong><code>tidyfun</code></strong> is intended to make user
+interactions with functional data easier. The package depends on package
+<strong><code>tf</code></strong>, which defines a data class
+(<code>tf</code>) so that vectors of functional observations are
+available, similar to vectors of class <code>numeric</code> or
+<code>character</code><a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a></p>
+<p>Such classes make it possible to store functional data alongside
+other variables in a single dataframe; by extension, tools for data
+manipulation from the <code>tidyverse</code> and elsewhere can be used
+with datasets in which one or more variable is functional.</p>
+<p>Many basic analyses are available in
+<strong><code>tidyfun</code></strong> – it’s possible to compute mean
+functions and other summary statistics of <code>tf</code> vectors, to
+expand observations using a spline basis or using functional principal
+components analysis. With tools like <code>group_by</code> and
+<code>summarize</code>, these can be powerful tools for data
+exploration. Other analysis approaches are included in the
+<strong><code>refunder</code></strong> package, and more will be added
+to that package over time.</p>
+<p>There is an active research community in FDA, and there is constant
+development of new methods for analysis. Our hope is that the data
+structures in <strong><code>tidyfun</code></strong> will be useful as
+others as new approaches are implemented, and this page is intended to
+provide some advice and guidance for those implementations.</p>
 <div class="section level2">
 <h2 id="why-use-tidyfun">Why use <strong><code>tidyfun</code></strong><a class="anchor" aria-label="anchor" href="#why-use-tidyfun"></a>
 </h2>
-<p>There are start-up costs to using a new data class when writing code for new methods, and there should be reasons to adopt such a class. We see several benefits to using <strong><code>tidyfun</code></strong>:</p>
+<p>There are start-up costs to using a new data class when writing code
+for new methods, and there should be reasons to adopt such a class. We
+see several benefits to using <strong><code>tidyfun</code></strong>:</p>
 <ul>
 <li>Compatibility with a dataframe-centric approach to analysis</li>
 <li>Supporting tools for data manipulation</li>
 <li>Plotting in <code>ggplot</code> and base R</li>
 </ul>
-<p>Together, these make it possible to analyze functional data in a pipeline (import, exploratory analysis, visualization, and formal analysis) that is similar to those used for scalar variables.</p>
-<p>These advantages are user-facing – they are intended to make things easier when analyzing datasets that include functional observations. Because new methods for functional data typically involve working with “raw” observations (numeric vectors or matrices), implementing methods for <strong><code>tidyfun</code></strong> will require some consideration of user interfaces, input objects, and data transformations. We believe the benefits are worth this effort.</p>
+<p>Together, these make it possible to analyze functional data in a
+pipeline (import, exploratory analysis, visualization, and formal
+analysis) that is similar to those used for scalar variables.</p>
+<p>These advantages are user-facing – they are intended to make things
+easier when analyzing datasets that include functional observations.
+Because new methods for functional data typically involve working with
+“raw” observations (numeric vectors or matrices), implementing methods
+for <strong><code>tidyfun</code></strong> will require some
+consideration of user interfaces, input objects, and data
+transformations. We believe the benefits are worth this effort.</p>
 </div>
 <div class="section level2">
 <h2 id="thoughts-on-design">Thoughts on design<a class="anchor" aria-label="anchor" href="#thoughts-on-design"></a>
 </h2>
-<p><strong><code>tidyfun</code></strong> will be most effective in new methods that are intended to be part of an analysis pipeline. As a starting point, we suggest addressing the following questions:</p>
+<p><strong><code>tidyfun</code></strong> will be most effective in new
+methods that are intended to be part of an analysis pipeline. As a
+starting point, we suggest addressing the following questions:</p>
 <ul>
-<li>How will users’ data be organized? What will input dataframes look like? What other variables will exist in addition to <code>tf</code> columns?</li>
-<li>What is a natural user interface for my function? How should users specify functional data columns?</li>
-<li>What will users expect to obtain from my function? Are there parallels with other modeling strategies? How should I organize output so that it integrates with a dataframe-centric analysis approach?</li>
-<li>Should functions support <code>tfd</code>, <code>tfb</code>, or both? Does the output class matter?</li>
-<li>Are there any supporting tools I should include? Things like <code>plot</code> or <code>predict</code>, which can be used to summarize results?</li>
+<li>How will users’ data be organized? What will input dataframes look
+like? What other variables will exist in addition to <code>tf</code>
+columns?</li>
+<li>What is a natural user interface for my function? How should users
+specify functional data columns?</li>
+<li>What will users expect to obtain from my function? Are there
+parallels with other modeling strategies? How should I organize output
+so that it integrates with a dataframe-centric analysis approach?</li>
+<li>Should functions support <code>tfd</code>, <code>tfb</code>, or
+both? Does the output class matter?</li>
+<li>Are there any supporting tools I should include? Things like
+<code>plot</code> or <code>predict</code>, which can be used to
+summarize results?</li>
 </ul>
-<p>At best, users will have a seamless experience across data exploration, modeling, and understanding results; <strong><code>tidyfun</code></strong> is intended to encourage that.</p>
+<p>At best, users will have a seamless experience across data
+exploration, modeling, and understanding results;
+<strong><code>tidyfun</code></strong> is intended to encourage that.</p>
 </div>
 <div class="section level2">
 <h2 id="using-tidyfun-in-new-functions">Using <strong><code>tidyfun</code></strong> in new functions<a class="anchor" aria-label="anchor" href="#using-tidyfun-in-new-functions"></a>
 </h2>
-<p>We anticipate that new methods for functional data will use raw numeric values (in vectors or matrices) for estimation and / or inference. Tools for converting <code>tf</code> vectors to matrices or other formats are available, and useful in this context. In general, we have used the following structure for functions that perform analyses:</p>
+<p>We anticipate that new methods for functional data will use raw
+numeric values (in vectors or matrices) for estimation and / or
+inference. Tools for converting <code>tf</code> vectors to matrices or
+other formats are available, and useful in this context. In general, we
+have used the following structure for functions that perform
+analyses:</p>
 <ul>
 <li>Input objects are dataframes containing <code>tf</code> vectors</li>
 <li>
-<code>tf</code> vectors are converted to matrices (or numeric vectors)</li>
+<code>tf</code> vectors are converted to matrices (or numeric
+vectors)</li>
 <li>The estimation procedure is implemented using these matrices</li>
-<li>Results are formatted as <code>tf</code> vectors as appropriate and returned to the user</li>
+<li>Results are formatted as <code>tf</code> vectors as appropriate and
+returned to the user</li>
 </ul>
-<p>This pipeline shifts the burden for data conversion from the user to the function author, and in doing so maintains seamlessness for the user.</p>
-<p>As an example, the <code>refunder::rfr_fpca</code> function for functional principal components analysis has two main inputs: a dataframe containing one or more <code>tf</code> variables, and the name of the variable to decompose using FPCA. Internally, the <code>tf</code> vector is converted to a matrix for estimation. The function returns a list of elements relevant for FPCA, and includes estimated functions as a <code>tfb</code> vector. There is also a <code>predict</code> method, so that FPCA expansions of new data using the estimated basis can be easily obtained by users.</p>
+<p>This pipeline shifts the burden for data conversion from the user to
+the function author, and in doing so maintains seamlessness for the
+user.</p>
+<p>As an example, the <code>refunder::rfr_fpca</code> function for
+functional principal components analysis has two main inputs: a
+dataframe containing one or more <code>tf</code> variables, and the name
+of the variable to decompose using FPCA. Internally, the <code>tf</code>
+vector is converted to a matrix for estimation. The function returns a
+list of elements relevant for FPCA, and includes estimated functions as
+a <code>tfb</code> vector. There is also a <code>predict</code> method,
+so that FPCA expansions of new data using the estimated basis can be
+easily obtained by users.</p>
 </div>
 <div class="section level2">
 <h2 id="keep-us-informed">Keep us informed!<a class="anchor" aria-label="anchor" href="#keep-us-informed"></a>
 </h2>
-<p>Our hope is that <strong><code>tidyfun</code></strong> will be a useful platform for other researchers and developers. For that reason, please let us know if you use <strong><code>tidyfun</code></strong> in your own work, identify <a href="https://github.com/tidyfun/tidyfun/issues" class="external-link">issues</a>, or have suggestions.</p>
+<p>Our hope is that <strong><code>tidyfun</code></strong> will be a
+useful platform for other researchers and developers. For that reason,
+please let us know if you use <strong><code>tidyfun</code></strong> in
+your own work, identify <a href="https://github.com/tidyfun/tidyfun/issues" class="external-link">issues</a>, or have
+suggestions.</p>
 </div>
-<div class="footnotes">
+<div class="footnotes footnotes-end-of-document">
 <hr>
 <ol>
-<li id="fn1"><p>This class and its subclasses and methods are defined in a separate package without <strong><code>tidyverse</code></strong>-dependencies in order to make package maintenance a little easier and to increase uptake among people who don’t want to rely on <strong><code>tidyverse</code></strong> packages.<a href="#fnref1" class="footnote-back">↩︎</a></p></li>
+<li id="fn1"><p>This class and its subclasses and methods are defined in
+a separate package without
+<strong><code>tidyverse</code></strong>-dependencies in order to make
+package maintenance a little easier and to increase uptake among people
+who don’t want to rely on <strong><code>tidyverse</code></strong>
+packages.<a href="#fnref1" class="footnote-back">↩︎</a></p></li>
 </ol>
 </div>
   </div>
@@ -178,7 +247,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>
