@@ -12,7 +12,7 @@
 #' data$UB = data$f + 1
 #' data$LB = data$f - 1
 #' library(ggplot2)
-#' ggplot(data, aes(tf = f, color = ID)) +
+#' ggplot(data, aes(y = f, color = ID)) +
 #'   geom_spaghetti() +
 #'   geom_errorband(aes(ub = UB, lb = LB, fill = ID,)) +
 #'   facet_wrap(vars(ID))

@@ -137,7 +137,7 @@ to the paired geom/stat.}
 \item{line.alpha}{aesthetic property of the reference line}
 }
 \description{
-Plots a miniature glyph or sparkline for each entry of a \code{tf}-object.
+Plots a miniature glyph / sparkline for each entry of a \code{tf}-object.
 (Capellini are tiny spaghetti -- \emph{angel hair} pasta.) Aesthetics \code{x} and \code{y}
 specify the location of the glyphs, the \code{tf} aesthetic defines their shapes.
 To accommodate all my fellow idiots, \code{geom_cappelini},  \code{geom_cappellini} and
@@ -176,35 +176,7 @@ ggplot(canada, aes(x = lon, y = lat, colour = region)) +
 }
 }
 \seealso{
-GGally::glyphs
-
-Other tidyfun visualization: 
-\code{\link{gglasagna}()},
-\code{\link{ggspaghetti}}
-
-Other tidyfun visualization: 
-\code{\link{gglasagna}()},
-\code{\link{ggspaghetti}}
-
-Other tidyfun visualization: 
-\code{\link{gglasagna}()},
-\code{\link{ggspaghetti}}
-
-Other tidyfun visualization: 
-\code{\link{gglasagna}()},
-\code{\link{ggspaghetti}}
-
-Other tidyfun visualization: 
-\code{\link{gglasagna}()},
-\code{\link{ggspaghetti}}
-
-Other tidyfun visualization: 
-\code{\link{gglasagna}()},
-\code{\link{ggspaghetti}}
-
-Other tidyfun visualization: 
-\code{\link{gglasagna}()},
-\code{\link{ggspaghetti}}
+\link[GGally:glyphs]{GGally::glyphs}
 
 Other tidyfun visualization: 
 \code{\link{gglasagna}()},

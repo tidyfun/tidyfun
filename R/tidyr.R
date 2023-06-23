@@ -60,7 +60,7 @@ tf_gather <- function(data, ..., key = ".tfd", arg = NULL, domain = NULL,
     }
   }
 
-  tfd_data <- data %>% select(gather_vars) %>% as.matrix()
+  tfd_data <- data %>% select(all_of(gather_vars)) %>% as.matrix()
   if (search_key) {
     # see also find_arg: will interpret separating-dashes as minus-signs
     # regex adapted from https://www.regular-expressions.info/floatingpoint.html
@@ -81,7 +81,7 @@ tf_gather <- function(data, ..., key = ".tfd", arg = NULL, domain = NULL,
   }
 
   data %>%
-    select(-gather_vars) %>%
+    select(-all_of(gather_vars)) %>%
     mutate(!!key_var :=
       tfd(tfd_data,
         arg = arg, domain = domain, evaluator = !!evaluator,

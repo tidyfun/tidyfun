@@ -62,7 +62,7 @@ One of the most fundamental plots for functional data is the spaghetti plot, whi
 ```{r plot_chf}
 chf_df %>% 
   filter(id == 1) %>% 
-  ggplot(aes(tf = activity)) + 
+  ggplot(aes(y = activity)) + 
   geom_spaghetti()
 ```
 
@@ -71,7 +71,7 @@ A variant on the spaghetti plot is the meatballs plot, which shows both the "noo
 ```{r}
 chf_df %>%
   filter(id == 1, day == "Mon") %>%
-  ggplot(aes(tf = activity)) +
+  ggplot(aes(y = activity)) +
   geom_meatballs()
 ```
 
@@ -84,7 +84,7 @@ You can, for example, define the color aesthetic for plots of `tf` variables usi
 ```{r}
 chf_df %>% 
   filter(id %in% 1:5) %>% 
-  ggplot(aes(tf = activity, color = gender)) + 
+  ggplot(aes(y = activity, color = gender)) + 
   geom_spaghetti(alpha = .2)
 ```
 
@@ -93,7 +93,7 @@ You can also use facetting:
 ```{r}
 chf_df %>% 
   filter(day %in% c("Mon", "Sun")) %>% 
-  ggplot(aes(tf = activity, color = gender)) + 
+  ggplot(aes(y = activity, color = gender)) + 
   geom_spaghetti(alpha = .1) + 
   facet_grid(~ day)
 ```
@@ -103,7 +103,7 @@ Another example, using the DTI data, is below.
 ```{r, dti-fig1}
 dti_df %>% 
   ggplot() + 
-  geom_spaghetti(aes(tf = cca, col = case, alpha = .2 + .4*(case == "control"))) +
+  geom_spaghetti(aes(y = cca, col = case, alpha = .2 + .4*(case == "control"))) +
   facet_wrap(~ sex) + 
   scale_alpha(guide = 'none', range = c(.2, .4))
 ```
@@ -117,9 +117,9 @@ chf_df %>%
   summarize(mean_act = mean(activity)) %>% 
   mutate(smooth_mean = tfb(mean_act)) %>% 
   filter(day %in% c("Mon", "Sun")) %>% 
-  ggplot(aes(tf = smooth_mean, color = gender)) + 
+  ggplot(aes(y = smooth_mean, color = gender)) + 
   geom_spaghetti(size = 1.25, alpha = 1) + 
-  geom_meatballs(aes(tf = mean_act), alpha = .1) + 
+  geom_meatballs(aes(y = mean_act), alpha = .1) + 
   facet_grid(~ day)
 ```
 
