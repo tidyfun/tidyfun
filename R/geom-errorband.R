@@ -94,7 +94,7 @@ GeomErrorband <- ggproto("GeomErrorband", Geom,
     GeomRibbon$draw_panel(data, panel_params, coord)
   },
   default_aes = aes(
-    fill = "grey70", linetype = 1, alpha = 0.3, linewidth = 0
+    fill = "grey70", linetype = 0, alpha = 0.3, linewidth = 0.1
   ),
   draw_key = GeomRibbon$draw_key,
   required_aes = c("ymin", "ymax")
