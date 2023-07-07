@@ -1,21 +1,21 @@
-#' Error bands based on `tf` objects for bounds
+#' Error bands using `tf` objects as bounds
 #' 
-#' Plots shaded region defined bye `tf`-objects `ub` and `lb`.
+#' Plots a shaded region between `tf`-objects `ymax` and `ymin`.
 #' This is primarily intended to help with plotting confidence bands
 #' although other purposes are possible. 
 #'
 #' @examples
 #' set.seed(1221)
 #' data =
-#'   data.frame(ID = 1:2)
+#'   data.frame(id = factor(1:2))
 #' data$f = tf_rgp(2)
-#' data$UB = data$f + 1
-#' data$LB = data$f - 1
+#' data$ymax = data$f + 1
+#' data$ymin = data$f - 1
 #' library(ggplot2)
-#' ggplot(data, aes(y = f, color = ID)) +
+#' ggplot(data, aes(y = f, color = id)) +
 #'   geom_spaghetti() +
-#'   geom_errorband(aes(ub = UB, lb = LB, fill = ID,)) +
-#'   facet_wrap(vars(ID))
+#'   geom_errorband(aes(ymax = ymax, ymin = ymin, fill = id)) +
+#'   facet_wrap(~id)
 #' @name ggerrorband
 NULL
 
@@ -25,21 +25,21 @@ NULL
 #' @usage NULL
 #' @format NULL
 StatErrorband <- ggproto("StatErrorband", Stat,
-  required_aes = c("ub", "lb"),
+  required_aes = c("ymax", "ymin"),
   setup_params = function(data, params) {
     if (is.null(params$arg)) {
-      params$arg <- list(tf_arg(pull(data, ub)))
+      params$arg <- list(tf_arg(pull(data, ymax)))
     }
     params
   },
   compute_layer = function(self, data, params, layout) {
-    stopifnot(is_tf(pull(data, ub)) & is_tf(pull(data, lb)))
+    stopifnot(is_tf(pull(data, ymax)) & is_tf(pull(data, ymin)))
     tf_eval <-
       suppressMessages(
-        mutate(data, id = names(ub) %||% seq_along(ub)) %>%
-          tf_unnest(c(ub, lb), .arg = params$arg, names_sep = "___")) %>%
-      select(-group, -lb___arg) %>%
-      rename(group = id, x = ub___arg, ymin = lb___value, ymax = ub___value)
+        mutate(data, id = names(ymax) %||% seq_along(ymax)) %>%
+          tf_unnest(c(ymax, ymin), .arg = params$arg, names_sep = "___")) %>%
+      select(-group, -ymin___arg) %>%
+      rename(group = id, x = ymax___arg, ymin = ymin___value, ymax = ymax___value)
     tf_eval
   },
   compute_panel = function(self, data, scales, arg, errorband) {
@@ -82,6 +82,11 @@ geom_errorband <- function(mapping = NULL, data = NULL,
 #' @usage NULL
 #' @format NULL
 GeomErrorband <- ggproto("GeomErrorband", Geom,
+  setup_params = function(data, params) {
+     # TODO: implement proper "orientation" - see extending ggplot vignette
+     params$flipped_aes <- FALSE
+     params
+  },
   setup_data = function(data, params) {
     GeomRibbon$setup_data(data, params)
   },
@@ -89,7 +94,7 @@ GeomErrorband <- ggproto("GeomErrorband", Geom,
     GeomRibbon$draw_panel(data, panel_params, coord)
   },
   default_aes = aes(
-    fill = "grey70", linetype = 0, alpha = 0.3, lwd = 0.1
+    fill = "grey70", linetype = 0, alpha = 0.3, linewidth = 0.1
   ),
   draw_key = GeomRibbon$draw_key,
   required_aes = c("ymin", "ymax")

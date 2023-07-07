@@ -7,7 +7,7 @@
 \alias{stat_errorband}
 \alias{geom_errorband}
 \alias{GeomErrorband}
-\title{Error bands based on \code{tf} objects for bounds}
+\title{Error bands using \code{tf} objects as bounds}
 \usage{
 stat_errorband(
   mapping = NULL,
@@ -83,21 +83,21 @@ often aesthetics, used to set an aesthetic to a fixed value, like
 to the paired geom/stat.}
 }
 \description{
-Plots shaded region defined bye \code{tf}-objects \code{ub} and \code{lb}.
+Plots a shaded region between \code{tf}-objects \code{ymax} and \code{ymin}.
 This is primarily intended to help with plotting confidence bands
 although other purposes are possible.
 }
 \examples{
 set.seed(1221)
 data =
-  data.frame(ID = 1:2)
+  data.frame(id = factor(1:2))
 data$f = tf_rgp(2)
-data$UB = data$f + 1
-data$LB = data$f - 1
+data$ymax = data$f + 1
+data$ymin = data$f - 1
 library(ggplot2)
-ggplot(data, aes(y = f, color = ID)) +
+ggplot(data, aes(y = f, color = id)) +
   geom_spaghetti() +
-  geom_errorband(aes(ub = UB, lb = LB, fill = ID,)) +
-  facet_wrap(vars(ID))
+  geom_errorband(aes(ymax = ymax, ymin = ymin, fill = id)) +
+  facet_wrap(~id)
 }
 \keyword{datasets}
