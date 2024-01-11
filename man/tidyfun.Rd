@@ -2,6 +2,7 @@
 % Please edit documentation in R/tidyfun-package.r
 \docType{package}
 \name{tidyfun}
+\alias{tidyfun-package}
 \alias{tidyfun}
 \title{tidyfun}
 \description{
@@ -21,4 +22,23 @@ in \code{R} easier.\cr\cr
 \cr
 Also see \code{vignette("Introducing tidyfun", "tidyfun")} for a brief introduction.
 }
+}
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/tidyfun/tidyfun}
+  \item \url{https://tidyfun.github.io/tidyfun/}
+  \item Report bugs at \url{https://github.com/tidyfun/tidyfun/issues}
+}
+
+}
+\author{
+\strong{Maintainer}: Fabian Scheipl \email{fabian.scheipl@googlemail.com}
+
+Authors:
+\itemize{
+  \item Jeff Goldsmith
+  \item Julia Wrobel
+}
+
 }
