@@ -1,28 +1,14 @@
 ---
-output:
-  github_document
+output: github_document
 ---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# tidyfun <img src="https://github.com/tidyfun/tidyfun/blob/master/README_files/figures/tidyfun_hex.gif?raw=true" align="right" height = "150" />
-
-<!-- badges: start -->
-[![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html)
-[![R build status](https://github.com/tidyfun/tidyfun/workflows/R-CMD-check/badge.svg)](https://github.com/tidyfun/tidyfun/actions)
-[![codecov.io](https://codecov.io/github/tidyfun/tidyfun/coverage.svg?branch=master)](https://codecov.io/github/tidyfun/tidyfun/branch/master)
-[![MIT license](http://img.shields.io/badge/license-MIT-brightgreen.svg)]( https://opensource.org/licenses/MIT)
-<!-- badges: end -->
-
-
-
 ```{r setup, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "##",
-  fig.width = 8, 
-  fig.height = 5.5,
-  out.width = "90%"
+  comment = "#>",
+  fig.path = "man/figures/README-"
 )
 
 library(tidyverse)
@@ -34,12 +20,21 @@ options(
   ggplot2.continuous.colour = "viridis",
   ggplot2.continuous.fill = "viridis"
 )
-scale_colour_discrete = scale_colour_viridis_d
-scale_fill_discrete = scale_fill_viridis_d
+scale_colour_discrete <- scale_colour_viridis_d
+scale_fill_discrete <- scale_fill_viridis_d
 
-pal_5 = viridis(7)[-(1:2)]
+pal_5 <- viridis(7)[-(1:2)]
 set.seed(1221)
 ```
+
+# tidyfun <a href="https://tidyfun.github.io/tidyfun/"><img src="man/figures/logo.gif" align="right" height="150" alt="tidyfun website" height = "150" /></a>
+
+<!-- badges: start -->
+[![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
+[![R-CMD-check](https://github.com/tidyfun/tidyfun/actions/workflows/full-check.yaml/badge.svg)](https://github.com/tidyfun/tidyfun/actions/workflows/full-check.yaml)
+[![MIT license](http://img.shields.io/badge/license-MIT-brightgreen.svg)](https://opensource.org/licenses/MIT)
+[![codecov.io](https://codecov.io/github/tidyfun/tidyfun/coverage.svg?branch=master)](https://codecov.io/github/tidyfun/tidyfun/branch/master)
+<!-- badges: end -->
 
 The goal of **`tidyfun`** is to provide accessible and well-documented software that **makes functional data analysis in `R` easy** -- specifically data wrangling and exploratory analysis. This is achieved by introducing a new data type (`tf`). Vectors of class `tf` can be operated on using many standard functions (`+`, `mean`, etc.) as well as several new functions in `tidyfun` (`tf_smooth`, `tf_where`). 
 
@@ -70,19 +65,17 @@ For detailed information on the features of `tidyfun`, check out articles on the
 The result is a package that enables exploratory data analysis like the following, which computes group-specific mean curves in the `dti_df` dataset, and plots the result:
 
 
-```{r, dti-ggplot-example, message=FALSE, warning = FALSE, eval = FALSE}
+```{r, dti-ggplot-example, message = FALSE, warning = FALSE, dpi = 300}
 library("tidyfun")
 data(dti_df, package = "tidyfun")
 
-dti_df %>% 
-  group_by(case, sex) %>% 
-  summarize(mean_cca = mean(cca, na.rm = TRUE)) %>% 
-  ggplot(aes(y = mean_cca, color = case)) + 
-    geom_spaghetti(size = 2) + 
-    facet_grid(~ sex)
+dti_df %>%
+  group_by(case, sex) %>%
+  summarize(mean_cca = mean(cca, na.rm = TRUE)) %>%
+  ggplot(aes(y = mean_cca, color = case)) +
+  geom_spaghetti(size = 2) +
+  facet_grid(~sex)
 ```
-<img src="https://raw.githubusercontent.com/tidyfun/tidyfun/dev/README_files/figure-gfm/unnamed-chunk-1-1.png" width="90%" />
-<!-- include image directly so it works for pkgdown-site as well (r-lib/pkgdown#927?)-->
 
 ## What does it do?
 
