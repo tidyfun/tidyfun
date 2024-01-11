@@ -1,5 +1,4 @@
-#' tidyfun
-#'
+#' @description
 #' `tidyfun` makes data wrangling and exploratory analysis for functional data
 #' in `R` easier.\cr\cr
 #' `tidyfun` is based on the classes and methods defined in package `tf` and provides:
@@ -13,7 +12,5 @@
 #' \cr\cr
 #' \cr
 #' Also see `vignette("Introducing tidyfun", "tidyfun")` for a brief introduction.
-#'
-#' @name tidyfun
-#' @docType package
-NULL
+#' @keywords internal
+"_PACKAGE"
