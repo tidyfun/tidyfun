@@ -12,5 +12,6 @@
 #' \cr\cr
 #' \cr
 #' Also see `vignette("Introducing tidyfun", "tidyfun")` for a brief introduction.
+#'
 #' @keywords internal
 "_PACKAGE"
