@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# tidyfun <a href="https://tidyfun.github.io/tidyfun/"><img src="man/figures/logo.gif" align="right" height="150" alt="tidyfun website" height = "150" /></a>
+# tidyfun <a href="https://tidyfun.github.io/tidyfun/"><img src="man/figures/logo.gif" align="right" height="150" alt="tidyfun website" /></a>
 
 <!-- badges: start -->
 

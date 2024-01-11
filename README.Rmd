@@ -27,7 +27,7 @@ pal_5 <- viridis(7)[-(1:2)]
 set.seed(1221)
 ```
 
-# tidyfun <a href="https://tidyfun.github.io/tidyfun/"><img src="man/figures/logo.gif" align="right" height="150" alt="tidyfun website" height = "150" /></a>
+# tidyfun <a href="https://tidyfun.github.io/tidyfun/"><img src="man/figures/logo.gif" align="right" height="150" alt="tidyfun website" /></a>
 
 <!-- badges: start -->
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
