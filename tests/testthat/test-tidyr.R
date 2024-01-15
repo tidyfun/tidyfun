@@ -39,8 +39,12 @@ test_that("tf_spread works", {
     tf_spread(d, f, arg = seq(0, 1, l = 20), sep = NULL), "interpolate = FALSE"
   )
   expect_equal(
-    suppressWarnings(tf_spread(d, f, arg = seq(0, 1, l = 20), sep = NULL)[, -1]),
-    suppressWarnings(as.data.frame(d$f[, seq(0, 1, l = 20), interpolate = FALSE])),
+    suppressWarnings(
+      tf_spread(d, f, arg = seq(0, 1, length.out = 20), sep = NULL)[, -1]
+    ),
+    suppressWarnings(
+      as.data.frame(d$f[, seq(0, 1, length.out = 20), interpolate = FALSE])
+    ),
     ignore_attr = TRUE
   )
   d$fb <- tfb(tf_rgp(3, 11L))
@@ -51,11 +55,17 @@ test_that("tf_spread works", {
   )
   set.seed(1312)
   d$fi <- tf_jiggle(tf_rgp(3, 11L))
-  expect_warning(tf_spread(d, fi), "no explicit <arg>")
+  tf_spread(d, fi) |>
+    expect_warning("no explicit <arg>") |>
+    expect_warning("interpolate = FALSE")
   expect_true(suppressWarnings(ncol(tf_spread(d, fi)) == 36))
   expect_equal(
-    tf_spread(d, fi, arg = seq(0, 1, l = 20), sep = NULL, interpolate = TRUE)[, -(1:3)],
-    as.data.frame(as.matrix(d$fi, arg = seq(0, 1, l = 20), interpolate = TRUE)), 
+    tf_spread(d, fi,
+      arg = seq(0, 1, length.out = 20), sep = NULL, interpolate = TRUE
+    )[, -(1:3)],
+    as.data.frame(
+      as.matrix(d$fi, arg = seq(0, 1, length.out = 20), interpolate = TRUE)
+    ),
     ignore_attr = TRUE
   )
 })
@@ -89,7 +99,7 @@ test_that("tf_unnest works", {
   expect_equal(NCOL(tf_unnest(tfdata, cols = c(value.x, value.y))), 5)
   expect_equal(
     as.matrix(tf_unnest(tfdata, cols = c(value.x, value.y))[-c(1, 4)]),
-    as.matrix(data[, 2:4]), 
+    as.matrix(data[, 2:4]),
     ignore_attr = TRUE
   )
   expect_s3_class(tf_unnest(tfdata, value.x)$value.y, "tfd")

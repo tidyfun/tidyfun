@@ -11,11 +11,11 @@ test_that("tf_evaluate.data.frame interface works", {
   expect_identical(tf_evaluate(d), tf_evaluate(d, a, b))
   expect_identical(tf_evaluate(d, a), tf_evaluate(d, -b))
   expect_identical(
-    tf_evaluate(d, a, arg = seq(0, 1, l = 11))[["a"]],
-    d[["a"]][, seq(0, 1, l = 11), matrix = FALSE]
+    tf_evaluate(d, a, arg = seq(0, 1, length.out = 11))[["a"]],
+    d[["a"]][, seq(0, 1, length.out = 11), matrix = FALSE]
   )
   expect_identical(
-    tf_evaluate(d, b, arg = seq(0, 1, l = 11)),
-    tf_evaluate(d, arg = seq(0, 1, l = 11), b)
+    tf_evaluate(d, b, arg = seq(0, 1, length.out = 11)),
+    tf_evaluate(d, arg = seq(0, 1, length.out = 11), b)
   )
 })
