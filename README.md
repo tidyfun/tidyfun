@@ -30,7 +30,8 @@ numeric, factor, and other observations on the same subject.
 ## Installation
 
 ``` r
-devtools::install_github("tidyfun/tidyfun")
+# install.packages("pak")
+pak::pak("tidyfun/tidyfun")
 ```
 
 ## Overview

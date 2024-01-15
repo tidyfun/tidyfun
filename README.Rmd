@@ -42,8 +42,9 @@ The goal of **`tidyfun`** is to provide accessible and well-documented software 
 
 ## Installation
 
-``` r
-devtools::install_github("tidyfun/tidyfun")
+```{r, eval = FALSE}
+# install.packages("pak")
+pak::pak("tidyfun/tidyfun")
 ```
 
 ## Overview
