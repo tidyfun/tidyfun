@@ -76,7 +76,7 @@ dti_df %>%
   facet_grid(~sex)
 ```
 
-![](man/figures/README-dti-ggplot-example-1.png)<!-- -->
+<img src="man/figures/README-dti-ggplot-example-1.png" width="100%" />
 
 ## What does it do?
 
