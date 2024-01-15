@@ -43,6 +43,8 @@ The goal of **`tidyfun`** is to provide accessible and well-documented software 
 
 ## Installation
 
+`tidyfun` is currently not on CRAN. You can install the development version from GitHub with:
+
 ```{r, eval = FALSE}
 # install.packages("pak")
 pak::pak("tidyfun/tidyfun")

@@ -29,6 +29,9 @@ numeric, factor, and other observations on the same subject.
 
 ## Installation
 
+`tidyfun` is currently not on CRAN. You can install the development
+version from GitHub with:
+
 ``` r
 # install.packages("pak")
 pak::pak("tidyfun/tidyfun")
