@@ -305,7 +305,7 @@ tf_unnest.tf <- function(data, cols, arg, interpolate = TRUE, ...) {
 
 #' @export
 #' @importFrom utils data tail
-#' @importFrom rlang syms `!!!` expr_text
+#' @importFrom rlang syms !!! expr_text
 #' @rdname tf_unnest
 tf_unnest.data.frame <- function(data, cols, arg, interpolate = TRUE, 
                                  keep_empty = FALSE, ptype = NULL, 
