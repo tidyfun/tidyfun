@@ -31,7 +31,7 @@ is.discrete <- function(x) {
 #'   Defaults to TRUE. Supply a list of arguments (grep source code for `order_ticks_args``) 
 #'   to override default appearance of labels. 
 #'   **Switch this off if you use facetting, it's a hack and will produce nonsense.**
-#' @return a `ggplot2`` object
+#' @returns a `ggplot2`` object
 #' @export
 #' @importFrom grid unit grobTree textGrob gpar 
 #' @importFrom rlang `%||%`

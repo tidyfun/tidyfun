@@ -22,7 +22,7 @@
 #' @param evaluator optional. A function accepting arguments x, arg, evaluations. See [tf::tfd()] for details.
 #' @param domain optional. Range of possible `arg`-values. See [tf::tfd()] for details.
 #' @param resolution optional. Resolution of the evaluation grid in `arg`. See [tf::tfd()] for details.
-#' @return a modified `data.frame` with a `tfd` column replacing the `...`.
+#' @returns a modified `data.frame` with a `tfd` column replacing the `...`.
 #' @import dplyr
 #' @importFrom rlang is_empty :=  quo_name enexpr
 #' @importFrom tidyselect vars_select
@@ -112,7 +112,7 @@ tf_gather <- function(data, ..., key = ".tfd", arg = NULL, domain = NULL,
 #' @param interpolate `interpolate`-argument for evaluating the functional data.
 #'   Defaults to FALSE, i.e., `tfd`s are *not* inter/extrapolated on unobserved
 #'    `arg`-values.
-#' @return a wider dataframe with the `tf`-column spread out into many columns
+#' @returns a wider dataframe with the `tf`-column spread out into many columns
 #'   each containing the functional measurements for one `arg`-value.   
 #' @importFrom tidyselect vars_pull
 #' @export
@@ -190,7 +190,7 @@ tf_spread <- function(data, value, arg, sep = "_", interpolate = FALSE) {
 #' @param .arg the (bare or quoted) name of the column defining the `arg`-values
 #'   of the observed functions. Defaults to "arg".
 #' @inheritParams tf_gather
-#' @return a data frame with (at least) `.id` and `tfd` columns
+#' @returns a data frame with (at least) `.id` and `tfd` columns
 #' @export
 #' @family tidyfun data wrangling functions
 #' @seealso tfd() for `domain, evaluator, resolution`
@@ -280,7 +280,7 @@ tf_nest <- function(data, ..., .id = "id", .arg = "arg", domain = NULL,
 #'   Defaults to `TRUE`. 
 #' @param ... not used currently   
 #' @inheritParams tidyr::unnest
-#' @return a "long" data frame with `tf`-columns expanded into `arg, value`-
+#' @returns a "long" data frame with `tf`-columns expanded into `arg, value`-
 #'   columns.
 #' @seealso tf_evaluate.data.frame()
 #' @export 
