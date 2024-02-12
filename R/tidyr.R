@@ -26,7 +26,6 @@
 #' @import dplyr
 #' @importFrom rlang is_empty :=  quo_name enexpr
 #' @importFrom tidyselect vars_select
-#' @importFrom stringr str_replace
 #' @export
 #' @seealso dplyr::select() 
 #' @family tidyfun data wrangling functions
@@ -53,7 +52,7 @@ tf_gather <- function(data, ..., key = ".tfd", arg = NULL, domain = NULL,
   }
   # turn matrix column into regular columns:
   if (length(gather_vars) == 1) {
-    if (is.matrix(data[[gather_vars]]) & search_key) {
+    if (is.matrix(data[[gather_vars]]) && search_key) {
       key_var <- gather_vars
       search_key <- FALSE
       message("creating new tfd-column <", key_var, ">")
@@ -64,17 +63,17 @@ tf_gather <- function(data, ..., key = ".tfd", arg = NULL, domain = NULL,
   if (search_key) {
     # see also find_arg: will interpret separating-dashes as minus-signs
     # regex adapted from https://www.regular-expressions.info/floatingpoint.html
-    found_key <- unique(str_replace(
-      colnames(tfd_data),
-      "[-+]?(0|(0\\.[0-9]+)|([1-9][0-9]*\\.?[0-9]*))([eE][-+]?[0-9]+)?$", ""
+    found_key <- unique(sub(
+      "[-+]?(0|(0\\.[0-9]+)|([1-9][0-9]*\\.?[0-9]*))([eE][-+]?[0-9]+)?$", "",
+      colnames(tfd_data)
     ))
     # assume trailing 0's are padding:
-    found_key <- str_replace(found_key, "[0]+$", "")
+    found_key <- sub("[0]+$", "", found_key)
     # assume trailing punctuation is separator:
-    found_key <- str_replace(found_key, "[:punct:]$", "")
+    found_key <- sub("[[:punct:]]$", "", found_key)
     # check again for uniqueness of resulting value ...
     found_key <- unique(found_key)
-    if (length(found_key) == 1 & all(found_key != "")) {
+    if (length(found_key) == 1 && all(found_key != "")) {
       key_var <- found_key
       message("creating new tfd-column <", key_var, ">")
     }
@@ -218,7 +217,7 @@ tf_nest <- function(data, ..., .id = "id", .arg = "arg", domain = NULL,
   if (is.null(resolution)) {
     resolution <- replicate(length(value_vars), resolution, simplify = FALSE)
   }
-  if (!is.list(resolution) & !is.null(resolution)) {
+  if (!is.list(resolution) && !is.null(resolution)) {
     resolution <- as.list(resolution)
   } else {
     stopifnot(length(resolution) %in% c(1, length(value_vars)))
