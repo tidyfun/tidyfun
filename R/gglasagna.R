@@ -130,7 +130,7 @@ gglasagna <- function(data, tf, order = NULL, label = NULL,
     geom_tile(aes(y = ..y, x = ..x, fill = !!sym(y_name), 
       colour = !!sym(y_name))) + ylab("") +
     xlab("")
-  if (!is.null(order_label) | !is.null(order_by_label)) {
+  if (!is.null(order_label) || !is.null(order_by_label)) {
     p <- p + labs(caption = paste(
       "ordered by:",
       paste0(
@@ -139,7 +139,7 @@ gglasagna <- function(data, tf, order = NULL, label = NULL,
       )
     ))
   }
-  if (!is.null(order_ticks) & is.discrete(pull(tf_eval, ..order))) {
+  if (!is.null(order_ticks) && is.discrete(pull(tf_eval, ..order))) {
      order_ticks_data <- data %>%
        arrange(desc(!!order)) %>%
        mutate(ticks = row_number()) %>%
