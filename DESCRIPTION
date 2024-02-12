@@ -28,7 +28,6 @@ Imports:
     tidyselect
 Suggests: 
     covr,
-    data.table,
     fda,
     gridExtra,
     janitor,
