@@ -29,8 +29,12 @@ numeric, factor, and other observations on the same subject.
 
 ## Installation
 
+`tidyfun` is currently not on CRAN. You can install the development
+version from GitHub with:
+
 ``` r
-devtools::install_github("tidyfun/tidyfun")
+# install.packages("pak")
+pak::pak("tidyfun/tidyfun")
 ```
 
 ## Overview
@@ -75,7 +79,7 @@ dti_df %>%
   facet_grid(~sex)
 ```
 
-![](man/figures/README-dti-ggplot-example-1.png)<!-- -->
+<img src="man/figures/README-dti-ggplot-example-1.png" width="100%" />
 
 ## What does it do?
 
