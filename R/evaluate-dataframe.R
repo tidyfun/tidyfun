@@ -35,7 +35,7 @@ tf_evaluate.data.frame <- function(object, ..., arg) {
   }
   if (!missing(arg) && !is.null(arg)) {
     arg <- tf::ensure_list(arg)
-    if (length(arg) == 1 & length(tf_cols) > 1) {
+    if (length(arg) == 1 && length(tf_cols) > 1) {
       arg <- replicate(length(tf_cols), arg, simplify = FALSE)
     }
   } else {

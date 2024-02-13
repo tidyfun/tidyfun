@@ -8,7 +8,8 @@ output: github_document
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  fig.path = "man/figures/README-"
+  fig.path = "man/figures/README-",
+  out.width = "100%"
 )
 
 library(tidyverse)
@@ -42,8 +43,11 @@ The goal of **`tidyfun`** is to provide accessible and well-documented software 
 
 ## Installation
 
-``` r
-devtools::install_github("tidyfun/tidyfun")
+`tidyfun` is currently not on CRAN. You can install the development version from GitHub with:
+
+```{r, eval = FALSE}
+# install.packages("pak")
+pak::pak("tidyfun/tidyfun")
 ```
 
 ## Overview
