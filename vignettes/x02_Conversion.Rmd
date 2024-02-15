@@ -92,7 +92,7 @@ canada = tibble(
 ) |> 
   mutate(
     temp = t(fda::CanadianWeather$dailyAv[,,1]) |> 
-      tfd(arg = 1:365)
+      tfd(arg = 1:365),
     precipl10 = t(fda::CanadianWeather$dailyAv[,,3]) |> 
       tfd(arg = 1:365) |>
       tf_smooth()
@@ -194,15 +194,18 @@ ALA::fev1 %>%
 
 In some cases functional data are stored in "wide" format, meaning that there are separate columns for each argument, and values are stored in these columns. In this case, `tf_gather` can be use to collapse across columns to produce a function for each subject.
 
-The example below again uses the `refund::DTI` dataset. We convert `cca` so that, instead of acting as a matrix, it is in "wide" format. We then use `tf_gather` to combine the `cca` observations into a function. 
+The example below again uses the `refund::DTI` dataset. We use `tf_gather` to transfer the `cca` observations from a matrix column (with `NA`s) into a column of irregularly observed functions (`tfd_irreg`). 
 
 ```{r}
 dti_df = 
   refund::DTI %>%
   janitor::clean_names() %>% 
-  select(-starts_with("rcst")) %>% 
+  select(-starts_with("rcst")) |> 
+  glimpse()
+
+dti_df %>% 
   tf_gather(starts_with("cca")) %>% 
-  as_tibble()
+  glimpse()
 ```
 
 
