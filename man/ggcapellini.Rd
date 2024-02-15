@@ -45,11 +45,11 @@ geom_capellini(
   box.colour = "#0000001A",
   box.linetype = 1,
   box.fill = NA,
-  box.size = 0.1,
+  box.linewidth = 0.1,
   box.alpha = 0.1,
   line.colour = "black",
   line.linetype = 2,
-  line.size = 0.3,
+  line.linewidth = 0.3,
   line.alpha = 0.5
 )
 }
@@ -124,7 +124,7 @@ to the paired geom/stat.}
 
 \item{box.fill}{aesthetic property of the box}
 
-\item{box.size}{aesthetic property of the box}
+\item{box.linewidth}{aesthetic property of the box}
 
 \item{box.alpha}{aesthetic property of the box}
 
@@ -132,7 +132,7 @@ to the paired geom/stat.}
 
 \item{line.linetype}{aesthetic property of the reference line}
 
-\item{line.size}{aesthetic property of of the reference line}
+\item{line.linewidth}{aesthetic property of of the reference line}
 
 \item{line.alpha}{aesthetic property of the reference line}
 }
