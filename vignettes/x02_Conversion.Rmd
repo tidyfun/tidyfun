@@ -85,16 +85,16 @@ We'll repeat the same basic process using a second, and probably even-more-peren
 In the following, we first create a `tibble` with scalar covariates, then use `tfd` to create functional data vectors, and finally include the resulting vectors in the dataframe. In this case, our `arg`s are days of the year, and we use `tf_smooth` to smooth the precipitation outcome. Because the original data matrices record the different observations in the columns instead of the rows, we have to use their transpose in the call to `tfd`:
 
 ```{r}
-canada = tibble(
-  place = fda::CanadianWeather$place, 
-  region = fda::CanadianWeather$region, 
-  lat = fda::CanadianWeather$coordinates[,1], 
-  lon = -fda::CanadianWeather$coordinates[,2]
-) |> 
+canada <- tibble(
+  place = fda::CanadianWeather$place,
+  region = fda::CanadianWeather$region,
+  lat = fda::CanadianWeather$coordinates[, 1],
+  lon = -fda::CanadianWeather$coordinates[, 2]
+) |>
   mutate(
-    temp = t(fda::CanadianWeather$dailyAv[,,1]) |> 
+    temp = t(fda::CanadianWeather$dailyAv[, , 1]) |>
       tfd(arg = 1:365),
-    precipl10 = t(fda::CanadianWeather$dailyAv[,,3]) |> 
+    precipl10 = t(fda::CanadianWeather$dailyAv[, , 3]) |>
       tfd(arg = 1:365) |>
       tf_smooth()
   )
@@ -196,14 +196,13 @@ In some cases functional data are stored in "wide" format, meaning that there ar
 The example below again uses the `refund::DTI` dataset. We use `tf_gather` to transfer the `cca` observations from a matrix column (with `NA`s) into a column of irregularly observed functions (`tfd_irreg`). 
 
 ```{r}
-dti_df = 
-  refund::DTI %>%
-  janitor::clean_names() %>% 
-  select(-starts_with("rcst")) |> 
+dti_df <- refund::DTI |>
+  janitor::clean_names() |>
+  select(-starts_with("rcst")) |>
   glimpse()
 
-dti_df %>% 
-  tf_gather(starts_with("cca")) %>% 
+dti_df |>
+  tf_gather(starts_with("cca")) |>
   glimpse()
 ```
 
@@ -224,16 +223,16 @@ The functions `tf_unnest` and `tf_spread` reverse the operations in `tf_nest` an
 First, to produce a long-format data frame, one can use `tf_unnest`:
 
 ```{r}
-pig_df %>% 
-  tf_unnest(cols = weight) |> 
+pig_df |>
+  tf_unnest(cols = weight) |>
   glimpse()
 ```
 
 To produce a wide-format data frame, one can use `tf_spread`:
 
 ```{r}
-pig_df %>% 
-  tf_spread() |> 
+pig_df |>
+  tf_spread() |>
   glimpse()
 ```
 
@@ -244,8 +243,7 @@ To convert `tf` vector to a matrix with each row containing the function evaluat
 ```{r}
 weight_vec <- pig_df$weight
 
-weight_matrix <- 
-  weight_vec %>% as.matrix 
+weight_matrix <- weight_vec |> as.matrix()
 
 head(weight_matrix)
 
@@ -258,7 +256,7 @@ To convert a `tf` vector to a standalone data frame with `"id"`,`"arg"`,`"value"
 ```{r}
 weight_vec
 
-weight_vec %>% 
-  as.data.frame(unnest = TRUE) |> 
+weight_vec |>
+  as.data.frame(unnest = TRUE) |>
   head()
 ```

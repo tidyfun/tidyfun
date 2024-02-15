@@ -31,12 +31,17 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Fabian Scheipl \email{fabian.scheipl@googlemail.com}
+\strong{Maintainer}: Fabian Scheipl \email{fabian.scheipl@googlemail.com} (\href{https://orcid.org/0000-0001-8172-3603}{ORCID})
 
 Authors:
 \itemize{
   \item Jeff Goldsmith
-  \item Julia Wrobel
+  \item Julia Wrobel (\href{https://orcid.org/0000-0001-6783-1421}{ORCID})
+}
+
+Other contributors:
+\itemize{
+  \item Maximilian Muecke (\href{https://orcid.org/0000-0002-9609-3197}{ORCID}) [contributor]
 }
 
 }

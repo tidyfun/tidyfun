@@ -113,15 +113,15 @@ Together with **`tidyfun`**'s tools for functional data wrangling and summary st
 like the plot below showing group-wise smoothed and unsmoothed mean activity profiles:
 
 ```{r}
-chf_df %>% 
-  group_by(gender, day) %>% 
-  summarize(mean_act = mean(activity)) %>% 
-  mutate(smooth_mean = tfb(mean_act, verbose = FALSE)) %>% 
-  filter(day %in% c("Mon", "Sun")) %>% 
-  ggplot(aes(y = smooth_mean, color = gender)) + 
-  geom_spaghetti(linewidth = 1.25, alpha = 1) + 
-  geom_meatballs(aes(y = mean_act), alpha = .1) + 
-  facet_grid(~ day)
+chf_df |>
+  group_by(gender, day) |>
+  summarize(mean_act = mean(activity)) |>
+  mutate(smooth_mean = tfb(mean_act, verbose = FALSE)) |>
+  filter(day %in% c("Mon", "Sun")) |>
+  ggplot(aes(y = smooth_mean, color = gender)) +
+  geom_spaghetti(linewidth = 1.25, alpha = 1) +
+  geom_meatballs(aes(y = mean_act), alpha = 0.1) +
+  facet_grid(~day)
 ```
 
 ... or the plot below showing group-wise mean functions +/- twice their pointwise standard errors:
