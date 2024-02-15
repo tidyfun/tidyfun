@@ -2,9 +2,13 @@ Package: tidyfun
 Title: Tools for Tidy Functional Data
 Version: 0.0.98
 Authors@R: c(
-    person("Fabian", "Scheipl", , "fabian.scheipl@googlemail.com", role = c("aut", "cre")),
+    person("Fabian", "Scheipl", , "fabian.scheipl@googlemail.com", role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0001-8172-3603")),
     person("Jeff", "Goldsmith", role = "aut"),
-    person("Julia", "Wrobel", role = "aut")
+    person("Julia", "Wrobel", role = "aut", 
+           comment = c(ORCID = "0000-0001-6783-1421")),
+    person("Maximilian", "Muecke", role = "ctb",
+           comment = c(ORCID = "0000-0002-9609-3197"))
   )
 Description: Representing, visualizing, describing and wrangling tidy
     functional data, based on {tf}.
