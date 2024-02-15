@@ -24,7 +24,7 @@ test_that("tf_gather works", {
     "tf_approx_spline"
   )
 
-  expect_equal(names(tf_gather(d1)), "cca")
+  expect_named(tf_gather(d1), "cca")
 })
 
 test_that("tf_spread works", {
@@ -36,7 +36,7 @@ test_that("tf_spread works", {
   expect_equal(tf_spread(d, f), tf_spread(d, -g))
   expect_equal(tf_spread(d, f), tf_spread(d))
   expect_warning(
-    tf_spread(d, f, arg = seq(0, 1, l = 20), sep = NULL), "interpolate = FALSE"
+    tf_spread(d, f, arg = seq(0, 1, length.out = 20), sep = NULL), "interpolate = FALSE"
   )
   expect_equal(
     suppressWarnings(
@@ -76,9 +76,9 @@ test_that("tf_nest works", {
   data <- dplyr::inner_join(tf_unnest(f1), tf_unnest(f2), by = c("id", "arg"))
   expect_equal(tf_nest(data)$value.x, f1, ignore_attr = TRUE)
   expect_equal(tf_nest(data)$value.y, f2, ignore_attr = TRUE)
-  expect_equal(names(tf_nest(data, value.x:value.y)), names(tf_nest(data)))
-  expect_equal(names(tf_nest(data, -(1:2))), names(tf_nest(data)))
-  expect_error(tf_nest(data, resolution = c(.01, .4, .4)))
+  expect_named(tf_nest(data, value.x:value.y), names(tf_nest(data)))
+  expect_named(tf_nest(data, -(1:2)), names(tf_nest(data)))
+  expect_error(tf_nest(data, resolution = c(0.01, 0.4, 0.4)))
 
   g <- rnorm(3)
   data <- bind_cols(data, g = rep(g, e = tf_count(f1)))
@@ -107,7 +107,7 @@ test_that("tf_unnest works", {
 
 # tidyfun#109
 test_that("tf_nest / tf_unnest work with numeric id-variables", {
-  d <- tf_rgp(10) %>% tf_unnest()
+  d <- tf_rgp(10) |> tf_unnest()
   d$id <- as.numeric(d$id) * 10
   nested <- tf_nest(d)
   unnested <- tf_unnest(nested, cols = value)

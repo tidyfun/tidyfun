@@ -15,7 +15,7 @@ vignette: >
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "##",
-  fig.width = 8, 
+  fig.width = 8,
   fig.height = 5.5,
   out.width = "90%"
 )
@@ -31,12 +31,12 @@ options(
   ggplot2.continuous.colour = "viridis",
   ggplot2.continuous.fill = "viridis"
 )
-scale_colour_discrete = scale_colour_viridis_d
-scale_fill_discrete = scale_fill_viridis_d
+scale_colour_discrete <- scale_colour_viridis_d
+scale_fill_discrete <- scale_fill_viridis_d
 
 library("tidyfun")
 
-pal_5 = viridis(7)[-(1:2)]
+pal_5 <- viridis(7)[-(1:2)]
 set.seed(1221)
 ```
 
@@ -53,14 +53,15 @@ In the following examples, we'll use `tfd` to get a `tf` vector from matrices. T
 The `DTI` data in the `refund` package has been a popular example in functional data analysis. In the code below, we create a data frame (or `tibble`) containing scalar covariates, and then add columns for the `cca` and `rcst` track profiles. This code was used to create the `tidyfun::dti_df` dataset included in the package.
 
 ```{r}
-dti_df = tibble(
-  id = refund::DTI$ID, 
+dti_df <- tibble(
+  id = refund::DTI$ID,
   visit = refund::DTI$visit,
-  sex = refund::DTI$sex, 
-  case = factor(ifelse(refund::DTI$case, "MS", "control")))
+  sex = refund::DTI$sex,
+  case = factor(ifelse(refund::DTI$case, "MS", "control"))
+)
 
-dti_df$cca = tfd(refund::DTI$cca, arg = seq(0,1, l = 93))
-dti_df$rcst = tfd(refund::DTI$rcst, arg = seq(0, 1, l = 55))
+dti_df$cca <- tfd(refund::DTI$cca, arg = seq(0, 1, length.out = 93))
+dti_df$rcst <- tfd(refund::DTI$rcst, arg = seq(0, 1, length.out = 55))
 ```
 
 In `tfd`, the first argument is a matrix; `arg` defines the grid over which functions are observed. The output of `tfd` is a vector, which we include in the `dti_df` data frame. 
@@ -72,11 +73,11 @@ dti_df
 Finally, we'll make a quick spaghetti plot to illustrate that the complete functional data is included in each `tf` column. 
 
 ```{r}
-dti_df %>% 
-  ggplot() + 
-  geom_spaghetti(aes(y = cca, col = case, alpha = .2 + .4*(case == "control"))) +
-  facet_wrap(~ sex) + 
-  scale_alpha(guide = 'none', range = c(.2, .4))
+dti_df |>
+  ggplot() +
+  geom_spaghetti(aes(y = cca, col = case, alpha = 0.2 + 0.4 * (case == "control"))) +
+  facet_wrap(~sex) +
+  scale_alpha(guide = "none", range = c(0.2, 0.4))
 ```
 
 We'll repeat the same basic process using a second, and probably even-more-perennial, functional data example: the Canadian weather data in the `fda` package. Here, functional data are stored in a three-dimensional array, with dimensions corresponding to day, station, and outcome (temperature, precipitation, and log10 precipitation).
@@ -84,16 +85,16 @@ We'll repeat the same basic process using a second, and probably even-more-peren
 In the following, we first create a `tibble` with scalar covariates, then use `tfd` to create functional data vectors, and finally include the resulting vectors in the dataframe. In this case, our `arg`s are days of the year, and we use `tf_smooth` to smooth the precipitation outcome. Because the original data matrices record the different observations in the columns instead of the rows, we have to use their transpose in the call to `tfd`:
 
 ```{r}
-canada = tibble(
-  place = fda::CanadianWeather$place, 
-  region = fda::CanadianWeather$region, 
-  lat = fda::CanadianWeather$coordinates[,1], 
-  lon = -fda::CanadianWeather$coordinates[,2])
+canada <- tibble(
+  place = fda::CanadianWeather$place,
+  region = fda::CanadianWeather$region,
+  lat = fda::CanadianWeather$coordinates[, 1],
+  lon = -fda::CanadianWeather$coordinates[, 2]
+)
 
-canada$temp = tfd(t(fda::CanadianWeather$dailyAv[,,1]), arg = 1:365)
-canada$precipl10 = 
-  tfd(t(fda::CanadianWeather$dailyAv[,,3]), arg = 1:365) %>%
-  tf_smooth
+canada$temp <- tfd(t(fda::CanadianWeather$dailyAv[, , 1]), arg = 1:365)
+canada$precipl10 <- tfd(t(fda::CanadianWeather$dailyAv[, , 3]), arg = 1:365) |>
+  tf_smooth()
 ```
 
 The resulting data frame is shown below.
@@ -105,13 +106,13 @@ canada
 A plot containing both functional observations is shown below. 
 
 ```{r}
-temp_panel =
-  canada %>% 
-  ggplot(aes(y = temp, color = region)) + geom_spaghetti() 
+temp_panel <- canada |>
+  ggplot(aes(y = temp, color = region)) +
+  geom_spaghetti()
 
-precip_panel =
-  canada %>% 
-  ggplot(aes(y = precipl10, color = region)) + geom_spaghetti() 
+precip_panel <- canada |>
+  ggplot(aes(y = precipl10, color = region)) +
+  geom_spaghetti()
 
 gridExtra::grid.arrange(temp_panel, precip_panel, nrow = 1)
 ```
@@ -128,7 +129,7 @@ A first example is the pig weight data from the `SemiPar` package, which is a ni
 ```{r}
 data("pig.weights", package = "SemiPar")
 
-pig.weights = as_tibble(pig.weights)
+pig.weights <- as_tibble(pig.weights)
 
 pig.weights
 ```
@@ -136,8 +137,7 @@ pig.weights
 We create `pig_df` by nesting weight within subject. The result is a data frame containing a single row for each pig, and columns for `id.num` and the `weight` function.
 
 ```{r}
-pig_df = 
-  pig.weights %>% 
+pig_df <- pig.weights |>
   tf_nest(weight, .id = id.num, .arg = num.weeks)
 
 pig_df
@@ -146,22 +146,21 @@ pig_df
 We'll make a quick plot to show the result.
 
 ```{r}
-pig_df %>% 
-  ggplot(aes(y = weight)) + 
+pig_df |>
+  ggplot(aes(y = weight)) +
   geom_spaghetti()
 ```
 
 A second example uses the `ALA::fev1` dataset. `ALA` is not available on CRAN but can be installed using the line below.
 
 ```{r, eval = FALSE}
-install.packages("ALA", repos="http://R-Forge.R-project.org")
+install.packages("ALA", repos = "http://R-Forge.R-project.org")
 ```
 
 In this dataset, both `height` and `logFEV1` are observed at multiple ages for each child; that is, there are two functions observed simultaneously, over a shared argument. We can use `tf_nest` to create a dataframe with a single row for each subject, which includes both non-functional covariates (like age and height at baseline), and functional observations `logFEV1` and `height`. 
 
 ```{r, eval = FALSE}
-ALA::fev1 %>% 
-  glimpse()
+ALA::fev1 |> glimpse()
 ## Rows: 1,994
 ## Columns: 6
 ## $ id      <fct> 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, …
@@ -170,11 +169,11 @@ ALA::fev1 %>%
 ## $ age0    <dbl> 9.3415, 9.3415, 9.3415, 9.3415, 9.3415, 9.3415, 9.3415, 6.5873, 6.5873, 6.5873, 6.5873, 6.5873, 6.5873, 6.58…
 ## $ height0 <dbl> 1.20, 1.20, 1.20, 1.20, 1.20, 1.20, 1.20, 1.13, 1.13, 1.13, 1.13, 1.13, 1.13, 1.13, 1.13, 1.18, 1.18, 1.18, …
 ## $ logFEV1 <dbl> 0.21511, 0.37156, 0.48858, 0.75142, 0.83291, 0.89200, 0.87129, 0.30748, 0.35066, 0.75612, 0.86710, 1.04732, …
-ALA::fev1 %>% 
-  group_by(id) %>% 
-  mutate(n_obs = n()) %>% 
-  filter(n_obs > 1) %>% 
-  tf_nest(logFEV1, height, .arg = age) %>%
+ALA::fev1 |>
+  group_by(id) |>
+  mutate(n_obs = n()) |>
+  filter(n_obs > 1) |>
+  tf_nest(logFEV1, height, .arg = age) |>
   glimpse()
 ## Rows: 252
 ## Columns: 6
@@ -194,11 +193,10 @@ In some cases functional data are stored in "wide" format, meaning that there ar
 The example below again uses the `refund::DTI` dataset. We convert `cca` so that, instead of acting as a matrix, it is in "wide" format. We then use `tf_gather` to combine the `cca` observations into a function. 
 
 ```{r}
-dti_df = 
-  refund::DTI %>%
-  janitor::clean_names() %>% 
-  select(-starts_with("rcst")) %>% 
-  tf_gather(starts_with("cca")) %>% 
+dti_df <- refund::DTI |>
+  janitor::clean_names() |>
+  select(-starts_with("rcst")) |>
+  tf_gather(starts_with("cca")) |>
   as_tibble()
 ```
 
@@ -219,15 +217,13 @@ The functions `tf_unnest` and `tf_spread` reverse the operations in `tf_nest` an
 First, to produce a long-format dataf rame, one can use `tf_unnest`:
 
 ```{r}
-pig_df %>% 
-  tf_unnest()
+pig_df |> tf_unnest()
 ```
 
 To produce a wide-format data frame, one can use `tf_spread`:
 
 ```{r}
-pig_df %>% 
-  tf_spread()
+pig_df |> tf_spread()
 ```
 
 ## Converting back to a matrix or data frame
@@ -235,10 +231,9 @@ pig_df %>%
 To convert `tf` vector to a matrix, use `as.matrix`:
 
 ```{r}
-weight_vec = pig_df$weight
+weight_vec <- pig_df$weight
 
-weight_matrix = 
-  weight_vec %>% as.matrix
+weight_matrix <- weight_vec |> as.matrix()
 
 weight_matrix[1:3, 1:5]
 ```
@@ -246,7 +241,5 @@ weight_matrix[1:3, 1:5]
 To convert a `tf` vector to a standalone data frame with `"id"`,`"arg"`,`"value"`-columns, use `as.data.frame()`:
 
 ```{r}
-weight_vec %>% 
-  as.data.frame()
+weight_vec |> as.data.frame()
 ```
-

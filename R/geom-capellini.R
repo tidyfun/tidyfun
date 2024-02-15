@@ -2,37 +2,41 @@
 #'
 #' Plots a miniature glyph / sparkline for each entry of a `tf`-object.
 #' (Capellini are tiny spaghetti -- *angel hair* pasta.) Aesthetics `x` and `y`
-#' specify the location of the glyphs, the `tf` aesthetic defines their shapes.  
+#' specify the location of the glyphs, the `tf` aesthetic defines their shapes.
 #' To accommodate all my fellow idiots, `geom_cappelini`,  `geom_cappellini` and
-#' `geom_capelini` also work. 
+#' `geom_capelini` also work.
 #'
 #' @section `tf` aesthetic:
 #'   Mandatory. Used to designate a column of class `tf` to be visualized as glyphs.
 #' @examples
-#' \dontrun{ # takes a little too long for CRAN
+#' \dontrun{
+#' # takes a little too long for CRAN
 #' library(ggplot2)
 #' library(tidyverse)
 #' weather <- fda::CanadianWeather
 #' canada <- data.frame(
 #'   place = weather$place,
 #'   region = weather$region,
-#'   lat = weather$coordinates[,1],
-#'   lon = -weather$coordinates[,2],
-#'   region = weather$region)
-#' canada$temp <- tfd(t(weather$dailyAv[,,1]), arg = 1:365)
-#' canada$precipl10 <- tfd(t(weather$dailyAv[,,3]), arg = 1:365) %>% tf_smooth
+#'   lat = weather$coordinates[, 1],
+#'   lon = -weather$coordinates[, 2],
+#'   region = weather$region
+#' )
+#' canada$temp <- tfd(t(weather$dailyAv[, , 1]), arg = 1:365)
+#' canada$precipl10 <- tfd(t(weather$dailyAv[, , 3]), arg = 1:365) |> tf_smooth()
 #' canada_map <-
 #'   data.frame(maps::map("world", "Canada", plot = FALSE)[c("x", "y")])
 #' # map of canada with annual temperature averages in red, precipitation in blue:
 #' ggplot(canada, aes(x = lon, y = lat)) +
 #'   geom_capellini(aes(tf = precipl10), width = 3, height = 5, colour = "blue") +
 #'   geom_capellini(aes(tf = temp), width = 3, height = 5, colour = "red") +
-#'   geom_path(data = canada_map, aes(x = x, y = y), alpha = .1) +
+#'   geom_path(data = canada_map, aes(x = x, y = y), alpha = 0.1) +
 #'   coord_quickmap()
 #'
 #' ggplot(canada, aes(x = lon, y = lat, colour = region)) +
-#'   geom_capellini(aes(tf = precipl10), width = 5, height = 3,
-#'     line.linetype = 1, box.fill = "white", box.alpha=.5, box.colour = NA)
+#'   geom_capellini(aes(tf = precipl10),
+#'     width = 5, height = 3,
+#'     line.linetype = 1, box.fill = "white", box.alpha = 0.5, box.colour = NA
+#'   )
 #' }
 #' @name ggcapellini
 #' @family tidyfun visualization
@@ -63,10 +67,12 @@ StatCapellini <- ggplot2::ggproto("StatCapellini", ggplot2::Stat,
     stopifnot(is_tf(pull(data, tf)))
     tf_eval <-
       suppressMessages(
-        mutate(data, tf___id = names(tf) %||% seq_along(tf)) %>% 
-          tf_unnest(tf, arg = params$arg, names_sep = "___")) %>% 
-      select(-group) %>%
-      rename(group = tf___id, arg = tf___arg, value = tf___value) %>%
+        data |>
+          mutate(tf___id = names(tf) %||% seq_along(tf)) |>
+          tf_unnest(tf, arg = params$arg, names_sep = "___")
+      ) |>
+      select(-group) |>
+      rename(group = tf___id, arg = tf___arg, value = tf___value) |>
       mutate(
         xgrid = x, ygrid = y,
         x = x + rescale11(arg) * params$width / 2,
@@ -81,7 +87,7 @@ StatCapellini <- ggplot2::ggproto("StatCapellini", ggplot2::Stat,
   # need this so arg etc get recognized as valid parameters
   # because layer() only checks compute_panel & compute_group
   compute_panel = function(self, data, scales, arg,
-                             add_lines, add_boxes, width, height) {
+                           add_lines, add_boxes, width, height) {
     ggplot2::Stat$compute_panel(self, data, scales)
   }
 )
@@ -130,15 +136,14 @@ stat_capellini <- function(mapping = NULL, data = NULL, geom = "capellini",
 #' @param line.linetype aesthetic property of the reference line
 #' @param line.size aesthetic property of of the reference line
 #' @param line.alpha aesthetic property of the reference line
-geom_capellini <- 
-  function(mapping = NULL, data = NULL, stat = "capellini",
-           position = "identity", ..., na.rm = TRUE, show.legend = NA,
-           inherit.aes = TRUE, arg = NULL, add_lines = TRUE, add_boxes = TRUE,
-           width = NULL, height = NULL, box.colour = "#0000001A", 
-           box.linetype = 1, box.fill = NA, box.size = .1, box.alpha = .1,
-           line.colour = "black", line.linetype = 2, line.size = .3, 
-           line.alpha = .5) {
-    ggplot2::layer(
+geom_capellini <- function(mapping = NULL, data = NULL, stat = "capellini",
+                           position = "identity", ..., na.rm = TRUE, show.legend = NA,
+                           inherit.aes = TRUE, arg = NULL, add_lines = TRUE, add_boxes = TRUE,
+                           width = NULL, height = NULL, box.colour = "#0000001A",
+                           box.linetype = 1, box.fill = NA, box.size = 0.1, box.alpha = 0.1,
+                           line.colour = "black", line.linetype = 2, line.size = 0.3,
+                           line.alpha = 0.5) {
+  ggplot2::layer(
     stat = StatCapellini, data = data, mapping = mapping, geom = "capellini",
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
     params = list(
@@ -174,10 +179,10 @@ GeomCapellini <- ggplot2::ggproto("GeomCapellini", ggplot2::Geom,
     GeomPath$setup_data(data, params)
   },
   draw_group = function(data, panel_params, coord,
-                          box.colour = "#0000001A", box.linetype = 1,
-                          box.fill = NA, box.size = .1, box.alpha = .1,
-                          line.colour = "black", line.linetype = 2,
-                          line.size = .3, line.alpha = .5) {
+                        box.colour = "#0000001A", box.linetype = 1,
+                        box.fill = NA, box.size = 0.1, box.alpha = 0.1,
+                        line.colour = "black", line.linetype = 2,
+                        line.size = 0.3, line.alpha = 0.5) {
     glyph_grob <- GeomPath$draw_panel(data, panel_params, coord)
     if (data$lines[1]) {
       lines <- data.frame(

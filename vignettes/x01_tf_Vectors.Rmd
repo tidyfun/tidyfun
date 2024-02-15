@@ -15,7 +15,7 @@ vignette: >
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "##",
-  fig.width = 8, 
+  fig.width = 8,
   fig.height = 5.5,
   out.width = "90%"
 )
@@ -29,12 +29,12 @@ options(
   ggplot2.continuous.colour = "viridis",
   ggplot2.continuous.fill = "viridis"
 )
-scale_colour_discrete = scale_colour_viridis_d
-scale_fill_discrete = scale_fill_viridis_d
+scale_colour_discrete <- scale_colour_viridis_d
+scale_fill_discrete <- scale_fill_viridis_d
 
 library("tidyfun")
 
-pal_5 = viridis(7)[-(1:2)]
+pal_5 <- viridis(7)[-(1:2)]
 set.seed(1221)
 ```
 
@@ -68,14 +68,14 @@ First we extract a `tf` vector from the `tidyfun::dti_df` dataset containing fra
 ```{r load-dti}
 data("dti_df")
 
-cca = dti_df$cca
+cca <- dti_df$cca
 cca
 ```
 
 We also extract a simple 5-element vector of functions on a regular grid:
 
 ```{r ex-def}
-cca_five <- cca[1:5, seq(0, 1, l = 93), interpolate = TRUE]
+cca_five <- cca[1:5, seq(0, 1, length.out = 93), interpolate = TRUE]
 rownames(cca_five) <- LETTERS[1:5]
 cca_five <- tfd(cca_five, signif = 2)
 cca_five
@@ -85,7 +85,7 @@ For illustration, we plot the vector `cca_five` below.
 
 ```{r, ex-fig}
 plot(cca_five, xlim = c(-0.15, 1), col = pal_5)
-text(x = -.1, y = cca_five[,0.07], labels = names(cca_five), col = pal_5)
+text(x = -0.1, y = cca_five[, 0.07], labels = names(cca_five), col = pal_5)
 ```
 
 ## **`tf`** subclass: **`tfd`**
@@ -96,15 +96,19 @@ text(x = -.1, y = cca_five[,0.07], labels = names(cca_five), col = pal_5)
  - has a **`domain`**:  the range of valid **`arg`**s.
 
 ```{r}
-cca_five %>% tf_evaluations() %>% str
-cca_five %>% tf_arg() %>% str
-cca_five %>% tf_domain() 
+cca_five |>
+  tf_evaluations() |>
+  str()
+cca_five |>
+  tf_arg() |>
+  str()
+cca_five |> tf_domain()
 ```
 
 - each **`tfd`**-vector contains an **`evaluator`** function that defines how to inter-/extrapolate `evaluations` between `arg`s
 
 ```{r}
-tf_evaluator(cca_five) %>% str
+tf_evaluator(cca_five) |> str()
 tf_evaluator(cca_five) <- tf_approx_spline
 ```
 
@@ -114,8 +118,10 @@ tf_evaluator(cca_five) <- tf_approx_spline
 cd4_vec <- tfd(refund::cd4)
 
 cd4_vec[1:2]
-cd4_vec[1:2] %>% tf_arg() %>% str
-cd4_vec[1:20] %>% plot(pch = "x", col = viridis(20))
+cd4_vec[1:2] |>
+  tf_arg() |>
+  str()
+cd4_vec[1:20] |> plot(pch = "x", col = viridis(20))
 ```
 
 ## **`tf`** subclass: **`tfb`**
@@ -130,9 +136,16 @@ Functional data in basis representation:
 - significant memory and time savings:
 
 ```{r}
-refund::DTI$cca %>% object.size() %>% print(units = "Kb")
-cca %>% object.size() %>% print(units = "Kb")
-cca %>% tfb(verbose = FALSE) %>% object.size() %>% print(units = "Kb")
+refund::DTI$cca |>
+  object.size() |>
+  print(units = "Kb")
+cca |>
+  object.size() |>
+  print(units = "Kb")
+cca |>
+  tfb(verbose = FALSE) |>
+  object.size() |>
+  print(units = "Kb")
 ```
 
 ### **`tfb_spline`**: spline basis
@@ -144,13 +157,13 @@ cca %>% tfb(verbose = FALSE) %>% object.size() %>% print(units = "Kb")
     - but also: $t$-distribution, ZI-Poisson, Beta, ... 
 
 ```{r, message = TRUE}
-cca_five_b <- cca_five %>% tfb()
+cca_five_b <- cca_five |> tfb()
 cca_five_b[1:2]
-cca_five[1:2] %>% tfb(bs = "tp", k = 55)
+cca_five[1:2] |> tfb(bs = "tp", k = 55)
 
 # functions represent ratios in (0,1), so a Beta-distribution is more appropriate:
-cca_five[1:2] %>% 
-  tfb(bs = "ps", m = c(2,1), family = mgcv::betar(link = "cloglog"))
+cca_five[1:2] |>
+  tfb(bs = "ps", m = c(2, 1), family = mgcv::betar(link = "cloglog"))
 ```
 
 ### Penalization: 
@@ -159,10 +172,14 @@ cca_five[1:2] %>%
 
 ```{r}
 layout(t(1:2))
-cca_five  %>% plot()
-cca_five_b %>% plot(col = "red")
-cca_five %>% tfb(k = 35, penalized = FALSE) %>% lines(col = "blue")
-cca_five %>% tfb(sp = .001) %>% lines(col = "orange")
+cca_five |> plot()
+cca_five_b |> plot(col = "red")
+cca_five |>
+  tfb(k = 35, penalized = FALSE) |>
+  lines(col = "blue")
+cca_five |>
+  tfb(sp = 0.001) |>
+  lines(col = "orange")
 ```
 
 Right plot shows smoothing with function-specific penalization in red, without penalization in blue, 
@@ -188,15 +205,16 @@ and with manually set strong smoothing (`sp` $\to 0$) in orange.
 ```{r, echo = FALSE}
 set.seed(1212)
 raw <- c(
-  tf_rgp(5, scale = 0.2, nugget = .05, arg = 101L) - 5,
-  tf_rgp(5, scale = 0.02, nugget = .05, arg = 101L),
-  tf_rgp(5, scale = 0.002, nugget = .05, arg = 101L) + 5)
+  tf_rgp(5, scale = 0.2, nugget = 0.05, arg = 101L) - 5,
+  tf_rgp(5, scale = 0.02, nugget = 0.05, arg = 101L),
+  tf_rgp(5, scale = 0.002, nugget = 0.05, arg = 101L) + 5
+)
 ```
 
 Dataset with heterogeneous roughness:
 ```{r}
 layout(t(1:3))
-clrs <- scales::alpha(sample(viridis(15)), .5)
+clrs <- scales::alpha(sample(viridis(15)), 0.5)
 plot(raw, main = "raw", col = clrs)
 plot(tfb(raw, k = 55), main = "separate", col = clrs)
 plot(tfb(raw, k = 55, global = TRUE), main = "global", col = clrs)
@@ -211,15 +229,15 @@ plot(tfb(raw, k = 55, global = TRUE), main = "global", col = clrs)
 minimal *percentage of variance explained* `pve` 
 
 ```{r}
-(cca_five_fpc <- cca_five %>% tfb_fpc(pve = .999))
-(cca_five_fpc_lowrank <- cca_five %>% tfb_fpc(pve = .6))
+cca_five_fpc <- cca_five |> tfb_fpc(pve = 0.999)
+cca_five_fpc_lowrank <- cca_five |> tfb_fpc(pve = 0.6)
 ```
 
 ```{r}
 layout(t(1:2))
-cca_five %>% plot()
-cca_five_fpc  %>% plot(col = "red", ylab = "tfb_fpc(cca_five)")
-cca_five_fpc_lowrank %>% lines(col = "blue", lty = 2)
+cca_five |> plot()
+cca_five_fpc |> plot(col = "red", ylab = "tfb_fpc(cca_five)")
+cca_five_fpc_lowrank |> lines(col = "blue", lty = 2)
 ```
 
 `tfb_fpc` is currently only implemented for data on identical 
@@ -250,7 +268,7 @@ cca_five <- unname(cca_five)
 ```{r}
 cca_five[1] + cca_five[1] == 2 * cca_five[1]
 log(exp(cca_five[2])) == cca_five[2]
-(cca_five - (2:-2)) != cca_five 
+(cca_five - (2:-2)) != cca_five
 ```
 
 ```{r, echo = FALSE}
@@ -272,11 +290,10 @@ summary(cca_five)
 
 Compute summaries for each function like its mean or extreme values, quantiles, etc.
 ```{r}
-tf_fmean(cca_five) #mean of each function's evaluations
-tf_fmax(cca_five)  #max of each function's evaluations
-#25%-tile of each f(t) for t > .5:
-tf_fwise(cca_five, 
-         ~ quantile(.x$value[.x$arg > 0.5], prob = 0.25)) |> unlist() 
+tf_fmean(cca_five) # mean of each function's evaluations
+tf_fmax(cca_five) # max of each function's evaluations
+# 25%-tile of each f(t) for t > .5:
+tf_fwise(cca_five, \(x) quantile(x$value[x$arg > 0.5], prob = 0.25)) |> unlist()
 ```
 `tf_fwise` can be used to define custom statistics for each function that can depend on both its `value` and its `arg`.
 
@@ -292,9 +309,9 @@ In addition, **`tidyfun`** provides methods for operations that are specific for
 so it's easy to get point values for `tf` objects, in `matrix` or `data.frame` formats: 
 
 ```{r, warning  = FALSE}
-cca_five[1:2, seq(0, 1, l = 3)]
-cca_five["B", seq(0, .15, l = 3), interpolate = FALSE]
-cca_five[1:2, seq(0, 1, l = 7), matrix = FALSE] %>% str
+cca_five[1:2, seq(0, 1, length.out = 3)]
+cca_five["B", seq(0, 0.15, length.out = 3), interpolate = FALSE]
+cca_five[1:2, seq(0, 1, length.out = 7), matrix = FALSE] |> str()
 ```
 
 
@@ -302,27 +319,38 @@ cca_five[1:2, seq(0, 1, l = 7), matrix = FALSE] %>% str
 
 ```{r}
 layout(t(1:3))
-cca_five %>% plot(alpha = .2, ylab = "lowess")
-cca_five %>% tf_smooth("lowess") %>% lines(col = pal_5)
+cca_five |> plot(alpha = 0.2, ylab = "lowess")
+cca_five |>
+  tf_smooth("lowess") |>
+  lines(col = pal_5)
 
-cca_five %>% plot(alpha = .2, ylab = "rolling median (k=5)")
-cca_five %>% tf_smooth("rollmedian", k = 5) %>% lines(col = pal_5)
+cca_five |> plot(alpha = 0.2, ylab = "rolling median (k=5)")
+cca_five |>
+  tf_smooth("rollmedian", k = 5) |>
+  lines(col = pal_5)
 
-cca_five %>% plot(alpha = .2, ylab = "Savitzky-Golay (quartic, 11 steps)")
-cca_five %>% tf_smooth("savgol", fl = 11) %>% lines(col = pal_5)
+cca_five |> plot(alpha = 0.2, ylab = "Savitzky-Golay (quartic, 11 steps)")
+cca_five |>
+  tf_smooth("savgol", fl = 11) |>
+  lines(col = pal_5)
 ```
 
 ### differentiate & integrate:
 
 ```{r}
 layout(t(1:3))
-cca_five %>% plot(col = pal_5)
-cca_five %>% tf_smooth() %>% tf_derive() %>% plot(col = pal_5, ylab = "tf_derive(tf_smooth(cca_five))")
-cca_five %>% tf_integrate(definite = FALSE) %>%  plot(col = pal_5)
+cca_five |> plot(col = pal_5)
+cca_five |>
+  tf_smooth() |>
+  tf_derive() |>
+  plot(col = pal_5, ylab = "tf_derive(tf_smooth(cca_five))")
+cca_five |>
+  tf_integrate(definite = FALSE) |>
+  plot(col = pal_5)
 ```
 
 ```{r}
-cca_five %>% tf_integrate()
+cca_five |> tf_integrate()
 ```
 
 ### query
@@ -330,32 +358,32 @@ cca_five %>% tf_integrate()
 **`tidyfun`** makes it easy to find (ranges of) `arg`uments $t$ satisfying a condition on `value` $f(t)$ (and `arg`ument $t$):
 
 ```{r}
-cca_five %>% tf_anywhere(value > .65)
-cca_five[1:2] %>% tf_where(value > .6, "all")
-cca_five[2] %>% tf_where(value > .6, "range")
-cca_five %>% tf_where(value > .6 & arg > .5, "first")
+cca_five |> tf_anywhere(value > 0.65)
+cca_five[1:2] |> tf_where(value > 0.6, "all")
+cca_five[2] |> tf_where(value > 0.6, "range")
+cca_five |> tf_where(value > 0.6 & arg > 0.5, "first")
 ```
 
 ### zoom & query
 
 ```{r, ex-fig2}
-cca_five %>% plot(xlim = c(-0.15, 1), col = pal_5, lwd = 2)
-text(x = -.1, y = cca_five[,0.07], labels = names(cca_five), col = pal_5, cex = 1.5)
-median(cca_five) %>% lines(col = pal_5[3], lwd = 4)
+cca_five |> plot(xlim = c(-0.15, 1), col = pal_5, lwd = 2)
+text(x = -0.1, y = cca_five[, 0.07], labels = names(cca_five), col = pal_5, cex = 1.5)
+median(cca_five) |> lines(col = pal_5[3], lwd = 4)
 ```
 
 ```{r}
 # where are the first maxima of these functions?
-cca_five %>% tf_where(value == max(value), "first")
+cca_five |> tf_where(value == max(value), "first")
 
 # where are the first maxima of the later part (t > .5) of these functions?
-cca_five[c("A", "D")] %>% tf_zoom(.5, 1) %>% 
+cca_five[c("A", "D")] |>
+  tf_zoom(0.5, 1) |>
   tf_where(value == max(value), "first")
 
 # which f_i(t) are below the functional median anywhere for 0.2 < t < 0.6?
 # (t() needed here so we're comparing column vectors to column vectors...)
-cca_five %>% tf_zoom(0.2, 0.6) %>% 
+cca_five |>
+  tf_zoom(0.2, 0.6) |>
   tf_anywhere(value <= t(median(cca_five)[, arg]))
 ```
-
-
