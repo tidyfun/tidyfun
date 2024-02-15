@@ -230,7 +230,10 @@ minimal *percentage of variance explained* `pve`
 
 ```{r}
 cca_five_fpc <- cca_five |> tfb_fpc(pve = 0.999)
+cca_five_fpc
+
 cca_five_fpc_lowrank <- cca_five |> tfb_fpc(pve = 0.6)
+cca_five_fpc_lowrank
 ```
 
 ```{r}
