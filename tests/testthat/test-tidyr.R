@@ -6,20 +6,20 @@ cca <- tfd(data$cca)
 test_that("tf_gather works", {
   expect_s3_class(tf_gather(d1)$cca, "tfd")
   expect_message(tf_gather(d1)$cca, "cca")
-  expect_equal(tf_gather(d1)$cca, cca)
+  expect_identical(tf_gather(d1)$cca, cca)
   expect_equal(
     tf_gather(d1)$cca, tf_gather(data[, 1:8], cca)$cca,
     ignore_attr = TRUE
   )
 
-  expect_equal(tf_gather(d2, -1)$cca, cca)
-  expect_equal(tf_gather(d2, -1)$id, d2$id)
-  expect_equal(tf_gather(d2, -1, key = "nuhnuh")$nuhnuh, tf_gather(d2, -1)$cca)
+  expect_identical(tf_gather(d2, -1)$cca, cca)
+  expect_identical(tf_gather(d2, -1)$id, d2$id)
+  expect_identical(tf_gather(d2, -1, key = "nuhnuh")$nuhnuh, tf_gather(d2, -1)$cca)
 
-  expect_equal(tf_gather(d2, -id)$cca, tf_gather(d2, -1)$cca)
-  expect_equal(tf_gather(d2, starts_with("cca"))$cca, tf_gather(d2, -1)$cca)
+  expect_identical(tf_gather(d2, -id)$cca, tf_gather(d2, -1)$cca)
+  expect_identical(tf_gather(d2, starts_with("cca"))$cca, tf_gather(d2, -1)$cca)
 
-  expect_equal(
+  expect_identical(
     attr(tf_gather(d1, evaluator = tf_approx_spline)$cca, "evaluator_name"),
     "tf_approx_spline"
   )
@@ -33,8 +33,8 @@ test_that("tf_spread works", {
     tf_spread(d, f, sep = NULL)[, -1], as.data.frame(as.matrix(d$f)),
     ignore_attr = TRUE
   )
-  expect_equal(tf_spread(d, f), tf_spread(d, -g))
-  expect_equal(tf_spread(d, f), tf_spread(d))
+  expect_identical(tf_spread(d, f), tf_spread(d, -g))
+  expect_identical(tf_spread(d, f), tf_spread(d))
   expect_warning(
     tf_spread(d, f, arg = seq(0, 1, length.out = 20), sep = NULL), "interpolate = FALSE"
   )
@@ -82,7 +82,7 @@ test_that("tf_nest works", {
 
   g <- rnorm(3)
   data <- bind_cols(data, g = rep(g, e = tf_count(f1)))
-  expect_equal(tf_nest(data, value.x:value.y)$g, g)
+  expect_identical(tf_nest(data, value.x:value.y)$g, g)
   data <- bind_cols(data, f = rep(rnorm(nrow(data))))
   expect_error(tf_nest(data, value.x:value.y), "Can't nest")
 })
@@ -96,7 +96,7 @@ test_that("tf_unnest works", {
   f2 <- tf_rgp(3, 11L)
   data <- dplyr::inner_join(tf_unnest(f1), tf_unnest(f2), by = c("id", "arg"))
   tfdata <- tf_nest(data)
-  expect_equal(NCOL(tf_unnest(tfdata, cols = c(value.x, value.y))), 5)
+  expect_identical(NCOL(tf_unnest(tfdata, cols = c(value.x, value.y))), 5L)
   expect_equal(
     as.matrix(tf_unnest(tfdata, cols = c(value.x, value.y))[-c(1, 4)]),
     as.matrix(data[, 2:4]),
