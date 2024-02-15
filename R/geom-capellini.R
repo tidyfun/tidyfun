@@ -2,9 +2,9 @@
 #'
 #' Plots a miniature glyph / sparkline for each entry of a `tf`-object.
 #' (Capellini are tiny spaghetti -- *angel hair* pasta.) Aesthetics `x` and `y`
-#' specify the location of the glyphs, the `tf` aesthetic defines their shapes.  
+#' specify the location of the glyphs, the `tf` aesthetic defines their shapes.
 #' To accommodate all my fellow idiots, `geom_cappelini`,  `geom_cappellini` and
-#' `geom_capelini` also work. 
+#' `geom_capelini` also work.
 #'
 #' @section `tf` aesthetic:
 #'   Mandatory. Used to designate a column of class `tf` to be visualized as glyphs.
@@ -63,8 +63,8 @@ StatCapellini <- ggplot2::ggproto("StatCapellini", ggplot2::Stat,
     stopifnot(is_tf(pull(data, tf)))
     tf_eval <-
       suppressMessages(
-        mutate(data, tf___id = names(tf) %||% seq_along(tf)) %>% 
-          tf_unnest(tf, arg = params$arg, names_sep = "___")) %>% 
+        mutate(data, tf___id = names(tf) %||% seq_along(tf)) %>%
+          tf_unnest(tf, arg = params$arg, names_sep = "___")) %>%
       select(-group) %>%
       rename(group = tf___id, arg = tf___arg, value = tf___value) %>%
       mutate(
@@ -124,19 +124,19 @@ stat_capellini <- function(mapping = NULL, data = NULL, geom = "capellini",
 #' @param box.colour aesthetic property of the box
 #' @param box.linetype  aesthetic property of the box
 #' @param box.fill  aesthetic property of the box
-#' @param box.size  aesthetic property of the box
+#' @param box.linewidth  aesthetic property of the box
 #' @param box.alpha  aesthetic property of the box
 #' @param line.colour aesthetic property of the reference line
 #' @param line.linetype aesthetic property of the reference line
-#' @param line.size aesthetic property of of the reference line
+#' @param line.linewidth aesthetic property of of the reference line
 #' @param line.alpha aesthetic property of the reference line
-geom_capellini <- 
+geom_capellini <-
   function(mapping = NULL, data = NULL, stat = "capellini",
            position = "identity", ..., na.rm = TRUE, show.legend = NA,
            inherit.aes = TRUE, arg = NULL, add_lines = TRUE, add_boxes = TRUE,
-           width = NULL, height = NULL, box.colour = "#0000001A", 
-           box.linetype = 1, box.fill = NA, box.size = .1, box.alpha = .1,
-           line.colour = "black", line.linetype = 2, line.size = .3, 
+           width = NULL, height = NULL, box.colour = "#0000001A",
+           box.linetype = 1, box.fill = NA, box.linewidth = .1, box.alpha = .1,
+           line.colour = "black", line.linetype = 2, line.linewidth = .3,
            line.alpha = .5) {
     ggplot2::layer(
     stat = StatCapellini, data = data, mapping = mapping, geom = "capellini",
@@ -145,9 +145,9 @@ geom_capellini <-
       na.rm = na.rm, arg = arg, add_lines = add_lines,
       add_boxes = add_boxes, width = width, height = height,
       box.colour = box.colour, box.linetype = box.linetype,
-      box.fill = box.fill, box.size = box.size, box.alpha = box.alpha,
+      box.fill = box.fill, box.linewidth = box.linewidth, box.alpha = box.alpha,
       line.colour = line.colour, line.linetype = line.linetype,
-      line.size = line.size, line.alpha = line.alpha, ...
+      line.linewidth = line.linewidth, line.alpha = line.alpha, ...
     )
   )
 }
@@ -175,9 +175,9 @@ GeomCapellini <- ggplot2::ggproto("GeomCapellini", ggplot2::Geom,
   },
   draw_group = function(data, panel_params, coord,
                           box.colour = "#0000001A", box.linetype = 1,
-                          box.fill = NA, box.size = .1, box.alpha = .1,
+                          box.fill = NA, box.linewidth = .1, box.alpha = .1,
                           line.colour = "black", line.linetype = 2,
-                          line.size = .3, line.alpha = .5) {
+                          line.linewidth = .3, line.alpha = .5) {
     glyph_grob <- GeomPath$draw_panel(data, panel_params, coord)
     if (data$lines[1]) {
       lines <- data.frame(
@@ -187,7 +187,7 @@ GeomCapellini <- ggplot2::ggproto("GeomCapellini", ggplot2::Geom,
         yend = data$ygrid[1],
         colour = line.colour,
         linetype = line.linetype,
-        size = line.size,
+        linewidth = line.linewidth,
         alpha = line.alpha
       )
       lines_grob <- GeomSegment$draw_panel(lines, panel_params, coord)
@@ -204,7 +204,7 @@ GeomCapellini <- ggplot2::ggproto("GeomCapellini", ggplot2::Geom,
         linetype = box.linetype,
         fill = box.fill,
         alpha = box.alpha,
-        size = box.size
+        linewidth = box.linewidth
       )
       boxes_grob <- GeomRect$draw_panel(boxes, panel_params, coord)
     } else {
@@ -217,7 +217,7 @@ GeomCapellini <- ggplot2::ggproto("GeomCapellini", ggplot2::Geom,
     )
   },
   default_aes = ggplot2::aes(
-    colour = "black", size = 0.5,
+    colour = "black", linewidth = 0.5,
     linetype = 1, alpha = 0.5
   ),
   draw_key = ggplot2::GeomPath$draw_key
