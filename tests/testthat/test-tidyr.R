@@ -96,7 +96,7 @@ test_that("tf_unnest works", {
   f2 <- tf_rgp(3, 11L)
   data <- dplyr::inner_join(tf_unnest(f1), tf_unnest(f2), by = c("id", "arg"))
   tfdata <- tf_nest(data)
-  expect_identical(NCOL(tf_unnest(tfdata, cols = c(value.x, value.y))), 5)
+  expect_identical(NCOL(tf_unnest(tfdata, cols = c(value.x, value.y))), 5L)
   expect_equal(
     as.matrix(tf_unnest(tfdata, cols = c(value.x, value.y))[-c(1, 4)]),
     as.matrix(data[, 2:4]),
