@@ -1,6 +1,6 @@
 Package: tidyfun
 Title: Tools for Tidy Functional Data
-Version: 0.0.971
+Version: 0.0.98
 Authors@R: c(
     person("Fabian", "Scheipl", , "fabian.scheipl@googlemail.com", role = c("aut", "cre")),
     person("Jeff", "Goldsmith", role = "aut"),
