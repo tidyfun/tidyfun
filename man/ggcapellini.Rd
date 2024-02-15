@@ -54,10 +54,10 @@ geom_capellini(
 )
 }
 \arguments{
-\item{mapping}{Set of aesthetic mappings created by \code{\link[ggplot2:aes]{aes()}} or
-\code{\link[ggplot2:aes_]{aes_()}}. If specified and \code{inherit.aes = TRUE} (the
-default), it is combined with the default mapping at the top level of the
-plot. You must supply \code{mapping} if there is no plot mapping.}
+\item{mapping}{Set of aesthetic mappings created by \code{\link[ggplot2:aes]{aes()}}. If specified and
+\code{inherit.aes = TRUE} (the default), it is combined with the default mapping
+at the top level of the plot. You must supply \code{mapping} if there is no plot
+mapping.}
 
 \item{data}{The data to be displayed in this layer. There are three
 options:
@@ -74,10 +74,14 @@ the plot data. The return value must be a \code{data.frame}, and
 will be used as the layer data. A \code{function} can be created
 from a \code{formula} (e.g. \code{~ head(.x, 10)}).}
 
-\item{geom}{The geometric object to use display the data}
+\item{geom}{The geometric object to use to display the data, either as a
+\code{ggproto} \code{Geom} subclass or as a string naming the geom stripped of the
+\code{geom_} prefix (e.g. \code{"point"} rather than \code{"geom_point"})}
 
-\item{position}{Position adjustment, either as a string, or the result of
-a call to a position adjustment function.}
+\item{position}{Position adjustment, either as a string naming the adjustment
+(e.g. \code{"jitter"} to use \code{position_jitter}), or the result of a call to a
+position adjustment function. Use the latter if you need to change the
+settings of the adjustment.}
 
 \item{na.rm}{remove NAs? defaults to \code{TRUE}}
 
@@ -133,7 +137,7 @@ to the paired geom/stat.}
 \item{line.alpha}{aesthetic property of the reference line}
 }
 \description{
-Plots a miniature glyph or sparkline for each entry of a \code{tf}-object.
+Plots a miniature glyph / sparkline for each entry of a \code{tf}-object.
 (Capellini are tiny spaghetti -- \emph{angel hair} pasta.) Aesthetics \code{x} and \code{y}
 specify the location of the glyphs, the \code{tf} aesthetic defines their shapes.
 To accommodate all my fellow idiots, \code{geom_cappelini},  \code{geom_cappellini} and
@@ -172,35 +176,7 @@ ggplot(canada, aes(x = lon, y = lat, colour = region)) +
 }
 }
 \seealso{
-GGally::glyphs
-
-Other tidyfun visualization: 
-\code{\link{gglasagna}()},
-\code{\link{ggspaghetti}}
-
-Other tidyfun visualization: 
-\code{\link{gglasagna}()},
-\code{\link{ggspaghetti}}
-
-Other tidyfun visualization: 
-\code{\link{gglasagna}()},
-\code{\link{ggspaghetti}}
-
-Other tidyfun visualization: 
-\code{\link{gglasagna}()},
-\code{\link{ggspaghetti}}
-
-Other tidyfun visualization: 
-\code{\link{gglasagna}()},
-\code{\link{ggspaghetti}}
-
-Other tidyfun visualization: 
-\code{\link{gglasagna}()},
-\code{\link{ggspaghetti}}
-
-Other tidyfun visualization: 
-\code{\link{gglasagna}()},
-\code{\link{ggspaghetti}}
+\link[GGally:glyphs]{GGally::glyphs}
 
 Other tidyfun visualization: 
 \code{\link{gglasagna}()},

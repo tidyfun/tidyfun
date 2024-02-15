@@ -31,10 +31,10 @@ is.discrete <- function(x) {
 #'   Defaults to TRUE. Supply a list of arguments (grep source code for `order_ticks_args``) 
 #'   to override default appearance of labels. 
 #'   **Switch this off if you use facetting, it's a hack and will produce nonsense.**
-#' @return a `ggplot2`` object
+#' @returns a `ggplot2`` object
 #' @export
 #' @importFrom grid unit grobTree textGrob gpar 
-#' @importFrom rlang `%||%`
+#' @importFrom rlang %||%
 #' @family tidyfun visualization
 #' @examples
 #' \dontrun{
@@ -130,7 +130,7 @@ gglasagna <- function(data, tf, order = NULL, label = NULL,
     geom_tile(aes(y = ..y, x = ..x, fill = !!sym(y_name), 
       colour = !!sym(y_name))) + ylab("") +
     xlab("")
-  if (!is.null(order_label) | !is.null(order_by_label)) {
+  if (!is.null(order_label) || !is.null(order_by_label)) {
     p <- p + labs(caption = paste(
       "ordered by:",
       paste0(
@@ -139,7 +139,7 @@ gglasagna <- function(data, tf, order = NULL, label = NULL,
       )
     ))
   }
-  if (!is.null(order_ticks) & is.discrete(pull(tf_eval, ..order))) {
+  if (!is.null(order_ticks) && is.discrete(pull(tf_eval, ..order))) {
      order_ticks_data <- data %>%
        arrange(desc(!!order)) %>%
        mutate(ticks = row_number()) %>%

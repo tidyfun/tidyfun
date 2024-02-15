@@ -22,11 +22,10 @@
 #' @param evaluator optional. A function accepting arguments x, arg, evaluations. See [tf::tfd()] for details.
 #' @param domain optional. Range of possible `arg`-values. See [tf::tfd()] for details.
 #' @param resolution optional. Resolution of the evaluation grid in `arg`. See [tf::tfd()] for details.
-#' @return a modified `data.frame` with a `tfd` column replacing the `...`.
+#' @returns a modified `data.frame` with a `tfd` column replacing the `...`.
 #' @import dplyr
 #' @importFrom rlang is_empty :=  quo_name enexpr
 #' @importFrom tidyselect vars_select
-#' @importFrom stringr str_replace
 #' @export
 #' @seealso dplyr::select() 
 #' @family tidyfun data wrangling functions
@@ -53,35 +52,35 @@ tf_gather <- function(data, ..., key = ".tfd", arg = NULL, domain = NULL,
   }
   # turn matrix column into regular columns:
   if (length(gather_vars) == 1) {
-    if (is.matrix(data[[gather_vars]]) & search_key) {
+    if (is.matrix(data[[gather_vars]]) && search_key) {
       key_var <- gather_vars
       search_key <- FALSE
       message("creating new tfd-column <", key_var, ">")
     }
   }
 
-  tfd_data <- data %>% select(gather_vars) %>% as.matrix()
+  tfd_data <- data %>% select(all_of(gather_vars)) %>% as.matrix()
   if (search_key) {
     # see also find_arg: will interpret separating-dashes as minus-signs
     # regex adapted from https://www.regular-expressions.info/floatingpoint.html
-    found_key <- unique(str_replace(
-      colnames(tfd_data),
-      "[-+]?(0|(0\\.[0-9]+)|([1-9][0-9]*\\.?[0-9]*))([eE][-+]?[0-9]+)?$", ""
+    found_key <- unique(sub(
+      "[-+]?(0|(0\\.[0-9]+)|([1-9][0-9]*\\.?[0-9]*))([eE][-+]?[0-9]+)?$", "",
+      colnames(tfd_data)
     ))
     # assume trailing 0's are padding:
-    found_key <- str_replace(found_key, "[0]+$", "")
+    found_key <- sub("[0]+$", "", found_key)
     # assume trailing punctuation is separator:
-    found_key <- str_replace(found_key, "[:punct:]$", "")
+    found_key <- sub("[[:punct:]]$", "", found_key)
     # check again for uniqueness of resulting value ...
     found_key <- unique(found_key)
-    if (length(found_key) == 1 & all(found_key != "")) {
+    if (length(found_key) == 1 && all(found_key != "")) {
       key_var <- found_key
       message("creating new tfd-column <", key_var, ">")
     }
   }
 
   data %>%
-    select(-gather_vars) %>%
+    select(-all_of(gather_vars)) %>%
     mutate(!!key_var :=
       tfd(tfd_data,
         arg = arg, domain = domain, evaluator = !!evaluator,
@@ -112,7 +111,7 @@ tf_gather <- function(data, ..., key = ".tfd", arg = NULL, domain = NULL,
 #' @param interpolate `interpolate`-argument for evaluating the functional data.
 #'   Defaults to FALSE, i.e., `tfd`s are *not* inter/extrapolated on unobserved
 #'    `arg`-values.
-#' @return a wider dataframe with the `tf`-column spread out into many columns
+#' @returns a wider dataframe with the `tf`-column spread out into many columns
 #'   each containing the functional measurements for one `arg`-value.   
 #' @importFrom tidyselect vars_pull
 #' @export
@@ -190,7 +189,7 @@ tf_spread <- function(data, value, arg, sep = "_", interpolate = FALSE) {
 #' @param .arg the (bare or quoted) name of the column defining the `arg`-values
 #'   of the observed functions. Defaults to "arg".
 #' @inheritParams tf_gather
-#' @return a data frame with (at least) `.id` and `tfd` columns
+#' @returns a data frame with (at least) `.id` and `tfd` columns
 #' @export
 #' @family tidyfun data wrangling functions
 #' @seealso tfd() for `domain, evaluator, resolution`
@@ -218,7 +217,7 @@ tf_nest <- function(data, ..., .id = "id", .arg = "arg", domain = NULL,
   if (is.null(resolution)) {
     resolution <- replicate(length(value_vars), resolution, simplify = FALSE)
   }
-  if (!is.list(resolution) & !is.null(resolution)) {
+  if (!is.list(resolution) && !is.null(resolution)) {
     resolution <- as.list(resolution)
   } else {
     stopifnot(length(resolution) %in% c(1, length(value_vars)))
@@ -280,7 +279,7 @@ tf_nest <- function(data, ..., .id = "id", .arg = "arg", domain = NULL,
 #'   Defaults to `TRUE`. 
 #' @param ... not used currently   
 #' @inheritParams tidyr::unnest
-#' @return a "long" data frame with `tf`-columns expanded into `arg, value`-
+#' @returns a "long" data frame with `tf`-columns expanded into `arg, value`-
 #'   columns.
 #' @seealso tf_evaluate.data.frame()
 #' @export 
@@ -305,7 +304,7 @@ tf_unnest.tf <- function(data, cols, arg, interpolate = TRUE, ...) {
 
 #' @export
 #' @importFrom utils data tail
-#' @importFrom rlang syms `!!!` expr_text
+#' @importFrom rlang syms !!! expr_text
 #' @rdname tf_unnest
 tf_unnest.data.frame <- function(data, cols, arg, interpolate = TRUE, 
                                  keep_empty = FALSE, ptype = NULL, 

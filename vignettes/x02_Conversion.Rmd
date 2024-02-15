@@ -74,7 +74,7 @@ Finally, we'll make a quick spaghetti plot to illustrate that the complete funct
 ```{r}
 dti_df %>% 
   ggplot() + 
-  geom_spaghetti(aes(tf = cca, col = case, alpha = .2 + .4*(case == "control"))) +
+  geom_spaghetti(aes(y = cca, col = case, alpha = .2 + .4*(case == "control"))) +
   facet_wrap(~ sex) + 
   scale_alpha(guide = 'none', range = c(.2, .4))
 ```
@@ -107,11 +107,11 @@ A plot containing both functional observations is shown below.
 ```{r}
 temp_panel =
   canada %>% 
-  ggplot(aes(tf = temp, color = region)) + geom_spaghetti() 
+  ggplot(aes(y = temp, color = region)) + geom_spaghetti() 
 
 precip_panel =
   canada %>% 
-  ggplot(aes(tf = precipl10, color = region)) + geom_spaghetti() 
+  ggplot(aes(y = precipl10, color = region)) + geom_spaghetti() 
 
 gridExtra::grid.arrange(temp_panel, precip_panel, nrow = 1)
 ```
@@ -147,7 +147,7 @@ We'll make a quick plot to show the result.
 
 ```{r}
 pig_df %>% 
-  ggplot(aes(tf = weight)) + 
+  ggplot(aes(y = weight)) + 
   geom_spaghetti()
 ```
 

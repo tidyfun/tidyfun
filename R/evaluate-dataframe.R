@@ -12,7 +12,7 @@
 #'   For more options, see the [dplyr::select()] documentation. 
 #' @param arg optional evaluation grid (vector or list of vectors).
 #'   Defaults to `tf_arg(object)`.
-#' @return Replaces `tf`-columns with list columns of
+#' @returns Replaces `tf`-columns with list columns of
 #'   smaller `data.frames` containing the functions' arguments (`arg`) and
 #'   evaluations (`value`) and returns the modified nested dataframe.
 #' @export
@@ -35,7 +35,7 @@ tf_evaluate.data.frame <- function(object, ..., arg) {
   }
   if (!missing(arg) && !is.null(arg)) {
     arg <- tf::ensure_list(arg)
-    if (length(arg) == 1 & length(tf_cols) > 1) {
+    if (length(arg) == 1 && length(tf_cols) > 1) {
       arg <- replicate(length(tf_cols), arg, simplify = FALSE)
     }
   } else {

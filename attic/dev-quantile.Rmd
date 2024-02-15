@@ -1,35 +1,72 @@
+---
+editor_options: 
+  markdown: 
+    wrap: 80
+---
+
 ## Functional quantiles
 
 ... are hard:
 
-1.  outlyingness/centrality can a) be defined in many different ways and b) only yields "center-outward" order, not "above-below"
-2.  ordering infinite-dimensional objects seems like an ill-posed problem in general (functions cross, there's horizontal (low-high) and vertical (early-late) variation, etc...), so even with lots of fancy theory this seems like something that is impossible to achieve in full generality (in the sense of achieving meaningful, interpretable, reasonable results for arbitrary data, like in the scalar case).
-3.  a method that is easy to understand intuitively and checks itself before it wrecks itself, i.e, comes with diagnostics about whether requesting a \*low-to-high\* ordering of functions is a sensible thing to do for a given dataset, might be useful.\
+1.  outlyingness/centrality can a) be defined in many different ways and b) only
+    yields "center-outward" order, not "above-below"
+2.  ordering infinite-dimensional objects seems like an ill-posed problem in
+    general (functions cross, there's horizontal (low-high) and vertical
+    (early-late) variation, etc...), so even with lots of fancy theory this
+    seems like something that is impossible to achieve in full generality (in
+    the sense of achieving meaningful, interpretable, reasonable results for
+    arbitrary data, like in the scalar case).
+3.  a method that is easy to understand intuitively and checks itself before it
+    wrecks itself, i.e, comes with diagnostics about whether requesting a
+    \*low-to-high\* ordering of functions is a sensible thing to do for a given
+    dataset, might be useful.\
 
 ### Hard to compute, solid theory, dubious meaning: Directional quantiles for functions
 
-[Serfling](https://personal.utdallas.edu/~serfling/papers/Serfling_and_Wijesuriya_July_13_2016.pdf) gives definition based on reasonable looking spatial depth / "directional quantiles" for functions, for specific constant "functional directions" $u(t) = \pm c \in \mathbb{B}$:\
-![](images/paste-D1C69A44.png)\
-So these can also be used to define *empirical quantiles* relative to a dataset of curves, not just distributions.\
-*pros*: such quantiles won't necessarily be elements of the dataset, IIUC, they can interpolate the functions in the dataset\
+[Serfling](https://personal.utdallas.edu/~serfling/papers/Serfling_and_Wijesuriya_July_13_2016.pdf)
+gives definition based on reasonable looking spatial depth / "directional
+quantiles" for functions, for specific constant "functional directions"
+$u(t) \equiv \pm c \in \mathbb{R}$ :\
+![](images/paste-6B5AAF69.png)\
+So these can also be used to define *empirical quantiles* relative to a dataset
+of curves, not just distributions.\
+*pros*: such quantiles won't necessarily be elements of the dataset, IIUC, they
+can interpolate the functions in the dataset\
 *cons*:\
-- computation seems (very) hard, *for something that might not even work reliably since the problem is not particularly well posed...*?\
+- computation seems (very) hard, *for something that might not even work
+reliably since the problem is not particularly well posed...*?\
 - no internal diagnostics, AFAICT\
 
 ### Easy to compute & understand, barely any theory, same dubious meaning: using integrals of rank-transformed functions
 
-Define *simple functional empirical quantiles* based on "how much of the function is below/above how many other functions in the set":
+Define *simple functional empirical quantiles* based on "how much of the
+function is below/above how many other functions in the set":
 
-1.  rough equivalent of order statistics for functions $x:T \to \mathbb{R}$ in dataset $X = \{x_1, \dots, x_n\}$ based on "modified epigraph index" MEI: $mei(x(t)) = (n|T|)^{-1}\int |\{x'(t) \in X: x(t) > x'(t)\}| dt \in [0, 1]$
-2.  the function whose MEI is the $q \in [0,1]$ sample quantile of the MEIs in the dataset is the $q$ functional quantile. **That's it, that's the entire idea.** (We're using the simplest version of empirical quantiles here, i.e., direct inverse of ECDF, so no interpolation/averaging/etc)
+1.  rough equivalent of order statistics for functions $x:T \to \mathbb{R}$ in
+    dataset $X = \{x_1, \dots, x_n\}$ based on "modified epigraph index" MEI:
+    $mei(x(t)) = (n|T|)^{-1}\int |\{x'(t) \in X: x(t) > x'(t)\}| dt \in [0, 1]$
+2.  the function whose MEI is the $q \in [0,1]$ sample quantile of the MEIs in
+    the dataset is the $q$ functional quantile. **That's it, that's the entire
+    idea.** (We're using the simplest version of empirical quantiles here, i.e.,
+    direct inverse of ECDF, so no interpolation/averaging/etc)
 
--   computation of this is very easy -- about the same complexity as Sun/Genton's efficient MBD-2 implementation: just pointwise ranks of function evals and then averaging those per function.
--   for datasets in which functions cross a lot, MEIs will be concentrated around 0.5, so its range/dispersion is a diagnostic for whether it even makes sense to try to order the functions according to their level. (More precisely, the shape of the MEI distribution can tell *which* functional quantiles are well defined -- could be that there is a clear ordering at the low end but not at the upper end, e.g., and in general, the more non-uniform the MEI distribution is the less well-defined this notion of functional quantile is...)
+-   computation of this is very easy -- about the same complexity as
+    Sun/Genton's efficient MBD-2 implementation: just pointwise ranks of
+    function evals and then averaging those per function.
+-   for datasets in which functions cross a lot, MEIs will be concentrated
+    around 0.5, so its range/dispersion is a diagnostic for whether it even
+    makes sense to try to order the functions according to their level. (More
+    precisely, the shape of the MEI distribution can tell *which* functional
+    quantiles are well defined -- could be that there is a clear ordering at the
+    low end but not at the upper end, e.g., and in general, the more non-uniform
+    the MEI distribution is the less well-defined this notion of functional
+    quantile is...)
 
 ```{r, def-mei}
 # simple functional "order statistics" based on "modified epigraph index"
 mei_order <- function(x, arg = seq_len(ncol(x))) {
-  ranks <- apply(x, 2, rank, na.last = "keep")
+  ranks <- apply(x, 2, rank, na.last = "keep", ties.method = "min")
+  ranks <- nrow(x) - ranks + 1
   weights <- {
     # assign half interval length to 2nd/nxt-to-last points to 1st and last point
     # assign other half intervals to intermediate points
@@ -70,9 +107,8 @@ tf_quantile <- function(tf, q, method = c("mei", "pc1")) {
 
 #### Examples:
 
-`mbd` is modified 2-band depth, 
-"median" and "quartiles" in middle panel according to upper definition in gold and blue,
-and MBD-median in black)
+`mbd` is modified 2-band depth, "median" and "quartiles" in middle panel
+according to upper definition in gold and blue, and MBD-median in black)
 
 ```{r, def-data, echo = FALSE, message = FALSE, warning = FALSE}
 library(tidyverse)
@@ -105,6 +141,7 @@ examples <- list(
   acti50_smooth = chf_df$activity[1:50] %>% tf_smooth()
 )
 ```
+
 ```{r, viz}
 for (ex in names(examples)) {
   ex_data <- tibble(x = examples[[ex]], mei = mei_order(as.matrix(examples[[ex]])), mbd = tf_depth(x)) %>% 
@@ -146,40 +183,56 @@ for (ex in names(examples)) {
 
 #### Conclusions, tentative
 
-- for data in which "above-below" is a well defined notion over the entire domain, this seems to mostly yield reasonable answers. (in idealized cases, even the same as MBD)
-- breaks, as expected, for data with lots of crossing curves where there is no useful "level" variability: `cross`, `phase_shift1`
-- MBD medians for real data examples seem more reasonable than MEI medians - less frequently at extremes of the data. MEI averages local properties of the curve relative to all other curves while MBD considers all triplets of curves (all 2-bands vs function, so more "stable", maybe? *think more about this, might be exploitable somehow*) 
+-   for data in which "above-below" is a well defined notion over the entire
+    domain, this seems to mostly yield reasonable answers. (in idealized cases,
+    even the same as MBD)
+-   breaks, as expected, for data with lots of crossing curves where there is no
+    useful "level" variability: `cross`, `phase_shift1`
+-   MBD medians for real data examples seem more reasonable than MEI medians -
+    less frequently at extremes of the data. MEI averages local properties of
+    the curve relative to all other curves while MBD considers all triplets of
+    curves (all 2-bands vs function, so more "stable", maybe? *think more about
+    this, might be exploitable somehow*)
 
-desiderata for better f-quantiles: 
-- symmetric (1-q/2, q/2)-quantiles should not cross (prob. impossible if data cross a lot and fun. quantiles are (very similar to) actual observed curves)
-- that
+desiderata for better f-quantiles: - symmetric (1-q/2, q/2)-quantiles should not
+cross (prob. impossible if data cross a lot and fun. quantiles are (very similar
+to) actual observed curves) - that
 
 ### Even more stupid ideas
 
 **f-quantile by removing deepest curves**
 
-idea: for scalar data, if we remove the middle q% of data, the min/max of the remainder are (1-q/2, q/2) quantiles.
-So: 
+idea: for scalar data, if we remove the middle q% of data, the min/max of the
+remainder are (1-q/2, q/2) quantiles. So:
 
-- remove q% deepest curves based on suitable depth
-- find lowest/highest MEI (w.r.t to the deepest middle q% only! otherwise should be same as MEI-based q's as above) of remainder to get (1-q/2, q/2) f-quantiles
-- prob. needs different MEI implementation than above since it's no longer "in-sample" MEI ("rank remaining curves relative to removed", not "rank all curves pointwise"), might be computationally heavy(?)
+-   remove q% deepest curves based on suitable depth
+-   find lowest/highest MEI (w.r.t to the deepest middle q% only! otherwise
+    should be same as MEI-based q's as above) of remainder to get (1-q/2, q/2)
+    f-quantiles
+-   prob. needs different MEI implementation than above since it's no longer
+    "in-sample" MEI ("rank remaining curves relative to removed", not "rank all
+    curves pointwise"), might be computationally heavy(?)
 
 **f-quantiles via function bands/envelopes**
 
-- find 2 deepest curves s.t. their 2-band contains q% of curves -->   (1-q/2, q/2) f-quantiles
-  - very likely not possible in general for curves with many crossings  
-  - seems like a hard computation, too, at least quadratic in # of curves
-- alternative: find 2 deepest curves s.t. their 2-band contains q% of function evaluations
+-   find 2 deepest curves s.t. their 2-band contains q% of curves --\> (1-q/2,
+    q/2) f-quantiles
+    -   very likely not possible in general for curves with many crossings\
+    -   seems like a hard computation, too, at least quadratic in \# of curves
+-   alternative: find 2 deepest curves s.t. their 2-band contains q% of function
+    evaluations
 
 **something different: use data-driven directions for spatial depth**
 
-IIUC, Serfling uses constant negative/positive functions as directions, which makes sense to induce an "above-below" ordering of functions. 
-But that's maybe not a sensible ask for data with lots of crossings, dominant phase var, etc.  
+IIUC, Serfling uses constant negative/positive functions as directions, which
+makes sense to induce an "above-below" ordering of functions. But that's maybe
+not a sensible ask for data with lots of crossings, dominant phase var, etc.
 
-- could it make more sense to use directions derived from FPCs? (i.e, in multivariate data, would use first PC as direction to use "most important mode of variation"-- *is there lit on this?*)  
-- could maybe even use multiple directions weighted by EVs if first FPC is not "large"/dominant...?
-- does this yield basically the same thing as Hyndman/Shang's functional bag/boxplots that use half-space depth of FPC score vectors for constructing f-medians and "deepest q%" function bands? seems close...
-
-
-
+-   could it make more sense to use directions derived from FPCs? (i.e, in
+    multivariate data, would use first PC as direction to use "most important
+    mode of variation"-- *is there lit on this?*)\
+-   could maybe even use multiple directions weighted by EVs if first FPC is not
+    "large"/dominant...?
+-   does this yield basically the same thing as Hyndman/Shang's functional
+    bag/boxplots that use half-space depth of FPC score vectors for constructing
+    f-medians and "deepest q%" function bands? seems close...
