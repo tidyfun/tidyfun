@@ -253,7 +253,7 @@ tf_nest <- function(data, ..., .id = "id", .arg = "arg", domain = NULL,
     list(value_vars, evaluator, domain, resolution),
     \(x, y, z, w) {
       data |>
-        select(id_var, arg_var, !!x) |>
+        select(!!id_var, !!arg_var, all_of(x)) |>
         tfd(evaluator = !!y, domain = z, resolution = w)
     }
   )
