@@ -25,6 +25,7 @@ reference:
   - tf::Ops.tf
   - tf::tfsummaries
   - tf::tf_depth
+  - tf::functionwise
 - title: Differentiation, integration and simple smoothing
   contents:
   - tf::tf_derive
@@ -44,6 +45,7 @@ reference:
   - tf::plot.tf
   - geom_spaghetti
   - gglasagna
+  - ggerrorband
   - geom_capellini
   - tf::print.tf
   - type_sum.tf
