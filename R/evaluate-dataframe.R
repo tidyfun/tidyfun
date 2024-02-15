@@ -9,7 +9,7 @@
 #' @param ... optional: a selection of `tf`-columns. If empty, all `tf`-variables
 #'   in the data frame are selected. You can supply bare variable names,
 #'   select all variables between `x` and `z` with `x:z`, exclude `y` with `-y`.
-#'   For more options, see the [dplyr::select()] documentation. 
+#'   For more options, see the [dplyr::select()] documentation.
 #' @param arg optional evaluation grid (vector or list of vectors).
 #'   Defaults to `tf_arg(object)`.
 #' @returns Replaces `tf`-columns with list columns of
@@ -23,7 +23,7 @@
 #' @family tidyfun data wrangling functions
 tf_evaluate.data.frame <- function(object, ..., arg) {
   # figure out which tf columns to evaluate:
-  tf_cols <- names(object)[purrr::map_lgl(object, is_tf)]
+  tf_cols <- names(object)[map_lgl(object, is_tf)]
   tf_to_evaluate <- enquos(...)
   if (!is_empty(tf_to_evaluate)) {
     tf_to_evaluate <- unname(vars_select(names(object), !!!tf_to_evaluate))
@@ -39,7 +39,7 @@ tf_evaluate.data.frame <- function(object, ..., arg) {
       arg <- replicate(length(tf_cols), arg, simplify = FALSE)
     }
   } else {
-    arg <- purrr::map(object[tf_cols], ~tf::ensure_list(tf_arg(.)))
+    arg <- map(object[tf_cols], \(x) tf::ensure_list(tf_arg(x)))
   }
   stopifnot(length(arg) == length(tf_cols))
   names(arg) <- tf_cols

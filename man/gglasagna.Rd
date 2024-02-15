@@ -57,11 +57,12 @@ ordering of observations obtained by \code{dplyr::arrange(data, order, order_by(
 \examples{
 \dontrun{
 set.seed(1221)
-data = expand.grid(group = factor(1:5), rep = 1:10)
-data = dplyr::mutate(data, 
-                     id = paste(group, rep, sep = "-"), 
-                     f =  tf_rgp(50),
-                     fb = tfb(f))
+data <- expand.grid(group = factor(1:5), rep = 1:10)
+data <- dplyr::mutate(data,
+  id = paste(group, rep, sep = "-"),
+  f =  tf_rgp(50),
+  fb = tfb(f)
+)
 
 gglasagna(data, f, label = id)
 gglasagna(data, fb, label = id, order = group)
