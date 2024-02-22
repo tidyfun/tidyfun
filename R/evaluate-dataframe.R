@@ -30,7 +30,7 @@ tf_evaluate.data.frame <- function(object, ..., arg) {
     tf_cols <- intersect(tf_cols, tf_to_evaluate)
   }
   if (!length(tf_cols)) {
-    warning("Nothing to be done for tf_evaluate.")
+    warning("Nothing to be done for tf_evaluate.", call. = FALSE)
     return(object)
   }
   if (!missing(arg) && !is.null(arg)) {

@@ -128,14 +128,18 @@ tf_spread <- function(data, value, arg, sep = "_", interpolate = FALSE) {
     if (length(tf_cols) == 0) {
       warning(
         "<value>-argument ", sQuote(tf_var),
-        " is not a column of class 'tf'. Nothing's happening here."
+        " is not a column of class 'tf'. Nothing's happening here.",
+        call. = FALSE
       )
       return(data)
     }
     if (length(tf_cols) == 1) {
       value <- tf_cols
     } else {
-      stop("More than one `tf` found, specify which one to spread in <value>.")
+      stop(
+        "More than one `tf` found, specify which one to spread in <value>.",
+        call. = FALSE
+      )
     }
   }
   tf_var <- tidyselect::vars_pull(names(data), !!enquo(value))
@@ -143,7 +147,8 @@ tf_spread <- function(data, value, arg, sep = "_", interpolate = FALSE) {
   if (!is_tf(tf)) {
     warning(
       "<value>-argument ", sQuote(tf_var),
-      " is not a column of class 'tf'. Nothing's happening here."
+      " is not a column of class 'tf'. Nothing's happening here.",
+      call. = FALSE
     )
     return(data)
   }
@@ -156,7 +161,8 @@ tf_spread <- function(data, value, arg, sep = "_", interpolate = FALSE) {
       warning(
         "no explicit <arg> for irregular ", sQuote(tf_var),
         " provided-- using all ", length(arg),
-        " distinct observed argument values."
+        " distinct observed argument values.",
+        call. = FALSE
       )
     }
   }
@@ -243,7 +249,8 @@ tf_nest <- function(data, ..., .id = "id", .arg = "arg", domain = NULL,
   if (ncol(not_constant)) {
     stop(
       "Can't nest - columns ", toString(names(not_constant)),
-      " are not constant for all levels of the id-variable."
+      " are not constant for all levels of the id-variable.",
+      call. = FALSE
     )
   }
 
@@ -322,9 +329,8 @@ tf_unnest.data.frame <- function(data, cols, arg, interpolate = TRUE,
     tf_cols <- names(data)[map_lgl(data, is_tf)]
     cols <- expr(c(!!!syms(tf_cols)))
     warning(paste0(
-      "`cols` is now required.\n", "Please use `cols = ",
-      expr_text(cols), "`"
-    ))
+      "`cols` is now required.\n", "Please use `cols = ", expr_text(cols), "`"
+    ), call. = FALSE)
   }
 
   ret <- tf_evaluate.data.frame(data, !!enquo(cols), arg = arg) |>
