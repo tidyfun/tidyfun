@@ -1,21 +1,40 @@
 Package: tidyfun
 Title: Tools for Tidy Functional Data
-Version: 0.0.97
-Authors@R: c(person("Fabian", "Scheipl", email = "fabian.scheipl@googlemail.com", role = c("aut", "cre")), person("Jeff", "Goldsmith", role = c("aut")), person("Julia", "Wrobel", role = c("aut")))
-Description: Representing, visualizing, describing and wrangling tidy functional data, based on {tf}.
-Depends: R (>= 4.1), tf
-Imports:
-  dplyr, GGally, ggplot2, grid, pillar, purrr, rlang, stringr, tibble, 
-  tidyselect, tidyr (>= 1.0.0) 
+Version: 0.0.98
+Authors@R: c(
+    person("Fabian", "Scheipl", , "fabian.scheipl@googlemail.com", role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0001-8172-3603")),
+    person("Jeff", "Goldsmith", role = "aut"),
+    person("Julia", "Wrobel", role = "aut",
+           comment = c(ORCID = "0000-0001-6783-1421")),
+    person("Maximilian", "Muecke", role = "ctb",
+           comment = c(ORCID = "0009-0000-9432-9795"))
+  )
+Description: Representing, visualizing, describing and wrangling tidy
+    functional data, based on {tf}.
 License: MIT + file LICENSE
-Encoding: UTF-8
-LazyData: true
-RoxygenNote: 7.2.0
+URL: https://github.com/tidyfun/tidyfun,
+    https://tidyfun.github.io/tidyfun/
+BugReports: https://github.com/tidyfun/tidyfun/issues
+Depends: 
+    R (>= 4.1),
+    tf
+Imports:
+    dplyr,
+    GGally,
+    ggplot2,
+    grid,
+    pillar,
+    purrr,
+    rlang,
+    tibble,
+    tidyr (>= 1.0.0),
+    tidyselect
 Suggests: 
-    data.table,
+    covr,
     fda,
-    janitor,
     gridExtra,
+    janitor,
     knitr,
     maps,
     mgcv,
@@ -23,14 +42,15 @@ Suggests:
     rmarkdown,
     scales,
     SemiPar,
-    testthat,
+    testthat (>= 3.0.0),
     tidyverse,
-    viridisLite,
-    covr
-Roxygen: list(markdown = TRUE)
-Remotes:  
+    viridisLite
+VignetteBuilder: 
+    knitr
+Remotes: 
     tidyfun/tf
-VignetteBuilder: knitr
-URL: https://github.com/tidyfun/tidyfun,
-    https://tidyfun.github.io/tidyfun/
-BugReports: https://github.com/tidyfun/tidyfun/issues
+Config/testthat/edition: 3
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.1

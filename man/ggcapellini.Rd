@@ -45,19 +45,19 @@ geom_capellini(
   box.colour = "#0000001A",
   box.linetype = 1,
   box.fill = NA,
-  box.size = 0.1,
+  box.linewidth = 0.1,
   box.alpha = 0.1,
   line.colour = "black",
   line.linetype = 2,
-  line.size = 0.3,
+  line.linewidth = 0.3,
   line.alpha = 0.5
 )
 }
 \arguments{
-\item{mapping}{Set of aesthetic mappings created by \code{\link[ggplot2:aes]{aes()}} or
-\code{\link[ggplot2:aes_]{aes_()}}. If specified and \code{inherit.aes = TRUE} (the
-default), it is combined with the default mapping at the top level of the
-plot. You must supply \code{mapping} if there is no plot mapping.}
+\item{mapping}{Set of aesthetic mappings created by \code{\link[ggplot2:aes]{aes()}}. If specified and
+\code{inherit.aes = TRUE} (the default), it is combined with the default mapping
+at the top level of the plot. You must supply \code{mapping} if there is no plot
+mapping.}
 
 \item{data}{The data to be displayed in this layer. There are three
 options:
@@ -74,10 +74,14 @@ the plot data. The return value must be a \code{data.frame}, and
 will be used as the layer data. A \code{function} can be created
 from a \code{formula} (e.g. \code{~ head(.x, 10)}).}
 
-\item{geom}{The geometric object to use display the data}
+\item{geom}{The geometric object to use to display the data, either as a
+\code{ggproto} \code{Geom} subclass or as a string naming the geom stripped of the
+\code{geom_} prefix (e.g. \code{"point"} rather than \code{"geom_point"})}
 
-\item{position}{Position adjustment, either as a string, or the result of
-a call to a position adjustment function.}
+\item{position}{Position adjustment, either as a string naming the adjustment
+(e.g. \code{"jitter"} to use \code{position_jitter}), or the result of a call to a
+position adjustment function. Use the latter if you need to change the
+settings of the adjustment.}
 
 \item{na.rm}{remove NAs? defaults to \code{TRUE}}
 
@@ -120,7 +124,7 @@ to the paired geom/stat.}
 
 \item{box.fill}{aesthetic property of the box}
 
-\item{box.size}{aesthetic property of the box}
+\item{box.linewidth}{aesthetic property of the box}
 
 \item{box.alpha}{aesthetic property of the box}
 
@@ -128,12 +132,12 @@ to the paired geom/stat.}
 
 \item{line.linetype}{aesthetic property of the reference line}
 
-\item{line.size}{aesthetic property of of the reference line}
+\item{line.linewidth}{aesthetic property of of the reference line}
 
 \item{line.alpha}{aesthetic property of the reference line}
 }
 \description{
-Plots a miniature glyph or sparkline for each entry of a \code{tf}-object.
+Plots a miniature glyph / sparkline for each entry of a \code{tf}-object.
 (Capellini are tiny spaghetti -- \emph{angel hair} pasta.) Aesthetics \code{x} and \code{y}
 specify the location of the glyphs, the \code{tf} aesthetic defines their shapes.
 To accommodate all my fellow idiots, \code{geom_cappelini},  \code{geom_cappellini} and
@@ -145,62 +149,38 @@ Mandatory. Used to designate a column of class \code{tf} to be visualized as gly
 }
 
 \examples{
-\dontrun{ # takes a little too long for CRAN
+\dontrun{
+# takes a little too long for CRAN
 library(ggplot2)
 library(tidyverse)
 weather <- fda::CanadianWeather
 canada <- data.frame(
   place = weather$place,
   region = weather$region,
-  lat = weather$coordinates[,1],
-  lon = -weather$coordinates[,2],
-  region = weather$region)
-canada$temp <- tfd(t(weather$dailyAv[,,1]), arg = 1:365)
-canada$precipl10 <- tfd(t(weather$dailyAv[,,3]), arg = 1:365) \%>\% tf_smooth
+  lat = weather$coordinates[, 1],
+  lon = -weather$coordinates[, 2],
+  region = weather$region
+)
+canada$temp <- tfd(t(weather$dailyAv[, , 1]), arg = 1:365)
+canada$precipl10 <- tfd(t(weather$dailyAv[, , 3]), arg = 1:365) |> tf_smooth()
 canada_map <-
   data.frame(maps::map("world", "Canada", plot = FALSE)[c("x", "y")])
 # map of canada with annual temperature averages in red, precipitation in blue:
 ggplot(canada, aes(x = lon, y = lat)) +
   geom_capellini(aes(tf = precipl10), width = 3, height = 5, colour = "blue") +
   geom_capellini(aes(tf = temp), width = 3, height = 5, colour = "red") +
-  geom_path(data = canada_map, aes(x = x, y = y), alpha = .1) +
+  geom_path(data = canada_map, aes(x = x, y = y), alpha = 0.1) +
   coord_quickmap()
 
 ggplot(canada, aes(x = lon, y = lat, colour = region)) +
-  geom_capellini(aes(tf = precipl10), width = 5, height = 3,
-    line.linetype = 1, box.fill = "white", box.alpha=.5, box.colour = NA)
+  geom_capellini(aes(tf = precipl10),
+    width = 5, height = 3,
+    line.linetype = 1, box.fill = "white", box.alpha = 0.5, box.colour = NA
+  )
 }
 }
 \seealso{
-GGally::glyphs
-
-Other tidyfun visualization: 
-\code{\link{gglasagna}()},
-\code{\link{ggspaghetti}}
-
-Other tidyfun visualization: 
-\code{\link{gglasagna}()},
-\code{\link{ggspaghetti}}
-
-Other tidyfun visualization: 
-\code{\link{gglasagna}()},
-\code{\link{ggspaghetti}}
-
-Other tidyfun visualization: 
-\code{\link{gglasagna}()},
-\code{\link{ggspaghetti}}
-
-Other tidyfun visualization: 
-\code{\link{gglasagna}()},
-\code{\link{ggspaghetti}}
-
-Other tidyfun visualization: 
-\code{\link{gglasagna}()},
-\code{\link{ggspaghetti}}
-
-Other tidyfun visualization: 
-\code{\link{gglasagna}()},
-\code{\link{ggspaghetti}}
+\link[GGally:glyphs]{GGally::glyphs}
 
 Other tidyfun visualization: 
 \code{\link{gglasagna}()},
