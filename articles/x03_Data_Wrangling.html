@@ -4,104 +4,88 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="description" content="tidyfun">
 <title>Data Wrangling • tidyfun</title>
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
-<script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
+<script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../pkgdown.js"></script><meta property="og:title" content="Data Wrangling">
+<!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Data Wrangling">
 <meta property="og:description" content="tidyfun">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
 </head>
-<body data-spy="scroll" data-target="#toc">
+<body>
+    <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
     
 
-    <div class="container template-article">
-      <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
-  <div class="container">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <span class="navbar-brand">
-        <a class="navbar-link" href="../index.html">tidyfun</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.97</span>
-      </span>
-    </div>
+    <nav class="navbar fixed-top navbar-default navbar-expand-lg bg-light"><div class="container">
+    
+    <a class="navbar-brand me-2" href="../index.html">tidyfun</a>
 
-    <div id="navbar" class="navbar-collapse collapse">
-      <ul class="nav navbar-nav">
-<li>
-  <a href="https://github.com/tidyfun/tidyfun" class="external-link">
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.0.98</small>
+
+    
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div id="navbar" class="collapse navbar-collapse ms-3">
+      <ul class="navbar-nav me-auto">
+<li class="nav-item">
+  <a class="external-link nav-link" href="https://github.com/tidyfun/tidyfun">
     <span class="fa fa-github"></span>
      
   </a>
 </li>
-<li>
-  <a href="../reference/index.html">Reference</a>
+<li class="nav-item">
+  <a class="nav-link" href="../reference/index.html">Reference</a>
 </li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-    Articles
-     
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
-<li>
-      <a href="../articles/x01_tf_Vectors.html">tf-Vectors and Operations</a>
-    </li>
-    <li>
-      <a href="../articles/x02_Conversion.html">Converting data to and from `tf`</a>
-    </li>
-    <li>
-      <a href="../articles/x03_Data_Wrangling.html">Data Wrangling</a>
-    </li>
-    <li>
-      <a href="../articles/x04_Visualization.html">Visualization</a>
-    </li>
-    <li>
-      <a href="../articles/x05_Advice.html">Advice for Developers</a>
-    </li>
-  </ul>
-</li>
-      </ul>
-<ul class="nav navbar-nav navbar-right">
-<li>
-  <a href="https://github.com/tidyfun/tidyfun/" class="external-link">
-    <span class="fab fa-github fa-lg"></span>
-     
-  </a>
-</li>
-      </ul>
-</div>
-<!--/.nav-collapse -->
+<li class="active nav-item dropdown">
+  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
+  <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <a class="dropdown-item" href="../articles/x01_tf_Vectors.html">tf-Vectors and Operations</a>
+    <a class="dropdown-item" href="../articles/x02_Conversion.html">Converting data to and from `tf`</a>
+    <a class="dropdown-item" href="../articles/x03_Data_Wrangling.html">Data Wrangling</a>
+    <a class="dropdown-item" href="../articles/x04_Visualization.html">Visualization</a>
+    <a class="dropdown-item" href="../articles/x05_Advice.html">Advice for Developers</a>
   </div>
-<!--/.container -->
+</li>
+      </ul>
+<form class="form-inline my-2 my-lg-0" role="search">
+        <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off">
+</form>
+
+      <ul class="navbar-nav">
+<li class="nav-item">
+  <a class="external-link nav-link" href="https://github.com/tidyfun/tidyfun/" aria-label="github">
+    <span class="fab fa fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
 </div>
-<!--/.navbar -->
 
-      
+    
+  </div>
+</nav><div class="container template-article">
 
-      </header><div class="row">
-  <div class="col-md-9 contents">
-    <div class="page-header toc-ignore">
-      <h1 data-toc-skip>Data Wrangling</h1>
+
+
+
+<div class="row">
+  <main id="main" class="col-md-9"><div class="page-header">
+      <img src="" class="logo" alt=""><h1>Data Wrangling</h1>
                         <h4 data-toc-skip class="author">Jeff Goldsmith,
 Fabian Scheipl</h4>
             
-            <h4 data-toc-skip class="date">2023-06-21</h4>
+            <h4 data-toc-skip class="date">2024-02-23</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/tidyfun/tidyfun/blob/HEAD/vignettes/x03_Data_Wrangling.Rmd" class="external-link"><code>vignettes/x03_Data_Wrangling.Rmd</code></a></small>
-      <div class="hidden name"><code>x03_Data_Wrangling.Rmd</code></div>
-
+      <div class="d-none name"><code>x03_Data_Wrangling.Rmd</code></div>
     </div>
 
     
@@ -158,18 +142,10 @@ several covariates.</p>
 <span><span class="co">## <span style="color: #949494;"># ℹ 1 more variable: activity &lt;tfd_reg&gt;</span></span></span></code></pre></div>
 <p>A quick plot of the first 5 curves:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">chf_df</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>,<span class="op">]</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>tf <span class="op">=</span> <span class="va">activity</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="../reference/ggspaghetti.html">geom_spaghetti</a></span><span class="op">(</span>alpha <span class="op">=</span> <span class="fl">.1</span><span class="op">)</span></span>
-<span><span class="co">## Warning: Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Warning: Using the `size` aesthetic with geom_line was deprecated in ggplot2 3.4.0.</span></span>
-<span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Please use the `linewidth` aesthetic instead.</span></span>
-<span><span class="co">## <span style="color: #555555;">This warning is displayed once every 8 hours.</span></span></span>
-<span><span class="co">## <span style="color: #555555;">Call `lifecycle::last_lifecycle_warnings()` to see where this warning was</span></span></span>
-<span><span class="co">## <span style="color: #555555;">generated.</span></span></span>
-<span><span class="co">## Warning: Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">chf_df</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html" class="external-link">slice</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">activity</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/ggspaghetti.html">geom_spaghetti</a></span><span class="op">(</span>alpha <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span></span></code></pre></div>
 <p><img src="x03_Data_Wrangling_files/figure-html/plot_chf-1.png" width="90%"></p>
 <p>The <code><a href="../reference/dti_df.html">tidyfun::dti_df</a></code> contains fractional anisotropy (FA)
 tract profiles for the corpus callosum (cca) and the right corticospinal
@@ -195,390 +171,9 @@ tract (rcst), along with several covariates.</p>
 <span><span class="co">## <span style="color: #949494;"># ℹ 1 more variable: rcst &lt;tfd_irrg&gt;</span></span></span></code></pre></div>
 <p>A quick plot of the <code>cca</code> tract profiles is below.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">dti_df</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>tf <span class="op">=</span> <span class="va">cca</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="../reference/ggspaghetti.html">geom_spaghetti</a></span><span class="op">(</span>alpha <span class="op">=</span> <span class="fl">.05</span><span class="op">)</span></span>
-<span><span class="co">## Warning: Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">dti_df</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">cca</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/ggspaghetti.html">geom_spaghetti</a></span><span class="op">(</span>alpha <span class="op">=</span> <span class="fl">0.05</span><span class="op">)</span></span></code></pre></div>
 <p><img src="x03_Data_Wrangling_files/figure-html/plot_dti-1.png" width="90%"></p>
 </div>
 <div class="section level2">
@@ -588,92 +183,42 @@ tract (rcst), along with several covariates.</p>
 observations can be manipulated using tools from <code>dplyr</code>,
 including <code>select</code> and <code>filter</code>:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">chf_df</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">id</span>, <span class="va">day</span>, <span class="va">activity</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">day</span> <span class="op">==</span> <span class="st">"Mon"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>tf <span class="op">=</span> <span class="va">activity</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
-<span>  <span class="fu"><a href="../reference/ggspaghetti.html">geom_spaghetti</a></span><span class="op">(</span>alpha <span class="op">=</span> <span class="fl">.05</span><span class="op">)</span> </span>
-<span><span class="co">## Warning: Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">chf_df</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">id</span>, <span class="va">day</span>, <span class="va">activity</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">day</span> <span class="op">==</span> <span class="st">"Mon"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">activity</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/ggspaghetti.html">geom_spaghetti</a></span><span class="op">(</span>alpha <span class="op">=</span> <span class="fl">0.05</span><span class="op">)</span></span></code></pre></div>
 <p><img src="x03_Data_Wrangling_files/figure-html/unnamed-chunk-1-1.png" width="90%"></p>
 <p>Operations using <code>group_by</code> and <code>summarize</code>
 also work – let’s look at some daily averages of these activity
 profiles:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">chf_df</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">day</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize</a></span><span class="op">(</span>mean_act <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">activity</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>tf <span class="op">=</span> <span class="va">mean_act</span>, color <span class="op">=</span> <span class="va">day</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
+<code class="sourceCode R"><span><span class="va">chf_df</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">day</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize</a></span><span class="op">(</span>mean_act <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">activity</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">mean_act</span>, color <span class="op">=</span> <span class="va">day</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/ggspaghetti.html">geom_spaghetti</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p><img src="x03_Data_Wrangling_files/figure-html/unnamed-chunk-2-1.png" width="90%"></p>
 <p>One can <code>mutate</code> functional observations – here we
 exponentiate the log activity counts to obtain original recordings:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">chf_df</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>,<span class="op">]</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>exp_act <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">exp</a></span><span class="op">(</span><span class="va">activity</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>tf <span class="op">=</span> <span class="va">exp_act</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
-<span>  <span class="fu"><a href="../reference/ggspaghetti.html">geom_spaghetti</a></span><span class="op">(</span>alpha <span class="op">=</span> <span class="fl">.2</span><span class="op">)</span></span>
-<span><span class="co">## Warning: Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">chf_df</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html" class="external-link">slice</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>exp_act <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">exp</a></span><span class="op">(</span><span class="va">activity</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">exp_act</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/ggspaghetti.html">geom_spaghetti</a></span><span class="op">(</span>alpha <span class="op">=</span> <span class="fl">0.2</span><span class="op">)</span></span></code></pre></div>
 <p><img src="x03_Data_Wrangling_files/figure-html/unnamed-chunk-3-1.png" width="90%"></p>
 <p>Functions for data manipulation from <code>tidyr</code> are also
 supported. We illustrate by using <code>pivot_wider</code> to create new
 <code>tfd</code>-columns containing the activity profiles for each day
 of the week:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">chf_df</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">id</span>, <span class="va">day</span>, <span class="va">activity</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<code class="sourceCode R"><span><span class="va">chf_df</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">id</span>, <span class="va">day</span>, <span class="va">activity</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_wider.html" class="external-link">pivot_wider</a></span><span class="op">(</span></span>
-<span>    names_from <span class="op">=</span> <span class="va">day</span>, </span>
-<span>    values_from <span class="op">=</span> <span class="va">activity</span><span class="op">)</span></span>
+<span>    names_from <span class="op">=</span> <span class="va">day</span>,</span>
+<span>    values_from <span class="op">=</span> <span class="va">activity</span></span>
+<span>  <span class="op">)</span></span>
 <span><span class="co">## <span style="color: #949494;"># A tibble: 47 × 8</span></span></span>
 <span><span class="co">##       id                          Mon                          Tue</span></span>
 <span><span class="co">##    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>                    <span style="color: #949494; font-style: italic;">&lt;tfd_reg&gt;</span>                    <span style="color: #949494; font-style: italic;">&lt;tfd_reg&gt;</span></span></span>
@@ -695,18 +240,18 @@ generally recommended, but may be useful in some cases).</p>
 <p>It’s also possible to join datasets based on non-functional keys. To
 illustrate, we’ll first create a pair of datasets:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">monday_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">chf_df</span>, <span class="va">day</span> <span class="op">==</span> <span class="st">"Mon"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<code class="sourceCode R"><span><span class="va">monday_df</span> <span class="op">&lt;-</span> <span class="va">chf_df</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">day</span> <span class="op">==</span> <span class="st">"Mon"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">id</span>, monday_act <span class="op">=</span> <span class="va">activity</span><span class="op">)</span></span>
-<span><span class="va">friday_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">chf_df</span>, <span class="va">day</span> <span class="op">==</span> <span class="st">"Fri"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span><span class="va">friday_df</span> <span class="op">&lt;-</span> <span class="va">chf_df</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">day</span> <span class="op">==</span> <span class="st">"Fri"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">id</span>, friday_act <span class="op">=</span> <span class="va">activity</span><span class="op">)</span></span></code></pre></div>
 <p>These can be joined using the <code>id</code> variable as a key (and
 then tidied using <code>pivot_longer</code>):</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">left_join</a></span><span class="op">(</span><span class="va">monday_df</span>, <span class="va">friday_df</span>, by <span class="op">=</span> <span class="st">"id"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html" class="external-link">pivot_longer</a></span><span class="op">(</span></span>
-<span>    <span class="va">monday_act</span><span class="op">:</span><span class="va">friday_act</span>,</span>
-<span>    names_to <span class="op">=</span> <span class="st">"day"</span>, </span>
-<span>    values_to <span class="op">=</span> <span class="st">"activity"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">monday_df</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">left_join</a></span><span class="op">(</span><span class="va">friday_df</span>, by <span class="op">=</span> <span class="st">"id"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html" class="external-link">pivot_longer</a></span><span class="op">(</span><span class="va">monday_act</span><span class="op">:</span><span class="va">friday_act</span>, names_to <span class="op">=</span> <span class="st">"day"</span>, values_to <span class="op">=</span> <span class="st">"activity"</span><span class="op">)</span></span>
 <span><span class="co">## <span style="color: #949494;"># A tibble: 94 × 3</span></span></span>
 <span><span class="co">##       id day                            activity</span></span>
 <span><span class="co">##    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                         <span style="color: #949494; font-style: italic;">&lt;tfd_reg&gt;</span></span></span>
@@ -724,12 +269,12 @@ then tidied using <code>pivot_longer</code>):</p>
 <p>Similar tidying can be done for the DTI data – let’s look at average
 RCST tract values for gender and case status:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">dti_df</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">case</span>, <span class="va">sex</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize</a></span><span class="op">(</span>mean_rcst <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">rcst</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>tf <span class="op">=</span> <span class="va">mean_rcst</span>, color <span class="op">=</span> <span class="va">case</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
-<span>    <span class="fu"><a href="../reference/ggspaghetti.html">geom_spaghetti</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="op">+</span> </span>
-<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_grid.html" class="external-link">facet_grid</a></span><span class="op">(</span><span class="op">~</span><span class="va">sex</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">dti_df</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">case</span>, <span class="va">sex</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize</a></span><span class="op">(</span>mean_rcst <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">rcst</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">mean_rcst</span>, color <span class="op">=</span> <span class="va">case</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/ggspaghetti.html">geom_spaghetti</a></span><span class="op">(</span>linewidth <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_grid.html" class="external-link">facet_grid</a></span><span class="op">(</span><span class="op">~</span><span class="va">sex</span><span class="op">)</span></span>
 <span><span class="co">## `summarise()` has grouped output by 'case'. You can override using the</span></span>
 <span><span class="co">## `.groups` argument.</span></span></code></pre></div>
 <p><img src="x03_Data_Wrangling_files/figure-html/unnamed-chunk-7-1.png" width="90%"></p>
@@ -742,8 +287,7 @@ functions in <code>tidyfun</code>. For example, one might use
 <code>filter</code> with <code>tf_anywhere</code> to filter based on the
 values of observed functions:</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">like_to_move_it_move_it</span> <span class="op">&lt;-</span> <span class="va">chf_df</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="fu"><a href="https://tidyfun.github.io/tf/reference/tf_where.html" class="external-link">tf_anywhere</a></span><span class="op">(</span><span class="va">activity</span>, <span class="va">value</span> <span class="op">&gt;</span> <span class="fl">9</span><span class="op">)</span><span class="op">)</span> </span>
+<code class="sourceCode R"><span><span class="va">like_to_move_it_move_it</span> <span class="op">&lt;-</span> <span class="va">chf_df</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="fu"><a href="https://tidyfun.github.io/tf/reference/tf_where.html" class="external-link">tf_anywhere</a></span><span class="op">(</span><span class="va">activity</span>, <span class="va">value</span> <span class="op">&gt;</span> <span class="fl">9</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="va">like_to_move_it_move_it</span><span class="op">)</span></span>
 <span><span class="co">## Rows: 6</span></span>
 <span><span class="co">## Columns: 8</span></span>
@@ -756,21 +300,16 @@ values of observed functions:</p>
 <span><span class="co">## $ day        <span style="color: #949494; font-style: italic;">&lt;ord&gt;</span> Wed, Thu, Sun, Thu, Fri, Sat</span></span>
 <span><span class="co">## $ activity   <span style="color: #949494; font-style: italic;">&lt;tfd_reg&gt;</span> &lt;0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000…</span></span>
 <span></span>
-<span><span class="va">like_to_move_it_move_it</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>tf <span class="op">=</span> <span class="va">activity</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
+<span><span class="va">like_to_move_it_move_it</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">activity</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/ggspaghetti.html">geom_spaghetti</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>colour <span class="op">=</span> <span class="va">id</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="x03_Data_Wrangling_files/figure-html/unnamed-chunk-8-1.png" width="90%"></p>
 <p>A second example of this functionality in the DTI data is below.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">dti_df</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="fu"><a href="https://tidyfun.github.io/tf/reference/tf_where.html" class="external-link">tf_anywhere</a></span><span class="op">(</span><span class="va">cca</span>, <span class="va">value</span> <span class="op">&lt;</span> <span class="fl">.26</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>tf <span class="op">=</span> <span class="va">cca</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
-<span>    <span class="fu"><a href="../reference/ggspaghetti.html">geom_spaghetti</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">## Warning: Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">dti_df</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="fu"><a href="https://tidyfun.github.io/tf/reference/tf_where.html" class="external-link">tf_anywhere</a></span><span class="op">(</span><span class="va">cca</span>, <span class="va">value</span> <span class="op">&lt;</span> <span class="fl">0.26</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">cca</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/ggspaghetti.html">geom_spaghetti</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p><img src="x03_Data_Wrangling_files/figure-html/unnamed-chunk-9-1.png" width="90%"></p>
 <p>The existing <code>mutate</code> function can be combined with
 several <code>tidyfun</code> functions, including
@@ -779,57 +318,40 @@ several <code>tidyfun</code> functions, including
 <p>One can smooth existing observations using
 <code>tf_smooth</code>:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">chf_df</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">id</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>smooth_act <span class="op">=</span> <span class="fu"><a href="https://tidyfun.github.io/tf/reference/tf_smooth.html" class="external-link">tf_smooth</a></span><span class="op">(</span><span class="va">activity</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>tf <span class="op">=</span> <span class="va">smooth_act</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
+<code class="sourceCode R"><span><span class="va">chf_df</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">id</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>smooth_act <span class="op">=</span> <span class="fu"><a href="https://tidyfun.github.io/tf/reference/tf_smooth.html" class="external-link">tf_smooth</a></span><span class="op">(</span><span class="va">activity</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">smooth_act</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/ggspaghetti.html">geom_spaghetti</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">## using f = 0.15 as smoother span for lowess</span></span>
-<span><span class="co">## Warning: Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span></code></pre></div>
+<span><span class="co">## using f = 0.15 as smoother span for lowess</span></span></code></pre></div>
 <p><img src="x03_Data_Wrangling_files/figure-html/unnamed-chunk-10-1.png" width="90%"></p>
 <p>This can be combined with previous steps, like <code>group_by</code>
 and <code>summarize</code>, to build intution through descriptive plots
 and summaries:</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">chf_df</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">day</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize</a></span><span class="op">(</span>mean_act <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">activity</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>smooth_mean <span class="op">=</span> <span class="fu"><a href="https://tidyfun.github.io/tf/reference/tf_smooth.html" class="external-link">tf_smooth</a></span><span class="op">(</span><span class="va">mean_act</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>tf <span class="op">=</span> <span class="va">mean_act</span>, color <span class="op">=</span> <span class="va">day</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
-<span>  <span class="fu"><a href="../reference/ggspaghetti.html">geom_spaghetti</a></span><span class="op">(</span>alpha <span class="op">=</span> <span class="fl">.2</span><span class="op">)</span> <span class="op">+</span> </span>
-<span>  <span class="fu"><a href="../reference/ggspaghetti.html">geom_spaghetti</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>tf <span class="op">=</span> <span class="va">smooth_mean</span><span class="op">)</span>, size <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">chf_df</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">day</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize</a></span><span class="op">(</span>mean_act <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">activity</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>smooth_mean <span class="op">=</span> <span class="fu"><a href="https://tidyfun.github.io/tf/reference/tf_smooth.html" class="external-link">tf_smooth</a></span><span class="op">(</span><span class="va">mean_act</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">mean_act</span>, color <span class="op">=</span> <span class="va">day</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/ggspaghetti.html">geom_spaghetti</a></span><span class="op">(</span>alpha <span class="op">=</span> <span class="fl">0.2</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/ggspaghetti.html">geom_spaghetti</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">smooth_mean</span><span class="op">)</span>, linewidth <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
 <span><span class="co">## using f = 0.15 as smoother span for lowess</span></span></code></pre></div>
 <p><img src="x03_Data_Wrangling_files/figure-html/unnamed-chunk-11-1.png" width="90%"></p>
 <p>One can also extract observations over a subset of the full domain
 using <code>tf_zoom</code>:</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">chf_df</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">id</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>daytime_act <span class="op">=</span> <span class="fu"><a href="https://tidyfun.github.io/tf/reference/tf_zoom.html" class="external-link">tf_zoom</a></span><span class="op">(</span><span class="va">activity</span>, <span class="fl">360</span>, <span class="fl">1200</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>tf <span class="op">=</span> <span class="va">daytime_act</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
-<span>  <span class="fu"><a href="../reference/ggspaghetti.html">geom_spaghetti</a></span><span class="op">(</span>alpha <span class="op">=</span> <span class="fl">.2</span><span class="op">)</span></span>
-<span><span class="co">## Warning: Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">chf_df</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">id</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>daytime_act <span class="op">=</span> <span class="fu"><a href="https://tidyfun.github.io/tf/reference/tf_zoom.html" class="external-link">tf_zoom</a></span><span class="op">(</span><span class="va">activity</span>, <span class="fl">360</span>, <span class="fl">1200</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">daytime_act</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/ggspaghetti.html">geom_spaghetti</a></span><span class="op">(</span>alpha <span class="op">=</span> <span class="fl">0.2</span><span class="op">)</span></span></code></pre></div>
 <p><img src="x03_Data_Wrangling_files/figure-html/unnamed-chunk-12-1.png" width="90%"></p>
 <p>We can also convert from <code>tfd</code> to <code>tfb</code> inside
 a <code>mutate</code> statement as part of a data processing
 pipeline:</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">dti_df</span> <span class="op">&lt;-</span> <span class="va">dti_df</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
-<span>    cca_tfb <span class="op">=</span> <span class="fu"><a href="https://tidyfun.github.io/tf/reference/tfb.html" class="external-link">tfb</a></span><span class="op">(</span><span class="va">cca</span>, k <span class="op">=</span> <span class="fl">25</span><span class="op">)</span></span>
-<span>  <span class="op">)</span>  </span>
+<code class="sourceCode R"><span><span class="va">dti_df</span> <span class="op">&lt;-</span> <span class="va">dti_df</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>cca_tfb <span class="op">=</span> <span class="fu"><a href="https://tidyfun.github.io/tf/reference/tfb.html" class="external-link">tfb</a></span><span class="op">(</span><span class="va">cca</span>, k <span class="op">=</span> <span class="fl">25</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">## Percentage of input data variability preserved in basis representation</span></span>
 <span><span class="co">## (per functional observation, approximate):</span></span>
 <span><span class="co">##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span></span>
@@ -837,72 +359,42 @@ pipeline:</p>
 <p>It’s also possible to compute derivatives as part of a processing
 pipeline:</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">dti_df</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, <span class="op">]</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<code class="sourceCode R"><span><span class="va">dti_df</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html" class="external-link">slice</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
 <span>    cca_raw_deriv <span class="op">=</span> <span class="fu"><a href="https://tidyfun.github.io/tf/reference/tf_derive.html" class="external-link">tf_derive</a></span><span class="op">(</span><span class="va">cca</span><span class="op">)</span>,</span>
 <span>    cca_tfb_deriv <span class="op">=</span> <span class="fu"><a href="https://tidyfun.github.io/tf/reference/tf_derive.html" class="external-link">tf_derive</a></span><span class="op">(</span><span class="va">cca_tfb</span><span class="op">)</span></span>
-<span>  <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> </span>
-<span>    <span class="fu"><a href="../reference/ggspaghetti.html">geom_spaghetti</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>tf <span class="op">=</span> <span class="va">cca_raw_deriv</span><span class="op">)</span>, alpha <span class="op">=</span> <span class="fl">.3</span>, lwd <span class="op">=</span> <span class="fl">.3</span>, col <span class="op">=</span> <span class="st">"blue"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="../reference/ggspaghetti.html">geom_spaghetti</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>tf <span class="op">=</span> <span class="va">cca_tfb_deriv</span><span class="op">)</span>, alpha <span class="op">=</span> <span class="fl">.3</span>, lwd <span class="op">=</span> <span class="fl">.3</span>, col <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ylab</a></span><span class="op">(</span><span class="st">"d/dt f(t)"</span><span class="op">)</span></span>
+<span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/ggspaghetti.html">geom_spaghetti</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">cca_raw_deriv</span><span class="op">)</span>, alpha <span class="op">=</span> <span class="fl">0.3</span>, linewidth <span class="op">=</span> <span class="fl">0.3</span>, col <span class="op">=</span> <span class="st">"blue"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/ggspaghetti.html">geom_spaghetti</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">cca_tfb_deriv</span><span class="op">)</span>, alpha <span class="op">=</span> <span class="fl">0.3</span>, linewidth <span class="op">=</span> <span class="fl">0.3</span>, col <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ylab</a></span><span class="op">(</span><span class="st">"d/dt f(t)"</span><span class="op">)</span></span>
 <span><span class="co">## Warning: There was 1 warning in `mutate()`.</span></span>
 <span><span class="co">## <span style="color: #00BBBB;">ℹ</span> In argument: `cca_raw_deriv = tf_derive(cca)`.</span></span>
-<span><span class="co">## Caused by warning in `tf_derive.tfd()`:</span></span>
-<span><span class="co">## <span style="color: #BBBB00;">!</span> Differentiating over irregular grids can be unstable.</span></span>
-<span><span class="co">## Warning in geom_spaghetti(aes(tf = cca_raw_deriv), alpha = 0.3, lwd = 0.3, :</span></span>
-<span><span class="co">## Ignoring unknown parameters: `linewidth`</span></span>
-<span><span class="co">## Warning in geom_spaghetti(aes(tf = cca_tfb_deriv), alpha = 0.3, lwd = 0.3, :</span></span>
-<span><span class="co">## Ignoring unknown parameters: `linewidth`</span></span>
-<span><span class="co">## Warning: Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span>
-<span><span class="co">## Unknown or uninitialised column: `linewidth`.</span></span></code></pre></div>
+<span><span class="co">## Caused by warning:</span></span>
+<span><span class="co">## <span style="color: #BBBB00;">!</span> Differentiating over irregular grids can be unstable.</span></span></code></pre></div>
 <p><img src="x03_Data_Wrangling_files/figure-html/unnamed-chunk-14-1.png" width="90%"></p>
 </div>
-  </div>
-
-  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
-
-        <nav id="toc" data-toggle="toc"><h2 data-toc-skip>Contents</h2>
-    </nav>
-</div>
-
+  </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
+    </nav></aside>
 </div>
 
 
 
-      <footer><div class="copyright">
+    <footer><div class="pkgdown-footer-left">
   <p></p>
 <p>Developed by Fabian Scheipl, Jeff Goldsmith, Julia Wrobel.</p>
 </div>
 
-<div class="pkgdown">
+<div class="pkgdown-footer-right">
   <p></p>
 <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
-      </footer>
+    </footer>
 </div>
 
   
-
 
   
 

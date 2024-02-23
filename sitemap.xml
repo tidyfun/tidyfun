@@ -43,6 +43,9 @@
     <loc>https://tidyfun.github.io/tidyfun/reference/ggcapellini.html</loc>
   </url>
   <url>
+    <loc>https://tidyfun.github.io/tidyfun/reference/ggerrorband.html</loc>
+  </url>
+  <url>
     <loc>https://tidyfun.github.io/tidyfun/reference/gglasagna.html</loc>
   </url>
   <url>
@@ -70,6 +73,6 @@
     <loc>https://tidyfun.github.io/tidyfun/reference/tftibble.html</loc>
   </url>
   <url>
-    <loc>https://tidyfun.github.io/tidyfun/reference/tidyfun.html</loc>
+    <loc>https://tidyfun.github.io/tidyfun/reference/tidyfun-package.html</loc>
   </url>
 </urlset>
