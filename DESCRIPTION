@@ -7,7 +7,7 @@ Authors@R: c(
     person("Jeff", "Goldsmith", role = "aut"),
     person("Julia", "Wrobel", role = "aut",
            comment = c(ORCID = "0000-0001-6783-1421")),
-    person("Maximilian", "Muecke", role = "ctb",
+    person("Maximilian", "Mücke", role = "ctb",
            comment = c(ORCID = "0009-0000-9432-9795"))
   )
 Description: Representing, visualizing, describing and wrangling tidy
@@ -53,4 +53,4 @@ Config/testthat/edition: 3
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.1
+RoxygenNote: 7.3.2
