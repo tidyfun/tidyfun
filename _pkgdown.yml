@@ -2,6 +2,8 @@ url: https://tidyfun.github.io/tidyfun
 
 template:
   bootstrap: 5
+  light-switch: true
+  math-rendering: mathjax
 
 reference:
 - title: 'tf - (Sub)classes: Constructors & converters'
