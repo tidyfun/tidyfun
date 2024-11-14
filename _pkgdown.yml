@@ -7,15 +7,16 @@ template:
 
 reference:
 - title: 'tf - (Sub)classes: Constructors & converters'
-  desc: Defining, evaluating and converting functional data objects
+  desc: Defining and converting functional data objects
   contents:
   - tf::tfd
   - tf::tfb
   - tf::tfb_spline
   - tf::tfb_fpc
   - tf::fpc_wsvd
+  - tf::tf_rebase
 - title: Evaluation and indexing
-  desc: Accessing, appending, evaluating and overwriting functional data objects
+  desc: Accessing, appending and evaluating functional data objects
   contents:
   - tf::tfbrackets
   - tf::tf_approx_linear
