@@ -10,14 +10,17 @@
 #'   Mandatory. Used to designate a column of class `tf` to be visualized.
 #' @examples
 #' set.seed(1221)
-#' data = data.frame(col = sample(gl(5, 2)))
-#' data$f = tf_rgp(10)
-#' data$fi = tf_jiggle(data$f)
-#' data$fb = tfb(data$f)
+#' data <- data.frame(col = sample(gl(5, 2)))
+#' data$f <- tf_rgp(10)
+#' data$fi <- tf_jiggle(data$f)
+#' data$fb <- tfb(data$f)
 #' library(ggplot2)
-#' ggplot(data, aes(y = f, color = tf_depth(f))) + geom_spaghetti()
-#' ggplot(data, aes(y = fi, shape = col, color = col)) + geom_meatballs()
-#' ggplot(data, aes(y = fi)) + geom_meatballs(spaghetti = FALSE) +
+#' ggplot(data, aes(y = f, color = tf_depth(f))) +
+#'   geom_spaghetti()
+#' ggplot(data, aes(y = fi, shape = col, color = col)) +
+#'   geom_meatballs()
+#' ggplot(data, aes(y = fi)) +
+#'   geom_meatballs(spaghetti = FALSE) +
 #'   facet_wrap(~col)
 #' @name ggspaghetti
 #' @family tidyfun visualization
@@ -27,8 +30,8 @@ NULL
 
 #' @export
 is.finite.tf <- function(x) {
-  map_lgl(tf_evaluations(x), ~all(is.finite(.) | !is.na(.)))
-}  
+  map_lgl(tf_evaluations(x), \(x) all(is.finite(x) | !is.na(x)))
+}
 
 #' @export
 scale_type.tf <- function(x) "identity"
@@ -51,9 +54,11 @@ StatTf <- ggproto("StatTf", Stat,
   compute_layer = function(self, data, params, layout) {
     stopifnot(is_tf(pull(data, y)))
     tf_eval <- suppressMessages(
-      mutate(data, y____id = names(y) %||% seq_along(y)) %>% 
-      tf_unnest(y, arg = params$arg, names_sep = "____")) %>%
-      select(-group) %>%
+      data |>
+        mutate(y____id = names(y) %||% seq_along(y)) |>
+        tf_unnest(y, arg = params$arg, names_sep = "____")
+    ) |>
+      select(-group) |>
       rename(group = y____id, x = y____arg, y = y____value)
     tf_eval
   },
@@ -130,7 +135,7 @@ GeomSpaghetti <- ggplot2::ggproto("GeomSpaghetti", ggplot2::Geom,
 #' @param spaghetti plot noodles along with meatballs? defaults to TRUE.
 geom_meatballs <- function(mapping = NULL, data = NULL,
                            position = "identity", na.rm = TRUE, show.legend = NA,
-                           inherit.aes = TRUE, arg = NULL, spaghetti = TRUE, 
+                           inherit.aes = TRUE, arg = NULL, spaghetti = TRUE,
                            ...) {
   ggplot2::layer(
     stat = StatTf, data = data, mapping = mapping, geom = "meatballs",
@@ -144,10 +149,10 @@ geom_meatballs <- function(mapping = NULL, data = NULL,
 #' @usage NULL
 #' @format NULL
 GeomMeatballs <- ggplot2::ggproto("GeomMeatball", ggplot2::Geom,
-   setup_params = function(data, params) {
-     # TODO: implement proper "orientation" - see extending ggplot vignette
-     params$flipped_aes <- FALSE
-     params
+  setup_params = function(data, params) {
+    # TODO: implement proper "orientation" - see extending ggplot vignette
+    params$flipped_aes <- FALSE
+    params
   },
   setup_data = function(data, params) {
     GeomLine$setup_data(data, params)

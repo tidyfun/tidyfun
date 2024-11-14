@@ -89,11 +89,10 @@ although other purposes are possible.
 }
 \examples{
 set.seed(1221)
-data =
-  data.frame(id = factor(1:2))
-data$f = tf_rgp(2)
-data$ymax = data$f + 1
-data$ymin = data$f - 1
+data <- data.frame(id = factor(1:2))
+data$f <- tf_rgp(2)
+data$ymax <- data$f + 1
+data$ymin <- data$f - 1
 library(ggplot2)
 ggplot(data, aes(y = f, color = id)) +
   geom_spaghetti() +

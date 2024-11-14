@@ -71,9 +71,9 @@ dataset, and plots the result:
 library("tidyfun")
 data(dti_df, package = "tidyfun")
 
-dti_df %>%
-  group_by(case, sex) %>%
-  summarize(mean_cca = mean(cca, na.rm = TRUE)) %>%
+dti_df |>
+  group_by(case, sex) |>
+  summarize(mean_cca = mean(cca, na.rm = TRUE)) |>
   ggplot(aes(y = mean_cca, color = case)) +
   geom_spaghetti(size = 2) +
   facet_grid(~sex)

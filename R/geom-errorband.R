@@ -1,16 +1,15 @@
 #' Error bands using `tf` objects as bounds
-#' 
+#'
 #' Plots a shaded region between `tf`-objects `ymax` and `ymin`.
 #' This is primarily intended to help with plotting confidence bands
-#' although other purposes are possible. 
+#' although other purposes are possible.
 #'
 #' @examples
 #' set.seed(1221)
-#' data =
-#'   data.frame(id = factor(1:2))
-#' data$f = tf_rgp(2)
-#' data$ymax = data$f + 1
-#' data$ymin = data$f - 1
+#' data <- data.frame(id = factor(1:2))
+#' data$f <- tf_rgp(2)
+#' data$ymax <- data$f + 1
+#' data$ymin <- data$f - 1
 #' library(ggplot2)
 #' ggplot(data, aes(y = f, color = id)) +
 #'   geom_spaghetti() +
@@ -36,10 +35,14 @@ StatErrorband <- ggproto("StatErrorband", Stat,
     stopifnot(is_tf(pull(data, ymax)) & is_tf(pull(data, ymin)))
     tf_eval <-
       suppressMessages(
-        mutate(data, id = names(ymax) %||% seq_along(ymax)) %>%
-          tf_unnest(c(ymax, ymin), .arg = params$arg, names_sep = "___")) %>%
-      select(-group, -ymin___arg) %>%
-      rename(group = id, x = ymax___arg, ymin = ymin___value, ymax = ymax___value)
+        data |>
+          mutate(id = names(ymax) %||% seq_along(ymax)) |>
+          tf_unnest(c(ymax, ymin), .arg = params$arg, names_sep = "___")
+      ) |>
+      select(-group, -ymin___arg) |>
+      rename(
+        group = id, x = ymax___arg, ymin = ymin___value, ymax = ymax___value
+      )
     tf_eval
   },
   compute_panel = function(self, data, scales, arg, errorband) {
@@ -52,8 +55,8 @@ StatErrorband <- ggproto("StatErrorband", Stat,
 #' @inheritParams ggplot2::stat_identity
 #' @param na.rm remove NAs? defaults to `TRUE`
 stat_errorband <- function(mapping = NULL, data = NULL, geom = "errorband",
-                    position = "identity", na.rm = TRUE, show.legend = NA,
-                    inherit.aes = TRUE, arg = NULL, ...) {
+                           position = "identity", na.rm = TRUE, show.legend = NA,
+                           inherit.aes = TRUE, arg = NULL, ...) {
   layer(
     stat = StatErrorband, data = data, mapping = mapping, geom = geom,
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
@@ -75,7 +78,6 @@ geom_errorband <- function(mapping = NULL, data = NULL,
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
     params = list(na.rm = na.rm, arg = arg, ...)
   )
-
 }
 #' @export
 #' @rdname ggerrorband
@@ -83,9 +85,9 @@ geom_errorband <- function(mapping = NULL, data = NULL,
 #' @format NULL
 GeomErrorband <- ggproto("GeomErrorband", Geom,
   setup_params = function(data, params) {
-     # TODO: implement proper "orientation" - see extending ggplot vignette
-     params$flipped_aes <- FALSE
-     params
+    # TODO: implement proper "orientation" - see extending ggplot vignette
+    params$flipped_aes <- FALSE
+    params
   },
   setup_data = function(data, params) {
     GeomRibbon$setup_data(data, params)
