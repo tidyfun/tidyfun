@@ -7,8 +7,8 @@
 \alias{stat_tf}
 \alias{geom_spaghetti}
 \alias{GeomSpaghetti}
-\alias{geom_meatballs}
-\alias{GeomMeatballs}
+\alias{geom_polpette}
+\alias{GeomPolpette}
 \title{Spaghetti plots for \code{tf} objects}
 \usage{
 stat_tf(
@@ -34,7 +34,7 @@ geom_spaghetti(
   ...
 )
 
-geom_meatballs(
+geom_polpette(
   mapping = NULL,
   data = NULL,
   position = "identity",
@@ -136,19 +136,20 @@ lists which parameters it can accept.
 \link[ggplot2:draw_key]{key glyphs}, to change the display of the layer in the legend.
 }}
 
-\item{spaghetti}{plot noodles along with meatballs? defaults to TRUE.}
+\item{spaghetti}{plot lines along with points? defaults to TRUE.}
 }
 \description{
 Plots a line for each entry of a \code{tf}-object.
-\code{geom_spaghetti} does spaghetti (i.e. "hairball") plots, \code{geom_meatballs}
-does spaghetti plots with points for the actual evaluations.
+\code{geom_spaghetti} does spaghetti (i.e. "hairball") plots, \code{geom_polpette}
+does line plots with \emph{polpette}-points for the actual evaluations.
 }
 \details{
 "Flipped" aesthetics are not implemented for these geoms.
 }
-\section{\code{y} aesthetic}{
+\section{\code{tf} aesthetic}{
 
 Mandatory. Used to designate a column of class \code{tf} to be visualized.
+(You'll need to title the \code{y}-axis manually, sorry.)
 }
 
 \examples{
@@ -158,12 +159,12 @@ data$f <- tf_rgp(10)
 data$fi <- tf_jiggle(data$f)
 data$fb <- tfb(data$f)
 library(ggplot2)
-ggplot(data, aes(y = f, color = tf_depth(f))) +
+ggplot(data, aes(tf = f, color = tf_depth(f))) +
   geom_spaghetti()
-ggplot(data, aes(y = fi, shape = col, color = col)) +
-  geom_meatballs()
-ggplot(data, aes(y = fi)) +
-  geom_meatballs(spaghetti = FALSE) +
+ggplot(data, aes(tf = fi, shape = col, color = col)) +
+  geom_polpette()
+ggplot(data, aes(tf = fi)) +
+  geom_polpette(spaghetti = FALSE) +
   facet_wrap(~col)
 }
 \seealso{

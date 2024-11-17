@@ -64,7 +64,7 @@ A quick plot of the first 5 curves:
 ```{r plot_chf}
 chf_df |>
   slice(1:5) |>
-  ggplot(aes(y = activity)) +
+  ggplot(aes(tf = activity)) +
   geom_spaghetti(alpha = 0.1)
 ```
 
@@ -80,7 +80,7 @@ A quick plot of the `cca` tract profiles is below.
 
 ```{r plot_dti}
 dti_df |>
-  ggplot(aes(y = cca)) +
+  ggplot(aes(tf = cca)) +
   geom_spaghetti(alpha = 0.05)
 ```
 
@@ -92,7 +92,7 @@ Dataframes using `tidyfun` to store functional observations can be manipulated u
 chf_df |>
   select(id, day, activity) |>
   filter(day == "Mon") |>
-  ggplot(aes(y = activity)) +
+  ggplot(aes(tf = activity)) +
   geom_spaghetti(alpha = 0.05)
 ```
 
@@ -102,7 +102,7 @@ daily averages of these activity profiles:
 chf_df |>
   group_by(day) |>
   summarize(mean_act = mean(activity)) |>
-  ggplot(aes(y = mean_act, color = day)) +
+  ggplot(aes(tf = mean_act, color = day)) +
   geom_spaghetti()
 ```
 
@@ -112,8 +112,8 @@ One can `mutate` functional observations -- here we exponentiate the log activit
 chf_df |>
   slice(1:5) |>
   mutate(exp_act = exp(activity)) |>
-  ggplot(aes(y = exp_act)) +
-  geom_spaghetti(alpha = 0.2)
+  ggplot(aes(tf = exp_act)) +
+  geom_spaghetti(alpha = 0.2) 
 ```
 
 Functions for data manipulation from `tidyr` are also supported. We illustrate by using `pivot_wider` to create new `tfd`-columns containing the activity profiles for each day of the week:
@@ -152,10 +152,12 @@ Similar tidying can be done for the DTI data -- let's look at average RCST tract
 gender and case status: 
 
 ```{r}
-dti_df |>
+groups_dti <- dti_df |>
   group_by(case, sex) |>
-  summarize(mean_rcst = mean(rcst, na.rm = TRUE)) |>
-  ggplot(aes(y = mean_rcst, color = case)) +
+  summarize(mean_rcst = mean(rcst, na.rm = TRUE)) 
+groups_dti
+
+ggplot(groups_dti, aes(tf = mean_rcst, color = case)) +
   geom_spaghetti(linewidth = 2) +
   facet_grid(~sex)
 ```
@@ -170,8 +172,9 @@ like_to_move_it_move_it <- chf_df |> filter(tf_anywhere(activity, value > 9))
 glimpse(like_to_move_it_move_it)
 
 like_to_move_it_move_it |>
-  ggplot(aes(y = activity)) +
-  geom_spaghetti(aes(colour = id))
+  ggplot(aes(tf = activity)) +
+  geom_spaghetti(aes(colour = id)) + 
+  theme(legend.position = "none")
 ```
 
 A second example of this functionality in the DTI data is below.
@@ -179,8 +182,10 @@ A second example of this functionality in the DTI data is below.
 ```{r}
 dti_df |>
   filter(tf_anywhere(cca, value < 0.26)) |>
-  ggplot(aes(y = cca)) +
-  geom_spaghetti()
+  ggplot(aes(tf = cca)) +
+  geom_spaghetti() + 
+  # add entire data in light grey
+  geom_spaghetti(data = dti_df, alpha = .01)
 ```
 
 The existing `mutate` function can be combined with several `tidyfun` functions, including `tf_smooth`, `tf_zoom`, and `tf_deriv`.
@@ -191,7 +196,7 @@ One can smooth existing observations using `tf_smooth`:
 chf_df |>
   filter(id == 1) |>
   mutate(smooth_act = tf_smooth(activity)) |>
-  ggplot(aes(y = smooth_act)) +
+  ggplot(aes(tf = smooth_act)) +
   geom_spaghetti()
 ```
 
@@ -202,9 +207,9 @@ chf_df |>
   group_by(day) |>
   summarize(mean_act = mean(activity)) |>
   mutate(smooth_mean = tf_smooth(mean_act)) |>
-  ggplot(aes(y = mean_act, color = day)) +
+  ggplot(aes(tf = mean_act, color = day)) +
   geom_spaghetti(alpha = 0.2) +
-  geom_spaghetti(aes(y = smooth_mean), linewidth = 2)
+  geom_spaghetti(aes(tf = smooth_mean), linewidth = 2)
 ```
 
 One can also extract observations over a subset of the full domain using `tf_zoom`:
@@ -213,7 +218,7 @@ One can also extract observations over a subset of the full domain using `tf_zoo
 chf_df |>
   filter(id == 1) |>
   mutate(daytime_act = tf_zoom(activity, 360, 1200)) |>
-  ggplot(aes(y = daytime_act)) +
+  ggplot(aes(tf = daytime_act)) +
   geom_spaghetti(alpha = 0.2)
 ```
 
@@ -232,8 +237,8 @@ dti_df |>
     cca_tfb_deriv = tf_derive(cca_tfb)
   ) |>
   ggplot() +
-  geom_spaghetti(aes(y = cca_raw_deriv), alpha = 0.3, linewidth = 0.3, col = "blue") +
-  geom_spaghetti(aes(y = cca_tfb_deriv), alpha = 0.3, linewidth = 0.3, col = "red") +
+  geom_spaghetti(aes(tf = cca_raw_deriv), alpha = 0.3, linewidth = 0.3, col = "blue") +
+  geom_spaghetti(aes(tf = cca_tfb_deriv), alpha = 0.3, linewidth = 0.3, col = "red") +
   ylab("d/dt f(t)")
 ```
 

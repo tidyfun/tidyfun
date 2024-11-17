@@ -1,13 +1,14 @@
 #' Spaghetti plots for `tf` objects
 #'
 #' Plots a line for each entry of a `tf`-object.
-#' `geom_spaghetti` does spaghetti (i.e. "hairball") plots, `geom_meatballs`
-#' does spaghetti plots with points for the actual evaluations.
+#' `geom_spaghetti` does spaghetti (i.e. "hairball") plots, `geom_polpette`
+#' does line plots with *polpette*-points for the actual evaluations.
 #'
 #' "Flipped" aesthetics are not implemented for these geoms.
 #'
-#' @section `y` aesthetic:
+#' @section `tf` aesthetic:
 #'   Mandatory. Used to designate a column of class `tf` to be visualized.
+#'   (You'll need to title the `y`-axis manually, sorry.)
 #' @examples
 #' set.seed(1221)
 #' data <- data.frame(col = sample(gl(5, 2)))
@@ -15,12 +16,12 @@
 #' data$fi <- tf_jiggle(data$f)
 #' data$fb <- tfb(data$f)
 #' library(ggplot2)
-#' ggplot(data, aes(y = f, color = tf_depth(f))) +
+#' ggplot(data, aes(tf = f, color = tf_depth(f))) +
 #'   geom_spaghetti()
-#' ggplot(data, aes(y = fi, shape = col, color = col)) +
-#'   geom_meatballs()
-#' ggplot(data, aes(y = fi)) +
-#'   geom_meatballs(spaghetti = FALSE) +
+#' ggplot(data, aes(tf = fi, shape = col, color = col)) +
+#'   geom_polpette()
+#' ggplot(data, aes(tf = fi)) +
+#'   geom_polpette(spaghetti = FALSE) +
 #'   facet_wrap(~col)
 #' @name ggspaghetti
 #' @family tidyfun visualization
@@ -44,28 +45,28 @@ scale_type.tf <- function(x) "identity"
 #' @usage NULL
 #' @format NULL
 StatTf <- ggproto("StatTf", Stat,
-  required_aes = "y",
-  setup_params = function(data, params) {
-    if (is.null(params$arg)) {
-      params$arg <- list(tf_arg(pull(data, y)))
+  required_aes = "tf",
+   # need _panel not _layer because _layer does not get "scales"
+  # and scale-transforms to x-y need to be applied here!
+  compute_panel = function(self, data, scales, arg, spaghetti) {
+    stopifnot(is_tf(pull(data, tf)))
+    if (is.null(arg)) {
+      arg <- list(tf_arg(pull(data, tf)))
     }
-    params
-  },
-  compute_layer = function(self, data, params, layout) {
-    stopifnot(is_tf(pull(data, y)))
     tf_eval <- suppressMessages(
       data |>
-        mutate(y____id = names(y) %||% seq_along(y)) |>
-        tf_unnest(y, arg = params$arg, names_sep = "____")
+        mutate(spghtt_id = names(tf) %||% seq_along(tf)) |>
+        tf_unnest(tf, arg = arg, names_sep = "_spghtt_")
     ) |>
       select(-group) |>
-      rename(group = y____id, x = y____arg, y = y____value)
+      rename(group = spghtt_id, x = tf_spghtt_arg, y = tf_spghtt_value)
+    if (!is.null(scales$x)) {
+      tf_eval$x <- tf_eval$x |> scales$x$get_transformation()$transform()
+    }
+    if (!is.null(scales$y)) {
+      tf_eval$y <- tf_eval$y |> scales$y$get_transformation()$transform()
+    }
     tf_eval
-  },
-  # need this so arg, spaghetti gets recognized as valid parameters
-  # because layer() only checks compute_panel & compute_group
-  compute_panel = function(self, data, scales, arg, spaghetti) {
-    Stat$compute_panel(self, data, scales)
   }
 )
 
@@ -132,13 +133,13 @@ GeomSpaghetti <- ggplot2::ggproto("GeomSpaghetti", ggplot2::Geom,
 #' @family tidyfun visualization
 #' @format NULL
 #' @importFrom grid gList
-#' @param spaghetti plot noodles along with meatballs? defaults to TRUE.
-geom_meatballs <- function(mapping = NULL, data = NULL,
+#' @param spaghetti plot lines along with points? defaults to TRUE.
+geom_polpette <- function(mapping = NULL, data = NULL,
                            position = "identity", na.rm = TRUE, show.legend = NA,
                            inherit.aes = TRUE, arg = NULL, spaghetti = TRUE,
                            ...) {
   ggplot2::layer(
-    stat = StatTf, data = data, mapping = mapping, geom = "meatballs",
+    stat = StatTf, data = data, mapping = mapping, geom = "polpette",
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
     params = list(na.rm = na.rm, arg = arg, spaghetti = spaghetti, ...)
   )
@@ -148,7 +149,7 @@ geom_meatballs <- function(mapping = NULL, data = NULL,
 #' @family tidyfun visualization
 #' @usage NULL
 #' @format NULL
-GeomMeatballs <- ggplot2::ggproto("GeomMeatball", ggplot2::Geom,
+GeomPolpette <- ggplot2::ggproto("GeomPolpette", ggplot2::Geom,
   setup_params = function(data, params) {
     # TODO: implement proper "orientation" - see extending ggplot vignette
     params$flipped_aes <- FALSE
