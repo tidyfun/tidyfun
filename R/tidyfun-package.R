@@ -4,7 +4,7 @@
 #' `tidyfun` is based on the classes and methods defined in package `tf` and provides:
 #'
 #'   - new data types for representing functional data: [tf::tfd()] & [tf::tfb()]
-#'   - arithmetic operators ([tf::Ops.tf()]),
+#'   - arithmetic operators ([tf::tfgroupgenerics()]),
 #'   - descriptive statistics: e.g. [tf::mean.tf()], [tf::median.tf()]
 #'   - and graphics functions for such data: [tf::plot.tf()], [geom_spaghetti()], [gglasagna()]
 #'   - functions to do smoothing ([tf::tf_smooth.tfd()]), differentiation and integration ([tf::tf_derive.tfd()])
