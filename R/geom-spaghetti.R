@@ -95,6 +95,10 @@ stat_tf <- function(mapping = NULL, data = NULL, geom = "spaghetti",
 geom_spaghetti <- function(mapping = NULL, data = NULL,
                            position = "identity", na.rm = TRUE, show.legend = NA,
                            inherit.aes = TRUE, arg = NULL, ...) {
+  if ("y" %in% names(mapping)) {
+    warning("using 'aes(y = ...)' is deprecated, use `aes(tf = ...)` instead")
+    names(mapping) <- sub("^y$", "tf", names(mapping))
+  }
   ggplot2::layer(
     stat = StatTf, data = data, mapping = mapping, geom = "spaghetti",
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
@@ -138,6 +142,10 @@ geom_polpette <- function(mapping = NULL, data = NULL,
                            position = "identity", na.rm = TRUE, show.legend = NA,
                            inherit.aes = TRUE, arg = NULL, spaghetti = TRUE,
                            ...) {
+  if ("y" %in% names(mapping)) {
+    warning("using 'aes(y = ...)' is deprecated, use `aes(tf = ...)` instead")
+    names(mapping) <- sub("^y$", "tf", names(mapping))
+  }
   ggplot2::layer(
     stat = StatTf, data = data, mapping = mapping, geom = "polpette",
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
