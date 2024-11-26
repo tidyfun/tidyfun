@@ -1,7 +1,8 @@
-# aborted attempt to port BIRSVD (https://www.mat.univie.ac.at/~neum/software/birsvd/)
-# status: breaks if any weights are zero (i.e., NA obs), 
+# aborted attempt to port BIRSVD (https://arnold-neumaier.at/software/birsvd/)
+# http://arnold-neumaier.at/software/birsvd/BIRSVD.tar.gz
+# status: breaks if any weights are zero (i.e., NA obs),
 #         unclear how to tune penalization
-#   direct port of their BIRSVD routine, 
+#   direct port of their BIRSVD routine,
 #   should probably have tried to reimplement their BIRSVD2 ?
 #   (more efficient, more direct LS solver steps)
 
@@ -45,19 +46,19 @@ for (i in 1:n_iter) {
     Diagonal(rnk) %x% pen_U
   #L_L <- chol(L)
   #Y <- backsolve(L_L, backsolve(t(L_L), R))
-  Y <- solve(L, R) 
+  Y <- solve(L, R)
   Y <- matrix(Y, rnk, n)
   svd_r <- svd(Y, nu = rnk, nv = rnk)
   S <- svd_r$d
   V <- svd_r$v
-  
+
   #fix signs:
   for (r in 1:rnk) {
     i <- which.max(abs(svd_r$u[,r])) #svd_r$u is diagonal with 1/-1 entries!?
     V[, r] <- sign(svd_r$u[i,r]) * V[, r]
   }
-  
-  
+
+
   # Computing the left approximants from the right approximants.
   R <- as.vector(t(A_w %*% t(t(V)/S)))
   L <- do.call(bdiag, map(1:p, ~ crossprod(V, W[.x,] * V))) +
@@ -74,7 +75,7 @@ for (i in 1:n_iter) {
   layout(t(1:2)); matplot(A, type = "l"); matplot(A_approx, type = "l", ylim = range(A))
   layout(t(1:2)); matplot(U_true, type = "l"); matplot(U, type = "l")
   # layout(t(1:2)); matplot(V_true, type = "b"); matplot(V, type = "b")
-  # 
+  #
   # all_equal(S, S_true)
 }
 
