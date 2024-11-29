@@ -1,5 +1,5 @@
 ---
-title: "**`tidyfun & tf`**"
+title: "`tidyfun & tf`"
 format: 
   revealjs:
     theme: [default, fs-simple.scss]
@@ -8,6 +8,10 @@ format:
     transition: none
     code-line-numbers: false
     slide-number: "c/t"
+title-slide-attributes:
+  data-background-image: tidyfun.png
+  data-background-size: contain
+  data-background-opacity: "0.3"
 execute:
   echo: true
 highlight-style: github
@@ -39,6 +43,7 @@ scale_fill_discrete = scale_fill_viridis_d
 library(tidyfun)
 
 pal_5 = viridis(7)[-(1:2)]
+format_glimpse.tf <- tf:::format.tf
 ```
 
 ```{r load, echo=FALSE, include=FALSE}
@@ -80,6 +85,7 @@ canada_map <-
 #'   geom_capellini(aes(tf = temp), width = 3, height = 5, colour = "red") +
 #'   geom_path(data = canada_map, aes(x = x, y = y), alpha = 0.1) +
 #'   coord_quickmap()
+format_glimpse.tf <- tf:::format.tf
 ```
 
 # Functional Data
@@ -88,20 +94,20 @@ canada_map <-
 
 ```{r}
 #| echo: false
-ggplot(tibble(x = biscuit_nirc)) + geom_spaghetti(aes(tf = x)) + 
+ggplot(tibble(x = biscuit_nirc)) + geom_spaghetti(aes(tf = x), alpha = .2) + 
   labs(y = "NIR Reflectance", x = "Wavelength [nm]", 
        subtitle = "Biscuit Dough Spectroscopy") + 
   ggplot(tibble(x = tf_sparsify(pigweight, dropout = .2) |> tf_jiggle())) + 
-  geom_polpette(aes(tf = x)) + 
+  geom_polpette(aes(tf = x), alpha = .2) + 
   labs(y = "Weight [kg]", x = "Time [weeks]", 
        subtitle = "Pig Fattening") + 
   ggplot(canada) + 
-  geom_spaghetti(aes(tf = temp, col = region)) + 
+  geom_spaghetti(aes(tf = temp, col = region), alpha = .4) + 
   labs(y = "Temperature [°C, Average]", x = "DOY", 
        subtitle = "Canada Temperatures") +
   theme(legend.position = "bottom") +
   ggplot(subset(dti, case == "MS")) + 
-  geom_spaghetti(aes(tf = cca, col = sex)) + 
+  geom_spaghetti(aes(tf = cca, col = sex), alpha = .2) + 
   labs(y = "Fractional Anisotropy", x = "Distance", 
        subtitle = "Corpus Callosum (MS patients)") +
   theme(legend.position = "bottom")
@@ -125,7 +131,7 @@ Properties of *real-world functional data*:
 
 ## Aims of functional data analysis:
 
--   Represent the data $\to$ interpolation, basis representation, **smoothing**  
+-   Represent the data $\to$ interpolation, **basis representation, smoothing**  
 $x_i(t) \approx \sum_j B_j(t) w_{ij}$
 
 ```{r x-xsm}
@@ -168,10 +174,11 @@ ggplot(t_summary) +
 ## Aims of functional data analysis:
 
 -   Represent the data $\to$ interpolation, basis representation, smoothing
--   Display the data $\to$ exploratory analysis, outlier detection, *registration* 
+-   Display the data $\to$ exploratory analysis, outlier detection, **registration** 
 
-![](tidyfun-long-figs/motivateReg_unReg.png){width=40%}
-![](tidyfun-long-figs/motivateReg_Reg.png){width=40%}
+![](tidyfun-long-figs/CurveAlignment.png){width=60%} 
+
+<span style="font-size: 0.8em;">Fig.: James (2007). Curve Alignment by Moments. *AoAS* 1(2):480--501</span>
 
 ## Aims of functional data analysis:
 
@@ -217,22 +224,22 @@ p
 
 **Painful** to work with:
 
--   huge amounts of data
--   regular grids? irregular grids?
--   work with:
--   raw data?
--   smooth/interpolated?
--   basis representations?
+- huge amounts of data
+- regular grids? irregular grids?
+- work with:
+    -   raw data?
+    -   smooth/interpolated data?
+    -   coefficient vectors of basis representations?  
 
 ## Functional data in practice
 
 **Painful:**\
-Two (2.5, actually..) bad options to keep it in the same data.frame as the rest of your data:
+Two (2.5, actually..) bad options to keep it in the same `data.frame` as the rest of your data:
 
 1.  **wide** format:\
--   does not work (well) for sparse/irregular data
--   way too many weird columns
--   need to keep track of argument values $t$ separately somehow:
+    -   does not work (well) for sparse/irregular data
+    -   way too many weird columns
+    -   need to keep track of argument values $t$ separately somehow:
 
 ```{r, echo = FALSE}
 glimpse(dti_wide)
@@ -244,10 +251,9 @@ glimpse(dti_wide)
 Two (2.5, actually..) bad options to keep it in the same data.frame as the rest of your data:
 
 2.  **long** format:
-
--   unwieldy amounts of rows, lots of duplication of all other columns
--   need to keep track of grouping structure (which rows belong to the same observation?) throughout
--   infeasible if different functions for same observational unit are evaluated on different domains or grids 
+    -   unwieldy amounts of rows, lots of duplication in all "not functional data"- columns
+    -   need to keep track of grouping structure (which rows belong to the same observation?) throughout
+    -   infeasible if different functions for same observational unit are evaluated on different argument values 
 
 ```{r, echo = FALSE}
 glimpse(dti_long)
@@ -262,13 +268,23 @@ Third bad option: **matrix columns** in a `data.frame`.
 Sucks, too:
 
 - not well supported: breaks many `tidyverse`-packages, lots of unpleasant surprises in `R-base`
-- doesn’t solve how to keep track of argument values -- more trouble than it’s worth.
+- doesn’t keep track of argument values 
+- doesn't work for irregular grids
+
+-- more trouble than it’s worth.
 
 ## Functional Data in Practice
 
 Despite all that, people keep measuring ever more of the damn things.
 
-`tidyfun` tries to make dealing with functional data in **`R`** less painful.
+`{tf}` + `{tidyfun}`  try to make dealing with functional data in **`R`** less painful:
+
+- treat *functions* as primary observational units
+- easy conversion between different representations of functional data
+- implement common tasks in exploratory & descriptive analyses of functional data:  
+  graphics, arithmetic, smoothing, derivatives & integrals, summaries, extracting landmarks, ....
+
+
 
 # Start at the end...
 
@@ -276,8 +292,16 @@ Despite all that, people keep measuring ever more of the damn things.
 
 ```{r, echo = TRUE, out.height = '.4\\textheight', fig.width = 6, fig.height = 2}
 # group-wise functional medians:
-medians <- dti |> group_by(case, sex) |> summarize(median_rcst = median(rcst))
-ggplot(medians) + geom_spaghetti(aes(tf =  median_rcst, col = sex, linetype = case))
+medians <- dti |> 
+  group_by(case, sex) |> 
+  summarize(median_rcst = median(rcst))
+# plot them:
+ggplot(medians, 
+       aes(tf = median_rcst, 
+           col = sex, 
+           linetype = case)
+       ) + 
+  geom_spaghetti(linewidth = 1.5)
 ```
 
 ## This is what we're aiming for:
@@ -288,29 +312,34 @@ glimpse(dti)
 
 # **`tidyfun` & `tf`**
 
+## Collaborators  
+
+![](./tidyfun-long-figs/members-tidyfun.png){height=70%}
+
+
 ## **`tidyfun` & `tf`**
 
 > Provide accessible and well-documented software 
 > that makes **data wrangling** and **exploratory analysis** 
 > for **functional data** in `R`  **easy & fun**
 
-**`tf`** provides:  
+**`{tf}`** provides:  
 
-- new **data types** for representing functional data: **`tfd`** & **`tfb`**, 
- based on the **`vctrs`**-framework. 
+- new **data types** for representing functional data: `tfd` & `tfb`, based on the `{vctrs}`**-framework  
+ (so: `S3`-classes). 
 - arithmetic **operators**, descriptive **statistics** and R-`base` **graphics** functions for such data
-- with few dependencies (particulary: no  **`tidyverse`**)
+- with few dependencies (particulary: no  `{tidyverse}`)
 
-**`tidyfun`** provides:  
+**`{tidyfun}`** provides:  
 
-- **`ggplot2`**-geoms for functional data
-- **`tidyverse`**-verbs for handling functional data **inside** data frames.
+- `{ggplot2}`-geoms for functional data
+- `tidyverse`-verbs for handling functional data **inside** data frames.
 
 
 ## Plan for today
 
-- **`tf`** data types
-- **`tf` & `tidyfun`** methods \& functions
+- `tf` class + subclasses
+- methods & functions in `{tf}`, `{tidyfun}` 
 
 # `tf` class definition
 
@@ -329,7 +358,7 @@ glimpse(dti)
     - how to **evaluate** the given "functions" for new arguments
     - their **domain**: the range of valid argument values 
 
-- implemented as new `S3`-classes using **`vctrs`**-infrastructure 
+- implemented as `S3`-classes using `{vctrs}`-infrastructure 
 
 ## Example Data
 
@@ -352,8 +381,8 @@ glimpse(dti)
 
 **`tfd`** objects contain "raw" functional data:
 
- - represented as a list of **`evaluations`** $f_i(t)|_{t=\mathbf{t'}}$ and corresponding **`arg`**ument vector(s) $\mathbf{t'}$
- - has a **`domain`**:  the range of valid **`arg`**s.
+ - represented as a list of `evaluations` $f_i(t)|_{t=\mathbf{t'}}$ and corresponding `arg`ument vector(s) $\mathbf{t'}$
+ - has a `domain`:  the range of valid `arg` values.
 
 ```{r}
 ex |> tf_evaluations() |> str()
@@ -365,7 +394,7 @@ ex |> tf_domain()
 
 ## **`tf`** subclass: **`tfd`**
 
-- contains an **`evaluator`** function that defines how to inter-/extrapolate `evaluations` between `arg`s 
+- contains an `evaluator` function that defines how to inter-/extrapolate `evaluations` between `arg`s 
 
 ```{r}
 ex_spline <- ex
@@ -374,9 +403,9 @@ ex_spline[1]
 ex[1]
 ```
 
-## **`tf`** subclass: **`tfd`**
+## **`tf`** subclasses: **`tfd`**
 
-- **`tfd`** has subclasses for regular data with a common grid and irregular or sparse data.
+subclasses `tfd_reg` for regular data with a common grid and `tfd_irreg` for irregular / sparse data:
 
 ```{r, out.height = '.30\\textheight', fig.width = 6, fig.height = 4.5}
 dti$rcst[1:2]
@@ -389,11 +418,11 @@ dti$rcst[1:2] |> plot(pch = "x", col = viridis(2))
 
 Functional data in basis representation: $x_i(t) \approx \sum^K_j B_j(t) w_{ij}$
 
- - represented as a list of *coefficient vectors* $\mathbf{w}_i$ and a common **`basis_matrix`** $\mathbf B = [B_j(t_g)]_{j = 1, \dots, K \atop g = 1, \dots, G}$ of basis function evaluations on a vector of `arg`-values
- - contains a **`basis`** function that defines how to compute the basis for new **`arg`**s and how to differentiate/integrate.
+ - represented as a list of *coefficient vectors* $\mathbf{w}_i$ and a common `basis_matrix` $\mathbf B = [B_j(t_g)]_{g = 1, \dots, G \atop j = 1, \dots, K}$ of basis function evaluations on a vector of `arg`-values
+ - contains a `basis` function that defines how to compute the basis for new `arg`s and how to differentiate/integrate.
 - (internal) flavors: 
-    - `tfb_spline`: all **`mgcv`**-spline bases 
-    - `tfb_fpc`: FPCs 
+    - `tfb_spline`: use any `{mgcv}`-spline basis 
+    - `tfb_fpc`: FPC basis 
 
 - significant memory (and time) savings:
 ```{r, cache = TRUE}
@@ -412,16 +441,19 @@ dti$rcst[1:5] |> tfb()
 
 ## **`tf`** subclass: **`tfb_spline`**
 - default for `tfb()`
-- accepts all arguments of **`mgcv`**'s `s()`-syntax: control basis type `bs`, basis dimension `k`, penalty order `m`
-- also does non-Gaussian fits: `family` argument 
+- accepts all arguments of `{mgcv}`'s `s()`-syntax:  
+  e.g. basis function type `bs`, basis dimension `k`, penalty order `m`, ...
+- also does non-Gaussian (penalized) spline fits: `family` argument 
     - all exponential families
-    - but also: $t$-distribution (robust smoothing?), ZI-Poisson (accelerometry?), Beta, ... 
+    - but also: $t$-distribution (robust smoothing), ZI-Poisson (accelerometry), Beta, ... 
 
 ## **`tf`** subclass: **`tfb_spline`**
 
 ```{r, message = TRUE}
 ex_b = ex |> tfb(); ex_b[1:2]
+
 ex[1:2] |> tfb(bs = "tp", k = 55)
+
 ex[1:2] |> tfb(bs = "ps", m = c(2,1), family = betar(link = "cloglog"))
 ```
 
@@ -430,9 +462,8 @@ ex[1:2] |> tfb(bs = "ps", m = c(2,1), family = betar(link = "cloglog"))
 - penalization: <span style="color:red;">function-specific (default)</span>, none, prespecified (`sp`), or global 
 
 ```{r, eval = FALSE}
-ex  |> plot()
+ex |> plot()
 ex |> tfb() |> plot(col = "red")
-# ex |> tfb(k = 35, penalized = FALSE) |> lines(col = "blue")
 ```
 ```{r, echo = FALSE, results = 'hide', out.height = '.4\\textheight', fig.width = 8, fig.height = 4}
 layout(t(1:2))
@@ -445,7 +476,7 @@ plot(ex |> tfb(verbose = FALSE), col = "red", ylab = "tfb(ex)")
 - penalization: <span style="color:red;">function-specific (default)</span>, <span style="color:blue;">none</span>, prespecified (`sp`), or global 
 
 ```{r, eval = FALSE}
-ex  |> plot()
+ex |> plot()
 ex |> tfb() |> plot(col = "red")
 ex |> tfb(k = 35, penalized = FALSE) |> lines(col = "blue")
 ```
@@ -479,16 +510,17 @@ lines(tfb(ex, sp = .001), col = "orange")
 1. estimate smoothing parameters for subsample (~10\%) of curves
 2. use geometric mean of estimated smoothing parameters to smooth *all* curves
 
-**Good:**
+**Pros:**
 
 - (much) faster than optimizing amount of smoothing for each curve
-- expected to scale well for large data
+- scales better for large data sets
 
-**No good:**
+**Cons:**
 
-- no real borrowing of information across curves (very sparse or functional fragment data, e.g.)
-- needs more observations than basis functions *per curve*.
+- needs more observations than basis functions *for every curve*.
 - subsample could miss small subgroups with different roughness
+- not much borrowing of information across curves (e.g. for very sparse or functional fragment data, e.g.)
+
 
 <!--*Should global smoothing be the default?*-->
 
@@ -513,15 +545,15 @@ tfb(raw, k = 55, global = TRUE) |> plot() #global smoothing
 ```{r, echo = FALSE, results = 'hide', out.height = '.5\\textheight', fig.width = 10, fig.height = 4}
 layout(t(1:3))
 clrs <- scales::alpha(sample(viridis(15)), .5)
-plot(raw, main = "raw", col = clrs)
-plot(tfb(raw, k = 55), main = "separate", col = clrs)
+plot(raw, main = "raw data", col = clrs)
+plot(tfb(raw, k = 55), main = "curve-specific", col = clrs)
 plot(tfb(raw, k = 55, global = TRUE), main = "global", col = clrs)
 ```
 
 ## **`tf`** subclass: **`tfb`** FPC-based
 
-- defaults to simple (weighted, truncated) SVD of the data matrix 
-  - (uses a nuclear-norm regularized SVD for partially missing / irregular inputs)
+- defaults to simple (weighted, truncated) SVD of the data matrix to get FPCs
+  - nuclear-norm regularized SVD^[Dasa & Neumaier (2011). Fast regularized low rank approximation of weighted data sets. In *Proc. Mat. Univ.* (pp. 1-29).] for partially missing / irregular inputs
   - easy to extend for your favorite FPCA algorithm, see `?tfb_fpc` for example
 - estimated FPCs and mean function saved as basis matrix, observed functions are simply linear combinations of those.
 
@@ -560,7 +592,7 @@ ex
 
 ## Evaluate anywhere
 
-Overload second argument for `[` as *"evaluate here"*:
+Overload second argument for `[` as *"evaluate the function at"*:
 
 ```{r, warning  = FALSE}
 ex[1:2, seq(0, 1, l = 5)]
@@ -590,10 +622,12 @@ ex - (2:-2) != ex
 names(ex) = n_ex
 ```
 
-## Compute
+## Arithmetic with `tfb`
 
-Dangerzone: Computations that cannot be expressed as operations
-on the basis coefficients are in general not "lossless" for `tfb`:
+:::{.callout-warning}
+Computations that cannot be expressed as operations
+on the basis coefficients lose numerical precision for `tfb`:
+:::
 
 ```{r}
 #| warning: true
@@ -637,15 +671,15 @@ lines(tf_smooth(ex, "rollmedian", k = 5), col = pal_5)
 
 ## Differentiate & integrate
 ```{r, eval  = FALSE}
-ex[1:2] |> plot()
+ex[1:2] |> tf_smooth() |> plot()
 ex[1:2] |> tf_smooth() |> tf_derive() |> plot()
 ex[1:2] |> tf_integrate(definite = FALSE) |> plot()
 ```
 ```{r, echo = FALSE, fig.height = 4.5}
 layout(t(1:3))
-plot(ex[1:2], col = pal_5[c(1,4)], ylab = "ex[1:2]")
+plot(tf_smooth(ex[1:2]), col = pal_5[c(1,4)], ylab = "tf_smooth(ex[1:2])")
 plot(tf_derive(tf_smooth(tfd(ex[1:2], signif = 4))), col = pal_5[c(1,4)], ylab = "tf_smooth(ex[1:2]) |> tf_derive")
-plot(tf_integrate(ex[1:2], definite = FALSE), col = pal_5[c(1,4)])
+plot(tf_integrate(tf_smooth(ex[1:2]), definite = FALSE), col = pal_5[c(1,4)])
 ```
 ```{r}
 ex[1:2] |> tf_integrate()
@@ -657,7 +691,7 @@ Find `arg`uments $t$ satisfying a condition on `value` $x_i(t)$ (and on `arg`ume
 
 :::: {.columns}
 
-::: {.column width="60%"}
+::: {.column width="50%"}
 ```{r}
 ex |> tf_anywhere(value > .62)
 
@@ -665,15 +699,14 @@ ex[1:2] |> tf_where(value > .62, return = "all")
 
 ex["B"] |> tf_where(value > .62, return = "range")
 
-ex |> tf_where(value > .62 & arg > .5, return = "first")
+ex |> tf_where(value > .62 & arg > .5, 
+               return = "first")
 ```
 :::
 
-::: {.column width="40%"}
-```{r, ex-fig2, echo = FALSE}
-#| fig-asp: 1
+::: {.column width="50%"}
+```{r ex-fig2, fig.height=5, fig.width=5, echo = FALSE}
 #| out-width: 100%
-
 plot(ex,  xlim = c(-0.15, 1), col = pal_5, lwd = 2)
 text(x = -.1, y = ex[,0.07], labels = names(ex), col = pal_5, cex = 1.5)
 lines(median(ex), col = pal_5[3], lwd = 4)
@@ -683,6 +716,7 @@ lines(median(ex), col = pal_5[3], lwd = 4)
 ::::
 
 ## Zoom & query
+
 ```{r}
 ex |> tf_where(value == max(value), "first")
 
@@ -693,19 +727,23 @@ ex[c("A", "D")] |> tf_zoom(.5, 1) |> tf_where(value == max(value), "first")
 ex |> tf_zoom(0.2, 0.6) |> tf_anywhere(value < median(ex)[, arg])
 ```
 
-```{r, ex-fig2, echo = FALSE, out.height = '.35\\textheight', fig.width = 6.5, fig.height = 4}
+```{r ex-fig2b, echo = FALSE, out.height = '.35\\textheight', fig.width = 6.5, fig.height = 4}
+plot(ex,  xlim = c(-0.15, 1), col = pal_5, lwd = 2)
+text(x = -.1, y = ex[,0.07], labels = names(ex), col = pal_5, cex = 1.5)
+lines(median(ex), col = pal_5[3], lwd = 4)
+
 ```
 
 ## Convert & construct
 
-To & from list, matrix or data frame with `"id"`,`"arg"`,`"value"`-columns:
+To & from list, matrix or data frame^[with `"id, arg, value"`-columns]:
 
 ```{r}
 ex_matrix = ex |> as.matrix(); str(ex_matrix)
 
-ex_df = ex |> tf_unnest(); str(ex_df)
-
 ex_matrix[1:2, ] |> tfd()
+
+ex_df = ex |> tf_unnest(); str(ex_df)
 
 tfd(ex_df) == tfd(ex_matrix)
 ```
@@ -727,7 +765,7 @@ tf_rebase(object = ex_b15, basis_from = cca_fpc)[1]
 tf_rebase(object = dti$cca, basis_from = ex_b15)[1]
 ```
 
--- crucial to make functional covariates commensurable for many operations!
+-- crucial for many operations to make functional data commensurable!
 
 # Visualize `tf` objects
 
@@ -742,32 +780,75 @@ lines(c(median(ex), mean(ex)), col = c(2, 4))
 plot(ex, type = "lasagna", col = viridis(50))
 ```
 
-## Visualize: `ggplot2`
+## Visualize: `{ggplot2}`
 
-**Pasta-themed** `geom`s for functional data:
+*Pasta-themed* `geom`s for functional data:
 
-- **`geom_spaghetti`** for lines
-- **`geom_polpette`**  for (lines &) points
-- **`geom_pappardelle`**  for ribbons
-- **`geom_capellini`** for little sparklines / glyphs on maps etc. 
-- **`gglasagna`** for heatmaps, with an **`order`**-aesthetic for sorting rows (lasagna layers)
+- `geom_spaghetti` for lines
+- `geom_polpette` for (lines &) points
+- `geom_pappardelle`  for ribbons
+- `geom_capellini` for little sparklines / glyphs on maps etc. 
+- `gglasagna` for heatmaps, with an `order`-aesthetic for sorting rows (lasagna layers)
 
-## `ggplot2`: line plots
+## `{ggplot2}`: line plots
 
+:::: {.columns}
+
+::: {.column width="40%"}
 ```{r, eval = FALSE}
-ggplot(dti, aes(tf =  cca, colour = case)) +
-  geom_spaghetti() + facet_wrap(~ sex)
+ggplot(dti, 
+       aes(tf =  cca, colour = case)) +
+  geom_spaghetti() + 
+  facet_wrap(~ sex)
 ```
+:::
 
-```{r, dti-fig1, echo = FALSE, out.height = '.7\\textheight', fig.width = 12, fig.height = 7}
+::: {.column width="60%"}
+```{r, dti-fig1, echo = FALSE,  fig.width = 6, fig.height = 6}
+#| out-height: 100%
+
 ggplot(dti) + 
   geom_spaghetti(aes(tf =  cca, col = case, alpha = 1*(case == "control"))) + 
-  facet_wrap(~ sex) + scale_alpha(guide = 'none', range = c(.2, .4))
+  facet_wrap( ~ sex, nrow = 2) + scale_alpha(guide = 'none', range = c(.2, .4)) + 
+  theme(legend.position = "bottom", )
 ```
+:::
 
-## `ggplot2`: ribbon plots
+::::
 
-```{r}
+## `{ggplot2}`: ribbon plots
+:::: {.columns}
+
+::: {.column width="40%"}
+
+```{r, eval = FALSE}
+dti |>
+  group_by(sex, case) |>
+  summarize(
+    mean_cca = mean(cca),
+    sd_cca = sd(cca),
+    hi_cca = mean_cca + sd_cca,
+    lo_cca = mean_cca - sd_cca
+  ) |> 
+  ggplot(
+    aes(tf = mean_cca, 
+        color = sex, 
+        fill = sex)
+  ) +
+  geom_papardelle(
+    aes(fmax = hi_cca, fmin = lo_cca), 
+    alpha = 0.3
+  ) +
+  geom_spaghetti(
+    alpha = .9, linewidth = 2
+  ) +
+  facet_grid(~ case) 
+``` 
+:::
+
+::: {.column width="60%"}
+```{r, echo=FALSE, fig.width = 5, fig.height= 5}
+#| out-height: 100%
 dti |>
   group_by(sex, case) |>
   summarize(
@@ -779,10 +860,13 @@ dti |>
   ggplot(aes(tf = mean_cca, color = sex, fill = sex)) +
   geom_papardelle(aes(fmax = hi_cca, fmin = lo_cca), alpha = 0.3) +
   geom_spaghetti(alpha = .9, linewidth = 2) +
-  facet_grid(~ case) 
+  facet_wrap(~ case, nrow = 2) + 
+  theme(legend.position = "bottom")
 ``` 
+:::
 
-## `ggplot2`: heatmaps
+::::
+## `{ggplot2}`: heatmaps
 
 ```{r, eval = FALSE}
 gglasagna(dti, 
@@ -801,7 +885,7 @@ gglasagna(dti[1:100,], tf =  cca, order = tf_integrate(cca, definite = TRUE)) +
 ```
 
 
-## `ggplot2`: glyph plot maps
+## `{ggplot2}`: glyph plot maps
 
 Plots for spatial functional data:
 
@@ -818,9 +902,21 @@ canada$precipl10 <- tfd(t(weather$dailyAv[,,3]), arg = 1:365) |> tf_smooth()
 glimpse(canada)
 ```
 
-## `ggplot2`: glyph plot maps
+## `{ggplot2}`: glyph plot maps
 
-```{r, out.height = '.5\\textheight', fig.width = 10, fig.height = 5}
+```{r, eval = FALSE}
+canada_map <- maps::map("world", "Canada") |> data.frame()
+map_plot <- ggplot(canada, aes(x = lon, y = lat)) + 
+  geom_path(data = canada_map, aes(x = x, y = y), alpha = .3) 
+
+map_plot + geom_cappellini(aes(tf = precipl10), colour = "blue") + 
+  labs(subtitle = "Precipitation [log10]") +
+map_plot + geom_cappellini(aes(tf = temp), colour = "red") +
+  labs(subtitle = "Temperature")
+```
+
+
+```{r, echo = FALSE, out.height = '.5\\textheight', fig.width = 10, fig.height = 5}
 canada_map <-
    data.frame(maps::map("world", "Canada", plot = FALSE)[c("x", "y")])
  # maps of Canada with annual temperature averages in red, precipitation in blue:
@@ -841,14 +937,15 @@ map_plot +
 
 ## Wrangling `tf`s inside data frames: `dplyr`
 
-**`dplyr`** verbs like  
-**`filter`**, **`select`**, **`mutate`**, **`summarize`**  
-simply work on **`tf`**-columns - e.g.:
+`{dplyr}` verbs like  
+`filter`, `select`, `mutate`, `summarize`  
+simply work on `tf`-columns - e.g.:
 
 ```{r, dplyr}
 # group-wise functional means:
 dti |> group_by(case, sex) |> 
   summarize(mean_rcst = mean(rcst, na.rm = TRUE))
+
 # select subjects that go below cca = .26:
 dti |> filter(tf_anywhere(cca, value < .26))
 ```
@@ -857,27 +954,31 @@ dti |> filter(tf_anywhere(cca, value < .26))
 
 ```{r, dplyr2}
 # mutate to save smooth and derived functional data:
-dti |>
+dti |> 
+  select(c(id, rcst)) |> 
   mutate(
     rcst_smooth = tfb(rcst, k = 15, verbose = FALSE),
-    rcst_deriv = tf_derive(rcst_smooth))
+    rcst_deriv = tf_derive(rcst_smooth)) |> 
+  glimpse()
 ```
 
-## Wrangling `tf`s inside data frames: `tidyr`
+## Wrangling `tf`s inside data frames: `{tidyr}`
 
-`tidyfun` provides `tf_` variants of `tidyr`-verbs to reshape and reformat functional data while keeping it in sync with other covariates:
-
-<br>
-
-- `tf_spread:` `tf` $\rightarrow$ columns for each `arg`
-- `tf_gather:` columns for each `arg` $\rightarrow$ `tf`
+`{tidyfun}` provides `tf_` variants of `{tidyr}`-verbs to reshape and reformat functional data while keeping it in sync with other covariates:
 
 <br>
+wide $\leftrightarrow$ narrow:
 
-- `tf_nest  :` data in long format (`id`, `arg`, `value`)  $\rightarrow$ `tf`
-- `tf_unnest:` `tf` $\rightarrow$ data in long format (`id`, `arg`, `value`)  
+- `tf_spread`: `tf` $\rightarrow$ separate columns for each `arg`
+- `tf_gather`: separate columns for each `arg` $\rightarrow$ `tf`
 
-## `tidyr`: spread & gather
+<br>
+long $\leftrightarrow$ short:
+
+- `tf_nest`: data in long format (`id`, `arg`, `value`)  $\rightarrow$ `tf`
+- `tf_unnest`: `tf` $\rightarrow$ data in long format (`id`, `arg`, `value`)  
+
+## `{tidyr}`: spread & gather
 
 ```{r, tidyr}
 # *spread* tf out into separate columns for each arg:
@@ -888,7 +989,7 @@ dti_wide[, 1:10] |> glimpse()
 dti_wide |> tf_gather(matches("cca_")) |> glimpse()
 ```
 
-## `tidyr`: nest & unnest
+## `{tidyr}`: nest & unnest
 
 
 ```{r, tidyr2}
@@ -904,59 +1005,62 @@ dti_long |> tf_nest(cca_value, .id = cca_id, .arg = cca_arg) |> glimpse()
 
 ## Wrangling `tf`s inside `data.table`:
 
-Works as well, `data.table` generally handles list columns as well as `base`-R.
+Works as well, `data.table` generally handles list columns as well as `base`-R:
+
+```{r}
+dti_dt <- data.table::as.data.table(dti)
+
+dti_dt[tf_anywhere(cca, value > .8), ]
+
+dti_dt[ , .(cca_mean   = tf:::mean.tf(cca),
+            cca_median = median(cca)), 
+       by = case:sex]
+``` 
 
 
 # Wrap-Up & Discussion
 
-## 
-
-What seems too difficult to you...?
-
-What seems too sloppy/dangerous/simplistic to you..?
-
-What additional features would you need...?
-
-
 ## Next up:
 
-- registration: time-warping, alignment, elastic deformation
+- more glue code for `{fda}`, `{fda.usc}`, `{roahd}` 
+- registration: time-warping, alignment, elastic deformation 
 - FPCA refinements: more covariance-estimators, generalized case, multi-level data
-- 
+- put `{tidyfun}` on CRAN, too (... finally)
+- fresh functional datasets: `{tidyfundata}`
 
-## What is missing:
+further out:
 
-- Warping/Registration: Which methods?
+- multivariate functions in `{tf}`: $f:\mathbb R \to \mathbb R^d$
+- upstream packages (e.g. functional regression) that use these as inputs/outputs:  
+  integration with `refund`, `FDboost`, `registr` (or re-implementation)
 
-## What is missing:
+## {.large} 
 
-- Bridges to `fda`, `fda.usc`, `roahd`, `fdasrvf`, ...
-- Integration with `refund`, `FDboost`, `registr`, ...
+:::{.r-stack}
+**What else is missing?**
+:::
 
-##  
+<br><br>
 
-\begin{center}
-\textbf{... I like it. You might, too, give it a spin!}\footnote{\emph{Caveat emptor. Currently a moving target, still a beta-version.}}
+:::{.r-stack}
+Join us on Github to propose features or contribute code!
+:::
+
+<br><br>
+
+:::{.r-stack}
+[**github.com/tidyfun**](https://github.com/tidyfun)
+:::
+
+Try it yourself: 
+
+<br>
+
+```r
+install.packages("tf") # on CRAN
+remotes::install_github("tidyfun/tidyfun") # only on Github, currently
+```
 
 
-\href{https://tidyfun.github.io/tidyfun}{\texttt{https://tidyfun.github.io/tidyfun}}
+# Thanks for listening 
 
-Get it: \texttt{devtools::install\_github("fabian-s/tidyfun")}
-
-\end{center}
-
-## Outlook
-
-Next up:
-
-  - integrate `fda` bases & penalties, wavelet bases
-  - functions for registering & warping
-  - validate & test
-  
-Version 1.0:
-
-  - extensions for multivariable functions
-  - much more extensive documentation & tests
-  - integration with **`refund`** for modeling and inference
-
-# Thanks. \vskip 2em \href{https://github.com/fabian-s/tidyfun}{\texttt{https://github.com/fabian-s/tidyfun}} \vskip 2em \tiny (I don't even have references.)
