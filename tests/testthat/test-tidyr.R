@@ -57,7 +57,10 @@ test_that("tf_spread works", {
   d$fi <- tf_jiggle(tf_rgp(3, 11L))
   tf_spread(d, fi) |>
     expect_warning("no explicit `arg` for irregular") |>
-    expect_warning("`interpolate = FALSE`")
+    suppressWarnings()
+  tf_spread(d, fi) |>
+    expect_warning("`interpolate = FALSE`") |>
+    suppressWarnings()
   expect_true(suppressWarnings(ncol(tf_spread(d, fi)) == 36))
   expect_equal(
     tf_spread(d, fi,
@@ -82,6 +85,7 @@ test_that("tf_nest works", {
 
   g <- rnorm(3)
   data <- bind_cols(data, g = rep(g, e = tf_count(f1)))
+  expect_error(tf_nest(data |> group_by(g)), "grouped_df")
   expect_identical(tf_nest(data, value.x:value.y)$g, g)
   data <- bind_cols(data, f = rep(rnorm(nrow(data))))
   expect_error(tf_nest(data, value.x:value.y), "Can't nest")
