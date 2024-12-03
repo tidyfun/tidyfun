@@ -22,6 +22,7 @@ reference:
   - tf::tf_approx_linear
   - tf::tf_evaluate
   - tf::tf_interpolate
+  - tf::tfsplitcombine
 - title: Arithmetic, logical and summary functions
   desc: Functionality for computing with and comparing functional data
   contents:
