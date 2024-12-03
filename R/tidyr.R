@@ -203,6 +203,10 @@ tf_nest <- function(data, ..., .id = "id", .arg = "arg", domain = NULL,
       "{.arg {data}} must be data frame, not {.obj_type_friendly {data}}."
     )
   }
+  if (inherits(data, "grouped_df")) {
+    cli::cli_abort(c("{.fun tf_nest} does not work for {.cls grouped_df}.",
+                   i = "{.fun ungroup} your data before nesting."))
+  }
   id_var <- quo_name(enexpr(.id))
   arg_var <- quo_name(enexpr(.arg))
   quos <- quos(...)
