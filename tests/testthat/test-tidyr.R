@@ -95,7 +95,6 @@ test_that("tf_nest works", {
   expect_equal(tf_nest(data)$value.y, f2, ignore_attr = TRUE)
   expect_named(tf_nest(data, value.x:value.y), names(tf_nest(data)))
   expect_named(tf_nest(data, -(1:2)), names(tf_nest(data)))
-  expect_error(tf_nest(data, resolution = c(0.01, 0.4, 0.4)))
 
   g <- rnorm(3)
   data <- bind_cols(data, g = rep(g, e = tf_count(f1)))

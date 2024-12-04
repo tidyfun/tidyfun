@@ -21,7 +21,6 @@
 #'   See also [tf::tfd()].
 #' @param evaluator optional. A function accepting arguments x, arg, evaluations. See [tf::tfd()] for details.
 #' @param domain optional. Range of possible `arg`-values. See [tf::tfd()] for details.
-#' @param resolution optional. Resolution of the evaluation grid in `arg`. See [tf::tfd()] for details.
 #' @returns a modified `data.frame` with a `tfd` column replacing the `...`.
 #' @import dplyr
 #' @importFrom rlang is_empty :=  quo_name enexpr
@@ -37,7 +36,7 @@
 #' (d2 <- dplyr::bind_cols(id = rownames(d), d))
 #' tf_gather(d2, -id) # tf_gather(d2, matches("cca")); tf_gather(d2, -1); etc
 tf_gather <- function(data, ..., key = ".tfd", arg = NULL, domain = NULL,
-                      evaluator = tf_approx_linear, resolution = NULL) {
+                      evaluator = tf_approx_linear) {
   key_var <- quo_name(enexpr(key))
   evaluator <- quo_name(enexpr(evaluator))
   search_key <- isTRUE(key == ".tfd")
@@ -82,10 +81,8 @@ tf_gather <- function(data, ..., key = ".tfd", arg = NULL, domain = NULL,
   data |>
     select(-all_of(gather_vars)) |>
     mutate(
-      !!key_var := tfd(tfd_data,
-        arg = arg, domain = domain, evaluator = !!evaluator,
-        resolution = resolution
-      )
+      !!key_var := tfd(tfd_data, arg = arg, domain = domain,
+                       evaluator = !!evaluator)
     )
 }
 
@@ -177,7 +174,7 @@ tf_spread <- function(data, value, arg, sep = "_", interpolate = FALSE) {
 #' `tfd`-objects. All other variables are checked for constancy over `.id` and
 #' appended as well.
 #'
-#' `domain`, `resolution` and `evaluator` can be specified as lists or vectors
+#' `domain` and `evaluator` can be specified as lists or vectors
 #' if you're nesting multiple functional data columns with different properties.
 #' Because quasi-quotation is *such* a bitch, you can only specify the evaluator
 #' functions as strings and not as bare names here.
@@ -195,9 +192,9 @@ tf_spread <- function(data, value, arg, sep = "_", interpolate = FALSE) {
 #' @returns a data frame with (at least) `.id` and `tfd` columns
 #' @export
 #' @family tidyfun data wrangling functions
-#' @seealso tfd() for `domain, evaluator, resolution`
+#' @seealso tfd() for `domain, evaluator`
 tf_nest <- function(data, ..., .id = "id", .arg = "arg", domain = NULL,
-                    evaluator = "tf_approx_linear", resolution = NULL) {
+                    evaluator = "tf_approx_linear") {
   if (!is.data.frame(data)) {
     cli::cli_abort(
       "{.arg {data}} must be data frame, not {.obj_type_friendly {data}}."
@@ -205,7 +202,7 @@ tf_nest <- function(data, ..., .id = "id", .arg = "arg", domain = NULL,
   }
   if (inherits(data, "grouped_df")) {
     cli::cli_abort(c("{.fun tf_nest} does not work for {.cls grouped_df}.",
-                   i = "{.fun ungroup} your data before nesting."))
+                     i = "{.fun ungroup} your data before nesting."))
   }
   id_var <- quo_name(enexpr(.id))
   arg_var <- quo_name(enexpr(.arg))
@@ -234,18 +231,7 @@ tf_nest <- function(data, ..., .id = "id", .arg = "arg", domain = NULL,
       )
     }
   }
-  if (is.null(resolution)) {
-    resolution <- replicate(n_value_vars, resolution, simplify = FALSE)
-  }
-  if (!is.list(resolution) && !is.null(resolution)) {
-    resolution <- as.list(resolution)
-  } else {
-    if (!length(resolution) %in% c(1, n_value_vars)) {
-      cli::cli_abort(
-        "{.arg resolution} length must be 1 or {n_value_vars}, not {length(resolution)}."
-      )
-    }
-  }
+
   evaluator <- as.list(evaluator)
   if (!length(evaluator) %in% c(1, n_value_vars)) {
     cli::cli_abort(
@@ -269,14 +255,15 @@ tf_nest <- function(data, ..., .id = "id", .arg = "arg", domain = NULL,
     )
   }
 
+  # keep first line of every id-level:
   ret <- ret |> slice(1) |> ungroup()
-  # TODO: parallelize this over evaluator, domain, resolution
+
   tfd_list <- pmap(
-    list(value_vars, evaluator, domain, resolution),
-    function(x, y, z, w) {
+    list(value_vars, evaluator, domain),
+    function(x, y, z) {
       data |>
         select(!!id_var, !!arg_var, all_of(x)) |>
-        tfd(evaluator = !!y, domain = z, resolution = w)
+        tfd(evaluator = !!y, domain = z)
     }
   )
   names(tfd_list) <- value_vars

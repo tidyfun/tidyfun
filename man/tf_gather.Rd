@@ -10,8 +10,7 @@ tf_gather(
   key = ".tfd",
   arg = NULL,
   domain = NULL,
-  evaluator = tf_approx_linear,
-  resolution = NULL
+  evaluator = tf_approx_linear
 )
 }
 \arguments{
@@ -36,8 +35,6 @@ See also \code{\link[tf:tfd]{tf::tfd()}}.}
 \item{domain}{optional. Range of possible \code{arg}-values. See \code{\link[tf:tfd]{tf::tfd()}} for details.}
 
 \item{evaluator}{optional. A function accepting arguments x, arg, evaluations. See \code{\link[tf:tfd]{tf::tfd()}} for details.}
-
-\item{resolution}{optional. Resolution of the evaluation grid in \code{arg}. See \code{\link[tf:tfd]{tf::tfd()}} for details.}
 }
 \value{
 a modified \code{data.frame} with a \code{tfd} column replacing the \code{...}.

@@ -51,9 +51,9 @@ dti = with(refund::DTI,
            data.frame(id = ID, sex = sex, 
                       case = factor(ifelse(case, "MS", "control")))) |> 
   as.tbl() |> 
-  mutate(cca = tfd(DTI$cca, seq(0,1, l = 93), resolution = .01) |>
+  mutate(cca = tfd(DTI$cca, seq(0,1, l = 93)) |>
            tfd(arg = round(seq(0,1,l = 93), 3)),
-         rcst = tfd(DTI$rcst, round(seq(0, 1, l = 55), 3), resolution = .01))
+         rcst = tfd(DTI$rcst, round(seq(0, 1, l = 55), 3)))
 set.seed(1221)
 ex_data = dti$cca[1:5, seq(0, 1, l = 93), interpolate = TRUE]
 rownames(ex_data) = LETTERS[1:5]
