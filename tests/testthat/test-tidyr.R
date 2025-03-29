@@ -60,7 +60,7 @@ test_that("tf_spread works", {
     ),
     ignore_attr = TRUE
   )
-  d$fb <- tfb(tf_rgp(3, 11L), verbose = FALSE)
+  d$fb <- tfb(tf_rgp(3, 11L), verbose = FALSE) |> suppressWarnings()
   expect_error(tf_spread(d), "More than one")
   expect_equal(
     tf_spread(d, fb, sep = NULL)[, -(1:2)] |> suppressMessages(),
