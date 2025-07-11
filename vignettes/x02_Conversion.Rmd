@@ -136,7 +136,7 @@ sleepstudy <- as_tibble(sleepstudy)
 sleepstudy
 ```
 
-We create `sleepstudy_tf` by nesting weight within subject. The result is a data frame containing a single row for each pig, and columns for `id.num` and the `weight` function.
+We create `sleepstudy_tf` by nesting `Reaction` within subjects. The result is a data frame containing a single row for each curve (one per `Subject`) that holds two columns: the `Reaction` function and the `Subject` ID: 
 
 ```{r}
 sleepstudy_tf <- sleepstudy |>
