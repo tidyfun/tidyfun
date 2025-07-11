@@ -1,6 +1,6 @@
 Package: tidyfun
 Title: Tools for Tidy Functional Data
-Version: 0.0.98
+Version: 0.0.981
 Authors@R: c(
     person("Fabian", "Scheipl", , "fabian.scheipl@googlemail.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0001-8172-3603")),
@@ -37,12 +37,12 @@ Suggests:
     gridExtra,
     janitor,
     knitr,
+    lme4,
     maps,
     mgcv,
     refund,
     rmarkdown,
     scales,
-    SemiPar,
     testthat (>= 3.0.0),
     tidyverse,
     viridisLite

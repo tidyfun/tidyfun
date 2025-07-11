@@ -35,8 +35,14 @@
 #' tf_gather(d, arg = seq(0, 1, length.out = 10))$cca
 #' (d2 <- dplyr::bind_cols(id = rownames(d), d))
 #' tf_gather(d2, -id) # tf_gather(d2, matches("cca")); tf_gather(d2, -1); etc
-tf_gather <- function(data, ..., key = ".tfd", arg = NULL, domain = NULL,
-                      evaluator = tf_approx_linear) {
+tf_gather <- function(
+  data,
+  ...,
+  key = ".tfd",
+  arg = NULL,
+  domain = NULL,
+  evaluator = tf_approx_linear
+) {
   key_var <- quo_name(enexpr(key))
   evaluator <- quo_name(enexpr(evaluator))
   search_key <- isTRUE(key == ".tfd")
@@ -50,7 +56,9 @@ tf_gather <- function(data, ..., key = ".tfd", arg = NULL, domain = NULL,
     return(data)
   }
   # turn matrix column into regular columns:
-  if (length(gather_vars) == 1 && is.matrix(data[[gather_vars]]) && search_key) {
+  if (
+    length(gather_vars) == 1 && is.matrix(data[[gather_vars]]) && search_key
+  ) {
     key_var <- gather_vars
     search_key <- FALSE
     cli::cli_inform("creating new {.cls tfd}-column {.val {key_var}}")
@@ -63,7 +71,8 @@ tf_gather <- function(data, ..., key = ".tfd", arg = NULL, domain = NULL,
     # see also find_arg: will interpret separating-dashes as minus-signs
     # regex adapted from https://www.regular-expressions.info/floatingpoint.html
     found_key <- unique(sub(
-      "[-+]?(0|(0\\.[0-9]+)|([1-9][0-9]*\\.?[0-9]*))([eE][-+]?[0-9]+)?$", "",
+      "[-+]?(0|(0\\.[0-9]+)|([1-9][0-9]*\\.?[0-9]*))([eE][-+]?[0-9]+)?$",
+      "",
       colnames(tfd_data)
     ))
     # assume trailing 0's are padding:
@@ -81,8 +90,12 @@ tf_gather <- function(data, ..., key = ".tfd", arg = NULL, domain = NULL,
   data |>
     select(-all_of(gather_vars)) |>
     mutate(
-      !!key_var := tfd(tfd_data, arg = arg, domain = domain,
-                       evaluator = !!evaluator)
+      !!key_var := tfd(
+        tfd_data,
+        arg = arg,
+        domain = domain,
+        evaluator = !!evaluator
+      )
     )
 }
 
@@ -193,16 +206,24 @@ tf_spread <- function(data, value, arg, sep = "_", interpolate = FALSE) {
 #' @export
 #' @family tidyfun data wrangling functions
 #' @seealso tfd() for `domain, evaluator`
-tf_nest <- function(data, ..., .id = "id", .arg = "arg", domain = NULL,
-                    evaluator = "tf_approx_linear") {
+tf_nest <- function(
+  data,
+  ...,
+  .id = "id",
+  .arg = "arg",
+  domain = NULL,
+  evaluator = "tf_approx_linear"
+) {
   if (!is.data.frame(data)) {
     cli::cli_abort(
       "{.arg {data}} must be data frame, not {.obj_type_friendly {data}}."
     )
   }
   if (inherits(data, "grouped_df")) {
-    cli::cli_abort(c("{.fun tf_nest} does not work for {.cls grouped_df}.",
-                     i = "{.fun ungroup} your data before nesting."))
+    cli::cli_abort(c(
+      "{.fun tf_nest} does not work for {.cls grouped_df}.",
+      i = "{.fun ungroup} your data before nesting."
+    ))
   }
   id_var <- quo_name(enexpr(.id))
   arg_var <- quo_name(enexpr(.arg))
@@ -282,7 +303,7 @@ tf_nest <- function(data, ..., .id = "id", .arg = "arg", domain = NULL,
 #' Turn (data frames with) `tf`-objects / list columns into "long" tables.
 #'
 #' Similar in spirit to [tidyr::unnest()], the reverse of [tf_nest()].
-#' The `tf`-method simply turns a single `tfd` or `tfb` vector into a "long" [tibble()].
+#' The `tf`-method simply turns a single `tfd` or `tfb` vector into a "long" [tibble::tibble()].
 #'
 #' - Caution -- uses slightly different defaults for names of unnested columns
 #' than `tidyr::unnest()`.
@@ -292,7 +313,7 @@ tf_nest <- function(data, ..., .id = "id", .arg = "arg", domain = NULL,
 #'
 #' @param data a data.frame or a `tf`-object
 #' @param arg optional values for the `arg` argument of
-#'   [tf_evaluate()]
+#'   [tf::tf_evaluate()]
 #' @param interpolate return function values for `arg`-values not on original grid?
 #'   Defaults to `TRUE`.
 #' @param ... not used currently
@@ -324,9 +345,17 @@ tf_unnest.tf <- function(data, cols, arg, interpolate = TRUE, ...) {
 #' @importFrom utils data tail
 #' @importFrom rlang syms !!! expr_text
 #' @rdname tf_unnest
-tf_unnest.data.frame <- function(data, cols, arg, interpolate = TRUE,
-                                 keep_empty = FALSE, ptype = NULL,
-                                 names_sep = "_", names_repair = "check_unique", ...) {
+tf_unnest.data.frame <- function(
+  data,
+  cols,
+  arg,
+  interpolate = TRUE,
+  keep_empty = FALSE,
+  ptype = NULL,
+  names_sep = "_",
+  names_repair = "check_unique",
+  ...
+) {
   if (missing(cols)) {
     tf_cols <- names(data)[map_lgl(data, is_tf)]
     cols <- expr(c(!!!syms(tf_cols)))
@@ -337,8 +366,10 @@ tf_unnest.data.frame <- function(data, cols, arg, interpolate = TRUE,
 
   ret <- tf_evaluate.data.frame(data, !!enquo(cols), arg = arg) |>
     tidyr::unnest(
-      cols = !!enquo(cols), keep_empty = keep_empty,
-      ptype = ptype, names_sep = names_sep,
+      cols = !!enquo(cols),
+      keep_empty = keep_empty,
+      ptype = ptype,
+      names_sep = names_sep,
       names_repair = names_repair
     )
   ret
