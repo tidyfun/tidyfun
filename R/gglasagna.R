@@ -144,8 +144,7 @@ gglasagna <- function(data, tf, order = NULL, label = NULL,
       y = ..y, x = ..x, fill = !!sym(y_name),
       colour = !!sym(y_name)
     )) +
-    ylab("") +
-    xlab("")
+    labs(x = "", y = "")
   if (!is.null(order_label) || !is.null(order_by_label)) {
     p <- p + labs(caption = paste(
       "ordered by:",
