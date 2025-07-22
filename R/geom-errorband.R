@@ -19,7 +19,6 @@
 NULL
 
 #' @export
-#' @importFrom ggplot2 ggproto Stat Geom
 #' @rdname ggerrorband
 #' @usage NULL
 #' @format NULL

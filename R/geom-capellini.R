@@ -44,7 +44,6 @@
 NULL
 
 #' @export
-#' @importFrom ggplot2 ggproto Stat Geom aes
 #' @importFrom GGally rescale11 rescale01
 #' @rdname ggcapellini
 #' @usage NULL
