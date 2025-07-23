@@ -4,13 +4,21 @@
 \name{chf_df}
 \alias{chf_df}
 \title{Congestive heart failure accelerometry data}
+\format{
+An object of class \code{spec_tbl_df} (inherits from \code{tbl_df}, \code{tbl}, \code{data.frame}) with 329 rows and 8 columns.
+}
+\usage{
+chf_df
+}
 \description{
-Activity data from a study of congestive heart failure.
-Data were originally presented
-in "Multilevel Matrix-Variate Analysis and its Application
-to Accelerometry-Measured Physical Activity in Clinical
-Populations" by Huang et al.; these data are public,
+Activity data from a study of congestive heart failure. Data
+were originally presented in "Multilevel Matrix-Variate Analysis
+and its Application to Accelerometry-Measured Physical Activity
+in Clinical Populations" by Huang et al.; these data are public,
 with download information in the paper.
+}
+\examples{
+chf_df
 }
 \seealso{
 Other tidyfun datasets: 
