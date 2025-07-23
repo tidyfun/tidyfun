@@ -37,7 +37,6 @@ is.finite.tf <- function(x) {
 scale_type.tf <- function(x) "identity"
 
 #' @export
-#' @importFrom dplyr pull
 #' @rdname ggspaghetti
 #' @family tidyfun visualization
 #' @usage NULL
