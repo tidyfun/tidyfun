@@ -835,6 +835,16 @@ finalize_tf_ggplot <- function(tf_plot) {
         if (is.null(base_mapping$group)) {
           base_mapping$group <- rlang::sym(paste0(safe_name, ".id"))
         }
+      } else if (expr_info$target_aes == "tf_ymin") {
+        base_mapping$ymin <- rlang::sym(safe_name)
+        base_mapping$x <- rlang::sym(paste0(safe_name, ".arg"))
+        base_mapping$group <- rlang::sym(paste0(safe_name, ".id"))
+      } else if (expr_info$target_aes == "tf_ymax") {
+        base_mapping$ymax <- rlang::sym(safe_name)
+        base_mapping$x <- rlang::sym(paste0(safe_name, ".arg"))
+        if (is.null(base_mapping$group)) {
+          base_mapping$group <- rlang::sym(paste0(safe_name, ".id"))
+        }
       }
     }
   }
@@ -872,6 +882,16 @@ finalize_tf_ggplot <- function(tf_plot) {
           new_mapping$group <- rlang::sym(paste0(safe_name, ".id"))
         } else if (expr_info$target_aes == "tf_x") {
           new_mapping$x <- rlang::sym(safe_name)
+          if (is.null(new_mapping$group)) {
+            new_mapping$group <- rlang::sym(paste0(safe_name, ".id"))
+          }
+        } else if (expr_info$target_aes == "tf_ymin") {
+          new_mapping$ymin <- rlang::sym(safe_name)
+          new_mapping$x <- rlang::sym(paste0(safe_name, ".arg"))
+          new_mapping$group <- rlang::sym(paste0(safe_name, ".id"))
+        } else if (expr_info$target_aes == "tf_ymax") {
+          new_mapping$ymax <- rlang::sym(safe_name)
+          new_mapping$x <- rlang::sym(paste0(safe_name, ".arg"))
           if (is.null(new_mapping$group)) {
             new_mapping$group <- rlang::sym(paste0(safe_name, ".id"))
           }
