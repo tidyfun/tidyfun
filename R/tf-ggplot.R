@@ -112,12 +112,16 @@ parse_tf_aesthetics <- function(mapping, data = NULL) {
   if (!is.null(data)) {
     for (i in seq_along(mapping)) {
       if (!is_direct_tf_aes[i]) {
-        expr <- rlang::quo_get_expr(mapping[[i]])
-        # Check if expression contains tf function calls
-        expr_text <- rlang::expr_deparse(expr)
-        if (grepl("tf_", expr_text)) {
-          is_scalar_tf_aes[i] <- TRUE
+        # Only try to extract expression if it's a quosure
+        if (rlang::is_quosure(mapping[[i]])) {
+          expr <- rlang::quo_get_expr(mapping[[i]])
+          # Check if expression contains tf function calls
+          expr_text <- rlang::expr_deparse(expr)
+          if (grepl("tf_", expr_text)) {
+            is_scalar_tf_aes[i] <- TRUE
+          }
         }
+        # Non-quosure aesthetics (constants) cannot contain tf functions
       }
     }
   }
@@ -164,7 +168,7 @@ transform_tf_data <- function(
   n_tf_cols <- length(tf_aesthetics)
 
   # Estimate expansion - get first tf column to check grid size
-  first_tf_expr <- quo_get_expr(tf_aesthetics[[1]])
+  first_tf_expr <- rlang::quo_get_expr(tf_aesthetics[[1]])
   if (is.symbol(first_tf_expr)) {
     first_tf_name <- as.character(first_tf_expr)
   } else {
@@ -204,7 +208,7 @@ transform_tf_data <- function(
 
   for (i in seq_along(tf_aesthetics)) {
     # Extract column name from quosure
-    expr <- quo_get_expr(tf_aesthetics[[i]])
+    expr <- rlang::quo_get_expr(tf_aesthetics[[i]])
     if (is.symbol(expr)) {
       # Simple column reference
       tf_col_names[i] <- as.character(expr)
@@ -217,7 +221,7 @@ transform_tf_data <- function(
   # Evaluate complex expressions and validate tf objects
   for (i in seq_along(tf_aesthetics)) {
     col_name <- tf_col_names[i]
-    expr <- quo_get_expr(tf_aesthetics[[i]])
+    expr <- rlang::quo_get_expr(tf_aesthetics[[i]])
 
     if (is.symbol(expr)) {
       # Simple column reference - validate it exists and is tf

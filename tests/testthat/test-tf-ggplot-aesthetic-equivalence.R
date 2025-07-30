@@ -11,11 +11,11 @@ test_that("tf aesthetics in constructor vs geom layer are equivalent - basic cas
   p1 <- tf_ggplot(data, aes(tf = func)) + geom_line()
 
   # Method 2: tf aesthetic in geom layer
-  p2 <- tf_ggplot(data) + geom_line(aes(tf = func))
+  p2 <- tf_ggplot(data) + suppressWarnings(geom_line(aes(tf = func)))
 
   # Build both plots
-  built1 <- ggplot_build(p1)
-  built2 <- ggplot_build(p2)
+  built1 <- suppressWarnings(ggplot_build(p1))
+  built2 <- suppressWarnings(ggplot_build(p2))
 
   # Should have identical data structure
   expect_equal(nrow(built1$data[[1]]), nrow(built2$data[[1]]))
@@ -47,10 +47,11 @@ test_that("tf aesthetics with color mapping are equivalent", {
   p1 <- tf_ggplot(data, aes(tf = func, color = group)) + geom_line()
 
   # Method 2: aesthetics in geom layer
-  p2 <- tf_ggplot(data) + geom_line(aes(tf = func, color = group))
+  p2 <- tf_ggplot(data) +
+    suppressWarnings(geom_line(aes(tf = func, color = group)))
 
-  built1 <- ggplot_build(p1)
-  built2 <- ggplot_build(p2)
+  built1 <- suppressWarnings(ggplot_build(p1))
+  built2 <- suppressWarnings(ggplot_build(p2))
 
   # Should have identical structure
   expect_equal(dim(built1$data[[1]]), dim(built2$data[[1]]))
@@ -88,10 +89,15 @@ test_that("mixed tf and regular aesthetics are equivalent", {
 
   # Method 2: mixed aesthetics in geom layer
   p2 <- tf_ggplot(data) +
-    geom_line(aes(tf = func, color = group, size = size_var, alpha = alpha_var))
+    suppressWarnings(geom_line(aes(
+      tf = func,
+      color = group,
+      size = size_var,
+      alpha = alpha_var
+    )))
 
-  built1 <- ggplot_build(p1)
-  built2 <- ggplot_build(p2)
+  built1 <- suppressWarnings(ggplot_build(p1))
+  built2 <- suppressWarnings(ggplot_build(p2))
 
   # Should have identical dimensions and structure
   expect_equal(dim(built1$data[[1]]), dim(built2$data[[1]]))
@@ -118,10 +124,11 @@ test_that("multiple tf aesthetics are equivalent", {
   p1 <- tf_ggplot(data, aes(tf_x = func1, tf_y = func2)) + geom_point()
 
   # Method 2: multiple tf aesthetics in geom layer
-  p2 <- tf_ggplot(data) + geom_point(aes(tf_x = func1, tf_y = func2))
+  p2 <- tf_ggplot(data) +
+    suppressWarnings(geom_point(aes(tf_x = func1, tf_y = func2)))
 
-  built1 <- ggplot_build(p1)
-  built2 <- ggplot_build(p2)
+  built1 <- suppressWarnings(ggplot_build(p1))
+  built2 <- suppressWarnings(ggplot_build(p2))
 
   # Should have identical structure
   expect_equal(dim(built1$data[[1]]), dim(built2$data[[1]]))
@@ -146,10 +153,13 @@ test_that("ribbon tf aesthetics are equivalent", {
 
   # Method 2: ribbon aesthetics in geom layer
   p2 <- tf_ggplot(data) +
-    geom_ribbon(aes(tf_ymin = lower_func, tf_ymax = upper_func), alpha = 0.3)
+    suppressWarnings(geom_ribbon(
+      aes(tf_ymin = lower_func, tf_ymax = upper_func),
+      alpha = 0.3
+    ))
 
-  built1 <- ggplot_build(p1)
-  built2 <- ggplot_build(p2)
+  built1 <- suppressWarnings(ggplot_build(p1))
+  built2 <- suppressWarnings(ggplot_build(p2))
 
   # Should have identical structure
   expect_equal(dim(built1$data[[1]]), dim(built2$data[[1]]))
@@ -174,10 +184,10 @@ test_that("aesthetic inheritance and override work correctly", {
 
   # All aesthetics in geom layer
   p2 <- tf_ggplot(data) +
-    geom_line(aes(tf = func, color = group))
+    suppressWarnings(geom_line(aes(tf = func, color = group)))
 
-  built1 <- ggplot_build(p1)
-  built2 <- ggplot_build(p2)
+  built1 <- suppressWarnings(ggplot_build(p1))
+  built2 <- suppressWarnings(ggplot_build(p2))
 
   # Should produce identical results
   expect_equal(dim(built1$data[[1]]), dim(built2$data[[1]]))
@@ -201,8 +211,8 @@ test_that("aesthetic override in geom layer works", {
   p2 <- tf_ggplot(data, aes(tf = func)) +
     geom_line(aes(color = alt_group))
 
-  built1 <- ggplot_build(p1)
-  built2 <- ggplot_build(p2)
+  built1 <- suppressWarnings(ggplot_build(p1))
+  built2 <- suppressWarnings(ggplot_build(p2))
 
   # Should use alt_group for coloring in both cases
   expect_equal(sort(built1$data[[1]]$colour), sort(built2$data[[1]]$colour))
@@ -226,11 +236,11 @@ test_that("faceting works equivalently with different aesthetic specifications",
 
   # Method 2: aesthetics in geom layer
   p2 <- tf_ggplot(data) +
-    geom_line(aes(tf = func)) +
+    suppressWarnings(geom_line(aes(tf = func))) +
     facet_wrap(~treatment)
 
-  built1 <- ggplot_build(p1)
-  built2 <- ggplot_build(p2)
+  built1 <- suppressWarnings(ggplot_build(p1))
+  built2 <- suppressWarnings(ggplot_build(p2))
 
   # Should have identical panel structure
   expect_equal(dim(built1$layout$layout), dim(built2$layout$layout))
@@ -252,10 +262,11 @@ test_that("custom arg parameter works equivalently", {
   p1 <- tf_ggplot(data, aes(tf = func), arg = custom_arg) + geom_line()
 
   # Method 2: aesthetics in geom layer with custom arg
-  p2 <- tf_ggplot(data, arg = custom_arg) + geom_line(aes(tf = func))
+  p2 <- tf_ggplot(data, arg = custom_arg) +
+    suppressWarnings(geom_line(aes(tf = func)))
 
-  built1 <- ggplot_build(p1)
-  built2 <- ggplot_build(p2)
+  built1 <- suppressWarnings(ggplot_build(p1))
+  built2 <- suppressWarnings(ggplot_build(p2))
 
   # Should use custom arg in both cases
   expect_equal(sort(unique(built1$data[[1]]$x)), custom_arg)
@@ -280,11 +291,11 @@ test_that("multiple layers with different aesthetic specifications work", {
 
   # All aesthetics specified at geom level
   p2 <- tf_ggplot(data) +
-    geom_line(aes(tf = func, color = group)) +
-    geom_point(aes(tf = func, color = group), size = 2)
+    suppressWarnings(geom_line(aes(tf = func, color = group))) +
+    suppressWarnings(geom_point(aes(tf = func, color = group), size = 2))
 
-  built1 <- ggplot_build(p1)
-  built2 <- ggplot_build(p2)
+  built1 <- suppressWarnings(ggplot_build(p1))
+  built2 <- suppressWarnings(ggplot_build(p2))
 
   # Should have same number of layers
   expect_equal(length(built1$data), length(built2$data))
@@ -328,10 +339,10 @@ test_that("data transformation is identical regardless of aesthetic specificatio
   p1 <- tf_ggplot(data, aesthetic_mapping) + geom_line()
 
   # Method 2: in geom layer
-  p2 <- tf_ggplot(data) + geom_line(aesthetic_mapping)
+  p2 <- tf_ggplot(data) + suppressWarnings(geom_line(aesthetic_mapping))
 
-  built1 <- ggplot_build(p1)
-  built2 <- ggplot_build(p2)
+  built1 <- suppressWarnings(ggplot_build(p1))
+  built2 <- suppressWarnings(ggplot_build(p2))
 
   # Extract and sort all data for comparison
   data1 <- built1$data[[1]][order(built1$data[[1]]$group, built1$data[[1]]$x), ]

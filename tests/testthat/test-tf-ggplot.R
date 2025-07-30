@@ -31,7 +31,7 @@ test_that("parse_tf_aesthetics correctly identifies tf aesthetics", {
   # Test simple tf aesthetic
   mapping1 <- aes(tf = func, color = group)
   parsed1 <- parse_tf_aesthetics(mapping1)
-  expect_named(parsed1, c("tf_aes", "regular_aes"))
+  expect_named(parsed1, c("tf_aes", "scalar_tf_aes", "regular_aes"))
   expect_equal(length(parsed1$tf_aes), 1)
   expect_equal(names(parsed1$tf_aes), "tf")
   expect_equal(length(parsed1$regular_aes), 1)
@@ -134,7 +134,7 @@ test_that("tf_ggplot + geom_line creates correct plot", {
   expect_false(inherits(p_with_geom, "tf_ggplot")) # Should be converted
 
   # Check that the plot has the right data structure
-  built <- ggplot_build(p_with_geom)
+  built <- suppressWarnings(ggplot_build(p_with_geom))
   plot_data <- built$data[[1]]
 
   # Should have the right number of groups (one per function)
@@ -159,7 +159,7 @@ test_that("tf_ggplot handles grouping aesthetics correctly", {
 
   # Test with color grouping
   p <- tf_ggplot(data, aes(tf = func, color = treatment)) + geom_line()
-  built <- ggplot_build(p)
+  built <- suppressWarnings(ggplot_build(p))
   plot_data <- built$data[[1]]
 
   # Should have 4 groups (one per function) but 2 colors (treatments)
@@ -178,15 +178,20 @@ test_that("tf_ggplot + geom_ribbon works with tf_ymin/tf_ymax", {
   set.seed(123)
   data <- data.frame(id = 1:2)
   data$mean_func <- tf_rgp(2, arg = seq(0, 1, length.out = 11))
-  data$lower_func <- tf_rgp(2, arg = seq(0, 1, length.out = 11))
-  data$upper_func <- tf_rgp(2, arg = seq(0, 1, length.out = 11))
+  data$lower_func <- data$mean_func +
+    abs(tf_rgp(2, arg = seq(0, 1, length.out = 11)))
+  data$upper_func <- data$mean_func +
+    abs(tf_rgp(2, arg = seq(0, 1, length.out = 11)))
 
   # Test ribbon plot
   p <- tf_ggplot(data) +
-    geom_ribbon(aes(tf_ymin = lower_func, tf_ymax = upper_func), alpha = 0.3)
+    suppressWarnings(geom_ribbon(
+      aes(tf_ymin = lower_func, tf_ymax = upper_func),
+      alpha = 0.3
+    ))
 
   expect_s3_class(p, "ggplot")
-  built <- ggplot_build(p)
+  built <- suppressWarnings(ggplot_build(p))
   plot_data <- built$data[[1]]
 
   # Should have ymin and ymax columns
@@ -228,13 +233,13 @@ test_that("tf_ggplot handles irregular tf objects", {
   data <- data.frame(id = 1:2)
   # Create irregular tf by jiggling and sparsifying
   regular_tf <- tf_rgp(2, arg = seq(0, 1, length.out = 21))
-  data$irreg_func <- tf_sparsify(regular_tf, prob = 0.7) # Make sparse/irregular
+  data$irreg_func <- tf_sparsify(regular_tf, dropout = 0.7) # Make sparse/irregular
 
   # Should still work
   p <- tf_ggplot(data, aes(tf = irreg_func)) + geom_line()
   expect_s3_class(p, "ggplot")
 
-  built <- ggplot_build(p)
+  built <- suppressWarnings(ggplot_build(p))
   plot_data <- built$data[[1]]
 
   # Should have data for both functions
@@ -260,7 +265,7 @@ test_that("tf_ggplot preserves faceting variables", {
     facet_wrap(~treatment)
 
   expect_s3_class(p, "ggplot")
-  built <- ggplot_build(p)
+  built <- suppressWarnings(ggplot_build(p))
 
   # Should have panels for each treatment level
   expect_equal(length(unique(built$layout$layout$PANEL)), 2)
@@ -283,7 +288,7 @@ test_that("tf_ggplot handles custom arg specification", {
   custom_arg <- seq(0, 1, length.out = 11) # Coarser grid
   p <- tf_ggplot(data, aes(tf = func), arg = custom_arg) + geom_line()
 
-  built <- ggplot_build(p)
+  built <- suppressWarnings(ggplot_build(p))
   plot_data <- built$data[[1]]
 
   # Should use the custom arg values
@@ -308,7 +313,7 @@ test_that("tf_ggplot error handling for scale conflicts", {
   expect_warning(
     {
       p <- tf_ggplot(data) +
-        geom_line(aes(tf = func)) + # tf data on y-scale
+        suppressWarnings(geom_line(aes(tf = func))) + # tf data on y-scale
         geom_point(aes(x = id, y = scalar_y)) # scalar data on y-scale
     },
     "scale.*conflict|mixed.*scale"

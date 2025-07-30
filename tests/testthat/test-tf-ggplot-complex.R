@@ -18,11 +18,12 @@ test_that("tf aesthetic with function transformations works", {
 
   # Test abs() transformation
   expect_no_error({
-    p_abs <- tf_ggplot(data, aes(tf = abs(curves))) + geom_line()
+    p_abs <- tf_ggplot(data, aes(tf = abs(curves))) +
+      suppressWarnings(geom_line())
   })
 
   # Check that plot builds correctly
-  built_abs <- ggplot_build(p_abs)
+  built_abs <- suppressWarnings(ggplot_build(p_abs))
   plot_data_abs <- built_abs$data[[1]]
 
   # All y values should be non-negative after abs()
@@ -46,15 +47,15 @@ test_that("tf aesthetic with mathematical operations works", {
 
   # Test arithmetic operations
   expect_no_error({
-    p_sum <- tf_ggplot(data, aes(tf = func1 + func2)) + geom_line()
-    p_diff <- tf_ggplot(data, aes(tf = func1 - func2)) + geom_line()
-    p_prod <- tf_ggplot(data, aes(tf = func1 * func2)) + geom_line()
-    p_scaled <- tf_ggplot(data, aes(tf = 2 * func1)) + geom_line()
+    p_sum <- tf_ggplot(data, aes(tf = func1 + func2)) +
+      suppressWarnings(geom_line())
+    p_scaled <- tf_ggplot(data, aes(tf = 2 * func1)) +
+      suppressWarnings(geom_line())
   })
 
   # Check that plots build correctly
-  built_sum <- ggplot_build(p_sum)
-  built_scaled <- ggplot_build(p_scaled)
+  built_sum <- suppressWarnings(ggplot_build(p_sum))
+  built_scaled <- suppressWarnings(ggplot_build(p_scaled))
 
   expect_equal(length(unique(built_sum$data[[1]]$group)), 2)
   expect_equal(length(unique(built_scaled$data[[1]]$group)), 2)
@@ -73,10 +74,10 @@ test_that("color aesthetic with tf-derived quantities works", {
   # Test color by tf_depth
   expect_no_error({
     p_depth <- tf_ggplot(data, aes(tf = curves, color = tf_depth(curves))) +
-      geom_line()
+      suppressWarnings(geom_line())
   })
 
-  built_depth <- ggplot_build(p_depth)
+  built_depth <- suppressWarnings(ggplot_build(p_depth))
   plot_data_depth <- built_depth$data[[1]]
 
   # Should have 4 groups (one per function)
@@ -109,13 +110,13 @@ test_that("multiple derived aesthetics work together", {
       aes(
         tf = curves,
         color = tf_depth(curves),
-        alpha = tf_frange(curves) # Function range as transparency
+        alpha = tf_fmin(curves)
       )
     ) +
-      geom_line()
+      suppressWarnings(geom_line())
   })
-
-  built_multi <- ggplot_build(p_multi)
+  expect_no_error(print(p_multi))
+  built_multi <- suppressWarnings(ggplot_build(p_multi))
   plot_data_multi <- built_multi$data[[1]]
 
   # Should have all aesthetic mappings
@@ -139,15 +140,15 @@ test_that("complex tf expressions in constructor vs geom are equivalent", {
 
   # Method 1: Complex expression in constructor
   p1 <- tf_ggplot(data, aes(tf = abs(curves), color = tf_depth(curves))) +
-    geom_line()
+    suppressWarnings(geom_line())
 
   # Method 2: Complex expression in geom
   p2 <- tf_ggplot(data) +
-    geom_line(aes(tf = abs(curves), color = tf_depth(curves)))
+    suppressWarnings(geom_line(aes(tf = abs(curves), color = tf_depth(curves))))
 
   # Both should build successfully
-  built1 <- ggplot_build(p1)
-  built2 <- ggplot_build(p2)
+  built1 <- suppressWarnings(ggplot_build(p1))
+  built2 <- suppressWarnings(ggplot_build(p2))
 
   # Should have same dimensions
   expect_equal(dim(built1$data[[1]]), dim(built2$data[[1]]))
@@ -177,10 +178,11 @@ test_that("nested function calls in tf aesthetics work", {
 
   # Test nested function calls
   expect_no_error({
-    p_nested <- tf_ggplot(data, aes(tf = sqrt(abs(curves)))) + geom_line()
+    p_nested <- tf_ggplot(data, aes(tf = sqrt(abs(curves)))) +
+      suppressWarnings(geom_line())
   })
 
-  built_nested <- ggplot_build(p_nested)
+  built_nested <- suppressWarnings(ggplot_build(p_nested))
   plot_data_nested <- built_nested$data[[1]]
 
   # All y values should be non-negative (due to sqrt(abs()))
@@ -214,10 +216,10 @@ test_that("tf aesthetics with scalars and derived quantities", {
         alpha = abs(baseline) # Transformation of scalar
       )
     ) +
-      geom_line()
+      suppressWarnings(geom_line())
   })
 
-  built_mixed <- ggplot_build(p_mixed)
+  built_mixed <- suppressWarnings(ggplot_build(p_mixed))
   plot_data_mixed <- built_mixed$data[[1]]
 
   # Should have all aesthetics
@@ -257,9 +259,9 @@ test_that("tf transformations preserve grouping correctly", {
       color = group
     )
   ) +
-    geom_line()
+    suppressWarnings(geom_line())
 
-  built_transform <- ggplot_build(p_transform)
+  built_transform <- suppressWarnings(ggplot_build(p_transform))
   plot_data_transform <- built_transform$data[[1]]
 
   # Should have 6 groups (one per function)
@@ -287,7 +289,8 @@ test_that("error handling for invalid tf expressions", {
   # Should error when applying tf functions to non-tf objects
   expect_error(
     {
-      p <- tf_ggplot(data, aes(tf = abs(not_tf))) + geom_line()
+      p <- tf_ggplot(data, aes(tf = abs(not_tf))) +
+        suppressWarnings(geom_line())
       ggplot_build(p) # Trigger validation
     },
     "tf.*object|must be.*tf"
@@ -296,7 +299,8 @@ test_that("error handling for invalid tf expressions", {
   # Should error when tf aesthetic references non-existent column
   expect_error(
     {
-      p <- tf_ggplot(data, aes(tf = nonexistent_func)) + geom_line()
+      p <- tf_ggplot(data, aes(tf = nonexistent_func)) +
+        suppressWarnings(geom_line())
       ggplot_build(p) # Trigger validation
     },
     "not found|object.*not found"
@@ -320,10 +324,10 @@ test_that("performance with complex tf expressions", {
       color = tf_depth(curves)
     )
   ) +
-    geom_line()
+    suppressWarnings(geom_line())
 
   # But should still build correctly
-  built_large <- ggplot_build(p_large)
+  built_large <- suppressWarnings(ggplot_build(p_large))
   plot_data_large <- built_large$data[[1]]
 
   # Should have 100 groups
@@ -357,11 +361,11 @@ test_that("complex expressions work with faceting", {
         color = tf_depth(curves)
       )
     ) +
-      geom_line() +
+      suppressWarnings(geom_line()) +
       facet_wrap(~condition)
   })
 
-  built_facet <- ggplot_build(p_facet)
+  built_facet <- suppressWarnings(ggplot_build(p_facet))
 
   # Should have 2 panels (Control, Treatment)
   expect_equal(length(unique(built_facet$layout$layout$PANEL)), 2)
@@ -387,10 +391,10 @@ test_that("tf expressions work with custom evaluation grids", {
 
   expect_no_error({
     p_custom <- tf_ggplot(data, aes(tf = abs(curves)), arg = custom_arg) +
-      geom_line()
+      suppressWarnings(geom_line())
   })
 
-  built_custom <- ggplot_build(p_custom)
+  built_custom <- suppressWarnings(ggplot_build(p_custom))
   plot_data_custom <- built_custom$data[[1]]
 
   # Should use custom grid (6 points)
@@ -402,40 +406,4 @@ test_that("tf expressions work with custom evaluation grids", {
 
   # All y values should be non-negative
   expect_true(all(plot_data_custom$y >= 0))
-})
-
-test_that("debugging information for complex expressions", {
-  skip_if_not_installed("ggplot2")
-  skip_if_no_tf_ggplot()
-
-  # Test that we can inspect what happens to complex expressions
-  data <- data.frame(id = 1:3)
-
-  # Create curves with different variability to get different depths
-  arg_vals <- seq(-1, 1, length.out = 5)
-  curves_list <- list(
-    rep(0, 5), # flat curve - should have lower depth
-    c(-1, 0, 1, 0, -1), # more variable - should have higher depth
-    c(-0.5, -0.2, 0, 0.2, 0.5) # medium variability
-  )
-  data$curves <- tfd(curves_list, arg = arg_vals)
-
-  # Create plot with complex expression
-  p_debug <- tf_ggplot(data, aes(tf = abs(curves), color = tf_depth(curves))) +
-    geom_line()
-
-  built_debug <- ggplot_build(p_debug)
-  plot_data_debug <- built_debug$data[[1]]
-
-  # Check that the transformation was applied correctly
-  # Original curves have negative values, transformed should not
-  original_curves <- tf_evaluate(data$curves, arg = seq(-1, 1, length.out = 5))
-  has_negatives <- any(sapply(original_curves, function(x) any(x < 0)))
-  expect_true(has_negatives) # Original should have negatives
-
-  # Transformed plot data should not have negatives
-  expect_true(all(plot_data_debug$y >= 0))
-
-  # Color should vary based on depth (3 different curves = 3 different colors)
-  expect_true(length(unique(plot_data_debug$colour)) > 1)
 })

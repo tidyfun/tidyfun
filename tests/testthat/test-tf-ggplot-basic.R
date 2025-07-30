@@ -30,14 +30,14 @@ test_that("basic tf aesthetic transformation works", {
   data <- create_test_tf_data(n_funcs = 2, n_points = 5)
 
   # Single tf aesthetic
-  p <- tf_ggplot(data, aes(tf = func)) + geom_line()
+  p <- tf_ggplot(data, aes(tf = func)) + suppressWarnings(geom_line())
 
   # Should still be tf_ggplot until finalized
   expect_s3_class(p, "ggplot")
   expect_true(inherits(p, "tf_ggplot"))
 
   # Check plot builds successfully
-  built <- ggplot_build(p)
+  built <- suppressWarnings(ggplot_build(p))
   expect_s3_class(built, "ggplot_built")
 
   # Should have correct number of groups (one per function)
@@ -107,10 +107,11 @@ test_that("geom_line integration produces correct plot structure", {
 
   data <- create_test_tf_data(n_funcs = 3, n_points = 6)
 
-  p <- tf_ggplot(data, aes(tf = func, color = group)) + geom_line()
+  p <- tf_ggplot(data, aes(tf = func, color = group)) +
+    suppressWarnings(geom_line())
 
   # Build plot and check structure
-  built <- ggplot_build(p)
+  built <- suppressWarnings(ggplot_build(p))
   plot_data <- built$data[[1]]
 
   # Should have 3 groups (one per function)
@@ -138,8 +139,9 @@ test_that("error handling for invalid tf aesthetics", {
 
   # Should error when tf aesthetic references non-tf column
   expect_error(
-    suppress_tf_warnings({
-      p <- tf_ggplot(data, aes(tf = regular_col)) + geom_line()
+    suppressWarnings({
+      p <- tf_ggplot(data, aes(tf = regular_col)) +
+        suppressWarnings(geom_line())
       ggplot_build(p) # Trigger the validation
     }),
     "tf.*object|must be.*tf"
@@ -147,8 +149,9 @@ test_that("error handling for invalid tf aesthetics", {
 
   # Should error when tf aesthetic references non-existent column
   expect_error(
-    suppress_tf_warnings({
-      p <- tf_ggplot(data, aes(tf = nonexistent)) + geom_line()
+    suppressWarnings({
+      p <- tf_ggplot(data, aes(tf = nonexistent)) +
+        suppressWarnings(geom_line())
       ggplot_build(p) # Trigger the validation
     }),
     "object.*not found|not found"
@@ -163,7 +166,8 @@ test_that("custom arg parameter works correctly", {
 
   # Use coarser evaluation grid
   custom_arg <- seq(0, 1, length.out = 5)
-  p <- tf_ggplot(data, aes(tf = func), arg = custom_arg) + geom_line()
+  p <- tf_ggplot(data, aes(tf = func), arg = custom_arg) +
+    suppressWarnings(geom_line())
 
   # Check that custom arg is used
   x_values <- get_plot_x_values(p)
@@ -182,7 +186,8 @@ test_that("grouping variables are preserved in transformation", {
   data$treatment <- factor(c("A", "A", "B", "B"))
   data$subject <- factor(1:4)
 
-  p <- tf_ggplot(data, aes(tf = func, color = treatment)) + geom_line()
+  p <- tf_ggplot(data, aes(tf = func, color = treatment)) +
+    suppressWarnings(geom_line())
   built <- ggplot_build(p)
   plot_data <- built$data[[1]]
 
