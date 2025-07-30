@@ -32,9 +32,9 @@ test_that("basic tf aesthetic transformation works", {
   # Single tf aesthetic
   p <- tf_ggplot(data, aes(tf = func)) + geom_line()
 
-  # Should return regular ggplot after adding layer
+  # Should still be tf_ggplot until finalized
   expect_s3_class(p, "ggplot")
-  expect_false(inherits(p, "tf_ggplot"))
+  expect_true(inherits(p, "tf_ggplot"))
 
   # Check plot builds successfully
   built <- ggplot_build(p)
@@ -139,7 +139,8 @@ test_that("error handling for invalid tf aesthetics", {
   # Should error when tf aesthetic references non-tf column
   expect_error(
     suppress_tf_warnings({
-      tf_ggplot(data, aes(tf = regular_col)) + geom_line()
+      p <- tf_ggplot(data, aes(tf = regular_col)) + geom_line()
+      ggplot_build(p) # Trigger the validation
     }),
     "tf.*object|must be.*tf"
   )
@@ -147,7 +148,8 @@ test_that("error handling for invalid tf aesthetics", {
   # Should error when tf aesthetic references non-existent column
   expect_error(
     suppress_tf_warnings({
-      tf_ggplot(data, aes(tf = nonexistent)) + geom_line()
+      p <- tf_ggplot(data, aes(tf = nonexistent)) + geom_line()
+      ggplot_build(p) # Trigger the validation
     }),
     "object.*not found|not found"
   )

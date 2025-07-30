@@ -76,6 +76,8 @@ tf_ggplot <- function(
   attr(p, "tf_interpolate") <- interpolate
   attr(p, "tf_original_data") <- data
   attr(p, "tf_original_mapping") <- mapping
+  attr(p, "tf_layers") <- list() # Store layers with tf aesthetics
+  attr(p, "tf_expression_counter") <- 0 # Counter for unique expression names
 
   return(p)
 }
@@ -455,59 +457,58 @@ convert_tf_ggplot <- function(tf_plot, layer_mapping = aes()) {
 #' @param e2 A ggplot2 layer, scale, theme, etc.
 #' @export
 `+.tf_ggplot` <- function(e1, e2) {
-  # If e2 is a layer with aesthetics, we may need to convert tf_ggplot
+  # Debug output
+  # cat("DEBUG: +.tf_ggplot called\n")
+
+  # If e2 is a layer, check if it has tf aesthetics
   if (inherits(e2, "LayerInstance") || inherits(e2, "Layer")) {
     # Extract layer mapping
     layer_mapping <- e2$mapping %||% aes()
 
-    # Check if layer has tf aesthetics
+    # Check if this layer or the plot has tf aesthetics
     parsed_layer_aes <- parse_tf_aesthetics(layer_mapping, e1$data)
     parsed_plot_aes <- parse_tf_aesthetics(e1$mapping, e1$data)
 
-    has_tf_aes <- length(parsed_layer_aes$tf_aes) > 0 ||
-      length(parsed_plot_aes$tf_aes) > 0
+    layer_has_tf <- length(parsed_layer_aes$tf_aes) > 0 ||
+      length(parsed_layer_aes$scalar_tf_aes) > 0
+    plot_has_tf <- length(parsed_plot_aes$tf_aes) > 0 ||
+      length(parsed_plot_aes$scalar_tf_aes) > 0
 
-    if (has_tf_aes) {
-      # Convert tf_ggplot to regular ggplot with transformed data
-      regular_plot <- convert_tf_ggplot(e1, layer_mapping)
+    # cat("DEBUG: layer_has_tf =", layer_has_tf, ", plot_has_tf =", plot_has_tf, "\n")
+    # cat("DEBUG: layer tf_aes =", length(parsed_layer_aes$tf_aes), ", plot tf_aes =", length(parsed_plot_aes$tf_aes), "\n")
 
-      # Update layer mapping to use transformed columns
-      if (length(parsed_layer_aes$tf_aes) > 0) {
-        # Need to update layer's mapping to reference transformed columns
-        transformed_mapping <- parsed_layer_aes$regular_aes
+    if (layer_has_tf || plot_has_tf) {
+      # cat("DEBUG: Taking tf path - storing layer\n")
+      # Store this layer with tf aesthetics
+      tf_layers <- attr(e1, "tf_layers")
+      tf_layers[[length(tf_layers) + 1]] <- list(
+        layer = e2,
+        layer_mapping = layer_mapping,
+        parsed_aes = parsed_layer_aes
+      )
+      attr(e1, "tf_layers") <- tf_layers
 
-        # Add the tf->x,y,group mappings that were created in convert_tf_ggplot
-        for (tf_aes_name in names(parsed_layer_aes$tf_aes)) {
-          tf_expr <- quo_get_expr(parsed_layer_aes$tf_aes[[tf_aes_name]])
-          if (is.symbol(tf_expr)) {
-            tf_col_name <- as.character(tf_expr)
-          } else {
-            # Complex expression - use generated name
-            tf_col_name <- paste0(
-              ".tf_expr_",
-              which(names(parsed_layer_aes$tf_aes) == tf_aes_name)
-            )
-          }
-
-          if (tf_aes_name == "tf" || tf_aes_name == "tf_y") {
-            transformed_mapping$x <- sym(paste0(tf_col_name, ".arg"))
-            transformed_mapping$y <- sym(paste0(tf_col_name, ".value"))
-            transformed_mapping$group <- sym(paste0(tf_col_name, ".id"))
-          }
-          # Add other tf aesthetic mappings as needed
-        }
-
-        e2$mapping <- transformed_mapping
-      }
-
-      # Add layer to converted plot
-      result <- regular_plot + e2
-      return(result)
+      # Return the tf_ggplot object to continue accumulating layers
+      return(e1)
+    } else {
+      # cat("DEBUG: No tf aesthetics found, checking for finalization\n")
     }
   }
 
-  # No tf aesthetics involved - use standard ggplot addition
-  # But first convert to regular ggplot to avoid infinite recursion
+  # Non-tf layer or non-layer object - need to finalize tf_ggplot
+  if (
+    length(attr(e1, "tf_layers")) > 0 ||
+      length(parse_tf_aesthetics(e1$mapping, e1$data)$tf_aes) > 0 ||
+      length(parse_tf_aesthetics(e1$mapping, e1$data)$scalar_tf_aes) > 0
+  ) {
+    # cat("DEBUG: Finalizing tf_ggplot\n")
+    # Convert tf_ggplot with all accumulated layers
+    regular_plot <- finalize_tf_ggplot(e1)
+    return(regular_plot + e2)
+  }
+
+  # cat("DEBUG: Converting to regular ggplot\n")
+  # No tf aesthetics at all - convert to regular ggplot
   regular_plot <- ggplot(data = e1$data, mapping = e1$mapping)
   regular_plot$theme <- e1$theme
   regular_plot$coordinates <- e1$coordinates
@@ -517,7 +518,450 @@ convert_tf_ggplot <- function(tf_plot, layer_mapping = aes()) {
   return(regular_plot + e2)
 }
 
+#' Finalize tf_ggplot by processing all tf expressions and creating regular ggplot
+#'
+#' @param tf_plot A tf_ggplot object with accumulated layers
+#' @return Regular ggplot object with all layers properly transformed
+#' @keywords internal
+finalize_tf_ggplot <- function(tf_plot) {
+  # cat("DEBUG: Starting finalize_tf_ggplot\n")
+  # Collect all tf expressions from plot and layers
+  tf_expressions <- list()
+  scalar_tf_expressions <- list()
+  expression_counter <- attr(tf_plot, "tf_expression_counter")
+
+  # Parse plot-level aesthetics
+  parsed_plot_aes <- parse_tf_aesthetics(tf_plot$mapping, tf_plot$data)
+
+  # Add plot-level tf expressions
+  for (aes_name in names(parsed_plot_aes$tf_aes)) {
+    # Get the expression and determine naming strategy
+    expr <- rlang::quo_get_expr(parsed_plot_aes$tf_aes[[aes_name]])
+    expr_text <- rlang::expr_deparse(expr)
+
+    # Use original column name for simple references, generated name for complex expressions
+    if (is.symbol(expr)) {
+      expr_id <- as.character(expr)
+    } else {
+      expression_counter <- expression_counter + 1
+      expr_id <- paste0(".tf_expr_", expression_counter)
+    }
+
+    tf_expressions[[expr_id]] <- list(
+      quo = parsed_plot_aes$tf_aes[[aes_name]],
+      target_aes = aes_name,
+      source = "plot",
+      expr_text = expr_text
+    )
+  }
+
+  # Add plot-level scalar tf expressions
+  for (aes_name in names(parsed_plot_aes$scalar_tf_aes)) {
+    expr_id <- paste0(".scalar_", aes_name, "_plot")
+    scalar_tf_expressions[[expr_id]] <- list(
+      quo = parsed_plot_aes$scalar_tf_aes[[aes_name]],
+      target_aes = aes_name,
+      source = "plot"
+    )
+  }
+
+  # Add layer-level tf expressions
+  tf_layers <- attr(tf_plot, "tf_layers")
+  for (i in seq_along(tf_layers)) {
+    layer_info <- tf_layers[[i]]
+    parsed_aes <- layer_info$parsed_aes
+
+    # Add layer tf expressions
+    for (aes_name in names(parsed_aes$tf_aes)) {
+      # Get the expression and determine naming strategy
+      expr <- rlang::quo_get_expr(parsed_aes$tf_aes[[aes_name]])
+      expr_text <- rlang::expr_deparse(expr)
+
+      # Use original column name for simple references, generated name for complex expressions
+      if (is.symbol(expr)) {
+        expr_id <- as.character(expr)
+      } else {
+        expression_counter <- expression_counter + 1
+        expr_id <- paste0(".tf_expr_", expression_counter)
+      }
+
+      # Add layer suffix to avoid conflicts between plot and layer expressions
+      if (expr_id %in% names(tf_expressions)) {
+        if (is.symbol(expr)) {
+          expr_id <- paste0(expr_id, "_layer_", i)
+        }
+      }
+
+      tf_expressions[[expr_id]] <- list(
+        quo = parsed_aes$tf_aes[[aes_name]],
+        target_aes = aes_name,
+        source = "layer",
+        layer_index = i,
+        expr_text = expr_text
+      )
+    }
+
+    # Add layer scalar tf expressions
+    for (aes_name in names(parsed_aes$scalar_tf_aes)) {
+      expr_id <- paste0(".scalar_", aes_name, "_layer_", i)
+      scalar_tf_expressions[[expr_id]] <- list(
+        quo = parsed_aes$scalar_tf_aes[[aes_name]],
+        target_aes = aes_name,
+        source = "layer",
+        layer_index = i
+      )
+    }
+  }
+
+  # Transform data with all tf expressions
+  transformed_data <- tf_plot$data
+
+  # Create mapping from expr_id to safe column names for later reference
+  expr_id_to_safe_name <- list()
+
+  # Evaluate scalar tf expressions first
+  for (expr_id in names(scalar_tf_expressions)) {
+    expr_info <- scalar_tf_expressions[[expr_id]]
+    tryCatch(
+      {
+        result <- rlang::eval_tidy(expr_info$quo, data = transformed_data)
+        transformed_data[[expr_id]] <- result
+      },
+      error = function(e) {
+        cli::cli_abort("Error evaluating scalar tf aesthetic: {e$message}")
+      }
+    )
+  }
+
+  # Evaluate and transform tf expressions
+  if (length(tf_expressions) > 0) {
+    # Process each tf expression
+    for (expr_id in names(tf_expressions)) {
+      expr_info <- tf_expressions[[expr_id]]
+
+      # Evaluate the expression
+      tf_expr <- rlang::quo_get_expr(expr_info$quo)
+      if (is.symbol(tf_expr)) {
+        # Simple column reference
+        col_name <- as.character(tf_expr)
+        if (!col_name %in% names(transformed_data)) {
+          cli::cli_abort("Column {.val {col_name}} not found in data")
+        }
+        tf_obj <- transformed_data[[col_name]]
+      } else {
+        # Complex expression - evaluate it
+        tryCatch(
+          {
+            tf_obj <- rlang::eval_tidy(expr_info$quo, data = transformed_data)
+          },
+          error = function(e) {
+            cli::cli_abort("Error evaluating tf expression: {e$message}")
+          }
+        )
+      }
+
+      if (!is_tf(tf_obj)) {
+        cli::cli_abort("tf aesthetic must evaluate to a tf object")
+      }
+
+      # Store the evaluated tf object
+      transformed_data[[expr_id]] <- tf_obj
+    }
+
+    # Transform data using the first tf expression to get the structure
+    first_tf_id <- names(tf_expressions)[1]
+    first_tf_obj <- transformed_data[[first_tf_id]]
+
+    # Determine evaluation grid
+    arg <- attr(tf_plot, "tf_arg")
+    if (is.null(arg)) {
+      first_tf_arg <- tf_arg(first_tf_obj)
+      if (is.list(first_tf_arg)) {
+        arg <- first_tf_arg[[1]]
+      } else {
+        arg <- first_tf_arg
+      }
+    }
+
+    # Transform using tf_unnest for the first expression
+    temp_data <- transformed_data
+    temp_data$.row_id <- seq_len(nrow(transformed_data))
+
+    # Use first tf object for the base transformation
+    tf_long <- tf_unnest(
+      first_tf_obj,
+      arg = arg,
+      interpolate = attr(tf_plot, "tf_interpolate")
+    )
+    tf_long$.row_id <- rep(seq_len(nrow(transformed_data)), each = length(arg))
+
+    # cat("DEBUG: tf_long columns after tf_unnest:", paste(names(tf_long), collapse=", "), "\n")
+
+    # Rename columns for first expression using expression text for meaningful labels
+    first_expr_info <- tf_expressions[[first_tf_id]]
+    expr_text <- first_expr_info$expr_text
+
+    # Exclude tf columns that will be removed from conflict check
+    original_expr <- rlang::quo_get_expr(first_expr_info$quo)
+    existing_names_filtered <- names(transformed_data)
+    if (is.symbol(original_expr)) {
+      original_col_name <- as.character(original_expr)
+      existing_names_filtered <- setdiff(
+        existing_names_filtered,
+        original_col_name
+      )
+    }
+
+    safe_name <- make_safe_column_name(
+      expr_text,
+      existing_names = existing_names_filtered
+    )
+
+    # Store the mapping for later use
+    expr_id_to_safe_name[[first_tf_id]] <- safe_name
+
+    arg_col <- paste0(safe_name, ".arg")
+    value_col <- safe_name
+    id_col <- paste0(safe_name, ".id")
+
+    # cat("DEBUG: first_tf_id =", first_tf_id, "\n")
+    # cat("DEBUG: Renaming columns to:", arg_col, value_col, id_col, "\n")
+
+    if ("arg" %in% names(tf_long))
+      names(tf_long)[names(tf_long) == "arg"] <- arg_col
+    if ("data" %in% names(tf_long)) {
+      names(tf_long)[names(tf_long) == "data"] <- value_col
+    } else if ("value" %in% names(tf_long)) {
+      names(tf_long)[names(tf_long) == "value"] <- value_col
+    }
+    if ("id" %in% names(tf_long))
+      names(tf_long)[names(tf_long) == "id"] <- id_col
+
+    # Add other tf expressions as additional columns
+    if (length(tf_expressions) > 1) {
+      # cat("DEBUG: Adding", length(tf_expressions) - 1, "additional tf expressions\n")
+      for (i in 2:length(tf_expressions)) {
+        expr_id <- names(tf_expressions)[i]
+        expr_info <- tf_expressions[[expr_id]]
+        tf_obj <- transformed_data[[expr_id]]
+
+        # Evaluate this tf object on the same grid
+        tf_vals <- tf_evaluate(tf_obj, arg = arg)
+
+        # Use expression text for meaningful column names
+        expr_text_i <- expr_info$expr_text
+
+        # Exclude tf columns that will be removed from conflict check
+        original_expr_i <- rlang::quo_get_expr(expr_info$quo)
+        existing_names_filtered_i <- c(names(tf_long), names(transformed_data))
+        if (is.symbol(original_expr_i)) {
+          original_col_name_i <- as.character(original_expr_i)
+          existing_names_filtered_i <- setdiff(
+            existing_names_filtered_i,
+            original_col_name_i
+          )
+        }
+
+        safe_name_i <- make_safe_column_name(
+          expr_text_i,
+          existing_names = existing_names_filtered_i
+        )
+
+        # Store the mapping for later use
+        expr_id_to_safe_name[[expr_id]] <- safe_name_i
+
+        value_col_i <- safe_name_i
+        id_col_i <- paste0(safe_name_i, ".id")
+        arg_col_i <- paste0(safe_name_i, ".arg")
+
+        # Create value and id columns
+        tf_long[[value_col_i]] <- unlist(tf_vals)
+        tf_long[[id_col_i]] <- rep(seq_along(tf_vals), each = length(arg))
+        # Add arg column for this expression too
+        tf_long[[arg_col_i]] <- rep(arg, length(tf_vals))
+      }
+    }
+
+    # Remove original tf columns from temp_data before join to avoid conflicts
+    temp_data_clean <- temp_data
+    for (expr_id in names(tf_expressions)) {
+      expr_info <- tf_expressions[[expr_id]]
+      original_expr <- rlang::quo_get_expr(expr_info$quo)
+
+      # Remove simple column references from temp_data to avoid join conflicts
+      if (is.symbol(original_expr)) {
+        original_col_name <- as.character(original_expr)
+        if (original_col_name %in% names(temp_data_clean)) {
+          temp_data_clean <- select(temp_data_clean, -!!sym(original_col_name))
+        }
+      }
+
+      # Also remove temporary expression columns if they exist
+      if (
+        expr_id %in% names(temp_data_clean) && grepl("^\\.tf_expr_", expr_id)
+      ) {
+        temp_data_clean <- select(temp_data_clean, -!!sym(expr_id))
+      }
+    }
+
+    # Join with cleaned original data
+    transformed_data <- tf_long |>
+      left_join(temp_data_clean, by = ".row_id") |>
+      select(-.row_id)
+  }
+
+  # Create regular ggplot with base mapping (non-tf aesthetics)
+  base_mapping <- parsed_plot_aes$regular_aes
+
+  # Add scalar tf aesthetics to base mapping
+  for (expr_id in names(scalar_tf_expressions)) {
+    expr_info <- scalar_tf_expressions[[expr_id]]
+    if (expr_info$source == "plot") {
+      base_mapping[[expr_info$target_aes]] <- sym(expr_id)
+    }
+  }
+
+  # Add tf aesthetics to base mapping (only if from plot level)
+  for (expr_id in names(tf_expressions)) {
+    expr_info <- tf_expressions[[expr_id]]
+    if (expr_info$source == "plot") {
+      safe_name <- expr_id_to_safe_name[[expr_id]]
+      if (expr_info$target_aes == "tf" || expr_info$target_aes == "tf_y") {
+        base_mapping$y <- rlang::sym(safe_name)
+        base_mapping$x <- rlang::sym(paste0(safe_name, ".arg"))
+        base_mapping$group <- rlang::sym(paste0(safe_name, ".id"))
+      } else if (expr_info$target_aes == "tf_x") {
+        base_mapping$x <- rlang::sym(safe_name)
+        if (is.null(base_mapping$group)) {
+          base_mapping$group <- rlang::sym(paste0(safe_name, ".id"))
+        }
+      }
+    }
+  }
+
+  # Create the base ggplot
+  regular_plot <- ggplot(data = transformed_data, mapping = base_mapping)
+
+  # No need for manual label setting - ggplot2 will use column names automatically
+
+  # Add all accumulated layers with updated mappings
+  for (i in seq_along(tf_layers)) {
+    layer_info <- tf_layers[[i]]
+    layer <- layer_info$layer
+    parsed_aes <- layer_info$parsed_aes
+
+    # Create new mapping for this layer
+    new_mapping <- parsed_aes$regular_aes
+
+    # Add scalar tf aesthetics
+    for (expr_id in names(scalar_tf_expressions)) {
+      expr_info <- scalar_tf_expressions[[expr_id]]
+      if (expr_info$source == "layer" && expr_info$layer_index == i) {
+        new_mapping[[expr_info$target_aes]] <- sym(expr_id)
+      }
+    }
+
+    # Add tf aesthetics
+    for (expr_id in names(tf_expressions)) {
+      expr_info <- tf_expressions[[expr_id]]
+      if (expr_info$source == "layer" && expr_info$layer_index == i) {
+        safe_name <- expr_id_to_safe_name[[expr_id]]
+        if (expr_info$target_aes == "tf" || expr_info$target_aes == "tf_y") {
+          new_mapping$y <- rlang::sym(safe_name)
+          new_mapping$x <- rlang::sym(paste0(safe_name, ".arg"))
+          new_mapping$group <- rlang::sym(paste0(safe_name, ".id"))
+        } else if (expr_info$target_aes == "tf_x") {
+          new_mapping$x <- rlang::sym(safe_name)
+          if (is.null(new_mapping$group)) {
+            new_mapping$group <- rlang::sym(paste0(safe_name, ".id"))
+          }
+        }
+      }
+    }
+
+    # Update layer mapping
+    layer$mapping <- new_mapping
+
+    # Add layer to plot
+    regular_plot <- regular_plot + layer
+  }
+
+  # Copy over plot properties
+  regular_plot$theme <- tf_plot$theme
+  regular_plot$coordinates <- tf_plot$coordinates
+  regular_plot$facet <- tf_plot$facet
+  regular_plot$labels <- tf_plot$labels
+
+  # Labels are automatically derived from column names - no manual override needed
+
+  return(regular_plot)
+}
+
 # Helper function to check if mapping is an aes object
 is_mapping <- function(x) {
   inherits(x, "uneval")
+}
+
+# Helper function to create safe column names from expression text
+make_safe_column_name <- function(expr_text, existing_names = character(0)) {
+  # For simple names (just letters, numbers, underscore), use as-is if valid
+  if (
+    grepl("^[a-zA-Z][a-zA-Z0-9_]*$", expr_text) &&
+      !expr_text %in% existing_names
+  ) {
+    return(expr_text)
+  }
+
+  # For complex expressions, use the original text as column name
+  # R allows any string as a column name if accessed properly
+  safe_name <- expr_text
+
+  # If the resulting name conflicts with existing names, add suffix
+  original_safe_name <- safe_name
+  counter <- 1
+  while (safe_name %in% existing_names) {
+    safe_name <- paste0(original_safe_name, "_", counter)
+    counter <- counter + 1
+  }
+
+  safe_name
+}
+
+#' Print method for tf_ggplot
+#' @param x A tf_ggplot object
+#' @param ... Additional arguments
+#' @export
+print.tf_ggplot <- function(x, ...) {
+  # If there are tf layers or tf aesthetics, finalize before printing
+  if (
+    length(attr(x, "tf_layers")) > 0 ||
+      length(parse_tf_aesthetics(x$mapping, x$data)$tf_aes) > 0 ||
+      length(parse_tf_aesthetics(x$mapping, x$data)$scalar_tf_aes) > 0
+  ) {
+    regular_plot <- finalize_tf_ggplot(x)
+    print(regular_plot)
+  } else {
+    # No tf aesthetics, print as regular ggplot
+    class(x) <- setdiff(class(x), "tf_ggplot")
+    print(x)
+  }
+}
+
+#' ggplot_build method for tf_ggplot
+#' @param plot A tf_ggplot object
+#' @export
+ggplot_build.tf_ggplot <- function(plot) {
+  # Finalize tf_ggplot before building
+  if (
+    length(attr(plot, "tf_layers")) > 0 ||
+      length(parse_tf_aesthetics(plot$mapping, plot$data)$tf_aes) > 0 ||
+      length(parse_tf_aesthetics(plot$mapping, plot$data)$scalar_tf_aes) > 0
+  ) {
+    regular_plot <- finalize_tf_ggplot(plot)
+    return(ggplot_build(regular_plot))
+  } else {
+    # No tf aesthetics, build as regular ggplot
+    class(plot) <- setdiff(class(plot), "tf_ggplot")
+    return(ggplot_build(plot))
+  }
 }

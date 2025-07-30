@@ -70,9 +70,7 @@ test_that("basic tf_ggplot line plots look sensible", {
     geom_line(size = 1) +
     labs(
       title = "tf_ggplot: Basic Line Plot (Constructor Aesthetics)",
-      subtitle = "Should show: sine, cosine, linear, and quadratic functions",
-      x = "x",
-      y = "f(x)"
+      subtitle = "Should show: sine, cosine, linear, and quadratic functions"
     ) +
     theme_minimal()
 
@@ -80,9 +78,7 @@ test_that("basic tf_ggplot line plots look sensible", {
     geom_line(aes(tf = func, color = group), size = 1) +
     labs(
       title = "tf_ggplot: Basic Line Plot (Geom Aesthetics)",
-      subtitle = "Should be identical to constructor version",
-      x = "x",
-      y = "f(x)"
+      subtitle = "Should be identical to constructor version"
     ) +
     theme_minimal()
 
@@ -126,9 +122,7 @@ test_that("tf_ggplot with points and lines looks correct", {
     geom_point(size = 2) +
     labs(
       title = "tf_ggplot: Lines + Points with Irregular Data",
-      subtitle = "Should show: 3 decay curves with visible data points",
-      x = "Time",
-      y = "Response"
+      subtitle = "Should show: 3 decay curves with visible data points"
     ) +
     theme_minimal()
 
@@ -171,9 +165,7 @@ test_that("tf_ggplot ribbon plots look sensible", {
     geom_line(aes(tf = mean_func), size = 1) +
     labs(
       title = "tf_ggplot: Confidence Bands",
-      subtitle = "Should show: 2 oscillating functions with confidence ribbons",
-      x = "x",
-      y = "f(x)"
+      subtitle = "Should show: 2 oscillating functions with confidence ribbons"
     ) +
     theme_minimal()
 
@@ -219,9 +211,7 @@ test_that("tf_ggplot faceting looks correct", {
     facet_grid(session ~ condition) +
     labs(
       title = "tf_ggplot: Faceted Plot",
-      subtitle = "Should show: Treatment effects across Pre/Post sessions",
-      x = "Time",
-      y = "Response"
+      subtitle = "Should show: Treatment effects across Pre/Post sessions"
     ) +
     theme_minimal()
 
@@ -280,9 +270,7 @@ test_that("tf_ggplot with multiple aesthetics looks good", {
     scale_alpha_continuous(range = c(0.4, 1.0)) +
     labs(
       title = "tf_ggplot: Multiple Aesthetics",
-      subtitle = "Should show: Learning curves by method, difficulty, and performance",
-      x = "Time",
-      y = "Performance"
+      subtitle = "Should show: Learning curves by method, difficulty, and performance"
     ) +
     theme_minimal() +
     theme(legend.position = "bottom")
@@ -310,9 +298,7 @@ test_that("tf_ggplot comparison with current geom_spaghetti", {
     geom_spaghetti(alpha = 0.7) +
     labs(
       title = "Current: geom_spaghetti",
-      subtitle = "6 random Gaussian process functions",
-      x = "x",
-      y = "f(x)"
+      subtitle = "6 random Gaussian process functions"
     ) +
     theme_minimal()
 
@@ -321,9 +307,7 @@ test_that("tf_ggplot comparison with current geom_spaghetti", {
     geom_line(alpha = 0.7) +
     labs(
       title = "New: tf_ggplot + geom_line",
-      subtitle = "Same data, should look identical",
-      x = "x",
-      y = "f(x)"
+      subtitle = "Same data, should look identical"
     ) +
     theme_minimal()
 
