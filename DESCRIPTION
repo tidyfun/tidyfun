@@ -16,7 +16,7 @@ License: MIT + file LICENSE
 URL: https://github.com/tidyfun/tidyfun,
     https://tidyfun.github.io/tidyfun/
 BugReports: https://github.com/tidyfun/tidyfun/issues
-Depends: 
+Depends:
     R (>= 4.1),
     tf
 Imports:
@@ -31,7 +31,7 @@ Imports:
     tibble,
     tidyr (>= 1.0.0),
     tidyselect
-Suggests: 
+Suggests:
     covr,
     fda,
     gridExtra,

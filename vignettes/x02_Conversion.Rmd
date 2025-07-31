@@ -156,7 +156,7 @@ sleepstudy_tf |>
 Alternatively, for this simple example that does not contain any additional time-varying or time-constant covariates besides the values that define the functions themselves, we could have simply done:
 
 ```{r}
-data_frame(
+tibble(
   Subject = unique(sleepstudy$Subject), 
   Reaction = tfd(sleepstudy, id = "Subject", arg = "Days", value = "Reaction")
 )
