@@ -76,7 +76,7 @@ tf_ggplot <- function(
   attr(p, "tf_interpolate") <- interpolate
   attr(p, "tf_original_data") <- data
   attr(p, "tf_original_mapping") <- mapping
-  attr(p, "tf_layers") <- list() # Store layers with tf aesthetics
+  attr(p, "all_layers") <- list() # Store all layers in order with metadata
   attr(p, "tf_expression_counter") <- 0 # Counter for unique expression names
 
   return(p)
@@ -499,13 +499,15 @@ convert_tf_ggplot <- function(tf_plot, layer_mapping = aes()) {
     if (layer_has_tf || plot_has_tf) {
       # cat("DEBUG: Taking tf path - storing layer\n")
       # Store this layer with tf aesthetics
-      tf_layers <- attr(e1, "tf_layers")
-      tf_layers[[length(tf_layers) + 1]] <- list(
+      all_layers <- attr(e1, "all_layers")
+      if (is.null(all_layers)) all_layers <- list()
+      all_layers[[length(all_layers) + 1]] <- list(
         layer = e2,
         layer_mapping = layer_mapping,
-        parsed_aes = parsed_layer_aes
+        parsed_aes = parsed_layer_aes,
+        is_tf_layer = TRUE
       )
-      attr(e1, "tf_layers") <- tf_layers
+      attr(e1, "all_layers") <- all_layers
 
       # Return the tf_ggplot object to continue accumulating layers
       return(e1)
@@ -514,13 +516,65 @@ convert_tf_ggplot <- function(tf_plot, layer_mapping = aes()) {
     }
   }
 
-  # Non-tf layer or non-layer object - need to finalize tf_ggplot
+  # Handle regular layers (non-tf layers)
+  if (inherits(e2, "LayerInstance") || inherits(e2, "Layer")) {
+    layer_mapping <- e2$mapping %||% aes()
+    parsed_layer_aes <- parse_tf_aesthetics(layer_mapping, e1$data)
+    layer_has_tf <- length(parsed_layer_aes$tf_aes) > 0 ||
+      length(parsed_layer_aes$scalar_tf_aes) > 0
+
+    if (!layer_has_tf) {
+      # This is a regular (non-tf) layer - store it instead of finalizing immediately
+      # cat("DEBUG: Storing regular layer\n")
+
+      # Set the layer to use original data
+      e2$data <- e1$data
+
+      # Check for potential scale conflicts
+      all_layers <- attr(e1, "all_layers")
+      tf_layers_exist <- (!is.null(all_layers) &&
+        any(sapply(all_layers, function(x) x$is_tf_layer))) ||
+        length(parse_tf_aesthetics(e1$mapping, e1$data)$tf_aes) > 0
+
+      if (tf_layers_exist) {
+        # Check if this regular layer uses aesthetics that might conflict with tf layers
+        regular_aes_names <- names(layer_mapping)
+        tf_conflicting_aes <- c("x", "y", "ymin", "ymax") # aesthetics that tf layers commonly use
+
+        potential_conflicts <- intersect(regular_aes_names, tf_conflicting_aes)
+        if (length(potential_conflicts) > 0) {
+          cli::cli_warn(c(
+            "Potential scale conflict detected: regular layer uses {.field {potential_conflicts}} aesthetic(s) while tf layers also modify these scales",
+            "i" = "This may result in unexpected scale ranges or behavior",
+            "i" = "Consider using different aesthetics or ensuring data ranges are compatible"
+          ))
+        }
+      }
+
+      # Store the regular layer in order
+      all_layers <- attr(e1, "all_layers")
+      if (is.null(all_layers)) all_layers <- list()
+      all_layers[[length(all_layers) + 1]] <- list(
+        layer = e2,
+        layer_mapping = layer_mapping,
+        parsed_aes = parsed_layer_aes,
+        is_tf_layer = FALSE
+      )
+      attr(e1, "all_layers") <- all_layers
+
+      # Return the tf_ggplot object to continue accumulating layers
+      return(e1)
+    }
+  }
+
+  # Non-layer object (like themes, scales, etc.) - need to finalize tf_ggplot
+  all_layers <- attr(e1, "all_layers")
   if (
-    length(attr(e1, "tf_layers")) > 0 ||
+    (!is.null(all_layers) && length(all_layers) > 0) ||
       length(parse_tf_aesthetics(e1$mapping, e1$data)$tf_aes) > 0 ||
       length(parse_tf_aesthetics(e1$mapping, e1$data)$scalar_tf_aes) > 0
   ) {
-    # cat("DEBUG: Finalizing tf_ggplot\n")
+    # cat("DEBUG: Finalizing tf_ggplot for non-layer object\n")
     # Convert tf_ggplot with all accumulated layers
     regular_plot <- finalize_tf_ggplot(e1)
     return(regular_plot + e2)
@@ -595,7 +649,8 @@ finalize_tf_ggplot <- function(tf_plot) {
   }
 
   # Add layer-level tf expressions
-  tf_layers <- attr(tf_plot, "tf_layers")
+  all_layers <- attr(tf_plot, "all_layers")
+  tf_layers <- all_layers[sapply(all_layers, function(x) x$is_tf_layer)]
   for (i in seq_along(tf_layers)) {
     layer_info <- tf_layers[[i]]
     parsed_aes <- layer_info$parsed_aes
@@ -742,6 +797,24 @@ finalize_tf_ggplot <- function(tf_plot) {
       interpolate = attr(tf_plot, "tf_interpolate")
     )
     tf_long$.row_id <- rep(seq_len(nrow(transformed_data)), each = length(arg))
+
+    # Check for large data expansion and warn
+    n_rows_original <- nrow(transformed_data)
+    n_rows_expanded <- nrow(tf_long)
+    expansion_factor <- n_rows_expanded / n_rows_original
+
+    if (n_rows_expanded > 500 || expansion_factor > 20) {
+      cli::cli_warn(
+        "Large data expansion: {n_rows_original} rows expanded to {n_rows_expanded} rows (factor of {round(expansion_factor)}). This may impact memory usage and performance."
+      )
+    }
+
+    # Filter out NA values from tf transformation
+    # This handles cases where tf objects contain NA functions
+    value_col_name <- if ("value" %in% names(tf_long)) "value" else "data"
+    if (value_col_name %in% names(tf_long)) {
+      tf_long <- tf_long[!is.na(tf_long[[value_col_name]]), ]
+    }
 
     # cat("DEBUG: tf_long columns after tf_unnest:", paste(names(tf_long), collapse=", "), "\n")
 
@@ -902,56 +975,69 @@ finalize_tf_ggplot <- function(tf_plot) {
 
   # No need for manual label setting - ggplot2 will use column names automatically
 
-  # Add all accumulated layers with updated mappings
-  for (i in seq_along(tf_layers)) {
-    layer_info <- tf_layers[[i]]
-    layer <- layer_info$layer
-    parsed_aes <- layer_info$parsed_aes
+  # Process all layers in order (tf and regular)
+  all_layers <- attr(tf_plot, "all_layers")
+  tf_layer_index <- 0 # Track tf layer indices for expression matching
 
-    # Create new mapping for this layer
-    new_mapping <- parsed_aes$regular_aes
+  for (layer_info in all_layers) {
+    if (layer_info$is_tf_layer) {
+      # This is a tf layer - increment tf layer index and process
+      tf_layer_index <- tf_layer_index + 1
+      layer <- layer_info$layer
+      parsed_aes <- layer_info$parsed_aes
 
-    # Add scalar tf aesthetics
-    for (expr_id in names(scalar_tf_expressions)) {
-      expr_info <- scalar_tf_expressions[[expr_id]]
-      if (expr_info$source == "layer" && expr_info$layer_index == i) {
-        new_mapping[[expr_info$target_aes]] <- sym(expr_id)
+      # Create new mapping for this layer
+      new_mapping <- parsed_aes$regular_aes
+
+      # Add scalar tf aesthetics
+      for (expr_id in names(scalar_tf_expressions)) {
+        expr_info <- scalar_tf_expressions[[expr_id]]
+        if (
+          expr_info$source == "layer" && expr_info$layer_index == tf_layer_index
+        ) {
+          new_mapping[[expr_info$target_aes]] <- sym(expr_id)
+        }
       }
-    }
 
-    # Add tf aesthetics
-    for (expr_id in names(tf_expressions)) {
-      expr_info <- tf_expressions[[expr_id]]
-      if (expr_info$source == "layer" && expr_info$layer_index == i) {
-        safe_name <- expr_id_to_safe_name[[expr_id]]
-        if (expr_info$target_aes == "tf" || expr_info$target_aes == "tf_y") {
-          new_mapping$y <- rlang::sym(safe_name)
-          new_mapping$x <- rlang::sym(paste0(safe_name, ".arg"))
-          new_mapping$group <- rlang::sym(paste0(safe_name, ".id"))
-        } else if (expr_info$target_aes == "tf_x") {
-          new_mapping$x <- rlang::sym(safe_name)
-          if (is.null(new_mapping$group)) {
+      # Add tf aesthetics
+      for (expr_id in names(tf_expressions)) {
+        expr_info <- tf_expressions[[expr_id]]
+        if (
+          expr_info$source == "layer" && expr_info$layer_index == tf_layer_index
+        ) {
+          safe_name <- expr_id_to_safe_name[[expr_id]]
+          if (expr_info$target_aes == "tf" || expr_info$target_aes == "tf_y") {
+            new_mapping$y <- rlang::sym(safe_name)
+            new_mapping$x <- rlang::sym(paste0(safe_name, ".arg"))
             new_mapping$group <- rlang::sym(paste0(safe_name, ".id"))
-          }
-        } else if (expr_info$target_aes == "tf_ymin") {
-          new_mapping$ymin <- rlang::sym(safe_name)
-          new_mapping$x <- rlang::sym(paste0(safe_name, ".arg"))
-          new_mapping$group <- rlang::sym(paste0(safe_name, ".id"))
-        } else if (expr_info$target_aes == "tf_ymax") {
-          new_mapping$ymax <- rlang::sym(safe_name)
-          new_mapping$x <- rlang::sym(paste0(safe_name, ".arg"))
-          if (is.null(new_mapping$group)) {
+          } else if (expr_info$target_aes == "tf_x") {
+            new_mapping$x <- rlang::sym(safe_name)
+            if (is.null(new_mapping$group)) {
+              new_mapping$group <- rlang::sym(paste0(safe_name, ".id"))
+            }
+          } else if (expr_info$target_aes == "tf_ymin") {
+            new_mapping$ymin <- rlang::sym(safe_name)
+            new_mapping$x <- rlang::sym(paste0(safe_name, ".arg"))
             new_mapping$group <- rlang::sym(paste0(safe_name, ".id"))
+          } else if (expr_info$target_aes == "tf_ymax") {
+            new_mapping$ymax <- rlang::sym(safe_name)
+            new_mapping$x <- rlang::sym(paste0(safe_name, ".arg"))
+            if (is.null(new_mapping$group)) {
+              new_mapping$group <- rlang::sym(paste0(safe_name, ".id"))
+            }
           }
         }
       }
+
+      # Update layer mapping
+      layer$mapping <- new_mapping
+
+      # Add layer to plot
+      regular_plot <- regular_plot + layer
+    } else {
+      # This is a regular layer - add it directly
+      regular_plot <- regular_plot + layer_info$layer
     }
-
-    # Update layer mapping
-    layer$mapping <- new_mapping
-
-    # Add layer to plot
-    regular_plot <- regular_plot + layer
   }
 
   # Copy over plot properties
@@ -1001,8 +1087,9 @@ make_safe_column_name <- function(expr_text, existing_names = character(0)) {
 #' @export
 print.tf_ggplot <- function(x, ...) {
   # If there are tf layers or tf aesthetics, finalize before printing
+  all_layers <- attr(x, "all_layers")
   if (
-    length(attr(x, "tf_layers")) > 0 ||
+    (!is.null(all_layers) && length(all_layers) > 0) ||
       length(parse_tf_aesthetics(x$mapping, x$data)$tf_aes) > 0 ||
       length(parse_tf_aesthetics(x$mapping, x$data)$scalar_tf_aes) > 0
   ) {
@@ -1020,8 +1107,9 @@ print.tf_ggplot <- function(x, ...) {
 #' @export
 ggplot_build.tf_ggplot <- function(plot) {
   # Finalize tf_ggplot before building
+  all_layers <- attr(plot, "all_layers")
   if (
-    length(attr(plot, "tf_layers")) > 0 ||
+    (!is.null(all_layers) && length(all_layers) > 0) ||
       length(parse_tf_aesthetics(plot$mapping, plot$data)$tf_aes) > 0 ||
       length(parse_tf_aesthetics(plot$mapping, plot$data)$scalar_tf_aes) > 0
   ) {

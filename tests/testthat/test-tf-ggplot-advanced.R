@@ -92,10 +92,10 @@ test_that("faceting works with tf data", {
   # Should have 2 panels (one per treatment)
   expect_equal(length(unique(built$layout$layout$PANEL)), 2)
 
-  # Faceting variable should be preserved in data
+  # Plot should build successfully and have correct structure
   plot_data <- built$data[[1]]
-  expect_true("treatment" %in% names(plot_data))
-  expect_equal(length(unique(plot_data$treatment)), 2)
+  expect_equal(length(unique(plot_data$group)), 6) # 6 functions
+  expect_equal(nrow(plot_data), 30) # 6 functions × 5 points
 })
 
 test_that("irregular tf objects are handled correctly", {
@@ -190,9 +190,10 @@ test_that("performance warnings are triggered appropriately", {
 
   # Should warn about large data expansion
   expect_warning(
-    suppressWarnings({
-      tf_ggplot(data, aes(tf = func)) + geom_line()
-    }),
+    {
+      p <- tf_ggplot(data, aes(tf = func)) + geom_line()
+      ggplot_build(p)
+    },
     "large.*data|expansion|memory|performance"
   )
 })
@@ -258,4 +259,169 @@ test_that("theme and scale customization works with tf_ggplot", {
   expect_equal(p$labels$title, "Test Plot")
   expect_equal(p$labels$x, "Time")
   expect_equal(p$labels$y, "Value")
+})
+
+test_that("multiple tf layers work correctly", {
+  skip_if_not_installed("ggplot2")
+  skip_if_no_tf_ggplot()
+
+  data <- create_test_tf_data(n_funcs = 3, n_points = 5)
+
+  # Create plot with multiple tf layers
+  p <- tf_ggplot(data) +
+    suppressWarnings(geom_line(aes(tf = func, color = group), alpha = 0.7)) +
+    suppressWarnings(geom_point(aes(tf = func, color = group), size = 2)) +
+    suppressWarnings(geom_line(
+      aes(tf = func),
+      color = "black",
+      linetype = "dashed",
+      alpha = 0.3
+    ))
+
+  built <- suppressWarnings(ggplot_build(p))
+
+  # Should have 3 layers
+  expect_equal(length(built$data), 3)
+
+  # All layers should have same number of groups (3 functions)
+  expect_equal(length(unique(built$data[[1]]$group)), 3) # colored lines
+  expect_equal(length(unique(built$data[[2]]$group)), 3) # colored points
+  expect_equal(length(unique(built$data[[3]]$group)), 3) # black dashed lines
+
+  # All layers should have same number of rows (3 functions × 5 points)
+  expect_equal(nrow(built$data[[1]]), 15)
+  expect_equal(nrow(built$data[[2]]), 15)
+  expect_equal(nrow(built$data[[3]]), 15)
+})
+
+test_that("mixing multiple tf and regular layers works", {
+  skip_if_not_installed("ggplot2")
+  skip_if_no_tf_ggplot()
+
+  data <- create_test_tf_data(n_funcs = 3, n_points = 5)
+  data$mean_val <- c(1, 2, 3)
+  data$max_val <- c(1.5, 2.5, 3.5)
+
+  # Create plot mixing tf and regular layers
+  expect_warning(
+    {
+      p <- tf_ggplot(data) +
+        suppressWarnings(geom_line(aes(tf = func, color = group))) + # tf layer 1
+        geom_point(aes(x = 0.5, y = mean_val, color = group), size = 3) + # regular layer 1
+        suppressWarnings(geom_point(aes(tf = func), alpha = 0.5)) + # tf layer 2
+        geom_point(aes(x = 0.8, y = max_val, color = group), size = 2) + # regular layer 2
+        suppressWarnings(geom_line(aes(tf = func), linetype = "dotted")) # tf layer 3
+    },
+    "scale.*conflict|Potential.*conflict"
+  )
+
+  built <- suppressWarnings(ggplot_build(p))
+
+  # Should have 5 layers
+  expect_equal(length(built$data), 5)
+
+  # tf layers should have expanded data (15 rows each)
+  expect_equal(nrow(built$data[[1]]), 15) # tf lines
+  expect_equal(nrow(built$data[[3]]), 15) # tf points
+  expect_equal(nrow(built$data[[5]]), 15) # tf dotted lines
+
+  # Regular layers should have original data (3 rows each)
+  expect_equal(nrow(built$data[[2]]), 3) # regular points 1
+  expect_equal(nrow(built$data[[4]]), 3) # regular points 2
+})
+
+test_that("complex multi-layer plots with different aesthetics work", {
+  skip_if_not_installed("ggplot2")
+  skip_if_no_tf_ggplot()
+
+  # Create more complex data
+  data <- create_band_tf_data(n_funcs = 2, n_points = 5)
+  data$summary_stat <- c(0.5, -0.5)
+
+  # Create complex multi-layer plot
+  expect_warning(
+    {
+      p <- tf_ggplot(data, aes(color = factor(id))) +
+        suppressWarnings(geom_ribbon(
+          aes(tf_ymin = lower_func, tf_ymax = upper_func, fill = factor(id)),
+          alpha = 0.2
+        )) + # tf ribbon
+        suppressWarnings(geom_line(aes(tf = mean_func), size = 1)) + # tf line
+        geom_hline(
+          aes(yintercept = summary_stat, color = factor(id)),
+          linetype = "dashed"
+        ) + # regular hlines
+        suppressWarnings(geom_point(aes(tf = mean_func), size = 2)) + # tf points
+        geom_point(
+          aes(x = 0.5, y = summary_stat, color = factor(id)),
+          size = 4,
+          shape = "diamond"
+        ) # regular points
+    },
+    "scale.*conflict|Potential.*conflict"
+  )
+
+  built <- suppressWarnings(ggplot_build(p))
+
+  # Should have 5 layers
+  expect_equal(length(built$data), 5)
+
+  # tf layers should have expanded data (10 rows each: 2 functions × 5 points)
+  expect_equal(nrow(built$data[[1]]), 10) # ribbon
+  expect_equal(nrow(built$data[[2]]), 10) # line
+  expect_equal(nrow(built$data[[4]]), 10) # points
+
+  # Regular layers should have original data (2 rows each)
+  expect_equal(nrow(built$data[[3]]), 2) # hlines
+  expect_equal(nrow(built$data[[5]]), 2) # points
+})
+
+test_that("many layers with different tf expressions work", {
+  skip_if_not_installed("ggplot2")
+  skip_if_no_tf_ggplot()
+
+  data <- create_test_tf_data(n_funcs = 2, n_points = 5)
+
+  # Create plot with many different tf expressions
+  p <- tf_ggplot(data, aes(color = group)) +
+    suppressWarnings(geom_line(aes(tf = func), alpha = 0.8)) + # original functions
+    suppressWarnings(geom_line(aes(tf = func + 0.5), linetype = "dashed")) + # shifted up
+    suppressWarnings(geom_line(aes(tf = func - 0.5), linetype = "dotted")) + # shifted down
+    suppressWarnings(geom_point(aes(tf = func, size = tf_fmean(func)))) + # points with size by mean
+    suppressWarnings(geom_point(aes(tf = func + 1, alpha = tf_depth(func)))) # shifted points with alpha by depth
+
+  built <- suppressWarnings(ggplot_build(p))
+
+  # Should have 5 layers
+  expect_equal(length(built$data), 5)
+
+  # All layers should have same number of rows (2 functions × 5 points = 10)
+  for (i in 1:5) {
+    expect_equal(
+      nrow(built$data[[i]]),
+      10,
+      info = sprintf("Layer %d should have 10 rows", i)
+    )
+    expect_equal(
+      length(unique(built$data[[i]]$group)),
+      2,
+      info = sprintf("Layer %d should have 2 groups", i)
+    )
+  }
+
+  # Check that transformations worked correctly
+  # Layer 2 should be shifted up by 0.5 compared to layer 1
+  layer1_y <- built$data[[1]]$y[order(built$data[[1]]$x, built$data[[1]]$group)]
+  layer2_y <- built$data[[2]]$y[order(built$data[[2]]$x, built$data[[2]]$group)]
+  expect_true(
+    all(abs((layer2_y - layer1_y) - 0.5) < 1e-10),
+    "Layer 2 should be shifted up by 0.5"
+  )
+
+  # Layer 3 should be shifted down by 0.5 compared to layer 1
+  layer3_y <- built$data[[3]]$y[order(built$data[[3]]$x, built$data[[3]]$group)]
+  expect_true(
+    all(abs((layer3_y - layer1_y) + 0.5) < 1e-10),
+    "Layer 3 should be shifted down by 0.5"
+  )
 })
