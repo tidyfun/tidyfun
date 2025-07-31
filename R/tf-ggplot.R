@@ -357,21 +357,36 @@ convert_tf_ggplot <- function(tf_plot, layer_mapping = aes()) {
 
   # Evaluate scalar tf aesthetics first
   data_with_scalars <- tf_plot$data
+  scalar_column_mapping <- list() # Track original aes_name to safe column name
+
   if (length(parsed_aes$scalar_tf_aes) > 0) {
     for (i in seq_along(parsed_aes$scalar_tf_aes)) {
       aes_name <- names(parsed_aes$scalar_tf_aes)[i]
       aes_quo <- parsed_aes$scalar_tf_aes[[i]]
 
+      # Get expression text for meaningful naming
+      expr <- rlang::quo_get_expr(aes_quo)
+      expr_text <- rlang::expr_deparse(expr)
+
+      # Create meaningful column name
+      safe_name <- make_safe_column_name(
+        expr_text,
+        existing_names = names(data_with_scalars)
+      )
+
+      # Track the mapping
+      scalar_column_mapping[[aes_name]] <- safe_name
+
       # Evaluate the scalar tf expression
       tryCatch(
         {
           result <- rlang::eval_tidy(aes_quo, data = data_with_scalars)
-          # Add result as a new column
-          data_with_scalars[[paste0(".scalar_", aes_name)]] <- result
+          # Add result with meaningful column name
+          data_with_scalars[[safe_name]] <- result
         },
         error = function(e) {
           cli::cli_abort(
-            "Error evaluating scalar tf aesthetic {.field {aes_name}}: {e$message}"
+            "Error evaluating scalar tf aesthetic {.code {expr_text}}: {e$message}"
           )
         }
       )
@@ -394,10 +409,10 @@ convert_tf_ggplot <- function(tf_plot, layer_mapping = aes()) {
   # Create new aesthetic mapping for transformed data
   new_mapping <- parsed_aes$regular_aes
 
-  # Add scalar tf aesthetics to regular mapping with evaluated column names
-  for (i in seq_along(parsed_aes$scalar_tf_aes)) {
-    aes_name <- names(parsed_aes$scalar_tf_aes)[i]
-    new_mapping[[aes_name]] <- sym(paste0(".scalar_", aes_name))
+  # Add scalar tf aesthetics to regular mapping with meaningful column names
+  for (aes_name in names(parsed_aes$scalar_tf_aes)) {
+    safe_name <- scalar_column_mapping[[aes_name]]
+    new_mapping[[aes_name]] <- sym(safe_name)
   }
 
   for (tf_aes_name in names(parsed_aes$tf_aes)) {
@@ -561,11 +576,21 @@ finalize_tf_ggplot <- function(tf_plot) {
 
   # Add plot-level scalar tf expressions
   for (aes_name in names(parsed_plot_aes$scalar_tf_aes)) {
-    expr_id <- paste0(".scalar_", aes_name, "_plot")
-    scalar_tf_expressions[[expr_id]] <- list(
+    # Get the expression and use it for meaningful naming
+    expr <- rlang::quo_get_expr(parsed_plot_aes$scalar_tf_aes[[aes_name]])
+    expr_text <- rlang::expr_deparse(expr)
+
+    # Create meaningful column name using the same approach as tf expressions
+    safe_name <- make_safe_column_name(
+      expr_text,
+      existing_names = names(tf_plot$data)
+    )
+
+    scalar_tf_expressions[[safe_name]] <- list(
       quo = parsed_plot_aes$scalar_tf_aes[[aes_name]],
       target_aes = aes_name,
-      source = "plot"
+      source = "plot",
+      expr_text = expr_text
     )
   }
 
@@ -607,12 +632,27 @@ finalize_tf_ggplot <- function(tf_plot) {
 
     # Add layer scalar tf expressions
     for (aes_name in names(parsed_aes$scalar_tf_aes)) {
-      expr_id <- paste0(".scalar_", aes_name, "_layer_", i)
-      scalar_tf_expressions[[expr_id]] <- list(
+      # Get the expression and use it for meaningful naming
+      expr <- rlang::quo_get_expr(parsed_aes$scalar_tf_aes[[aes_name]])
+      expr_text <- rlang::expr_deparse(expr)
+
+      # Create meaningful column name using the same approach as tf expressions
+      safe_name <- make_safe_column_name(
+        expr_text,
+        existing_names = c(names(tf_plot$data), names(scalar_tf_expressions))
+      )
+
+      # If conflicts with existing expressions, add layer suffix
+      if (safe_name %in% names(scalar_tf_expressions)) {
+        safe_name <- paste0(safe_name, "_layer_", i)
+      }
+
+      scalar_tf_expressions[[safe_name]] <- list(
         quo = parsed_aes$scalar_tf_aes[[aes_name]],
         target_aes = aes_name,
         source = "layer",
-        layer_index = i
+        layer_index = i,
+        expr_text = expr_text
       )
     }
   }
@@ -629,10 +669,14 @@ finalize_tf_ggplot <- function(tf_plot) {
     tryCatch(
       {
         result <- rlang::eval_tidy(expr_info$quo, data = transformed_data)
+        # Use the meaningful column name (expr_id is now the safe expression text)
         transformed_data[[expr_id]] <- result
       },
       error = function(e) {
-        cli::cli_abort("Error evaluating scalar tf aesthetic: {e$message}")
+        expr_text <- expr_info$expr_text %||% "unknown expression"
+        cli::cli_abort(
+          "Error evaluating scalar tf aesthetic {.code {expr_text}}: {e$message}"
+        )
       }
     )
   }
