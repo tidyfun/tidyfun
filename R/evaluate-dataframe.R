@@ -17,8 +17,7 @@
 #'   evaluations (`value`) and returns the modified nested dataframe.
 #' @export
 #' @import tf
-#' @importFrom tidyselect vars_select quos
-#' @importFrom rlang enquos quo_text
+#' @importFrom tidyselect vars_select
 #' @importFrom purrr map map_lgl pmap
 #' @family tidyfun data wrangling functions
 tf_evaluate.data.frame <- function(object, ..., arg) {

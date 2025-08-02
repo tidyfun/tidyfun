@@ -34,7 +34,6 @@ is.discrete <- function(x) {
 #' @returns a `ggplot2`` object
 #' @export
 #' @importFrom grid unit grobTree textGrob gpar
-#' @importFrom rlang %||%
 #' @family tidyfun visualization
 #' @examples
 #' \dontrun{
@@ -81,31 +80,31 @@ gglasagna <- function(data, tf, order = NULL, label = NULL,
   has_order_by <- !is.null(match.call()[["order_by"]])
   order_label <- enexpr(order)
   if (has_order) {
-    order_label <- quo_name(order_label)
+    order_label <- as_label(order_label)
     order <- match.call()$order
   } else {
     order_label <- NULL
-    order <- bquote(..row)
+    order <- expr(..row)
     order_ticks <- FALSE
   }
   has_label <- !is.null(match.call()[["label"]])
   if (!has_label) {
-    label <- bquote(names(.(enexpr(tf))) %||% row_number())
+    label <- expr(names(!!enexpr(tf)) %||% row_number())
     labelname <- ""
   } else {
     label <- match.call()$label
     labelname <- deparse(label)
   }
-  y_name <- quo_name(enquo(tf))
+  y_name <- as_name(enexpr(tf))
   data <- mutate(data, ..label = !!label, ..row = row_number(), ..order = !!order)
   tf_eval <- data |>
     # TODO: add .preserve for all list columns not being plotted
-    mutate(..y = names((enexpr(tf))) %||% row_number()) |> # vertical position variable
+    mutate(..y = !!label) |> # vertical position variable
     tf_unnest(y_name, .arg = arg, names_sep = "___", try_dropping = FALSE) |>
     rename(..x = matches("___arg"), ..fill = matches("___value"))
   order_by_label <- enexpr(order_by)
   if (has_order_by) {
-    order_by_label <- quo_name(order_by_label)
+    order_by_label <- as_label(order_by_label)
     if (!is.function(order_by)) {
       cli::cli_abort(
         "{.arg order_by} must be a function, not {.obj_type_friendly {order_by}}."
@@ -113,7 +112,7 @@ gglasagna <- function(data, tf, order = NULL, label = NULL,
     }
     order_by_value <- tf_eval |>
       group_by(..y) |>
-      summarize(..order_by_value = order_by(..fill)) |>
+      summarise(..order_by_value = order_by(..fill)) |>
       ungroup() |>
       mutate(..order_by_value = rank(..order_by_value))
     tf_eval <- left_join(tf_eval, order_by_value, by = "..y")
