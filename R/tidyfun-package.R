@@ -14,4 +14,5 @@
 #' Also see `vignette("Introducing tidyfun", "tidyfun")` for a brief introduction.
 #'
 #' @keywords internal
+#' @import rlang
 "_PACKAGE"
