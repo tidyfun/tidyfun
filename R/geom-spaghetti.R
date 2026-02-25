@@ -194,7 +194,7 @@ geom_meatballs <- function(
 #' @usage NULL
 #' @format NULL
 GeomMeatballs <- ggplot2::ggproto(
-  "GeomMeatball",
+  "GeomMeatballs",
   ggplot2::Geom,
   default_aes = ggplot2::aes(
     colour = "black",

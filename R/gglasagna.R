@@ -23,15 +23,15 @@ is.discrete <- function(x) {
 #'   order of lasagna layers.
 #' @param label (optional) bare name of a column in `data` to define labels for
 #'   lasagna layers. Defaults to names of `y`, if present, or row numbers.
-#' @param arg `arg` to evaluate `y` om
+#' @param arg `arg` to evaluate `y` on
 #' @param order_by a function applied to each row in `y[, arg]` that must
 #'   return a scalar value to define the order of lasagna layers.
 #' @param order_ticks add horizontal lines indicating borders between levels of
 #'   `order` (if it is a discrete variable) and labels for its levels?
-#'   Defaults to TRUE. Supply a list of arguments (grep source code for `order_ticks_args``)
+#'   Defaults to TRUE. Supply a list of arguments (grep source code for `order_ticks_args`)
 #'   to override default appearance of labels.
 #'   **Switch this off if you use facetting, it's a hack and will produce nonsense.**
-#' @returns a `ggplot2`` object
+#' @returns a `ggplot2` object
 #' @export
 #' @importFrom grid unit grobTree textGrob gpar
 #' @importFrom rlang %||%

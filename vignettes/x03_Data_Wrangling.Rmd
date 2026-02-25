@@ -183,7 +183,7 @@ dti_df |>
   geom_spaghetti()
 ```
 
-The existing `mutate` function can be combined with several `tidyfun` functions, including `tf_smooth`, `tf_zoom`, and `tf_deriv`.
+The existing `mutate` function can be combined with several `tidyfun` functions, including `tf_smooth`, `tf_zoom`, and `tf_derive`.
 
 One can smooth existing observations using `tf_smooth`:
 
@@ -195,7 +195,7 @@ chf_df |>
   geom_spaghetti()
 ```
 
-This can be combined with previous steps, like `group_by` and `summarize`, to build intution through descriptive plots and summaries:
+This can be combined with previous steps, like `group_by` and `summarize`, to build intuition through descriptive plots and summaries:
 
 ```{r}
 chf_df |>

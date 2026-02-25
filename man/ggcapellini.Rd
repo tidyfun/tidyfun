@@ -174,7 +174,7 @@ lists which parameters it can accept.
 
 \item{line.linetype}{aesthetic property of the reference line}
 
-\item{line.linewidth}{aesthetic property of of the reference line}
+\item{line.linewidth}{aesthetic property of the reference line}
 
 \item{line.alpha}{aesthetic property of the reference line}
 }

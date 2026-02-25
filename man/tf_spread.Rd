@@ -17,7 +17,7 @@ see examples.}
 
 \item{arg}{(Semi-)optional. A vector of \code{arg}-values on which to evaluate the
 functions. If not provided, uses the default \code{arg}s. Should be
-specified for \code{tf_irreg}, otherwise \emph{all} observed gridpoint are used for
+specified for \code{tf_irreg}, otherwise \emph{all} observed gridpoints are used for
 \emph{every} function.}
 
 \item{sep}{separating character used to create column names for the new columns,
