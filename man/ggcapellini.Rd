@@ -222,7 +222,7 @@ ggplot(canada, aes(x = lon, y = lat, colour = region)) +
 }
 }
 \seealso{
-\link[GGally:glyphs]{GGally::glyphs}
+\code{\link[GGally:glyphs]{GGally::glyphs()}}
 
 Other tidyfun visualization: 
 \code{\link{gglasagna}()},

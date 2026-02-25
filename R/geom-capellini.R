@@ -40,7 +40,7 @@
 #' }
 #' @name ggcapellini
 #' @family tidyfun visualization
-#' @seealso [GGally::glyphs]
+#' @seealso [GGally::glyphs()]
 NULL
 
 #' @export

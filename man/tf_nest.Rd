@@ -49,7 +49,7 @@ Because quasi-quotation is \emph{such} a bitch, you can only specify the evaluat
 functions as strings and not as bare names here.
 }
 \seealso{
-tfd() for \verb{domain, evaluator}
+\code{\link[tf:tfd]{tf::tfd()}} for \verb{domain, evaluator}
 
 Other tidyfun data wrangling functions: 
 \code{\link{tf_evaluate.data.frame}()},
