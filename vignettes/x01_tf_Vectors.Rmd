@@ -193,7 +193,7 @@ and with manually set strong smoothing (`sp` $\to 0$) in orange.
 **Advantages:**
 
 - (much) faster than optimizing penalization for each curve
-- should scale well for larg-ish datasets
+- should scale well for largish datasets
 
 **Disadvantages**
 

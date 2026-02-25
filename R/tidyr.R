@@ -111,7 +111,7 @@ tf_gather <- function(
 #'   see examples.
 #' @param arg (Semi-)optional. A vector of `arg`-values on which to evaluate the
 #'   functions. If not provided, uses the default `arg`s. Should be
-#'   specified for `tf_irreg`, otherwise *all* observed gridpoint are used for
+#'   specified for `tf_irreg`, otherwise *all* observed gridpoints are used for
 #'   *every* function.
 #' @param sep separating character used to create column names for the new columns,
 #'   defaults to `"_"` for column names "<name of the `tf`>_<`arg`-value>".

@@ -81,7 +81,7 @@ dti_df |>
   facet_grid(~sex)
 ```
 
-<img src="man/figures/README-dti-ggplot-example-1.png" width="100%" />
+<img src="man/figures/README-dti-ggplot-example-1.png" alt="" width="100%" />
 
 ## What does it do?
 
@@ -130,7 +130,7 @@ conversions.
 
 [See
 here](https://tidyfun.github.io/tidyfun/articles/x02_Conversion.html)
-details on getting data into (and out of) the `tf` format.
+for details on getting data into (and out of) the `tf` format.
 
 #### `tidyverse` verbs for dealing with functional data inside data frames
 
@@ -168,5 +168,5 @@ vignette.
 
 ------------------------------------------------------------------------
 
-Found a bug? Got a question? Missing some functionality?  
+Found a bug? Got a question? Missing some functionality?\
 Please let us know so we can make it better.

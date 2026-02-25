@@ -25,19 +25,19 @@ order of lasagna layers.}
 \item{label}{(optional) bare name of a column in \code{data} to define labels for
 lasagna layers. Defaults to names of \code{y}, if present, or row numbers.}
 
-\item{arg}{\code{arg} to evaluate \code{y} om}
+\item{arg}{\code{arg} to evaluate \code{y} on}
 
 \item{order_by}{a function applied to each row in \code{y[, arg]} that must
 return a scalar value to define the order of lasagna layers.}
 
 \item{order_ticks}{add horizontal lines indicating borders between levels of
 \code{order} (if it is a discrete variable) and labels for its levels?
-Defaults to TRUE. Supply a list of arguments (grep source code for `order_ticks_args``)
+Defaults to TRUE. Supply a list of arguments (grep source code for \code{order_ticks_args})
 to override default appearance of labels.
 \strong{Switch this off if you use facetting, it's a hack and will produce nonsense.}}
 }
 \value{
-a `ggplot2`` object
+a \code{ggplot2} object
 }
 \description{
 Lasagna plots show one color bar for each function.

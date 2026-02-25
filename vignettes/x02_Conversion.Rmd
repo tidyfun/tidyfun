@@ -225,7 +225,7 @@ dti_df |>
 
 ## Conversion from `tf` to data frames
 
-The functions `tf_unnest` and `tf_spread` reverse the operations in `tf_nest` and `tf_gather`, respectively -- that is, they take a data frame with a functional observation and produce long or wide data frames. We'll illustrate these with the `pig_df` data set. 
+The functions `tf_unnest` and `tf_spread` reverse the operations in `tf_nest` and `tf_gather`, respectively -- that is, they take a data frame with a functional observation and produce long or wide data frames. We'll illustrate these with the `sleepstudy_tf` data set. 
 
 First, to produce a long-format data frame, one can use `tf_unnest`:
 
