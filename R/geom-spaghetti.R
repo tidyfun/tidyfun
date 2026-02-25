@@ -54,7 +54,7 @@ StatTf <- ggproto(
   compute_layer = function(self, data, params, layout) {
     if (!is_tf(data$y)) {
       cli::cli_abort(
-        "y must be a tf object, not {.obj_type_friendly {data$y}}"
+        "{.arg y} must be a {.cls tf} object, not {.obj_type_friendly {data$y}}."
       )
     }
     tf_eval <- suppressMessages(

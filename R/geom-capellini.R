@@ -65,7 +65,7 @@ StatCapellini <- ggplot2::ggproto("StatCapellini", ggplot2::Stat,
   compute_layer = function(self, data, params, layout) {
     if (!is_tf(data$tf)) {
       cli::cli_abort(
-        "tf must be a tf object, not {.obj_type_friendly {data$tf}}"
+        "{.arg tf} must be a {.cls tf} object, not {.obj_type_friendly {data$tf}}."
       )
     }
     tf_eval <- suppressMessages(

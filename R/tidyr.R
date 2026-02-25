@@ -216,13 +216,13 @@ tf_nest <- function(
 ) {
   if (!is.data.frame(data)) {
     cli::cli_abort(
-      "{.arg {data}} must be data frame, not {.obj_type_friendly {data}}."
+      "{.arg data} must be data frame, not {.obj_type_friendly {data}}."
     )
   }
   if (inherits(data, "grouped_df")) {
     cli::cli_abort(c(
-      "{.fun tf_nest} does not work for {.cls grouped_df}.",
-      i = "{.fun ungroup} your data before nesting."
+      "{.fn tf_nest} does not work for {.cls grouped_df}.",
+      i = "{.fn ungroup} your data before nesting."
     ))
   }
   id_var <- quo_name(enexpr(.id))
