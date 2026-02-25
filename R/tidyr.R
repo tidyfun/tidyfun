@@ -26,10 +26,10 @@
 #' @importFrom rlang is_empty :=  quo_name enexpr
 #' @importFrom tidyselect vars_select
 #' @export
-#' @seealso dplyr::select()
+#' @seealso [dplyr::select()]
 #' @family tidyfun data wrangling functions
 #' @examples
-#' (d <- dplyr::as.tbl(data.frame(refund::DTI[1:5, ]$cca[, 1:10])))
+#' (d <- tibble::as_tibble(data.frame(refund::DTI[1:5, ]$cca[, 1:10])))
 #' tf_gather(d)
 #' tf_gather(d, key = "cca_tf")
 #' tf_gather(d, arg = seq(0, 1, length.out = 10))$cca
@@ -205,7 +205,7 @@ tf_spread <- function(data, value, arg, sep = "_", interpolate = FALSE) {
 #' @returns a data frame with (at least) `.id` and `tfd` columns
 #' @export
 #' @family tidyfun data wrangling functions
-#' @seealso tfd() for `domain, evaluator`
+#' @seealso [tfd()] for `domain, evaluator`
 tf_nest <- function(
   data,
   ...,
@@ -320,7 +320,7 @@ tf_nest <- function(
 #' @inheritParams tidyr::unnest
 #' @returns a "long" data frame with `tf`-columns expanded into `arg, value`-
 #'   columns.
-#' @seealso tf_evaluate.data.frame()
+#' @seealso [tf_evaluate.data.frame()]
 #' @export
 #' @family tidyfun data wrangling functions
 tf_unnest <- function(data, cols, arg, interpolate = TRUE, ...) {

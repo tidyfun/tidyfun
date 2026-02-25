@@ -87,7 +87,7 @@ be able to match arg-value pairs to the different functions after unnesting.
 }
 }
 \seealso{
-tf_evaluate.data.frame()
+\code{\link[=tf_evaluate.data.frame]{tf_evaluate.data.frame()}}
 
 Other tidyfun data wrangling functions: 
 \code{\link{tf_evaluate.data.frame}()},
