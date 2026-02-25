@@ -41,7 +41,7 @@ tf_evaluate.data.frame <- function(object, ..., arg) {
     arg <- map(object[tf_cols], \(x) tf::ensure_list(tf_arg(x)))
   }
   if (length(arg) != length(tf_cols)) {
-    cli::cli_abort("{.arg arg} length must match number of tf columns.")
+    cli::cli_abort("{.arg arg} length must match number of {.cls tf} columns.")
   }
   names(arg) <- tf_cols
   # convert them to list-columns of data.frames

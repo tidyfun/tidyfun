@@ -73,7 +73,7 @@ gglasagna <- function(data, tf, order = NULL, label = NULL,
   # FIXME: render errors for weird arg lengths (e.g. 93)
   if (!is_tf(pull(data, !!enexpr(tf)))) {
     cli::cli_abort(
-      "{.arg tf} must be a tf object, not {.obj_type_friendly {pull(data, !!enexpr(tf))}}"
+      "{.arg tf} must be a {.cls tf} object, not {.obj_type_friendly {pull(data, !!enexpr(tf))}}."
     )
   }
   has_order <- !is.null(match.call()[["order"]])

@@ -214,7 +214,7 @@ tf_nest <- function(
 ) {
   if (!is.data.frame(data)) {
     cli::cli_abort(
-      "{.arg {data}} must be data frame, not {.obj_type_friendly {data}}."
+      "{.arg data} must be data frame, not {.obj_type_friendly {data}}."
     )
   }
   if (inherits(data, "grouped_df")) {
