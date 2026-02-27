@@ -71,9 +71,9 @@ gglasagna <- function(data, tf, order = NULL, label = NULL,
   }
 
   # FIXME: render errors for weird arg lengths (e.g. 93)
-  if (!is_tf(pull(data, !!enexpr(tf)))) {
+  if (!is_tf(pull(data, {{ tf }}))) {
     cli::cli_abort(
-      "{.arg tf} must be a {.cls tf} object, not {.obj_type_friendly {pull(data, !!enexpr(tf))}}."
+      "{.arg tf} must be a {.cls tf} object, not {.obj_type_friendly {pull(data, {{ tf }})}}."
     )
   }
   has_order <- !is.null(match.call()[["order"]])
@@ -140,8 +140,8 @@ gglasagna <- function(data, tf, order = NULL, label = NULL,
 
   p <- ggplot(tf_eval) +
     geom_tile(aes(
-      y = ..y, x = ..x, fill = !!sym(y_name),
-      colour = !!sym(y_name)
+      y = ..y, x = ..x, fill = .data[[y_name]],
+      colour = .data[[y_name]]
     )) +
     labs(x = "", y = "")
   if (!is.null(order_label) || !is.null(order_by_label)) {
