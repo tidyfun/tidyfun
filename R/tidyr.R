@@ -144,7 +144,13 @@ tf_spread <- function(data, value, arg, sep = "_", interpolate = FALSE) {
       )
     }
   }
-  tf_var <- names(eval_select(enquo(value), data))
+  value_sel <- eval_select(enquo(value), data)
+  if (length(value_sel) != 1L) {
+    cli::cli_abort(
+      "{.arg value} must select exactly one column, not {length(value_sel)}."
+    )
+  }
+  tf_var <- names(value_sel)
   tf <- data[[tf_var]]
   if (!is_tf(tf)) {
     cli::cli_warn(
