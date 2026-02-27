@@ -23,7 +23,6 @@
 #' @param domain optional. Range of possible `arg`-values. See [tf::tfd()] for details.
 #' @returns a modified `data.frame` with a `tfd` column replacing the `...`.
 #' @import dplyr
-#' @importFrom tidyselect vars_select
 #' @export
 #' @seealso [dplyr::select()]
 #' @family tidyfun data wrangling functions
@@ -44,11 +43,10 @@ tf_gather <- function(
 ) {
   key_var <- as_name(enexpr(key))
   search_key <- isTRUE(key == ".tfd")
-  quos <- enquos(...)
-  if (is_empty(quos)) {
+  if (...length() == 0) {
     gather_vars <- names(data)
   } else {
-    gather_vars <- unname(vars_select(names(data), !!!quos))
+    gather_vars <- names(eval_select(expr(c(...)), data))
   }
   if (is_empty(gather_vars)) {
     return(data)
@@ -121,7 +119,6 @@ tf_gather <- function(
 #'    `arg`-values.
 #' @returns a wider dataframe with the `tf`-column spread out into many columns
 #'   each containing the functional measurements for one `arg`-value.
-#' @importFrom tidyselect vars_pull
 #' @export
 #' @family tidyfun data wrangling functions
 #' @examples
@@ -147,7 +144,13 @@ tf_spread <- function(data, value, arg, sep = "_", interpolate = FALSE) {
       )
     }
   }
-  tf_var <- tidyselect::vars_pull(names(data), !!enquo(value))
+  value_sel <- eval_select(enquo(value), data)
+  if (length(value_sel) != 1L) {
+    cli::cli_abort(
+      "{.arg value} must select exactly one column, not {length(value_sel)}."
+    )
+  }
+  tf_var <- names(value_sel)
   tf <- data[[tf_var]]
   if (!is_tf(tf)) {
     cli::cli_warn(
@@ -170,7 +173,7 @@ tf_spread <- function(data, value, arg, sep = "_", interpolate = FALSE) {
     colnames(tf_eval) <- paste0(tf_var, sep, arg)
   }
   data |>
-    select(-!!tf_var) |>
+    select(-all_of(tf_var)) |>
     bind_cols(tf_eval)
 }
 
@@ -225,11 +228,10 @@ tf_nest <- function(
   }
   arg_var <- as_name(enexpr(.arg))
   id_var <- as_name(enexpr(.id))
-  quos <- enquos(...)
-  if (is_empty(quos)) {
+  if (...length() == 0) {
     value_vars <- setdiff(names(data), c(id_var, arg_var))
   } else {
-    value_vars <- unname(vars_select(names(data), !!!quos))
+    value_vars <- names(eval_select(expr(c(...)), data))
   }
   n_value_vars <- length(value_vars)
   if (n_value_vars == 0) {
