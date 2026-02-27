@@ -76,24 +76,24 @@ gglasagna <- function(data, tf, order = NULL, label = NULL,
       "{.arg tf} must be a {.cls tf} object, not {.obj_type_friendly {pull(data, !!enexpr(tf))}}."
     )
   }
-  has_order <- !is.null(match.call()[["order"]])
-  has_order_by <- !is.null(match.call()[["order_by"]])
-  order_label <- enexpr(order)
+  order <- enexpr(order)
+  has_order <- !is.null(order)
+  order_by_label <- enexpr(order_by)
+  has_order_by <- !is.null(order_by_label)
   if (has_order) {
-    order_label <- as_label(order_label)
-    order <- match.call()$order
+    order_label <- as_label(order)
   } else {
     order_label <- NULL
     order <- expr(..row)
     order_ticks <- FALSE
   }
-  has_label <- !is.null(match.call()[["label"]])
+  label <- enexpr(label)
+  has_label <- !is.null(label)
   if (!has_label) {
     label <- expr(names(!!enexpr(tf)) %||% row_number())
     labelname <- ""
   } else {
-    label <- match.call()$label
-    labelname <- deparse(label)
+    labelname <- as_label(label)
   }
   y_name <- as_name(enexpr(tf))
   data <- mutate(data, ..label = !!label, ..row = row_number(), ..order = !!order)
@@ -102,7 +102,6 @@ gglasagna <- function(data, tf, order = NULL, label = NULL,
     mutate(..y = !!label) |> # vertical position variable
     tf_unnest(y_name, .arg = arg, names_sep = "___", try_dropping = FALSE) |>
     rename(..x = matches("___arg"), ..fill = matches("___value"))
-  order_by_label <- enexpr(order_by)
   if (has_order_by) {
     order_by_label <- as_label(order_by_label)
     if (!is.function(order_by)) {
