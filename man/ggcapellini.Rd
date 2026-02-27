@@ -225,6 +225,7 @@ ggplot(canada, aes(x = lon, y = lat, colour = region)) +
 \code{\link[GGally:glyphs]{GGally::glyphs()}}
 
 Other tidyfun visualization: 
+\code{\link{autoplot.tf}()},
 \code{\link{gglasagna}()},
 \code{\link{ggspaghetti}}
 }

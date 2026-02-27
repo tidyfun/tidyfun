@@ -47,6 +47,7 @@ reference:
   desc: Graphics functions and print formats
   contents:
   - tf::plot.tf
+  - autoplot.tf
   - geom_spaghetti
   - gglasagna
   - ggerrorband
