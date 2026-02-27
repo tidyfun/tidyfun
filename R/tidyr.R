@@ -119,6 +119,7 @@ tf_gather <- function(
 #'    `arg`-values.
 #' @returns a wider dataframe with the `tf`-column spread out into many columns
 #'   each containing the functional measurements for one `arg`-value.
+#' @importFrom tidyselect vars_pull
 #' @export
 #' @family tidyfun data wrangling functions
 #' @examples
@@ -144,13 +145,7 @@ tf_spread <- function(data, value, arg, sep = "_", interpolate = FALSE) {
       )
     }
   }
-  value_sel <- eval_select(enquo(value), data)
-  if (length(value_sel) != 1L) {
-    cli::cli_abort(
-      "{.arg value} must select exactly one column, not {length(value_sel)}."
-    )
-  }
-  tf_var <- names(value_sel)
+  tf_var <- vars_pull(names(data), !!enquo(value))
   tf <- data[[tf_var]]
   if (!is_tf(tf)) {
     cli::cli_warn(
