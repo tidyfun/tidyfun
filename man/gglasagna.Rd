@@ -76,6 +76,7 @@ gglasagna(data, fb, label = id, order = group, order_by = first)
 }
 \seealso{
 Other tidyfun visualization: 
+\code{\link{autoplot.tf}()},
 \code{\link{ggcapellini}},
 \code{\link{ggspaghetti}}
 }
