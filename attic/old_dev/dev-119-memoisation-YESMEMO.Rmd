@@ -1,0 +1,75 @@
+---
+output: github_document
+---
+
+```{r setup}
+library(rbenchmark)
+library(profvis)
+library(git2r)
+git2r::checkout(branch = "dev") # @ba48336f
+devtools::load_all()
+```
+
+```{r data, cache = TRUE}
+set.seed(1312)
+n <- 100
+g <- 1000
+arg <- seq(0, 1, l = g)
+
+tfd_lin <- tf_rgp(n = n, arg = arg) |> tfd(resolution = 1e-16)
+tfd_sp <- tfd(tfd_lin, evaluator = tf_approx_spline)
+tfd_const <- tfd(tfd_lin, evaluator = tf_approx_locf)
+
+tfb_cr10 <- tfb(tfd_lin, k = 10)
+tfb_ps10 <- tfb(tfd_lin, k = 10, bs = "ps")
+tfb_tp10 <- tfb(tfd_lin, k = 10, bs = "tp")
+tfb_cr50 <- tfb(tfd_lin, k = 50)
+tfb_ps50 <- tfb(tfd_lin, k = 50, bs = "ps")
+tfb_tp50 <- tfb(tfd_lin, k = 50, bs = "tp")
+
+domain <- tf_domain(tfd_lin)
+rez <- tf_resolution(tfd_lin)
+arg_new <- tfd_lin[1] |> tf_jiggle() |> tf_arg()
+```
+
+# benchmark time/memory for tfb and tfd_reg for repeated identical arg
+
+```{r, bench1}
+bench::mark(
+   tf_evaluate(tfd_lin, arg_new) |> length(),
+   tf_evaluate(tfd_sp, arg_new) |> length(),
+   tf_evaluate(tfd_const, arg_new) |> length(),
+)
+```
+
+```{r, bench1-tfb}
+bench::mark(
+   tf_evaluate(tfb_cr10, arg_new) |> length(),
+   tf_evaluate(tfb_ps10, arg_new) |> length(),
+   tf_evaluate(tfb_tp10, arg_new) |> length(),
+   tf_evaluate(tfb_cr50, arg_new) |> length(),
+   tf_evaluate(tfb_ps50, arg_new) |> length(),
+   tf_evaluate(tfb_tp50, arg_new) |> length()
+)
+```
+
+# benchmark time/memory for tfb and tfd_reg for novel arg
+
+```{r, bench2}
+bench::mark(
+   lin = tf_evaluate(tfd_lin, tf_jiggle_args(arg_new, .1)) |> length(),
+   sp = tf_evaluate(tfd_sp, tf_jiggle_args(arg_new, .1)) |> length(),
+   const = tf_evaluate(tfd_const, tf_jiggle_args(arg_new, .1)) |> length(),
+)
+```
+
+```{r, bench2-tfb}
+bench::mark(
+   cr10 = tf_evaluate(tfb_cr10, tf_jiggle_args(arg_new, .1)) |> length(),
+   ps10 = tf_evaluate(tfb_ps10, tf_jiggle_args(arg_new, .1)) |> length(),
+   tp10 = tf_evaluate(tfb_tp10, tf_jiggle_args(arg_new, .1)) |> length(),
+   cr50 = tf_evaluate(tfb_cr50, tf_jiggle_args(arg_new, .1)) |> length(),
+   ps50 = tf_evaluate(tfb_ps50, tf_jiggle_args(arg_new, .1)) |> length(),
+   tp50 = tf_evaluate(tfb_tp50, tf_jiggle_args(arg_new, .1)) |> length()
+)
+```

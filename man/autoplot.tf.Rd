@@ -12,15 +12,15 @@
 \arguments{
 \item{object}{a \code{tf} object}
 
-\item{...}{passed to \code{\link[=geom_spaghetti]{geom_spaghetti()}}}
+\item{...}{passed to \code{\link[ggplot2:geom_path]{ggplot2::geom_line()}}}
 }
 \value{
-A \code{\link[ggplot2:ggplot]{ggplot2::ggplot()}} object for \code{autoplot()}, a \code{\link[ggplot2:layer]{ggplot2::layer()}} object for \code{autolayer()}.
+A \code{\link[=tf_ggplot]{tf_ggplot()}} object for \code{autoplot()}, a \code{\link[ggplot2:layer]{ggplot2::layer()}} object for \code{autolayer()}.
 }
 \description{
 Convenient plotting methods for \code{tf} objects. \code{autoplot()} creates a
-complete spaghetti plot, \code{autolayer()} creates a spaghetti layer that can be
-added to an existing \code{\link[ggplot2:ggplot]{ggplot2::ggplot()}}.
+complete spaghetti plot, \code{autolayer()} creates a layer that can be
+added to an existing \code{\link[ggplot2:ggplot]{ggplot2::ggplot()}} or \code{\link[=tf_ggplot]{tf_ggplot()}}.
 }
 \examples{
 \donttest{
@@ -28,6 +28,7 @@ library(ggplot2)
 f <- tf_rgp(5)
 autoplot(f)
 ggplot() + autolayer(f)
+tf_ggplot() + autolayer(f)
 }
 }
 \seealso{

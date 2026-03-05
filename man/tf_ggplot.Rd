@@ -30,11 +30,11 @@ It works similarly to \code{ggplot()} but automatically transforms tf objects in
 long-format data suitable for standard ggplot2 geoms.
 }
 \details{
-tf_ggplot supports the following tf-specific aesthetics:
+\code{tf_ggplot} supports the following tf-specific aesthetics:
 \itemize{
-\item \code{tf}: Maps a tf object to y aesthetic (shorthand for tf_y)
-\item \code{tf_x}: Maps a tf object to x aesthetic
-\item \code{tf_y}: Maps a tf object to y aesthetic
+\item \code{tf}: Maps a \code{tf} object to \code{y} aesthetic (shorthand for \code{tf_y})
+\item \code{tf_x}: Maps a \code{tf} object to \code{x} aesthetic
+\item \code{tf_y}: Maps a \code{tf} object to \code{y} aesthetic
 \item \code{tf_ymin}: Maps a tf object to ymin aesthetic (for ribbons)
 \item \code{tf_ymax}: Maps a tf object to ymax aesthetic (for ribbons)
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/tf-ggplot.R
 \name{finalize_tf_ggplot}
 \alias{finalize_tf_ggplot}
-\title{Finalize tf_ggplot by processing all tf expressions and creating regular ggplot}
+\title{Finalize tf_ggplot by processing all tf layers independently}
 \usage{
 finalize_tf_ggplot(tf_plot)
 }
@@ -13,6 +13,7 @@ finalize_tf_ggplot(tf_plot)
 Regular ggplot object with all layers properly transformed
 }
 \description{
-Finalize tf_ggplot by processing all tf expressions and creating regular ggplot
+Each layer is evaluated on its own natural argument grid (Option B architecture).
+The base ggplot has \code{data = NULL}; each layer receives its own long-format data.
 }
 \keyword{internal}

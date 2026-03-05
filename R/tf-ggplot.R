@@ -562,7 +562,11 @@ convert_tf_ggplot <- function(tf_plot, layer_mapping = aes()) {
         is_tf_layer = TRUE,
         # Promoted data from tf-param expansion lives here (not in layer$data)
         # so that repeated finalize calls don't see mutated layer state.
-        promoted_data = .promoted_data
+        promoted_data = .promoted_data,
+        # Snapshot layer-level data at add-time (before any finalize mutation).
+        # Used when a layer carries its own data (e.g. from autolayer.tf).
+        layer_data_snapshot = if (!inherits(e2$data, "waiver")) e2$data else
+          NULL
       )
       attr(e1, "all_layers") <- all_layers
 
@@ -729,7 +733,9 @@ finalize_tf_ggplot <- function(tf_plot) {
       # fall back to plot-level enriched_data.  Never use layer$data here —
       # ggproto reference semantics mean layer$data gets mutated by a previous
       # finalize call, breaking repeated ggplot_build() calls on the same object.
-      effective_data <- layer_info$promoted_data %||% enriched_data
+      effective_data <- layer_info$promoted_data %||%
+        layer_info$layer_data_snapshot %||%
+        enriched_data
       result <- build_tf_layer_data(
         layer_info = layer_info,
         plot_tf_aes = parsed_plot_aes$tf_aes,
@@ -1013,11 +1019,13 @@ translate_old_tf_layer <- function(layer, e1) {
   extra_params <- layer$aes_params
 
   make_layer <- function(geom_fn, mapping) {
+    layer_data <- if (!inherits(layer$data, "waiver")) layer$data else NULL
     do.call(
       geom_fn,
       c(
         list(
           mapping = mapping,
+          data = layer_data,
           position = layer$position,
           show.legend = layer$show.legend,
           inherit.aes = layer$inherit.aes
