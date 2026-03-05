@@ -15,10 +15,10 @@
 #' @param ... Other arguments passed to ggplot2 functions.
 #'
 #' @details
-#' tf_ggplot supports the following tf-specific aesthetics:
-#' - `tf`: Maps a tf object to y aesthetic (shorthand for tf_y)
-#' - `tf_x`: Maps a tf object to x aesthetic
-#' - `tf_y`: Maps a tf object to y aesthetic
+#' `tf_ggplot` supports the following tf-specific aesthetics:
+#' - `tf`: Maps a `tf` object to `y` aesthetic (shorthand for `tf_y`)
+#' - `tf_x`: Maps a `tf` object to `x` aesthetic
+#' - `tf_y`: Maps a `tf` object to `y` aesthetic
 #' - `tf_ymin`: Maps a tf object to ymin aesthetic (for ribbons)
 #' - `tf_ymax`: Maps a tf object to ymax aesthetic (for ribbons)
 #'
@@ -193,7 +193,7 @@ transform_tf_data <- function(
 
       # Warn about large expansions
       if (estimated_rows > 10000) {
-        cli::cli_warn(c(
+        cli::cli_inform(c(
           "Large data expansion detected: {n_rows} rows -> {estimated_rows} rows",
           "i" = "Consider using a coarser evaluation grid with the 'arg' parameter",
           "i" = "This may impact memory usage and plotting performance"
@@ -293,10 +293,12 @@ transform_tf_data <- function(
   n_rows_expanded <- nrow(tf_long)
   expansion_factor <- n_rows_expanded / n_rows_original
 
-  if (n_rows_expanded > 500 || expansion_factor > 20) {
-    cli::cli_warn(
-      "Large data expansion: {n_rows_original} rows expanded to {n_rows_expanded} rows (factor of {round(expansion_factor)}). This may impact memory usage and performance."
-    )
+  if (n_rows_expanded > 5000 || expansion_factor > 50) {
+    cli::cli_warn(c(
+      "Large data expansion: Plotting data expanded to {n_rows_expanded} rows (from {n_rows_original} rows - factor of {round(expansion_factor)})",
+      "i" = "This may impact memory usage and plotting performance",
+      "i" = "Use {.arg arg} to specify a coarser evaluation grid"
+    ))
   }
 
   # Add row identifiers to match back to original data
@@ -481,11 +483,63 @@ convert_tf_ggplot <- function(tf_plot, layer_mapping = aes()) {
 
   # If e2 is a layer, check if it has tf aesthetics
   if (inherits(e2, "LayerInstance") || inherits(e2, "Layer")) {
+    # Reject geom_capellini: fundamentally incompatible (glyph-plot semantics)
+    if (inherits(e2$stat, "StatCapellini")) {
+      cli::cli_abort(c(
+        "{.fn geom_capellini} is not compatible with {.fn tf_ggplot}",
+        "i" = "{.fn geom_capellini} uses {.code x}/{.code y} for position and {.code tf} for sparkline shape",
+        "i" = "Use {.fn geom_capellini} with plain {.fn ggplot} instead"
+      ))
+    }
+
+    # Translate old-style tf geoms (geom_spaghetti, geom_meatballs, geom_errorband)
+    if (inherits(e2$stat, "StatTf") || inherits(e2$stat, "StatErrorband")) {
+      result <- translate_old_tf_layer(e2, e1)
+      e1 <- result$plot_obj
+      for (new_layer in result$layers) {
+        e1 <- e1 + new_layer
+      }
+      return(e1)
+    }
+
+    # Promote tf objects passed as constant params (e.g. geom_line(tf = tf_rgp(5)))
+    # into proper layer data + mapping so the normal tf-layer path can handle them.
+    .promoted_data <- NULL
+    .tf_aes_names <- c("tf", "tf_x", "tf_y", "tf_ymin", "tf_ymax")
+    .tf_in_params <- intersect(names(e2$aes_params), .tf_aes_names)
+    if (length(.tf_in_params) > 0) {
+      .tf_col_list <- list()
+      .new_mapping <- e2$mapping %||% aes()
+      for (.p in .tf_in_params) {
+        .val <- e2$aes_params[[.p]]
+        if (is_tf(.val)) {
+          .col <- paste0(".", .p, "_const_")
+          .tf_col_list[[.col]] <- .val
+          .new_mapping[[.p]] <- rlang::sym(.col)
+          e2$aes_params[[.p]] <- NULL
+        }
+      }
+      if (length(.tf_col_list) > 0) {
+        .promoted_data <- structure(
+          .tf_col_list,
+          class = "data.frame",
+          row.names = seq_len(length(.tf_col_list[[1]]))
+        )
+        # Do NOT set layer$data here (ggproto reference semantics would mutate
+        # the layer permanently, breaking subsequent finalize calls on the same
+        # tf_ggplot object). Store promoted data in layer_info instead.
+        e2$mapping <- .new_mapping
+      }
+    }
+
     # Extract layer mapping
     layer_mapping <- e2$mapping %||% aes()
 
     # Check if this layer or the plot has tf aesthetics
-    parsed_layer_aes <- parse_tf_aesthetics(layer_mapping, e1$data)
+    parsed_layer_aes <- parse_tf_aesthetics(
+      layer_mapping,
+      .promoted_data %||% e1$data
+    )
     parsed_plot_aes <- parse_tf_aesthetics(e1$mapping, e1$data)
 
     layer_has_tf <- length(parsed_layer_aes$tf_aes) > 0 ||
@@ -505,7 +559,10 @@ convert_tf_ggplot <- function(tf_plot, layer_mapping = aes()) {
         layer = e2,
         layer_mapping = layer_mapping,
         parsed_aes = parsed_layer_aes,
-        is_tf_layer = TRUE
+        is_tf_layer = TRUE,
+        # Promoted data from tf-param expansion lives here (not in layer$data)
+        # so that repeated finalize calls don't see mutated layer state.
+        promoted_data = .promoted_data
       )
       attr(e1, "all_layers") <- all_layers
 
@@ -591,464 +648,441 @@ convert_tf_ggplot <- function(tf_plot, layer_mapping = aes()) {
   return(regular_plot + e2)
 }
 
-#' Finalize tf_ggplot by processing all tf expressions and creating regular ggplot
+#' Finalize tf_ggplot by processing all tf layers independently
+#'
+#' Each layer is evaluated on its own natural argument grid (Option B architecture).
+#' The base ggplot has `data = NULL`; each layer receives its own long-format data.
 #'
 #' @param tf_plot A tf_ggplot object with accumulated layers
 #' @return Regular ggplot object with all layers properly transformed
 #' @keywords internal
 finalize_tf_ggplot <- function(tf_plot) {
-  # cat("DEBUG: Starting finalize_tf_ggplot\n")
-  # Collect all tf expressions from plot and layers
-  tf_expressions <- list()
-  scalar_tf_expressions <- list()
-  expression_counter <- attr(tf_plot, "tf_expression_counter")
+  user_arg <- attr(tf_plot, "tf_arg")
+  interpolate <- attr(tf_plot, "tf_interpolate") %||% TRUE
+  original_data <- tf_plot$data
+  all_layers <- attr(tf_plot, "all_layers") %||% list()
 
   # Parse plot-level aesthetics
-  parsed_plot_aes <- parse_tf_aesthetics(tf_plot$mapping, tf_plot$data)
+  parsed_plot_aes <- parse_tf_aesthetics(tf_plot$mapping, original_data)
 
-  # Add plot-level tf expressions
-  for (aes_name in names(parsed_plot_aes$tf_aes)) {
-    # Get the expression and determine naming strategy
-    expr <- rlang::quo_get_expr(parsed_plot_aes$tf_aes[[aes_name]])
-    expr_text <- rlang::expr_deparse(expr)
+  # Pre-evaluate all scalar tf aesthetics (e.g., color = tf_depth(f)) into enriched_data.
+  # These produce one scalar per original row and are replicated automatically via join.
+  enriched_data <- original_data
+  scalar_col_map <- list() # key -> col_name in enriched_data
 
-    # Use original column name for simple references, generated name for complex expressions
-    if (is.symbol(expr)) {
-      expr_id <- as.character(expr)
-    } else {
-      expression_counter <- expression_counter + 1
-      expr_id <- paste0(".tf_expr_", expression_counter)
-    }
-
-    tf_expressions[[expr_id]] <- list(
-      quo = parsed_plot_aes$tf_aes[[aes_name]],
-      target_aes = aes_name,
-      source = "plot",
-      expr_text = expr_text
-    )
-  }
-
-  # Add plot-level scalar tf expressions
-  for (aes_name in names(parsed_plot_aes$scalar_tf_aes)) {
-    # Get the expression and use it for meaningful naming
-    expr <- rlang::quo_get_expr(parsed_plot_aes$scalar_tf_aes[[aes_name]])
-    expr_text <- rlang::expr_deparse(expr)
-
-    # Create meaningful column name using the same approach as tf expressions
-    safe_name <- make_safe_column_name(
-      expr_text,
-      existing_names = names(tf_plot$data)
-    )
-
-    scalar_tf_expressions[[safe_name]] <- list(
-      quo = parsed_plot_aes$scalar_tf_aes[[aes_name]],
-      target_aes = aes_name,
-      source = "plot",
-      expr_text = expr_text
-    )
-  }
-
-  # Add layer-level tf expressions
-  all_layers <- attr(tf_plot, "all_layers")
-  tf_layers <- all_layers[sapply(all_layers, function(x) x$is_tf_layer)]
-  for (i in seq_along(tf_layers)) {
-    layer_info <- tf_layers[[i]]
-    parsed_aes <- layer_info$parsed_aes
-
-    # Add layer tf expressions
-    for (aes_name in names(parsed_aes$tf_aes)) {
-      # Get the expression and determine naming strategy
-      expr <- rlang::quo_get_expr(parsed_aes$tf_aes[[aes_name]])
-      expr_text <- rlang::expr_deparse(expr)
-
-      # Use original column name for simple references, generated name for complex expressions
-      if (is.symbol(expr)) {
-        expr_id <- as.character(expr)
-      } else {
-        expression_counter <- expression_counter + 1
-        expr_id <- paste0(".tf_expr_", expression_counter)
-      }
-
-      # Add layer suffix to avoid conflicts between plot and layer expressions
-      if (expr_id %in% names(tf_expressions)) {
-        if (is.symbol(expr)) {
-          expr_id <- paste0(expr_id, "_layer_", i)
-        }
-      }
-
-      tf_expressions[[expr_id]] <- list(
-        quo = parsed_aes$tf_aes[[aes_name]],
-        target_aes = aes_name,
-        source = "layer",
-        layer_index = i,
-        expr_text = expr_text
-      )
-    }
-
-    # Add layer scalar tf expressions
-    for (aes_name in names(parsed_aes$scalar_tf_aes)) {
-      # Get the expression and use it for meaningful naming
-      expr <- rlang::quo_get_expr(parsed_aes$scalar_tf_aes[[aes_name]])
-      expr_text <- rlang::expr_deparse(expr)
-
-      # Create meaningful column name using the same approach as tf expressions
-      safe_name <- make_safe_column_name(
-        expr_text,
-        existing_names = c(names(tf_plot$data), names(scalar_tf_expressions))
-      )
-
-      # If conflicts with existing expressions, add layer suffix
-      if (safe_name %in% names(scalar_tf_expressions)) {
-        safe_name <- paste0(safe_name, "_layer_", i)
-      }
-
-      scalar_tf_expressions[[safe_name]] <- list(
-        quo = parsed_aes$scalar_tf_aes[[aes_name]],
-        target_aes = aes_name,
-        source = "layer",
-        layer_index = i,
-        expr_text = expr_text
-      )
-    }
-  }
-
-  # Transform data with all tf expressions
-  transformed_data <- tf_plot$data
-
-  # Create mapping from expr_id to safe column names for later reference
-  expr_id_to_safe_name <- list()
-
-  # Evaluate scalar tf expressions first
-  for (expr_id in names(scalar_tf_expressions)) {
-    expr_info <- scalar_tf_expressions[[expr_id]]
-    tryCatch(
-      {
-        result <- rlang::eval_tidy(expr_info$quo, data = transformed_data)
-        # Use the meaningful column name (expr_id is now the safe expression text)
-        transformed_data[[expr_id]] <- result
-      },
-      error = function(e) {
-        expr_text <- expr_info$expr_text %||% "unknown expression"
+  n_data_rows <- nrow(enriched_data)
+  eval_scalar_tf_aes <- function(aes_name, quo) {
+    result <- tryCatch(
+      rlang::eval_tidy(quo, data = enriched_data),
+      error = function(e)
         cli::cli_abort(
-          "Error evaluating scalar tf aesthetic {.code {expr_text}}: {e$message}"
+          "Error evaluating scalar tf aesthetic {.code {aes_name}}: {e$message}"
         )
-      }
     )
+    if (!length(result) %in% c(1L, n_data_rows)) {
+      cli::cli_abort(c(
+        "Scalar tf aesthetic {.code {aes_name}} returned {length(result)} value(s)",
+        "i" = "Expected 1 or {n_data_rows} (one per row of plot data)"
+      ))
+    }
+    result
   }
 
-  # Evaluate and transform tf expressions
-  if (length(tf_expressions) > 0) {
-    # Process each tf expression
-    for (expr_id in names(tf_expressions)) {
-      expr_info <- tf_expressions[[expr_id]]
-
-      # Evaluate the expression
-      tf_expr <- rlang::quo_get_expr(expr_info$quo)
-      if (is.symbol(tf_expr)) {
-        # Simple column reference
-        col_name <- as.character(tf_expr)
-        if (!col_name %in% names(transformed_data)) {
-          cli::cli_abort("Column {.val {col_name}} not found in data")
-        }
-        tf_obj <- transformed_data[[col_name]]
-      } else {
-        # Complex expression - evaluate it
-        tryCatch(
-          {
-            tf_obj <- rlang::eval_tidy(expr_info$quo, data = transformed_data)
-          },
-          error = function(e) {
-            cli::cli_abort("Error evaluating tf expression: {e$message}")
-          }
-        )
-      }
-
-      if (!is_tf(tf_obj)) {
-        cli::cli_abort("tf aesthetic must evaluate to a tf object")
-      }
-
-      # Store the evaluated tf object
-      transformed_data[[expr_id]] <- tf_obj
-    }
-
-    # Transform data using the first tf expression to get the structure
-    first_tf_id <- names(tf_expressions)[1]
-    first_tf_obj <- transformed_data[[first_tf_id]]
-
-    # Determine evaluation grid
-    arg <- attr(tf_plot, "tf_arg")
-    if (is.null(arg)) {
-      first_tf_arg <- tf_arg(first_tf_obj)
-      if (is.list(first_tf_arg)) {
-        arg <- first_tf_arg[[1]]
-      } else {
-        arg <- first_tf_arg
-      }
-    }
-
-    # Transform using tf_unnest for the first expression
-    temp_data <- transformed_data
-    temp_data$.row_id <- seq_len(nrow(transformed_data))
-
-    # Use first tf object for the base transformation
-    tf_long <- tf_unnest(
-      first_tf_obj,
-      arg = arg,
-      interpolate = attr(tf_plot, "tf_interpolate")
+  for (aes_name in names(parsed_plot_aes$scalar_tf_aes)) {
+    quo <- parsed_plot_aes$scalar_tf_aes[[aes_name]]
+    result <- eval_scalar_tf_aes(aes_name, quo)
+    col_nm <- make_safe_column_name(
+      paste0(".s.", aes_name),
+      names(enriched_data)
     )
-    tf_long$.row_id <- rep(seq_len(nrow(transformed_data)), each = length(arg))
-
-    # Check for large data expansion and warn
-    n_rows_original <- nrow(transformed_data)
-    n_rows_expanded <- nrow(tf_long)
-    expansion_factor <- n_rows_expanded / n_rows_original
-
-    if (n_rows_expanded > 500 || expansion_factor > 20) {
-      cli::cli_warn(
-        "Large data expansion: {n_rows_original} rows expanded to {n_rows_expanded} rows (factor of {round(expansion_factor)}). This may impact memory usage and performance."
-      )
+    enriched_data[[col_nm]] <- result
+    scalar_col_map[[aes_name]] <- col_nm
+  }
+  for (i in seq_along(all_layers)) {
+    if (!all_layers[[i]]$is_tf_layer) next
+    for (aes_name in names(all_layers[[i]]$parsed_aes$scalar_tf_aes)) {
+      key <- paste0(aes_name, ".layer.", i)
+      quo <- all_layers[[i]]$parsed_aes$scalar_tf_aes[[aes_name]]
+      result <- eval_scalar_tf_aes(aes_name, quo)
+      col_nm <- make_safe_column_name(paste0(".s.", key), names(enriched_data))
+      enriched_data[[col_nm]] <- result
+      scalar_col_map[[key]] <- col_nm
     }
-
-    # Filter out NA values from tf transformation
-    # This handles cases where tf objects contain NA functions
-    value_col_name <- if ("value" %in% names(tf_long)) "value" else "data"
-    if (value_col_name %in% names(tf_long)) {
-      tf_long <- tf_long[!is.na(tf_long[[value_col_name]]), ]
-    }
-
-    # cat("DEBUG: tf_long columns after tf_unnest:", paste(names(tf_long), collapse=", "), "\n")
-
-    # Rename columns for first expression using expression text for meaningful labels
-    first_expr_info <- tf_expressions[[first_tf_id]]
-    expr_text <- first_expr_info$expr_text
-
-    # Exclude tf columns that will be removed from conflict check
-    original_expr <- rlang::quo_get_expr(first_expr_info$quo)
-    existing_names_filtered <- names(transformed_data)
-    if (is.symbol(original_expr)) {
-      original_col_name <- as.character(original_expr)
-      existing_names_filtered <- setdiff(
-        existing_names_filtered,
-        original_col_name
-      )
-    }
-
-    safe_name <- make_safe_column_name(
-      expr_text,
-      existing_names = existing_names_filtered
-    )
-
-    # Store the mapping for later use
-    expr_id_to_safe_name[[first_tf_id]] <- safe_name
-
-    arg_col <- paste0(safe_name, ".arg")
-    value_col <- safe_name
-    id_col <- paste0(safe_name, ".id")
-
-    # cat("DEBUG: first_tf_id =", first_tf_id, "\n")
-    # cat("DEBUG: Renaming columns to:", arg_col, value_col, id_col, "\n")
-
-    if ("arg" %in% names(tf_long))
-      names(tf_long)[names(tf_long) == "arg"] <- arg_col
-    if ("data" %in% names(tf_long)) {
-      names(tf_long)[names(tf_long) == "data"] <- value_col
-    } else if ("value" %in% names(tf_long)) {
-      names(tf_long)[names(tf_long) == "value"] <- value_col
-    }
-    if ("id" %in% names(tf_long))
-      names(tf_long)[names(tf_long) == "id"] <- id_col
-
-    # Add other tf expressions as additional columns
-    if (length(tf_expressions) > 1) {
-      # cat("DEBUG: Adding", length(tf_expressions) - 1, "additional tf expressions\n")
-      for (i in 2:length(tf_expressions)) {
-        expr_id <- names(tf_expressions)[i]
-        expr_info <- tf_expressions[[expr_id]]
-        tf_obj <- transformed_data[[expr_id]]
-
-        # Evaluate this tf object on the same grid
-        tf_vals <- tf_evaluate(tf_obj, arg = arg)
-
-        # Use expression text for meaningful column names
-        expr_text_i <- expr_info$expr_text
-
-        # Exclude tf columns that will be removed from conflict check
-        original_expr_i <- rlang::quo_get_expr(expr_info$quo)
-        existing_names_filtered_i <- c(names(tf_long), names(transformed_data))
-        if (is.symbol(original_expr_i)) {
-          original_col_name_i <- as.character(original_expr_i)
-          existing_names_filtered_i <- setdiff(
-            existing_names_filtered_i,
-            original_col_name_i
-          )
-        }
-
-        safe_name_i <- make_safe_column_name(
-          expr_text_i,
-          existing_names = existing_names_filtered_i
-        )
-
-        # Store the mapping for later use
-        expr_id_to_safe_name[[expr_id]] <- safe_name_i
-
-        value_col_i <- safe_name_i
-        id_col_i <- paste0(safe_name_i, ".id")
-        arg_col_i <- paste0(safe_name_i, ".arg")
-
-        # Create value and id columns
-        tf_long[[value_col_i]] <- unlist(tf_vals)
-        tf_long[[id_col_i]] <- rep(seq_along(tf_vals), each = length(arg))
-        # Add arg column for this expression too
-        tf_long[[arg_col_i]] <- rep(arg, length(tf_vals))
-      }
-    }
-
-    # Remove original tf columns from temp_data before join to avoid conflicts
-    temp_data_clean <- temp_data
-    for (expr_id in names(tf_expressions)) {
-      expr_info <- tf_expressions[[expr_id]]
-      original_expr <- rlang::quo_get_expr(expr_info$quo)
-
-      # Remove simple column references from temp_data to avoid join conflicts
-      if (is.symbol(original_expr)) {
-        original_col_name <- as.character(original_expr)
-        if (original_col_name %in% names(temp_data_clean)) {
-          temp_data_clean <- select(temp_data_clean, -!!sym(original_col_name))
-        }
-      }
-
-      # Also remove temporary expression columns if they exist
-      if (
-        expr_id %in% names(temp_data_clean) && grepl("^\\.tf_expr_", expr_id)
-      ) {
-        temp_data_clean <- select(temp_data_clean, -!!sym(expr_id))
-      }
-    }
-
-    # Join with cleaned original data
-    transformed_data <- tf_long |>
-      left_join(temp_data_clean, by = ".row_id") |>
-      select(-.row_id)
   }
 
-  # Create regular ggplot with base mapping (non-tf aesthetics)
+  # Base mapping: regular plot-level aes + scalar tf aes remapped to column names.
+  # Does NOT include x/y/group from tf aes — those are per-layer.
   base_mapping <- parsed_plot_aes$regular_aes
-
-  # Add scalar tf aesthetics to base mapping
-  for (expr_id in names(scalar_tf_expressions)) {
-    expr_info <- scalar_tf_expressions[[expr_id]]
-    if (expr_info$source == "plot") {
-      base_mapping[[expr_info$target_aes]] <- sym(expr_id)
-    }
+  for (aes_name in names(parsed_plot_aes$scalar_tf_aes)) {
+    base_mapping[[aes_name]] <- rlang::sym(scalar_col_map[[aes_name]])
   }
 
-  # Add tf aesthetics to base mapping (only if from plot level)
-  for (expr_id in names(tf_expressions)) {
-    expr_info <- tf_expressions[[expr_id]]
-    if (expr_info$source == "plot") {
-      safe_name <- expr_id_to_safe_name[[expr_id]]
-      if (expr_info$target_aes == "tf" || expr_info$target_aes == "tf_y") {
-        base_mapping$y <- rlang::sym(safe_name)
-        base_mapping$x <- rlang::sym(paste0(safe_name, ".arg"))
-        base_mapping$group <- rlang::sym(paste0(safe_name, ".id"))
-      } else if (expr_info$target_aes == "tf_x") {
-        base_mapping$x <- rlang::sym(safe_name)
-        if (is.null(base_mapping$group)) {
-          base_mapping$group <- rlang::sym(paste0(safe_name, ".id"))
-        }
-      } else if (expr_info$target_aes == "tf_ymin") {
-        base_mapping$ymin <- rlang::sym(safe_name)
-        base_mapping$x <- rlang::sym(paste0(safe_name, ".arg"))
-        base_mapping$group <- rlang::sym(paste0(safe_name, ".id"))
-      } else if (expr_info$target_aes == "tf_ymax") {
-        base_mapping$ymax <- rlang::sym(safe_name)
-        base_mapping$x <- rlang::sym(paste0(safe_name, ".arg"))
-        if (is.null(base_mapping$group)) {
-          base_mapping$group <- rlang::sym(paste0(safe_name, ".id"))
-        }
-      }
-    }
-  }
+  # Create base plot with data = NULL; each layer brings its own data
+  regular_plot <- ggplot(data = NULL, mapping = base_mapping)
 
-  # Create the base ggplot
-  regular_plot <- ggplot(data = transformed_data, mapping = base_mapping)
+  for (i in seq_along(all_layers)) {
+    layer_info <- all_layers[[i]]
+    layer <- layer_info$layer
 
-  # No need for manual label setting - ggplot2 will use column names automatically
-
-  # Process all layers in order (tf and regular)
-  all_layers <- attr(tf_plot, "all_layers")
-  tf_layer_index <- 0 # Track tf layer indices for expression matching
-
-  for (layer_info in all_layers) {
     if (layer_info$is_tf_layer) {
-      # This is a tf layer - increment tf layer index and process
-      tf_layer_index <- tf_layer_index + 1
-      layer <- layer_info$layer
-      parsed_aes <- layer_info$parsed_aes
-
-      # Create new mapping for this layer
-      new_mapping <- parsed_aes$regular_aes
-
-      # Add scalar tf aesthetics
-      for (expr_id in names(scalar_tf_expressions)) {
-        expr_info <- scalar_tf_expressions[[expr_id]]
-        if (
-          expr_info$source == "layer" && expr_info$layer_index == tf_layer_index
-        ) {
-          new_mapping[[expr_info$target_aes]] <- sym(expr_id)
-        }
+      # Use promoted data (from tf-param expansion) when present;
+      # fall back to plot-level enriched_data.  Never use layer$data here —
+      # ggproto reference semantics mean layer$data gets mutated by a previous
+      # finalize call, breaking repeated ggplot_build() calls on the same object.
+      effective_data <- layer_info$promoted_data %||% enriched_data
+      result <- build_tf_layer_data(
+        layer_info = layer_info,
+        plot_tf_aes = parsed_plot_aes$tf_aes,
+        scalar_col_map = scalar_col_map,
+        layer_idx = i,
+        enriched_data = effective_data,
+        user_arg = user_arg,
+        interpolate = interpolate
+      )
+      if (!is.null(result)) {
+        layer$data <- result$long_data
+        layer$mapping <- result$new_mapping
+      } else if (is.null(layer$data)) {
+        layer$data <- enriched_data
       }
-
-      # Add tf aesthetics
-      for (expr_id in names(tf_expressions)) {
-        expr_info <- tf_expressions[[expr_id]]
-        if (
-          expr_info$source == "layer" && expr_info$layer_index == tf_layer_index
-        ) {
-          safe_name <- expr_id_to_safe_name[[expr_id]]
-          if (expr_info$target_aes == "tf" || expr_info$target_aes == "tf_y") {
-            new_mapping$y <- rlang::sym(safe_name)
-            new_mapping$x <- rlang::sym(paste0(safe_name, ".arg"))
-            new_mapping$group <- rlang::sym(paste0(safe_name, ".id"))
-          } else if (expr_info$target_aes == "tf_x") {
-            new_mapping$x <- rlang::sym(safe_name)
-            if (is.null(new_mapping$group)) {
-              new_mapping$group <- rlang::sym(paste0(safe_name, ".id"))
-            }
-          } else if (expr_info$target_aes == "tf_ymin") {
-            new_mapping$ymin <- rlang::sym(safe_name)
-            new_mapping$x <- rlang::sym(paste0(safe_name, ".arg"))
-            new_mapping$group <- rlang::sym(paste0(safe_name, ".id"))
-          } else if (expr_info$target_aes == "tf_ymax") {
-            new_mapping$ymax <- rlang::sym(safe_name)
-            new_mapping$x <- rlang::sym(paste0(safe_name, ".arg"))
-            if (is.null(new_mapping$group)) {
-              new_mapping$group <- rlang::sym(paste0(safe_name, ".id"))
-            }
-          }
-        }
-      }
-
-      # Update layer mapping
-      layer$mapping <- new_mapping
-
-      # Add layer to plot
-      regular_plot <- regular_plot + layer
-    } else {
-      # This is a regular layer - add it directly
-      regular_plot <- regular_plot + layer_info$layer
+    } else if (is.null(layer$data)) {
+      layer$data <- enriched_data
     }
+
+    regular_plot <- regular_plot + layer
   }
 
-  # Copy over plot properties
   regular_plot$theme <- tf_plot$theme
   regular_plot$coordinates <- tf_plot$coordinates
   regular_plot$facet <- tf_plot$facet
   regular_plot$labels <- tf_plot$labels
 
-  # Labels are automatically derived from column names - no manual override needed
+  regular_plot
+}
 
-  return(regular_plot)
+#' Build long-format data and new mapping for a single tf layer
+#'
+#' Evaluates the layer's tf aesthetics independently on their own natural grid
+#' (or the user-specified grid). Called by [finalize_tf_ggplot()] per layer.
+#'
+#' @param layer_info List from `all_layers` with `layer`, `parsed_aes`, `is_tf_layer`
+#' @param plot_tf_aes tf aesthetics from the plot level (used when `inherit.aes = TRUE`)
+#' @param scalar_col_map Named list: key -> column name in enriched_data
+#' @param layer_idx Integer index of this layer (for keying layer-level scalar aes)
+#' @param enriched_data Data frame with original data + pre-evaluated scalar tf columns
+#' @param user_arg Optional evaluation grid (overrides natural grid)
+#' @param interpolate Whether to interpolate tf objects to `arg`
+#' @return `NULL` when no effective tf aes, otherwise `list(long_data, new_mapping)`
+#' @keywords internal
+build_tf_layer_data <- function(
+  layer_info,
+  plot_tf_aes,
+  scalar_col_map,
+  layer_idx,
+  enriched_data,
+  user_arg,
+  interpolate
+) {
+  layer <- layer_info$layer
+  parsed_aes <- layer_info$parsed_aes
+
+  # Effective tf aes: plot-level + layer-level, with layer overriding (respects inherit.aes)
+  effective_tf_aes <- if (isTRUE(layer$inherit.aes)) {
+    c(
+      plot_tf_aes[!names(plot_tf_aes) %in% names(parsed_aes$tf_aes)],
+      parsed_aes$tf_aes
+    )
+  } else {
+    parsed_aes$tf_aes
+  }
+
+  if (length(effective_tf_aes) == 0) {
+    return(NULL)
+  }
+
+  # Evaluate all tf expressions
+  tf_objects <- vector("list", length(effective_tf_aes))
+  names(tf_objects) <- names(effective_tf_aes)
+  for (aes_name in names(effective_tf_aes)) {
+    quo <- effective_tf_aes[[aes_name]]
+    tf_obj <- tryCatch(
+      rlang::eval_tidy(quo, data = enriched_data),
+      error = function(e) {
+        expr_text <- paste(
+          rlang::expr_deparse(rlang::quo_get_expr(quo)),
+          collapse = ""
+        )
+        cli::cli_abort(
+          "Error evaluating tf aesthetic {.code {expr_text}}: {e$message}"
+        )
+      }
+    )
+    if (!is_tf(tf_obj)) {
+      expr_text <- paste(
+        rlang::expr_deparse(rlang::quo_get_expr(quo)),
+        collapse = ""
+      )
+      cli::cli_abort(
+        "tf aesthetic {.code {aes_name} = {expr_text}} must evaluate to a tf object, not {.obj_type_friendly {tf_obj}}"
+      )
+    }
+    tf_objects[[aes_name]] <- tf_obj
+  }
+
+  # This layer's evaluation grid: user-specified or natural grid of first tf object
+  arg <- user_arg
+  if (is.null(arg)) {
+    first_arg <- tf_arg(tf_objects[[1]])
+    arg <- if (is.list(first_arg)) first_arg[[1]] else first_arg
+  }
+
+  # If there is no plot-level data (e.g. tf_ggplot() + geom_line(aes(tf = tf_rgp(5)))),
+  # synthesise a one-row-per-function data frame so joins and indexing work correctly.
+  n_funcs <- length(tf_objects[[1]])
+  .n_enriched <- nrow(enriched_data) # NULL for NULL / waiver / non-data-frames
+  if (is.null(.n_enriched) || .n_enriched == 0) {
+    enriched_data <- structure(
+      list(),
+      class = "data.frame",
+      row.names = seq_len(n_funcs)
+    )
+  }
+
+  n_rows <- nrow(enriched_data)
+  n_grid <- length(arg)
+  if (as.numeric(n_rows) * n_grid > 1e5) {
+    cli::cli_inform(c(
+      "Large data expansion: {n_rows} rows \u00d7 {n_grid} grid points = {n_rows * n_grid} rows",
+      "i" = "This may impact memory usage and plotting performance",
+      "i" = "Use {.arg arg} in {.fn tf_ggplot} to specify a coarser evaluation grid"
+    ))
+  }
+
+  # Unnest first tf aesthetic to long format
+  first_aes_name <- names(tf_objects)[1]
+  first_tf <- tf_objects[[1]]
+
+  # Use expression text for column names (produces meaningful axis labels).
+  # For simple column refs like aes(tf = curves), val_col = "curves".
+  # For complex expressions like aes(tf = func1 + func2), val_col = "func1 + func2".
+  first_quo <- effective_tf_aes[[first_aes_name]]
+  first_expr <- rlang::quo_get_expr(first_quo)
+  expr_text <- paste(rlang::expr_deparse(first_expr), collapse = "")
+  # Exclude the source column name from conflict check (it will be removed before join)
+  excl <- if (is.symbol(first_expr)) as.character(first_expr) else character(0)
+  safe_name <- make_safe_column_name(
+    expr_text,
+    existing_names = setdiff(names(enriched_data), excl)
+  )
+  val_col <- safe_name
+  arg_col <- paste0(safe_name, ".arg")
+  id_col <- paste0(safe_name, ".id")
+
+  tf_long <- suppressMessages(tf_unnest(
+    first_tf,
+    arg = arg,
+    interpolate = interpolate
+  ))
+  # tf_long has columns: id (ordered factor), arg, value
+  # Rename immediately to avoid conflicts with user data columns of the same name
+  names(tf_long)[names(tf_long) == "id"] <- id_col
+  names(tf_long)[names(tf_long) == "arg"] <- arg_col
+  names(tf_long)[names(tf_long) == "value"] <- val_col
+
+  tf_long$.row_id_ <- rep(seq_len(n_rows), each = n_grid)
+  tf_long <- tf_long[!is.na(tf_long[[val_col]]), ]
+
+  # Join with enriched_data to replicate covariates + scalar columns
+  work_data <- enriched_data
+  work_data$.row_id_ <- seq_len(n_rows)
+  # Remove original tf columns to avoid conflicts during join
+  for (aes_name in names(effective_tf_aes)) {
+    expr <- rlang::quo_get_expr(effective_tf_aes[[aes_name]])
+    if (is.symbol(expr)) {
+      col_nm <- as.character(expr)
+      if (col_nm %in% names(work_data)) work_data[[col_nm]] <- NULL
+    }
+  }
+
+  long_data <- left_join(tf_long, work_data, by = ".row_id_") |>
+    select(-.row_id_)
+
+  # Build the layer mapping
+  new_mapping <- parsed_aes$regular_aes
+
+  for (i in seq_along(tf_objects)) {
+    aes_name_i <- names(tf_objects)[i]
+    if (i == 1) {
+      v_col <- val_col
+      a_col <- arg_col
+      g_col <- id_col
+    } else {
+      # Evaluate additional tf aes on the FULL arg grid (not NA-filtered subset).
+      # Using curr_arg (from long_data after NA filtering) would silently drop points
+      # if the primary tf had NAs, misaligning the secondary aesthetic.
+      tf_vals <- tf_evaluate(tf_objects[[i]], arg = arg)
+      n_funcs <- length(tf_vals)
+      # Use expression text for meaningful column names
+      quo_i <- effective_tf_aes[[aes_name_i]]
+      expr_i <- rlang::quo_get_expr(quo_i)
+      expr_text_i <- paste(rlang::expr_deparse(expr_i), collapse = "")
+      excl_i <- if (is.symbol(expr_i)) as.character(expr_i) else character(0)
+      safe_i <- make_safe_column_name(
+        expr_text_i,
+        existing_names = setdiff(
+          c(names(long_data), names(enriched_data)),
+          excl_i
+        )
+      )
+      v_col <- safe_i
+      a_col <- paste0(safe_i, ".arg")
+      g_col <- paste0(safe_i, ".id")
+      # Build full secondary long-form, then left-join on (id, arg) to align with primary
+      sec_long <- data.frame(
+        .row_id_i_ = rep(seq_len(n_funcs), each = length(arg)),
+        .arg_i_ = rep(arg, n_funcs),
+        .val_i_ = unlist(tf_vals)
+      )
+      # Attach secondary values to long_data by matching row-id and arg position
+      long_data[[v_col]] <- sec_long$.val_i_[
+        match(
+          paste(as.integer(long_data[[id_col]]), long_data[[arg_col]]),
+          paste(sec_long$.row_id_i_, sec_long$.arg_i_)
+        )
+      ]
+      long_data[[g_col]] <- long_data[[id_col]]
+      long_data[[a_col]] <- long_data[[arg_col]]
+    }
+    new_mapping <- add_tf_aes_to_mapping(
+      new_mapping,
+      aes_name_i,
+      v_col,
+      a_col,
+      g_col
+    )
+  }
+
+  # Layer-level scalar tf aes: column is already in long_data (joined from enriched_data)
+  for (aes_name in names(parsed_aes$scalar_tf_aes)) {
+    key <- paste0(aes_name, ".layer.", layer_idx)
+    if (key %in% names(scalar_col_map)) {
+      new_mapping[[aes_name]] <- rlang::sym(scalar_col_map[[key]])
+    }
+  }
+
+  list(long_data = long_data, new_mapping = new_mapping)
+}
+
+#' Add a tf aesthetic to an ggplot2 mapping object
+#' @keywords internal
+add_tf_aes_to_mapping <- function(mapping, aes_name, val_col, arg_col, id_col) {
+  if (aes_name %in% c("tf", "tf_y")) {
+    mapping$y <- rlang::sym(val_col)
+    mapping$x <- rlang::sym(arg_col)
+    mapping$group <- rlang::sym(id_col)
+  } else if (aes_name == "tf_x") {
+    mapping$x <- rlang::sym(val_col)
+    if (is.null(mapping$group)) mapping$group <- rlang::sym(id_col)
+  } else if (aes_name == "tf_ymin") {
+    mapping$ymin <- rlang::sym(val_col)
+    if (is.null(mapping$x)) mapping$x <- rlang::sym(arg_col)
+    if (is.null(mapping$group)) mapping$group <- rlang::sym(id_col)
+  } else if (aes_name == "tf_ymax") {
+    mapping$ymax <- rlang::sym(val_col)
+    if (is.null(mapping$x)) mapping$x <- rlang::sym(arg_col)
+    if (is.null(mapping$group)) mapping$group <- rlang::sym(id_col)
+  }
+  mapping
+}
+
+# Translate old-style tf geoms to tf_ggplot-compatible layers ----------------
+
+#' Translate a geom_spaghetti/geom_meatballs/geom_errorband layer for tf_ggplot
+#'
+#' Remaps old-style y/ymin/ymax tf aesthetics to tf/tf_ymin/tf_ymax and
+#' substitutes the appropriate standard ggplot2 geom.
+#'
+#' @param layer A LayerInstance using StatTf or StatErrorband
+#' @param e1 The tf_ggplot object (may be modified to clean up plot-level y)
+#' @return A list with `plot_obj` (possibly modified e1) and `layers` (list of
+#'   new layers to add)
+#' @keywords internal
+translate_old_tf_layer <- function(layer, e1) {
+  layer_mapping <- layer$mapping %||% aes()
+  plot_mapping <- e1$mapping %||% aes()
+  extra_params <- layer$aes_params
+
+  make_layer <- function(geom_fn, mapping) {
+    do.call(
+      geom_fn,
+      c(
+        list(
+          mapping = mapping,
+          position = layer$position,
+          show.legend = layer$show.legend,
+          inherit.aes = layer$inherit.aes
+        ),
+        extra_params
+      )
+    )
+  }
+
+  if (inherits(layer$stat, "StatTf")) {
+    if ("y" %in% names(layer_mapping)) {
+      new_mapping <- layer_mapping
+      new_mapping[["tf"]] <- new_mapping[["y"]]
+      new_mapping[["y"]] <- NULL
+    } else if ("y" %in% names(plot_mapping)) {
+      new_mapping <- layer_mapping
+      new_mapping[["tf"]] <- plot_mapping[["y"]]
+      e1$mapping[["y"]] <- NULL # remove from plot mapping to avoid conflicts
+    } else {
+      cli::cli_warn(
+        "Cannot translate {.fn geom_spaghetti}/{.fn geom_meatballs}: no {.code y} aesthetic found"
+      )
+      return(list(plot_obj = e1, layers = list(layer)))
+    }
+
+    cli::cli_inform(
+      c(
+        "i" = "{.fn geom_spaghetti} layer automatically translated for {.fn tf_ggplot}",
+        "*" = "Use {.fn geom_line} with {.code aes(tf = f)} directly to silence this"
+      ),
+      .frequency = "regularly",
+      .frequency_id = "translate_spaghetti"
+    )
+
+    layers <- if (inherits(layer$geom, "GeomMeatball")) {
+      list(
+        make_layer(geom_line, new_mapping),
+        make_layer(geom_point, new_mapping)
+      )
+    } else {
+      list(make_layer(geom_line, new_mapping))
+    }
+    list(plot_obj = e1, layers = layers)
+  } else if (inherits(layer$stat, "StatErrorband")) {
+    new_mapping <- layer_mapping
+    if ("ymin" %in% names(new_mapping)) {
+      new_mapping[["tf_ymin"]] <- new_mapping[["ymin"]]
+      new_mapping[["ymin"]] <- NULL
+    }
+    if ("ymax" %in% names(new_mapping)) {
+      new_mapping[["tf_ymax"]] <- new_mapping[["ymax"]]
+      new_mapping[["ymax"]] <- NULL
+    }
+
+    cli::cli_inform(
+      c(
+        "i" = "{.fn geom_errorband} layer automatically translated for {.fn tf_ggplot}",
+        "*" = "Use {.fn geom_ribbon} with {.code aes(tf_ymin = lo, tf_ymax = hi)} directly to silence this"
+      ),
+      .frequency = "regularly",
+      .frequency_id = "translate_errorband"
+    )
+
+    list(plot_obj = e1, layers = list(make_layer(geom_ribbon, new_mapping)))
+  }
 }
 
 # Helper function to check if mapping is an aes object
@@ -1119,5 +1153,25 @@ ggplot_build.tf_ggplot <- function(plot) {
     # No tf aesthetics, build as regular ggplot
     class(plot) <- setdiff(class(plot), "tf_ggplot")
     return(ggplot_build(plot))
+  }
+}
+
+# Register tf aesthetics with ggplot2 geoms so that geom_line(aes(tf = ...))
+# etc. do not trigger "Ignoring unknown aesthetics" warnings.
+.onLoad <- function(libname, pkgname) {
+  tf_aes <- c("tf", "tf_x", "tf_y", "tf_ymin", "tf_ymax")
+  geoms <- list(
+    ggplot2::GeomLine,
+    ggplot2::GeomPath,
+    ggplot2::GeomPoint,
+    ggplot2::GeomRibbon
+  )
+  for (G in geoms) {
+    old_fn <- G$aesthetics
+    G$aesthetics <- local({
+      old <- old_fn
+      extra <- tf_aes
+      function(self) c(old(), extra)
+    })
   }
 }
