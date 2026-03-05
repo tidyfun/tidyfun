@@ -40,7 +40,7 @@
 #' }
 #' @name ggcapellini
 #' @family tidyfun visualization
-#' @seealso [GGally::glyphs]
+#' @seealso [GGally::glyphs()]
 NULL
 
 #' @export
@@ -65,7 +65,7 @@ StatCapellini <- ggplot2::ggproto("StatCapellini", ggplot2::Stat,
   compute_layer = function(self, data, params, layout) {
     if (!is_tf(data$tf)) {
       cli::cli_abort(
-        "tf must be a tf object, not {.obj_type_friendly {data$tf}}"
+        "{.arg tf} must be a {.cls tf} object, not {.obj_type_friendly {data$tf}}."
       )
     }
     tf_eval <- suppressMessages(
@@ -136,7 +136,7 @@ stat_capellini <- function(mapping = NULL, data = NULL, geom = "capellini",
 #' @param box.alpha  aesthetic property of the box
 #' @param line.colour aesthetic property of the reference line
 #' @param line.linetype aesthetic property of the reference line
-#' @param line.linewidth aesthetic property of of the reference line
+#' @param line.linewidth aesthetic property of the reference line
 #' @param line.alpha aesthetic property of the reference line
 geom_capellini <-
   function(mapping = NULL, data = NULL, stat = "capellini",

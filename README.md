@@ -8,6 +8,8 @@
 [![Lifecycle:
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 [![R-CMD-check](https://github.com/tidyfun/tidyfun/actions/workflows/full-check.yaml/badge.svg)](https://github.com/tidyfun/tidyfun/actions/workflows/full-check.yaml)
+[![R-universe
+version](https://tidyfun.r-universe.dev/tidyfun/badges/version)](https://tidyfun.r-universe.dev/tidyfun)
 [![MIT
 license](http://img.shields.io/badge/license-MIT-brightgreen.svg)](https://opensource.org/licenses/MIT)
 [![codecov.io](https://codecov.io/github/tidyfun/tidyfun/coverage.svg?branch=master)](https://codecov.io/github/tidyfun/tidyfun/branch/master)
@@ -79,7 +81,7 @@ dti_df |>
   facet_grid(~sex)
 ```
 
-<img src="man/figures/README-dti-ggplot-example-1.png" width="100%" />
+<img src="man/figures/README-dti-ggplot-example-1.png" alt="" width="100%" />
 
 ## What does it do?
 
@@ -128,7 +130,7 @@ conversions.
 
 [See
 here](https://tidyfun.github.io/tidyfun/articles/x02_Conversion.html)
-details on getting data into (and out of) the `tf` format.
+for details on getting data into (and out of) the `tf` format.
 
 #### `tidyverse` verbs for dealing with functional data inside data frames
 
@@ -166,5 +168,5 @@ vignette.
 
 ------------------------------------------------------------------------
 
-Found a bug? Got a question? Missing some functionality?  
+Found a bug? Got a question? Missing some functionality?\
 Please let us know so we can make it better.

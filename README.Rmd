@@ -33,6 +33,7 @@ set.seed(1221)
 <!-- badges: start -->
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 [![R-CMD-check](https://github.com/tidyfun/tidyfun/actions/workflows/full-check.yaml/badge.svg)](https://github.com/tidyfun/tidyfun/actions/workflows/full-check.yaml)
+[![R-universe version](https://tidyfun.r-universe.dev/tidyfun/badges/version)](https://tidyfun.r-universe.dev/tidyfun)
 [![MIT license](http://img.shields.io/badge/license-MIT-brightgreen.svg)](https://opensource.org/licenses/MIT)
 [![codecov.io](https://codecov.io/github/tidyfun/tidyfun/coverage.svg?branch=master)](https://codecov.io/github/tidyfun/tidyfun/branch/master)
 <!-- badges: end -->
@@ -106,7 +107,7 @@ The `tf` objects are basically glorified lists, so they work well as columns in 
 
 **`tidyfun`** includes functions `tfd` and `tfb` for converting matrices, data frames, etc. to `tf` vectors. It also provides `tf_gather` & `tf_nest` in order to reshape tables with functional data, by going from wide to narrow or from long to short; functions like `as.matrix`, `tf_spread` & `tf_unnest` can reverse these data conversions.
 
-[See here](https://tidyfun.github.io/tidyfun/articles/x02_Conversion.html) details on getting data into (and out of) the `tf` format.
+[See here](https://tidyfun.github.io/tidyfun/articles/x02_Conversion.html) for details on getting data into (and out of) the `tf` format.
 
 #### `tidyverse` verbs for dealing with functional data inside data frames
 

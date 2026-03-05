@@ -23,13 +23,11 @@
 #' @param domain optional. Range of possible `arg`-values. See [tf::tfd()] for details.
 #' @returns a modified `data.frame` with a `tfd` column replacing the `...`.
 #' @import dplyr
-#' @importFrom rlang is_empty :=  quo_name enexpr
-#' @importFrom tidyselect vars_select
 #' @export
-#' @seealso dplyr::select()
+#' @seealso [dplyr::select()]
 #' @family tidyfun data wrangling functions
 #' @examples
-#' (d <- dplyr::as.tbl(data.frame(refund::DTI[1:5, ]$cca[, 1:10])))
+#' (d <- tibble::as_tibble(data.frame(refund::DTI[1:5, ]$cca[, 1:10])))
 #' tf_gather(d)
 #' tf_gather(d, key = "cca_tf")
 #' tf_gather(d, arg = seq(0, 1, length.out = 10))$cca
@@ -43,16 +41,14 @@ tf_gather <- function(
   domain = NULL,
   evaluator = tf_approx_linear
 ) {
-  key_var <- quo_name(enexpr(key))
-  evaluator <- quo_name(enexpr(evaluator))
+  key_var <- as_name(enexpr(key))
   search_key <- isTRUE(key == ".tfd")
-  quos <- enquos(...)
-  if (rlang::is_empty(quos)) {
+  if (...length() == 0) {
     gather_vars <- names(data)
   } else {
-    gather_vars <- unname(vars_select(names(data), !!!quos))
+    gather_vars <- names(eval_select(expr(c(...)), data))
   }
-  if (rlang::is_empty(gather_vars)) {
+  if (is_empty(gather_vars)) {
     return(data)
   }
   # turn matrix column into regular columns:
@@ -94,7 +90,7 @@ tf_gather <- function(
         tfd_data,
         arg = arg,
         domain = domain,
-        evaluator = !!evaluator
+        evaluator = {{ evaluator }}
       )
     )
 }
@@ -113,7 +109,7 @@ tf_gather <- function(
 #'   see examples.
 #' @param arg (Semi-)optional. A vector of `arg`-values on which to evaluate the
 #'   functions. If not provided, uses the default `arg`s. Should be
-#'   specified for `tf_irreg`, otherwise *all* observed gridpoint are used for
+#'   specified for `tf_irreg`, otherwise *all* observed gridpoints are used for
 #'   *every* function.
 #' @param sep separating character used to create column names for the new columns,
 #'   defaults to `"_"` for column names "<name of the `tf`>_<`arg`-value>".
@@ -149,7 +145,7 @@ tf_spread <- function(data, value, arg, sep = "_", interpolate = FALSE) {
       )
     }
   }
-  tf_var <- tidyselect::vars_pull(names(data), !!enquo(value))
+  tf_var <- vars_pull(names(data), !!enquo(value))
   tf <- data[[tf_var]]
   if (!is_tf(tf)) {
     cli::cli_warn(
@@ -160,9 +156,7 @@ tf_spread <- function(data, value, arg, sep = "_", interpolate = FALSE) {
   if (missing(arg)) {
     arg <- tf_arg(tf)
     if (is_irreg(tf)) {
-      arg <- unlist(arg) |>
-        unique() |>
-        sort()
+      arg <- unlist(arg, use.names = TRUE) |> unique() |> sort()
       cli::cli_warn(
         "no explicit {.arg arg} for irregular {.val {tf_var}} provided -- using all {length(arg)}, distinct observed argument values.",
       )
@@ -170,9 +164,11 @@ tf_spread <- function(data, value, arg, sep = "_", interpolate = FALSE) {
   }
   tf_eval <- tf[, arg, matrix = TRUE, interpolate = interpolate] |>
     as.data.frame()
-  if (!is.null(sep)) colnames(tf_eval) <- paste0(tf_var, sep, arg)
+  if (!is.null(sep)) {
+    colnames(tf_eval) <- paste0(tf_var, sep, arg)
+  }
   data |>
-    select(-!!tf_var) |>
+    select(-all_of(tf_var)) |>
     bind_cols(tf_eval)
 }
 
@@ -205,7 +201,7 @@ tf_spread <- function(data, value, arg, sep = "_", interpolate = FALSE) {
 #' @returns a data frame with (at least) `.id` and `tfd` columns
 #' @export
 #' @family tidyfun data wrangling functions
-#' @seealso tfd() for `domain, evaluator`
+#' @seealso [tfd()] for `domain, evaluator`
 tf_nest <- function(
   data,
   ...,
@@ -216,22 +212,21 @@ tf_nest <- function(
 ) {
   if (!is.data.frame(data)) {
     cli::cli_abort(
-      "{.arg {data}} must be data frame, not {.obj_type_friendly {data}}."
+      "{.arg data} must be data frame, not {.obj_type_friendly {data}}."
     )
   }
   if (inherits(data, "grouped_df")) {
     cli::cli_abort(c(
-      "{.fun tf_nest} does not work for {.cls grouped_df}.",
-      i = "{.fun ungroup} your data before nesting."
+      "{.fn tf_nest} does not work for {.cls grouped_df}.",
+      i = "{.fn ungroup} your data before nesting."
     ))
   }
-  id_var <- quo_name(enexpr(.id))
-  arg_var <- quo_name(enexpr(.arg))
-  quos <- quos(...)
-  if (is_empty(quos)) {
+  arg_var <- as_name(enexpr(.arg))
+  id_var <- as_name(enexpr(.id))
+  if (...length() == 0) {
     value_vars <- setdiff(names(data), c(id_var, arg_var))
   } else {
-    value_vars <- unname(vars_select(names(data), !!!quos))
+    value_vars <- names(eval_select(expr(c(...)), data))
   }
   n_value_vars <- length(value_vars)
   if (n_value_vars == 0) {
@@ -263,14 +258,14 @@ tf_nest <- function(
   remaining <- setdiff(names(data), c(id_var, arg_var, value_vars))
   # check that nesting is possible without information loss
   ret <- data |>
-    select(!!id_var, !!remaining) |>
-    group_by(!!as.name(id_var))
+    select(all_of(c(id_var, remaining))) |>
+    group_by(across(all_of(id_var)))
   not_constant <- ret |>
-    summarise_all(n_distinct) |>
-    select(-!!id_var) |>
-    summarise_all(function(x) !all(x == 1L)) |>
-    select_if(isTRUE)
-  if (ncol(not_constant)) {
+    summarise(across(everything(), n_distinct)) |>
+    select(-all_of(id_var)) |>
+    summarise(across(everything(), \(x) !all(x == 1L))) |>
+    select(where(isTRUE))
+  if (ncol(not_constant) > 0) {
     cli::cli_abort(
       "Can't nest - columns {.val {names(not_constant)}} are not constant for all levels of {.arg id}"
     )
@@ -283,7 +278,7 @@ tf_nest <- function(
     list(value_vars, evaluator, domain),
     function(x, y, z) {
       data |>
-        select(!!id_var, !!arg_var, all_of(x)) |>
+        select(all_of(c(id_var, arg_var, x))) |>
         tfd(evaluator = !!y, domain = z)
     }
   )
@@ -320,7 +315,7 @@ tf_nest <- function(
 #' @inheritParams tidyr::unnest
 #' @returns a "long" data frame with `tf`-columns expanded into `arg, value`-
 #'   columns.
-#' @seealso tf_evaluate.data.frame()
+#' @seealso [tf_evaluate.data.frame()]
 #' @export
 #' @family tidyfun data wrangling functions
 tf_unnest <- function(data, cols, arg, interpolate = TRUE, ...) {
@@ -342,8 +337,6 @@ tf_unnest.tf <- function(data, cols, arg, interpolate = TRUE, ...) {
 }
 
 #' @export
-#' @importFrom utils data tail
-#' @importFrom rlang syms !!! expr_text
 #' @rdname tf_unnest
 tf_unnest.data.frame <- function(
   data,
@@ -358,15 +351,15 @@ tf_unnest.data.frame <- function(
 ) {
   if (missing(cols)) {
     tf_cols <- names(data)[map_lgl(data, is_tf)]
-    cols <- expr(c(!!!syms(tf_cols)))
+    cols <- expr(!!!syms(tf_cols))
     cli::cli_warn(
       "{.arg cols} is now required. Please use {.code cols = {expr_text(cols)}}"
     )
   }
 
-  ret <- tf_evaluate.data.frame(data, !!enquo(cols), arg = arg) |>
+  ret <- tf_evaluate.data.frame(data, {{ cols }}, arg = arg) |>
     tidyr::unnest(
-      cols = !!enquo(cols),
+      cols = {{ cols }},
       keep_empty = keep_empty,
       ptype = ptype,
       names_sep = names_sep,

@@ -172,30 +172,37 @@ ggplot(data, aes(y = fi)) +
 \code{\link[=geom_cappelini]{geom_cappelini()}} for glyph plots, \code{\link[=gglasagna]{gglasagna()}} for heatmaps.
 
 Other tidyfun visualization: 
+\code{\link{autoplot.tf}()},
 \code{\link{ggcapellini}},
 \code{\link{gglasagna}()}
 
 Other tidyfun visualization: 
+\code{\link{autoplot.tf}()},
 \code{\link{ggcapellini}},
 \code{\link{gglasagna}()}
 
 Other tidyfun visualization: 
+\code{\link{autoplot.tf}()},
 \code{\link{ggcapellini}},
 \code{\link{gglasagna}()}
 
 Other tidyfun visualization: 
+\code{\link{autoplot.tf}()},
 \code{\link{ggcapellini}},
 \code{\link{gglasagna}()}
 
 Other tidyfun visualization: 
+\code{\link{autoplot.tf}()},
 \code{\link{ggcapellini}},
 \code{\link{gglasagna}()}
 
 Other tidyfun visualization: 
+\code{\link{autoplot.tf}()},
 \code{\link{ggcapellini}},
 \code{\link{gglasagna}()}
 
 Other tidyfun visualization: 
+\code{\link{autoplot.tf}()},
 \code{\link{ggcapellini}},
 \code{\link{gglasagna}()}
 }

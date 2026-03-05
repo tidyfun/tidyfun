@@ -6,7 +6,7 @@
 #'   - new data types for representing functional data: [tf::tfd()] & [tf::tfb()]
 #'   - arithmetic & comparison operators ([tf::tfgroupgenerics()]),
 #'   - descriptive statistics: e.g. [tf::mean.tf()], [tf::median.tf()]
-#'   - and graphics functions for such data: [tf::plot.tf()], [geom_spaghetti()], [gglasagna()]
+#'   - and graphics functions for such data: [tf::plot.tf()], [autoplot.tf()], [geom_spaghetti()], [gglasagna()]
 #'   - functions to do smoothing ([tf::tf_smooth.tfd()]), differentiation and integration ([tf::tf_derive.tfd()])
 #' - `tidyverse`-verbs for handling functional data inside data frames: [tf_gather()] etc.
 #' \cr\cr
@@ -14,4 +14,5 @@
 #' Also see `vignette("Introducing tidyfun", "tidyfun")` for a brief introduction.
 #'
 #' @keywords internal
+#' @import rlang
 "_PACKAGE"
