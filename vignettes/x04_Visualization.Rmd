@@ -136,7 +136,53 @@ dti_df |>
   facet_grid(sex ~ case)
 ```
 
-## `gglasagna`
+## Functional data boxplots with `geom_fboxplot`
+
+"Boxplots" for functional data are implemented in `tidyfun` through `geom_fboxplot()`. They show the deepest function (using modified band depth, `"MBD"`, by default) as a thick median curve, a filled central ribbon spanning the pointwise range of the deepest half of the sample (by default), and outer fence lines obtained by inflating that central envelope by a factor of `coef = 1.5`. Curves that leave the fence envelope anywhere are flagged as outliers and drawn separately.
+
+Like `geom_boxplot()`, the layer follows the usual `ggplot2` interface closely. Grouping works naturally through `colour`, `fill`, or `group`, and the same group colour is reused for the ribbon, the outlier curves, and the median if a group colour/fill is mapped; otherwise, the median defaults to black.
+
+```{r}
+dti_df |> 
+  tf_ggplot(aes(tf = cca, fill = case)) +
+  geom_fboxplot(alpha = 0.35) +
+  facet_grid(~ sex) + labs(title="MBD-based boxplot")
+```
+
+```{r}
+dti_df |>
+  tf_ggplot(aes(tf = cca, colour = case)) +
+  geom_fboxplot(depth = "FM", alpha = 0.3) +
+  facet_grid(~ sex) + labs(title="FM-based boxplot")
+```
+
+```{r}
+dti_df |>
+  tf_ggplot(aes(tf = cca, colour = case)) +
+  geom_fboxplot(depth = "RPD", alpha = 0.3) +
+  facet_grid(~ sex) + labs(title="RPD-based boxplot")
+```
+
+The layer also supports irregular functional data directly:
+```{r}
+tf_ggplot(dti_df, aes(tf = rcst)) + geom_fboxplot()
+```
+
+Useful arguments:
+
+```{r}
+tf_ggplot(dti_df, aes(tf = rcst)) + 
+  geom_fboxplot(alpha = .5)
+tf_ggplot(dti_df, aes(tf = rcst)) + 
+  geom_fboxplot(alpha = .5, central = .2)
+tf_ggplot(dti_df, aes(tf = rcst)) + 
+  geom_fboxplot(alpha = .5, central = .2, outliers = FALSE)
+tf_ggplot(dti_df, aes(tf = rcst)) +
+  geom_fboxplot(orientation = "y", alpha = .3)
+``` 
+
+
+## Heatmaps for functional data: `gglasagna`
 
 Lasagna plots are "[a saucy alternative to spaghetti plots](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2937254/)". They are a variant on a heatmaps which show functional observations in rows and use color to illustrate values taken at different arguments. 
 
@@ -252,4 +298,30 @@ text(
 )
 
 median(cca_five) |> lines(col = pal_5[3], lwd = 4)
+```
+
+`tf` also defines a `plot` method for `tf_registration` objects (returned by
+`tf_register()`) for visualizing function alignment (registration / phase
+variability). Current versions of `tf` return a registration result that stores
+the aligned curves, inverse warps, and template and can be inspected directly:
+```{r}
+cca_reg <- tf_register(
+  cca[1:5],
+  method = "landmark",
+  landmarks = tf_landmarks_extrema(cca[1:5], "max")
+)
+
+cca_reg
+summary(cca_reg)
+plot(cca_reg)
+```
+
+The registered curves, inverse warping functions, and template can also be
+extracted explicitly for custom plots:
+```{r}
+layout(t(1:2))
+
+plot(tf_inv_warps(cca_reg), col = pal_5, lwd = 2)
+plot(tf_aligned(cca_reg), col = pal_5, lwd = 2)
+lines(tf_template(cca_reg), col = "black", lwd = 4)
 ```

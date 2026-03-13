@@ -75,7 +75,7 @@ geom_fboxplot(
 \arguments{
 \item{mapping, data, position, show.legend, inherit.aes, na.rm, orientation, ...}{Passed on to \code{\link[ggplot2:layer]{ggplot2::layer()}}.}
 
-\item{coef}{Inflation factor for the central envelope used to define fences.}
+\item{coef}{Inflation factor for the central envelope used to define outer fences, defaults to 1.5.}
 
 \item{depth}{Character scalar naming the built-in depth measure passed to
 \code{\link[tf:tf_depth]{tf::tf_depth()}} when \code{depth_fn} is \code{NULL}.}
@@ -96,7 +96,13 @@ drawing. Defaults to the natural grid of the mapped \code{tf}.}
 
 \item{outliers}{Should outlying curves be drawn?}
 
-\item{outlier.colour, outlier.color, outlier.fill, outlier.shape, outlier.size, }{outlier.stroke,outlier.alpha Styling parameters for outlier curves.}
+\item{outlier.colour, outlier.color, outlier.fill, outlier.shape, outlier.size}{Styling parameters for outlier curves.}
+
+\item{outlier.stroke}{Accepted for interface compatibility with
+\code{\link[ggplot2:geom_boxplot]{ggplot2::geom_boxplot()}} but ignored because functional outliers are drawn
+as curves.}
+
+\item{outlier.alpha}{Alpha used for outlier curves.}
 
 \item{whisker.colour, whisker.color, whisker.linetype, whisker.linewidth}{Styling
 parameters for fence lines.}
@@ -120,23 +126,28 @@ A ggplot2 layer.
 Draw functional boxplots based on functional depth rankings.
 }
 \details{
-\code{stat_fboxplot()} computes a median curve, a central region envelope,
-functional fences, and optional outlying curves from a \code{tf} column.
-\code{geom_fboxplot()} draws these summaries as a band plus line layers.
+\code{stat_fboxplot()} computes a median curve (thick line), a central region
+envelope (filled ribbon), functional fences (dashed lines), and optional
+outlying curves (defined as "exceeds the fences somewhere", plotted as solid lines)
+from a \code{tf} column. \code{geom_fboxplot()} draws these summaries as a band plus
+line layers.
 
 The interface intentionally follows \code{\link[ggplot2:geom_boxplot]{ggplot2::stat_boxplot()}} and
 \code{\link[ggplot2:geom_boxplot]{ggplot2::geom_boxplot()}} where this is meaningful for functional data.
 Use \code{aes(tf = f)} to map a \code{tf} column. Separate functional boxplots inside a
 panel are defined by \code{group}, \code{colour}/\code{color}, or \code{fill}; separate panels are
-handled through facetting.
+handled through facetting. Note that only \code{color} or \code{fill} need to be
+specified explicitly, as the other will be automatically mapped to the same
+variable if not provided.
 }
 \examples{
 \donttest{
 library(ggplot2)
-data <- data.frame(id = 1:10, grp = rep(c("A", "B"), each = 5))
-data$f <- tf_rgp(10)
+set.seed(1312)
+data <- data.frame(id = 1:50, grp = rep(c("A", "B"), each = 25))
+data$f <- tf_rgp(50) + 5 * (data$grp == "A")
 
-tf_ggplot(data, aes(tf = f, fill = grp, colour = grp)) +
+tf_ggplot(data, aes(tf = f, fill = grp)) + # same as `colour = grp` here!
   geom_fboxplot(alpha = 0.3)
 
 tf_ggplot(data, aes(tf = f)) +

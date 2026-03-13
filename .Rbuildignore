@@ -13,6 +13,7 @@
 ^\.Renviron$
 ^\.Rproj\.user$
 ^\.ccache$
+^\.claude$
 ^\.dockerignore$
 ^\.editorconfig$
 ^\.gitattributes$
@@ -24,6 +25,8 @@
 ^\.pre-commit-config\.yaml$
 ^\.vscode$
 ^_pkgdown\.yml$
+^CLAUDE\.md$
+^Rplots\.pdf$
 ^attic$
 ^codecov\.yml$
 ^compose\.ya?ml$
@@ -35,3 +38,6 @@
 ^paper$
 ^pkgdown$
 ^revdep$
+^test-tf-ggplot-demo\.R$
+^tests\.txt$
+^tests(_after_fixes|_final)?\.txt$

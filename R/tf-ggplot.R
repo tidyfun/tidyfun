@@ -39,15 +39,18 @@
 #' data$f <- tf_rgp(10)
 #'
 #' # Method 1: tf aesthetic in constructor
-#' tf_ggplot(data, aes(tf = f, color = group)) + geom_line()
+#' tf_ggplot(data, ggplot2::aes(tf = f, color = group)) + ggplot2::geom_line()
 #'
 #' # Method 2: tf aesthetic in geom (equivalent)
-#' tf_ggplot(data) + geom_line(aes(tf = f, color = group))
+#' tf_ggplot(data) + ggplot2::geom_line(ggplot2::aes(tf = f, color = group))
 #'
 #' # Confidence bands
 #' tf_ggplot(data) +
-#'   geom_ribbon(aes(tf_ymin = mean(f) - sd(f), tf_ymax = mean(f) + sd(f)), alpha = 0.3) +
-#'   geom_line(aes(tf = mean(f)))
+#'   ggplot2::geom_ribbon(
+#'     ggplot2::aes(tf_ymin = mean(f) - sd(f), tf_ymax = mean(f) + sd(f)),
+#'     alpha = 0.3
+#'   ) +
+#'   ggplot2::geom_line(ggplot2::aes(tf = mean(f)))
 #'
 #' @export
 tf_ggplot <- function(
@@ -348,7 +351,7 @@ transform_tf_data <- function(
 convert_tf_ggplot <- function(tf_plot, layer_mapping = aes()) {
   # Combine plot-level and layer-level mappings
   # Layer mapping takes precedence over plot mapping
-  combined_mapping <- modifyList(tf_plot$mapping, layer_mapping)
+  combined_mapping <- utils::modifyList(tf_plot$mapping, layer_mapping)
 
   # Parse tf aesthetics
   parsed_aes <- parse_tf_aesthetics(combined_mapping, tf_plot$data)
@@ -420,7 +423,7 @@ convert_tf_ggplot <- function(tf_plot, layer_mapping = aes()) {
 
   for (tf_aes_name in names(parsed_aes$tf_aes)) {
     # Get the tf column name (from transform_tf_data)
-    tf_expr <- quo_get_expr(parsed_aes$tf_aes[[tf_aes_name]])
+    tf_expr <- rlang::quo_get_expr(parsed_aes$tf_aes[[tf_aes_name]])
     if (is.symbol(tf_expr)) {
       tf_col_name <- as.character(tf_expr)
     } else {
@@ -1309,8 +1312,9 @@ print.tf_ggplot <- function(x, ...) {
 
 #' ggplot_build method for tf_ggplot
 #' @param plot A tf_ggplot object
+#' @param ... Additional arguments passed through from [ggplot2::ggplot_build()].
 #' @export
-ggplot_build.tf_ggplot <- function(plot) {
+ggplot_build.tf_ggplot <- function(plot, ...) {
   # Finalize tf_ggplot before building
   all_layers <- attr(plot, "all_layers")
   if (

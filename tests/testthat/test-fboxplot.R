@@ -94,6 +94,13 @@ test_that("geom_fboxplot is compatible with facetting", {
   expect_equal(as.character(sort(unique(built$data[[1]]$PANEL))), c("1", "2"))
 })
 
+test_that("geom_fboxplot handles irregular tf data on common support", {
+  p <- tf_ggplot(tidyfun::dti_df, aes(tf = rcst)) + geom_fboxplot()
+
+  expect_no_warning(built <- ggplot_build(p))
+  expect_true(nrow(built$data[[1]]) > 0)
+})
+
 test_that("geom_fboxplot is compatible with scaled axes", {
   data <- make_fboxplot_data()
 

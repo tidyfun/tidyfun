@@ -4,7 +4,7 @@
 #'
 #' `stat_fboxplot()` computes a median curve (thick line), a central region
 #' envelope (filled ribbon), functional fences (dashed lines), and optional
-#' outlying curves (which exceed the "fences" somewhere, plotted as solid lines)
+#' outlying curves (defined as "exceeds the fences somewhere", plotted as solid lines)
 #' from a `tf` column. `geom_fboxplot()` draws these summaries as a band plus
 #' line layers.
 #'
@@ -31,8 +31,12 @@
 #' @param arg Optional evaluation grid used for depth calculation, envelopes, and
 #'   drawing. Defaults to the natural grid of the mapped `tf`.
 #' @param outliers Should outlying curves be drawn?
-#' @param outlier.colour,outlier.color,outlier.fill,outlier.shape,outlier.size,
-#'   outlier.stroke,outlier.alpha Styling parameters for outlier curves.
+#' @param outlier.colour,outlier.color,outlier.fill,outlier.shape,outlier.size
+#'   Styling parameters for outlier curves.
+#' @param outlier.stroke Accepted for interface compatibility with
+#'   [ggplot2::geom_boxplot()] but ignored because functional outliers are drawn
+#'   as curves.
+#' @param outlier.alpha Alpha used for outlier curves.
 #' @param whisker.colour,whisker.color,whisker.linetype,whisker.linewidth Styling
 #'   parameters for fence lines.
 #' @param staple.colour,staple.color,staple.linetype,staple.linewidth Accepted for
@@ -134,6 +138,65 @@ compute_fboxplot_depth <- function(x, arg, depth, depth_fn = NULL) {
   }
 
   depth_values
+}
+
+default_fboxplot_arg <- function(tf_vec) {
+  tf_arg0 <- tf_arg(tf_vec)
+  if (!is.list(tf_arg0)) {
+    return(tf_arg0)
+  }
+
+  arg_starts <- vapply(tf_arg0, min, numeric(1))
+  arg_ends <- vapply(tf_arg0, max, numeric(1))
+  common_lower <- max(arg_starts)
+  common_upper <- min(arg_ends)
+
+  if (common_lower > common_upper) {
+    cli::cli_abort(c(
+      "Cannot infer a default evaluation grid for irregular {.cls tf} data with no common support.",
+      "i" = "Provide {.arg arg} explicitly."
+    ))
+  }
+
+  common_arg <- sort(unique(unlist(tf_arg0)))
+  common_arg <- common_arg[
+    common_arg >= common_lower & common_arg <= common_upper
+  ]
+
+  if (length(common_arg) == 0) {
+    if (identical(common_lower, common_upper)) {
+      return(common_lower)
+    }
+
+    cli::cli_abort(c(
+      "Cannot infer a default evaluation grid for irregular {.cls tf} data.",
+      "i" = "Provide {.arg arg} explicitly."
+    ))
+  }
+
+  common_arg
+}
+
+prepare_fboxplot_curves <- function(tf_vec, data, arg) {
+  curve_mat <- as.matrix(tf_vec, arg = arg, interpolate = TRUE)
+  keep <- stats::complete.cases(curve_mat)
+
+  if (!all(keep)) {
+    cli::cli_warn(c(
+      "Dropped {sum(!keep)} function{?s} from {.fn stat_fboxplot} because they cannot be evaluated on the selected grid.",
+      "i" = "Provide {.arg arg} explicitly to control the evaluation support."
+    ))
+  }
+
+  if (!any(keep)) {
+    return(NULL)
+  }
+
+  list(
+    tf_vec = tf_vec[keep],
+    data = data[keep, , drop = FALSE],
+    curve_mat = curve_mat[keep, , drop = FALSE]
+  )
 }
 
 as_fboxplot_curve <- function(x, arg, what) {
@@ -495,11 +558,7 @@ StatFboxplot <- ggplot2::ggproto(
       return(data.frame())
     }
 
-    arg <- arg %||%
-      {
-        tf_arg0 <- tf_arg(tf_vec)
-        if (is.list(tf_arg0)) tf_arg0[[1]] else tf_arg0
-      }
+    arg <- arg %||% default_fboxplot_arg(tf_vec)
 
     stat_groups <- build_fboxplot_groups(data, use_group_aes = use_group_aes)
     pieces <- vector("list", length(levels(stat_groups)))
@@ -510,6 +569,19 @@ StatFboxplot <- ggplot2::ggproto(
       group_data <- data[take, , drop = FALSE]
       group_tf <- group_data$tf
 
+      prepared <- prepare_fboxplot_curves(
+        tf_vec = group_tf,
+        data = group_data,
+        arg = arg
+      )
+      if (is.null(prepared)) {
+        next
+      }
+
+      group_tf <- prepared$tf_vec
+      group_data <- prepared$data
+      curve_mat <- prepared$curve_mat
+
       depth_values <- compute_fboxplot_depth(
         x = group_tf,
         arg = arg,
@@ -517,7 +589,6 @@ StatFboxplot <- ggplot2::ggproto(
         depth_fn = depth_fn
       )
 
-      curve_mat <- as.matrix(group_tf, arg = arg, interpolate = TRUE)
       rank_idx <- order(depth_values, decreasing = TRUE, na.last = NA)
       if (length(rank_idx) == 0) {
         next

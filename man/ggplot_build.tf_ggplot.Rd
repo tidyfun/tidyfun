@@ -4,10 +4,12 @@
 \alias{ggplot_build.tf_ggplot}
 \title{ggplot_build method for tf_ggplot}
 \usage{
-\method{ggplot_build}{tf_ggplot}(plot)
+\method{ggplot_build}{tf_ggplot}(plot, ...)
 }
 \arguments{
 \item{plot}{A tf_ggplot object}
+
+\item{...}{Additional arguments passed through from \code{\link[ggplot2:ggplot_build]{ggplot2::ggplot_build()}}.}
 }
 \description{
 ggplot_build method for tf_ggplot

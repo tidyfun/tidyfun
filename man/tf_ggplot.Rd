@@ -48,21 +48,25 @@ When tf aesthetics are used, the data is automatically transformed:
 }
 }
 \examples{
-\dontrun{
 # Basic usage
-data <- data.frame(id = 1:3, group = c("A", "A", "B"))
-data$func <- tf_rgp(3)
+data <- data.frame(
+id = 1:10,
+group = sample(c("A", "B"), 10, replace = TRUE)
+)
+data$f <- tf_rgp(10)
 
 # Method 1: tf aesthetic in constructor
-tf_ggplot(data, aes(tf = func, color = group)) + geom_line()
+tf_ggplot(data, ggplot2::aes(tf = f, color = group)) + ggplot2::geom_line()
 
 # Method 2: tf aesthetic in geom (equivalent)
-tf_ggplot(data) + geom_line(aes(tf = func, color = group))
+tf_ggplot(data) + ggplot2::geom_line(ggplot2::aes(tf = f, color = group))
 
 # Confidence bands
 tf_ggplot(data) +
-  geom_ribbon(aes(tf_ymin = lower, tf_ymax = upper), alpha = 0.3) +
-  geom_line(aes(tf = mean_func))
-}
+  ggplot2::geom_ribbon(
+    ggplot2::aes(tf_ymin = mean(f) - sd(f), tf_ymax = mean(f) + sd(f)),
+    alpha = 0.3
+  ) +
+  ggplot2::geom_line(ggplot2::aes(tf = mean(f)))
 
 }
