@@ -51,6 +51,51 @@ test_that("ribbon geoms work with tf_ymin and tf_ymax", {
   expect_true(all(plot_data$ymax >= plot_data$ymin))
 })
 
+test_that("summary ribbon tf aesthetics broadcast across plot-level tf data", {
+  skip_if_not_installed("ggplot2")
+  skip_if_no_tf_ggplot()
+
+  set.seed(123)
+  data <- data.frame(g = gl(2, 5))
+  data$f <- tf_rgp(10) + 5
+
+  expect_no_warning({
+    built <- ggplot_build(
+      tf_ggplot(data, aes(tf = f, tf_ymin = min(f), tf_ymax = max(f))) +
+        geom_ribbon(alpha = 0.01)
+    )
+  })
+
+  plot_data <- built$data[[1]]
+  expect_true(all(c("ymin", "ymax") %in% names(plot_data)))
+  expect_true(all(is.finite(plot_data$ymin)))
+  expect_true(all(is.finite(plot_data$ymax)))
+})
+
+test_that("summary ribbon and summary line layers work without row-size errors", {
+  skip_if_not_installed("ggplot2")
+  skip_if_no_tf_ggplot()
+
+  set.seed(123)
+  data <- data.frame(id = 1:10)
+  data$f <- tf_rgp(10) + 5
+
+  expect_no_error({
+    built <- ggplot_build(
+      tf_ggplot(data) +
+        geom_ribbon(
+          aes(tf_ymin = mean(f) - sd(f), tf_ymax = mean(f) + sd(f)),
+          alpha = 0.3
+        ) +
+        geom_line(aes(tf = mean(f)))
+    )
+  })
+
+  expect_equal(length(built$data), 2)
+  expect_true(all(c("ymin", "ymax") %in% names(built$data[[1]])))
+  expect_true(all(c("x", "y") %in% names(built$data[[2]])))
+})
+
 test_that("combining tf and regular geoms works", {
   skip_if_not_installed("ggplot2")
   skip_if_no_tf_ggplot()
@@ -59,9 +104,16 @@ test_that("combining tf and regular geoms works", {
   data$mean_val <- c(1, 2, 3)
 
   # This should work - different aesthetics
-  p <- tf_ggplot(data) +
-    suppressWarnings(geom_line(aes(tf = func, color = group))) +
-    geom_point(aes(x = 0.5, y = mean_val), size = 3) # Regular geom
+  captured <- capture_warnings_silently(
+    tf_ggplot(data) +
+      suppressWarnings(geom_line(aes(tf = func, color = group))) +
+      geom_point(aes(x = 0.5, y = mean_val), size = 3) # Regular geom
+  )
+  p <- captured$value
+  expect_true(any(grepl(
+    "Potential.*conflict|scale.*conflict",
+    captured$warnings
+  )))
 
   built <- ggplot_build(p)
 
@@ -189,13 +241,15 @@ test_that("performance warnings are triggered appropriately", {
   data$func <- tf_rgp(50, arg = seq(0, 1, length.out = 51)) # Dense grid
 
   # Should warn about large data expansion
-  expect_warning(
-    {
-      p <- tf_ggplot(data, aes(tf = func)) + geom_line()
-      ggplot_build(p)
-    },
-    "large.*data|expansion|memory|performance"
-  )
+  captured <- capture_warnings_silently({
+    p <- tf_ggplot(data, aes(tf = func)) + geom_line()
+    ggplot_build(p)
+  })
+  expect_true(any(grepl(
+    "large.*data|expansion|memory|performance",
+    captured$warnings,
+    ignore.case = TRUE
+  )))
 })
 
 test_that("scale conflicts are detected", {
@@ -303,17 +357,19 @@ test_that("mixing multiple tf and regular layers works", {
   data$max_val <- c(1.5, 2.5, 3.5)
 
   # Create plot mixing tf and regular layers
-  expect_warning(
-    {
-      p <- tf_ggplot(data) +
-        suppressWarnings(geom_line(aes(tf = func, color = group))) + # tf layer 1
-        geom_point(aes(x = 0.5, y = mean_val, color = group), size = 3) + # regular layer 1
-        suppressWarnings(geom_point(aes(tf = func), alpha = 0.5)) + # tf layer 2
-        geom_point(aes(x = 0.8, y = max_val, color = group), size = 2) + # regular layer 2
-        suppressWarnings(geom_line(aes(tf = func), linetype = "dotted")) # tf layer 3
-    },
-    "scale.*conflict|Potential.*conflict"
+  captured <- capture_warnings_silently(
+    tf_ggplot(data) +
+      suppressWarnings(geom_line(aes(tf = func, color = group))) + # tf layer 1
+      geom_point(aes(x = 0.5, y = mean_val, color = group), size = 3) + # regular layer 1
+      suppressWarnings(geom_point(aes(tf = func), alpha = 0.5)) + # tf layer 2
+      geom_point(aes(x = 0.8, y = max_val, color = group), size = 2) + # regular layer 2
+      suppressWarnings(geom_line(aes(tf = func), linetype = "dotted")) # tf layer 3
   )
+  expect_true(any(grepl(
+    "scale.*conflict|Potential.*conflict",
+    captured$warnings
+  )))
+  p <- captured$value
 
   built <- suppressWarnings(ggplot_build(p))
 

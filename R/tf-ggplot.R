@@ -31,22 +31,23 @@
 #' @return A tf_ggplot object that inherits from ggplot
 #'
 #' @examples
-#' \dontrun{
 #' # Basic usage
-#' data <- data.frame(id = 1:3, group = c("A", "A", "B"))
-#' data$func <- tf_rgp(3)
+#' data <- data.frame(
+#' id = 1:10,
+#' group = sample(c("A", "B"), 10, replace = TRUE)
+#' )
+#' data$f <- tf_rgp(10)
 #'
 #' # Method 1: tf aesthetic in constructor
-#' tf_ggplot(data, aes(tf = func, color = group)) + geom_line()
+#' tf_ggplot(data, aes(tf = f, color = group)) + geom_line()
 #'
 #' # Method 2: tf aesthetic in geom (equivalent)
-#' tf_ggplot(data) + geom_line(aes(tf = func, color = group))
+#' tf_ggplot(data) + geom_line(aes(tf = f, color = group))
 #'
 #' # Confidence bands
 #' tf_ggplot(data) +
-#'   geom_ribbon(aes(tf_ymin = lower, tf_ymax = upper), alpha = 0.3) +
-#'   geom_line(aes(tf = mean_func))
-#' }
+#'   geom_ribbon(aes(tf_ymin = mean(f) - sd(f), tf_ymax = mean(f) + sd(f)), alpha = 0.3) +
+#'   geom_line(aes(tf = mean(f)))
 #'
 #' @export
 tf_ggplot <- function(
@@ -723,6 +724,7 @@ finalize_tf_ggplot <- function(tf_plot) {
 
   # Create base plot with data = NULL; each layer brings its own data
   regular_plot <- ggplot(data = NULL, mapping = base_mapping)
+  raw_tf_axis_labels <- NULL
 
   for (i in seq_along(all_layers)) {
     layer_info <- all_layers[[i]]
@@ -736,18 +738,36 @@ finalize_tf_ggplot <- function(tf_plot) {
       effective_data <- layer_info$promoted_data %||%
         layer_info$layer_data_snapshot %||%
         enriched_data
-      result <- build_tf_layer_data(
-        layer_info = layer_info,
-        plot_tf_aes = parsed_plot_aes$tf_aes,
-        scalar_col_map = scalar_col_map,
-        layer_idx = i,
-        enriched_data = effective_data,
-        user_arg = user_arg,
-        interpolate = interpolate
-      )
+      result <- if (inherits(layer$stat, "StatFboxplot")) {
+        build_raw_tf_layer_data(
+          layer_info = layer_info,
+          plot_mapping = tf_plot$mapping,
+          layer_idx = i,
+          enriched_data = effective_data
+        )
+      } else {
+        build_tf_layer_data(
+          layer_info = layer_info,
+          plot_tf_aes = parsed_plot_aes$tf_aes,
+          scalar_col_map = scalar_col_map,
+          layer_idx = i,
+          enriched_data = effective_data,
+          user_arg = user_arg,
+          interpolate = interpolate
+        )
+      }
       if (!is.null(result)) {
         layer$data <- result$long_data
         layer$mapping <- result$new_mapping
+        if (!is.null(result$stat_params)) {
+          layer$stat_params <- utils::modifyList(
+            layer$stat_params,
+            result$stat_params
+          )
+        }
+        if (is.null(raw_tf_axis_labels) && !is.null(result$axis_labels)) {
+          raw_tf_axis_labels <- result$axis_labels
+        }
       } else if (is.null(layer$data)) {
         layer$data <- enriched_data
       }
@@ -762,8 +782,105 @@ finalize_tf_ggplot <- function(tf_plot) {
   regular_plot$coordinates <- tf_plot$coordinates
   regular_plot$facet <- tf_plot$facet
   regular_plot$labels <- tf_plot$labels
+  if (!is.null(raw_tf_axis_labels)) {
+    if (is.null(regular_plot$labels$x)) {
+      regular_plot$labels$x <- raw_tf_axis_labels$x
+    }
+    if (is.null(regular_plot$labels$y)) {
+      regular_plot$labels$y <- raw_tf_axis_labels$y
+    }
+  }
 
   regular_plot
+}
+
+combine_layer_mappings <- function(
+  plot_mapping,
+  layer_mapping,
+  inherit.aes = TRUE
+) {
+  plot_mapping <- plot_mapping %||% aes()
+  layer_mapping <- layer_mapping %||% aes()
+
+  combined <- if (isTRUE(inherit.aes)) {
+    c(
+      plot_mapping[!names(plot_mapping) %in% names(layer_mapping)],
+      layer_mapping
+    )
+  } else {
+    layer_mapping
+  }
+  class(combined) <- "uneval"
+  combined
+}
+
+build_raw_tf_layer_data <- function(
+  layer_info,
+  plot_mapping,
+  layer_idx,
+  enriched_data
+) {
+  layer <- layer_info$layer
+  combined_mapping <- combine_layer_mappings(
+    plot_mapping = plot_mapping,
+    layer_mapping = layer$mapping,
+    inherit.aes = layer$inherit.aes
+  )
+
+  if (inherits(layer$stat, "StatFboxplot")) {
+    normalized <- normalize_fboxplot_mapping(combined_mapping)
+    combined_mapping <- normalized$mapping
+    stat_params <- list(use_group_aes = normalized$use_group_aes)
+    axis_labels <- infer_tf_axis_labels(
+      combined_mapping,
+      orientation = layer$stat_params$orientation %||% NA
+    )
+  } else {
+    stat_params <- NULL
+    axis_labels <- NULL
+  }
+
+  list(
+    long_data = enriched_data,
+    new_mapping = combined_mapping,
+    stat_params = stat_params,
+    axis_labels = axis_labels
+  )
+}
+
+infer_tf_axis_labels <- function(mapping, orientation = NA) {
+  tf_name <- intersect(c("tf", "tf_y"), names(mapping))[1]
+  if (is.na(tf_name) || is.null(tf_name)) {
+    return(NULL)
+  }
+
+  tf_expr <- mapping[[tf_name]]
+  if (!rlang::is_quosure(tf_expr)) {
+    return(NULL)
+  }
+
+  expr_text <- paste(
+    rlang::expr_deparse(rlang::quo_get_expr(tf_expr)),
+    collapse = ""
+  )
+
+  orientation <- if (is.null(orientation) || is.na(orientation)) {
+    "x"
+  } else {
+    match.arg(orientation, c("x", "y"))
+  }
+
+  if (orientation == "y") {
+    list(
+      x = expr_text,
+      y = paste0(expr_text, ".arg")
+    )
+  } else {
+    list(
+      x = paste0(expr_text, ".arg"),
+      y = expr_text
+    )
+  }
 }
 
 #' Build long-format data and new mapping for a single tf layer
@@ -835,6 +952,31 @@ build_tf_layer_data <- function(
     tf_objects[[aes_name]] <- tf_obj
   }
 
+  tf_lengths <- vapply(tf_objects, length, integer(1))
+  common_n_funcs <- max(tf_lengths)
+  if (!all(tf_lengths %in% c(1L, common_n_funcs))) {
+    cli::cli_abort(c(
+      "All tf aesthetics in a layer must have matching lengths or length 1",
+      "i" = "Observed lengths: {paste(tf_lengths, collapse = ', ')}"
+    ))
+  }
+
+  primary_idx <- which(tf_lengths == common_n_funcs)[1]
+  if (!identical(primary_idx, 1L)) {
+    tf_objects <- tf_objects[c(
+      primary_idx,
+      setdiff(seq_along(tf_objects), primary_idx)
+    )]
+    effective_tf_aes <- effective_tf_aes[c(
+      primary_idx,
+      setdiff(seq_along(effective_tf_aes), primary_idx)
+    )]
+    tf_lengths <- tf_lengths[c(
+      primary_idx,
+      setdiff(seq_along(tf_lengths), primary_idx)
+    )]
+  }
+
   # This layer's evaluation grid: user-specified or natural grid of first tf object
   arg <- user_arg
   if (is.null(arg)) {
@@ -844,7 +986,7 @@ build_tf_layer_data <- function(
 
   # If there is no plot-level data (e.g. tf_ggplot() + geom_line(aes(tf = tf_rgp(5)))),
   # synthesise a one-row-per-function data frame so joins and indexing work correctly.
-  n_funcs <- length(tf_objects[[1]])
+  n_funcs <- common_n_funcs
   .n_enriched <- nrow(enriched_data) # NULL for NULL / waiver / non-data-frames
   if (is.null(.n_enriched) || .n_enriched == 0) {
     enriched_data <- structure(
@@ -855,9 +997,23 @@ build_tf_layer_data <- function(
   }
 
   n_rows <- nrow(enriched_data)
+  if (n_rows != n_funcs) {
+    if (n_funcs == 1L && n_rows > 0) {
+      enriched_data <- enriched_data[1, , drop = FALSE]
+      n_rows <- 1L
+    } else if (n_rows == 1L && n_funcs > 1L) {
+      enriched_data <- enriched_data[rep(1L, n_funcs), , drop = FALSE]
+      n_rows <- n_funcs
+    } else {
+      cli::cli_abort(c(
+        "Layer data cannot be aligned with the evaluated tf aesthetics",
+        "i" = "Data has {n_rows} row(s), but tf aesthetics evaluate to {n_funcs} function(s)."
+      ))
+    }
+  }
   n_grid <- length(arg)
-  if (as.numeric(n_rows) * n_grid > 1e5) {
-    cli::cli_inform(c(
+  if (as.numeric(n_rows) * n_grid >= 2500) {
+    cli::cli_warn(c(
       "Large data expansion: {n_rows} rows \u00d7 {n_grid} grid points = {n_rows * n_grid} rows",
       "i" = "This may impact memory usage and plotting performance",
       "i" = "Use {.arg arg} in {.fn tf_ggplot} to specify a coarser evaluation grid"
@@ -927,7 +1083,6 @@ build_tf_layer_data <- function(
       # Using curr_arg (from long_data after NA filtering) would silently drop points
       # if the primary tf had NAs, misaligning the secondary aesthetic.
       tf_vals <- tf_evaluate(tf_objects[[i]], arg = arg)
-      n_funcs <- length(tf_vals)
       # Use expression text for meaningful column names
       quo_i <- effective_tf_aes[[aes_name_i]]
       expr_i <- rlang::quo_get_expr(quo_i)
@@ -943,20 +1098,28 @@ build_tf_layer_data <- function(
       v_col <- safe_i
       a_col <- paste0(safe_i, ".arg")
       g_col <- paste0(safe_i, ".id")
-      # Build full secondary long-form, then left-join on (id, arg) to align with primary
-      sec_long <- data.frame(
-        .row_id_i_ = rep(seq_len(n_funcs), each = length(arg)),
-        .arg_i_ = rep(arg, n_funcs),
-        .val_i_ = unlist(tf_vals)
-      )
-      # Attach secondary values to long_data by matching row-id and arg position
-      long_data[[v_col]] <- sec_long$.val_i_[
-        match(
-          paste(as.integer(long_data[[id_col]]), long_data[[arg_col]]),
-          paste(sec_long$.row_id_i_, sec_long$.arg_i_)
+      n_tf_i <- length(tf_vals)
+      if (n_tf_i == 1L && n_funcs > 1L) {
+        long_data[[v_col]] <- unlist(tf_vals)[
+          match(long_data[[arg_col]], arg)
+        ]
+        long_data[[g_col]] <- long_data[[id_col]]
+      } else {
+        # Build full secondary long-form, then left-join on (id, arg) to align with primary
+        sec_long <- data.frame(
+          .row_id_i_ = rep(seq_len(n_tf_i), each = length(arg)),
+          .arg_i_ = rep(arg, n_tf_i),
+          .val_i_ = unlist(tf_vals)
         )
-      ]
-      long_data[[g_col]] <- long_data[[id_col]]
+        # Attach secondary values to long_data by matching row-id and arg position
+        long_data[[v_col]] <- sec_long$.val_i_[
+          match(
+            paste(as.integer(long_data[[id_col]]), long_data[[arg_col]]),
+            paste(sec_long$.row_id_i_, sec_long$.arg_i_)
+          )
+        ]
+        long_data[[g_col]] <- long_data[[id_col]]
+      }
       long_data[[a_col]] <- long_data[[arg_col]]
     }
     new_mapping <- add_tf_aes_to_mapping(
@@ -1172,7 +1335,8 @@ ggplot_build.tf_ggplot <- function(plot) {
     ggplot2::GeomLine,
     ggplot2::GeomPath,
     ggplot2::GeomPoint,
-    ggplot2::GeomRibbon
+    ggplot2::GeomRibbon,
+    GeomFboxplot
   )
   for (G in geoms) {
     old_fn <- G$aesthetics

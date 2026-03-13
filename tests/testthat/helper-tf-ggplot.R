@@ -74,3 +74,16 @@ skip_if_no_tf_ggplot <- function() {
 suppress_tf_warnings <- function(expr) {
   suppressWarnings(suppressMessages(expr))
 }
+
+capture_warnings_silently <- function(expr) {
+  warnings <- character(0)
+  value <- withCallingHandlers(
+    expr,
+    warning = function(w) {
+      warnings <<- c(warnings, conditionMessage(w))
+      invokeRestart("muffleWarning")
+    }
+  )
+
+  list(value = value, warnings = warnings)
+}

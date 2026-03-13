@@ -102,7 +102,12 @@ test_that("transform_tf_data handles multiple tf aesthetics", {
 
   # Test transformation with multiple tf aesthetics
   tf_aesthetics <- list(tf_x = quo(func1), tf_y = quo(func2))
-  result <- transform_tf_data(data, tf_aesthetics)
+  captured <- capture_warnings_silently(transform_tf_data(data, tf_aesthetics))
+  result <- captured$value
+  expect_true(any(grepl(
+    "Multiple tf aesthetics.*Using first tf aesthetic only",
+    captured$warnings
+  )))
 
   # Currently only the first tf aesthetic is supported (documented limitation)
   expect_true("func1.arg" %in% names(result))
@@ -219,7 +224,7 @@ test_that("tf_ggplot validates input correctly", {
       p <- tf_ggplot(data, aes(tf = regular_col)) + geom_line()
       ggplot_build(p) # Trigger validation
     },
-    "tf aesthetic must evaluate to a tf object"
+    "tf aesthetic.*must evaluate to a tf object"
   )
 
   # Should error if tf aesthetic references non-existent column
@@ -315,14 +320,16 @@ test_that("tf_ggplot error handling for scale conflicts", {
   )
   data$func <- tf_rgp(3, arg = seq(0, 1, length.out = 11))
 
-  # This should work without error (scale conflict warnings not implemented)
+  # This should work without error; scale conflict warnings are acceptable
   expect_no_error({
-    p <- tf_ggplot(data) +
-      suppressWarnings(geom_line(aes(tf = func))) + # tf data on y-scale
-      geom_point(aes(x = id, y = scalar_y)) # scalar data on y-scale
+    p <- suppressWarnings(
+      tf_ggplot(data) +
+        suppressWarnings(geom_line(aes(tf = func))) + # tf data on y-scale
+        geom_point(aes(x = id, y = scalar_y)) # scalar data on y-scale
+    )
 
     # Should build successfully
-    built <- ggplot_build(p)
+    built <- suppressWarnings(ggplot_build(p))
     expect_s3_class(built, "ggplot_built")
   })
 })
@@ -335,10 +342,17 @@ test_that("tf_ggplot performance warnings for large datasets", {
   data <- data.frame(id = 1:100) # Many functions
   data$func <- tf_rgp(100, arg = seq(0, 1, length.out = 101)) # Dense grid
 
-  # Should handle large datasets without error (performance warnings not fully implemented)
+  # Should handle large datasets without error and emit a performance warning
   expect_no_error({
-    p <- tf_ggplot(data, aes(tf = func)) + geom_line()
-    built <- ggplot_build(p)
+    captured <- capture_warnings_silently({
+      p <- tf_ggplot(data, aes(tf = func)) + geom_line()
+      ggplot_build(p)
+    })
+    built <- captured$value
+    expect_true(any(grepl(
+      "Large data expansion",
+      captured$warnings
+    )))
 
     # Should have correct dimensions despite large size
     expect_s3_class(built, "ggplot_built")
