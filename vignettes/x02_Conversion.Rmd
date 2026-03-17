@@ -237,7 +237,7 @@ cca_basis
 cca_rebased <- tf_rebase(cca_raw, basis_from = cca_basis)
 cca_rebased
 
-# or convert a spline-based representation to a grid based one for a specific grid:
+# or convert a spline-based representation to a grid-based one for a specific grid:
 tf_rebase(cca_basis, basis_from = cca_raw)
 ```
 
