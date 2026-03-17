@@ -222,17 +222,20 @@ functional data vectors are expressed on the same grid or in the same basis.
 `tf_rebase` re-expresses one `tf` object in the representation of another:
 
 ```{r}
-# irregular functional data
-rcst_raw <- dti_df$rcst[1:5]
-rcst_raw
+# reload the tidyfun version of the DTI data
+data(dti_df, package = "tidyfun")
+
+# raw functional data
+cca_raw <- dti_df$cca[1:5]
+cca_raw
 
 # represent in a spline basis
-rcst_basis <- tfb(dti_df$rcst[20:25], k = 25, bs = "tp")
-rcst_basis
+cca_basis <- tfb(dti_df$cca[1:5], k = 25)
+cca_basis
 
 # re-express the raw data in the same basis representation
-rcst_rebased <- tf_rebase(rcst_raw, rcst_basis)
-rcst_rebased
+cca_rebased <- tf_rebase(cca_raw, cca_basis)
+cca_rebased
 ```
 
 This is useful when you want to ensure that operations between `tf` objects
