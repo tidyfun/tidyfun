@@ -11,6 +11,9 @@
 
 \item{...}{Additional arguments passed through from \code{\link[ggplot2:ggplot_build]{ggplot2::ggplot_build()}}.}
 }
+\value{
+A built ggplot object (class \code{ggplot_built}).
+}
 \description{
 ggplot_build method for tf_ggplot
 }

@@ -124,6 +124,9 @@ lists which parameters it can accept.
 \link[ggplot2:draw_key]{key glyphs}, to change the display of the layer in the legend.
 }}
 }
+\value{
+A \code{\link[ggplot2:layer]{ggplot2::layer()}} object for use in a ggplot.
+}
 \description{
 Plots a shaded region between \code{tf}-objects \code{ymax} and \code{ymin}.
 This is primarily intended to help with plotting confidence bands

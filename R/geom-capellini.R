@@ -8,11 +8,9 @@
 #'
 #' @section `tf` aesthetic:
 #'   Mandatory. Used to designate a column of class `tf` to be visualized as glyphs.
-#' @examples
-#' \dontrun{
-#' # takes a little too long for CRAN
+#' @returns A [ggplot2::layer()] object for use in a ggplot.
+#' @examplesIf rlang::is_installed(c("fda", "maps"))
 #' library(ggplot2)
-#' library(tidyverse)
 #' weather <- fda::CanadianWeather
 #' canada <- data.frame(
 #'   place = weather$place,
@@ -37,7 +35,6 @@
 #'     width = 5, height = 3,
 #'     line.linetype = 1, box.fill = "white", box.alpha = 0.5, box.colour = NA
 #'   )
-#' }
 #' @name ggcapellini
 #' @family tidyfun visualization
 #' @seealso [GGally::glyphs()]
@@ -48,7 +45,9 @@ NULL
 #' @rdname ggcapellini
 #' @usage NULL
 #' @format NULL
-StatCapellini <- ggplot2::ggproto("StatCapellini", ggplot2::Stat,
+StatCapellini <- ggplot2::ggproto(
+  "StatCapellini",
+  ggplot2::Stat,
   required_aes = c("x", "y", "tf"),
   setup_params = function(data, params) {
     if (is.null(params$arg)) {
@@ -76,7 +75,8 @@ StatCapellini <- ggplot2::ggproto("StatCapellini", ggplot2::Stat,
       select(-group) |>
       rename(group = tf___id, arg = tf___arg, value = tf___value) |>
       mutate(
-        xgrid = x, ygrid = y,
+        xgrid = x,
+        ygrid = y,
         x = x + rescale11(arg) * params$width / 2,
         y = y + rescale11(value) * params$height / 2,
         width = params$width,
@@ -88,8 +88,16 @@ StatCapellini <- ggplot2::ggproto("StatCapellini", ggplot2::Stat,
   },
   # need this so arg etc get recognized as valid parameters
   # because layer() only checks compute_panel & compute_group
-  compute_panel = function(self, data, scales, arg,
-                           add_lines, add_boxes, width, height) {
+  compute_panel = function(
+    self,
+    data,
+    scales,
+    arg,
+    add_lines,
+    add_boxes,
+    width,
+    height
+  ) {
     ggplot2::Stat$compute_panel(self, data, scales)
   }
 )
@@ -99,16 +107,37 @@ StatCapellini <- ggplot2::ggproto("StatCapellini", ggplot2::Stat,
 #' @rdname ggcapellini
 #' @inheritParams ggplot2::stat_identity
 #' @param na.rm remove NAs? defaults to `TRUE`
-stat_capellini <- function(mapping = NULL, data = NULL, geom = "capellini",
-                           position = "identity", na.rm = TRUE, show.legend = NA,
-                           inherit.aes = TRUE, arg = NULL, add_lines = FALSE,
-                           add_boxes = TRUE, width = NULL, height = NULL, ...) {
+stat_capellini <- function(
+  mapping = NULL,
+  data = NULL,
+  geom = "capellini",
+  position = "identity",
+  na.rm = TRUE,
+  show.legend = NA,
+  inherit.aes = TRUE,
+  arg = NULL,
+  add_lines = FALSE,
+  add_boxes = TRUE,
+  width = NULL,
+  height = NULL,
+  ...
+) {
   ggplot2::layer(
-    stat = StatCapellini, data = data, mapping = mapping, geom = geom,
-    position = position, show.legend = show.legend, inherit.aes = inherit.aes,
+    stat = StatCapellini,
+    data = data,
+    mapping = mapping,
+    geom = geom,
+    position = position,
+    show.legend = show.legend,
+    inherit.aes = inherit.aes,
     params = list(
-      na.rm = na.rm, arg = arg, add_lines = add_lines,
-      add_boxes = add_boxes, width = width, height = height, ...
+      na.rm = na.rm,
+      arg = arg,
+      add_lines = add_lines,
+      add_boxes = add_boxes,
+      width = width,
+      height = height,
+      ...
     )
   )
 }
@@ -139,23 +168,55 @@ stat_capellini <- function(mapping = NULL, data = NULL, geom = "capellini",
 #' @param line.linewidth aesthetic property of the reference line
 #' @param line.alpha aesthetic property of the reference line
 geom_capellini <-
-  function(mapping = NULL, data = NULL, stat = "capellini",
-           position = "identity", ..., na.rm = TRUE, show.legend = NA,
-           inherit.aes = TRUE, arg = NULL, add_lines = TRUE, add_boxes = TRUE,
-           width = NULL, height = NULL, box.colour = "#0000001A",
-           box.linetype = 1, box.fill = NA, box.linewidth = 0.1, box.alpha = 0.1,
-           line.colour = "black", line.linetype = 2, line.linewidth = 0.3,
-           line.alpha = 0.5) {
+  function(
+    mapping = NULL,
+    data = NULL,
+    stat = "capellini",
+    position = "identity",
+    ...,
+    na.rm = TRUE,
+    show.legend = NA,
+    inherit.aes = TRUE,
+    arg = NULL,
+    add_lines = TRUE,
+    add_boxes = TRUE,
+    width = NULL,
+    height = NULL,
+    box.colour = "#0000001A",
+    box.linetype = 1,
+    box.fill = NA,
+    box.linewidth = 0.1,
+    box.alpha = 0.1,
+    line.colour = "black",
+    line.linetype = 2,
+    line.linewidth = 0.3,
+    line.alpha = 0.5
+  ) {
     ggplot2::layer(
-      stat = StatCapellini, data = data, mapping = mapping, geom = "capellini",
-      position = position, show.legend = show.legend, inherit.aes = inherit.aes,
+      stat = StatCapellini,
+      data = data,
+      mapping = mapping,
+      geom = "capellini",
+      position = position,
+      show.legend = show.legend,
+      inherit.aes = inherit.aes,
       params = list(
-        na.rm = na.rm, arg = arg, add_lines = add_lines,
-        add_boxes = add_boxes, width = width, height = height,
-        box.colour = box.colour, box.linetype = box.linetype,
-        box.fill = box.fill, box.linewidth = box.linewidth, box.alpha = box.alpha,
-        line.colour = line.colour, line.linetype = line.linetype,
-        line.linewidth = line.linewidth, line.alpha = line.alpha, ...
+        na.rm = na.rm,
+        arg = arg,
+        add_lines = add_lines,
+        add_boxes = add_boxes,
+        width = width,
+        height = height,
+        box.colour = box.colour,
+        box.linetype = box.linetype,
+        box.fill = box.fill,
+        box.linewidth = box.linewidth,
+        box.alpha = box.alpha,
+        line.colour = line.colour,
+        line.linetype = line.linetype,
+        line.linewidth = line.linewidth,
+        line.alpha = line.alpha,
+        ...
       )
     )
   }
@@ -177,15 +238,26 @@ geom_cappelini <- geom_capellini
 #' @rdname ggcapellini
 #' @usage NULL
 #' @format NULL
-GeomCapellini <- ggplot2::ggproto("GeomCapellini", ggplot2::Geom,
+GeomCapellini <- ggplot2::ggproto(
+  "GeomCapellini",
+  ggplot2::Geom,
   setup_data = function(data, params) {
     GeomPath$setup_data(data, params)
   },
-  draw_group = function(data, panel_params, coord,
-                        box.colour = "#0000001A", box.linetype = 1,
-                        box.fill = NA, box.linewidth = 0.1, box.alpha = 0.1,
-                        line.colour = "black", line.linetype = 2,
-                        line.linewidth = 0.3, line.alpha = 0.5) {
+  draw_group = function(
+    data,
+    panel_params,
+    coord,
+    box.colour = "#0000001A",
+    box.linetype = 1,
+    box.fill = NA,
+    box.linewidth = 0.1,
+    box.alpha = 0.1,
+    line.colour = "black",
+    line.linetype = 2,
+    line.linewidth = 0.3,
+    line.alpha = 0.5
+  ) {
     glyph_grob <- GeomPath$draw_panel(data, panel_params, coord)
     if (data$lines[1]) {
       lines <- data.frame(
@@ -225,8 +297,10 @@ GeomCapellini <- ggplot2::ggproto("GeomCapellini", ggplot2::Geom,
     )
   },
   default_aes = ggplot2::aes(
-    colour = "black", linewidth = 0.5,
-    linetype = 1, alpha = 0.5
+    colour = "black",
+    linewidth = 0.5,
+    linetype = 1,
+    alpha = 0.5
   ),
   draw_key = ggplot2::GeomPath$draw_key
 )

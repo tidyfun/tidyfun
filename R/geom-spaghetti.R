@@ -22,6 +22,7 @@
 #' ggplot(data, aes(y = fi)) +
 #'   geom_meatballs(spaghetti = FALSE) +
 #'   facet_wrap(~col)
+#' @returns A [ggplot2::layer()] object for use in a ggplot.
 #' @name ggspaghetti
 #' @family tidyfun visualization
 #' @import ggplot2

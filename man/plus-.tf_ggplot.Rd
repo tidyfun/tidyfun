@@ -11,6 +11,9 @@
 
 \item{e2}{A ggplot2 layer, scale, theme, etc.}
 }
+\value{
+A modified \code{tf_ggplot} object.
+}
 \description{
 Add layers to tf_ggplot objects
 }

@@ -32,6 +32,11 @@ list of \code{arg}-vectors or -lists used as the \code{arg} argument for the
 \code{...} is not used for a \code{tf}-\code{object}, but a second unnamed argument to these
 methods will be interpreted as \code{arg}.
 }
+\examples{
+d <- dplyr::tibble(id = 1:3)
+d$f <- tf_rgp(3, 11L)
+str(tf_evaluate(d))
+}
 \seealso{
 Other tidyfun data wrangling functions: 
 \code{\link{tf_gather}()},

@@ -184,7 +184,7 @@ tf_ggplot(dti_df, aes(tf = rcst)) +
 
 ## Heatmaps for functional data: `gglasagna`
 
-Lasagna plots are "[a saucy alternative to spaghetti plots](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2937254/)". They are a variant on a heatmaps which show functional observations in rows and use color to illustrate values taken at different arguments. 
+Lasagna plots are "[a saucy alternative to spaghetti plots](https://pmc.ncbi.nlm.nih.gov/articles/PMC2937254/)". They are a variant on a heatmaps which show functional observations in rows and use color to illustrate values taken at different arguments. 
 
 In `tidyfun`, lasagna plots are implemented through `gglasagna`. A first example, using the CHF data, is below. 
 
@@ -245,7 +245,7 @@ ggplot(canada, aes(x = lon, y = lat)) +
 
 Another general use case for `geom_capellini` is visualizing FPCA decompositions:
 
-```{r}
+```{r, warn=FALSE}
 cca_fpc_tbl <- tibble(
   cca = dti_df$cca[1:30],
   cca_fpc = tfb_fpc(cca, pve = .8), 
@@ -263,13 +263,17 @@ tibble(
 ) |> tf_ggplot() + 
   geom_line(aes(tf = eigenfunction, col = FPC)) + 
   geom_hline(yintercept = 0)
+```
 
+So FPC1 is mostly a horizontal (level) shift, while FPC2 mostly affects the size and direction of the extrema around 0.13 and 0.8.
+
+```{r, warn=FALSE}
 ggplot(cca_fpc_tbl[1:40,], aes(x =  fpc_1, y = fpc_2)) +
   geom_point(size = .5, col = "red") +
   geom_capellini(aes(tf =cca_fpc),width = .01, height = .01, line.linetype = 1) +
   labs(x = "FPC1 score", y = "FPC2 score")
 ```
--- here we can see that the horizontal axis representing the 1st FPC scores has the average level of functions increasing from left to right (first FPC function is basically a level shift), while the size and direction of the extrema at around 0.13 and particularly 0.8 change along the vertical axis representing the 2nd FPC scores (second FPC mostly affects those).
+Consequently, we can see here that the horizontal axis representing the 1st FPC scores has the average level of functions increasing from left to right (first FPC function is basically a level shift), while the size and direction of the extrema at around 0.13 and particularly 0.8 change along the vertical axis representing the 2nd FPC scores.
 
 # Plotting with base R
 

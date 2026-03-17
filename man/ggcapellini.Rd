@@ -178,6 +178,9 @@ lists which parameters it can accept.
 
 \item{line.alpha}{aesthetic property of the reference line}
 }
+\value{
+A \code{\link[ggplot2:layer]{ggplot2::layer()}} object for use in a ggplot.
+}
 \description{
 Plots a miniature glyph / sparkline for each entry of a \code{tf}-object.
 (Capellini are tiny spaghetti -- \emph{angel hair} pasta.) Aesthetics \code{x} and \code{y}
@@ -191,10 +194,8 @@ Mandatory. Used to designate a column of class \code{tf} to be visualized as gly
 }
 
 \examples{
-\dontrun{
-# takes a little too long for CRAN
+\dontshow{if (rlang::is_installed(c("fda", "maps"))) withAutoprint(\{ # examplesIf}
 library(ggplot2)
-library(tidyverse)
 weather <- fda::CanadianWeather
 canada <- data.frame(
   place = weather$place,
@@ -219,7 +220,7 @@ ggplot(canada, aes(x = lon, y = lat, colour = region)) +
     width = 5, height = 3,
     line.linetype = 1, box.fill = "white", box.alpha = 0.5, box.colour = NA
   )
-}
+\dontshow{\}) # examplesIf}
 }
 \seealso{
 \code{\link[GGally:glyphs]{GGally::glyphs()}}

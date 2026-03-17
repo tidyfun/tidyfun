@@ -140,6 +140,9 @@ lists which parameters it can accept.
 
 \item{spaghetti}{plot noodles along with meatballs? defaults to TRUE.}
 }
+\value{
+A \code{\link[ggplot2:layer]{ggplot2::layer()}} object for use in a ggplot.
+}
 \description{
 Plots a line for each entry of a \code{tf}-object.
 \code{geom_spaghetti} does spaghetti (i.e. "hairball") plots, \code{geom_meatballs}

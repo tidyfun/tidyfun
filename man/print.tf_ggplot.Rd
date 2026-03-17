@@ -11,6 +11,9 @@
 
 \item{...}{Additional arguments}
 }
+\value{
+\code{x}, invisibly. Called for its side effect of printing the plot.
+}
 \description{
 Print method for tf_ggplot
 }

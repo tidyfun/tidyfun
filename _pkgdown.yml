@@ -29,7 +29,6 @@ reference:
 - title: Arithmetic, logical and summary functions
   desc: Functionality for computing with and comparing functional data
   contents:
-  - tf::Ops.tf
   - tf::tfgroupgenerics
   - tf::tfsummaries
   - tf::tf_depth
@@ -45,8 +44,9 @@ reference:
   - tf::tf_register
   - tf::tf_landmarks_extrema
   - tf::tf_warp
-  - tf::tf_unwarp
   - tf::tf_invert
+  - tf::tf_align
+  - tf::tf_estimate_warps
 - title: Wrangling
   desc: Reshaping and transforming tf-objects inside data frames
   contents:
@@ -64,6 +64,14 @@ reference:
   - gglasagna
   - ggerrorband
   - geom_capellini
+  - geom_fboxplot
+  - tf_ggplot
+  - is_tf_ggplot
+  - parse_tf_aesthetics
+  - transform_tf_data
+  - "+.tf_ggplot"
+  - print.tf_ggplot
+  - ggplot_build.tf_ggplot
   - tf::print.tf
   - tf::prep_plotting_arg
   - type_sum.tf
@@ -107,11 +115,13 @@ articles:
   - x03_Data_Wrangling
   - x04_Visualization
   - x05_Advice
+  - x06_Registration
 navbar:
   type: default
   left:
   - icon: fa-github
     href: https://github.com/tidyfun/tidyfun
+    aria-label: GitHub
   - text: Reference
     href: reference/index.html
   - text: Articles
@@ -126,6 +136,8 @@ navbar:
       href: articles/x04_Visualization.html
     - text: Advice for Developers
       href: articles/x05_Advice.html
+    - text: Curve Registration
+      href: articles/x06_Registration.html
 development:
   mode: auto
 

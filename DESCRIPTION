@@ -1,8 +1,8 @@
 Package: tidyfun
-Title: Tools for Tidy Functional Data
+Title: Tidy Functional Data Wrangling and Visualization
 Version: 0.0.995
 Authors@R: c(
-    person("Fabian", "Scheipl", , "fabian.scheipl@googlemail.com", role = c("aut", "cre"),
+    person("Fabian", "Scheipl", , "fabian.scheipl@googlemail.com", role = c("aut", "cre", "cph"),
            comment = c(ORCID = "0000-0001-8172-3603")),
     person("Jeff", "Goldsmith", role = "aut"),
     person("Julia", "Wrobel", role = "aut",
@@ -10,8 +10,11 @@ Authors@R: c(
     person("Maximilian", "Mücke", role = "ctb",
            comment = c(ORCID = "0009-0000-9432-9795"))
   )
-Description: Representing, visualizing, describing and wrangling tidy
-    functional data, based on {tf}.
+Description: Represent, visualize, describe and wrangle functional data
+    in tidy data frames, building on the 'tf' package. Provides data types
+    for functional observations that work as columns in data frames,
+    enabling manipulation with 'dplyr' verbs and visualization with
+    'ggplot2' geoms designed for functional data.
 License: MIT + file LICENSE
 URL: https://github.com/tidyfun/tidyfun,
     https://tidyfun.github.io/tidyfun/
@@ -34,6 +37,7 @@ Imports:
 Suggests:
     covr,
     fda,
+    fdasrvf,
     gridExtra,
     janitor,
     knitr,
@@ -48,8 +52,6 @@ Suggests:
     viridisLite
 VignetteBuilder: 
     knitr
-Remotes:
-    tidyfun/tf
 Config/testthat/edition: 3
 Encoding: UTF-8
 LazyData: true

@@ -3,7 +3,8 @@ d <- tibble(a = tf_rgp(3), b = tf_rgp(3))
 test_that("tf_evaluate.data.frame basically works", {
   da <- d$a
   expect_identical(
-    tf_evaluate(da)[["a"]], da[["a"]][, tf_arg(d$a), matrix = FALSE]
+    tf_evaluate(da)[["a"]],
+    da[["a"]][, tf_arg(d$a), matrix = FALSE]
   )
 })
 

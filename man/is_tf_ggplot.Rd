@@ -9,6 +9,14 @@ is_tf_ggplot(x)
 \arguments{
 \item{x}{Object to test}
 }
+\value{
+\code{TRUE} if \code{x} inherits from \code{"tf_ggplot"}, \code{FALSE} otherwise.
+}
 \description{
 Check if object is a tf_ggplot
+}
+\examples{
+p <- tf_ggplot(data.frame(x = 1))
+is_tf_ggplot(p)
+is_tf_ggplot(ggplot2::ggplot())
 }

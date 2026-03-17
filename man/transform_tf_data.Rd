@@ -7,17 +7,23 @@
 transform_tf_data(data, tf_aesthetics, arg = NULL, interpolate = TRUE)
 }
 \arguments{
-\item{data}{Data frame containing tf objects}
+\item{data}{Data frame containing tf objects.}
 
-\item{tf_aesthetics}{List of tf aesthetic mappings}
+\item{tf_aesthetics}{List of tf aesthetic mappings.}
 
-\item{arg}{Optional evaluation grid}
+\item{arg}{Optional evaluation grid.}
 
-\item{interpolate}{Whether to interpolate tf objects}
+\item{interpolate}{Whether to interpolate tf objects.}
 }
 \value{
-Transformed data frame in long format
+A data frame in long format with tf columns expanded.
 }
 \description{
 Transform data with tf aesthetics into long format
+}
+\examples{
+d <- data.frame(g = 1:3)
+d$f <- tf_rgp(3)
+tf_aes <- parse_tf_aesthetics(ggplot2::aes(tf = f))$tf_aes
+head(transform_tf_data(d, tf_aes))
 }

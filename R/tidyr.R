@@ -203,6 +203,9 @@ tf_spread <- function(data, value, arg, sep = "_", interpolate = FALSE) {
 #' @export
 #' @family tidyfun data wrangling functions
 #' @seealso [tfd()] for `domain, evaluator`
+#' @examples
+#' d <- dplyr::tibble(id = rep(1:3, each = 5), arg = rep(1:5, 3), value = rnorm(15))
+#' tf_nest(d, .id = id, .arg = arg)
 tf_nest <- function(
   data,
   ...,
@@ -319,6 +322,10 @@ tf_nest <- function(
 #' @seealso [tf_evaluate.data.frame()]
 #' @export
 #' @family tidyfun data wrangling functions
+#' @examples
+#' d <- dplyr::tibble(id = 1:3)
+#' d$f <- tf_rgp(3, 11L)
+#' tf_unnest(d, f)
 tf_unnest <- function(data, cols, arg, interpolate = TRUE, ...) {
   UseMethod("tf_unnest")
 }

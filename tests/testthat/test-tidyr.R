@@ -4,30 +4,31 @@ d2 <- data.frame(id = data$ID, data$cca)
 cca <- tfd(data$cca)
 
 test_that("tf_gather works", {
-  expect_s3_class(tf_gather(d1)$cca |> suppressMessages(),
-                  "tfd")
-  expect_message(tf_gather(d1)$cca,
-                 "cca")
-  expect_identical(tf_gather(d1)$cca |> suppressMessages(),
-                   cca)
+  expect_s3_class(tf_gather(d1)$cca |> suppressMessages(), "tfd")
+  expect_message(tf_gather(d1)$cca, "cca")
+  expect_identical(tf_gather(d1)$cca |> suppressMessages(), cca)
   expect_equal(
     tf_gather(d1)$cca |> suppressMessages(),
     tf_gather(data[, 1:8], cca)$cca |> suppressMessages(),
     ignore_attr = TRUE
   )
 
-  expect_identical(tf_gather(d2, -1)$cca |> suppressMessages(),
-                   cca)
-  expect_identical(tf_gather(d2, -1)$id |> suppressMessages(),
-                   d2$id)
-  expect_identical(tf_gather(d2, -1, key = "nuhnuh")$nuhnuh |>
-                     suppressMessages(),
-                   tf_gather(d2, -1)$cca |> suppressMessages())
+  expect_identical(tf_gather(d2, -1)$cca |> suppressMessages(), cca)
+  expect_identical(tf_gather(d2, -1)$id |> suppressMessages(), d2$id)
+  expect_identical(
+    tf_gather(d2, -1, key = "nuhnuh")$nuhnuh |>
+      suppressMessages(),
+    tf_gather(d2, -1)$cca |> suppressMessages()
+  )
 
-  expect_identical(tf_gather(d2, -id)$cca |> suppressMessages(),
-                   tf_gather(d2, -1)$cca |> suppressMessages())
-  expect_identical(tf_gather(d2, starts_with("cca"))$cca |> suppressMessages(),
-                   tf_gather(d2, -1)$cca |> suppressMessages())
+  expect_identical(
+    tf_gather(d2, -id)$cca |> suppressMessages(),
+    tf_gather(d2, -1)$cca |> suppressMessages()
+  )
+  expect_identical(
+    tf_gather(d2, starts_with("cca"))$cca |> suppressMessages(),
+    tf_gather(d2, -1)$cca |> suppressMessages()
+  )
 
   expect_identical(
     attr(tf_gather(d1, evaluator = tf_approx_spline)$cca, "evaluator_name") |>
@@ -35,14 +36,14 @@ test_that("tf_gather works", {
     "tf_approx_spline"
   )
 
-  expect_named(tf_gather(d1) |> suppressMessages(),
-               "cca")
+  expect_named(tf_gather(d1) |> suppressMessages(), "cca")
 })
 
 test_that("tf_spread works", {
   d <- tibble(g = 1:3, f = tf_rgp(3, 11L))
   expect_equal(
-    tf_spread(d, f, sep = NULL)[, -1], as.data.frame(as.matrix(d$f)),
+    tf_spread(d, f, sep = NULL)[, -1],
+    as.data.frame(as.matrix(d$f)),
     ignore_attr = TRUE
   )
   expect_identical(tf_spread(d, f), tf_spread(d, -g))
@@ -77,8 +78,12 @@ test_that("tf_spread works", {
     suppressWarnings()
   expect_true(suppressWarnings(ncol(tf_spread(d, fi)) == 36))
   expect_equal(
-    tf_spread(d, fi,
-      arg = seq(0, 1, length.out = 20), sep = NULL, interpolate = TRUE
+    tf_spread(
+      d,
+      fi,
+      arg = seq(0, 1, length.out = 20),
+      sep = NULL,
+      interpolate = TRUE
     )[, -(1:3)],
     as.data.frame(
       as.matrix(d$fi, arg = seq(0, 1, length.out = 20), interpolate = TRUE)

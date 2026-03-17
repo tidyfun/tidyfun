@@ -55,12 +55,13 @@ observation in \code{data} and the vertical order of the layers is the
 ordering of observations obtained by \code{dplyr::arrange(data, order, order_by(value), row_number())}.
 }
 \examples{
-\dontrun{
+\donttest{
+library(ggplot2)
 set.seed(1221)
 data <- expand.grid(group = factor(1:5), rep = 1:10)
 data <- dplyr::mutate(data,
   id = paste(group, rep, sep = "-"),
-  f =  tf_rgp(50),
+  f = tf_rgp(50),
   fb = tfb(f)
 )
 
@@ -68,10 +69,10 @@ gglasagna(data, f, label = id)
 gglasagna(data, fb, label = id, order = group)
 # order is lowest first / on top by default
 gglasagna(data, f, label = id, order = tf_depth(f))
-gglasagna(data, f, label = id, order_by = first) +
+gglasagna(data, f, label = id, order_by = dplyr::first) +
   facet_wrap(~group, scales = "free")
 # order of layers is by "order_by" within "order":
-gglasagna(data, fb, label = id, order = group, order_by = first)
+gglasagna(data, fb, label = id, order = group, order_by = dplyr::first)
 }
 }
 \seealso{

@@ -48,6 +48,10 @@ if you're nesting multiple functional data columns with different properties.
 Because quasi-quotation is \emph{such} a bitch, you can only specify the evaluator
 functions as strings and not as bare names here.
 }
+\examples{
+d <- dplyr::tibble(id = rep(1:3, each = 5), arg = rep(1:5, 3), value = rnorm(15))
+tf_nest(d, .id = id, .arg = arg)
+}
 \seealso{
 \code{\link[tf:tfd]{tf::tfd()}} for \verb{domain, evaluator}
 

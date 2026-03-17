@@ -245,18 +245,23 @@ Quick success checks:
 
 ## Choosing a Registration Method
 
-| Method | Use when | Avoid when | Template handling | Key arguments | Input grid | Noise robustness | Typical speed | Typical failure signs | First fallback |
-|:--|:--|:--|:--|:--|:--|:--|:--|:--|:--|
-| `srvf` (default) | Smooth, non-linear timing differences with shared shape family | Very noisy data, sparse grids, highly heterogeneous shapes | Implicit Karcher-type mean unless `template` supplied | `method = "srvf"`, `lambda` | regular only | Low (pre-smooth if noisy) | Fast (but O(n²) in grid) | Unstable warps, over-warping, inconsistent reruns | Pre-smooth inputs; try `affine` or `landmark` |
-| `cc` | You want continuous-criterion alignment and can tune criterion | Complex phase-amplitude interactions or severe irregularity | Arithmetic mean unless `template` supplied | `method = "cc"`, `crit = 1/2`, `nbasis`, `lambda`, `conv`, `iterlim` | regular only | High (most stable) | Moderate | Sensitive to criterion choice, weak alignment gains | Change criterion, basis dimension and/or amount of penalization; Try `srvf` or `affine` |
-| `affine` | Mostly shift/scale timing variability; need interpretable warps | Strong non-linear timing deformation | Arithmetic mean unless `template` supplied | `method = "affine"`, `type`, bounds | regular + **irregular** | Moderate | Fast | Residual misalignment of local features, boundary `NA`s under stronger shifts/scales | Set stricter/looser bounds; Upgrade to `srvf` |
-| `landmark` | Reliable, repeated landmarks are available across curves | Ambiguous/noisy landmarks or mismatched counts | Uses `template_landmarks` (default: column means) | `method = "landmark"`, `landmarks`, `template_landmarks` | regular + **irregular** | Moderate; outlier-robust | Very fast | Forced/broken alignments from bad landmarks | Check appropriateness of landmarks; Use `srvf` or `affine` |
+|   | `srvf` (default) | `cc` | `affine` | `landmark` |
+|:--|:--|:--|:--|:--|
+| **Use when** | Smooth, non-linear timing differences with shared shape family | You want continuous-criterion alignment and can tune criterion | Mostly shift/scale timing variability; need interpretable warps | Reliable, repeated landmarks are available across curves |
+| **Avoid when** | Very noisy data, sparse grids, highly heterogeneous shapes | Complex phase-amplitude interactions or severe irregularity | Strong non-linear timing deformation | Ambiguous/noisy landmarks or mismatched counts |
+| **Template handling** | Implicit Karcher-type mean unless `template` supplied | Arithmetic mean unless `template` supplied | Arithmetic mean unless `template` supplied | Uses `template_landmarks` (default: column means) |
+| **Key arguments** | `method = "srvf"`, `lambda` | `method = "cc"`, `crit = 1/2`, `nbasis`, `lambda`, `conv`, `iterlim` | `method = "affine"`, `type`, bounds | `method = "landmark"`, `landmarks`, `template_landmarks` |
+| **Input grid** | regular only | regular only | regular + **irregular** | regular + **irregular** |
+| **Noise robustness** | Low (pre-smooth if noisy) | High (most stable) | Moderate | Moderate; outlier-robust |
+| **Typical speed** | Fast (but O(n^2^) in grid) | Moderate | Fast | Very fast |
+| **Typical failure signs** | Unstable warps, over-warping, inconsistent reruns | Sensitive to criterion choice, weak alignment gains | Residual misalignment of local features, boundary `NA`s under stronger shifts/scales | Forced/broken alignments from bad landmarks |
+| **First fallback** | Pre-smooth inputs; try `affine` or `landmark` | Change criterion, basis dimension and/or amount of penalization; try `srvf` or `affine` | Set stricter/looser bounds; upgrade to `srvf` | Check appropriateness of landmarks; use `srvf` or `affine` |
 
 The `srvf` and `cc` methods require regular grids (`tfd_reg` or `tfb`). The `affine` and `landmark` methods also accept irregular grids (`tfd_irreg`).
 
 ### Evidence-Based Method Selection
 
-Based on benchmarks across 15 data-generating processes, 3 noise levels, and 5 methods:
+Based on [benchmarks](https://tidyfun.github.io/sim-registration/) across 15 data-generating processes, 3 noise levels, and 5 methods:
 
 1. **Reliable landmarks available?** → Use `landmark`. Fastest, simplest warps, and most robust to outlier contamination (warp MISE degrades only ~1.6× at 30% contamination vs 2.6–3.7× for iterative methods).
 2. **Mostly shift/scale variation?** → Use `affine`. Fast, interpretable, but produces boundary `NA`s.
@@ -495,7 +500,7 @@ Represents each curve via its *square root velocity function* (SRVF), $q(t) = \d
 
 ### CC (Continuous Registration Criterion)
 
-Estimates smooth monotone warping functions by maximizing the integrated cross-correlation between the derivative of each registered curve and the first eigenfunction of the derivatives' covariance, which represents the dominant common shape of the sample (criterion `crit=2`, the default) or by minimizing the squared differences between aligned function and template (criterion `crit=1`, not recommended). In current `tf`, this is implemented as a tf-native dense-grid optimizer with monotone spline warps rather than the older `fda::register.fd()` backend. See [Ramsay & Li (1998)](https://doi.org/10.1111/1467-9868.00129) and Ramsay & Silverman (2005, *Functional Data Analysis*, Ch. 8).
+Estimates smooth monotone warping functions by maximizing the integrated cross-correlation between the derivative of each registered curve and the first eigenfunction of the derivatives' covariance, which represents the dominant common shape of the sample (criterion `crit=2`, the default) or by minimizing the squared differences between aligned function and template (criterion `crit=1`, not recommended). In current `tf`, this is implemented as a tf-native dense-grid optimizer with monotone spline warps rather than the older `fda::register.fd()` backend. See [Ramsay & Li (1998, JRSS-B)](https://academic.oup.com/jrsssb/article/60/2/351/7083189) and Ramsay & Silverman (2005, *Functional Data Analysis*, Ch. 8).
 
 - **Optimization:** tf-native dense-grid optimization of a continuous registration criterion with monotone spline warps.
 - **Template:** Arithmetic mean, re-estimated over `max_iter` iterations (default 3), or user-supplied.
@@ -523,7 +528,7 @@ Each curve is aligned independently via bounded L-BFGS-B optimization of the L2 
 
 ### Landmark
 
-Constructs piecewise linear warps by mapping user-specified landmark positions to target positions. No continuous optimization is performed — the warp is fully determined by the landmark correspondence. See [Kneip & Gasser (1992)](https://doi.org/10.1214/aos/1176348794) and Ramsay & Silverman (2005, Ch. 7).
+Constructs piecewise linear warps by mapping user-specified landmark positions to target positions. No continuous optimization is performed — the warp is fully determined by the landmark correspondence. See [Kneip & Gasser (1992, Annals of Statistics)](https://projecteuclid.org/journals/annals-of-statistics/volume-20/issue-3/Statistical-Tools-to-Analyze-Data-Representing-a-Sample-of-Curves/10.1214/aos/1176348794.full) and Ramsay & Silverman (2005, Ch. 7).
 
 - **Template:** Defined by column-wise means of the landmark time points matrix, or user-supplied `template_landmarks`.
 - **Domain-preserving:** Yes — domain endpoints are used as boundary anchors.
@@ -767,6 +772,10 @@ reg_lm <- tf_aligned(reg_lm_obj)
 ```
 
 ```{r growth-landmarks-plot, fig.width = 8, fig.height = 3}
+if (!exists("reg_brks")) {
+  reg_brks <- range(c(tf_evaluations(growth$smooth_vel), tf_evaluations(reg_lm))) |>
+    (\(x) seq(x[1], x[2], l = 13))()
+}
 layout(t(1:4))
 plot(growth$smooth_vel, main = "Smooth Velocity",
      xlab = "Age [years]", ylab = "cm/year", lwd = 0.8)
@@ -780,3 +789,14 @@ plot(reg_lm, main = "Landmark Registered",
 ```
 
 The piecewise linear warps align the pubertal peaks well, with the pubertal trough and infant growth landmarks anchoring the earlier phases. Compared to SRVF, the warps are simpler and fully interpretable — each segment directly corresponds to a physiological period (early childhood, late childhood, pubertal acceleration, post-peak deceleration). The trade-off is that landmark registration cannot adapt between landmarks (alignment between successive landmarks depends entirely on those two anchor points) and that landmark definition is often somewhat arbitrary (c.f. definition of "end of rapid infant growth" above...).
+
+## References
+
+- Kneip, A., & Gasser, T. (1992). Statistical tools to analyze data representing a sample of curves. *Annals of Statistics*, 20(3), 1266--1305. [doi:10.1214/aos/1176348794](https://projecteuclid.org/journals/annals-of-statistics/volume-20/issue-3/Statistical-Tools-to-Analyze-Data-Representing-a-Sample-of-Curves/10.1214/aos/1176348794.full)
+- Marron, J.S., Ramsay, J.O., Sangalli, L.M., & Srivastava, A. (2015). Functional data analysis of amplitude and phase variation. *Statistical Science*, 30(4), 468--484. [doi:10.1214/15-EJS1030](https://doi.org/10.1214/15-EJS1030)
+- Ramsay, J.O., & Li, X. (1998). Curve registration. *Journal of the Royal Statistical Society: Series B*, 60(2), 351--363. [doi:10.1111/1467-9868.00129](https://academic.oup.com/jrsssb/article/60/2/351/7083189)
+- Ramsay, J.O., & Silverman, B.W. (2005). *Functional Data Analysis* (2nd ed.). Springer.
+- Srivastava, A., & Klassen, E.P. (2016). *Functional and Shape Data Analysis*. Springer.
+- Srivastava, A., Wu, W., Kurtek, S., Klassen, E., & Marron, J.S. (2011). Registration of functional data using Fisher-Rao metric. [arXiv:1103.3817](https://doi.org/10.48550/arXiv.1103.3817)
+- Tucker, J.D., Wu, W., & Srivastava, A. (2013). Generative models for functional data using phase and amplitude separation. *Computational Statistics & Data Analysis*, 61, 50--66. [doi:10.1016/j.csda.2012.12.001](https://doi.org/10.1016/j.csda.2012.12.001)
+- Wang, K., & Gasser, T. (1997). Alignment of curves by dynamic time warping. *Annals of Statistics*, 25(3), 1251--1276. [doi:10.1214/aos/1069362747](https://doi.org/10.1214/aos/1069362747)

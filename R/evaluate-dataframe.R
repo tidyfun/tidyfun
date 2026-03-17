@@ -20,6 +20,10 @@
 #' @importFrom tidyselect eval_select
 #' @importFrom purrr map map_lgl pmap
 #' @family tidyfun data wrangling functions
+#' @examples
+#' d <- dplyr::tibble(id = 1:3)
+#' d$f <- tf_rgp(3, 11L)
+#' str(tf_evaluate(d))
 tf_evaluate.data.frame <- function(object, ..., arg) {
   # figure out which tf columns to evaluate:
   tf_cols <- names(object)[map_lgl(object, is_tf)]

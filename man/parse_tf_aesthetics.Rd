@@ -7,13 +7,17 @@
 parse_tf_aesthetics(mapping, data = NULL)
 }
 \arguments{
-\item{mapping}{An aesthetic mapping created with aes()}
+\item{mapping}{An aesthetic mapping created with \code{\link[ggplot2:aes]{ggplot2::aes()}}.}
 
-\item{data}{Data frame to evaluate expressions against}
+\item{data}{Data frame to evaluate expressions against.}
 }
 \value{
-List with tf_aes, scalar_tf_aes, and regular_aes components
+A list with components \code{tf_aes}, \code{scalar_tf_aes}, and \code{regular_aes}.
 }
 \description{
 Parse aesthetic mappings to separate tf and regular aesthetics
+}
+\examples{
+parse_tf_aesthetics(ggplot2::aes(tf = f, color = group))
+parse_tf_aesthetics(ggplot2::aes(x = x, y = y))
 }

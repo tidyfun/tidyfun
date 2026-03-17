@@ -88,6 +88,11 @@ tf_ggplot <- function(
 
 #' Check if object is a tf_ggplot
 #' @param x Object to test
+#' @returns `TRUE` if `x` inherits from `"tf_ggplot"`, `FALSE` otherwise.
+#' @examples
+#' p <- tf_ggplot(data.frame(x = 1))
+#' is_tf_ggplot(p)
+#' is_tf_ggplot(ggplot2::ggplot())
 #' @export
 is_tf_ggplot <- function(x) {
   inherits(x, "tf_ggplot")
@@ -95,9 +100,12 @@ is_tf_ggplot <- function(x) {
 
 #' Parse aesthetic mappings to separate tf and regular aesthetics
 #'
-#' @param mapping An aesthetic mapping created with aes()
-#' @param data Data frame to evaluate expressions against
-#' @return List with tf_aes, scalar_tf_aes, and regular_aes components
+#' @param mapping An aesthetic mapping created with [ggplot2::aes()].
+#' @param data Data frame to evaluate expressions against.
+#' @returns A list with components `tf_aes`, `scalar_tf_aes`, and `regular_aes`.
+#' @examples
+#' parse_tf_aesthetics(ggplot2::aes(tf = f, color = group))
+#' parse_tf_aesthetics(ggplot2::aes(x = x, y = y))
 #' @export
 parse_tf_aesthetics <- function(mapping, data = NULL) {
   if (length(mapping) == 0) {
@@ -151,11 +159,16 @@ parse_tf_aesthetics <- function(mapping, data = NULL) {
 
 #' Transform data with tf aesthetics into long format
 #'
-#' @param data Data frame containing tf objects
-#' @param tf_aesthetics List of tf aesthetic mappings
-#' @param arg Optional evaluation grid
-#' @param interpolate Whether to interpolate tf objects
-#' @return Transformed data frame in long format
+#' @param data Data frame containing tf objects.
+#' @param tf_aesthetics List of tf aesthetic mappings.
+#' @param arg Optional evaluation grid.
+#' @param interpolate Whether to interpolate tf objects.
+#' @returns A data frame in long format with tf columns expanded.
+#' @examples
+#' d <- data.frame(g = 1:3)
+#' d$f <- tf_rgp(3)
+#' tf_aes <- parse_tf_aesthetics(ggplot2::aes(tf = f))$tf_aes
+#' head(transform_tf_data(d, tf_aes))
 #' @export
 transform_tf_data <- function(
   data,
@@ -480,6 +493,7 @@ convert_tf_ggplot <- function(tf_plot, layer_mapping = aes()) {
 #'
 #' @param e1 A tf_ggplot object
 #' @param e2 A ggplot2 layer, scale, theme, etc.
+#' @returns A modified `tf_ggplot` object.
 #' @export
 `+.tf_ggplot` <- function(e1, e2) {
   # Debug output
@@ -1292,6 +1306,7 @@ make_safe_column_name <- function(expr_text, existing_names = character(0)) {
 #' Print method for tf_ggplot
 #' @param x A tf_ggplot object
 #' @param ... Additional arguments
+#' @returns `x`, invisibly. Called for its side effect of printing the plot.
 #' @export
 print.tf_ggplot <- function(x, ...) {
   # If there are tf layers or tf aesthetics, finalize before printing
@@ -1313,6 +1328,7 @@ print.tf_ggplot <- function(x, ...) {
 #' ggplot_build method for tf_ggplot
 #' @param plot A tf_ggplot object
 #' @param ... Additional arguments passed through from [ggplot2::ggplot_build()].
+#' @returns A built ggplot object (class `ggplot_built`).
 #' @export
 ggplot_build.tf_ggplot <- function(plot, ...) {
   # Finalize tf_ggplot before building

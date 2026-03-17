@@ -86,6 +86,11 @@ If it does not include an ID column with a unique identifier for each row, you w
 be able to match arg-value pairs to the different functions after unnesting.
 }
 }
+\examples{
+d <- dplyr::tibble(id = 1:3)
+d$f <- tf_rgp(3, 11L)
+tf_unnest(d, f)
+}
 \seealso{
 \code{\link[=tf_evaluate.data.frame]{tf_evaluate.data.frame()}}
 

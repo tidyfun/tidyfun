@@ -4,7 +4,7 @@
 \name{tidyfun-package}
 \alias{tidyfun}
 \alias{tidyfun-package}
-\title{tidyfun: Tools for Tidy Functional Data}
+\title{tidyfun: Tidy Functional Data Wrangling and Visualization}
 \description{
 \code{tidyfun} makes data wrangling and exploratory analysis for functional data
 in \code{R} easier.\cr\cr
@@ -31,7 +31,7 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Fabian Scheipl \email{fabian.scheipl@googlemail.com} (\href{https://orcid.org/0000-0001-8172-3603}{ORCID})
+\strong{Maintainer}: Fabian Scheipl \email{fabian.scheipl@googlemail.com} (\href{https://orcid.org/0000-0001-8172-3603}{ORCID}) [copyright holder]
 
 Authors:
 \itemize{
