@@ -22,6 +22,7 @@
 #' ggplot(data, aes(y = fi)) +
 #'   geom_meatballs(spaghetti = FALSE) +
 #'   facet_wrap(~col)
+#' @returns A [ggplot2::layer()] object for use in a ggplot.
 #' @name ggspaghetti
 #' @family tidyfun visualization
 #' @import ggplot2
@@ -37,13 +38,13 @@ is.finite.tf <- function(x) {
 scale_type.tf <- function(x) "identity"
 
 #' @export
-#' @importFrom ggplot2 ggproto Stat Geom
-#' @importFrom dplyr pull
 #' @rdname ggspaghetti
 #' @family tidyfun visualization
 #' @usage NULL
 #' @format NULL
-StatTf <- ggproto("StatTf", Stat,
+StatTf <- ggproto(
+  "StatTf",
+  Stat,
   required_aes = "y",
   setup_params = function(data, params) {
     if (is.null(params$arg)) {
@@ -52,7 +53,11 @@ StatTf <- ggproto("StatTf", Stat,
     params
   },
   compute_layer = function(self, data, params, layout) {
-    stopifnot(is_tf(pull(data, y)))
+    if (!is_tf(data$y)) {
+      cli::cli_abort(
+        "{.arg y} must be a {.cls tf} object, not {.obj_type_friendly {data$y}}."
+      )
+    }
     tf_eval <- suppressMessages(
       data |>
         mutate(y____id = names(y) %||% seq_along(y)) |>
@@ -74,12 +79,25 @@ StatTf <- ggproto("StatTf", Stat,
 #' @family tidyfun visualization
 #' @inheritParams ggplot2::stat_identity
 #' @param na.rm remove NAs? defaults to `TRUE`
-stat_tf <- function(mapping = NULL, data = NULL, geom = "spaghetti",
-                    position = "identity", na.rm = TRUE, show.legend = NA,
-                    inherit.aes = TRUE, arg = NULL, ...) {
+stat_tf <- function(
+  mapping = NULL,
+  data = NULL,
+  geom = "spaghetti",
+  position = "identity",
+  na.rm = TRUE,
+  show.legend = NA,
+  inherit.aes = TRUE,
+  arg = NULL,
+  ...
+) {
   ggplot2::layer(
-    stat = StatTf, data = data, mapping = mapping, geom = geom,
-    position = position, show.legend = show.legend, inherit.aes = inherit.aes,
+    stat = StatTf,
+    data = data,
+    mapping = mapping,
+    geom = geom,
+    position = position,
+    show.legend = show.legend,
+    inherit.aes = inherit.aes,
     params = list(na.rm = na.rm, arg = arg, ...)
   )
 }
@@ -91,12 +109,24 @@ stat_tf <- function(mapping = NULL, data = NULL, geom = "spaghetti",
 #' @family tidyfun visualization
 #' @format NULL
 #' @param arg where to evaluate the functions in `y` -- defaults to the default ;)
-geom_spaghetti <- function(mapping = NULL, data = NULL,
-                           position = "identity", na.rm = TRUE, show.legend = NA,
-                           inherit.aes = TRUE, arg = NULL, ...) {
+geom_spaghetti <- function(
+  mapping = NULL,
+  data = NULL,
+  position = "identity",
+  na.rm = TRUE,
+  show.legend = NA,
+  inherit.aes = TRUE,
+  arg = NULL,
+  ...
+) {
   ggplot2::layer(
-    stat = StatTf, data = data, mapping = mapping, geom = "spaghetti",
-    position = position, show.legend = show.legend, inherit.aes = inherit.aes,
+    stat = StatTf,
+    data = data,
+    mapping = mapping,
+    geom = "spaghetti",
+    position = position,
+    show.legend = show.legend,
+    inherit.aes = inherit.aes,
     params = list(na.rm = na.rm, arg = arg, ...)
   )
 }
@@ -105,24 +135,28 @@ geom_spaghetti <- function(mapping = NULL, data = NULL,
 #' @family tidyfun visualization
 #' @usage NULL
 #' @format NULL
-GeomSpaghetti <- ggplot2::ggproto("GeomSpaghetti", ggplot2::Geom,
+GeomSpaghetti <- ggplot2::ggproto(
+  "GeomSpaghetti",
+  ggplot2::Geom,
+  default_aes = ggplot2::aes(
+    colour = "black",
+    linewidth = 0.5,
+    linetype = 1,
+    alpha = 0.5
+  ),
+  draw_group = function(data, panel_params, coord) {
+    GeomLine$draw_panel(data, panel_params, coord)
+  },
+  draw_key = GeomLine$draw_key,
+  required_aes = c("x", "y", "group"),
+  setup_data = function(data, params) {
+    GeomLine$setup_data(data, params)
+  },
   setup_params = function(data, params) {
     # TODO: implement proper "orientation" - see extending ggplot vignette
     params$flipped_aes <- FALSE
     params
-  },
-  setup_data = function(data, params) {
-    GeomLine$setup_data(data, params)
-  },
-  draw_group = function(data, panel_params, coord) {
-    GeomLine$draw_panel(data, panel_params, coord)
-  },
-  default_aes = ggplot2::aes(
-    colour = "black", linewidth = 0.5,
-    linetype = 1, alpha = 0.5
-  ),
-  draw_key = GeomLine$draw_key,
-  required_aes = c("x", "y", "group")
+  }
 )
 
 #-------------------------------------------------------------------------------
@@ -133,13 +167,25 @@ GeomSpaghetti <- ggplot2::ggproto("GeomSpaghetti", ggplot2::Geom,
 #' @format NULL
 #' @importFrom grid gList
 #' @param spaghetti plot noodles along with meatballs? defaults to TRUE.
-geom_meatballs <- function(mapping = NULL, data = NULL,
-                           position = "identity", na.rm = TRUE, show.legend = NA,
-                           inherit.aes = TRUE, arg = NULL, spaghetti = TRUE,
-                           ...) {
+geom_meatballs <- function(
+  mapping = NULL,
+  data = NULL,
+  position = "identity",
+  na.rm = TRUE,
+  show.legend = NA,
+  inherit.aes = TRUE,
+  arg = NULL,
+  spaghetti = TRUE,
+  ...
+) {
   ggplot2::layer(
-    stat = StatTf, data = data, mapping = mapping, geom = "meatballs",
-    position = position, show.legend = show.legend, inherit.aes = inherit.aes,
+    stat = StatTf,
+    data = data,
+    mapping = mapping,
+    geom = "meatballs",
+    position = position,
+    show.legend = show.legend,
+    inherit.aes = inherit.aes,
     params = list(na.rm = na.rm, arg = arg, spaghetti = spaghetti, ...)
   )
 }
@@ -148,7 +194,32 @@ geom_meatballs <- function(mapping = NULL, data = NULL,
 #' @family tidyfun visualization
 #' @usage NULL
 #' @format NULL
-GeomMeatballs <- ggplot2::ggproto("GeomMeatball", ggplot2::Geom,
+GeomMeatballs <- ggplot2::ggproto(
+  "GeomMeatballs",
+  ggplot2::Geom,
+  default_aes = ggplot2::aes(
+    colour = "black",
+    linewidth = 0.5,
+    size = 0.5,
+    linetype = 1,
+    alpha = 0.5,
+    shape = 19,
+    fill = NA,
+    stroke = 0.5
+  ),
+  draw_group = function(data, panel_params, coord, spaghetti = TRUE) {
+    grid::gList(
+      if (spaghetti) GeomLine$draw_panel(data, panel_params, coord),
+      GeomPoint$draw_panel(data, panel_params, coord)
+    )
+  },
+  draw_key = function(data, params, size) {
+    grid::grobTree(
+      if (params$spaghetti) draw_key_path(data, params, size),
+      draw_key_point(data, params, size)
+    )
+  },
+  required_aes = c("x", "y", "group"),
   setup_params = function(data, params) {
     # TODO: implement proper "orientation" - see extending ggplot vignette
     params$flipped_aes <- FALSE
@@ -156,17 +227,5 @@ GeomMeatballs <- ggplot2::ggproto("GeomMeatball", ggplot2::Geom,
   },
   setup_data = function(data, params) {
     GeomLine$setup_data(data, params)
-  },
-  draw_group = function(data, panel_params, coord, spaghetti = TRUE) {
-    grid::gList(
-      if (spaghetti) GeomLine$draw_panel(data, panel_params, coord),
-      GeomPoint$draw_panel(data, panel_params, coord)
-    )
-  },
-  default_aes = ggplot2::aes(
-    colour = "black", linewidth = 0.5, size = 0.5,
-    linetype = 1, alpha = 0.5, shape = 19, fill = NA, stroke = 0.5
-  ),
-  draw_key = GeomLine$draw_key,
-  required_aes = c("x", "y", "group")
+  }
 )

@@ -4,19 +4,30 @@
 \name{dti_df}
 \alias{dti_df}
 \title{Diffusion tensor imaging data}
+\format{
+An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 382 rows and 6 columns.
+}
+\usage{
+dti_df
+}
 \description{
 Fractional anisotropy (FA) tract profiles for the corpus
-callosum (cca) and the right corticospinal tract (rcst). Accompanying
-the tract profiles are the subject ID numbers, visit number, total
-number of scans, multiple sclerosis case status and Paced Auditory Serial
-Addition Test (pasat) score.
+callosum (cca) and the right corticospinal tract (rcst).
+Accompanying the tract profiles are the subject ID numbers,
+visit number, total number of scans, multiple sclerosis case
+status and Paced Auditory Serial Addition Test (pasat) score.
 
-Data are also include in the \code{refund} package in another format.
+Data are also included in the \pkg{refund} package in another
+format.
 }
 \details{
 If you use this data as an example in written work, please
-include the following acknowledgment: “The MRI/DTI data were collected
-at Johns Hopkins University and the Kennedy-Krieger Institute"
+include the following acknowledgment: "The MRI/DTI data were
+collected at Johns Hopkins University and the Kennedy-Krieger
+Institute"
+}
+\examples{
+dti_df
 }
 \seealso{
 Other tidyfun datasets: 

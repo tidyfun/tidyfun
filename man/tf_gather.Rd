@@ -10,8 +10,7 @@ tf_gather(
   key = ".tfd",
   arg = NULL,
   domain = NULL,
-  evaluator = tf_approx_linear,
-  resolution = NULL
+  evaluator = tf_approx_linear
 )
 }
 \arguments{
@@ -36,8 +35,6 @@ See also \code{\link[tf:tfd]{tf::tfd()}}.}
 \item{domain}{optional. Range of possible \code{arg}-values. See \code{\link[tf:tfd]{tf::tfd()}} for details.}
 
 \item{evaluator}{optional. A function accepting arguments x, arg, evaluations. See \code{\link[tf:tfd]{tf::tfd()}} for details.}
-
-\item{resolution}{optional. Resolution of the evaluation grid in \code{arg}. See \code{\link[tf:tfd]{tf::tfd()}} for details.}
 }
 \value{
 a modified \code{data.frame} with a \code{tfd} column replacing the \code{...}.
@@ -49,15 +46,16 @@ original columns in a very long "key"-column -- instead it creates a \code{tfd}-
 containing the functional measurements of the columns given in \code{...}.
 }
 \examples{
-(d <- dplyr::as.tbl(data.frame(refund::DTI[1:5, ]$cca[, 1:10])))
+data(growth, package = "tf")
+(d <- tibble::as_tibble(as.data.frame(growth[1:5, ]$height[, 1:10, matrix = TRUE])))
 tf_gather(d)
-tf_gather(d, key = "cca_tf")
-tf_gather(d, arg = seq(0, 1, length.out = 10))$cca
+tf_gather(d, key = "height_tf")
+tf_gather(d, arg = seq(0, 1, length.out = 10))
 (d2 <- dplyr::bind_cols(id = rownames(d), d))
-tf_gather(d2, -id) # tf_gather(d2, matches("cca")); tf_gather(d2, -1); etc
+tf_gather(d2, -id) # tf_gather(d2, matches("height")); tf_gather(d2, -1); etc
 }
 \seealso{
-dplyr::select()
+\code{\link[dplyr:select]{dplyr::select()}}
 
 Other tidyfun data wrangling functions: 
 \code{\link{tf_evaluate.data.frame}()},

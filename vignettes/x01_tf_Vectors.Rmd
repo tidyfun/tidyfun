@@ -56,8 +56,7 @@ This vignette introduces the `tf` class, as well as the `tfd` and `tfb` subclass
 
 - with additional attributes that define *function-like* behavior:
     - how to **evaluate** the given "functions" for new arguments
-    - their **domain** 
-    - the **resolution** of the argument values
+    - their **domain**: the range of valid argument values 
 
 - `S3` based
 
@@ -194,7 +193,7 @@ and with manually set strong smoothing (`sp` $\to 0$) in orange.
 **Advantages:**
 
 - (much) faster than optimizing penalization for each curve
-- should scale well for larg-ish datasets
+- should scale well for largish datasets
 
 **Disadvantages**
 

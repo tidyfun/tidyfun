@@ -31,7 +31,7 @@ When selecting multiple columns, values from the same row will be recycled
 to their common size.}
 
 \item{arg}{optional values for the \code{arg} argument of
-\code{\link[=tf_evaluate]{tf_evaluate()}}}
+\code{\link[tf:tf_evaluate]{tf::tf_evaluate()}}}
 
 \item{interpolate}{return function values for \code{arg}-values not on original grid?
 Defaults to \code{TRUE}.}
@@ -75,7 +75,7 @@ columns.
 }
 \description{
 Similar in spirit to \code{\link[tidyr:unnest]{tidyr::unnest()}}, the reverse of \code{\link[=tf_nest]{tf_nest()}}.
-The \code{tf}-method simply turns a single \code{tfd} or \code{tfb} vector into a "long" \code{\link[=tibble]{tibble()}}.
+The \code{tf}-method simply turns a single \code{tfd} or \code{tfb} vector into a "long" \code{\link[tibble:tibble]{tibble::tibble()}}.
 }
 \details{
 \itemize{
@@ -86,8 +86,13 @@ If it does not include an ID column with a unique identifier for each row, you w
 be able to match arg-value pairs to the different functions after unnesting.
 }
 }
+\examples{
+d <- dplyr::tibble(id = 1:3)
+d$f <- tf_rgp(3, 11L)
+tf_unnest(d, f)
+}
 \seealso{
-tf_evaluate.data.frame()
+\code{\link[=tf_evaluate.data.frame]{tf_evaluate.data.frame()}}
 
 Other tidyfun data wrangling functions: 
 \code{\link{tf_evaluate.data.frame}()},

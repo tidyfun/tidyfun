@@ -183,7 +183,7 @@ dti_df |>
   geom_spaghetti()
 ```
 
-The existing `mutate` function can be combined with several `tidyfun` functions, including `tf_smooth`, `tf_zoom`, and `tf_deriv`.
+The existing `mutate` function can be combined with several `tidyfun` functions, including `tf_smooth`, `tf_zoom`, and `tf_derive`.
 
 One can smooth existing observations using `tf_smooth`:
 
@@ -195,7 +195,7 @@ chf_df |>
   geom_spaghetti()
 ```
 
-This can be combined with previous steps, like `group_by` and `summarize`, to build intution through descriptive plots and summaries:
+This can be combined with previous steps, like `group_by` and `summarize`, to build intuition through descriptive plots and summaries:
 
 ```{r}
 chf_df |>
@@ -236,3 +236,18 @@ dti_df |>
   geom_spaghetti(aes(y = cca_tfb_deriv), alpha = 0.3, linewidth = 0.3, col = "red") +
   ylab("d/dt f(t)")
 ```
+
+# Working with `data.table`
+
+`tidyfun` functional data objects work within `data.table` as well.
+
+However, there is one specific known caveat when calculating the mean of a `tf` vector within a `data.table` context:
+By default, `data.table` will use optimized routines for summary statistics, which may cause `mean` to dispatch to `data.table`'s own optimized implementation,
+leading to unexpected behavior for `tf` vectors.
+
+To ensure the correct mean calculation for `tf` vectors, there are two solutions:
+
+- Set `options(data.table.optimize = 0)`, which disables optimization, allowing the mean function to correctly dispatch for `tf` vectors.
+- Alternatively, explicitly call `tf:::mean.tf(activity)` in your code to directly specify the correct `tf`-mean calculation.
+
+This caveat applies specifically to `mean()` and is the only known issue. 

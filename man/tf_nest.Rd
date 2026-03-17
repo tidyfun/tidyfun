@@ -10,8 +10,7 @@ tf_nest(
   .id = "id",
   .arg = "arg",
   domain = NULL,
-  evaluator = "tf_approx_linear",
-  resolution = NULL
+  evaluator = "tf_approx_linear"
 )
 }
 \arguments{
@@ -31,8 +30,6 @@ of the observed functions. Defaults to "arg".}
 \item{domain}{optional. Range of possible \code{arg}-values. See \code{\link[tf:tfd]{tf::tfd()}} for details.}
 
 \item{evaluator}{optional. A function accepting arguments x, arg, evaluations. See \code{\link[tf:tfd]{tf::tfd()}} for details.}
-
-\item{resolution}{optional. Resolution of the evaluation grid in \code{arg}. See \code{\link[tf:tfd]{tf::tfd()}} for details.}
 }
 \value{
 a data frame with (at least) \code{.id} and \code{tfd} columns
@@ -46,13 +43,17 @@ define the values of the functions at those points into a (much shorter) table c
 appended as well.
 }
 \details{
-\code{domain}, \code{resolution} and \code{evaluator} can be specified as lists or vectors
+\code{domain} and \code{evaluator} can be specified as lists or vectors
 if you're nesting multiple functional data columns with different properties.
 Because quasi-quotation is \emph{such} a bitch, you can only specify the evaluator
 functions as strings and not as bare names here.
 }
+\examples{
+d <- dplyr::tibble(id = rep(1:3, each = 5), arg = rep(1:5, 3), value = rnorm(15))
+tf_nest(d, .id = id, .arg = arg)
+}
 \seealso{
-tfd() for \verb{domain, evaluator, resolution}
+\code{\link[tf:tfd]{tf::tfd()}} for \verb{domain, evaluator}
 
 Other tidyfun data wrangling functions: 
 \code{\link{tf_evaluate.data.frame}()},

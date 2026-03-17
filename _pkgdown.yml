@@ -2,27 +2,34 @@ url: https://tidyfun.github.io/tidyfun
 
 template:
   bootstrap: 5
+  light-switch: true
+  math-rendering: mathjax
 
 reference:
 - title: 'tf - (Sub)classes: Constructors & converters'
-  desc: Defining, evaluating and converting functional data objects
+  desc: Defining and converting functional data objects
   contents:
   - tf::tfd
+  - tf::as.tfd
   - tf::tfb
+  - tf::as.tfb
+  - tf::as.data.frame.tf
   - tf::tfb_spline
   - tf::tfb_fpc
   - tf::fpc_wsvd
+  - tf::tf_rebase
 - title: Evaluation and indexing
-  desc: Accessing, appending, evaluating and overwriting functional data objects
+  desc: Accessing, appending and evaluating functional data objects
   contents:
   - tf::tfbrackets
   - tf::tf_approx_linear
   - tf::tf_evaluate
   - tf::tf_interpolate
+  - tf::tf_splitcombine
 - title: Arithmetic, logical and summary functions
   desc: Functionality for computing with and comparing functional data
   contents:
-  - tf::Ops.tf
+  - tf::tfgroupgenerics
   - tf::tfsummaries
   - tf::tf_depth
   - tf::functionwise
@@ -31,6 +38,15 @@ reference:
   - tf::tf_derive
   - tf::tf_integrate
   - tf::tf_smooth
+- title: Registering and warping
+  desc: Functions for registering, and warping functional data
+  contents:
+  - tf::tf_register
+  - tf::tf_landmarks_extrema
+  - tf::tf_warp
+  - tf::tf_invert
+  - tf::tf_align
+  - tf::tf_estimate_warps
 - title: Wrangling
   desc: Reshaping and transforming tf-objects inside data frames
   contents:
@@ -43,11 +59,21 @@ reference:
   desc: Graphics functions and print formats
   contents:
   - tf::plot.tf
+  - autoplot.tf
   - geom_spaghetti
   - gglasagna
   - ggerrorband
   - geom_capellini
+  - geom_fboxplot
+  - tf_ggplot
+  - is_tf_ggplot
+  - parse_tf_aesthetics
+  - transform_tf_data
+  - "+.tf_ggplot"
+  - print.tf_ggplot
+  - ggplot_build.tf_ggplot
   - tf::print.tf
+  - tf::prep_plotting_arg
   - type_sum.tf
 - title: Querying functional data
   desc: Locating functional features like peaks or zero-crossings
@@ -63,12 +89,23 @@ reference:
   contents:
   - tf::tf_rgp
   - tf::tf_jiggle
+- title: Accessories
+  desc: Tooling functions
+  contents:
+  - tf::in_range
+  - tf::ensure_list
+  - tf::unique_id
+  - tf::vctrs
+  - tf::tf
 - title: Data Sets
   desc: Functional data sets
   contents:
   - chf_df
   - dti_df
   - tidyfun
+  - tf::gait
+  - tf::growth
+  - tf::pinch
 articles:
 - title: Articles
   desc: Articles & vignettes for tidyfun
@@ -78,11 +115,13 @@ articles:
   - x03_Data_Wrangling
   - x04_Visualization
   - x05_Advice
+  - x06_Registration
 navbar:
   type: default
   left:
   - icon: fa-github
     href: https://github.com/tidyfun/tidyfun
+    aria-label: GitHub
   - text: Reference
     href: reference/index.html
   - text: Articles
@@ -97,6 +136,8 @@ navbar:
       href: articles/x04_Visualization.html
     - text: Advice for Developers
       href: articles/x05_Advice.html
+    - text: Curve Registration
+      href: articles/x06_Registration.html
 development:
   mode: auto
 

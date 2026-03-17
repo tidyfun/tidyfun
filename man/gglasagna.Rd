@@ -25,19 +25,19 @@ order of lasagna layers.}
 \item{label}{(optional) bare name of a column in \code{data} to define labels for
 lasagna layers. Defaults to names of \code{y}, if present, or row numbers.}
 
-\item{arg}{\code{arg} to evaluate \code{y} om}
+\item{arg}{\code{arg} to evaluate \code{y} on}
 
 \item{order_by}{a function applied to each row in \code{y[, arg]} that must
 return a scalar value to define the order of lasagna layers.}
 
 \item{order_ticks}{add horizontal lines indicating borders between levels of
 \code{order} (if it is a discrete variable) and labels for its levels?
-Defaults to TRUE. Supply a list of arguments (grep source code for `order_ticks_args``)
+Defaults to TRUE. Supply a list of arguments (grep source code for \code{order_ticks_args})
 to override default appearance of labels.
 \strong{Switch this off if you use facetting, it's a hack and will produce nonsense.}}
 }
 \value{
-a `ggplot2`` object
+a \code{ggplot2} object
 }
 \description{
 Lasagna plots show one color bar for each function.
@@ -55,12 +55,13 @@ observation in \code{data} and the vertical order of the layers is the
 ordering of observations obtained by \code{dplyr::arrange(data, order, order_by(value), row_number())}.
 }
 \examples{
-\dontrun{
+\donttest{
+library(ggplot2)
 set.seed(1221)
 data <- expand.grid(group = factor(1:5), rep = 1:10)
 data <- dplyr::mutate(data,
   id = paste(group, rep, sep = "-"),
-  f =  tf_rgp(50),
+  f = tf_rgp(50),
   fb = tfb(f)
 )
 
@@ -68,14 +69,15 @@ gglasagna(data, f, label = id)
 gglasagna(data, fb, label = id, order = group)
 # order is lowest first / on top by default
 gglasagna(data, f, label = id, order = tf_depth(f))
-gglasagna(data, f, label = id, order_by = first) +
+gglasagna(data, f, label = id, order_by = dplyr::first) +
   facet_wrap(~group, scales = "free")
 # order of layers is by "order_by" within "order":
-gglasagna(data, fb, label = id, order = group, order_by = first)
+gglasagna(data, fb, label = id, order = group, order_by = dplyr::first)
 }
 }
 \seealso{
 Other tidyfun visualization: 
+\code{\link{autoplot.tf}()},
 \code{\link{ggcapellini}},
 \code{\link{ggspaghetti}}
 }

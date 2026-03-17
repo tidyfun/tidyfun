@@ -17,20 +17,22 @@
 #'   evaluations (`value`) and returns the modified nested dataframe.
 #' @export
 #' @import tf
-#' @importFrom tidyselect vars_select quos
-#' @importFrom rlang enquos quo_text
+#' @importFrom tidyselect eval_select
 #' @importFrom purrr map map_lgl pmap
 #' @family tidyfun data wrangling functions
+#' @examples
+#' d <- dplyr::tibble(id = 1:3)
+#' d$f <- tf_rgp(3, 11L)
+#' str(tf_evaluate(d))
 tf_evaluate.data.frame <- function(object, ..., arg) {
   # figure out which tf columns to evaluate:
   tf_cols <- names(object)[map_lgl(object, is_tf)]
-  tf_to_evaluate <- enquos(...)
-  if (!is_empty(tf_to_evaluate)) {
-    tf_to_evaluate <- unname(vars_select(names(object), !!!tf_to_evaluate))
+  if (...length() > 0) {
+    tf_to_evaluate <- names(eval_select(expr(c(...)), object))
     tf_cols <- intersect(tf_cols, tf_to_evaluate)
   }
   if (!length(tf_cols)) {
-    warning("Nothing to be done for tf_evaluate.", call. = FALSE)
+    cli::cli_warn("Nothing to be done for {.fn tf_evaluate}.")
     return(object)
   }
   if (!missing(arg) && !is.null(arg)) {
@@ -41,7 +43,9 @@ tf_evaluate.data.frame <- function(object, ..., arg) {
   } else {
     arg <- map(object[tf_cols], \(x) tf::ensure_list(tf_arg(x)))
   }
-  stopifnot(length(arg) == length(tf_cols))
+  if (length(arg) != length(tf_cols)) {
+    cli::cli_abort("{.arg arg} length must match number of {.cls tf} columns.")
+  }
   names(arg) <- tf_cols
   # convert them to list-columns of data.frames
   for (f in tf_cols) {

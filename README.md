@@ -8,9 +8,11 @@
 [![Lifecycle:
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 [![R-CMD-check](https://github.com/tidyfun/tidyfun/actions/workflows/full-check.yaml/badge.svg)](https://github.com/tidyfun/tidyfun/actions/workflows/full-check.yaml)
+[![R-universe
+version](https://tidyfun.r-universe.dev/tidyfun/badges/version)](https://tidyfun.r-universe.dev/tidyfun)
 [![MIT
-license](http://img.shields.io/badge/license-MIT-brightgreen.svg)](https://opensource.org/licenses/MIT)
-[![codecov.io](https://codecov.io/github/tidyfun/tidyfun/coverage.svg?branch=master)](https://codecov.io/github/tidyfun/tidyfun/branch/master)
+license](https://img.shields.io/badge/license-MIT-brightgreen.svg)](https://opensource.org/licenses/MIT)
+[![codecov](https://app.codecov.io/github/tidyfun/tidyfun/coverage.svg?branch=master)](https://app.codecov.io/github/tidyfun/tidyfun/branch/master)
 <!-- badges: end -->
 
 The goal of **`tidyfun`** is to provide accessible and well-documented
@@ -29,8 +31,13 @@ numeric, factor, and other observations on the same subject.
 
 ## Installation
 
-`tidyfun` is currently not on CRAN. You can install the development
-version from GitHub with:
+You can install `tidyfun` from CRAN:
+
+``` r
+install.packages("tidyfun")
+```
+
+or install the development version from GitHub with:
 
 ``` r
 # install.packages("pak")
@@ -62,6 +69,8 @@ articles on the following topics:
   `tidyfun` tools
 - [Visualizing](https://tidyfun.github.io/tidyfun/articles/x04_Visualization.html)
   tidy functional data
+- [Registering](https://tidyfun.github.io/tidyfun/articles/x06_Registration.html)
+  (aligning) functional data across methods
 
 The result is a package that enables exploratory data analysis like the
 following, which computes group-specific mean curves in the `dti_df`
@@ -79,7 +88,7 @@ dti_df |>
   facet_grid(~sex)
 ```
 
-<img src="man/figures/README-dti-ggplot-example-1.png" width="100%" />
+<img src="man/figures/README-dti-ggplot-example-1.png" alt="" width="100%" />
 
 ## What does it do?
 
@@ -128,7 +137,7 @@ conversions.
 
 [See
 here](https://tidyfun.github.io/tidyfun/articles/x02_Conversion.html)
-details on getting data into (and out of) the `tf` format.
+for details on getting data into (and out of) the `tf` format.
 
 #### `tidyverse` verbs for dealing with functional data inside data frames
 
@@ -163,6 +172,19 @@ for the documentation of the visualization approaches or take a look at
 the
 [Visualization](https://tidyfun.github.io/tidyfun/articles/x04_Visualization.html)
 vignette.
+
+#### Curve registration
+
+**`tidyfun`** supports multiple methods for aligning curves in time via
+`tf_register`: elastic SRVF alignment, continuous registration (CC),
+affine shift/scale models, and landmark registration. All methods return
+`tf_registration` objects with a consistent interface for extracting
+aligned curves, inverse warping functions, and diagnostic summaries.
+
+[See
+here](https://tidyfun.github.io/tidyfun/articles/x06_Registration.html)
+for a practical guide covering method selection, diagnostics, and worked
+examples on real data.
 
 ------------------------------------------------------------------------
 

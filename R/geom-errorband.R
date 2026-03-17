@@ -15,15 +15,17 @@
 #'   geom_spaghetti() +
 #'   geom_errorband(aes(ymax = ymax, ymin = ymin, fill = id)) +
 #'   facet_wrap(~id)
+#' @returns A [ggplot2::layer()] object for use in a ggplot.
 #' @name ggerrorband
 NULL
 
 #' @export
-#' @importFrom ggplot2 ggproto Stat Geom
 #' @rdname ggerrorband
 #' @usage NULL
 #' @format NULL
-StatErrorband <- ggproto("StatErrorband", Stat,
+StatErrorband <- ggproto(
+  "StatErrorband",
+  Stat,
   required_aes = c("ymax", "ymin"),
   setup_params = function(data, params) {
     if (is.null(params$arg)) {
@@ -32,7 +34,11 @@ StatErrorband <- ggproto("StatErrorband", Stat,
     params
   },
   compute_layer = function(self, data, params, layout) {
-    stopifnot(is_tf(pull(data, ymax)) & is_tf(pull(data, ymin)))
+    if (!is_tf(data$ymin) || !is_tf(data$ymax)) {
+      cli::cli_abort(
+        "{.arg ymax} and {.arg ymin} must be {.cls tf} objects, not {.obj_type_friendly {data$ymin}} and {.obj_type_friendly {data$ymax}}."
+      )
+    }
     tf_eval <-
       suppressMessages(
         data |>
@@ -41,7 +47,10 @@ StatErrorband <- ggproto("StatErrorband", Stat,
       ) |>
       select(-group, -ymin___arg) |>
       rename(
-        group = id, x = ymax___arg, ymin = ymin___value, ymax = ymax___value
+        group = id,
+        x = ymax___arg,
+        ymin = ymin___value,
+        ymax = ymax___value
       )
     tf_eval
   },
@@ -54,12 +63,25 @@ StatErrorband <- ggproto("StatErrorband", Stat,
 #' @rdname ggerrorband
 #' @inheritParams ggplot2::stat_identity
 #' @param na.rm remove NAs? defaults to `TRUE`
-stat_errorband <- function(mapping = NULL, data = NULL, geom = "errorband",
-                           position = "identity", na.rm = TRUE, show.legend = NA,
-                           inherit.aes = TRUE, arg = NULL, ...) {
+stat_errorband <- function(
+  mapping = NULL,
+  data = NULL,
+  geom = "errorband",
+  position = "identity",
+  na.rm = TRUE,
+  show.legend = NA,
+  inherit.aes = TRUE,
+  arg = NULL,
+  ...
+) {
   layer(
-    stat = StatErrorband, data = data, mapping = mapping, geom = geom,
-    position = position, show.legend = show.legend, inherit.aes = inherit.aes,
+    stat = StatErrorband,
+    data = data,
+    mapping = mapping,
+    geom = geom,
+    position = position,
+    show.legend = show.legend,
+    inherit.aes = inherit.aes,
     params = list(na.rm = na.rm, arg = arg, ...)
   )
 }
@@ -70,12 +92,24 @@ stat_errorband <- function(mapping = NULL, data = NULL, geom = "errorband",
 #' @rdname ggerrorband
 #' @format NULL
 #' @param arg where to evaluate `tf` -- defaults to the default ;)
-geom_errorband <- function(mapping = NULL, data = NULL,
-                           position = "identity", na.rm = TRUE, show.legend = NA,
-                           inherit.aes = TRUE, arg = NULL, ...) {
+geom_errorband <- function(
+  mapping = NULL,
+  data = NULL,
+  position = "identity",
+  na.rm = TRUE,
+  show.legend = NA,
+  inherit.aes = TRUE,
+  arg = NULL,
+  ...
+) {
   layer(
-    stat = StatErrorband, data = data, mapping = mapping, geom = "errorband",
-    position = position, show.legend = show.legend, inherit.aes = inherit.aes,
+    stat = StatErrorband,
+    data = data,
+    mapping = mapping,
+    geom = "errorband",
+    position = position,
+    show.legend = show.legend,
+    inherit.aes = inherit.aes,
     params = list(na.rm = na.rm, arg = arg, ...)
   )
 }
@@ -83,7 +117,9 @@ geom_errorband <- function(mapping = NULL, data = NULL,
 #' @rdname ggerrorband
 #' @usage NULL
 #' @format NULL
-GeomErrorband <- ggproto("GeomErrorband", Geom,
+GeomErrorband <- ggproto(
+  "GeomErrorband",
+  Geom,
   setup_params = function(data, params) {
     # TODO: implement proper "orientation" - see extending ggplot vignette
     params$flipped_aes <- FALSE
@@ -96,7 +132,10 @@ GeomErrorband <- ggproto("GeomErrorband", Geom,
     GeomRibbon$draw_panel(data, panel_params, coord)
   },
   default_aes = aes(
-    fill = "grey70", linetype = 0, alpha = 0.3, linewidth = 0.1
+    fill = "grey70",
+    linetype = 0,
+    alpha = 0.3,
+    linewidth = 0.1
   ),
   draw_key = GeomRibbon$draw_key,
   required_aes = c("ymin", "ymax")

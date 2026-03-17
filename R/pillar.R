@@ -27,10 +27,6 @@ pillar_shaft.tf <- function(x, ...) {
   if (is.null(digits)) {
     digits <- options("digits")$digits
   }
-  out <- format(x,
-    width = 30L,
-    digits = min(digits, abs(floor(log10(attr(x, "resolution"))))),
-    prefix = FALSE, ...
-  )
+  out <- format(x, width = 30L, digits = digits, prefix = FALSE, ...)
   pillar::new_pillar_shaft_simple(out, align = "right", min_width = NULL)
 }

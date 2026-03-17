@@ -1,6 +1,6 @@
 # MIT License
 
-Copyright (c) 2019 Fabian Scheipl, Jeff Goldsmith, Julia Wrobel
+Copyright (c) 2019-2026 Fabian Scheipl, Jeff Goldsmith, Julia Wrobel
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

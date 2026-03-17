@@ -42,70 +42,60 @@ set.seed(1221)
 
 The **`tidyfun`** package is designed to facilitate **functional data analysis in `R`**, with particular emphasis on compatibility with the `tidyverse`. In this vignette, we illustrate data visualization using **`tidyfun`**.
 
-We'll draw on `tidyfun::chf_df` and `tidyfun::dti_df`, as well as the `fda::CanadianWeather` data. 
+We'll draw on the `tidyfun::dti_df` and the `tidyfun::chf_df` data sets for examples.   
 
 # Plotting with `ggplot`
 
 `ggplot` is a powerful framework for visualization. In this section, we'll assume some basic familiarity with the package; if you're new to `ggplot`, [this primer](https://rpubs.com/hadley/ggplot-intro) may be helpful.
 
-**`tidyfun`** includes **pasta-themed** `geom`s and plots for functional data:
+**`tidyfun`** provides `tf_ggplot()` as the primary interface for plotting functional data with `ggplot2`. It works just like `ggplot()`, but understands `tf` vectors — use the `tf` aesthetic to map a `tf` column to the plot, then add standard `ggplot2` geoms (`geom_line`, `geom_point`, `geom_ribbon`, etc.).
 
-- **`geom_spaghetti`** for lines
-- **`geom_meatballs`**  for (lines &) points
-- **`gglasagna`** for heatmaps, with an **`order`**-argument for arranging lasagna layers / heat map rows.
-- **`geom_capellini`** for little sparklines / glyphs on maps etc.
-- **`geom_errorband`** -- a functional data version of `geom_ribbon`
+For heatmaps, use **`gglasagna`**; for sparklines / glyphs on maps, use **`geom_capellini`** (these use their own specialized stats and are called directly without `tf_ggplot`). The older geoms **`geom_spaghetti`**, **`geom_meatballs`**, and **`geom_errorband`** are still available for backward compatibility.
 
-## `geom_spaghetti` and `geom_meatballs`
+## `tf_ggplot` with standard geoms
 
-One of the most fundamental plots for functional data is the spaghetti plot, which is implemented in `tidyfun` + `ggplot` through `geom_spaghetti`:
+One of the most fundamental plots for functional data is the spaghetti plot, which is implemented in `tidyfun` + `ggplot2` through `tf_ggplot()` + `geom_line()`:
 
 ```{r plot_chf}
-chf_df |>
-  filter(id == 1) |>
-  ggplot(aes(y = activity)) +
-  geom_spaghetti()
+dti_df[1:10,] |>
+  tf_ggplot(aes(tf = cca)) + geom_line(alpha = .3)
 ```
 
-A variant on the spaghetti plot is the meatballs plot, which shows both the "noodles" (i.e. functional observations visualized as curves) and the "meatballs" (i.e. observed data values visualized as points). 
+Adding `geom_point()` to `geom_line()` shows both the curves and the actually observed data values:
 
 ```{r}
-chf_df |>
-  filter(id == 1, day == "Mon") |>
-  ggplot(aes(y = activity)) +
-  geom_meatballs()
+dti_df[1:3,] |>
+  tf_ggplot(aes(tf = rcst)) + geom_line(alpha = .3) + geom_point(alpha= .3)
 ```
 
-## Using with other `ggplot` features
+## Using with other `ggplot2` features
 
-The new geoms in `tidyfun` "play nicely" with standard `ggplot` aesthetics and options. 
+`tf_ggplot()` plays nicely with standard `ggplot2` aesthetics and options.
 
 You can, for example, define the color aesthetic for plots of `tf` variables using other observations:
 
 ```{r}
 chf_df |>
   filter(id %in% 1:5) |>
-  ggplot(aes(y = activity, color = gender)) +
-  geom_spaghetti(alpha = 0.2)
+tf_ggplot(aes(tf = tf_smooth(activity, f = .05), color = gender)) + 
+  geom_line(alpha = 0.3)
 ```
 
-You can also use facetting:
+... or use facetting:
 
 ```{r}
 chf_df |>
-  filter(day %in% c("Mon", "Sun")) |>
-  ggplot(aes(y = activity, color = gender)) +
-  geom_spaghetti(alpha = 0.1) +
-  facet_grid(~day)
+  filter((id %in% 1:10) & (day %in% c("Mon", "Sun"))) |>
+tf_ggplot(aes(tf = tf_smooth(activity, f = .05), color = gender)) +
+  geom_line(alpha = 0.3) + facet_grid(~day)
 ```
 
-Another example, using the DTI data, is below. 
+Another example, using the DTI data, is below.
 
 ```{r, dti-fig1}
 dti_df |>
-  ggplot() +
-  geom_spaghetti(aes(y = cca, col = case, alpha = 0.2 + 0.4 * (case == "control"))) +
-  facet_wrap(~sex) +
+  tf_ggplot(aes(tf = cca, col = case, alpha = 0.2 + 0.4 * (case == "control"))) +
+  geom_line() + facet_wrap(~sex) +
   scale_alpha(guide = "none", range = c(0.2, 0.4))
 ```
 
@@ -115,38 +105,86 @@ like the plot below showing group-wise smoothed and unsmoothed mean activity pro
 ```{r}
 chf_df |>
   group_by(gender, day) |>
-  summarize(mean_act = mean(activity)) |>
+  summarize(mean_act = mean(activity),
+            .groups = "drop_last") |>
   mutate(smooth_mean = tfb(mean_act, verbose = FALSE)) |>
   filter(day %in% c("Mon", "Sun")) |>
-  ggplot(aes(y = smooth_mean, color = gender)) +
-  geom_spaghetti(linewidth = 1.25, alpha = 1) +
-  geom_meatballs(aes(y = mean_act), alpha = 0.1) +
-  facet_grid(~day)
+  tf_ggplot(aes(color = gender)) +
+  geom_line(aes(tf = smooth_mean), linewidth = 1.25) +
+  geom_line(aes(tf = mean_act), alpha = 0.1) +
+  geom_point(aes(tf = mean_act), alpha = 0.1, size = .1) +
+  facet_grid(day~.)
 ```
 
 ... or the plot below showing group-wise mean functions +/- twice their pointwise standard errors:
 ```{r}
-chf_df |>
-  group_by(gender, day) |>
+dti_df |>
+  group_by(sex, case) |>
   summarize(
-    mean_act = mean(activity),
-    sd_act = sd(activity)
+    mean_cca = mean(tfb(cca, verbose = FALSE)), #pointwise mean function
+    sd_cca = sd(tfb(cca, verbose = FALSE)), # pointwise sd function
+    .groups = "drop_last"
   ) |>
-  group_by(gender, day) |>
+  group_by(sex, case) |>
   mutate(
-    upper_act = mean_act + 2 * sd_act,
-    lower_act = mean_act - 2 * sd_act
+    upper_cca = mean_cca + 2 * sd_cca,
+    lower_cca = mean_cca - 2 * sd_cca
   ) |>
-  filter(day %in% c("Mon", "Sun")) |>
-  ggplot(aes(y = mean_act, color = gender, fill = gender)) +
-  geom_spaghetti(alpha = 1) +
-  geom_errorband(aes(ymax = upper_act, ymin = lower_act), alpha = 0.3) +
-  facet_grid(day ~ gender)
+  tf_ggplot() +
+  geom_line(aes(tf = mean_cca, color = sex)) +
+  geom_ribbon(aes(tf_ymin = lower_cca, tf_ymax = upper_cca, fill = sex), alpha = 0.3) +
+  facet_grid(sex ~ case)
 ```
 
-## `gglasagna`
+## Functional data boxplots with `geom_fboxplot`
 
-Lasagna plots are "[a saucy alternative to spaghetti plots](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2937254/)". They are a variant on a heatmaps which show functional observations in rows and use color to illustrate values taken at different arguments. 
+"Boxplots" for functional data are implemented in `tidyfun` through `geom_fboxplot()`. They show the deepest function (using modified band depth, `"MBD"`, by default) as a thick median curve, a filled central ribbon spanning the pointwise range of the deepest half of the sample (by default), and outer fence lines obtained by inflating that central envelope by a factor of `coef = 1.5`. Curves that leave the fence envelope anywhere are flagged as outliers and drawn separately.
+
+Like `geom_boxplot()`, the layer follows the usual `ggplot2` interface closely. Grouping works naturally through `colour`, `fill`, or `group`, and the same group colour is reused for the ribbon, the outlier curves, and the median if a group colour/fill is mapped; otherwise, the median defaults to black.
+
+```{r}
+dti_df |> 
+  tf_ggplot(aes(tf = cca, fill = case)) +
+  geom_fboxplot(alpha = 0.35) +
+  facet_grid(~ sex) + labs(title="MBD-based boxplot")
+```
+
+```{r}
+dti_df |>
+  tf_ggplot(aes(tf = cca, colour = case)) +
+  geom_fboxplot(depth = "FM", alpha = 0.3) +
+  facet_grid(~ sex) + labs(title="FM-based boxplot")
+```
+
+```{r}
+dti_df |>
+  tf_ggplot(aes(tf = cca, colour = case)) +
+  geom_fboxplot(depth = "RPD", alpha = 0.3) +
+  facet_grid(~ sex) + labs(title="RPD-based boxplot")
+```
+
+The layer also supports irregular functional data directly:
+```{r}
+tf_ggplot(dti_df, aes(tf = rcst)) + geom_fboxplot()
+```
+
+Useful arguments:
+
+```{r}
+tf_ggplot(dti_df, aes(tf = rcst)) + 
+  geom_fboxplot(alpha = .5)
+tf_ggplot(dti_df, aes(tf = rcst)) + 
+  geom_fboxplot(alpha = .5, central = .2)
+tf_ggplot(dti_df, aes(tf = rcst)) + 
+  geom_fboxplot(alpha = .5, central = .2, outliers = FALSE)
+tf_ggplot(dti_df, aes(tf = rcst)) +
+  geom_fboxplot(orientation = "y", alpha = .3)
+``` 
+
+
+## Heatmaps for functional data: `gglasagna`
+
+Lasagna plots are "[a saucy alternative to spaghetti plots](https://pmc.ncbi.nlm.nih.gov/articles/PMC2937254/)". They are a variant on a heatmaps which show functional observations in rows and use color to illustrate values taken at different arguments. 
 
 In `tidyfun`, lasagna plots are implemented through `gglasagna`. A first example, using the CHF data, is below. 
 
@@ -205,6 +243,37 @@ ggplot(canada, aes(x = lon, y = lat)) +
   coord_quickmap()
 ```
 
+Another general use case for `geom_capellini` is visualizing FPCA decompositions:
+
+```{r, warn=FALSE}
+cca_fpc_tbl <- tibble(
+  cca = dti_df$cca[1:30],
+  cca_fpc = tfb_fpc(cca, pve = .8), 
+  fpc_1 = map(coef(cca_fpc), 2) |> unlist(), # 1st PC loading
+  fpc_2 = map(coef(cca_fpc), 3) |> unlist() # 2nd PC loading
+) 
+# rescale FPCs by sqrt of eigenvalues for visualization
+cca_fpcs_1_2 <- 
+  tf_basis(cca_fpc_tbl$cca_fpc, as_tfd = TRUE)[2:3] * 
+    sqrt(attr(cca_fpc_tbl$cca_fpc, "score_variance")[1:2]) 
+# scaled eigenfunctions look like this:
+tibble(
+   eigenfunction = cca_fpcs_1_2,
+   FPC = factor(1:2)
+) |> tf_ggplot() + 
+  geom_line(aes(tf = eigenfunction, col = FPC)) + 
+  geom_hline(yintercept = 0)
+```
+
+So FPC1 is mostly a horizontal (level) shift, while FPC2 mostly affects the size and direction of the extrema around 0.13 and 0.8.
+
+```{r, warn=FALSE}
+ggplot(cca_fpc_tbl[1:40,], aes(x =  fpc_1, y = fpc_2)) +
+  geom_point(size = .5, col = "red") +
+  geom_capellini(aes(tf =cca_fpc),width = .01, height = .01, line.linetype = 1) +
+  labs(x = "FPC1 score", y = "FPC2 score")
+```
+Consequently, we can see here that the horizontal axis representing the 1st FPC scores has the average level of functions increasing from left to right (first FPC function is basically a level shift), while the size and direction of the extrema at around 0.13 and particularly 0.8 change along the vertical axis representing the 2nd FPC scores.
 
 # Plotting with base R
 
@@ -233,4 +302,30 @@ text(
 )
 
 median(cca_five) |> lines(col = pal_5[3], lwd = 4)
+```
+
+`tf` also defines a `plot` method for `tf_registration` objects (returned by
+`tf_register()`) for visualizing function alignment (registration / phase
+variability). Current versions of `tf` return a registration result that stores
+the aligned curves, inverse warps, and template and can be inspected directly:
+```{r}
+cca_reg <- tf_register(
+  cca[1:5],
+  method = "landmark",
+  landmarks = tf_landmarks_extrema(cca[1:5], "max")
+)
+
+cca_reg
+summary(cca_reg)
+plot(cca_reg)
+```
+
+The registered curves, inverse warping functions, and template can also be
+extracted explicitly for custom plots:
+```{r}
+layout(t(1:2))
+
+plot(tf_inv_warps(cca_reg), col = pal_5, lwd = 2)
+plot(tf_aligned(cca_reg), col = pal_5, lwd = 2)
+lines(tf_template(cca_reg), col = "black", lwd = 4)
 ```
