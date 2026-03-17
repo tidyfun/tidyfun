@@ -234,8 +234,11 @@ cca_basis <- tfb(dti_df$cca[1:5], k = 25)
 cca_basis
 
 # re-express the raw data in the same basis representation
-cca_rebased <- tf_rebase(cca_raw, cca_basis)
+cca_rebased <- tf_rebase(cca_raw, basis_from = cca_basis)
 cca_rebased
+
+# or convert a spline-based representation to a grid based one for a specific grid:
+tf_rebase(cca_basis, basis_from = cca_raw)
 ```
 
 This is useful when you want to ensure that operations between `tf` objects
@@ -266,9 +269,38 @@ cca_recombined
 ```
 
 
-# Other formats
+# Conversion from `fda` objects
 
-`fda` and `fd` coming soon ...
+The `fda` package represents functional data as `fd` objects (basis function
+coefficients + basis definition). `tf` can convert these directly using
+`tfb_spline`, which re-expresses the `fd` basis in `tf`'s spline framework.
+This also works for `fdSmooth` objects returned by `fda::smooth.basis`.
+
+```{r}
+# create an fd object from the Canadian weather data
+weather_basis <- fda::create.fourier.basis(c(0, 365), nbasis = 65)
+weather_fd <- fda::smooth.basis(
+  argvals = 1:365,
+  y = fda::CanadianWeather$dailyAv[, , 1],
+  fdParobj = weather_basis
+)
+
+# convert fdSmooth to tfb
+weather_tf <- tfb_spline(weather_fd)
+weather_tf[1:3]
+```
+
+The resulting `tfb` object can then be used with all `tidyfun` tools:
+
+```{r}
+tibble(
+  place = fda::CanadianWeather$place,
+  region = fda::CanadianWeather$region,
+  temp = weather_tf
+) |>
+  tf_ggplot(aes(tf = temp, color = region)) +
+  geom_line(alpha = 0.5)
+```
 
 
 # Reversing the conversion
