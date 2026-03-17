@@ -232,8 +232,8 @@ dti_df |>
     cca_tfb_deriv = tf_derive(cca_tfb)
   ) |>
   tf_ggplot() +
-  geom_line(aes(tf = cca_raw_deriv), alpha = 0.3, linewidth = 0.3, col = "blue") +
-  geom_line(aes(tf = cca_tfb_deriv), alpha = 0.3, linewidth = 0.3, col = "red") +
+  geom_line(aes(tf = cca_raw_deriv), alpha = 0.3, linewidth = 0.3, color = "blue") +
+  geom_line(aes(tf = cca_tfb_deriv), alpha = 0.3, linewidth = 0.3, color = "red") +
   ylab("d/dt f(t)")
 ```
 
