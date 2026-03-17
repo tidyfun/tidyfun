@@ -17,19 +17,19 @@ rnk <- 5 #min(n, p)
 #x <- seq(-1, 1, l = p)
 x <- c(0, sort(runif(p - 2)), 1)
 set.seed(121344)
-Af <- tf_rgp(n, arg = x, nugget = 2/500)
+Af <- tf_rgp(n, arg = x, nugget = 2 / 500)
 # tfb_fpc(Af) %>% attr(., "basis") %>% environment(.) %$% efunctions %>% plot
 A <- t(as.matrix(Af)) #matrix(runif(n*p), ncol = n)
 
 #na_mask <- matrix(rbinom(n*p, size= 1, p = .995), ncol = n, nrow = p)
 #W <- na_mask
 #W <- matrix(1, ncol = n, nrow = p)
-W <- matrix(c(0, diff(x)/2), ncol = n, nrow = p)
+W <- matrix(c(0, diff(x) / 2), ncol = n, nrow = p)
 
 A_w <- A * W
 
 # initialize U
-U <-  qr.Q(qr(matrix(runif(p*rnk), ncol = rnk))) #svd(A_w)$u[, 1:rnk]
+U <- qr.Q(qr(matrix(runif(p * rnk), ncol = rnk))) #svd(A_w)$u[, 1:rnk]
 
 U_true <- svd(A)$u[, 1:rnk]
 V_true <- svd(A)$v[, 1:rnk]
@@ -42,7 +42,7 @@ pen_V <- .01 * crossprod(diff(diff(diag(p))))
 for (i in 1:n_iter) {
   # Computing the right approximants from the left approximants.
   R <- as.vector(t(U) %*% A_w)
-  L <- do.call(bdiag, map(1:n, ~ crossprod(U, W[,.x] * U))) +
+  L <- do.call(bdiag, map(1:n, ~ crossprod(U, W[, .x] * U))) +
     Diagonal(rnk) %x% pen_U
   #L_L <- chol(L)
   #Y <- backsolve(L_L, backsolve(t(L_L), R))
@@ -54,14 +54,13 @@ for (i in 1:n_iter) {
 
   #fix signs:
   for (r in 1:rnk) {
-    i <- which.max(abs(svd_r$u[,r])) #svd_r$u is diagonal with 1/-1 entries!?
-    V[, r] <- sign(svd_r$u[i,r]) * V[, r]
+    i <- which.max(abs(svd_r$u[, r])) #svd_r$u is diagonal with 1/-1 entries!?
+    V[, r] <- sign(svd_r$u[i, r]) * V[, r]
   }
 
-
   # Computing the left approximants from the right approximants.
-  R <- as.vector(t(A_w %*% t(t(V)/S)))
-  L <- do.call(bdiag, map(1:p, ~ crossprod(V, W[.x,] * V))) +
+  R <- as.vector(t(A_w %*% t(t(V) / S)))
+  L <- do.call(bdiag, map(1:p, ~ crossprod(V, W[.x, ] * V))) +
     Diagonal(rnk) %x% pen_V
   #lu_L <- lu(L)
   X <- solve(L, R) #backsolve(lu_L@U, backsolve(t(lu_L@L), R))
@@ -72,11 +71,13 @@ for (i in 1:n_iter) {
   A_approx <- U %*% diag(S) %*% t(V)
   mean(abs(A_approx - A))
   cat(mean(abs(A_approx - A_true)), "\n")
-  layout(t(1:2)); matplot(A, type = "l"); matplot(A_approx, type = "l", ylim = range(A))
-  layout(t(1:2)); matplot(U_true, type = "l"); matplot(U, type = "l")
+  layout(t(1:2))
+  matplot(A, type = "l")
+  matplot(A_approx, type = "l", ylim = range(A))
+  layout(t(1:2))
+  matplot(U_true, type = "l")
+  matplot(U, type = "l")
   # layout(t(1:2)); matplot(V_true, type = "b"); matplot(V, type = "b")
   #
   # all_equal(S, S_true)
 }
-
-

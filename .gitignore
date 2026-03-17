@@ -50,3 +50,14 @@ rsconnect/
 
 # macOS
 .DS_Store
+
+# Local dev/scratch files
+CLAUDE.md
+tidyfun.Rproj
+Rplots.pdf
+attic/
+test-tf-ggplot-demo.R
+vignettes/x*.R
+tests/quick-visual-check.R
+tests/README-visual-testing.md
+tests/visual-test-runner.R
