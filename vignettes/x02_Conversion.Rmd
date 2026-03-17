@@ -244,8 +244,8 @@ tf_rebase(cca_basis, basis_from = cca_raw)
 This is useful when you want to ensure that operations between `tf` objects
 (e.g., addition, comparison) use a common representation, or when you want
 to convert between `tfd` and `tfb` representations while matching a specific
-basis configuration. It is required for many operations that would otherwise be
-not well defined.
+basis configuration. It is required for many operations that would otherwise not
+be well-defined.
 
 
 # Splitting and combining functions
