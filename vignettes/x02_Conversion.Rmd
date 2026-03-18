@@ -74,8 +74,8 @@ Finally, we'll make a quick spaghetti plot to illustrate that the complete funct
 
 ```{r}
 dti_df |>
-  ggplot() +
-  geom_spaghetti(aes(y = cca, col = case, alpha = 0.2 + 0.4 * (case == "control"))) +
+  tf_ggplot(aes(tf = cca, col = case, alpha = 0.2 + 0.4 * (case == "control"))) +
+  geom_line() +
   facet_wrap(~sex) +
   scale_alpha(guide = "none", range = c(0.2, 0.4))
 ```
@@ -110,12 +110,12 @@ A plot containing both functional observations is shown below.
 
 ```{r}
 temp_panel <- canada |>
-  ggplot(aes(y = temp, color = region)) +
-  geom_spaghetti()
+  tf_ggplot(aes(tf = temp, color = region)) +
+  geom_line()
 
 precip_panel <- canada |>
-  ggplot(aes(y = precipl10, color = region)) +
-  geom_spaghetti()
+  tf_ggplot(aes(tf = precipl10, color = region)) +
+  geom_line()
 
 gridExtra::grid.arrange(temp_panel, precip_panel, nrow = 1)
 ```
@@ -149,8 +149,8 @@ We'll make a quick plot to show the result.
 
 ```{r}
 sleepstudy_tf |>
-  ggplot(aes(y = Reaction)) +
-  geom_spaghetti()
+  tf_ggplot(aes(tf = Reaction)) +
+  geom_line()
 ```
 
 Alternatively, for this simple example that does not contain any additional time-varying or time-constant covariates besides the values that define the functions themselves, we could have simply done:
@@ -214,9 +214,93 @@ dti_df |>
 ```
 
 
-# Other formats
+# Changing representation with `tf_rebase`
 
-`fda` and `fd` coming soon ...
+Sometimes you need to make different `tf` objects compatible -- for example,
+to combine raw observations with a basis representation, or to ensure two
+functional data vectors are expressed on the same grid or in the same basis.
+`tf_rebase` re-expresses one `tf` object in the representation of another:
+
+```{r}
+# reload the tidyfun version of the DTI data
+data(dti_df, package = "tidyfun")
+
+# raw functional data
+cca_raw <- dti_df$cca[1:5]
+cca_raw
+
+# represent in a spline basis
+cca_basis <- tfb(dti_df$cca[1:5], k = 25)
+cca_basis
+
+# re-express the raw data in the same basis representation
+cca_rebased <- tf_rebase(cca_raw, basis_from = cca_basis)
+cca_rebased
+
+# or convert a spline-based representation to a grid-based one for a specific grid:
+tf_rebase(cca_basis, basis_from = cca_raw)
+```
+
+This is useful when you want to ensure that operations between `tf` objects
+(e.g., addition, comparison) use a common representation, or when you want
+to convert between `tfd` and `tfb` representations while matching a specific
+basis configuration. It is required for many operations that would otherwise not
+be well-defined.
+
+
+# Splitting and combining functions
+
+`tf_split` separates each function into fragments defined on sub-intervals
+of its domain, and `tf_combine` joins fragments back together. This is
+useful for analyzing specific parts of a function separately or for
+stitching together functional observations from different sources.
+
+```{r}
+# split CCA profiles at their midpoint
+cca_halves <- tf_split(dti_df$cca[1:10], splits = 0.5)
+
+# result is a list of tf vectors, one per segment
+cca_halves[[1]]
+cca_halves[[2]]
+
+# recombine
+cca_recombined <- tf_combine(cca_halves[[1]], cca_halves[[2]])
+cca_recombined 
+```
+
+
+# Conversion from `fda` objects
+
+The `fda` package represents functional data as `fd` objects (basis function
+coefficients + basis definition). `tf` can convert these directly using
+`tfb_spline`, which re-expresses the `fd` basis in `tf`'s spline framework.
+This also works for `fdSmooth` objects returned by `fda::smooth.basis`.
+
+```{r}
+# create an fd object from the Canadian weather data
+weather_basis <- fda::create.fourier.basis(c(0, 365), nbasis = 65)
+weather_fd <- fda::smooth.basis(
+  argvals = 1:365,
+  y = fda::CanadianWeather$dailyAv[, , 1],
+  fdParobj = weather_basis
+)
+
+# convert fdSmooth to tfb
+weather_tf <- tfb_spline(weather_fd)
+weather_tf[1:3]
+```
+
+The resulting `tfb` object can then be used with all `tidyfun` tools:
+
+```{r}
+tibble(
+  place = fda::CanadianWeather$place,
+  region = fda::CanadianWeather$region,
+  temp = weather_tf
+) |>
+  tf_ggplot(aes(tf = temp, color = region)) +
+  geom_line(alpha = 0.5)
+```
 
 
 # Reversing the conversion
