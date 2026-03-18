@@ -5,22 +5,51 @@
 \alias{chf_df}
 \title{Congestive heart failure accelerometry data}
 \format{
-An object of class \code{spec_tbl_df} (inherits from \code{tbl_df}, \code{tbl}, \code{data.frame}) with 329 rows and 8 columns.
+A tibble with 329 rows and 8 columns:
+\describe{
+\item{id}{(numeric) Subject identifier.}
+\item{gender}{(character) \code{"Male"} or \code{"Female"}.}
+\item{age}{(numeric) Age in years.}
+\item{bmi}{(numeric) Body mass index.}
+\item{event_week}{(numeric) Week of cardiac event.}
+\item{event_type}{(character) Type of cardiac event.}
+\item{day}{(ordered factor) Day of the week (\code{Mon} < \code{Tue} < ... < \code{Sun}).}
+\item{activity}{(\code{tfd_reg}) Minute-by-minute activity counts over
+a 24-hour period (arg domain 1--1440).}
+}
+}
+\source{
+Data are from a study of physical activity in CHF patients conducted by
+Huang et al. The original data are publicly available; see the paper for
+download details.
 }
 \usage{
 chf_df
 }
 \description{
-Activity data from a study of congestive heart failure. Data
-were originally presented in "Multilevel Matrix-Variate Analysis
-and its Application to Accelerometry-Measured Physical Activity
-in Clinical Populations" by Huang et al.; these data are public,
-with download information in the paper.
+Activity data from a study of congestive heart failure (CHF) patients. Data
+were originally presented in Huang et al. (2019); these data are publicly
+available, with download information in the paper.
 }
 \examples{
 chf_df
+
+library(ggplot2)
+chf_df |>
+  dplyr::filter(id \%in\% 1:5) |>
+  gglasagna(activity, order_by = mean)
+}
+\references{
+Huang, L., Bai, J., Ivanescu, A., Harris, T., Maurer, M., Green, P., and
+Zipunnikov, V. (2019). Multilevel Matrix-Variate Analysis and its
+Application to Accelerometry-Measured Physical Activity in Clinical
+Populations. \emph{Journal of the American Statistical Association}, 114(526),
+553--564. \doi{10.1080/01621459.2018.1482750}
 }
 \seealso{
+\link{dti_df} for another example dataset,
+\code{vignette("x01_Overview", package = "tidyfun")} for usage examples.
+
 Other tidyfun datasets: 
 \code{\link{dti_df}}
 }
