@@ -5,15 +5,11 @@
       fontURL: "https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/output/chtml/fonts/woff-v2"
     }
   };
-</script><script src="../lightswitch.js"></script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet"><link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet"><script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Congestive heart failure accelerometry data — chf_df"><meta name="description" content='Activity data from a study of congestive heart failure. Data
-were originally presented in "Multilevel Matrix-Variate Analysis
-and its Application to Accelerometry-Measured Physical Activity
-in Clinical Populations" by Huang et al.; these data are public,
-with download information in the paper.'><meta property="og:description" content='Activity data from a study of congestive heart failure. Data
-were originally presented in "Multilevel Matrix-Variate Analysis
-and its Application to Accelerometry-Measured Physical Activity
-in Clinical Populations" by Huang et al.; these data are public,
-with download information in the paper.'></head><body>
+</script><script src="../lightswitch.js"></script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet"><link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet"><script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Congestive heart failure accelerometry data — chf_df"><meta name="description" content="Activity data from a study of congestive heart failure (CHF) patients. Data
+were originally presented in Huang et al. (2019); these data are publicly
+available, with download information in the paper."><meta property="og:description" content="Activity data from a study of congestive heart failure (CHF) patients. Data
+were originally presented in Huang et al. (2019); these data are publicly
+available, with download information in the paper."></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
@@ -63,11 +59,9 @@ with download information in the paper.'></head><body>
     </div>
 
     <div class="ref-description section level2">
-    <p>Activity data from a study of congestive heart failure. Data
-were originally presented in "Multilevel Matrix-Variate Analysis
-and its Application to Accelerometry-Measured Physical Activity
-in Clinical Populations" by Huang et al.; these data are public,
-with download information in the paper.</p>
+    <p>Activity data from a study of congestive heart failure (CHF) patients. Data
+were originally presented in Huang et al. (2019); these data are publicly
+available, with download information in the paper.</p>
     </div>
 
     <div class="section level2">
@@ -77,11 +71,52 @@ with download information in the paper.</p>
 
     <div class="section level2">
     <h2 id="format">Format<a class="anchor" aria-label="anchor" href="#format"></a></h2>
-    <p>An object of class <code>spec_tbl_df</code> (inherits from <code>tbl_df</code>, <code>tbl</code>, <code>data.frame</code>) with 329 rows and 8 columns.</p>
+    <p>A tibble with 329 rows and 8 columns:</p><dl><dt>id</dt>
+<dd><p>(numeric) Subject identifier.</p></dd>
+
+<dt>gender</dt>
+<dd><p>(character) <code>"Male"</code> or <code>"Female"</code>.</p></dd>
+
+<dt>age</dt>
+<dd><p>(numeric) Age in years.</p></dd>
+
+<dt>bmi</dt>
+<dd><p>(numeric) Body mass index.</p></dd>
+
+<dt>event_week</dt>
+<dd><p>(numeric) Week of cardiac event.</p></dd>
+
+<dt>event_type</dt>
+<dd><p>(character) Type of cardiac event.</p></dd>
+
+<dt>day</dt>
+<dd><p>(ordered factor) Day of the week (<code>Mon</code> &lt; <code>Tue</code> &lt; ... &lt; <code>Sun</code>).</p></dd>
+
+<dt>activity</dt>
+<dd><p>(<code>tfd_reg</code>) Minute-by-minute activity counts over
+a 24-hour period (arg domain 1–1440).</p></dd>
+
+
+</dl></div>
+    <div class="section level2">
+    <h2 id="source">Source<a class="anchor" aria-label="anchor" href="#source"></a></h2>
+    <p>Data are from a study of physical activity in CHF patients conducted by
+Huang et al. The original data are publicly available; see the paper for
+download details.</p>
+    </div>
+    <div class="section level2">
+    <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
+    <p>Huang, L., Bai, J., Ivanescu, A., Harris, T., Maurer, M., Green, P., and
+Zipunnikov, V. (2019). Multilevel Matrix-Variate Analysis and its
+Application to Accelerometry-Measured Physical Activity in Clinical
+Populations. <em>Journal of the American Statistical Association</em>, 114(526),
+553–564. <a href="https://doi.org/10.1080/01621459.2018.1482750" class="external-link">doi:10.1080/01621459.2018.1482750</a></p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
-    <div class="dont-index"><p>Other tidyfun datasets:
+    <div class="dont-index"><p><a href="dti_df.html">dti_df</a> for another example dataset,
+<code><a href="../articles/x04_Visualization.html">vignette("x04_Visualization", package = "tidyfun")</a></code> for usage examples.</p>
+<p>Other tidyfun datasets:
 <code><a href="dti_df.html">dti_df</a></code></p></div>
     </div>
 
@@ -103,6 +138,12 @@ with download information in the paper.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span>     3 Female    81    21         32 .          Wed  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 319 more rows</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 1 more variable: activity &lt;tfd_reg&gt;</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">chf_df</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">id</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="gglasagna.html">gglasagna</a></span><span class="op">(</span><span class="va">activity</span>, order_by <span class="op">=</span> <span class="va">mean</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="chf_df-1.png" alt="" width="700" height="433"></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

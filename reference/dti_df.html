@@ -5,19 +5,15 @@
       fontURL: "https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/output/chtml/fonts/woff-v2"
     }
   };
-</script><script src="../lightswitch.js"></script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet"><link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet"><script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Diffusion tensor imaging data — dti_df"><meta name="description" content="Fractional anisotropy (FA) tract profiles for the corpus
-callosum (cca) and the right corticospinal tract (rcst).
-Accompanying the tract profiles are the subject ID numbers,
-visit number, total number of scans, multiple sclerosis case
-status and Paced Auditory Serial Addition Test (pasat) score.
-Data are also included in the refund package in another
-format."><meta property="og:description" content="Fractional anisotropy (FA) tract profiles for the corpus
-callosum (cca) and the right corticospinal tract (rcst).
-Accompanying the tract profiles are the subject ID numbers,
-visit number, total number of scans, multiple sclerosis case
-status and Paced Auditory Serial Addition Test (pasat) score.
-Data are also included in the refund package in another
-format."></head><body>
+</script><script src="../lightswitch.js"></script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet"><link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet"><script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Diffusion tensor imaging data — dti_df"><meta name="description" content="Fractional anisotropy (FA) tract profiles for the corpus callosum (cca)
+and the right corticospinal tract (rcst) from a diffusion tensor imaging
+(DTI) study of multiple sclerosis patients and healthy controls.
+The original data in refund::DTI include additional variables (pasat,
+Nscans, visit.time) that were not carried over here."><meta property="og:description" content="Fractional anisotropy (FA) tract profiles for the corpus callosum (cca)
+and the right corticospinal tract (rcst) from a diffusion tensor imaging
+(DTI) study of multiple sclerosis patients and healthy controls.
+The original data in refund::DTI include additional variables (pasat,
+Nscans, visit.time) that were not carried over here."></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
@@ -67,13 +63,11 @@ format."></head><body>
     </div>
 
     <div class="ref-description section level2">
-    <p>Fractional anisotropy (FA) tract profiles for the corpus
-callosum (cca) and the right corticospinal tract (rcst).
-Accompanying the tract profiles are the subject ID numbers,
-visit number, total number of scans, multiple sclerosis case
-status and Paced Auditory Serial Addition Test (pasat) score.</p>
-<p>Data are also included in the <a href="https://CRAN.R-project.org/package=refund" class="external-link"><span class="pkg">refund</span></a> package in another
-format.</p>
+    <p>Fractional anisotropy (FA) tract profiles for the corpus callosum (<code>cca</code>)
+and the right corticospinal tract (<code>rcst</code>) from a diffusion tensor imaging
+(DTI) study of multiple sclerosis patients and healthy controls.</p>
+<p>The original data in <a href="https://rdrr.io/pkg/refund/man/DTI.html" class="external-link">refund::DTI</a> include additional variables (<code>pasat</code>,
+<code>Nscans</code>, <code>visit.time</code>) that were not carried over here.</p>
     </div>
 
     <div class="section level2">
@@ -83,18 +77,54 @@ format.</p>
 
     <div class="section level2">
     <h2 id="format">Format<a class="anchor" aria-label="anchor" href="#format"></a></h2>
-    <p>An object of class <code>tbl_df</code> (inherits from <code>tbl</code>, <code>data.frame</code>) with 382 rows and 6 columns.</p>
+    <p>A tibble with 382 rows and 6 columns:</p><dl><dt>id</dt>
+<dd><p>(numeric) Subject identifier.</p></dd>
+
+<dt>visit</dt>
+<dd><p>(integer) Visit number.</p></dd>
+
+<dt>sex</dt>
+<dd><p>(factor) <code>"male"</code> or <code>"female"</code>.</p></dd>
+
+<dt>case</dt>
+<dd><p>(factor) <code>"control"</code> or <code>"MS"</code> (multiple sclerosis status).</p></dd>
+
+<dt>cca</dt>
+<dd><p>(<code>tfd_irreg</code>) FA tract profiles for the corpus callosum
+(up to 93 evaluation points, domain 0–1).</p></dd>
+
+<dt>rcst</dt>
+<dd><p>(<code>tfd_irreg</code>) FA tract profiles for the right corticospinal
+tract (up to 55 evaluation points, domain 0–1).</p></dd>
+
+
+</dl></div>
+    <div class="section level2">
+    <h2 id="source">Source<a class="anchor" aria-label="anchor" href="#source"></a></h2>
+    <p>Data are from the Johns Hopkins University and the Kennedy-Krieger Institute.
+Also available in a different format as <a href="https://rdrr.io/pkg/refund/man/DTI.html" class="external-link">refund::DTI</a>.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>If you use this data as an example in written work, please
-include the following acknowledgment: "The MRI/DTI data were
-collected at Johns Hopkins University and the Kennedy-Krieger
-Institute"</p>
+    <p>If you use this data as an example in written work, please include the
+following acknowledgment: <em>"The MRI/DTI data were collected at Johns Hopkins
+University and the Kennedy-Krieger Institute."</em></p>
+    </div>
+    <div class="section level2">
+    <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
+    <p>Goldsmith, J., Bobb, J., Crainiceanu, C., Caffo, B., and Reich, D. (2011).
+Penalized Functional Regression. <em>Journal of Computational and Graphical
+Statistics</em>, 20(4), 830–851. <a href="https://doi.org/10.1198/jcgs.2010.10007" class="external-link">doi:10.1198/jcgs.2010.10007</a></p>
+<p>Goldsmith, J., Crainiceanu, C., Caffo, B., and Reich, D. (2012).
+Longitudinal Penalized Functional Regression for Cognitive Outcomes on
+Neuronal Tract Measurements. <em>Journal of the Royal Statistical Society:
+Series C</em>, 61(3), 453–469. <a href="https://doi.org/10.1111/j.1467-9876.2011.01031.x" class="external-link">doi:10.1111/j.1467-9876.2011.01031.x</a></p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
-    <div class="dont-index"><p>Other tidyfun datasets:
+    <div class="dont-index"><p><a href="chf_df.html">chf_df</a> for another example dataset,
+<code><a href="../articles/x04_Visualization.html">vignette("x04_Visualization", package = "tidyfun")</a></code> for usage examples.</p>
+<p>Other tidyfun datasets:
 <code><a href="chf_df.html">chf_df</a></code></p></div>
     </div>
 
@@ -116,6 +146,16 @@ Institute"</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span>  <span style="text-decoration: underline;">1</span>010     1 male   control (0.000,0.46);(0.011,0.47);(0.022,0.48); ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 372 more rows</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 1 more variable: rcst &lt;tfd_irreg&gt;</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">dti_df</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">visit</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="tf_ggplot.html">tf_ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>tf <span class="op">=</span> <span class="va">cca</span>, color <span class="op">=</span> <span class="va">case</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_line</a></span><span class="op">(</span>alpha <span class="op">=</span> <span class="fl">0.3</span><span class="op">)</span></span></span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Large data expansion: 142 rows × 93 grid points = 13206 rows</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> This may impact memory usage and plotting performance</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Use `arg` in `tf_ggplot()` to specify a coarser evaluation grid</span>
+<span class="r-plt img"><img src="dti_df-1.png" alt="" width="700" height="433"></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

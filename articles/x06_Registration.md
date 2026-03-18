@@ -681,8 +681,8 @@ function and template (criterion `crit=1`, not recommended). In current
 monotone spline warps rather than the older
 [`fda::register.fd()`](https://rdrr.io/pkg/fda/man/register.fd.html)
 backend. See [Ramsay & Li (1998,
-JRSS-B)](https://academic.oup.com/jrsssb/article/60/2/351/7083189) and
-Ramsay & Silverman (2005, *Functional Data Analysis*, Ch. 8).
+JRSS-B)](https://doi.org/10.1111/1467-9868.00129) and Ramsay & Silverman
+(2005, *Functional Data Analysis*, Ch. 8).
 
 - **Optimization:** tf-native dense-grid optimization of a continuous
   registration criterion with monotone spline warps.
@@ -1184,14 +1184,14 @@ growth” above…).
 - Kneip, A., & Gasser, T. (1992). Statistical tools to analyze data
   representing a sample of curves. *Annals of Statistics*, 20(3),
   1266–1305.
-  [doi:10.1214/aos/1176348794](https://projecteuclid.org/journals/annals-of-statistics/volume-20/issue-3/Statistical-Tools-to-Analyze-Data-Representing-a-Sample-of-Curves/10.1214/aos/1176348794.full)
+  [doi:10.1214/aos/1176348794](https://doi.org/10.1214/aos/1176348794)
 - Marron, J.S., Ramsay, J.O., Sangalli, L.M., & Srivastava, A. (2015).
   Functional data analysis of amplitude and phase variation.
   *Statistical Science*, 30(4), 468–484.
   [doi:10.1214/15-EJS1030](https://doi.org/10.1214/15-EJS1030)
 - Ramsay, J.O., & Li, X. (1998). Curve registration. *Journal of the
   Royal Statistical Society: Series B*, 60(2), 351–363.
-  [doi:10.1111/1467-9868.00129](https://academic.oup.com/jrsssb/article/60/2/351/7083189)
+  [doi:10.1111/1467-9868.00129](https://doi.org/10.1111/1467-9868.00129)
 - Ramsay, J.O., & Silverman, B.W. (2005). *Functional Data Analysis*
   (2nd ed.). Springer.
 - Srivastava, A., & Klassen, E.P. (2016). *Functional and Shape Data
@@ -1216,7 +1216,7 @@ growth” above…).
     than pointwise averaging.
 
 2.  For full details on the benchmark design and results, see
-    [tidyfun.github.io/sim-registration](https:%5Ctidyfun.github.io/sim-registration)
+    [tidyfun.github.io/sim-registration](https://tidyfun.github.io/sim-registration)
 
 3.  more specifically: the positive orthant of such a sphere, which is
     the space of SRVFs of warping functions

@@ -1,14 +1,14 @@
 # Diffusion tensor imaging data
 
-Fractional anisotropy (FA) tract profiles for the corpus callosum (cca)
-and the right corticospinal tract (rcst). Accompanying the tract
-profiles are the subject ID numbers, visit number, total number of
-scans, multiple sclerosis case status and Paced Auditory Serial Addition
-Test (pasat) score.
+Fractional anisotropy (FA) tract profiles for the corpus callosum
+(`cca`) and the right corticospinal tract (`rcst`) from a diffusion
+tensor imaging (DTI) study of multiple sclerosis patients and healthy
+controls.
 
-Data are also included in the
-[refund](https://CRAN.R-project.org/package=refund) package in another
-format.
+The original data in
+[refund::DTI](https://rdrr.io/pkg/refund/man/DTI.html) include
+additional variables (`pasat`, `Nscans`, `visit.time`) that were not
+carried over here.
 
 ## Usage
 
@@ -18,16 +18,65 @@ dti_df
 
 ## Format
 
-An object of class `tbl_df` (inherits from `tbl`, `data.frame`) with 382
-rows and 6 columns.
+A tibble with 382 rows and 6 columns:
+
+- id:
+
+  (numeric) Subject identifier.
+
+- visit:
+
+  (integer) Visit number.
+
+- sex:
+
+  (factor) `"male"` or `"female"`.
+
+- case:
+
+  (factor) `"control"` or `"MS"` (multiple sclerosis status).
+
+- cca:
+
+  (`tfd_irreg`) FA tract profiles for the corpus callosum (up to 93
+  evaluation points, domain 0–1).
+
+- rcst:
+
+  (`tfd_irreg`) FA tract profiles for the right corticospinal tract (up
+  to 55 evaluation points, domain 0–1).
+
+## Source
+
+Data are from the Johns Hopkins University and the Kennedy-Krieger
+Institute. Also available in a different format as
+[refund::DTI](https://rdrr.io/pkg/refund/man/DTI.html).
 
 ## Details
 
 If you use this data as an example in written work, please include the
-following acknowledgment: "The MRI/DTI data were collected at Johns
-Hopkins University and the Kennedy-Krieger Institute"
+following acknowledgment: *"The MRI/DTI data were collected at Johns
+Hopkins University and the Kennedy-Krieger Institute."*
+
+## References
+
+Goldsmith, J., Bobb, J., Crainiceanu, C., Caffo, B., and Reich, D.
+(2011). Penalized Functional Regression. *Journal of Computational and
+Graphical Statistics*, 20(4), 830–851.
+[doi:10.1198/jcgs.2010.10007](https://doi.org/10.1198/jcgs.2010.10007)
+
+Goldsmith, J., Crainiceanu, C., Caffo, B., and Reich, D. (2012).
+Longitudinal Penalized Functional Regression for Cognitive Outcomes on
+Neuronal Tract Measurements. *Journal of the Royal Statistical Society:
+Series C*, 61(3), 453–469.
+[doi:10.1111/j.1467-9876.2011.01031.x](https://doi.org/10.1111/j.1467-9876.2011.01031.x)
 
 ## See also
+
+[chf_df](https://tidyfun.github.io/tidyfun/reference/chf_df.md) for
+another example dataset,
+[`vignette("x04_Visualization", package = "tidyfun")`](https://tidyfun.github.io/tidyfun/articles/x04_Visualization.md)
+for usage examples.
 
 Other tidyfun datasets:
 [`chf_df`](https://tidyfun.github.io/tidyfun/reference/chf_df.md)
@@ -51,4 +100,13 @@ dti_df
 #> 10  1010     1 male   control (0.000,0.46);(0.011,0.47);(0.022,0.48); ...
 #> # ℹ 372 more rows
 #> # ℹ 1 more variable: rcst <tfd_irreg>
+
+library(ggplot2)
+dti_df |>
+  dplyr::filter(visit == 1) |>
+  tf_ggplot(aes(tf = cca, color = case)) +
+  geom_line(alpha = 0.3)
+#> Warning: Large data expansion: 142 rows × 93 grid points = 13206 rows
+#> ℹ This may impact memory usage and plotting performance
+#> ℹ Use `arg` in `tf_ggplot()` to specify a coarser evaluation grid
 ```

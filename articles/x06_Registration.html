@@ -521,7 +521,7 @@ variable across near-identical curves.</p>
 <p><strong>Remedies:</strong> Smooth inputs (more) first; reduce basis
 flexibility; compare before/after sensitivity.</p>
 <p>In our benchmarks<a class="footnote-ref" tabindex="0" data-bs-toggle="popover" data-bs-content='&lt;p&gt;For full details on the benchmark design and results,
-see &lt;a href="https:%5Ctidyfun.github.io/sim-registration"&gt;tidyfun.github.io/sim-registration&lt;/a&gt;&lt;/p&gt;'><sup>2</sup></a>, CC methods (<code>method = "cc"</code>)
+see &lt;a href="https://tidyfun.github.io/sim-registration" class="external-link"&gt;tidyfun.github.io/sim-registration&lt;/a&gt;&lt;/p&gt;'><sup>2</sup></a>, CC methods (<code>method = "cc"</code>)
 were the most noise-robust, while SRVF degraded most sharply under noise
 — because SRSFs involve numerical derivatives that amplify observation
 noise. Pre-smoothing SRVF inputs with <code>tfb(x, k = 25)</code> before
@@ -950,9 +950,9 @@ differences between aligned function and template (criterion
 <code>crit=1</code>, not recommended). In current <code>tf</code>, this
 is implemented as a tf-native dense-grid optimizer with monotone spline
 warps rather than the older <code><a href="https://rdrr.io/pkg/fda/man/register.fd.html" class="external-link">fda::register.fd()</a></code> backend. See
-<a href="https://academic.oup.com/jrsssb/article/60/2/351/7083189" class="external-link">Ramsay
-&amp; Li (1998, JRSS-B)</a> and Ramsay &amp; Silverman (2005,
-<em>Functional Data Analysis</em>, Ch. 8).</p>
+<a href="https://doi.org/10.1111/1467-9868.00129" class="external-link">Ramsay &amp; Li (1998,
+JRSS-B)</a> and Ramsay &amp; Silverman (2005, <em>Functional Data
+Analysis</em>, Ch. 8).</p>
 <ul>
 <li>
 <strong>Optimization:</strong> tf-native dense-grid optimization of
@@ -1466,14 +1466,14 @@ growth” above…).</p>
 <ul>
 <li>Kneip, A., &amp; Gasser, T. (1992). Statistical tools to analyze
 data representing a sample of curves. <em>Annals of Statistics</em>,
-20(3), 1266–1305. <a href="https://projecteuclid.org/journals/annals-of-statistics/volume-20/issue-3/Statistical-Tools-to-Analyze-Data-Representing-a-Sample-of-Curves/10.1214/aos/1176348794.full" class="external-link">doi:10.1214/aos/1176348794</a>
+20(3), 1266–1305. <a href="https://doi.org/10.1214/aos/1176348794" class="external-link">doi:10.1214/aos/1176348794</a>
 </li>
 <li>Marron, J.S., Ramsay, J.O., Sangalli, L.M., &amp; Srivastava, A.
 (2015). Functional data analysis of amplitude and phase variation.
 <em>Statistical Science</em>, 30(4), 468–484. <a href="https://doi.org/10.1214/15-EJS1030" class="external-link">doi:10.1214/15-EJS1030</a>
 </li>
 <li>Ramsay, J.O., &amp; Li, X. (1998). Curve registration. <em>Journal
-of the Royal Statistical Society: Series B</em>, 60(2), 351–363. <a href="https://academic.oup.com/jrsssb/article/60/2/351/7083189" class="external-link">doi:10.1111/1467-9868.00129</a>
+of the Royal Statistical Society: Series B</em>, 60(2), 351–363. <a href="https://doi.org/10.1111/1467-9868.00129" class="external-link">doi:10.1111/1467-9868.00129</a>
 </li>
 <li>Ramsay, J.O., &amp; Silverman, B.W. (2005). <em>Functional Data
 Analysis</em> (2nd ed.). Springer.</li>
