@@ -33,7 +33,7 @@
 #' 553--564. \doi{10.1080/01621459.2018.1482750}
 #'
 #' @seealso [dti_df] for another example dataset,
-#'   `vignette("x01_Overview", package = "tidyfun")` for usage examples.
+#'   `vignette("x04_Visualization", package = "tidyfun")` for usage examples.
 #' @keywords data
 #' @family tidyfun datasets
 #' @examples
@@ -87,7 +87,7 @@
 #' Series C*, 61(3), 453--469. \doi{10.1111/j.1467-9876.2011.01031.x}
 #'
 #' @seealso [chf_df] for another example dataset,
-#'   `vignette("x01_Overview", package = "tidyfun")` for usage examples.
+#'   `vignette("x04_Visualization", package = "tidyfun")` for usage examples.
 #' @keywords data
 #' @family tidyfun datasets
 #' @examples
