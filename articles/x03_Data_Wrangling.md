@@ -57,8 +57,11 @@ A quick plot of the first 5 curves:
 ``` r
 chf_df |>
   slice(1:5) |>
-  ggplot(aes(y = activity)) +
-  geom_spaghetti(alpha = 0.1)
+  tf_ggplot(aes(tf = activity)) +
+  geom_line(alpha = 0.1)
+## Warning: Large data expansion: 5 rows × 1440 grid points = 7200 rows
+## ℹ This may impact memory usage and plotting performance
+## ℹ Use `arg` in `tf_ggplot()` to specify a coarser evaluation grid
 ```
 
 ![](x03_Data_Wrangling_files/figure-html/plot_chf-1.png)
@@ -94,8 +97,11 @@ A quick plot of the `cca` tract profiles is below.
 
 ``` r
 dti_df |>
-  ggplot(aes(y = cca)) +
-  geom_spaghetti(alpha = 0.05)
+  tf_ggplot(aes(tf = cca)) +
+  geom_line(alpha = 0.05)
+## Warning: Large data expansion: 382 rows × 93 grid points = 35526 rows
+## ℹ This may impact memory usage and plotting performance
+## ℹ Use `arg` in `tf_ggplot()` to specify a coarser evaluation grid
 ```
 
 ![](x03_Data_Wrangling_files/figure-html/plot_dti-1.png)
@@ -109,8 +115,11 @@ manipulated using tools from `dplyr`, including `select` and `filter`:
 chf_df |>
   select(id, day, activity) |>
   filter(day == "Mon") |>
-  ggplot(aes(y = activity)) +
-  geom_spaghetti(alpha = 0.05)
+  tf_ggplot(aes(tf = activity)) +
+  geom_line(alpha = 0.05)
+## Warning: Large data expansion: 47 rows × 1440 grid points = 67680 rows
+## ℹ This may impact memory usage and plotting performance
+## ℹ Use `arg` in `tf_ggplot()` to specify a coarser evaluation grid
 ```
 
 ![](x03_Data_Wrangling_files/figure-html/unnamed-chunk-1-1.png)
@@ -122,8 +131,11 @@ some daily averages of these activity profiles:
 chf_df |>
   group_by(day) |>
   summarize(mean_act = mean(activity)) |>
-  ggplot(aes(y = mean_act, color = day)) +
-  geom_spaghetti()
+  tf_ggplot(aes(tf = mean_act, color = day)) +
+  geom_line()
+## Warning: Large data expansion: 7 rows × 1440 grid points = 10080 rows
+## ℹ This may impact memory usage and plotting performance
+## ℹ Use `arg` in `tf_ggplot()` to specify a coarser evaluation grid
 ```
 
 ![](x03_Data_Wrangling_files/figure-html/unnamed-chunk-2-1.png)
@@ -135,8 +147,11 @@ activity counts to obtain original recordings:
 chf_df |>
   slice(1:5) |>
   mutate(exp_act = exp(activity)) |>
-  ggplot(aes(y = exp_act)) +
-  geom_spaghetti(alpha = 0.2)
+  tf_ggplot(aes(tf = exp_act)) +
+  geom_line(alpha = 0.2)
+## Warning: Large data expansion: 5 rows × 1440 grid points = 7200 rows
+## ℹ This may impact memory usage and plotting performance
+## ℹ Use `arg` in `tf_ggplot()` to specify a coarser evaluation grid
 ```
 
 ![](x03_Data_Wrangling_files/figure-html/unnamed-chunk-3-1.png)
@@ -215,8 +230,8 @@ RCST tract values for gender and case status:
 dti_df |>
   group_by(case, sex) |>
   summarize(mean_rcst = mean(rcst, na.rm = TRUE)) |>
-  ggplot(aes(y = mean_rcst, color = case)) +
-  geom_spaghetti(linewidth = 2) +
+  tf_ggplot(aes(tf = mean_rcst, color = case)) +
+  geom_line(linewidth = 2) +
   facet_grid(~sex)
 ## `summarise()` has regrouped the output.
 ## ℹ Summaries were computed grouped by case and sex.
@@ -249,8 +264,11 @@ glimpse(like_to_move_it_move_it)
 ## $ activity   <tfd_reg> ▂▄▆▅▆▅▄▃, ▁▁▅▆▅▄▄▁, ▂▂▄▅▅▄▄▃, ▂▁▃▅▅▄▅▄, ▃▁▃▄▅▅▄▅, ▃▁▁▄▅▄▄▄…
 
 like_to_move_it_move_it |>
-  ggplot(aes(y = activity)) +
-  geom_spaghetti(aes(colour = id))
+  tf_ggplot(aes(tf = activity, colour = id)) +
+  geom_line()
+## Warning: Large data expansion: 6 rows × 1440 grid points = 8640 rows
+## ℹ This may impact memory usage and plotting performance
+## ℹ Use `arg` in `tf_ggplot()` to specify a coarser evaluation grid
 ```
 
 ![](x03_Data_Wrangling_files/figure-html/unnamed-chunk-8-1.png)
@@ -260,8 +278,8 @@ A second example of this functionality in the DTI data is below.
 ``` r
 dti_df |>
   filter(tf_anywhere(cca, value < 0.26)) |>
-  ggplot(aes(y = cca)) +
-  geom_spaghetti()
+  tf_ggplot(aes(tf = cca)) +
+  geom_line()
 ```
 
 ![](x03_Data_Wrangling_files/figure-html/unnamed-chunk-9-1.png)
@@ -275,9 +293,12 @@ One can smooth existing observations using `tf_smooth`:
 chf_df |>
   filter(id == 1) |>
   mutate(smooth_act = tf_smooth(activity)) |>
-  ggplot(aes(y = smooth_act)) +
-  geom_spaghetti()
+  tf_ggplot(aes(tf = smooth_act)) +
+  geom_line()
 ## Using `f = 0.15` as smoother span for `lowess()`.
+## Warning: Large data expansion: 7 rows × 1440 grid points = 10080 rows
+## ℹ This may impact memory usage and plotting performance
+## ℹ Use `arg` in `tf_ggplot()` to specify a coarser evaluation grid
 ```
 
 ![](x03_Data_Wrangling_files/figure-html/unnamed-chunk-10-1.png)
@@ -290,10 +311,16 @@ chf_df |>
   group_by(day) |>
   summarize(mean_act = mean(activity)) |>
   mutate(smooth_mean = tf_smooth(mean_act)) |>
-  ggplot(aes(y = mean_act, color = day)) +
-  geom_spaghetti(alpha = 0.2) +
-  geom_spaghetti(aes(y = smooth_mean), linewidth = 2)
+  tf_ggplot(aes(color = day)) +
+  geom_line(aes(tf = mean_act), alpha = 0.2) +
+  geom_line(aes(tf = smooth_mean), linewidth = 2)
 ## Using `f = 0.15` as smoother span for `lowess()`.
+## Warning: Large data expansion: 7 rows × 1440 grid points = 10080 rows
+## ℹ This may impact memory usage and plotting performance
+## ℹ Use `arg` in `tf_ggplot()` to specify a coarser evaluation grid
+## Large data expansion: 7 rows × 1440 grid points = 10080 rows
+## ℹ This may impact memory usage and plotting performance
+## ℹ Use `arg` in `tf_ggplot()` to specify a coarser evaluation grid
 ```
 
 ![](x03_Data_Wrangling_files/figure-html/unnamed-chunk-11-1.png)
@@ -305,8 +332,11 @@ One can also extract observations over a subset of the full domain using
 chf_df |>
   filter(id == 1) |>
   mutate(daytime_act = tf_zoom(activity, 360, 1200)) |>
-  ggplot(aes(y = daytime_act)) +
-  geom_spaghetti(alpha = 0.2)
+  tf_ggplot(aes(tf = daytime_act)) +
+  geom_line(alpha = 0.2)
+## Warning: Large data expansion: 7 rows × 841 grid points = 5887 rows
+## ℹ This may impact memory usage and plotting performance
+## ℹ Use `arg` in `tf_ggplot()` to specify a coarser evaluation grid
 ```
 
 ![](x03_Data_Wrangling_files/figure-html/unnamed-chunk-12-1.png)
@@ -332,9 +362,9 @@ dti_df |>
     cca_raw_deriv = tf_derive(cca),
     cca_tfb_deriv = tf_derive(cca_tfb)
   ) |>
-  ggplot() +
-  geom_spaghetti(aes(y = cca_raw_deriv), alpha = 0.3, linewidth = 0.3, col = "blue") +
-  geom_spaghetti(aes(y = cca_tfb_deriv), alpha = 0.3, linewidth = 0.3, col = "red") +
+  tf_ggplot() +
+  geom_line(aes(tf = cca_raw_deriv), alpha = 0.3, linewidth = 0.3, color = "blue") +
+  geom_line(aes(tf = cca_tfb_deriv), alpha = 0.3, linewidth = 0.3, color = "red") +
   ylab("d/dt f(t)")
 ## ✖ Differentiating over irregular grids can be unstable.
 ```

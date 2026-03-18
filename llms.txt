@@ -68,8 +68,8 @@ data(dti_df, package = "tidyfun")
 dti_df |>
   group_by(case, sex) |>
   summarize(mean_cca = mean(cca, na.rm = TRUE)) |>
-  ggplot(aes(y = mean_cca, color = case)) +
-  geom_spaghetti(size = 2) +
+  tf_ggplot(aes(tf = mean_cca, color = case)) +
+  geom_line(linewidth = 2) +
   facet_grid(~sex)
 ```
 
@@ -136,18 +136,21 @@ to see how you can wrangle functional data.
 
 #### New `ggplot2` `geoms` and `stats` for functional data
 
-**`tidyfun`** defines **pasta-themed** `geom`s for functional data:
+**`tidyfun`** provides
+**[`tf_ggplot()`](https://tidyfun.github.io/tidyfun/reference/tf_ggplot.md)**,
+which lets you use standard `ggplot2` geoms (`geom_line`, `geom_point`,
+`geom_ribbon`, …) with functional data via the `tf` aesthetic. It also
+includes specialized **pasta-themed** geoms:
 
-- **`geom_spaghetti`** for lines,
-- **`geom_meatballs`** for (lines &) points,
 - **`gglasagna`** for [lasagna
-  plots](https://asset.jmir.pub/assets/76aeec48564abf0e6f6da8e9cd06346d.png),
-  with an **`order`**-aesthetic to sort the lasagna layers,
+  plots](https://asset.jmir.pub/assets/76aeec48564abf0e6f6da8e9cd06346d.png)
+  (heatmaps), with an **`order`**-aesthetic to sort the lasagna layers,
 - **`geom_capellini`** for
   [glyphs](http://ggobi.github.io/ggally/articles/glyph_files/figure-html/glyphs-basic-usage-1.png)
   plots (i.e., sparklines),
+- **`geom_fboxplot`** for functional boxplots based on data depth,
 
-as well as new methods for base R graphics functions `plot`, `lines` and
+as well as methods for base R graphics functions `plot`, `lines` and
 `points` for quick and easy visualizations of functional data.
 
 [See

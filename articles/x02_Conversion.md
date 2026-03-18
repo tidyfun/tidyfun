@@ -71,10 +71,13 @@ complete functional data is included in each `tf` column.
 
 ``` r
 dti_df |>
-  ggplot() +
-  geom_spaghetti(aes(y = cca, col = case, alpha = 0.2 + 0.4 * (case == "control"))) +
+  tf_ggplot(aes(tf = cca, col = case, alpha = 0.2 + 0.4 * (case == "control"))) +
+  geom_line() +
   facet_wrap(~sex) +
   scale_alpha(guide = "none", range = c(0.2, 0.4))
+## Warning: Large data expansion: 382 rows × 93 grid points = 35526 rows
+## ℹ This may impact memory usage and plotting performance
+## ℹ Use `arg` in `tf_ggplot()` to specify a coarser evaluation grid
 ```
 
 ![](x02_Conversion_files/figure-html/unnamed-chunk-3-1.png)
@@ -135,14 +138,20 @@ A plot containing both functional observations is shown below.
 
 ``` r
 temp_panel <- canada |>
-  ggplot(aes(y = temp, color = region)) +
-  geom_spaghetti()
+  tf_ggplot(aes(tf = temp, color = region)) +
+  geom_line()
 
 precip_panel <- canada |>
-  ggplot(aes(y = precipl10, color = region)) +
-  geom_spaghetti()
+  tf_ggplot(aes(tf = precipl10, color = region)) +
+  geom_line()
 
 gridExtra::grid.arrange(temp_panel, precip_panel, nrow = 1)
+## Warning: Large data expansion: 35 rows × 365 grid points = 12775 rows
+## ℹ This may impact memory usage and plotting performance
+## ℹ Use `arg` in `tf_ggplot()` to specify a coarser evaluation grid
+## Large data expansion: 35 rows × 365 grid points = 12775 rows
+## ℹ This may impact memory usage and plotting performance
+## ℹ Use `arg` in `tf_ggplot()` to specify a coarser evaluation grid
 ```
 
 ![](x02_Conversion_files/figure-html/unnamed-chunk-6-1.png)
@@ -221,8 +230,8 @@ We’ll make a quick plot to show the result.
 
 ``` r
 sleepstudy_tf |>
-  ggplot(aes(y = Reaction)) +
-  geom_spaghetti()
+  tf_ggplot(aes(tf = Reaction)) +
+  geom_line()
 ```
 
 ![](x02_Conversion_files/figure-html/unnamed-chunk-9-1.png)
@@ -344,9 +353,168 @@ dti_df |>
 ## $ cca        <tfd_irreg> (1,0.5);(2,0.5);(3,0.5); ..., (1,0.5);(2,0.5);(3,0.5)…
 ```
 
-## Other formats
+## Changing representation with `tf_rebase`
 
-`fda` and `fd` coming soon …
+Sometimes you need to make different `tf` objects compatible – for
+example, to combine raw observations with a basis representation, or to
+ensure two functional data vectors are expressed on the same grid or in
+the same basis. `tf_rebase` re-expresses one `tf` object in the
+representation of another:
+
+``` r
+# reload the tidyfun version of the DTI data
+data(dti_df, package = "tidyfun")
+
+# raw functional data
+cca_raw <- dti_df$cca[1:5]
+cca_raw
+## irregular tfd[5]: [0,1] -> [0.3662524,0.6747586] based on 93 to 93 (mean: 93) evaluations each
+## interpolation by tf_approx_linear 
+## 1001_1: (0.000,0.49);(0.011,0.52);(0.022,0.54); ...
+## 1002_1: (0.000,0.47);(0.011,0.49);(0.022,0.50); ...
+## 1003_1: (0.000,0.50);(0.011,0.51);(0.022,0.54); ...
+## 1004_1: (0.000,0.40);(0.011,0.42);(0.022,0.44); ...
+## 1005_1: (0.000,0.40);(0.011,0.41);(0.022,0.40); ...
+
+# represent in a spline basis
+cca_basis <- tfb(dti_df$cca[1:5], k = 25)
+## Percentage of input data variability preserved in basis representation
+## (per functional observation, approximate):
+## Min. 1st Qu.  Median Mean 3rd Qu.  Max.
+## 95.60 96.40 96.90 97.12 98.00 98.70
+cca_basis
+## tfb[5]: [0,1] -> [0.3684063,0.6796841] in basis representation:
+##  using  s(arg, bs = "cr", k = 25, sp = -1)  
+## 1001_1: ▆██▆▄▃▄▄▄▄▅▅▅▅▅▄▄▂▂▂▃▅▅▆▆▆
+## 1002_1: ▅▆▆▄▄▄▄▄▃▄▅▅▄▃▃▃▃▃▃▄▅▆▆▇▆▆
+## 1003_1: ▆▇▆▄▃▃▃▃▃▄▃▃▄▄▄▃▃▂▃▃▃▅▆▄▇█
+## 1004_1: ▃▅▇▇▆▅▅▄▅▅▅▅▅▅▅▅▄▃▃▃▃▄▅▇▇▆
+## 1005_1: ▁▃▅▅▄▂▂▂▃▃▂▃▃▄▃▃▃▃▃▁▁▂▃▅▇▅
+
+# re-express the raw data in the same basis representation
+cca_rebased <- tf_rebase(cca_raw, basis_from = cca_basis)
+cca_rebased
+## tfb[5]: [0,1] -> [0.3684063,0.6796841] in basis representation:
+##  using  s(arg, bs = "cr", k = 25, sp = -1)  
+## 1001_1: ▆██▆▄▃▄▄▄▄▅▅▅▅▅▄▄▂▂▂▃▅▅▆▆▆
+## 1002_1: ▅▆▆▄▄▄▄▄▃▄▅▅▄▃▃▃▃▃▃▄▅▆▆▇▆▆
+## 1003_1: ▆▇▆▄▃▃▃▃▃▄▃▃▄▄▄▃▃▂▃▃▃▅▆▄▇█
+## 1004_1: ▃▅▇▇▆▅▅▄▅▅▅▅▅▅▅▅▄▃▃▃▃▄▅▇▇▆
+## 1005_1: ▁▃▅▅▄▂▂▂▃▃▂▃▃▄▃▃▃▃▃▁▁▂▃▅▇▅
+
+# or convert a spline-based representation to a grid-based one for a specific grid:
+tf_rebase(cca_basis, basis_from = cca_raw)
+## irregular tfd[5]: [0,1] -> [0.3684063,0.6796841] based on 93 to 93 (mean: 93) evaluations each
+## interpolation by tf_approx_linear 
+## 1001_1: (0.000,0.49);(0.011,0.52);(0.022,0.54); ...
+## 1002_1: (0.000,0.47);(0.011,0.49);(0.022,0.51); ...
+## 1003_1: (0.000,0.49);(0.011,0.52);(0.022,0.55); ...
+## 1004_1: (0.000,0.41);(0.011,0.42);(0.022,0.44); ...
+## 1005_1: (0.000, 0.4);(0.011, 0.4);(0.022, 0.4); ...
+```
+
+This is useful when you want to ensure that operations between `tf`
+objects (e.g., addition, comparison) use a common representation, or
+when you want to convert between `tfd` and `tfb` representations while
+matching a specific basis configuration. It is required for many
+operations that would otherwise not be well-defined.
+
+## Splitting and combining functions
+
+`tf_split` separates each function into fragments defined on
+sub-intervals of its domain, and `tf_combine` joins fragments back
+together. This is useful for analyzing specific parts of a function
+separately or for stitching together functional observations from
+different sources.
+
+``` r
+# split CCA profiles at their midpoint
+cca_halves <- tf_split(dti_df$cca[1:10], splits = 0.5)
+
+# result is a list of tf vectors, one per segment
+cca_halves[[1]]
+## tfd[10]: [0,0.5] -> [0.3860009,0.6894555] based on 47 evaluations each
+## interpolation by tf_approx_linear 
+## 1001_1: ▄▅▆▇█▇▇▆▅▃▃▃▃▃▄▄▄▄▄▄▄▄▄▄▄▄
+## 1002_1: ▃▄▅▆▆▅▅▃▃▃▄▄▄▄▄▃▃▃▃▃▄▅▅▅▄▄
+## 1003_1: ▄▅▇▇▇▆▅▄▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃
+## 1004_1: ▁▂▃▄▅▆▆▆▆▅▄▅▅▄▄▄▄▅▄▄▅▅▅▅▅▄
+## 1005_1: ▁▁▁▂▃▄▅▅▅▄▂▂▁▂▂▂▂▂▂▂▂▂▂▃▃▃
+## 1006_1: ▂▂▃▃▄▅▆▆▆▆▅▄▄▄▄▄▄▄▄▄▅▅▅▅▅▄
+##     [....]   (4 not shown)
+cca_halves[[2]]
+## tfd[10]: [0.5,1] -> [0.3662524,0.7028992] based on 47 evaluations each
+## interpolation by tf_approx_linear 
+## 1001_1: ▅▅▅▄▄▄▄▄▃▃▂▂▂▂▂▃▄▄▅▅▅▆▆▆▆▆
+## 1002_1: ▄▃▃▃▃▃▃▃▃▃▃▃▃▃▄▄▅▅▆▆▆▆▆▆▆▆
+## 1003_1: ▄▄▄▄▄▃▃▃▂▂▂▃▃▃▃▃▄▅▅▅▅▃▅▆▇█
+## 1004_1: ▄▄▅▅▄▄▄▄▄▃▃▂▂▂▃▃▄▄▄▅▆▆▆▆▆▆
+## 1005_1: ▃▄▄▄▃▃▃▂▃▃▃▂▂▂▁▁▁▂▂▃▃▄▆▆▆▅
+## 1006_1: ▄▅▅▅▅▄▄▄▄▄▄▄▅▅▅▅▆▆▇▆▇▆▆▅▅▄
+##     [....]   (4 not shown)
+
+# recombine
+cca_recombined <- tf_combine(cca_halves[[1]], cca_halves[[2]])
+## ! removing 10 duplicated points from input data.
+cca_recombined 
+## tfd[10]: [0,1] -> [0.3662524,0.7028992] based on 93 evaluations each
+## interpolation by tf_approx_linear 
+## 1: ▄▇▇▆▄▃▃▄▄▄▄▄▄▅▄▄▄▃▂▂▂▄▅▅▆▆
+## 2: ▄▆▆▄▃▄▄▄▃▃▄▅▄▃▃▃▃▃▃▄▄▅▆▆▆▆
+## 3: ▄▇▆▄▃▃▃▃▃▃▃▃▃▄▄▃▃▂▃▃▃▄▅▄▅█
+## 4: ▂▄▆▆▆▅▅▄▄▄▅▅▅▄▅▄▄▃▃▂▃▄▄▆▆▆
+## 5: ▁▂▄▅▄▂▂▂▂▃▂▃▃▄▄▃▂▃▃▂▁▁▃▄▆▆
+## 6: ▃▄▅▆▆▅▄▄▄▄▅▅▅▅▅▅▄▄▄▅▅▆▆▆▆▄
+##     [....]   (4 not shown)
+```
+
+## Conversion from `fda` objects
+
+The `fda` package represents functional data as `fd` objects (basis
+function coefficients + basis definition). `tf` can convert these
+directly using `tfb_spline`, which re-expresses the `fd` basis in `tf`’s
+spline framework. This also works for `fdSmooth` objects returned by
+[`fda::smooth.basis`](https://rdrr.io/pkg/fda/man/smooth.basis.html).
+
+``` r
+# create an fd object from the Canadian weather data
+weather_basis <- fda::create.fourier.basis(c(0, 365), nbasis = 65)
+weather_fd <- fda::smooth.basis(
+  argvals = 1:365,
+  y = fda::CanadianWeather$dailyAv[, , 1],
+  fdParobj = weather_basis
+)
+
+# convert fdSmooth to tfb
+weather_tf <- tfb_spline(weather_fd)
+## Percentage of input data variability preserved in basis representation
+## (per functional observation, approximate):
+## Min. 1st Qu.  Median Mean 3rd Qu.  Max.
+## 100 100 100 100 100 100
+weather_tf[1:3]
+## tfb[3]: [0,365] -> [-7.867481,19.46969] in basis representation:
+##  using  s(arg, bs = "fourier", k = 65, sp = NA, xt = list(period = 365))  
+## St. Johns: ▁▁▁▁▂▃▃▃▄▅▅▆▇▇██▇▇▆▅▅▄▃▃▂▂
+## Halifax  : ▁▁▁▁▂▃▃▄▅▆▇▇█████▇▇▆▅▅▃▃▂▁
+## Sydney   : ▁▁▁▁▂▃▃▄▄▅▆▇▇████▇▆▆▅▄▄▃▂▂
+```
+
+The resulting `tfb` object can then be used with all `tidyfun` tools:
+
+``` r
+tibble(
+  place = fda::CanadianWeather$place,
+  region = fda::CanadianWeather$region,
+  temp = weather_tf
+) |>
+  tf_ggplot(aes(tf = temp, color = region)) +
+  geom_line(alpha = 0.5)
+## Warning: Large data expansion: 35 rows × 365 grid points = 12775 rows
+## ℹ This may impact memory usage and plotting performance
+## ℹ Use `arg` in `tf_ggplot()` to specify a coarser evaluation grid
+```
+
+![](x02_Conversion_files/figure-html/unnamed-chunk-17-1.png)
 
 ## Reversing the conversion
 

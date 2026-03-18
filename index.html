@@ -123,8 +123,8 @@
 <span><span class="va">dti_df</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">group_by</span><span class="op">(</span><span class="va">case</span>, <span class="va">sex</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">summarize</span><span class="op">(</span>mean_cca <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">cca</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>y <span class="op">=</span> <span class="va">mean_cca</span>, color <span class="op">=</span> <span class="va">case</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="reference/ggspaghetti.html">geom_spaghetti</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="reference/tf_ggplot.html">tf_ggplot</a></span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>tf <span class="op">=</span> <span class="va">mean_cca</span>, color <span class="op">=</span> <span class="va">case</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">geom_line</span><span class="op">(</span>linewidth <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">facet_grid</span><span class="op">(</span><span class="op">~</span><span class="va">sex</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/README-dti-ggplot-example-1.png" alt="" width="100%"></p>
 </div>
@@ -166,18 +166,16 @@
 <div class="section level4">
 <h4 id="new-ggplot2-geoms-and-stats-for-functional-data">New <code>ggplot2</code> <code>geoms</code> and <code>stats</code> for functional data<a class="anchor" aria-label="anchor" href="#new-ggplot2-geoms-and-stats-for-functional-data"></a>
 </h4>
-<p><strong><code>tidyfun</code></strong> defines <strong>pasta-themed</strong> <code>geom</code>s for functional data:</p>
+<p><strong><code>tidyfun</code></strong> provides <strong><code><a href="reference/tf_ggplot.html">tf_ggplot()</a></code></strong>, which lets you use standard <code>ggplot2</code> geoms (<code>geom_line</code>, <code>geom_point</code>, <code>geom_ribbon</code>, …) with functional data via the <code>tf</code> aesthetic. It also includes specialized <strong>pasta-themed</strong> geoms:</p>
 <ul>
 <li>
-<strong><code>geom_spaghetti</code></strong> for lines,</li>
-<li>
-<strong><code>geom_meatballs</code></strong> for (lines &amp;) points,</li>
-<li>
-<strong><code>gglasagna</code></strong> for <a href="https://asset.jmir.pub/assets/76aeec48564abf0e6f6da8e9cd06346d.png" class="external-link">lasagna plots</a>, with an <strong><code>order</code></strong>-aesthetic to sort the lasagna layers,</li>
+<strong><code>gglasagna</code></strong> for <a href="https://asset.jmir.pub/assets/76aeec48564abf0e6f6da8e9cd06346d.png" class="external-link">lasagna plots</a> (heatmaps), with an <strong><code>order</code></strong>-aesthetic to sort the lasagna layers,</li>
 <li>
 <strong><code>geom_capellini</code></strong> for <a href="http://ggobi.github.io/ggally/articles/glyph_files/figure-html/glyphs-basic-usage-1.png" class="external-link">glyphs</a> plots (i.e., sparklines),</li>
+<li>
+<strong><code>geom_fboxplot</code></strong> for functional boxplots based on data depth,</li>
 </ul>
-<p>as well as new methods for base R graphics functions <code>plot</code>, <code>lines</code> and <code>points</code> for quick and easy visualizations of functional data.</p>
+<p>as well as methods for base R graphics functions <code>plot</code>, <code>lines</code> and <code>points</code> for quick and easy visualizations of functional data.</p>
 <p><a href="https://tidyfun.github.io/tidyfun/reference/index.html#section-visualization-display">See here</a> for the documentation of the visualization approaches or take a look at the <a href="https://tidyfun.github.io/tidyfun/articles/x04_Visualization.html">Visualization</a> vignette.</p>
 </div>
 <div class="section level4">
