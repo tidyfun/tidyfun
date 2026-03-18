@@ -288,7 +288,7 @@ Registration assumes a single shared template. If curves come from different sha
 
 **Remedies:** Smooth inputs (more) first; reduce basis flexibility; compare before/after sensitivity.
 
-In our benchmarks^[For full details on the benchmark design and results, see [tidyfun.github.io/sim-registration](https:\\tidyfun.github.io/sim-registration)], CC methods (`method = "cc"`) were the most noise-robust, while SRVF degraded most sharply under noise — because SRSFs involve numerical derivatives that amplify observation noise. Pre-smoothing SRVF inputs with `tfb(x, k = 25)` before registration reduced warp error (measured as warp MISE) by 50–70% under moderate noise. Recipe: `x_smooth <- tfb(x, k = 25); reg <- tf_register(x_smooth, method = "srvf")`.
+In our benchmarks^[For full details on the benchmark design and results, see [tidyfun.github.io/sim-registration](https://tidyfun.github.io/sim-registration)], CC methods (`method = "cc"`) were the most noise-robust, while SRVF degraded most sharply under noise — because SRSFs involve numerical derivatives that amplify observation noise. Pre-smoothing SRVF inputs with `tfb(x, k = 25)` before registration reduced warp error (measured as warp MISE) by 50–70% under moderate noise. Recipe: `x_smooth <- tfb(x, k = 25); reg <- tf_register(x_smooth, method = "srvf")`.
 
 #### Sparse or irregular grids
 
@@ -500,7 +500,7 @@ Represents each curve via its *square root velocity function* (SRVF), $q(t) = \d
 
 ### CC (Continuous Registration Criterion)
 
-Estimates smooth monotone warping functions by maximizing the integrated cross-correlation between the derivative of each registered curve and the first eigenfunction of the derivatives' covariance, which represents the dominant common shape of the sample (criterion `crit=2`, the default) or by minimizing the squared differences between aligned function and template (criterion `crit=1`, not recommended). In current `tf`, this is implemented as a tf-native dense-grid optimizer with monotone spline warps rather than the older `fda::register.fd()` backend. See [Ramsay & Li (1998, JRSS-B)](https://academic.oup.com/jrsssb/article/60/2/351/7083189) and Ramsay & Silverman (2005, *Functional Data Analysis*, Ch. 8).
+Estimates smooth monotone warping functions by maximizing the integrated cross-correlation between the derivative of each registered curve and the first eigenfunction of the derivatives' covariance, which represents the dominant common shape of the sample (criterion `crit=2`, the default) or by minimizing the squared differences between aligned function and template (criterion `crit=1`, not recommended). In current `tf`, this is implemented as a tf-native dense-grid optimizer with monotone spline warps rather than the older `fda::register.fd()` backend. See [Ramsay & Li (1998, JRSS-B)](https://doi.org/10.1111/1467-9868.00129) and Ramsay & Silverman (2005, *Functional Data Analysis*, Ch. 8).
 
 - **Optimization:** tf-native dense-grid optimization of a continuous registration criterion with monotone spline warps.
 - **Template:** Arithmetic mean, re-estimated over `max_iter` iterations (default 3), or user-supplied.
@@ -792,9 +792,9 @@ The piecewise linear warps align the pubertal peaks well, with the pubertal trou
 
 ## References
 
-- Kneip, A., & Gasser, T. (1992). Statistical tools to analyze data representing a sample of curves. *Annals of Statistics*, 20(3), 1266--1305. [doi:10.1214/aos/1176348794](https://projecteuclid.org/journals/annals-of-statistics/volume-20/issue-3/Statistical-Tools-to-Analyze-Data-Representing-a-Sample-of-Curves/10.1214/aos/1176348794.full)
+- Kneip, A., & Gasser, T. (1992). Statistical tools to analyze data representing a sample of curves. *Annals of Statistics*, 20(3), 1266--1305. [doi:10.1214/aos/1176348794](https://doi.org/10.1214/aos/1176348794)
 - Marron, J.S., Ramsay, J.O., Sangalli, L.M., & Srivastava, A. (2015). Functional data analysis of amplitude and phase variation. *Statistical Science*, 30(4), 468--484. [doi:10.1214/15-EJS1030](https://doi.org/10.1214/15-EJS1030)
-- Ramsay, J.O., & Li, X. (1998). Curve registration. *Journal of the Royal Statistical Society: Series B*, 60(2), 351--363. [doi:10.1111/1467-9868.00129](https://academic.oup.com/jrsssb/article/60/2/351/7083189)
+- Ramsay, J.O., & Li, X. (1998). Curve registration. *Journal of the Royal Statistical Society: Series B*, 60(2), 351--363. [doi:10.1111/1467-9868.00129](https://doi.org/10.1111/1467-9868.00129)
 - Ramsay, J.O., & Silverman, B.W. (2005). *Functional Data Analysis* (2nd ed.). Springer.
 - Srivastava, A., & Klassen, E.P. (2016). *Functional and Shape Data Analysis*. Springer.
 - Srivastava, A., Wu, W., Kurtek, S., Klassen, E., & Marron, J.S. (2011). Registration of functional data using Fisher-Rao metric. [arXiv:1103.3817](https://doi.org/10.48550/arXiv.1103.3817)
