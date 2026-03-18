@@ -48,7 +48,7 @@ Populations. \emph{Journal of the American Statistical Association}, 114(526),
 }
 \seealso{
 \link{dti_df} for another example dataset,
-\code{vignette("x01_Overview", package = "tidyfun")} for usage examples.
+\code{vignette("x04_Visualization", package = "tidyfun")} for usage examples.
 
 Other tidyfun datasets: 
 \code{\link{dti_df}}
