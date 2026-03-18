@@ -521,7 +521,7 @@ variable across near-identical curves.</p>
 <p><strong>Remedies:</strong> Smooth inputs (more) first; reduce basis
 flexibility; compare before/after sensitivity.</p>
 <p>In our benchmarks<a class="footnote-ref" tabindex="0" data-bs-toggle="popover" data-bs-content='&lt;p&gt;For full details on the benchmark design and results,
-see &lt;a href="https://tidyfun.github.io/sim-registration" class="external-link"&gt;tidyfun.github.io/sim-registration&lt;/a&gt;&lt;/p&gt;'><sup>2</sup></a>, CC methods (<code>method = "cc"</code>)
+see &lt;a href="https://tidyfun.github.io/sim-registration/" class="external-link"&gt;tidyfun.github.io/sim-registration&lt;/a&gt;&lt;/p&gt;'><sup>2</sup></a>, CC methods (<code>method = "cc"</code>)
 were the most noise-robust, while SRVF degraded most sharply under noise
 — because SRSFs involve numerical derivatives that amplify observation
 noise. Pre-smoothing SRVF inputs with <code>tfb(x, k = 25)</code> before
@@ -1032,9 +1032,8 @@ leading and/or trailing NAs (under strong shifts/scales).</li>
 </h3>
 <p>Constructs piecewise linear warps by mapping user-specified landmark
 positions to target positions. No continuous optimization is performed —
-the warp is fully determined by the landmark correspondence. See <a href="https://projecteuclid.org/journals/annals-of-statistics/volume-20/issue-3/Statistical-Tools-to-Analyze-Data-Representing-a-Sample-of-Curves/10.1214/aos/1176348794.full" class="external-link">Kneip
-&amp; Gasser (1992, Annals of Statistics)</a> and Ramsay &amp; Silverman
-(2005, Ch. 7).</p>
+the warp is fully determined by the landmark correspondence. See <a href="https://doi.org/10.1214/aos/1176348794" class="external-link">Kneip &amp; Gasser (1992,
+Annals of Statistics)</a> and Ramsay &amp; Silverman (2005, Ch. 7).</p>
 <ul>
 <li>
 <strong>Template:</strong> Defined by column-wise means of the

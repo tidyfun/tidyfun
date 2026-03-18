@@ -743,8 +743,8 @@ Constructs piecewise linear warps by mapping user-specified landmark
 positions to target positions. No continuous optimization is performed —
 the warp is fully determined by the landmark correspondence. See [Kneip
 & Gasser (1992, Annals of
-Statistics)](https://projecteuclid.org/journals/annals-of-statistics/volume-20/issue-3/Statistical-Tools-to-Analyze-Data-Representing-a-Sample-of-Curves/10.1214/aos/1176348794.full)
-and Ramsay & Silverman (2005, Ch. 7).
+Statistics)](https://doi.org/10.1214/aos/1176348794) and Ramsay &
+Silverman (2005, Ch. 7).
 
 - **Template:** Defined by column-wise means of the landmark time points
   matrix, or user-supplied `template_landmarks`.
@@ -1216,7 +1216,7 @@ growth” above…).
     than pointwise averaging.
 
 2.  For full details on the benchmark design and results, see
-    [tidyfun.github.io/sim-registration](https://tidyfun.github.io/sim-registration)
+    [tidyfun.github.io/sim-registration](https://tidyfun.github.io/sim-registration/)
 
 3.  more specifically: the positive orthant of such a sphere, which is
     the space of SRVFs of warping functions
