@@ -1,78 +1,45 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://tidyfun.github.io/tidyfun/404.html</loc>
-  </url>
-  <url>
-    <loc>https://tidyfun.github.io/tidyfun/LICENSE-text.html</loc>
-  </url>
-  <url>
-    <loc>https://tidyfun.github.io/tidyfun/LICENSE.html</loc>
-  </url>
-  <url>
-    <loc>https://tidyfun.github.io/tidyfun/articles/index.html</loc>
-  </url>
-  <url>
-    <loc>https://tidyfun.github.io/tidyfun/articles/x01_tf_Vectors.html</loc>
-  </url>
-  <url>
-    <loc>https://tidyfun.github.io/tidyfun/articles/x02_Conversion.html</loc>
-  </url>
-  <url>
-    <loc>https://tidyfun.github.io/tidyfun/articles/x03_Data_Wrangling.html</loc>
-  </url>
-  <url>
-    <loc>https://tidyfun.github.io/tidyfun/articles/x04_Visualization.html</loc>
-  </url>
-  <url>
-    <loc>https://tidyfun.github.io/tidyfun/articles/x05_Advice.html</loc>
-  </url>
-  <url>
-    <loc>https://tidyfun.github.io/tidyfun/authors.html</loc>
-  </url>
-  <url>
-    <loc>https://tidyfun.github.io/tidyfun/index.html</loc>
-  </url>
-  <url>
-    <loc>https://tidyfun.github.io/tidyfun/reference/chf_df.html</loc>
-  </url>
-  <url>
-    <loc>https://tidyfun.github.io/tidyfun/reference/dti_df.html</loc>
-  </url>
-  <url>
-    <loc>https://tidyfun.github.io/tidyfun/reference/ggcapellini.html</loc>
-  </url>
-  <url>
-    <loc>https://tidyfun.github.io/tidyfun/reference/ggerrorband.html</loc>
-  </url>
-  <url>
-    <loc>https://tidyfun.github.io/tidyfun/reference/gglasagna.html</loc>
-  </url>
-  <url>
-    <loc>https://tidyfun.github.io/tidyfun/reference/ggspaghetti.html</loc>
-  </url>
-  <url>
-    <loc>https://tidyfun.github.io/tidyfun/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>https://tidyfun.github.io/tidyfun/reference/tf_evaluate.data.frame.html</loc>
-  </url>
-  <url>
-    <loc>https://tidyfun.github.io/tidyfun/reference/tf_gather.html</loc>
-  </url>
-  <url>
-    <loc>https://tidyfun.github.io/tidyfun/reference/tf_nest.html</loc>
-  </url>
-  <url>
-    <loc>https://tidyfun.github.io/tidyfun/reference/tf_spread.html</loc>
-  </url>
-  <url>
-    <loc>https://tidyfun.github.io/tidyfun/reference/tf_unnest.html</loc>
-  </url>
-  <url>
-    <loc>https://tidyfun.github.io/tidyfun/reference/tftibble.html</loc>
-  </url>
-  <url>
-    <loc>https://tidyfun.github.io/tidyfun/reference/tidyfun-package.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>https://tidyfun.github.io/tidyfun/404.html</loc></url>
+<url><loc>https://tidyfun.github.io/tidyfun/LICENSE-text.html</loc></url>
+<url><loc>https://tidyfun.github.io/tidyfun/LICENSE.html</loc></url>
+<url><loc>https://tidyfun.github.io/tidyfun/articles/index.html</loc></url>
+<url><loc>https://tidyfun.github.io/tidyfun/articles/x01_tf_Vectors.html</loc></url>
+<url><loc>https://tidyfun.github.io/tidyfun/articles/x02_Conversion.html</loc></url>
+<url><loc>https://tidyfun.github.io/tidyfun/articles/x03_Data_Wrangling.html</loc></url>
+<url><loc>https://tidyfun.github.io/tidyfun/articles/x04_Visualization.html</loc></url>
+<url><loc>https://tidyfun.github.io/tidyfun/articles/x05_Advice.html</loc></url>
+<url><loc>https://tidyfun.github.io/tidyfun/articles/x06_Registration.html</loc></url>
+<url><loc>https://tidyfun.github.io/tidyfun/authors.html</loc></url>
+<url><loc>https://tidyfun.github.io/tidyfun/index.html</loc></url>
+<url><loc>https://tidyfun.github.io/tidyfun/news/index.html</loc></url>
+<url><loc>https://tidyfun.github.io/tidyfun/reference/add_tf_aes_to_mapping.html</loc></url>
+<url><loc>https://tidyfun.github.io/tidyfun/reference/autoplot.tf.html</loc></url>
+<url><loc>https://tidyfun.github.io/tidyfun/reference/build_tf_layer_data.html</loc></url>
+<url><loc>https://tidyfun.github.io/tidyfun/reference/chf_df.html</loc></url>
+<url><loc>https://tidyfun.github.io/tidyfun/reference/convert_tf_ggplot.html</loc></url>
+<url><loc>https://tidyfun.github.io/tidyfun/reference/dti_df.html</loc></url>
+<url><loc>https://tidyfun.github.io/tidyfun/reference/finalize_tf_ggplot.html</loc></url>
+<url><loc>https://tidyfun.github.io/tidyfun/reference/ggcapellini.html</loc></url>
+<url><loc>https://tidyfun.github.io/tidyfun/reference/ggerrorband.html</loc></url>
+<url><loc>https://tidyfun.github.io/tidyfun/reference/ggfboxplot.html</loc></url>
+<url><loc>https://tidyfun.github.io/tidyfun/reference/gglasagna.html</loc></url>
+<url><loc>https://tidyfun.github.io/tidyfun/reference/ggplot_build.tf_ggplot.html</loc></url>
+<url><loc>https://tidyfun.github.io/tidyfun/reference/ggspaghetti.html</loc></url>
+<url><loc>https://tidyfun.github.io/tidyfun/reference/index.html</loc></url>
+<url><loc>https://tidyfun.github.io/tidyfun/reference/is_tf_ggplot.html</loc></url>
+<url><loc>https://tidyfun.github.io/tidyfun/reference/parse_tf_aesthetics.html</loc></url>
+<url><loc>https://tidyfun.github.io/tidyfun/reference/plus-.tf_ggplot.html</loc></url>
+<url><loc>https://tidyfun.github.io/tidyfun/reference/print.tf_ggplot.html</loc></url>
+<url><loc>https://tidyfun.github.io/tidyfun/reference/reexports.html</loc></url>
+<url><loc>https://tidyfun.github.io/tidyfun/reference/tf_evaluate.data.frame.html</loc></url>
+<url><loc>https://tidyfun.github.io/tidyfun/reference/tf_gather.html</loc></url>
+<url><loc>https://tidyfun.github.io/tidyfun/reference/tf_ggplot.html</loc></url>
+<url><loc>https://tidyfun.github.io/tidyfun/reference/tf_nest.html</loc></url>
+<url><loc>https://tidyfun.github.io/tidyfun/reference/tf_spread.html</loc></url>
+<url><loc>https://tidyfun.github.io/tidyfun/reference/tf_unnest.html</loc></url>
+<url><loc>https://tidyfun.github.io/tidyfun/reference/tftibble.html</loc></url>
+<url><loc>https://tidyfun.github.io/tidyfun/reference/tidyfun-package.html</loc></url>
+<url><loc>https://tidyfun.github.io/tidyfun/reference/transform_tf_data.html</loc></url>
+<url><loc>https://tidyfun.github.io/tidyfun/reference/translate_old_tf_layer.html</loc></url>
 </urlset>
+
