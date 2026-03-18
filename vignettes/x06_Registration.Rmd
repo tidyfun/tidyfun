@@ -288,7 +288,7 @@ Registration assumes a single shared template. If curves come from different sha
 
 **Remedies:** Smooth inputs (more) first; reduce basis flexibility; compare before/after sensitivity.
 
-In our benchmarks^[For full details on the benchmark design and results, see [tidyfun.github.io/sim-registration](https://tidyfun.github.io/sim-registration)], CC methods (`method = "cc"`) were the most noise-robust, while SRVF degraded most sharply under noise — because SRSFs involve numerical derivatives that amplify observation noise. Pre-smoothing SRVF inputs with `tfb(x, k = 25)` before registration reduced warp error (measured as warp MISE) by 50–70% under moderate noise. Recipe: `x_smooth <- tfb(x, k = 25); reg <- tf_register(x_smooth, method = "srvf")`.
+In our benchmarks^[For full details on the benchmark design and results, see [tidyfun.github.io/sim-registration](https://tidyfun.github.io/sim-registration/)], CC methods (`method = "cc"`) were the most noise-robust, while SRVF degraded most sharply under noise — because SRSFs involve numerical derivatives that amplify observation noise. Pre-smoothing SRVF inputs with `tfb(x, k = 25)` before registration reduced warp error (measured as warp MISE) by 50–70% under moderate noise. Recipe: `x_smooth <- tfb(x, k = 25); reg <- tf_register(x_smooth, method = "srvf")`.
 
 #### Sparse or irregular grids
 
@@ -528,7 +528,7 @@ Each curve is aligned independently via bounded L-BFGS-B optimization of the L2 
 
 ### Landmark
 
-Constructs piecewise linear warps by mapping user-specified landmark positions to target positions. No continuous optimization is performed — the warp is fully determined by the landmark correspondence. See [Kneip & Gasser (1992, Annals of Statistics)](https://projecteuclid.org/journals/annals-of-statistics/volume-20/issue-3/Statistical-Tools-to-Analyze-Data-Representing-a-Sample-of-Curves/10.1214/aos/1176348794.full) and Ramsay & Silverman (2005, Ch. 7).
+Constructs piecewise linear warps by mapping user-specified landmark positions to target positions. No continuous optimization is performed — the warp is fully determined by the landmark correspondence. See [Kneip & Gasser (1992, Annals of Statistics)](https://doi.org/10.1214/aos/1176348794) and Ramsay & Silverman (2005, Ch. 7).
 
 - **Template:** Defined by column-wise means of the landmark time points matrix, or user-supplied `template_landmarks`.
 - **Domain-preserving:** Yes — domain endpoints are used as boundary anchors.
