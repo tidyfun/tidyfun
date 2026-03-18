@@ -11,3 +11,8 @@
 ## First submission
 
 This is the first CRAN submission of tidyfun.
+
+## DESCRIPTION spelling
+
+"geoms" is an established term in the ggplot2 ecosystem (short for
+"geometric objects") and is used intentionally.

@@ -5,31 +5,61 @@
 \alias{dti_df}
 \title{Diffusion tensor imaging data}
 \format{
-An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 382 rows and 6 columns.
+A tibble with 382 rows and 6 columns:
+\describe{
+\item{id}{(numeric) Subject identifier.}
+\item{visit}{(integer) Visit number.}
+\item{sex}{(factor) \code{"male"} or \code{"female"}.}
+\item{case}{(factor) \code{"control"} or \code{"MS"} (multiple sclerosis status).}
+\item{cca}{(\code{tfd_irreg}) FA tract profiles for the corpus callosum
+(up to 93 evaluation points, domain 0--1).}
+\item{rcst}{(\code{tfd_irreg}) FA tract profiles for the right corticospinal
+tract (up to 55 evaluation points, domain 0--1).}
+}
+}
+\source{
+Data are from the Johns Hopkins University and the Kennedy-Krieger Institute.
+Also available in a different format as \link[refund:DTI]{refund::DTI}.
 }
 \usage{
 dti_df
 }
 \description{
-Fractional anisotropy (FA) tract profiles for the corpus
-callosum (cca) and the right corticospinal tract (rcst).
-Accompanying the tract profiles are the subject ID numbers,
-visit number, total number of scans, multiple sclerosis case
-status and Paced Auditory Serial Addition Test (pasat) score.
+Fractional anisotropy (FA) tract profiles for the corpus callosum (\code{cca})
+and the right corticospinal tract (\code{rcst}) from a diffusion tensor imaging
+(DTI) study of multiple sclerosis patients and healthy controls.
 
-Data are also included in the \pkg{refund} package in another
-format.
+The original data in \link[refund:DTI]{refund::DTI} include additional variables (\code{pasat},
+\code{Nscans}, \code{visit.time}) that were not carried over here.
 }
 \details{
-If you use this data as an example in written work, please
-include the following acknowledgment: "The MRI/DTI data were
-collected at Johns Hopkins University and the Kennedy-Krieger
-Institute"
+If you use this data as an example in written work, please include the
+following acknowledgment: \emph{"The MRI/DTI data were collected at Johns Hopkins
+University and the Kennedy-Krieger Institute."}
 }
 \examples{
 dti_df
+
+library(ggplot2)
+dti_df |>
+  dplyr::filter(visit == 1) |>
+  tf_ggplot(aes(tf = cca, color = case)) +
+  geom_line(alpha = 0.3)
+}
+\references{
+Goldsmith, J., Bobb, J., Crainiceanu, C., Caffo, B., and Reich, D. (2011).
+Penalized Functional Regression. \emph{Journal of Computational and Graphical
+Statistics}, 20(4), 830--851. \doi{10.1198/jcgs.2010.10007}
+
+Goldsmith, J., Crainiceanu, C., Caffo, B., and Reich, D. (2012).
+Longitudinal Penalized Functional Regression for Cognitive Outcomes on
+Neuronal Tract Measurements. \emph{Journal of the Royal Statistical Society:
+Series C}, 61(3), 453--469. \doi{10.1111/j.1467-9876.2011.01031.x}
 }
 \seealso{
+\link{chf_df} for another example dataset,
+\code{vignette("x04_Visualization", package = "tidyfun")} for usage examples.
+
 Other tidyfun datasets: 
 \code{\link{chf_df}}
 }
