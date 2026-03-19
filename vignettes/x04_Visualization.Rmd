@@ -27,10 +27,10 @@ theme_set(theme_minimal() + theme(legend.position = "bottom"))
 
 options(
   ggplot2.continuous.colour = "viridis",
-  ggplot2.continuous.fill = "viridis"
+  ggplot2.continuous.fill = "viridis",
+  ggplot2.discrete.colour = "viridis_d",
+  ggplot2.discrete.fill = "viridis_d"
 )
-scale_colour_discrete <- scale_colour_viridis_d
-scale_fill_discrete <- scale_fill_viridis_d
 
 library("tidyfun")
 data(chf_df, package = "tidyfun")
@@ -77,7 +77,9 @@ You can, for example, define the color aesthetic for plots of `tf` variables usi
 ```{r}
 chf_df |>
   filter(id %in% 1:5) |>
-  tf_ggplot(aes(tf = tf_smooth(activity, f = .05), color = gender)) +
+  tf_ggplot(
+    aes(tf = tf_smooth(activity, f = .05), # smoothed inputs for clearer viz
+        color = gender)) +
   geom_line(alpha = 0.3)
 ```
 
@@ -87,7 +89,7 @@ chf_df |>
 chf_df |>
   filter((id %in% 1:10) & (day %in% c("Mon", "Sun"))) |>
   tf_ggplot(aes(tf = tf_smooth(activity, f = .05), color = gender)) +
-  geom_line(alpha = 0.3) +
+  geom_line(alpha = 0.3, lwd = 1) +
   facet_grid(~day)
 ```
 
@@ -186,8 +188,9 @@ tf_ggplot(dti_df, aes(tf = rcst)) +
 ## Heatmaps for functional data: `gglasagna`
 
 Lasagna plots are "[a saucy alternative to spaghetti plots](https://pmc.ncbi.nlm.nih.gov/articles/PMC2937254/)". They are a variant on a heatmaps which show functional observations in rows and use color to illustrate values taken at different arguments. 
+Especially for large samples or noisy data, lasagna plots can be more informative than spaghetti plots, which can be hard to read when many curves are plotted together. Lasagna plots also allow for easy visual comparison of groups of curves, and the `order` argument in `gglasagna()` allows you to sort the curves by any variable or function of the data, which can help reveal patterns in the data.
 
-In **`tidyfun`**, lasagna plots are implemented through `gglasagna`. A first example, using the CHF data, is below. 
+In **`tidyfun`**, lasagna plots are implemented through `gglasagna` (as well as a basic `plot` method, see  ?!?). A first example, using the CHF data, is below. 
 
 ```{r}
 chf_df |>
@@ -201,11 +204,11 @@ A somewhat more involved example, demonstrating the `order` argument and taking 
 dti_df |>
   gglasagna(
     tf = cca,
-    order = tf_integrate(cca, definite = TRUE),
+    order = tf_integrate(cca, definite = TRUE), #order by area under the curve
     arg = seq(0, 1, length.out = 101)
   ) +
   theme(axis.text.y = element_text(size = 6)) +
-  facet_wrap(~case, ncol = 2, scales = "free")
+  facet_wrap(~ case:sex, ncol = 2, scales = "free")
 ```
 
 ## `geom_capellini`
@@ -270,7 +273,7 @@ So FPC1 is mostly a horizontal (level) shift, while FPC2 mostly affects the size
 
 ```{r, warning=FALSE}
 ggplot(cca_fpc_tbl[1:40,], aes(x =  fpc_1, y = fpc_2)) +
-  geom_point(size = .5, col = "red") +
+  geom_point(size = .5, col = viridis(3)[2]) +
   geom_capellini(aes(tf =cca_fpc),width = .01, height = .01, line.linetype = 1) +
   labs(x = "FPC1 score", y = "FPC2 score")
 ```
@@ -287,7 +290,7 @@ cca <- dti_df$cca |>
 layout(t(1:2))
 
 plot(cca, type = "spaghetti")
-lines(c(median(cca), mean = mean(cca)), col = c(2, 4))
+lines(c(median(cca), mean = mean(cca)), col = viridis(3)[c(1, 3)])
 
 plot(cca, type = "lasagna", col = viridis(50))
 ```
@@ -310,23 +313,22 @@ median(cca_five) |> lines(col = pal_5[3], lwd = 4)
 variability). Current versions of `tf` return a registration result that stores
 the aligned curves, inverse warps, and template and can be inspected directly:
 ```{r}
-cca_reg <- tf_register(
-  cca[1:5],
-  method = "landmark",
-  landmarks = tf_landmarks_extrema(cca[1:5], "max")
-)
-
-cca_reg
-summary(cca_reg)
-plot(cca_reg)
+pinch_reg <- tf::pinch |> tfb() |> #smooth before registration for better results
+  tf_register() 
+pinch_reg
+summary(pinch_reg)
+plot(pinch_reg)
 ```
 
 The registered curves, inverse warping functions, and template can also be
 extracted explicitly for custom plots:
 ```{r}
-layout(t(1:2))
+layout(t(1:3))
+plot(tf::pinch[1:5], col = pal_5, lwd = 2, points = FALSE)
 
-plot(tf_inv_warps(cca_reg), col = pal_5, lwd = 2)
-plot(tf_aligned(cca_reg), col = pal_5, lwd = 2)
-lines(tf_template(cca_reg), col = "black", lwd = 4)
+plot(tf_inv_warps(pinch_reg)[1:5], col = pal_5, lwd = 2, points = FALSE)
+abline(c(0,1), col = "grey", lty = 2)
+
+plot(tf_aligned(pinch_reg)[1:5], col = pal_5, lwd = 2)
+lines(tf_template(pinch_reg), col = "black", lwd = 3, lty= 3)
 ```
