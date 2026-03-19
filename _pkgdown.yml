@@ -15,36 +15,7 @@ reference:
   - tf_nest
   - tf_unnest
   - tf_evaluate.data.frame
-- title: Visualization with ggplot2
-  desc: >
-    `tf_ggplot()` and standard ggplot2 geoms for spaghetti plots, ribbons,
-    and more. Specialized geoms for heatmaps, boxplots, and sparklines.
-  contents:
-  - tf_ggplot
-  - is_tf_ggplot
-  - "+.tf_ggplot"
-  - print.tf_ggplot
-  - ggplot_build.tf_ggplot
-  - parse_tf_aesthetics
-- title: Geoms and stats
-  desc: ggplot2 layers for functional data
-  contents:
-  - geom_spaghetti
-  - geom_fboxplot
-  - gglasagna
-  - ggerrorband
-  - geom_capellini
-  - autoplot.tf
-- title: Display
-  desc: Pillar and print formatting for tf columns
-  contents:
-  - type_sum.tf
-- title: Data
-  desc: Real-world functional data sets shipped with tidyfun
-  contents:
-  - chf_df
-  - dti_df
-- title: "Constructors & converters (from tf)"
+- subtitle: "Constructors & converters (from tf)"
   desc: Defining and converting functional data objects (re-exported from tf)
   contents:
   - tf::tfd
@@ -56,6 +27,48 @@ reference:
   - tf::tfb_fpc
   - tf::fpc_wsvd
   - tf::tf_rebase
+- title: Visualization with ggplot2
+  desc: >
+    `tf_ggplot()` and standard ggplot2 geoms for spaghetti plots, ribbons,
+    and more. Specialized geoms for heatmaps, boxplots, and sparklines.
+  contents:
+  - tf_ggplot
+  - is_tf_ggplot
+  - "+.tf_ggplot"
+  - print.tf_ggplot
+  - ggplot_build.tf_ggplot
+  - parse_tf_aesthetics
+- subtitle: Geoms and stats
+  desc: ggplot2 layers for functional data
+  contents:
+  - geom_spaghetti
+  - geom_fboxplot
+  - gglasagna
+  - ggerrorband
+  - geom_capellini
+  - autoplot.tf
+- subtitle: "Visualization & display (from tf)"
+  desc: Base-R graphics and print formats for tf objects
+  contents:
+  - tf::plot.tf
+  - tf::print.tf
+- title: Display
+  desc: Pillar and print formatting for tf columns
+  contents:
+  - type_sum.tf
+- title: Data
+  desc: Real-world functional data sets shipped with tidyfun or tf
+  contents:
+  - chf_df
+  - dti_df
+  - tf::gait
+  - tf::growth
+  - tf::pinch
+- title: "Querying functional data (from tf)"
+  desc: Locating functional features like peaks or zero-crossings
+  contents:
+  - tf::tf_where
+  - tf::tf_zoom
 - title: "Evaluating, indexing & re-arranging (from tf)"
   desc: Accessing, appending, evaluating, splitting & combining functional data objects
   contents:
@@ -89,17 +102,6 @@ reference:
   - tf::tf_landmarks_extrema
   - tf::tf_warp
   - tf::tf_invert
-- title: "Visualization & display (from tf)"
-  desc: Base-R graphics and print formats for tf objects
-  contents:
-  - tf::plot.tf
-  - tf::print.tf
-  - tf::prep_plotting_arg
-- title: "Querying functional data (from tf)"
-  desc: Locating functional features like peaks or zero-crossings
-  contents:
-  - tf::tf_where
-  - tf::tf_zoom
 - title: "Utilities & random generation (from tf)"
   contents:
   - tf::tf_arg
@@ -108,14 +110,6 @@ reference:
   - tf::in_range
   - tf::ensure_list
   - tf::unique_id
-  - tf::vctrs
-  - tf::tf
-- title: "Data (from tf)"
-  desc: Functional data sets from tf
-  contents:
-  - tf::gait
-  - tf::growth
-  - tf::pinch
 articles:
 - title: User guides
   desc: End-user articles for working with tidyfun
