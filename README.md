@@ -15,32 +15,35 @@ license](https://img.shields.io/badge/license-MIT-brightgreen.svg)](https://open
 [![codecov](https://app.codecov.io/github/tidyfun/tidyfun/coverage.svg?branch=master)](https://app.codecov.io/github/tidyfun/tidyfun/branch/master)
 <!-- badges: end -->
 
-The goal of **`tidyfun`** is to provide accessible and well-documented
-software that **makes functional data analysis in `R` easy** –
-specifically data wrangling and exploratory analysis. This is achieved
-by introducing a new data type (`tf`). Vectors of class `tf` can be
-operated on using many standard functions (`+`, `mean`, etc.) as well as
-several new functions in `tidyfun` (`tf_smooth`, `tf_where`).
+**`tidyfun`** is a **`tidyverse`**-oriented interface layer around the
+core **`tf`** package. It makes functional data analysis in `R` easier
+by focusing on data wrangling, exploratory analysis, and graphics for
+functional data stored in ordinary data frames.
+
+The underlying **`tf`** package defines the `tf` vector type and the
+core functional-data methods. **`tidyfun`** builds on those objects with
+helpers for working inside data frames, plus plotting and workflow tools
+that fit naturally into the **`tidyverse`**.
 
 **Crucially**, vectors of class `tf` can be included in data frames
-containing other variables, enabling data manipulation using `tidyverse`
-tools. This approach is connected to the conceptual framework in
-functional data analysis, which assumes that *complete functions* are
-the unit of observation; with `tidyfun`, full curves sit alongside
-numeric, factor, and other observations on the same subject.
+alongside other variables, enabling data manipulation with standard
+**`tidyverse`** tools. This matches the functional-data view that
+*complete functions* are the unit of observation; with **`tidyfun`**,
+full curves sit alongside numeric, factor, and other observations on the
+same subject.
 
 ## Installation
 
-You can install `tidyfun` from CRAN:
+Install the released version from CRAN:
 
 ``` r
 install.packages("tidyfun")
 ```
 
-or install the development version from GitHub with:
+Or install the current development version from GitHub:
 
 ``` r
-# install.packages("pak")
+install.packages("pak")
 pak::pak("tidyfun/tidyfun")
 ```
 
@@ -48,29 +51,30 @@ pak::pak("tidyfun/tidyfun")
 
 **`tidyfun`** provides:
 
-- new **data types** for representing functional data: **`tfd`** &
-  **`tfb`**
-- arithmetic **operators** and descriptive **statistics** for such data
-- `tidyverse`-verbs for handling functional data – especially **inside**
-  data frames
-- new **graphics** functions for `tf` vectors and tidy functional data
-  frames
+- **`tidyverse`**-friendly **wrangling** tools for functional data
+  inside data frames
+- **`tidyfun`**-level **graphics** helpers for `tf` vectors and tidy
+  functional data frames
+- documentation and examples that sit on top of the core **`tf`** data
+  structures and methods
 
-For detailed information on the features of `tidyfun`, check out
+For detailed information on the features of **`tidyfun`**, check out
 articles on the following topics:
 
 - [Representing](https://tidyfun.github.io/tidyfun/articles/x01_tf_Vectors.html)
-  functional data as `tf` vectors, and operating on those vectors
+  functional data as `tf` vectors, and operating on those vectors with
+  core **`tf`** methods and **`tidyfun`** conveniences
 - [Converting](https://tidyfun.github.io/tidyfun/articles/x02_Conversion.html)
   non-tidy functional data (matrices, “long” and “wide” data frames) to
-  tidy functional data
+  tidy functional data using **`tidyfun`** workflows built on **`tf`**
 - [Wrangling](https://tidyfun.github.io/tidyfun/articles/x03_Data_Wrangling.html)
-  data frames that include functional data using `tidyverse` and
-  `tidyfun` tools
+  data frames that include functional data using **`tidyverse`** and
+  **`tidyfun`** tools
 - [Visualizing](https://tidyfun.github.io/tidyfun/articles/x04_Visualization.html)
-  tidy functional data
+  tidy functional data with **`tidyfun`** graphics helpers
 - [Registering](https://tidyfun.github.io/tidyfun/articles/x06_Registration.html)
-  (aligning) functional data across methods
+  functional data with the **`tf`** registration methods documented for
+  use in the **`tidyfun`** ecosystem
 
 The result is a package that enables exploratory data analysis like the
 following, which computes group-specific mean curves in the `dti_df`
@@ -92,14 +96,14 @@ dti_df |>
 
 ## What does it do?
 
-#### New vector-like data types for functional data
+#### Core `tf` data types and methods
 
-**`tidyfun`** introduces [new `S3`-classes for functional
-data](https://tidyfun.github.io/tidyfun/reference/index.html#section-tf-sub-classes-constructors-converters),
-either as raw data (class `tfd` for *t*idy *f*unctional *d*ata) or in
-basis representation (class `tfb` for *t*idy *f*unctional *b*asis data),
-defined in the underlying [**`{tf}`**](https://github.com/tidyfun/tf)
-package.
+The underlying [**`{tf}`**](https://github.com/tidyfun/tf) package
+defines the `tf` vector classes and related methods, including raw
+functional data (`tfd`) and basis representations (`tfb`). For an
+overview, see the [`tf` vectors
+article](https://tidyfun.github.io/tidyfun/articles/x01_tf_Vectors.html)
+and the [reference index](https://tidyfun.github.io/tidyfun/reference/).
 
 Such `tf`-objects can be subsetted or subassigned, computed on and
 summarized.
@@ -110,8 +114,10 @@ Almost all
 - math functions like `sum`, `log` or `abs`
 - and statistics functions like `mean` or `sd`
 
-are defined for **`tidyfun`**’s data structures
-([more](https://tidyfun.github.io/tidyfun/reference/index.html#section-arithmetic-logical-and-summary-functions)).
+are defined for these `tf` data structures, as illustrated in the [`tf`
+vectors
+article](https://tidyfun.github.io/tidyfun/articles/x01_tf_Vectors.html)
+and the [reference index](https://tidyfun.github.io/tidyfun/reference/).
 
 The `tf` objects are basically glorified lists, so they work well as
 columns in data frames. That makes it a lot easier to keep your other
@@ -124,36 +130,35 @@ can be integrated or differentiated, etc.
 [See
 here](https://tidyfun.github.io/tidyfun/articles/x01_tf_Vectors.html)
 for more information on the operations defined for `tf` vectors.
-<!-- TODO: link developer vignette here as well, eventually -->
 
 #### Methods for converting existing data to `tf`
 
-**`tidyfun`** includes functions `tfd` and `tfb` for converting
-matrices, data frames, etc. to `tf` vectors. It also provides
-`tf_gather` & `tf_nest` in order to reshape tables with functional data,
-by going from wide to narrow or from long to short; functions like
-`as.matrix`, `tf_spread` & `tf_unnest` can reverse these data
-conversions.
+The underlying **`tf`** package provides the `tfd` and `tfb`
+constructors for converting matrices, data frames, etc. to `tf` vectors.
+**`tidyfun`** builds on those objects with `tf_gather` & `tf_nest` to
+reshape tables with functional data, by going from wide to narrow or
+from long to short; functions like `as.matrix`, `tf_spread` &
+`tf_unnest` can reverse these data conversions.
 
 [See
 here](https://tidyfun.github.io/tidyfun/articles/x02_Conversion.html)
 for details on getting data into (and out of) the `tf` format.
 
-#### `tidyverse` verbs for dealing with functional data inside data frames
+#### **`tidyverse`** verbs for dealing with functional data inside data frames
 
-All `dplyr` verbs work on `tf`-columns, so you can `filter`, `mutate`,
-`group_by` & `summarize`, etc., functional data pretty much like
-conventional “tidy” data. **`tidyfun`** adds several functions that are
-useful in conjunction with these, like `tf_anywhere` and `tf_smooth`.
+All **`dplyr`** verbs work on `tf`-columns, so you can `filter`,
+`mutate`, `group_by` & `summarize`, etc., functional data pretty much
+like conventional “tidy” data. **`tidyfun`** workflows also work
+naturally with **`tf`** helpers such as `tf_anywhere` and `tf_smooth`.
 
 [See
 here](https://tidyfun.github.io/tidyfun/articles/x03_Data_Wrangling.html)
 to see how you can wrangle functional data.
 
-#### New `ggplot2` `geoms` and `stats` for functional data
+#### New **`ggplot2`** `geoms` and `stats` for functional data
 
 **`tidyfun`** provides **`tf_ggplot()`**, which lets you use standard
-`ggplot2` geoms (`geom_line`, `geom_point`, `geom_ribbon`, …) with
+**`ggplot2`** geoms (`geom_line`, `geom_point`, `geom_ribbon`, …) with
 functional data via the `tf` aesthetic. It also includes specialized
 **pasta-themed** geoms:
 
@@ -169,19 +174,18 @@ as well as methods for base R graphics functions `plot`, `lines` and
 `points` for quick and easy visualizations of functional data.
 
 [See
-here](https://tidyfun.github.io/tidyfun/reference/index.html#section-visualization-display)
-for the documentation of the visualization approaches or take a look at
-the
-[Visualization](https://tidyfun.github.io/tidyfun/articles/x04_Visualization.html)
-vignette.
+here](https://tidyfun.github.io/tidyfun/articles/x04_Visualization.html)
+for the documentation of the visualization approaches, or browse the
+[reference index](https://tidyfun.github.io/tidyfun/reference/).
 
 #### Curve registration
 
-**`tidyfun`** supports multiple methods for aligning curves in time via
-`tf_register`: elastic SRVF alignment, continuous registration (CC),
-affine shift/scale models, and landmark registration. All methods return
-`tf_registration` objects with a consistent interface for extracting
-aligned curves, inverse warping functions, and diagnostic summaries.
+**`tidyfun`** documents multiple **`tf`** methods for aligning curves in
+time via `tf_register`: elastic SRVF alignment, continuous registration
+(CC), affine shift/scale models, and landmark registration. All methods
+return `tf_registration` objects with a consistent interface for
+extracting aligned curves, inverse warping functions, and diagnostic
+summaries.
 
 [See
 here](https://tidyfun.github.io/tidyfun/articles/x06_Registration.html)
