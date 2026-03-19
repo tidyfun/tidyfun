@@ -33,8 +33,6 @@ scale_colour_discrete <- scale_colour_viridis_d
 scale_fill_discrete <- scale_fill_viridis_d
 
 library("tidyfun")
-# try(devtools::load_all("~/fda/tidyfun"))
-# try(devtools::load_all("~/Work/fda/tidyfun"))
 
 pal_5 <- viridis(7)[-(1:2)]
 set.seed(1221)
@@ -42,9 +40,9 @@ set.seed(1221)
 
 # Data manipulation using **`tidyfun`**
 
-The goal of **`tidyfun`** is to provide accessible and well-documented software that **makes functional data analysis in `R` easy**. In this vignette, we explore some aspects of data manipulation that are possible using **`tidyfun`**, emphasizing compatibility with the `tidyverse`.
+The goal of **`tidyfun`** is to provide accessible and well-documented software that **makes functional data analysis in `R` easy**. In this vignette, we explore some aspects of data manipulation that are possible using **`tidyfun`** workflows with `tf` vectors, emphasizing compatibility with the **`tidyverse`**.
 
-Other vignettes have examined the **`tfd`** & **`tfb`** data types, and how to convert common formats for functional data (e.g. matrices, long- and wide-format data frames, `fda` objects) in these new data types. Because our goal is "tidy" data manipulation for functional data analysis, the result of data conversion processes has been a data frame in which a column contains the functional data of interest. This vignette starts from that point.
+Other vignettes have examined the **`tfd`** & **`tfb`** data types, and how to convert common formats for functional data (e.g. matrices, long- and wide-format data frames, **`fda`** objects) in these new data types. Because our goal is "tidy" data manipulation for functional data analysis, the result of data conversion processes has been a data frame in which a column contains the functional data of interest. This vignette starts from that point.
 
 Throughout, we make use of some visualization tools -- these are explained in more detail in the [visualization](https://tidyfun.github.io/tidyfun/articles/x04_Visualization.html) vignette.
 
@@ -86,7 +84,7 @@ dti_df |>
 
 # Existing `tidyverse` functions
 
-Dataframes using `tidyfun` to store functional observations can be manipulated using tools from `dplyr`, including `select` and `filter`:
+Dataframes using **`tidyfun`** to store functional observations can be manipulated using tools from **`dplyr`**, including `select` and `filter`:
 
 ```{r}
 chf_df |>
@@ -116,7 +114,7 @@ chf_df |>
   geom_line(alpha = 0.2)
 ```
 
-Functions for data manipulation from `tidyr` are also supported. We illustrate by using `pivot_wider` to create new `tfd`-columns containing the activity profiles for each day of the week:
+Functions for data manipulation from **`tidyr`** are also supported. We illustrate by using `pivot_wider` to create new `tfd`-columns containing the activity profiles for each day of the week:
 
 ```{r}
 chf_df |>
@@ -161,9 +159,9 @@ dti_df |>
 ```
 
 
-# New `tidyfun` functions
+# `tf` helper functions in tidy workflows
 
-Some `dplyr` functions are useful in conjunction with new functions in `tidyfun`. For example, one might use `filter` with `tf_anywhere` to filter based on the values of observed functions:
+Some **`dplyr`** functions are useful in conjunction with **`tf`** helper functions. For example, one might use `filter` with `tf_anywhere()` to filter based on the values of observed functions:
 
 ```{r}
 like_to_move_it_move_it <- chf_df |> filter(tf_anywhere(activity, value > 9))
@@ -183,7 +181,7 @@ dti_df |>
   geom_line()
 ```
 
-The existing `mutate` function can be combined with several `tidyfun` functions, including `tf_smooth`, `tf_zoom`, and `tf_derive`.
+The existing `mutate` function can be combined with several `tf` helpers, including `tf_smooth()`, `tf_zoom()`, and `tf_derive()`.
 
 One can smooth existing observations using `tf_smooth`:
 
@@ -239,15 +237,21 @@ dti_df |>
 
 # Working with `data.table`
 
-`tidyfun` functional data objects work within `data.table` as well.
+**`tidyfun`** functional data objects work within **`data.table`** as well.
 
-However, there is one specific known caveat when calculating the mean of a `tf` vector within a `data.table` context:
-By default, `data.table` will use optimized routines for summary statistics, which may cause `mean` to dispatch to `data.table`'s own optimized implementation,
+However, there is one specific known caveat when calculating the mean of a `tf` vector within a **`data.table`** context:
+By default, **`data.table`** will use optimized routines for summary statistics, which may cause `mean` to dispatch to **`data.table`**'s own optimized implementation,
 leading to unexpected behavior for `tf` vectors.
 
 To ensure the correct mean calculation for `tf` vectors, there are two solutions:
 
-- Set `options(data.table.optimize = 0)`, which disables optimization, allowing the mean function to correctly dispatch for `tf` vectors.
-- Alternatively, explicitly call `tf:::mean.tf(activity)` in your code to directly specify the correct `tf`-mean calculation.
+- Disable the optimization for the summary step and let `mean()` dispatch normally:
+
+```{r, eval = FALSE}
+withr::with_options(
+  list(data.table.optimize = 0),
+  data.table::as.data.table(chf_df)[, list(mean_act = mean(activity)), by = day]
+)
+```
 
 This caveat applies specifically to `mean()` and is the only known issue. 
