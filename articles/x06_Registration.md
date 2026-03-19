@@ -749,8 +749,8 @@ Constructs piecewise linear warps by mapping user-specified landmark
 positions to target positions. No continuous optimization is performed —
 the warp is fully determined by the landmark correspondence. See [Kneip
 & Gasser (1992, Annals of
-Statistics)](https://doi.org/10.1214/aos/1176348794) and Ramsay &
-Silverman (2005, Ch. 7).
+Statistics)](https://projecteuclid.org/journals/annals-of-statistics/volume-20/issue-3/Statistical-Tools-to-Analyze-Data-Representing-a-Sample-of-Curves/10.1214/aos/1176348794.full)
+and Ramsay & Silverman (2005, Ch. 7).
 
 - **Template:** Defined by column-wise means of the landmark time points
   matrix, or user-supplied `template_landmarks`.
@@ -1190,7 +1190,7 @@ growth” above…).
 - Kneip, A., & Gasser, T. (1992). Statistical tools to analyze data
   representing a sample of curves. *Annals of Statistics*, 20(3),
   1266–1305.
-  [doi:10.1214/aos/1176348794](https://doi.org/10.1214/aos/1176348794)
+  [doi:10.1214/aos/1176348794](https://projecteuclid.org/journals/annals-of-statistics/volume-20/issue-3/Statistical-Tools-to-Analyze-Data-Representing-a-Sample-of-Curves/10.1214/aos/1176348794.full)
 - Marron, J.S., Ramsay, J.O., Sangalli, L.M., & Srivastava, A. (2015).
   Functional data analysis of amplitude and phase variation.
   *Statistical Science*, 30(4), 468–484.
