@@ -44,7 +44,7 @@ reference:
   contents:
   - chf_df
   - dti_df
-- subtitle: "tf package: Constructors & converters"
+- title: "Constructors & converters (from tf)"
   desc: Defining and converting functional data objects (re-exported from tf)
   contents:
   - tf::tfd
@@ -56,7 +56,7 @@ reference:
   - tf::tfb_fpc
   - tf::fpc_wsvd
   - tf::tf_rebase
-- subtitle: "tf package: Evaluating, indexing & re-arranging"
+- title: "Evaluating, indexing & re-arranging (from tf)"
   desc: Accessing, appending, evaluating, splitting & combining functional data objects
   contents:
   - tf::tfbrackets
@@ -64,7 +64,7 @@ reference:
   - tf::tf_evaluate
   - tf::tf_interpolate
   - tf::tf_splitcombine
-- subtitle: "tf package: Arithmetic, logical and summary functions"
+- title: "Arithmetic, logical and summary functions (from tf)"
   desc: Functionality for computing with and comparing functional data
   contents:
   - tf::tfgroupgenerics
@@ -74,12 +74,12 @@ reference:
   - tf::tf_order
   - tf::tf_minmax
   - tf::fivenum
-- subtitle: "tf package: Differentiation, integration and smoothing"
+- title: "Differentiation, integration and smoothing (from tf)"
   contents:
   - tf::tf_derive
   - tf::tf_integrate
   - tf::tf_smooth
-- subtitle: "tf package: Registering and warping"
+- title: "Registering and warping (from tf)"
   desc: Functions for registering and warping functional data
   contents:
   - tf::tf_register
@@ -89,18 +89,18 @@ reference:
   - tf::tf_landmarks_extrema
   - tf::tf_warp
   - tf::tf_invert
-- subtitle: "tf package: Visualization & display"
+- title: "Visualization & display (from tf)"
   desc: Base-R graphics and print formats for tf objects
   contents:
   - tf::plot.tf
   - tf::print.tf
   - tf::prep_plotting_arg
-- subtitle: "tf package: Querying functional data"
+- title: "Querying functional data (from tf)"
   desc: Locating functional features like peaks or zero-crossings
   contents:
   - tf::tf_where
   - tf::tf_zoom
-- subtitle: "tf package: Utilities & random generation"
+- title: "Utilities & random generation (from tf)"
   contents:
   - tf::tf_arg
   - tf::tf_rgp
@@ -110,7 +110,7 @@ reference:
   - tf::unique_id
   - tf::vctrs
   - tf::tf
-- subtitle: "tf package: Data"
+- title: "Data (from tf)"
   desc: Functional data sets from tf
   contents:
   - tf::gait
