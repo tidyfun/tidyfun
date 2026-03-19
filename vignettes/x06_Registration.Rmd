@@ -533,7 +533,7 @@ Each curve is aligned independently via bounded L-BFGS-B optimization of the L2 
 
 ### Landmark
 
-Constructs piecewise linear warps by mapping user-specified landmark positions to target positions. No continuous optimization is performed — the warp is fully determined by the landmark correspondence. See [Kneip & Gasser (1992, Annals of Statistics)](https://doi.org/10.1214/aos/1176348794) and Ramsay & Silverman (2005, Ch. 7).
+Constructs piecewise linear warps by mapping user-specified landmark positions to target positions. No continuous optimization is performed — the warp is fully determined by the landmark correspondence. See [Kneip & Gasser (1992, Annals of Statistics)](https://projecteuclid.org/journals/annals-of-statistics/volume-20/issue-3/Statistical-Tools-to-Analyze-Data-Representing-a-Sample-of-Curves/10.1214/aos/1176348794.full) and Ramsay & Silverman (2005, Ch. 7).
 
 - **Template:** Defined by column-wise means of the landmark time points matrix, or user-supplied `template_landmarks`.
 - **Domain-preserving:** Yes — domain endpoints are used as boundary anchors.
@@ -797,7 +797,7 @@ The piecewise linear warps align the pubertal peaks well, with the pubertal trou
 
 ## References
 
-- Kneip, A., & Gasser, T. (1992). Statistical tools to analyze data representing a sample of curves. *Annals of Statistics*, 20(3), 1266--1305. [doi:10.1214/aos/1176348794](https://doi.org/10.1214/aos/1176348794)
+- Kneip, A., & Gasser, T. (1992). Statistical tools to analyze data representing a sample of curves. *Annals of Statistics*, 20(3), 1266--1305. [doi:10.1214/aos/1176348794](https://projecteuclid.org/journals/annals-of-statistics/volume-20/issue-3/Statistical-Tools-to-Analyze-Data-Representing-a-Sample-of-Curves/10.1214/aos/1176348794.full)
 - Marron, J.S., Ramsay, J.O., Sangalli, L.M., & Srivastava, A. (2015). Functional data analysis of amplitude and phase variation. *Statistical Science*, 30(4), 468--484. [doi:10.1214/15-EJS1030](https://doi.org/10.1214/15-EJS1030)
 - Ramsay, J.O., & Li, X. (1998). Curve registration. *Journal of the Royal Statistical Society: Series B*, 60(2), 351--363. [doi:10.1111/1467-9868.00129](https://doi.org/10.1111/1467-9868.00129)
 - Ramsay, J.O., & Silverman, B.W. (2005). *Functional Data Analysis* (2nd ed.). Springer.
