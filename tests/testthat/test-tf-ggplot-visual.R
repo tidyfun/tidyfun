@@ -119,7 +119,7 @@ test_that("tf_ggplot with points and lines looks correct", {
 
   p <- tf_ggplot(data, aes(tf = func, color = treatment)) +
     geom_line(alpha = 0.7, linewidth = 1) +
-    geom_point(linewidth = 2) +
+    geom_point(size = 2) +
     labs(
       title = "tf_ggplot: Lines + Points with Irregular Data",
       subtitle = "Should show: 3 decay curves with visible data points"
@@ -352,7 +352,7 @@ test_that("tf_ggplot with different geom types", {
     geom_point(
       aes(tf = func),
       color = "red",
-      linewidth = 1.5,
+      size = 1.5,
       alpha = 0.7
     ) +
     labs(title = "geom_point", subtitle = "Individual evaluation points") +
@@ -375,7 +375,7 @@ test_that("tf_ggplot with different geom types", {
   # Combined plot
   p_combined <- tf_ggplot(data, aes(tf = func, color = factor(id))) +
     geom_line(linewidth = 1, alpha = 0.8) +
-    geom_point(linewidth = 2) +
+    geom_point(size = 2) +
     labs(
       title = "Combined: Lines + Points",
       subtitle = "Should show both continuous lines and data points",
@@ -419,7 +419,7 @@ test_that("tf_ggplot edge cases render properly", {
 
   p2 <- tf_ggplot(data2, aes(tf = func, color = factor(id))) +
     geom_line(linewidth = 1) +
-    geom_point(linewidth = 3) +
+    geom_point(size = 3) +
     labs(title = "Edge Case: Very Sparse Data (3 points)", color = "Function") +
     theme_minimal()
 

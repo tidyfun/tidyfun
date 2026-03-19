@@ -276,11 +276,22 @@ test_that("tf_ggplot error handling for scale conflicts", {
   )
   data$func <- tf_rgp(3, arg = seq(0, 1, length.out = 11))
 
+  expect_warning(
+    {
+      p <- tf_ggplot(data) +
+        geom_line(aes(tf = func)) + # tf data on y-scale
+        geom_point(aes(x = id, y = scalar_y)) # scalar data on y-scale
+    },
+    "scale conflict"
+  )
+
   # This should work without error; scale conflict warnings are acceptable
   expect_no_error({
-    p <- tf_ggplot(data) +
-      geom_line(aes(tf = func)) + # tf data on y-scale
-      geom_point(aes(x = id, y = scalar_y)) # scalar data on y-scale
+    p <- suppressWarnings(
+      tf_ggplot(data) +
+        geom_line(aes(tf = func)) + # tf data on y-scale
+        geom_point(aes(x = id, y = scalar_y))
+    ) # scalar data on y-scale
 
     # Should build successfully
     built <- ggplot_build(p)
