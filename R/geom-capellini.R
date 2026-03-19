@@ -3,8 +3,8 @@
 #' Plots a miniature glyph / sparkline for each entry of a `tf`-object.
 #' (Capellini are tiny spaghetti -- *angel hair* pasta.) Aesthetics `x` and `y`
 #' specify the location of the glyphs, the `tf` aesthetic defines their shapes.
-#' To accommodate all my fellow idiots, `geom_cappelini`,  `geom_cappellini` and
-#' `geom_capelini` also work.
+#' The aliases `geom_cappelini`, `geom_cappellini`, and `geom_capelini` are
+#' also accepted.
 #'
 #' @section `tf` aesthetic:
 #'   Mandatory. Used to designate a column of class `tf` to be visualized as glyphs.
@@ -147,8 +147,9 @@ stat_capellini <- function(
 #' @export
 #' @rdname ggcapellini
 #' @format NULL
-#' @param stat that's "capellini"!
-#' @param arg where to evaluate `tf` -- defaults to the default ;)
+#' @param stat the stat to use; defaults to `"capellini"`.
+#' @param arg where to evaluate `tf`; defaults to the object's default
+#'   evaluation grid.
 #' @param add_lines should a reference line in the middle of the range of the
 #'    functions' values be added to each glyph? defaults to TRUE
 #' @param add_boxes should a box be added to frame each glyph? defaults to TRUE

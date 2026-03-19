@@ -79,11 +79,11 @@ The \code{tf}-method simply turns a single \code{tfd} or \code{tfb} vector into 
 }
 \details{
 \itemize{
-\item Caution -- uses slightly different defaults for names of unnested columns
+\item Caution: this uses slightly different defaults for names of unnested columns
 than \code{tidyr::unnest()}.
-\item For \code{data.frames}, \strong{make sure to have an ID column in your data before unnesting!}
-If it does not include an ID column with a unique identifier for each row, you will not
-be able to match arg-value pairs to the different functions after unnesting.
+\item For \code{data.frames}, include an ID column with a unique row identifier before
+unnesting. Without it, arg-value pairs cannot be matched back to their
+original functions after unnesting.
 }
 }
 \examples{

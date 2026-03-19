@@ -1,8 +1,8 @@
 #' Spaghetti plots for `tf` objects
 #'
 #' Plots a line for each entry of a `tf`-object.
-#' `geom_spaghetti` does spaghetti (i.e. "hairball") plots, `geom_meatballs`
-#' does spaghetti plots with points for the actual evaluations.
+#' `geom_spaghetti` draws a line through each function, and `geom_meatballs`
+#' adds points for the evaluated grid values.
 #'
 #' "Flipped" aesthetics are not implemented for these geoms.
 #'
@@ -108,7 +108,8 @@ stat_tf <- function(
 #' @rdname ggspaghetti
 #' @family tidyfun visualization
 #' @format NULL
-#' @param arg where to evaluate the functions in `y` -- defaults to the default ;)
+#' @param arg where to evaluate the functions in `y`; defaults to the object's
+#'   default evaluation grid.
 geom_spaghetti <- function(
   mapping = NULL,
   data = NULL,

@@ -44,16 +44,16 @@ appended as well.
 }
 \details{
 \code{domain} and \code{evaluator} can be specified as lists or vectors
-if you're nesting multiple functional data columns with different properties.
-Because quasi-quotation is \emph{such} a bitch, you can only specify the evaluator
-functions as strings and not as bare names here.
+if you are nesting multiple functional data columns with different properties.
+Because this interface captures evaluator names as text, supply the evaluator
+as a string rather than a bare function name.
 }
 \examples{
 d <- dplyr::tibble(id = rep(1:3, each = 5), arg = rep(1:5, 3), value = rnorm(15))
 tf_nest(d, .id = id, .arg = arg)
 }
 \seealso{
-\code{\link[tf:tfd]{tf::tfd()}} for \verb{domain, evaluator}
+\code{\link[tf:tfd]{tf::tfd()}} for details on \code{domain} and \code{evaluator}.
 
 Other tidyfun data wrangling functions: 
 \code{\link{tf_evaluate.data.frame}()},

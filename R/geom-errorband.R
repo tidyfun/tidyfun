@@ -91,7 +91,8 @@ stat_errorband <- function(
 #' @export
 #' @rdname ggerrorband
 #' @format NULL
-#' @param arg where to evaluate `tf` -- defaults to the default ;)
+#' @param arg where to evaluate `tf`; defaults to the object's default
+#'   evaluation grid.
 geom_errorband <- function(
   mapping = NULL,
   data = NULL,

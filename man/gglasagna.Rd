@@ -15,7 +15,7 @@ gglasagna(
 )
 }
 \arguments{
-\item{data}{the data. Duhh.}
+\item{data}{A data frame containing the \code{tf} column to visualize.}
 
 \item{tf}{bare name of the \code{tf} column to visualize}
 
@@ -32,9 +32,9 @@ return a scalar value to define the order of lasagna layers.}
 
 \item{order_ticks}{add horizontal lines indicating borders between levels of
 \code{order} (if it is a discrete variable) and labels for its levels?
-Defaults to TRUE. Supply a list of arguments (grep source code for \code{order_ticks_args})
-to override default appearance of labels.
-\strong{Switch this off if you use facetting, it's a hack and will produce nonsense.}}
+Defaults to TRUE. Supply a named list to override tick appearance, including
+label styling, line type, alpha, rotation, and label placement.
+Disable this when faceting; the tick annotations are not designed for faceted layouts.}
 }
 \value{
 a \code{ggplot2} object

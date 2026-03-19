@@ -115,7 +115,8 @@ rather than combining with them. This is most useful for helper functions
 that define both data and aesthetics and shouldn't inherit behaviour from
 the default plot specification, e.g. \code{\link[ggplot2:annotation_borders]{annotation_borders()}}.}
 
-\item{arg}{where to evaluate \code{tf} -- defaults to the default ;)}
+\item{arg}{where to evaluate \code{tf}; defaults to the object's default
+evaluation grid.}
 
 \item{add_lines}{should a reference line in the middle of the range of the
 functions' values be added to each glyph? defaults to TRUE}
@@ -158,7 +159,7 @@ lists which parameters it can accept.
 \link[ggplot2:draw_key]{key glyphs}, to change the display of the layer in the legend.
 }}
 
-\item{stat}{that's "capellini"!}
+\item{stat}{the stat to use; defaults to \code{"capellini"}.}
 
 \item{box.colour}{aesthetic property of the box}
 
@@ -185,8 +186,8 @@ A \code{\link[ggplot2:layer]{ggplot2::layer()}} object for use in a ggplot.
 Plots a miniature glyph / sparkline for each entry of a \code{tf}-object.
 (Capellini are tiny spaghetti -- \emph{angel hair} pasta.) Aesthetics \code{x} and \code{y}
 specify the location of the glyphs, the \code{tf} aesthetic defines their shapes.
-To accommodate all my fellow idiots, \code{geom_cappelini},  \code{geom_cappellini} and
-\code{geom_capelini} also work.
+The aliases \code{geom_cappelini}, \code{geom_cappellini}, and \code{geom_capelini} are
+also accepted.
 }
 \section{\code{tf} aesthetic}{
 
