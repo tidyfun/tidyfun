@@ -44,6 +44,78 @@ reference:
   contents:
   - chf_df
   - dti_df
+- subtitle: "tf package: Constructors & converters"
+  desc: Defining and converting functional data objects (re-exported from tf)
+  contents:
+  - tf::tfd
+  - tf::as.tfd
+  - tf::tfb
+  - tf::as.tfb
+  - tf::as.data.frame.tf
+  - tf::tfb_spline
+  - tf::tfb_fpc
+  - tf::fpc_wsvd
+  - tf::tf_rebase
+- subtitle: "tf package: Evaluating, indexing & re-arranging"
+  desc: Accessing, appending, evaluating, splitting & combining functional data objects
+  contents:
+  - tf::tfbrackets
+  - tf::tf_approx_linear
+  - tf::tf_evaluate
+  - tf::tf_interpolate
+  - tf::tf_splitcombine
+- subtitle: "tf package: Arithmetic, logical and summary functions"
+  desc: Functionality for computing with and comparing functional data
+  contents:
+  - tf::tfgroupgenerics
+  - tf::tfsummaries
+  - tf::functionwise
+  - tf::tf_depth
+  - tf::tf_order
+  - tf::tf_minmax
+  - tf::fivenum
+- subtitle: "tf package: Differentiation, integration and smoothing"
+  contents:
+  - tf::tf_derive
+  - tf::tf_integrate
+  - tf::tf_smooth
+- subtitle: "tf package: Registering and warping"
+  desc: Functions for registering and warping functional data
+  contents:
+  - tf::tf_register
+  - tf::tf_estimate_warps
+  - tf::tf_registration
+  - tf::tf_align
+  - tf::tf_landmarks_extrema
+  - tf::tf_warp
+  - tf::tf_invert
+- subtitle: "tf package: Visualization & display"
+  desc: Base-R graphics and print formats for tf objects
+  contents:
+  - tf::plot.tf
+  - tf::print.tf
+  - tf::prep_plotting_arg
+- subtitle: "tf package: Querying functional data"
+  desc: Locating functional features like peaks or zero-crossings
+  contents:
+  - tf::tf_where
+  - tf::tf_zoom
+- subtitle: "tf package: Utilities & random generation"
+  contents:
+  - tf::tf_arg
+  - tf::tf_rgp
+  - tf::tf_jiggle
+  - tf::in_range
+  - tf::ensure_list
+  - tf::unique_id
+  - tf::vctrs
+  - tf::tf
+- subtitle: "tf package: Data"
+  desc: Functional data sets from tf
+  contents:
+  - tf::gait
+  - tf::growth
+  - tf::pinch
 articles:
 - title: User guides
   desc: End-user articles for working with tidyfun
