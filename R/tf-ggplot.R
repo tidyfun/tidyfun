@@ -468,6 +468,21 @@ finalize_tf_ggplot <- function(tf_plot) {
   regular_plot$coordinates <- tf_plot$coordinates
   regular_plot$facet <- tf_plot$facet
   regular_plot$labels <- tf_plot$labels
+
+  # Fix legend titles for scalar tf aesthetics (e.g. linewidth = tf_fmean(f)):
+  # the internal column name (.s.linewidth) leaks into the legend; replace with
+  # the original expression text.
+  for (aes_name in names(parsed_plot_aes$scalar_tf_aes)) {
+    if (is.null(regular_plot$labels[[aes_name]])) {
+      quo <- parsed_plot_aes$scalar_tf_aes[[aes_name]]
+      expr_text <- paste(
+        rlang::expr_deparse(rlang::quo_get_expr(quo)),
+        collapse = ""
+      )
+      regular_plot$labels[[aes_name]] <- expr_text
+    }
+  }
+
   if (!is.null(raw_tf_axis_labels)) {
     if (is.null(regular_plot$labels$x)) {
       regular_plot$labels$x <- raw_tf_axis_labels$x

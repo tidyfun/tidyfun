@@ -212,7 +212,7 @@ test_that("tf aesthetics with scalars and derived quantities", {
       aes(
         tf = curves,
         color = treatment, # Regular factor variable
-        size = tf_fmean(curves), # Scalar summary of tf
+        linewidth = tf_fmean(curves), # Scalar summary of tf
         alpha = abs(baseline) # Transformation of scalar
       )
     ) +
@@ -224,14 +224,14 @@ test_that("tf aesthetics with scalars and derived quantities", {
 
   # Should have all aesthetics
   expect_true("colour" %in% names(plot_data_mixed))
-  expect_true("size" %in% names(plot_data_mixed))
+  expect_true("linewidth" %in% names(plot_data_mixed))
   expect_true("alpha" %in% names(plot_data_mixed))
 
   # Should have 4 groups (one per function)
   expect_equal(length(unique(plot_data_mixed$group)), 4)
 
-  # Size should vary based on function means
-  expect_true(length(unique(plot_data_mixed$size)) > 1)
+  # Linewidth should vary based on function means
+  expect_true(length(unique(plot_data_mixed$linewidth)) > 1)
 
   # Alpha should vary based on baseline
   expect_true(length(unique(plot_data_mixed$alpha)) > 1)
