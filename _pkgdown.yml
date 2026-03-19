@@ -6,8 +6,8 @@ template:
   math-rendering: mathjax
 
 reference:
-- title: tidyfun workflows
-  desc: User-facing wrappers for working with functional data inside data frames
+- title: Tidy data wrangling
+  desc: Converting, reshaping, and evaluating functional data inside data frames
   contents:
   - tidyfun
   - tf_gather
@@ -15,82 +15,32 @@ reference:
   - tf_nest
   - tf_unnest
   - tf_evaluate.data.frame
-- title: tidyfun graphics and display
-  desc: Plotting helpers and display methods provided by tidyfun
+- title: Visualization with ggplot2
+  desc: >
+    `tf_ggplot()` and standard ggplot2 geoms for spaghetti plots, ribbons,
+    and more. Specialized geoms for heatmaps, boxplots, and sparklines.
   contents:
   - tf_ggplot
   - is_tf_ggplot
-  - parse_tf_aesthetics
   - "+.tf_ggplot"
   - print.tf_ggplot
   - ggplot_build.tf_ggplot
+  - parse_tf_aesthetics
+- title: Geoms and stats
+  desc: ggplot2 layers for functional data
+  contents:
   - geom_spaghetti
+  - geom_fboxplot
   - gglasagna
   - ggerrorband
   - geom_capellini
-  - geom_fboxplot
-  - type_sum.tf
-- title: Related tf classes and conversion
-  desc: Core functional-data classes and constructors documented for convenience
-  contents:
-  - tf::tfd
-  - tf::as.tfd
-  - tf::tfb
-  - tf::as.tfb
-  - tf::as.data.frame.tf
-  - tf::tfb_spline
-  - tf::tfb_fpc
-  - tf::fpc_wsvd
-  - tf::tf_rebase
-- title: Related tf evaluation and computation
-  desc: Indexing, summary, and calculus helpers documented for convenience
-  contents:
-  - tf::tfbrackets
-  - tf::tf_approx_linear
-  - tf::tf_evaluate
-  - tf::tf_interpolate
-  - tf::tf_splitcombine
-  - tf::tfgroupgenerics
-  - tf::tfsummaries
-  - tf::tf_depth
-  - tf::functionwise
-  - tf::tf_derive
-  - tf::tf_integrate
-  - tf::tf_smooth
-- title: Related tf registration and utilities
-  desc: Registration, search, random generation, and helper functions documented for convenience
-  contents:
-  - tf::tf_register
-  - tf::tf_landmarks_extrema
-  - tf::tf_warp
-  - tf::tf_invert
-  - tf::tf_align
-  - tf::tf_estimate_warps
-  - tf::tf_where
-  - tf::tf_zoom
-  - tf::tf_arg
-  - tf::tf_rgp
-  - tf::tf_jiggle
-  - tf::in_range
-  - tf::ensure_list
-  - tf::unique_id
-  - tf::vctrs
-  - tf::tf
-- title: Related tf display methods
-  desc: Core tf display helpers documented for convenience
-  contents:
   - autoplot.tf
-  - tf::plot.tf
-  - tf::print.tf
-  - tf::prep_plotting_arg
-- title: Related tf datasets
-  desc: Functional data sets documented for convenience
+- title: Display
+  desc: Pillar and print formatting for tf columns
   contents:
-  - tf::gait
-  - tf::growth
-  - tf::pinch
-- title: tidyfun datasets
-  desc: Functional data sets shipped with tidyfun
+  - type_sum.tf
+- title: Data
+  desc: Real-world functional data sets shipped with tidyfun
   contents:
   - chf_df
   - dti_df
