@@ -413,7 +413,7 @@ test_that("complex multi-layer plots with different aesthetics work", {
           aes(tf_ymin = lower_func, tf_ymax = upper_func, fill = factor(id)),
           alpha = 0.2
         ) + # tf ribbon
-        geom_line(aes(tf = mean_func), size = 1) + # tf line
+        geom_line(aes(tf = mean_func), linewidth = 1) + # tf line
         geom_hline(
           aes(yintercept = summary_stat, color = factor(id)),
           linetype = "dashed"

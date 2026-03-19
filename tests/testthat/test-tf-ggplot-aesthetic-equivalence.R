@@ -77,13 +77,13 @@ test_that("mixed tf and regular aesthetics are equivalent", {
   skip_if_no_tf_ggplot()
 
   data <- create_test_tf_data(n_funcs = 3, n_points = 5)
-  data$size_var <- c(1, 2, 3)
+  data$lw_var <- c(1, 2, 3)
   data$alpha_var <- c(0.3, 0.7, 0.9)
 
   # Method 1: mixed aesthetics in constructor
   p1 <- tf_ggplot(
     data,
-    aes(tf = func, color = group, size = size_var, alpha = alpha_var)
+    aes(tf = func, color = group, linewidth = lw_var, alpha = alpha_var)
   ) +
     geom_line()
 
@@ -92,7 +92,7 @@ test_that("mixed tf and regular aesthetics are equivalent", {
     geom_line(aes(
       tf = func,
       color = group,
-      size = size_var,
+      linewidth = lw_var,
       alpha = alpha_var
     ))
 
@@ -104,7 +104,7 @@ test_that("mixed tf and regular aesthetics are equivalent", {
   expect_setequal(names(built1$data[[1]]), names(built2$data[[1]]))
 
   # All aesthetic mappings should be identical
-  aesthetic_cols <- c("colour", "size", "alpha")
+  aesthetic_cols <- c("colour", "linewidth", "alpha")
   for (col in aesthetic_cols) {
     expect_equal(
       sort(built1$data[[1]][[col]]),
