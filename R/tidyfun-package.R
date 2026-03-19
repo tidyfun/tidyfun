@@ -1,17 +1,15 @@
 #' @description
 #' `tidyfun` makes data wrangling and exploratory analysis for functional data
 #' in `R` easier.\cr\cr
-#' `tidyfun` is based on the classes and methods defined in package `tf` and provides:
+#' The `tf` package defines the core functional data classes and methods.
+#' `tidyfun` builds on those objects with:
 #'
-#'   - new data types for representing functional data: [tf::tfd()] & [tf::tfb()]
-#'   - arithmetic & comparison operators ([tf::tfgroupgenerics()]),
-#'   - descriptive statistics: e.g. [tf::mean.tf()], [tf::median.tf()]
-#'   - and graphics functions for such data: [tf::plot.tf()], [autoplot.tf()], [geom_spaghetti()], [gglasagna()]
-#'   - functions to do smoothing ([tf::tf_smooth.tfd()]), differentiation and integration ([tf::tf_derive.tfd()])
-#' - `tidyverse`-verbs for handling functional data inside data frames: [tf_gather()] etc.
+#'   - data-frame workflows for functional data: [tf_gather()] etc.
+#'   - graphics helpers for `tf` objects and tidy functional data frames: [geom_spaghetti()], [gglasagna()]
+#'   - documentation and examples that show how to use `tf` objects in tidy workflows
 #' \cr\cr
 #' \cr
-#' Also see `vignette("Introducing tidyfun", "tidyfun")` for a brief introduction.
+#' Start with `vignette(package = "tidyfun")` for the article index.
 #'
 #' @keywords internal
 #' @import rlang

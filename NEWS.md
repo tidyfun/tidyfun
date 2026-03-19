@@ -7,4 +7,4 @@
 * `ggplot2` geoms for functional data: `geom_spaghetti`, `geom_meatballs`,
   `geom_capellini`, `geom_errorband`, `gglasagna`.
 * `tf_ggplot()` for tf-aware ggplot construction with standard geoms.
-* Functional boxplots via `geom_funcboxplot`.
+* Functional boxplots via `geom_fboxplot`.

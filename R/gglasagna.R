@@ -17,7 +17,7 @@ is.discrete <- function(x) {
 #' observation in `data` and the vertical order of the layers is the
 #' ordering of observations obtained by `dplyr::arrange(data, order, order_by(value), row_number())`.
 #'
-#' @param data the data. Duhh.
+#' @param data A data frame containing the `tf` column to visualize.
 #' @param tf bare name of the `tf` column to visualize
 #' @param order (optional) bare name of a column in `data` to define vertical
 #'   order of lasagna layers.
@@ -28,9 +28,9 @@ is.discrete <- function(x) {
 #'   return a scalar value to define the order of lasagna layers.
 #' @param order_ticks add horizontal lines indicating borders between levels of
 #'   `order` (if it is a discrete variable) and labels for its levels?
-#'   Defaults to TRUE. Supply a list of arguments (grep source code for `order_ticks_args`)
-#'   to override default appearance of labels.
-#'   **Switch this off if you use facetting, it's a hack and will produce nonsense.**
+#'   Defaults to TRUE. Supply a named list to override tick appearance, including
+#'   label styling, line type, alpha, rotation, and label placement.
+#'   Disable this when faceting; the tick annotations are not designed for faceted layouts.
 #' @returns a `ggplot2` object
 #' @export
 #' @importFrom grid unit grobTree textGrob gpar

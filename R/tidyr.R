@@ -185,9 +185,9 @@ tf_spread <- function(data, value, arg, sep = "_", interpolate = FALSE) {
 #' appended as well.
 #'
 #' `domain` and `evaluator` can be specified as lists or vectors
-#' if you're nesting multiple functional data columns with different properties.
-#' Because quasi-quotation is *such* a bitch, you can only specify the evaluator
-#' functions as strings and not as bare names here.
+#' if you are nesting multiple functional data columns with different properties.
+#' Because this interface captures evaluator names as text, supply the evaluator
+#' as a string rather than a bare function name.
 #'
 #' @param data a data frame
 #' @param ... A selection of columns. If empty, all variables except the
@@ -202,7 +202,7 @@ tf_spread <- function(data, value, arg, sep = "_", interpolate = FALSE) {
 #' @returns a data frame with (at least) `.id` and `tfd` columns
 #' @export
 #' @family tidyfun data wrangling functions
-#' @seealso [tfd()] for `domain, evaluator`
+#' @seealso [tfd()] for details on `domain` and `evaluator`.
 #' @examples
 #' d <- dplyr::tibble(id = rep(1:3, each = 5), arg = rep(1:5, 3), value = rnorm(15))
 #' tf_nest(d, .id = id, .arg = arg)
@@ -304,11 +304,11 @@ tf_nest <- function(
 #' Similar in spirit to [tidyr::unnest()], the reverse of [tf_nest()].
 #' The `tf`-method simply turns a single `tfd` or `tfb` vector into a "long" [tibble::tibble()].
 #'
-#' - Caution -- uses slightly different defaults for names of unnested columns
-#' than `tidyr::unnest()`.
-#' - For `data.frames`, **make sure to have an ID column in your data before unnesting!**
-#' If it does not include an ID column with a unique identifier for each row, you will not
-#' be able to match arg-value pairs to the different functions after unnesting.
+#' - Caution: this uses slightly different defaults for names of unnested columns
+#'   than `tidyr::unnest()`.
+#' - For `data.frames`, include an ID column with a unique row identifier before
+#'   unnesting. Without it, arg-value pairs cannot be matched back to their
+#'   original functions after unnesting.
 #'
 #' @param data a data.frame or a `tf`-object
 #' @param arg optional values for the `arg` argument of

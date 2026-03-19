@@ -108,7 +108,8 @@ rather than combining with them. This is most useful for helper functions
 that define both data and aesthetics and shouldn't inherit behaviour from
 the default plot specification, e.g. \code{\link[ggplot2:annotation_borders]{annotation_borders()}}.}
 
-\item{arg}{where to evaluate the functions in \code{y} -- defaults to the default ;)}
+\item{arg}{where to evaluate the functions in \code{y}; defaults to the object's
+default evaluation grid.}
 
 \item{...}{Other arguments passed on to \code{\link[ggplot2:layer]{layer()}}'s \code{params} argument. These
 arguments broadly fall into one of 4 categories below. Notably, further
@@ -145,8 +146,8 @@ A \code{\link[ggplot2:layer]{ggplot2::layer()}} object for use in a ggplot.
 }
 \description{
 Plots a line for each entry of a \code{tf}-object.
-\code{geom_spaghetti} does spaghetti (i.e. "hairball") plots, \code{geom_meatballs}
-does spaghetti plots with points for the actual evaluations.
+\code{geom_spaghetti} draws a line through each function, and \code{geom_meatballs}
+adds points for the evaluated grid values.
 }
 \details{
 "Flipped" aesthetics are not implemented for these geoms.

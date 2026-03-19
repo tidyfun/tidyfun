@@ -41,6 +41,4 @@
 ^test-tf-ggplot-demo\.R$
 ^tests\.txt$
 ^tests(_after_fixes|_final)?\.txt$
-^vignettes/x06_Registration_cache$
-^vignettes/x06_Registration_files$
-^vignettes/x04_Visualization_files$
+^vignettes/[^/]+_(cache|files)(/.*)?$
