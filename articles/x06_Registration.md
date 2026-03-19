@@ -475,13 +475,13 @@ summary(reg_aff)
 #> 
 #> Inverse warp deviations from identity (relative to domain length):
 #>     0%    10%    25%    50%    75%    90%   100% 
-#> 0.0487 0.0991 0.1221 0.1481 0.1722 0.1855 0.2384 
+#> 0.0483 0.0989 0.1222 0.1478 0.1725 0.1855 0.2374 
 #> 
 #> Inverse warp slopes (1 = identity):
-#>   overall range: [1.087, 1.287]
+#>   overall range: [1.088, 1.287]
 #>   per-curve slopes:
 #>    0%   10%   25%   50%   75%   90%  100% 
-#> 1.087 1.089 1.117 1.136 1.229 1.262 1.287 
+#> 1.088 1.099 1.116 1.135 1.227 1.265 1.287 
 #> 
 #> Domain coverage loss after alignment (fraction of original range):
 #>     0%    10%    25%    50%    75%    90%   100% 
@@ -531,7 +531,7 @@ data.frame(
 )
 #>                 metric       value
 #> 1       sd_peak_before 0.028031728
-#> 2 sd_peak_after_affine 0.002836273
+#> 2 sd_peak_after_affine 0.002796824
 ```
 
 ### Step 4: Compare with an alternative method
@@ -571,7 +571,7 @@ data.frame(
 )
 #>                 metric       value
 #> 1       sd_peak_before 0.028031728
-#> 2 sd_peak_after_affine 0.002836273
+#> 2 sd_peak_after_affine 0.002796824
 #> 3   sd_peak_after_srvf 0.001349897
 ```
 
@@ -880,12 +880,12 @@ all three features without producing `NA`s.
 reg_srvf <- tf_register(pinch_small, method = "srvf")
 inv_warp_srvf <- tf_inv_warps(reg_srvf)
 reg_cc_unpen <- tf_register(pinch_small, method = "cc", max_iter = 10, nbasis = 10, crit = 1)
-#> Iterative registration stopped after 4 of 10 iterations: alignment worsened
-#> (objective 0.7346 > 0.539).
+#> Iterative registration stopped after 5 of 10 iterations: alignment worsened
+#> (objective 0.5409 > 0.5296).
 inv_warp_cc_unpen <- tf_inv_warps(reg_cc_unpen)
 reg_cc_pen <- tf_register(pinch_small, method = "cc", lambda = 1e-4, max_iter = 20)
-#> Iterative registration stopped after 12 of 20 iterations: alignment worsened
-#> (objective 0.4575 > 0.454).
+#> Iterative registration stopped after 18 of 20 iterations: alignment worsened
+#> (objective 0.438 > 0.4374).
 inv_warp_cc_pen <- tf_inv_warps(reg_cc_pen)
 ```
 
@@ -908,16 +908,16 @@ summary(reg_cc_unpen)
 #> 
 #> Inverse warp deviations from identity (relative to domain length):
 #>     0%    10%    25%    50%    75%    90%   100% 
-#> 0.1151 0.1431 0.1526 0.1637 0.1881 0.1949 0.1972 
+#> 0.1143 0.1418 0.1530 0.1664 0.1936 0.1965 0.1968 
 #> 
 #> Inverse warp slopes (1 = identity):
-#>   overall range: [0.261, 4.01]
+#>   overall range: [0.282, 4.434]
 #>   per-curve min slopes:
 #>    0%   10%   25%   50%   75%   90%  100% 
-#> 0.261 0.315 0.358 0.428 0.461 0.474 0.505 
+#> 0.282 0.315 0.362 0.432 0.452 0.460 0.471 
 #>   per-curve max slopes:
 #>    0%   10%   25%   50%   75%   90%  100% 
-#> 2.259 2.335 2.510 2.699 3.362 3.888 4.010
+#> 2.350 2.366 2.549 3.006 3.377 3.904 4.434
 # ... ouch! max slope almost 100 and only 40% amplitude variance reduction ....
 
 summary(reg_srvf)
@@ -944,20 +944,20 @@ summary(reg_cc_pen)
 #> 
 #> 10 curve(s) on [0, 0.3]
 #> 
-#> Amplitude variance reduction: 97%
+#> Amplitude variance reduction: 97.1%
 #> 
 #> Inverse warp deviations from identity (relative to domain length):
 #>     0%    10%    25%    50%    75%    90%   100% 
-#> 0.0214 0.0650 0.0925 0.1164 0.1526 0.1666 0.1905 
+#> 0.0192 0.0586 0.0812 0.1152 0.1535 0.1709 0.1947 
 #> 
 #> Inverse warp slopes (1 = identity):
-#>   overall range: [0.489, 1.776]
+#>   overall range: [0.508, 1.862]
 #>   per-curve min slopes:
 #>    0%   10%   25%   50%   75%   90%  100% 
-#> 0.489 0.528 0.570 0.711 0.762 0.777 0.837 
+#> 0.508 0.550 0.592 0.782 0.823 0.855 0.878 
 #>   per-curve max slopes:
 #>    0%   10%   25%   50%   75%   90%  100% 
-#> 1.087 1.158 1.202 1.456 1.575 1.619 1.776
+#> 1.053 1.206 1.234 1.572 1.671 1.700 1.862
 ```
 
 ``` r
