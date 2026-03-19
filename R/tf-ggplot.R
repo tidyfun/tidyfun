@@ -177,9 +177,6 @@ parse_tf_aesthetics <- function(mapping, data = NULL) {
 #' @returns A modified `tf_ggplot` object.
 #' @export
 `+.tf_ggplot` <- function(e1, e2) {
-  # Debug output
-  # cat("DEBUG: +.tf_ggplot called\n")
-
   # If e2 is a layer, check if it has tf aesthetics
   if (inherits(e2, "LayerInstance") || inherits(e2, "Layer")) {
     # Reject geom_capellini: fundamentally incompatible (glyph-plot semantics)
@@ -246,11 +243,7 @@ parse_tf_aesthetics <- function(mapping, data = NULL) {
     plot_has_tf <- length(parsed_plot_aes$tf_aes) > 0 ||
       length(parsed_plot_aes$scalar_tf_aes) > 0
 
-    # cat("DEBUG: layer_has_tf =", layer_has_tf, ", plot_has_tf =", plot_has_tf, "\n")
-    # cat("DEBUG: layer tf_aes =", length(parsed_layer_aes$tf_aes), ", plot tf_aes =", length(parsed_plot_aes$tf_aes), "\n")
-
     if (layer_has_tf || plot_has_tf) {
-      # cat("DEBUG: Taking tf path - storing layer\n")
       # Store this layer with tf aesthetics
       all_layers <- attr(e1, "all_layers")
       if (is.null(all_layers)) all_layers <- list()
@@ -271,8 +264,6 @@ parse_tf_aesthetics <- function(mapping, data = NULL) {
 
       # Return the tf_ggplot object to continue accumulating layers
       return(e1)
-    } else {
-      # cat("DEBUG: No tf aesthetics found, checking for finalization\n")
     }
   }
 
@@ -285,7 +276,6 @@ parse_tf_aesthetics <- function(mapping, data = NULL) {
 
     if (!layer_has_tf) {
       # This is a regular (non-tf) layer - store it instead of finalizing immediately
-      # cat("DEBUG: Storing regular layer\n")
 
       # Set the layer to use original data
       e2$data <- e1$data
@@ -334,13 +324,11 @@ parse_tf_aesthetics <- function(mapping, data = NULL) {
       length(parse_tf_aesthetics(e1$mapping, e1$data)$tf_aes) > 0 ||
       length(parse_tf_aesthetics(e1$mapping, e1$data)$scalar_tf_aes) > 0
   ) {
-    # cat("DEBUG: Finalizing tf_ggplot for non-layer object\n")
     # Convert tf_ggplot with all accumulated layers
     regular_plot <- finalize_tf_ggplot(e1)
     return(regular_plot + e2)
   }
 
-  # cat("DEBUG: Converting to regular ggplot\n")
   # No tf aesthetics at all - convert to regular ggplot
   regular_plot <- ggplot(data = e1$data, mapping = e1$mapping)
   regular_plot$theme <- e1$theme
