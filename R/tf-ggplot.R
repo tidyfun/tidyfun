@@ -1027,54 +1027,37 @@ ggplot_build.tf_ggplot <- function(plot, ...) {
   }
 }
 
-# Muffle ggplot2's "Ignoring unknown aesthetics" warnings when all unknown
-# aesthetics are tf-specific. This avoids monkey-patching ggplot2 internals.
-.tidyfun_aes_warning_handler <- function(w) {
-  # Strip ANSI escape codes (cli adds them in interactive/color-capable sessions)
-  msg <- cli::ansi_strip(conditionMessage(w))
-  if (startsWith(msg, "Ignoring unknown aesthetics:")) {
-    aes_str <- sub("^Ignoring unknown aesthetics:\\s*", "", msg)
-    # Split on commas, "and", or ", and" (Oxford comma); drop empty fragments
-    aes_names <- trimws(strsplit(aes_str, ",\\s*and\\s+|,\\s*|\\s+and\\s+")[[
-      1
-    ]])
-    aes_names <- aes_names[nzchar(aes_names)]
-    tf_aes <- c("tf", "tf_x", "tf_y", "tf_ymin", "tf_ymax")
-    if (length(aes_names) > 0L && all(aes_names %in% tf_aes)) {
-      tryInvokeRestart("muffleWarning")
-    }
+# Register tf aesthetics as optional on ggplot2 geoms so that
+# geom_line(aes(tf = ...)) etc. do not warn "Ignoring unknown aesthetics".
+# Appending to optional_aes is the lightest-touch approach: it prevents the
+# warning at the source (inside ggplot2::layer()) and works in all contexts
+# (interactive, knitr, testthat). Cleaned up in .onUnload().
+.tf_optional_aes <- c("tf", "tf_x", "tf_y", "tf_ymin", "tf_ymax")
+
+.onLoad <- function(libname, pkgname) {
+  geoms <- list(
+    ggplot2::GeomLine,
+    ggplot2::GeomPath,
+    ggplot2::GeomPoint,
+    ggplot2::GeomRibbon,
+    ggplot2::GeomArea,
+    ggplot2::GeomStep
+  )
+  for (g in geoms) {
+    g$optional_aes <- union(g$optional_aes, .tf_optional_aes)
   }
 }
 
-.onLoad <- function(libname, pkgname) {
-  # globalCallingHandlers() errors when called with handlers on the stack
-  # (e.g., during R CMD INSTALL). Fail silently; the handler is a convenience
-  # that suppresses cosmetic warnings, not a correctness requirement.
-  tryCatch(
-    globalCallingHandlers(warning = .tidyfun_aes_warning_handler),
-    error = function(e) NULL
-  )
-}
-
 .onUnload <- function(libpath) {
-  # globalCallingHandlers() errors when called with handlers on the stack
-  # (e.g., during R CMD check). Fail silently -- the handler becomes inert
-  # once the package namespace is unloaded anyway.
-  tryCatch(
-    suspendInterrupts({
-      # Snapshot and clear all global handlers, then re-register all except ours.
-      # Re-register in reverse order to preserve original precedence (handlers
-      # are returned most-recent-first by globalCallingHandlers()).
-      handlers <- globalCallingHandlers()
-      globalCallingHandlers(NULL)
-      for (i in rev(seq_along(handlers))) {
-        if (!identical(handlers[[i]], .tidyfun_aes_warning_handler)) {
-          args <- list(handlers[[i]])
-          names(args) <- names(handlers)[i]
-          do.call(globalCallingHandlers, args)
-        }
-      }
-    }),
-    error = function(e) NULL
+  geoms <- list(
+    ggplot2::GeomLine,
+    ggplot2::GeomPath,
+    ggplot2::GeomPoint,
+    ggplot2::GeomRibbon,
+    ggplot2::GeomArea,
+    ggplot2::GeomStep
   )
+  for (g in geoms) {
+    g$optional_aes <- setdiff(g$optional_aes, .tf_optional_aes)
+  }
 }

@@ -757,6 +757,7 @@ GeomFboxplot <- ggplot2::ggproto(
   "GeomFboxplot",
   ggplot2::Geom,
   required_aes = character(0),
+  optional_aes = c("tf", "tf_x", "tf_y", "tf_ymin", "tf_ymax"),
   default_aes = ggplot2::aes(
     colour = "#333333",
     fill = "grey80",
