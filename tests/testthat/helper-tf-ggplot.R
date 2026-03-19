@@ -70,11 +70,6 @@ skip_if_no_tf_ggplot <- function() {
   skip_if_not(exists("tf_ggplot"), "tf_ggplot function not available")
 }
 
-# Suppress common warnings during testing
-suppress_tf_warnings <- function(expr) {
-  suppressWarnings(suppressMessages(expr))
-}
-
 capture_warnings_silently <- function(expr) {
   warnings <- character(0)
   value <- withCallingHandlers(

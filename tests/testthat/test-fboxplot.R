@@ -23,7 +23,7 @@ test_that("geom_fboxplot builds on tf_ggplot", {
   data <- make_fboxplot_data()
 
   p <- tf_ggplot(data, aes(tf = func)) + geom_fboxplot()
-  built <- suppressWarnings(ggplot_build(p))
+  built <- ggplot_build(p)
   plot_data <- built$data[[1]]
 
   expect_true(all(
@@ -39,7 +39,7 @@ test_that("geom_fboxplot sets tf axis labels like standard tf geoms", {
   data <- make_fboxplot_data()
 
   p <- tf_ggplot(data, aes(tf = func)) + geom_fboxplot()
-  built <- suppressWarnings(ggplot_build(p))
+  built <- ggplot_build(p)
 
   expect_equal(built$plot$labels$y, "func")
   expect_equal(built$plot$labels$x, "func.arg")
@@ -49,7 +49,7 @@ test_that("geom_fboxplot swaps default axis labels for horizontal orientation", 
   data <- make_fboxplot_data()
 
   p <- tf_ggplot(data, aes(tf = func)) + geom_fboxplot(orientation = "y")
-  built <- suppressWarnings(ggplot_build(p))
+  built <- ggplot_build(p)
 
   expect_equal(built$plot$labels$x, "func")
   expect_equal(built$plot$labels$y, "func.arg")
@@ -60,7 +60,7 @@ test_that("geom_fboxplot groups within a panel by fill and colour", {
 
   p <- tf_ggplot(data, aes(tf = func, fill = grp, colour = grp)) +
     geom_fboxplot()
-  built <- suppressWarnings(ggplot_build(p))
+  built <- ggplot_build(p)
 
   expect_equal(length(unique(built$data[[1]]$.fbox_stat_group)), 2)
 })
@@ -89,7 +89,7 @@ test_that("geom_fboxplot is compatible with facetting", {
   p <- tf_ggplot(data, aes(tf = func, fill = grp, colour = grp)) +
     geom_fboxplot() +
     facet_wrap(~facet_grp)
-  built <- suppressWarnings(ggplot_build(p))
+  built <- ggplot_build(p)
 
   expect_equal(as.character(sort(unique(built$data[[1]]$PANEL))), c("1", "2"))
 })
@@ -107,7 +107,7 @@ test_that("geom_fboxplot is compatible with scaled axes", {
   p <- tf_ggplot(data, aes(tf = func)) +
     geom_fboxplot() +
     scale_y_log10()
-  built <- suppressWarnings(ggplot_build(p))
+  built <- ggplot_build(p)
   numeric_cols <- intersect(
     c("x", "y", "ymin", "ymax", "xmin", "xmax"),
     names(built$data[[1]])
@@ -128,7 +128,7 @@ test_that("geom_fboxplot stat output is retransformed by y scales", {
   p <- tf_ggplot(data, aes(tf = pos_func, fill = grp)) +
     geom_fboxplot() +
     scale_y_log10()
-  built <- suppressWarnings(ggplot_build(p))
+  built <- ggplot_build(p)
   numeric_cols <- intersect(
     c("y", "ymin", "ymax", "xmin", "xmax"),
     names(built$data[[1]])
@@ -145,7 +145,7 @@ test_that("geom_fboxplot supports flipped orientation", {
 
   p <- tf_ggplot(data, aes(tf = func)) +
     geom_fboxplot(orientation = "y")
-  built <- suppressWarnings(ggplot_build(p))
+  built <- ggplot_build(p)
   plot_data <- built$data[[1]]
 
   expect_true(all(c("x", "y") %in% names(plot_data)))
@@ -180,7 +180,7 @@ test_that("geom_fboxplot accepts custom depth and fence functions", {
 
   p <- tf_ggplot(data, aes(tf = func)) +
     geom_fboxplot(depth_fn = depth_fn, fence_fn = fence_fn)
-  built <- suppressWarnings(ggplot_build(p))
+  built <- ggplot_build(p)
 
   expect_true(any(built$data[[1]]$.fbox_component == "outlier"))
 })

@@ -55,69 +55,25 @@ test_that("parse_tf_aesthetics correctly identifies tf aesthetics", {
   expect_equal(length(parsed4$regular_aes), 3)
 })
 
-test_that("transform_tf_data correctly transforms data with single tf aesthetic", {
+test_that("data transformation via ggplot_build works correctly", {
   skip_if_not_installed("ggplot2")
 
-  # Create test data
   set.seed(123)
   data <- data.frame(
     id = 1:3,
-    group = factor(c("A", "A", "B")),
-    scalar_val = c(10, 20, 30)
+    group = factor(c("A", "A", "B"))
   )
   data$func <- tf_rgp(3, arg = seq(0, 1, length.out = 11))
 
-  # Test transformation
-  tf_aesthetics <- list(tf = quo(func))
-  result <- transform_tf_data(data, tf_aesthetics)
+  p <- tf_ggplot(data, aes(tf = func, color = group)) + geom_line()
+  built <- ggplot_build(p)
+  plot_data <- built$data[[1]]
 
-  # Check dimensions - should have 3 functions × 11 points = 33 rows
-  expect_equal(nrow(result), 33)
-
-  # Check required columns exist
-  expect_true("func.arg" %in% names(result))
-  expect_true("func.value" %in% names(result))
-  expect_true("func.id" %in% names(result))
-
-  # Check that non-tf columns are replicated correctly
-  expect_true("group" %in% names(result))
-  expect_true("scalar_val" %in% names(result))
-  expect_equal(length(unique(result$group)), 2) # A and B
-
-  # Check that function IDs are correct
-  expect_equal(sort(unique(result$func.id)), 1:3)
-
-  # Check that argument values are correct
-  expect_equal(sort(unique(result$func.arg)), seq(0, 1, length.out = 11))
-})
-
-test_that("transform_tf_data handles multiple tf aesthetics", {
-  skip_if_not_installed("ggplot2")
-
-  # Create test data with two tf columns
-  set.seed(123)
-  data <- data.frame(id = 1:2)
-  data$func1 <- tf_rgp(2, arg = seq(0, 1, length.out = 11))
-  data$func2 <- tf_rgp(2, arg = seq(0, 1, length.out = 11))
-
-  # Test transformation with multiple tf aesthetics
-  tf_aesthetics <- list(tf_x = quo(func1), tf_y = quo(func2))
-  captured <- capture_warnings_silently(transform_tf_data(data, tf_aesthetics))
-  result <- captured$value
-  expect_true(any(grepl(
-    "Multiple tf aesthetics.*Using first tf aesthetic only",
-    captured$warnings
-  )))
-
-  # Currently only the first tf aesthetic is supported (documented limitation)
-  expect_true("func1.arg" %in% names(result))
-  expect_true("func1.value" %in% names(result))
-  # func2 columns are not created due to current limitation
-  expect_false("func2.arg" %in% names(result))
-  expect_false("func2.value" %in% names(result))
-
-  # Should have rows for first tf object only
-  expect_equal(nrow(result), 2 * 11) # 2 functions × 11 points (first tf only)
+  # 3 functions × 11 points = 33 rows
+  expect_equal(nrow(plot_data), 33)
+  expect_equal(length(unique(plot_data$group)), 3)
+  expect_equal(length(unique(plot_data$x)), 11)
+  expect_equal(length(unique(plot_data$colour)), 2) # A and B
 })
 
 test_that("tf_ggplot + geom_line creates correct plot", {
@@ -140,7 +96,7 @@ test_that("tf_ggplot + geom_line creates correct plot", {
   expect_true(inherits(p_with_geom, "tf_ggplot")) # Should stay tf_ggplot
 
   # Check that the plot has the right data structure
-  built <- suppressWarnings(ggplot_build(p_with_geom))
+  built <- ggplot_build(p_with_geom)
   plot_data <- built$data[[1]]
 
   # Should have the right number of groups (one per function)
@@ -165,7 +121,7 @@ test_that("tf_ggplot handles grouping aesthetics correctly", {
 
   # Test with color grouping
   p <- tf_ggplot(data, aes(tf = func, color = treatment)) + geom_line()
-  built <- suppressWarnings(ggplot_build(p))
+  built <- ggplot_build(p)
   plot_data <- built$data[[1]]
 
   # Should have 4 groups (one per function) but 2 colors (treatments)
@@ -191,13 +147,13 @@ test_that("tf_ggplot + geom_ribbon works with tf_ymin/tf_ymax", {
 
   # Test ribbon plot
   p <- tf_ggplot(data) +
-    suppressWarnings(geom_ribbon(
+    geom_ribbon(
       aes(tf_ymin = lower_func, tf_ymax = upper_func),
       alpha = 0.3
-    ))
+    )
 
   expect_s3_class(p, "ggplot")
-  built <- suppressWarnings(ggplot_build(p))
+  built <- ggplot_build(p)
   plot_data <- built$data[[1]]
 
   # Should have ymin and ymax columns
@@ -251,7 +207,7 @@ test_that("tf_ggplot handles irregular tf objects", {
   p <- tf_ggplot(data, aes(tf = irreg_func)) + geom_line()
   expect_s3_class(p, "ggplot")
 
-  built <- suppressWarnings(ggplot_build(p))
+  built <- ggplot_build(p)
   plot_data <- built$data[[1]]
 
   # Should have data for both functions
@@ -277,7 +233,7 @@ test_that("tf_ggplot preserves faceting variables", {
     facet_wrap(~treatment)
 
   expect_s3_class(p, "ggplot")
-  built <- suppressWarnings(ggplot_build(p))
+  built <- ggplot_build(p)
 
   # Should have panels for each treatment level
   expect_equal(length(unique(built$layout$layout$PANEL)), 2)
@@ -300,7 +256,7 @@ test_that("tf_ggplot handles custom arg specification", {
   custom_arg <- seq(0, 1, length.out = 11) # Coarser grid
   p <- tf_ggplot(data, aes(tf = func), arg = custom_arg) + geom_line()
 
-  built <- suppressWarnings(ggplot_build(p))
+  built <- ggplot_build(p)
   plot_data <- built$data[[1]]
 
   # Should use the custom arg values
@@ -322,40 +278,32 @@ test_that("tf_ggplot error handling for scale conflicts", {
 
   # This should work without error; scale conflict warnings are acceptable
   expect_no_error({
-    p <- suppressWarnings(
-      tf_ggplot(data) +
-        suppressWarnings(geom_line(aes(tf = func))) + # tf data on y-scale
-        geom_point(aes(x = id, y = scalar_y)) # scalar data on y-scale
-    )
+    p <- tf_ggplot(data) +
+      geom_line(aes(tf = func)) + # tf data on y-scale
+      geom_point(aes(x = id, y = scalar_y)) # scalar data on y-scale
 
     # Should build successfully
-    built <- suppressWarnings(ggplot_build(p))
+    built <- ggplot_build(p)
     expect_s3_class(built, "ggplot_built")
   })
 })
 
-test_that("tf_ggplot performance warnings for large datasets", {
+test_that("tf_ggplot handles large datasets", {
   skip_if_not_installed("ggplot2")
 
-  # Create potentially large dataset
+  # Large dataset should build without error
   set.seed(123)
-  data <- data.frame(id = 1:100) # Many functions
-  data$func <- tf_rgp(100, arg = seq(0, 1, length.out = 101)) # Dense grid
+  data <- data.frame(id = 1:201)
+  data$func <- tf_rgp(201, arg = seq(0, 1, length.out = 101))
 
-  # Should handle large datasets without error and emit a performance warning
   expect_no_error({
     captured <- capture_warnings_silently({
       p <- tf_ggplot(data, aes(tf = func)) + geom_line()
       ggplot_build(p)
     })
     built <- captured$value
-    expect_true(any(grepl(
-      "Large data expansion",
-      captured$warnings
-    )))
 
-    # Should have correct dimensions despite large size
     expect_s3_class(built, "ggplot_built")
-    expect_equal(length(unique(built$data[[1]]$group)), 100) # 100 functions
+    expect_equal(length(unique(built$data[[1]]$group)), 201)
   })
 })

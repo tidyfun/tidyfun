@@ -30,14 +30,14 @@ test_that("basic tf aesthetic transformation works", {
   data <- create_test_tf_data(n_funcs = 2, n_points = 5)
 
   # Single tf aesthetic
-  p <- tf_ggplot(data, aes(tf = func)) + suppressWarnings(geom_line())
+  p <- tf_ggplot(data, aes(tf = func)) + geom_line()
 
   # Should still be tf_ggplot until finalized
   expect_s3_class(p, "ggplot")
   expect_true(inherits(p, "tf_ggplot"))
 
   # Check plot builds successfully
-  built <- suppressWarnings(ggplot_build(p))
+  built <- ggplot_build(p)
   expect_s3_class(built, "ggplot_built")
 
   # Should have correct number of groups (one per function)
@@ -74,31 +74,24 @@ test_that("tf aesthetic parsing identifies tf columns correctly", {
   expect_equal(length(parsed4$regular_aes), 2)
 })
 
-test_that("data transformation creates correct structure", {
+test_that("data transformation creates correct structure via ggplot_build", {
   skip_if_not_installed("ggplot2")
   skip_if_no_tf_ggplot()
 
-  # Create test data with deterministic groups
   data <- data.frame(
     id = 1:2,
     group = factor(c("A", "B"))
   )
   data$func <- tf_rgp(2, arg = seq(0, 1, length.out = 5))
-  tf_aesthetics <- list(tf = quo(func))
 
-  result <- transform_tf_data(data, tf_aesthetics)
+  p <- tf_ggplot(data, aes(tf = func)) + geom_line()
+  built <- ggplot_build(p)
+  plot_data <- built$data[[1]]
 
-  # Check dimensions
-  expect_equal(nrow(result), 2 * 5) # 2 functions × 5 points
-
-  # Check required columns
-  expected_cols <- c("func.arg", "func.value", "func.id", "group", "id")
-  expect_true(all(expected_cols %in% names(result)))
-
-  # Check data integrity
-  expect_equal(sort(unique(result$func.id)), c(1, 2))
-  expect_equal(length(unique(result$func.arg)), 5)
-  expect_equal(length(unique(result$group)), 2) # A and B
+  # Check dimensions (2 functions × 5 points)
+  expect_equal(nrow(plot_data), 10)
+  expect_equal(length(unique(plot_data$group)), 2)
+  expect_equal(length(unique(plot_data$x)), 5)
 })
 
 test_that("geom_line integration produces correct plot structure", {
@@ -108,10 +101,10 @@ test_that("geom_line integration produces correct plot structure", {
   data <- create_test_tf_data(n_funcs = 3, n_points = 6)
 
   p <- tf_ggplot(data, aes(tf = func, color = group)) +
-    suppressWarnings(geom_line())
+    geom_line()
 
   # Build plot and check structure
-  built <- suppressWarnings(ggplot_build(p))
+  built <- ggplot_build(p)
   plot_data <- built$data[[1]]
 
   # Should have 3 groups (one per function)
@@ -139,21 +132,21 @@ test_that("error handling for invalid tf aesthetics", {
 
   # Should error when tf aesthetic references non-tf column
   expect_error(
-    suppressWarnings({
+    {
       p <- tf_ggplot(data, aes(tf = regular_col)) +
-        suppressWarnings(geom_line())
+        geom_line()
       ggplot_build(p) # Trigger the validation
-    }),
+    },
     "tf.*object|must be.*tf"
   )
 
   # Should error when tf aesthetic references non-existent column
   expect_error(
-    suppressWarnings({
+    {
       p <- tf_ggplot(data, aes(tf = nonexistent)) +
-        suppressWarnings(geom_line())
+        geom_line()
       ggplot_build(p) # Trigger the validation
-    }),
+    },
     "object.*not found|not found"
   )
 })
@@ -164,10 +157,10 @@ test_that("custom arg parameter works correctly", {
 
   data <- create_test_tf_data(n_funcs = 2, n_points = 11)
 
-  # Use coarser evaluation grid
+  # Use coarser evaluation grid (numeric vector)
   custom_arg <- seq(0, 1, length.out = 5)
   p <- tf_ggplot(data, aes(tf = func), arg = custom_arg) +
-    suppressWarnings(geom_line())
+    geom_line()
 
   # Check that custom arg is used
   x_values <- get_plot_x_values(p)
@@ -176,6 +169,26 @@ test_that("custom arg parameter works correctly", {
 
   # Check total rows (2 functions × 5 points)
   expect_true(check_plot_nrows(p, 10))
+})
+
+test_that("integer arg sets grid length", {
+  skip_if_not_installed("ggplot2")
+  skip_if_no_tf_ggplot()
+
+  data <- create_test_tf_data(n_funcs = 2, n_points = 21)
+
+  # Integer arg = grid length
+  p <- tf_ggplot(data, aes(tf = func), arg = 5L) + geom_line()
+  x_values <- get_plot_x_values(p)
+  expect_equal(length(x_values), 5)
+  expect_equal(range(x_values), c(0, 1)) # Should span the tf domain
+
+  # Check total rows (2 functions × 5 points)
+  expect_true(check_plot_nrows(p, 10))
+
+  # Validation: arg < 2 should error
+  expect_error(tf_ggplot(data, arg = 1L), "grid length must be >= 2")
+  expect_error(tf_ggplot(data, arg = NA_real_), "numeric")
 })
 
 test_that("grouping variables are preserved in transformation", {
@@ -187,7 +200,7 @@ test_that("grouping variables are preserved in transformation", {
   data$subject <- factor(1:4)
 
   p <- tf_ggplot(data, aes(tf = func, color = treatment)) +
-    suppressWarnings(geom_line())
+    geom_line()
   built <- ggplot_build(p)
   plot_data <- built$data[[1]]
 

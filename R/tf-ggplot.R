@@ -8,8 +8,10 @@
 #'   in each layer added to the plot.
 #' @param mapping Default list of aesthetic mappings to use for plot. Can include
 #'   tf-specific aesthetics like `tf`, `tf_x`, `tf_y`, `tf_ymin`, `tf_ymax`.
-#' @param arg Optional. Evaluation grid for tf objects. If not provided, uses
-#'   the default evaluation grid of the tf objects.
+#' @param arg Optional. Evaluation grid for tf objects. A numeric vector of arg
+#'   values, or a single integer specifying the desired grid length (resolved to
+#'   an equidistant grid over the tf domain). If `NULL` (default), uses the
+#'   natural grid of the tf objects.
 #' @param interpolate Logical. Should tf objects be interpolated to the evaluation
 #'   grid? Defaults to TRUE.
 #' @param ... Other arguments passed to ggplot2 functions.
@@ -69,6 +71,17 @@ tf_ggplot <- function(
     cli::cli_abort(
       "mapping must be created with aes(), not {.obj_type_friendly {mapping}}"
     )
+  }
+
+  if (!is.null(arg)) {
+    if (!is.numeric(arg) || anyNA(arg)) {
+      cli::cli_abort(
+        "{.arg arg} must be a numeric vector or a single integer grid length"
+      )
+    }
+    if (length(arg) == 1L && arg < 2) {
+      cli::cli_abort("{.arg arg} as grid length must be >= 2, not {arg}")
+    }
   }
 
   # Create base ggplot object
@@ -155,338 +168,6 @@ parse_tf_aesthetics <- function(mapping, data = NULL) {
     scalar_tf_aes = scalar_tf_aes,
     regular_aes = regular_aes
   ))
-}
-
-#' Transform data with tf aesthetics into long format
-#'
-#' @param data Data frame containing tf objects.
-#' @param tf_aesthetics List of tf aesthetic mappings.
-#' @param arg Optional evaluation grid.
-#' @param interpolate Whether to interpolate tf objects.
-#' @returns A data frame in long format with tf columns expanded.
-#' @examples
-#' d <- data.frame(g = 1:3)
-#' d$f <- tf_rgp(3)
-#' tf_aes <- parse_tf_aesthetics(ggplot2::aes(tf = f))$tf_aes
-#' head(transform_tf_data(d, tf_aes))
-#' @export
-transform_tf_data <- function(
-  data,
-  tf_aesthetics,
-  arg = NULL,
-  interpolate = TRUE
-) {
-  if (length(tf_aesthetics) == 0) {
-    return(data)
-  }
-
-  # Check for large data expansions
-  n_rows <- nrow(data)
-  n_tf_cols <- length(tf_aesthetics)
-
-  # Estimate expansion - get first tf column to check grid size
-  first_tf_expr <- rlang::quo_get_expr(tf_aesthetics[[1]])
-  if (is.symbol(first_tf_expr)) {
-    first_tf_name <- as.character(first_tf_expr)
-  } else {
-    first_tf_name <- NULL
-  }
-
-  if (!is.null(first_tf_name) && first_tf_name %in% names(data)) {
-    first_tf <- data[[first_tf_name]]
-    if (is_tf(first_tf)) {
-      if (is.null(arg)) {
-        first_tf_arg <- tf_arg(first_tf)
-        if (is.list(first_tf_arg)) {
-          arg_length <- length(first_tf_arg[[1]])
-        } else {
-          arg_length <- length(first_tf_arg)
-        }
-      } else {
-        arg_length <- length(arg)
-      }
-
-      estimated_rows <- n_rows * arg_length
-
-      # Warn about large expansions
-      if (estimated_rows > 10000) {
-        cli::cli_inform(c(
-          "Large data expansion detected: {n_rows} rows -> {estimated_rows} rows",
-          "i" = "Consider using a coarser evaluation grid with the 'arg' parameter",
-          "i" = "This may impact memory usage and plotting performance"
-        ))
-      }
-    }
-  }
-
-  # Extract tf column names from aesthetic expressions
-  tf_col_names <- character(length(tf_aesthetics))
-  names(tf_col_names) <- names(tf_aesthetics)
-
-  for (i in seq_along(tf_aesthetics)) {
-    # Extract column name from quosure
-    expr <- rlang::quo_get_expr(tf_aesthetics[[i]])
-    if (is.symbol(expr)) {
-      # Simple column reference
-      tf_col_names[i] <- as.character(expr)
-    } else {
-      # Complex expression - evaluate it and store result
-      tf_col_names[i] <- paste0(".tf_expr_", i)
-    }
-  }
-
-  # Evaluate complex expressions and validate tf objects
-  for (i in seq_along(tf_aesthetics)) {
-    col_name <- tf_col_names[i]
-    expr <- rlang::quo_get_expr(tf_aesthetics[[i]])
-
-    if (is.symbol(expr)) {
-      # Simple column reference - validate it exists and is tf
-      if (!col_name %in% names(data)) {
-        cli::cli_abort("Column {.val {col_name}} not found in data")
-      }
-      if (!is_tf(data[[col_name]])) {
-        cli::cli_abort(
-          "Column {.val {col_name}} must be a tf object, not {.obj_type_friendly {data[[col_name]]}}"
-        )
-      }
-    } else {
-      # Complex expression - evaluate it and validate result is tf
-      tryCatch(
-        {
-          result <- rlang::eval_tidy(tf_aesthetics[[i]], data = data)
-          if (!is_tf(result)) {
-            cli::cli_abort(
-              "tf aesthetic expression {.code {rlang::expr_deparse(expr)}} must evaluate to a tf object, not {.obj_type_friendly {result}}"
-            )
-          }
-          # Store the evaluated result in data for later use
-          data[[col_name]] <- result
-        },
-        error = function(e) {
-          cli::cli_abort(
-            "Error evaluating tf aesthetic expression {.code {rlang::expr_deparse(expr)}}: {e$message}"
-          )
-        }
-      )
-    }
-  }
-
-  # Determine common evaluation grid
-  if (is.null(arg)) {
-    # Use the first tf object's grid as default
-    first_tf <- data[[tf_col_names[1]]]
-    first_tf_arg <- tf_arg(first_tf)
-    if (is.list(first_tf_arg)) {
-      arg <- first_tf_arg[[1]]
-    } else {
-      arg <- first_tf_arg
-    }
-  }
-
-  # For simplicity, let's handle one tf aesthetic at a time
-  # This can be optimized later for multiple tf aesthetics
-
-  if (length(tf_col_names) > 1) {
-    cli::cli_warn(
-      "Multiple tf aesthetics not fully supported yet. Using first tf aesthetic only."
-    )
-  }
-
-  # Get the first (and for now, only) tf column
-  first_tf_aes <- names(tf_col_names)[1]
-  first_tf_col <- tf_col_names[1]
-  tf_obj <- data[[first_tf_col]]
-
-  # Use tf_unnest to convert to long format
-  temp_data <- data
-  temp_data$.row_id <- seq_len(nrow(data))
-
-  # Use tf_unnest.tf directly on the tf object
-  tf_long <- tf_unnest(tf_obj, arg = arg, interpolate = interpolate)
-
-  # Check for large data expansion and warn
-  n_rows_original <- nrow(data)
-  n_rows_expanded <- nrow(tf_long)
-  expansion_factor <- n_rows_expanded / n_rows_original
-
-  if (n_rows_expanded > 5000 || expansion_factor > 50) {
-    cli::cli_warn(c(
-      "Large data expansion: Plotting data expanded to {n_rows_expanded} rows (from {n_rows_original} rows - factor of {round(expansion_factor)})",
-      "i" = "This may impact memory usage and plotting performance",
-      "i" = "Use {.arg arg} to specify a coarser evaluation grid"
-    ))
-  }
-
-  # Add row identifiers to match back to original data
-  tf_long$.row_id <- rep(seq_len(nrow(data)), each = length(arg))
-
-  # Create proper column names
-  arg_col <- paste0(first_tf_col, ".arg")
-  value_col <- paste0(first_tf_col, ".value")
-  id_col <- paste0(first_tf_col, ".id")
-
-  # Rename columns appropriately
-  if ("arg" %in% names(tf_long)) {
-    names(tf_long)[names(tf_long) == "arg"] <- arg_col
-  }
-  if ("data" %in% names(tf_long)) {
-    names(tf_long)[names(tf_long) == "data"] <- value_col
-  } else if ("value" %in% names(tf_long)) {
-    names(tf_long)[names(tf_long) == "value"] <- value_col
-  }
-  if ("id" %in% names(tf_long)) {
-    names(tf_long)[names(tf_long) == "id"] <- id_col
-  }
-
-  # Join with original data to replicate non-tf columns
-  transformed_data <- tf_long |>
-    left_join(temp_data, by = ".row_id") |>
-    select(-!!sym(first_tf_col), -.row_id) # Remove original tf column and temp id
-
-  # Convert func.id back to numeric for consistency
-  if (paste0(first_tf_col, ".id") %in% names(transformed_data)) {
-    id_col <- paste0(first_tf_col, ".id")
-    transformed_data[[id_col]] <- as.numeric(as.character(transformed_data[[
-      id_col
-    ]]))
-  }
-
-  return(transformed_data)
-}
-
-#' Convert tf_ggplot object to regular ggplot with transformed data
-#'
-#' @param tf_plot A tf_ggplot object
-#' @param layer_mapping Additional aesthetic mapping from a layer
-#' @return Regular ggplot object with transformed data
-#' @keywords internal
-convert_tf_ggplot <- function(tf_plot, layer_mapping = aes()) {
-  # Combine plot-level and layer-level mappings
-  # Layer mapping takes precedence over plot mapping
-  combined_mapping <- utils::modifyList(tf_plot$mapping, layer_mapping)
-
-  # Parse tf aesthetics
-  parsed_aes <- parse_tf_aesthetics(combined_mapping, tf_plot$data)
-
-  if (length(parsed_aes$tf_aes) == 0 && length(parsed_aes$scalar_tf_aes) == 0) {
-    # No tf aesthetics - return regular ggplot
-    return(ggplot(data = tf_plot$data, mapping = combined_mapping))
-  }
-
-  # Evaluate scalar tf aesthetics first
-  data_with_scalars <- tf_plot$data
-  scalar_column_mapping <- list() # Track original aes_name to safe column name
-
-  if (length(parsed_aes$scalar_tf_aes) > 0) {
-    for (i in seq_along(parsed_aes$scalar_tf_aes)) {
-      aes_name <- names(parsed_aes$scalar_tf_aes)[i]
-      aes_quo <- parsed_aes$scalar_tf_aes[[i]]
-
-      # Get expression text for meaningful naming
-      expr <- rlang::quo_get_expr(aes_quo)
-      expr_text <- rlang::expr_deparse(expr)
-
-      # Create meaningful column name
-      safe_name <- make_safe_column_name(
-        expr_text,
-        existing_names = names(data_with_scalars)
-      )
-
-      # Track the mapping
-      scalar_column_mapping[[aes_name]] <- safe_name
-
-      # Evaluate the scalar tf expression
-      tryCatch(
-        {
-          result <- rlang::eval_tidy(aes_quo, data = data_with_scalars)
-          # Add result with meaningful column name
-          data_with_scalars[[safe_name]] <- result
-        },
-        error = function(e) {
-          cli::cli_abort(
-            "Error evaluating scalar tf aesthetic {.code {expr_text}}: {e$message}"
-          )
-        }
-      )
-    }
-  }
-
-  # Transform data if there are tf aesthetics
-  if (length(parsed_aes$tf_aes) > 0) {
-    transformed_data <- transform_tf_data(
-      data = data_with_scalars,
-      tf_aesthetics = parsed_aes$tf_aes,
-      arg = attr(tf_plot, "tf_arg"),
-      interpolate = attr(tf_plot, "tf_interpolate")
-    )
-  } else {
-    # No tf aesthetics, just use data with scalar evaluations
-    transformed_data <- data_with_scalars
-  }
-
-  # Create new aesthetic mapping for transformed data
-  new_mapping <- parsed_aes$regular_aes
-
-  # Add scalar tf aesthetics to regular mapping with meaningful column names
-  for (aes_name in names(parsed_aes$scalar_tf_aes)) {
-    safe_name <- scalar_column_mapping[[aes_name]]
-    new_mapping[[aes_name]] <- sym(safe_name)
-  }
-
-  for (tf_aes_name in names(parsed_aes$tf_aes)) {
-    # Get the tf column name (from transform_tf_data)
-    tf_expr <- rlang::quo_get_expr(parsed_aes$tf_aes[[tf_aes_name]])
-    if (is.symbol(tf_expr)) {
-      tf_col_name <- as.character(tf_expr)
-    } else {
-      # Complex expression - use generated name
-      tf_col_name <- paste0(
-        ".tf_expr_",
-        which(names(parsed_aes$tf_aes) == tf_aes_name)
-      )
-    }
-
-    # Map tf aesthetic to regular ggplot aesthetic
-    if (tf_aes_name == "tf" || tf_aes_name == "tf_y") {
-      new_mapping$y <- sym(paste0(tf_col_name, ".value"))
-      new_mapping$x <- sym(paste0(tf_col_name, ".arg"))
-      new_mapping$group <- sym(paste0(tf_col_name, ".id"))
-    } else if (tf_aes_name == "tf_x") {
-      new_mapping$x <- sym(paste0(tf_col_name, ".value"))
-      # For tf_x, we need a group based on the tf_x object
-      if (is.null(new_mapping$group)) {
-        new_mapping$group <- sym(paste0(tf_col_name, ".id"))
-      }
-    } else if (tf_aes_name == "tf_ymin") {
-      new_mapping$ymin <- sym(paste0(tf_col_name, ".value"))
-      if (is.null(new_mapping$x)) {
-        new_mapping$x <- sym(paste0(tf_col_name, ".arg"))
-      }
-      if (is.null(new_mapping$group)) {
-        new_mapping$group <- sym(paste0(tf_col_name, ".id"))
-      }
-    } else if (tf_aes_name == "tf_ymax") {
-      new_mapping$ymax <- sym(paste0(tf_col_name, ".value"))
-      if (is.null(new_mapping$x)) {
-        new_mapping$x <- sym(paste0(tf_col_name, ".arg"))
-      }
-      if (is.null(new_mapping$group)) {
-        new_mapping$group <- sym(paste0(tf_col_name, ".id"))
-      }
-    }
-  }
-
-  # Create regular ggplot with transformed data
-  regular_plot <- ggplot(data = transformed_data, mapping = new_mapping)
-
-  # Copy over plot properties
-  regular_plot$theme <- tf_plot$theme
-  regular_plot$coordinates <- tf_plot$coordinates
-  regular_plot$facet <- tf_plot$facet
-  regular_plot$labels <- tf_plot$labels
-
-  return(regular_plot)
 }
 
 #' Add layers to tf_ggplot objects
@@ -994,11 +675,16 @@ build_tf_layer_data <- function(
     )]
   }
 
-  # This layer's evaluation grid: user-specified or natural grid of first tf object
+  # This layer's evaluation grid: user-specified or natural grid of first tf object.
+  # user_arg can be NULL, a numeric vector (explicit points), or a single integer
+  # (desired grid length, resolved to an equidistant grid over the tf domain).
   arg <- user_arg
   if (is.null(arg)) {
     first_arg <- tf_arg(tf_objects[[1]])
     arg <- if (is.list(first_arg)) first_arg[[1]] else first_arg
+  } else if (length(arg) == 1L) {
+    domain <- tf_domain(tf_objects[[1]])
+    arg <- seq(domain[1], domain[2], length.out = as.integer(arg))
   }
 
   # If there is no plot-level data (e.g. tf_ggplot() + geom_line(aes(tf = tf_rgp(5)))),
@@ -1029,12 +715,18 @@ build_tf_layer_data <- function(
     }
   }
   n_grid <- length(arg)
-  if (as.numeric(n_rows) * n_grid >= 2500) {
-    cli::cli_warn(c(
-      "Large data expansion: {n_rows} rows \u00d7 {n_grid} grid points = {n_rows * n_grid} rows",
-      "i" = "This may impact memory usage and plotting performance",
-      "i" = "Use {.arg arg} in {.fn tf_ggplot} to specify a coarser evaluation grid"
-    ))
+  if (n_rows > 200 && n_grid > 100) {
+    cli::cli_warn(
+      c(
+        "Large data expansion: {n_rows} functions \u00d7 {n_grid} grid points
+       = {n_rows * n_grid} rows",
+        "i" = "Use {.arg arg} in {.fn tf_ggplot} to specify a coarser
+       evaluation grid (integer for grid length, numeric vector for
+       specific points)"
+      ),
+      .frequency = "regularly",
+      .frequency_id = "tidyfun_large_expansion"
+    )
   }
 
   # Unnest first tf aesthetic to long format
@@ -1347,23 +1039,54 @@ ggplot_build.tf_ggplot <- function(plot, ...) {
   }
 }
 
-# Register tf aesthetics with ggplot2 geoms so that geom_line(aes(tf = ...))
-# etc. do not trigger "Ignoring unknown aesthetics" warnings.
-.onLoad <- function(libname, pkgname) {
-  tf_aes <- c("tf", "tf_x", "tf_y", "tf_ymin", "tf_ymax")
-  geoms <- list(
-    ggplot2::GeomLine,
-    ggplot2::GeomPath,
-    ggplot2::GeomPoint,
-    ggplot2::GeomRibbon,
-    GeomFboxplot
-  )
-  for (G in geoms) {
-    old_fn <- G$aesthetics
-    G$aesthetics <- local({
-      old <- old_fn
-      extra <- tf_aes
-      function(self) c(old(), extra)
-    })
+# Muffle ggplot2's "Ignoring unknown aesthetics" warnings when all unknown
+# aesthetics are tf-specific. This avoids monkey-patching ggplot2 internals.
+.tidyfun_aes_warning_handler <- function(w) {
+  # Strip ANSI escape codes (cli adds them in interactive/color-capable sessions)
+  msg <- cli::ansi_strip(conditionMessage(w))
+  if (startsWith(msg, "Ignoring unknown aesthetics:")) {
+    aes_str <- sub("^Ignoring unknown aesthetics:\\s*", "", msg)
+    # Split on commas, "and", or ", and" (Oxford comma); drop empty fragments
+    aes_names <- trimws(strsplit(aes_str, ",\\s*and\\s+|,\\s*|\\s+and\\s+")[[
+      1
+    ]])
+    aes_names <- aes_names[nzchar(aes_names)]
+    tf_aes <- c("tf", "tf_x", "tf_y", "tf_ymin", "tf_ymax")
+    if (length(aes_names) > 0L && all(aes_names %in% tf_aes)) {
+      tryInvokeRestart("muffleWarning")
+    }
   }
+}
+
+.onLoad <- function(libname, pkgname) {
+  # globalCallingHandlers() errors when called with handlers on the stack
+  # (e.g., during R CMD INSTALL). Fail silently; the handler is a convenience
+  # that suppresses cosmetic warnings, not a correctness requirement.
+  tryCatch(
+    globalCallingHandlers(warning = .tidyfun_aes_warning_handler),
+    error = function(e) NULL
+  )
+}
+
+.onUnload <- function(libpath) {
+  # globalCallingHandlers() errors when called with handlers on the stack
+  # (e.g., during R CMD check). Fail silently — the handler becomes inert
+  # once the package namespace is unloaded anyway.
+  tryCatch(
+    suspendInterrupts({
+      # Snapshot and clear all global handlers, then re-register all except ours.
+      # Re-register in reverse order to preserve original precedence (handlers
+      # are returned most-recent-first by globalCallingHandlers()).
+      handlers <- globalCallingHandlers()
+      globalCallingHandlers(NULL)
+      for (i in rev(seq_along(handlers))) {
+        if (!identical(handlers[[i]], .tidyfun_aes_warning_handler)) {
+          args <- list(handlers[[i]])
+          names(args) <- names(handlers)[i]
+          do.call(globalCallingHandlers, args)
+        }
+      }
+    }),
+    error = function(e) NULL
+  )
 }

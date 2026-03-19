@@ -15,8 +15,10 @@ tf-specific aesthetics like \code{tf}, \code{tf_x}, \code{tf_y}, \code{tf_ymin},
 
 \item{...}{Other arguments passed to ggplot2 functions.}
 
-\item{arg}{Optional. Evaluation grid for tf objects. If not provided, uses
-the default evaluation grid of the tf objects.}
+\item{arg}{Optional. Evaluation grid for tf objects. A numeric vector of arg
+values, or a single integer specifying the desired grid length (resolved to
+an equidistant grid over the tf domain). If \code{NULL} (default), uses the
+natural grid of the tf objects.}
 
 \item{interpolate}{Logical. Should tf objects be interpolated to the evaluation
 grid? Defaults to TRUE.}

@@ -8,7 +8,7 @@ test_that("simple tf aesthetic has meaningful axis labels", {
   data$curves <- tf_rgp(2, arg = seq(0, 1, length.out = 5))
 
   p <- tf_ggplot(data, aes(tf = curves)) + geom_line()
-  built <- suppressWarnings(ggplot_build(p))
+  built <- ggplot_build(p)
 
   # For simple column references, y-label should be the column name
   expect_equal(built$plot$labels$y, "curves")
@@ -24,7 +24,7 @@ test_that("complex tf expression has meaningful axis labels", {
   data$func2 <- tf_rgp(2, arg = seq(0, 1, length.out = 5))
 
   p <- tf_ggplot(data, aes(tf = func1 + func2)) + geom_line()
-  built <- suppressWarnings(ggplot_build(p))
+  built <- ggplot_build(p)
 
   # For complex expressions, y-label should be the expression text
   expect_equal(built$plot$labels$y, "func1 + func2")
@@ -39,7 +39,7 @@ test_that("nested tf expression has meaningful axis labels", {
   data$curves <- tf_rgp(2, arg = seq(-1, 1, length.out = 5))
 
   p <- tf_ggplot(data, aes(tf = abs(curves))) + geom_line()
-  built <- suppressWarnings(ggplot_build(p))
+  built <- ggplot_build(p)
 
   # For nested expressions, y-label should be the expression text
   expect_equal(built$plot$labels$y, "abs(curves)")
@@ -56,10 +56,10 @@ test_that("multiple tf expressions have distinct meaningful labels", {
 
   p <- tf_ggplot(data, aes(tf = func1 + func2)) +
     geom_line() +
-    suppressWarnings(geom_line(aes(tf = func1), color = "red")) +
-    suppressWarnings(geom_line(aes(tf = func2), color = "blue"))
+    geom_line(aes(tf = func1), color = "red") +
+    geom_line(aes(tf = func2), color = "blue")
 
-  built <- suppressWarnings(ggplot_build(p))
+  built <- ggplot_build(p)
 
   # Base plot should have the sum expression label
   expect_equal(built$plot$labels$y, "func1 + func2")

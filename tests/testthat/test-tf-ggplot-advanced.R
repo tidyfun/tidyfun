@@ -9,7 +9,7 @@ test_that("multiple tf aesthetics work correctly", {
 
   # Test tf_x and tf_y aesthetics
   p <- tf_ggplot(data) +
-    suppressWarnings(geom_point(aes(tf_x = func1, tf_y = func2)))
+    geom_point(aes(tf_x = func1, tf_y = func2))
 
   built <- ggplot_build(p)
   plot_data <- built$data[[1]]
@@ -32,10 +32,10 @@ test_that("ribbon geoms work with tf_ymin and tf_ymax", {
 
   # Test ribbon with tf confidence bands
   p <- tf_ggplot(data) +
-    suppressWarnings(geom_ribbon(
+    geom_ribbon(
       aes(tf_ymin = lower_func, tf_ymax = upper_func),
       alpha = 0.3
-    ))
+    )
 
   built <- ggplot_build(p)
   plot_data <- built$data[[1]]
@@ -106,7 +106,7 @@ test_that("combining tf and regular geoms works", {
   # This should work - different aesthetics
   captured <- capture_warnings_silently(
     tf_ggplot(data) +
-      suppressWarnings(geom_line(aes(tf = func, color = group))) +
+      geom_line(aes(tf = func, color = group)) +
       geom_point(aes(x = 0.5, y = mean_val), size = 3) # Regular geom
   )
   p <- captured$value
@@ -139,7 +139,7 @@ test_that("faceting works with tf data", {
     geom_line() +
     facet_wrap(~treatment)
 
-  built <- suppressWarnings(ggplot_build(p))
+  built <- ggplot_build(p)
 
   # Should have 2 panels (one per treatment)
   expect_equal(length(unique(built$layout$layout$PANEL)), 2)
@@ -162,7 +162,7 @@ test_that("irregular tf objects are handled correctly", {
   # Should still work with irregular data
   p <- tf_ggplot(data, aes(tf = irreg_func)) + geom_line()
 
-  built <- suppressWarnings(ggplot_build(p))
+  built <- ggplot_build(p)
   plot_data <- built$data[[1]]
 
   # Should have data for both functions
@@ -214,7 +214,7 @@ test_that("complex aesthetic mappings work", {
   ) +
     geom_line()
 
-  built <- suppressWarnings(ggplot_build(p))
+  built <- ggplot_build(p)
   plot_data <- built$data[[1]]
 
   # Should preserve all aesthetic mappings
@@ -236,19 +236,30 @@ test_that("performance warnings are triggered appropriately", {
   skip_if_not_installed("ggplot2")
   skip_if_no_tf_ggplot()
 
-  # Create potentially large dataset
-  data <- data.frame(id = 1:50) # Many functions
-  data$func <- tf_rgp(50, arg = seq(0, 1, length.out = 51)) # Dense grid
+  # Warning triggers only for > 200 functions AND > 100 grid points
+  data <- data.frame(id = 1:201)
+  data$func <- tf_rgp(201, arg = seq(0, 1, length.out = 101))
 
-  # Should warn about large data expansion
   captured <- capture_warnings_silently({
     p <- tf_ggplot(data, aes(tf = func)) + geom_line()
     ggplot_build(p)
   })
   expect_true(any(grepl(
-    "large.*data|expansion|memory|performance",
-    captured$warnings,
-    ignore.case = TRUE
+    "Large data expansion",
+    captured$warnings
+  )))
+
+  # Below threshold: no expansion warning
+  data_small <- data.frame(id = 1:100)
+  data_small$func <- tf_rgp(100, arg = seq(0, 1, length.out = 101))
+
+  captured_small <- capture_warnings_silently({
+    p2 <- tf_ggplot(data_small, aes(tf = func)) + geom_line()
+    ggplot_build(p2)
+  })
+  expect_false(any(grepl(
+    "Large data expansion",
+    captured_small$warnings
   )))
 })
 
@@ -263,7 +274,7 @@ test_that("scale conflicts are detected", {
   expect_warning(
     {
       p <- tf_ggplot(data) +
-        suppressWarnings(geom_line(aes(tf = func))) + # tf data on y-scale
+        geom_line(aes(tf = func)) + # tf data on y-scale
         geom_point(aes(x = 0.5, y = scalar_y)) # scalar data on y-scale
     },
     "scale.*conflict|mixed.*aesthetic"
@@ -284,7 +295,7 @@ test_that("empty or NA tf objects are handled gracefully", {
   # Should handle NA functions gracefully
   p <- tf_ggplot(data, aes(tf = func)) + geom_line()
 
-  built <- suppressWarnings(ggplot_build(p))
+  built <- ggplot_build(p)
   plot_data <- built$data[[1]]
 
   # Should only have data for non-NA functions
@@ -306,7 +317,7 @@ test_that("theme and scale customization works with tf_ggplot", {
     labs(title = "Test Plot", x = "Time", y = "Value")
 
   # Should build successfully with customizations
-  built <- suppressWarnings(ggplot_build(p))
+  built <- ggplot_build(p)
   expect_s3_class(built, "ggplot_built")
 
   # Check that labels are preserved
@@ -323,16 +334,16 @@ test_that("multiple tf layers work correctly", {
 
   # Create plot with multiple tf layers
   p <- tf_ggplot(data) +
-    suppressWarnings(geom_line(aes(tf = func, color = group), alpha = 0.7)) +
-    suppressWarnings(geom_point(aes(tf = func, color = group), size = 2)) +
-    suppressWarnings(geom_line(
+    geom_line(aes(tf = func, color = group), alpha = 0.7) +
+    geom_point(aes(tf = func, color = group), size = 2) +
+    geom_line(
       aes(tf = func),
       color = "black",
       linetype = "dashed",
       alpha = 0.3
-    ))
+    )
 
-  built <- suppressWarnings(ggplot_build(p))
+  built <- ggplot_build(p)
 
   # Should have 3 layers
   expect_equal(length(built$data), 3)
@@ -359,11 +370,11 @@ test_that("mixing multiple tf and regular layers works", {
   # Create plot mixing tf and regular layers
   captured <- capture_warnings_silently(
     tf_ggplot(data) +
-      suppressWarnings(geom_line(aes(tf = func, color = group))) + # tf layer 1
+      geom_line(aes(tf = func, color = group)) + # tf layer 1
       geom_point(aes(x = 0.5, y = mean_val, color = group), size = 3) + # regular layer 1
-      suppressWarnings(geom_point(aes(tf = func), alpha = 0.5)) + # tf layer 2
+      geom_point(aes(tf = func), alpha = 0.5) + # tf layer 2
       geom_point(aes(x = 0.8, y = max_val, color = group), size = 2) + # regular layer 2
-      suppressWarnings(geom_line(aes(tf = func), linetype = "dotted")) # tf layer 3
+      geom_line(aes(tf = func), linetype = "dotted") # tf layer 3
   )
   expect_true(any(grepl(
     "scale.*conflict|Potential.*conflict",
@@ -371,7 +382,7 @@ test_that("mixing multiple tf and regular layers works", {
   )))
   p <- captured$value
 
-  built <- suppressWarnings(ggplot_build(p))
+  built <- ggplot_build(p)
 
   # Should have 5 layers
   expect_equal(length(built$data), 5)
@@ -398,16 +409,16 @@ test_that("complex multi-layer plots with different aesthetics work", {
   expect_warning(
     {
       p <- tf_ggplot(data, aes(color = factor(id))) +
-        suppressWarnings(geom_ribbon(
+        geom_ribbon(
           aes(tf_ymin = lower_func, tf_ymax = upper_func, fill = factor(id)),
           alpha = 0.2
-        )) + # tf ribbon
-        suppressWarnings(geom_line(aes(tf = mean_func), size = 1)) + # tf line
+        ) + # tf ribbon
+        geom_line(aes(tf = mean_func), size = 1) + # tf line
         geom_hline(
           aes(yintercept = summary_stat, color = factor(id)),
           linetype = "dashed"
         ) + # regular hlines
-        suppressWarnings(geom_point(aes(tf = mean_func), size = 2)) + # tf points
+        geom_point(aes(tf = mean_func), size = 2) + # tf points
         geom_point(
           aes(x = 0.5, y = summary_stat, color = factor(id)),
           size = 4,
@@ -417,7 +428,7 @@ test_that("complex multi-layer plots with different aesthetics work", {
     "scale.*conflict|Potential.*conflict"
   )
 
-  built <- suppressWarnings(ggplot_build(p))
+  built <- ggplot_build(p)
 
   # Should have 5 layers
   expect_equal(length(built$data), 5)
@@ -440,13 +451,13 @@ test_that("many layers with different tf expressions work", {
 
   # Create plot with many different tf expressions
   p <- tf_ggplot(data, aes(color = group)) +
-    suppressWarnings(geom_line(aes(tf = func), alpha = 0.8)) + # original functions
-    suppressWarnings(geom_line(aes(tf = func + 0.5), linetype = "dashed")) + # shifted up
-    suppressWarnings(geom_line(aes(tf = func - 0.5), linetype = "dotted")) + # shifted down
-    suppressWarnings(geom_point(aes(tf = func, size = tf_fmean(func)))) + # points with size by mean
-    suppressWarnings(geom_point(aes(tf = func + 1, alpha = tf_depth(func)))) # shifted points with alpha by depth
+    geom_line(aes(tf = func), alpha = 0.8) + # original functions
+    geom_line(aes(tf = func + 0.5), linetype = "dashed") + # shifted up
+    geom_line(aes(tf = func - 0.5), linetype = "dotted") + # shifted down
+    geom_point(aes(tf = func, size = tf_fmean(func))) + # points with size by mean
+    geom_point(aes(tf = func + 1, alpha = tf_depth(func))) # shifted points with alpha by depth
 
-  built <- suppressWarnings(ggplot_build(p))
+  built <- ggplot_build(p)
 
   # Should have 5 layers
   expect_equal(length(built$data), 5)
