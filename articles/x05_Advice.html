@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>Advice for Developers • tidyfun</title>
+<title>Developer Notes • tidyfun</title>
 <!-- mathjax math --><script src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js" integrity="sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI=" crossorigin="anonymous"></script><script>
   window.MathJax = {
     chtml: {
@@ -16,7 +16,7 @@
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Advice for Developers">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Developer Notes">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -37,15 +37,20 @@
       <ul class="navbar-nav me-auto">
 <li class="nav-item"><a class="external-link nav-link" href="https://github.com/tidyfun/tidyfun" aria-label="GitHub"><span class="fa fa-github"></span></a></li>
 <li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
-<li class="active nav-item dropdown">
+<li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><a class="dropdown-item" href="../articles/x01_tf_Vectors.html">tf-Vectors and Operations</a></li>
     <li><a class="dropdown-item" href="../articles/x02_Conversion.html">Converting data to and from `tf`</a></li>
     <li><a class="dropdown-item" href="../articles/x03_Data_Wrangling.html">Data Wrangling</a></li>
     <li><a class="dropdown-item" href="../articles/x04_Visualization.html">Visualization</a></li>
-    <li><a class="dropdown-item" href="../articles/x05_Advice.html">Advice for Developers</a></li>
     <li><a class="dropdown-item" href="../articles/x06_Registration.html">Curve Registration</a></li>
+  </ul>
+</li>
+<li class="active nav-item dropdown">
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-developer-notes" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Developer Notes</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-developer-notes">
+<li><a class="dropdown-item" href="../articles/x05_Advice.html">Developer Notes</a></li>
   </ul>
 </li>
       </ul>
@@ -75,11 +80,11 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
 
-      <h1>Advice for Developers</h1>
+      <h1>Developer Notes</h1>
                         <h4 data-toc-skip class="author">Jeff
 Goldsmith</h4>
             
-            <h4 data-toc-skip class="date">2026-03-18</h4>
+            <h4 data-toc-skip class="date">2026-03-19</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/tidyfun/tidyfun/blob/main/vignettes/x05_Advice.Rmd" class="external-link"><code>vignettes/x05_Advice.Rmd</code></a></small>
       <div class="d-none name"><code>x05_Advice.Rmd</code></div>
@@ -87,21 +92,25 @@ Goldsmith</h4>
 
     
     
+<p>This article is written for package authors and maintainers who want
+to extend the
+<strong><code>tidyfun</code></strong>/<strong><code>tf</code></strong>
+ecosystem. End users can usually skip it.</p>
 <p><strong><code>tidyfun</code></strong> is intended to make user
-interactions with functional data easier. The package depends on package
+interactions with functional data easier. The package builds on package
 <strong><code>tf</code></strong>, which defines a data class
 (<code>tf</code>) so that vectors of functional observations are
 available, similar to vectors of class <code>numeric</code> or
-<code>character</code><a class="footnote-ref" tabindex="0" data-bs-toggle="popover" data-bs-content="&lt;p&gt;This class and its subclasses and methods are defined in
-a separate package without
-&lt;strong&gt;&lt;code&gt;tidyverse&lt;/code&gt;&lt;/strong&gt;-dependencies in order to make
-package maintenance a little easier and to increase uptake among people
-who don’t want to rely on &lt;strong&gt;&lt;code&gt;tidyverse&lt;/code&gt;&lt;/strong&gt;
-packages.&lt;/p&gt;"><sup>1</sup></a></p>
+<code>character</code><a class="footnote-ref" tabindex="0" data-bs-toggle="popover" data-bs-content="&lt;p&gt;This class and its subclasses and methods live in a
+separate package without &lt;strong&gt;&lt;code&gt;tidyverse&lt;/code&gt;&lt;/strong&gt;
+dependencies in order to keep maintenance simpler and to support users
+who prefer not to depend on the
+&lt;strong&gt;&lt;code&gt;tidyverse&lt;/code&gt;&lt;/strong&gt;.&lt;/p&gt;"><sup>1</sup></a></p>
 <p>Such classes make it possible to store functional data alongside
 other variables in a single dataframe; by extension, tools for data
-manipulation from the <code>tidyverse</code> and elsewhere can be used
-with datasets in which one or more variable is functional.</p>
+manipulation from the <strong><code>tidyverse</code></strong> and
+elsewhere can be used with datasets in which one or more variable is
+functional.</p>
 <p>Many basic analyses are available in
 <strong><code>tidyfun</code></strong> – it’s possible to compute mean
 functions and other summary statistics of <code>tf</code> vectors, to
@@ -197,10 +206,8 @@ easily obtained by users.</p>
 <div class="section level2">
 <h2 id="keep-us-informed">Keep us informed!<a class="anchor" aria-label="anchor" href="#keep-us-informed"></a>
 </h2>
-<p>Our hope is that <strong><code>tidyfun</code></strong> will be a
-useful platform for other researchers and developers. For that reason,
-please let us know if you use <strong><code>tidyfun</code></strong> in
-your own work, identify <a href="https://github.com/tidyfun/tidyfun/issues" class="external-link">issues</a>, or have
+<p>If you build on <strong><code>tidyfun</code></strong>, please let us
+know by opening an <a href="https://github.com/tidyfun/tidyfun/issues" class="external-link">issue</a> or sending
 suggestions.</p>
 </div>
 

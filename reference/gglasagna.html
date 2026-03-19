@@ -29,8 +29,11 @@
     <li><a class="dropdown-item" href="../articles/x02_Conversion.html">Converting data to and from `tf`</a></li>
     <li><a class="dropdown-item" href="../articles/x03_Data_Wrangling.html">Data Wrangling</a></li>
     <li><a class="dropdown-item" href="../articles/x04_Visualization.html">Visualization</a></li>
-    <li><a class="dropdown-item" href="../articles/x05_Advice.html">Advice for Developers</a></li>
     <li><a class="dropdown-item" href="../articles/x06_Registration.html">Curve Registration</a></li>
+  </ul></li>
+<li class="nav-item dropdown">
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-developer-notes" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Developer Notes</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-developer-notes"><li><a class="dropdown-item" href="../articles/x05_Advice.html">Developer Notes</a></li>
   </ul></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
@@ -76,7 +79,7 @@
 
 
 <dl><dt id="arg-data">data<a class="anchor" aria-label="anchor" href="#arg-data"></a></dt>
-<dd><p>the data. Duhh.</p></dd>
+<dd><p>A data frame containing the <code>tf</code> column to visualize.</p></dd>
 
 
 <dt id="arg-tf">tf<a class="anchor" aria-label="anchor" href="#arg-tf"></a></dt>
@@ -105,9 +108,9 @@ return a scalar value to define the order of lasagna layers.</p></dd>
 <dt id="arg-order-ticks">order_ticks<a class="anchor" aria-label="anchor" href="#arg-order-ticks"></a></dt>
 <dd><p>add horizontal lines indicating borders between levels of
 <code>order</code> (if it is a discrete variable) and labels for its levels?
-Defaults to TRUE. Supply a list of arguments (grep source code for <code>order_ticks_args</code>)
-to override default appearance of labels.
-<strong>Switch this off if you use facetting, it's a hack and will produce nonsense.</strong></p></dd>
+Defaults to TRUE. Supply a named list to override tick appearance, including
+label styling, line type, alpha, rotation, and label placement.
+Disable this when faceting; the tick annotations are not designed for faceted layouts.</p></dd>
 
 </dl></div>
     <div class="section level2">

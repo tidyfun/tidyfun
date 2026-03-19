@@ -44,8 +44,13 @@
     <li><a class="dropdown-item" href="../articles/x02_Conversion.html">Converting data to and from `tf`</a></li>
     <li><a class="dropdown-item" href="../articles/x03_Data_Wrangling.html">Data Wrangling</a></li>
     <li><a class="dropdown-item" href="../articles/x04_Visualization.html">Visualization</a></li>
-    <li><a class="dropdown-item" href="../articles/x05_Advice.html">Advice for Developers</a></li>
     <li><a class="dropdown-item" href="../articles/x06_Registration.html">Curve Registration</a></li>
+  </ul>
+</li>
+<li class="nav-item dropdown">
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-developer-notes" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Developer Notes</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-developer-notes">
+<li><a class="dropdown-item" href="../articles/x05_Advice.html">Developer Notes</a></li>
   </ul>
 </li>
       </ul>
@@ -79,7 +84,7 @@
                         <h4 data-toc-skip class="author">Jeff Goldsmith,
 Fabian Scheipl</h4>
             
-            <h4 data-toc-skip class="date">2026-03-18</h4>
+            <h4 data-toc-skip class="date">2026-03-19</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/tidyfun/tidyfun/blob/main/vignettes/x04_Visualization.Rmd" class="external-link"><code>vignettes/x04_Visualization.Rmd</code></a></small>
       <div class="d-none name"><code>x04_Visualization.Rmd</code></div>
@@ -90,24 +95,25 @@ Fabian Scheipl</h4>
 <p>The <strong><code>tidyfun</code></strong> package is designed to
 facilitate <strong>functional data analysis in <code>R</code></strong>,
 with particular emphasis on compatibility with the
-<code>tidyverse</code>. In this vignette, we illustrate data
-visualization using <strong><code>tidyfun</code></strong>.</p>
+<strong><code>tidyverse</code></strong>. In this vignette, we illustrate
+data visualization using <strong><code>tidyfun</code></strong>.</p>
 <p>We’ll draw on the <code><a href="../reference/dti_df.html">tidyfun::dti_df</a></code> and the
 <code><a href="../reference/chf_df.html">tidyfun::chf_df</a></code> data sets for examples.</p>
 <div class="section level2">
-<h2 id="plotting-with-ggplot">Plotting with <code>ggplot</code><a class="anchor" aria-label="anchor" href="#plotting-with-ggplot"></a>
+<h2 id="plotting-with-ggplot2">Plotting with <strong><code>ggplot2</code></strong><a class="anchor" aria-label="anchor" href="#plotting-with-ggplot2"></a>
 </h2>
-<p><code>ggplot</code> is a powerful framework for visualization. In
-this section, we’ll assume some basic familiarity with the package; if
-you’re new to <code>ggplot</code>, <a href="https://rpubs.com/hadley/ggplot-intro" class="external-link">this primer</a> may be
+<p><strong><code>ggplot2</code></strong> is a powerful framework for
+visualization. In this section, we’ll assume some basic familiarity with
+the package; if you’re new to <strong><code>ggplot2</code></strong>, <a href="https://rpubs.com/hadley/ggplot-intro" class="external-link">this primer</a> may be
 helpful.</p>
 <p><strong><code>tidyfun</code></strong> provides
 <code><a href="../reference/tf_ggplot.html">tf_ggplot()</a></code> as the primary interface for plotting
-functional data with <code>ggplot2</code>. It works just like
-<code><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot()</a></code>, but understands <code>tf</code> vectors — use the
-<code>tf</code> aesthetic to map a <code>tf</code> column to the plot,
-then add standard <code>ggplot2</code> geoms (<code>geom_line</code>,
-<code>geom_point</code>, <code>geom_ribbon</code>, etc.).</p>
+functional data with <strong><code>ggplot2</code></strong>. It works
+just like <code><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot()</a></code>, but understands <code>tf</code> vectors
+— use the <code>tf</code> aesthetic to map a <code>tf</code> column to
+the plot, then add standard <strong><code>ggplot2</code></strong> geoms
+(<code>geom_line</code>, <code>geom_point</code>,
+<code>geom_ribbon</code>, etc.).</p>
 <p>For heatmaps, use <strong><code>gglasagna</code></strong>; for
 sparklines / glyphs on maps, use
 <strong><code>geom_capellini</code></strong> (these use their own
@@ -115,68 +121,63 @@ specialized stats and are called directly without
 <code>tf_ggplot</code>). The older geoms
 <strong><code>geom_spaghetti</code></strong>,
 <strong><code>geom_meatballs</code></strong>, and
-<strong><code>geom_errorband</code></strong> are still available for
+<strong><code>geom_errorband</code></strong> remain available for
 backward compatibility.</p>
 <div class="section level3">
 <h3 id="tf_ggplot-with-standard-geoms">
 <code>tf_ggplot</code> with standard geoms<a class="anchor" aria-label="anchor" href="#tf_ggplot-with-standard-geoms"></a>
 </h3>
 <p>One of the most fundamental plots for functional data is the
-spaghetti plot, which is implemented in <code>tidyfun</code> +
-<code>ggplot2</code> through <code><a href="../reference/tf_ggplot.html">tf_ggplot()</a></code> +
+spaghetti plot, which is implemented in
+<strong><code>tidyfun</code></strong> and
+<strong><code>ggplot2</code></strong> through <code><a href="../reference/tf_ggplot.html">tf_ggplot()</a></code> +
 <code><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_line()</a></code>:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dti_df</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span>,<span class="op">]</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/tf_ggplot.html">tf_ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>tf <span class="op">=</span> <span class="va">cca</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_line</a></span><span class="op">(</span>alpha <span class="op">=</span> <span class="fl">.3</span><span class="op">)</span></span></code></pre></div>
 <p><img src="x04_Visualization_files/figure-html/plot_chf-1.png" class="r-plt" alt="" width="90%"></p>
 <p>Adding <code><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point()</a></code> to <code><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_line()</a></code> shows
-both the curves and the actually observed data values:</p>
+both the curves and the observed data values:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dti_df</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span>,<span class="op">]</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/tf_ggplot.html">tf_ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>tf <span class="op">=</span> <span class="va">rcst</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_line</a></span><span class="op">(</span>alpha <span class="op">=</span> <span class="fl">.3</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>alpha<span class="op">=</span> <span class="fl">.3</span><span class="op">)</span></span></code></pre></div>
 <p><img src="x04_Visualization_files/figure-html/unnamed-chunk-1-1.png" class="r-plt" alt="" width="90%"></p>
 </div>
 <div class="section level3">
-<h3 id="using-with-other-ggplot2-features">Using with other <code>ggplot2</code> features<a class="anchor" aria-label="anchor" href="#using-with-other-ggplot2-features"></a>
+<h3 id="using-with-other-ggplot2-features">Using with other <strong><code>ggplot2</code></strong> features<a class="anchor" aria-label="anchor" href="#using-with-other-ggplot2-features"></a>
 </h3>
 <p><code><a href="../reference/tf_ggplot.html">tf_ggplot()</a></code> plays nicely with standard
-<code>ggplot2</code> aesthetics and options.</p>
+<strong><code>ggplot2</code></strong> aesthetics and options.</p>
 <p>You can, for example, define the color aesthetic for plots of
 <code>tf</code> variables using other observations:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">chf_df</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">id</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span><span class="fu"><a href="../reference/tf_ggplot.html">tf_ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>tf <span class="op">=</span> <span class="fu"><a href="https://tidyfun.github.io/tf/reference/tf_smooth.html" class="external-link">tf_smooth</a></span><span class="op">(</span><span class="va">activity</span>, f <span class="op">=</span> <span class="fl">.05</span><span class="op">)</span>, color <span class="op">=</span> <span class="va">gender</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_line</a></span><span class="op">(</span>alpha <span class="op">=</span> <span class="fl">0.3</span><span class="op">)</span></span>
-<span><span class="co">## Warning: Large data expansion: 28 rows × 1440 grid points = 40320 rows</span></span>
-<span><span class="co">## <span style="color: #00BBBB;">ℹ</span> This may impact memory usage and plotting performance</span></span>
-<span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Use `arg` in `tf_ggplot()` to specify a coarser evaluation grid</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/tf_ggplot.html">tf_ggplot</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>tf <span class="op">=</span> <span class="fu"><a href="https://tidyfun.github.io/tf/reference/tf_smooth.html" class="external-link">tf_smooth</a></span><span class="op">(</span><span class="va">activity</span>, f <span class="op">=</span> <span class="fl">.05</span><span class="op">)</span>, <span class="co"># smoothed inputs for clearer viz</span></span>
+<span>        color <span class="op">=</span> <span class="va">gender</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_line</a></span><span class="op">(</span>alpha <span class="op">=</span> <span class="fl">0.3</span><span class="op">)</span></span></code></pre></div>
 <p><img src="x04_Visualization_files/figure-html/unnamed-chunk-2-1.png" class="r-plt" alt="" width="90%"></p>
 <p>… or use facetting:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">chf_df</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="op">(</span><span class="va">id</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span> <span class="op">&amp;</span> <span class="op">(</span><span class="va">day</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Mon"</span>, <span class="st">"Sun"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span><span class="fu"><a href="../reference/tf_ggplot.html">tf_ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>tf <span class="op">=</span> <span class="fu"><a href="https://tidyfun.github.io/tf/reference/tf_smooth.html" class="external-link">tf_smooth</a></span><span class="op">(</span><span class="va">activity</span>, f <span class="op">=</span> <span class="fl">.05</span><span class="op">)</span>, color <span class="op">=</span> <span class="va">gender</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_line</a></span><span class="op">(</span>alpha <span class="op">=</span> <span class="fl">0.3</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_grid.html" class="external-link">facet_grid</a></span><span class="op">(</span><span class="op">~</span><span class="va">day</span><span class="op">)</span></span>
-<span><span class="co">## Warning: Large data expansion: 18 rows × 1440 grid points = 25920 rows</span></span>
-<span><span class="co">## <span style="color: #00BBBB;">ℹ</span> This may impact memory usage and plotting performance</span></span>
-<span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Use `arg` in `tf_ggplot()` to specify a coarser evaluation grid</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/tf_ggplot.html">tf_ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>tf <span class="op">=</span> <span class="fu"><a href="https://tidyfun.github.io/tf/reference/tf_smooth.html" class="external-link">tf_smooth</a></span><span class="op">(</span><span class="va">activity</span>, f <span class="op">=</span> <span class="fl">.05</span><span class="op">)</span>, color <span class="op">=</span> <span class="va">gender</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_line</a></span><span class="op">(</span>alpha <span class="op">=</span> <span class="fl">0.3</span>, lwd <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_grid.html" class="external-link">facet_grid</a></span><span class="op">(</span><span class="op">~</span><span class="va">day</span><span class="op">)</span></span></code></pre></div>
 <p><img src="x04_Visualization_files/figure-html/unnamed-chunk-3-1.png" class="r-plt" alt="" width="90%"></p>
 <p>Another example, using the DTI data, is below.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dti_df</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/tf_ggplot.html">tf_ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>tf <span class="op">=</span> <span class="va">cca</span>, col <span class="op">=</span> <span class="va">case</span>, alpha <span class="op">=</span> <span class="fl">0.2</span> <span class="op">+</span> <span class="fl">0.4</span> <span class="op">*</span> <span class="op">(</span><span class="va">case</span> <span class="op">==</span> <span class="st">"control"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_line</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap</a></span><span class="op">(</span><span class="op">~</span><span class="va">sex</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_alpha.html" class="external-link">scale_alpha</a></span><span class="op">(</span>guide <span class="op">=</span> <span class="st">"none"</span>, range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.2</span>, <span class="fl">0.4</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">## Warning: Large data expansion: 382 rows × 93 grid points = 35526 rows</span></span>
-<span><span class="co">## <span style="color: #00BBBB;">ℹ</span> This may impact memory usage and plotting performance</span></span>
-<span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Use `arg` in `tf_ggplot()` to specify a coarser evaluation grid</span></span></code></pre></div>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_alpha.html" class="external-link">scale_alpha</a></span><span class="op">(</span>guide <span class="op">=</span> <span class="st">"none"</span>, range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.2</span>, <span class="fl">0.4</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="x04_Visualization_files/figure-html/dti-fig1-1.png" class="r-plt" alt="" width="90%"></p>
 <p>Together with <strong><code>tidyfun</code></strong>’s tools for
 functional data wrangling and summary statistics, the integration with
-<code>ggplot2</code> can produce useful exploratory analyses, like the
-plot below showing group-wise smoothed and unsmoothed mean activity
-profiles:</p>
+<strong><code>ggplot2</code></strong> can produce useful exploratory
+analyses, like the plot below showing group-wise smoothed and unsmoothed
+mean activity profiles:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">chf_df</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">group_by</span><span class="op">(</span><span class="va">gender</span>, <span class="va">day</span><span class="op">)</span> <span class="op">|&gt;</span></span>
@@ -188,16 +189,7 @@ profiles:</p>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_line</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>tf <span class="op">=</span> <span class="va">smooth_mean</span><span class="op">)</span>, linewidth <span class="op">=</span> <span class="fl">1.25</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_line</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>tf <span class="op">=</span> <span class="va">mean_act</span><span class="op">)</span>, alpha <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>tf <span class="op">=</span> <span class="va">mean_act</span><span class="op">)</span>, alpha <span class="op">=</span> <span class="fl">0.1</span>, size <span class="op">=</span> <span class="fl">.1</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_grid.html" class="external-link">facet_grid</a></span><span class="op">(</span><span class="va">day</span><span class="op">~</span><span class="va">.</span><span class="op">)</span></span>
-<span><span class="co">## Warning: Large data expansion: 4 rows × 1440 grid points = 5760 rows</span></span>
-<span><span class="co">## <span style="color: #00BBBB;">ℹ</span> This may impact memory usage and plotting performance</span></span>
-<span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Use `arg` in `tf_ggplot()` to specify a coarser evaluation grid</span></span>
-<span><span class="co">## Large data expansion: 4 rows × 1440 grid points = 5760 rows</span></span>
-<span><span class="co">## <span style="color: #00BBBB;">ℹ</span> This may impact memory usage and plotting performance</span></span>
-<span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Use `arg` in `tf_ggplot()` to specify a coarser evaluation grid</span></span>
-<span><span class="co">## Large data expansion: 4 rows × 1440 grid points = 5760 rows</span></span>
-<span><span class="co">## <span style="color: #00BBBB;">ℹ</span> This may impact memory usage and plotting performance</span></span>
-<span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Use `arg` in `tf_ggplot()` to specify a coarser evaluation grid</span></span></code></pre></div>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_grid.html" class="external-link">facet_grid</a></span><span class="op">(</span><span class="va">day</span><span class="op">~</span><span class="va">.</span><span class="op">)</span></span></code></pre></div>
 <p><img src="x04_Visualization_files/figure-html/unnamed-chunk-4-1.png" class="r-plt" alt="" width="90%"></p>
 <p>… or the plot below showing group-wise mean functions +/- twice their
 pointwise standard errors:</p>
@@ -232,11 +224,11 @@ outer fence lines obtained by inflating that central envelope by a
 factor of <code>coef = 1.5</code>. Curves that leave the fence envelope
 anywhere are flagged as outliers and drawn separately.</p>
 <p>Like <code><a href="https://ggplot2.tidyverse.org/reference/geom_boxplot.html" class="external-link">geom_boxplot()</a></code>, the layer follows the usual
-<code>ggplot2</code> interface closely. Grouping works naturally through
-<code>colour</code>, <code>fill</code>, or <code>group</code>, and the
-same group colour is reused for the ribbon, the outlier curves, and the
-median if a group colour/fill is mapped; otherwise, the median defaults
-to black.</p>
+<strong><code>ggplot2</code></strong> interface closely. Grouping works
+naturally through <code>colour</code>, <code>fill</code>, or
+<code>group</code>, and the same group colour is reused for the ribbon,
+the outlier curves, and the median if a group colour/fill is mapped;
+otherwise, the median defaults to black.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dti_df</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="../reference/tf_ggplot.html">tf_ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>tf <span class="op">=</span> <span class="va">cca</span>, fill <span class="op">=</span> <span class="va">case</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
@@ -283,10 +275,17 @@ to black.</p>
 <p>Lasagna plots are “<a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC2937254/" class="external-link">a saucy
 alternative to spaghetti plots</a>”. They are a variant on a heatmaps
 which show functional observations in rows and use color to illustrate
-values taken at different arguments.</p>
-<p>In <code>tidyfun</code>, lasagna plots are implemented through
-<code>gglasagna</code>. A first example, using the CHF data, is
-below.</p>
+values taken at different arguments. Especially for large samples or
+noisy data, lasagna plots can be more informative than spaghetti plots,
+which can be hard to read when many curves are plotted together. Lasagna
+plots also allow for easy visual comparison of groups of curves, and the
+<code>order</code> argument in <code><a href="../reference/gglasagna.html">gglasagna()</a></code> allows you to
+sort the curves by any variable or function of the data, which can help
+reveal patterns in the data.</p>
+<p>In <strong><code>tidyfun</code></strong>, lasagna plots are
+implemented through <code>gglasagna</code> (as well as a basic
+<code>plot</code> method, see ?!?). A first example, using the CHF data,
+is below.</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">chf_df</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">day</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Mon"</span>, <span class="st">"Sun"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
@@ -298,11 +297,11 @@ below.</p>
 <code class="sourceCode R"><span><span class="va">dti_df</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/gglasagna.html">gglasagna</a></span><span class="op">(</span></span>
 <span>    tf <span class="op">=</span> <span class="va">cca</span>,</span>
-<span>    order <span class="op">=</span> <span class="fu"><a href="https://tidyfun.github.io/tf/reference/tf_integrate.html" class="external-link">tf_integrate</a></span><span class="op">(</span><span class="va">cca</span>, definite <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
+<span>    order <span class="op">=</span> <span class="fu"><a href="https://tidyfun.github.io/tf/reference/tf_integrate.html" class="external-link">tf_integrate</a></span><span class="op">(</span><span class="va">cca</span>, definite <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, <span class="co">#order by area under the curve</span></span>
 <span>    arg <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, length.out <span class="op">=</span> <span class="fl">101</span><span class="op">)</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.text.y <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">6</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap</a></span><span class="op">(</span><span class="op">~</span><span class="va">case</span>, ncol <span class="op">=</span> <span class="fl">2</span>, scales <span class="op">=</span> <span class="st">"free"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap</a></span><span class="op">(</span><span class="op">~</span> <span class="va">case</span><span class="op">:</span><span class="va">sex</span>, ncol <span class="op">=</span> <span class="fl">2</span>, scales <span class="op">=</span> <span class="st">"free"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="x04_Visualization_files/figure-html/dti-fig2-1.png" class="r-plt" alt="" width="90%"></p>
 </div>
 <div class="section level3">
@@ -310,7 +309,8 @@ below.</p>
 <code>geom_capellini</code><a class="anchor" aria-label="anchor" href="#geom_capellini"></a>
 </h3>
 <p>To illustrate <code>geom_capellini</code>, we’ll start with some data
-prep for the iconic Canadian Weather data:</p>
+prep for the iconic Canadian Weather data from
+<strong><code>fda</code></strong>:</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">canada</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
 <span>  place <span class="op">=</span> <span class="fu">fda</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/fda/man/CanadianWeather.html" class="external-link">CanadianWeather</a></span><span class="op">$</span><span class="va">place</span>,</span>
@@ -366,31 +366,9 @@ visualizing FPCA decompositions:</p>
 affects the size and direction of the extrema around 0.13 and 0.8.</p>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">cca_fpc_tbl</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">40</span>,<span class="op">]</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span>  <span class="va">fpc_1</span>, y <span class="op">=</span> <span class="va">fpc_2</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">.5</span>, col <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">.5</span>, col <span class="op">=</span> <span class="fu">viridis</span><span class="op">(</span><span class="fl">3</span><span class="op">)</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/ggcapellini.html">geom_capellini</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>tf <span class="op">=</span><span class="va">cca_fpc</span><span class="op">)</span>,width <span class="op">=</span> <span class="fl">.01</span>, height <span class="op">=</span> <span class="fl">.01</span>, line.linetype <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"FPC1 score"</span>, y <span class="op">=</span> <span class="st">"FPC2 score"</span><span class="op">)</span></span>
-<span><span class="co">## Warning: Removed 10 rows containing missing values or values outside the scale range</span></span>
-<span><span class="co">## (`geom_point()`).</span></span>
-<span><span class="co">## Warning: Removed 1 row containing missing values or values outside the scale range</span></span>
-<span><span class="co">## (`geom_segment()`).</span></span>
-<span><span class="co">## Removed 1 row containing missing values or values outside the scale range</span></span>
-<span><span class="co">## (`geom_segment()`).</span></span>
-<span><span class="co">## Removed 1 row containing missing values or values outside the scale range</span></span>
-<span><span class="co">## (`geom_segment()`).</span></span>
-<span><span class="co">## Removed 1 row containing missing values or values outside the scale range</span></span>
-<span><span class="co">## (`geom_segment()`).</span></span>
-<span><span class="co">## Removed 1 row containing missing values or values outside the scale range</span></span>
-<span><span class="co">## (`geom_segment()`).</span></span>
-<span><span class="co">## Removed 1 row containing missing values or values outside the scale range</span></span>
-<span><span class="co">## (`geom_segment()`).</span></span>
-<span><span class="co">## Removed 1 row containing missing values or values outside the scale range</span></span>
-<span><span class="co">## (`geom_segment()`).</span></span>
-<span><span class="co">## Removed 1 row containing missing values or values outside the scale range</span></span>
-<span><span class="co">## (`geom_segment()`).</span></span>
-<span><span class="co">## Removed 1 row containing missing values or values outside the scale range</span></span>
-<span><span class="co">## (`geom_segment()`).</span></span>
-<span><span class="co">## Removed 1 row containing missing values or values outside the scale range</span></span>
-<span><span class="co">## (`geom_segment()`).</span></span></code></pre></div>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"FPC1 score"</span>, y <span class="op">=</span> <span class="st">"FPC2 score"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="x04_Visualization_files/figure-html/unnamed-chunk-15-1.png" class="r-plt" alt="" width="90%">
 Consequently, we can see here that the horizontal axis representing the
 1st FPC scores has the average level of functions increasing from left
@@ -413,7 +391,7 @@ plots, and <code>lines</code> to add lines to an existing plot:</p>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/layout.html" class="external-link">layout</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">cca</span>, type <span class="op">=</span> <span class="st">"spaghetti"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/median.html" class="external-link">median</a></span><span class="op">(</span><span class="va">cca</span><span class="op">)</span>, mean <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">cca</span><span class="op">)</span><span class="op">)</span>, col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">4</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/median.html" class="external-link">median</a></span><span class="op">(</span><span class="va">cca</span><span class="op">)</span>, mean <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">cca</span><span class="op">)</span><span class="op">)</span>, col <span class="op">=</span> <span class="fu">viridis</span><span class="op">(</span><span class="fl">3</span><span class="op">)</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">3</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">cca</span>, type <span class="op">=</span> <span class="st">"lasagna"</span>, col <span class="op">=</span> <span class="fu">viridis</span><span class="op">(</span><span class="fl">50</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="x04_Visualization_files/figure-html/unnamed-chunk-16-1.png" class="r-plt" alt="" width="90%"></p>
@@ -437,48 +415,49 @@ can be edited like other base graphics:</p>
 return a registration result that stores the aligned curves, inverse
 warps, and template and can be inspected directly:</p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">cca_reg</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tidyfun.github.io/tf/reference/tf_register.html" class="external-link">tf_register</a></span><span class="op">(</span></span>
-<span>  <span class="va">cca</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span>,</span>
-<span>  method <span class="op">=</span> <span class="st">"landmark"</span>,</span>
-<span>  landmarks <span class="op">=</span> <span class="fu"><a href="https://tidyfun.github.io/tf/reference/landmarks.html" class="external-link">tf_landmarks_extrema</a></span><span class="op">(</span><span class="va">cca</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span>, <span class="st">"max"</span><span class="op">)</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">cca_reg</span></span>
+<code class="sourceCode R"><span><span class="va">pinch_reg</span> <span class="op">&lt;-</span> <span class="fu">tf</span><span class="fu">::</span><span class="va"><a href="https://tidyfun.github.io/tf/reference/pinch.html" class="external-link">pinch</a></span> <span class="op">|&gt;</span> <span class="fu"><a href="https://tidyfun.github.io/tf/reference/tfb.html" class="external-link">tfb</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="co">#smooth before registration for better results</span></span>
+<span>  <span class="fu"><a href="https://tidyfun.github.io/tf/reference/tf_register.html" class="external-link">tf_register</a></span><span class="op">(</span><span class="op">)</span> </span>
+<span><span class="co">## Percentage of input data variability preserved in basis representation</span></span>
+<span><span class="co">## (per functional observation, approximate):</span></span>
+<span><span class="co">## Min. 1st Qu.  Median Mean 3rd Qu.  Max.</span></span>
+<span><span class="co">## 99.60 99.70 99.80 99.75 99.80 99.80</span></span>
+<span><span class="va">pinch_reg</span></span>
 <span><span class="co">## <span style="color: #0000BB;">&lt;tf_registration&gt;</span></span></span>
-<span><span class="co">## Call: tf_register(x = cca[1:5], landmarks = tf_landmarks_extrema(cca[1:5], </span></span>
-<span><span class="co">##     "max"), method = "landmark")</span></span>
-<span><span class="co">## 5 curves on [0, 1]</span></span>
+<span><span class="co">## Call: tf_register(x = tfb(tf::pinch))</span></span>
+<span><span class="co">## 20 curves on [0, 0.3]</span></span>
 <span><span class="co">## Components: aligned, inv_warps, template, original data</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">cca_reg</span><span class="op">)</span></span>
-<span><span class="co">## tf_register(x = cca[1:5], landmarks = tf_landmarks_extrema(cca[1:5], </span></span>
-<span><span class="co">##     "max"), method = "landmark")</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">pinch_reg</span><span class="op">)</span></span>
+<span><span class="co">## tf_register(x = tfb(tf::pinch))</span></span>
 <span><span class="co">## </span></span>
-<span><span class="co">## 5 curve(s) on [0, 1]</span></span>
+<span><span class="co">## 20 curve(s) on [0, 0.3]</span></span>
 <span><span class="co">## </span></span>
-<span><span class="co">## Amplitude variance reduction: 9.6%</span></span>
+<span><span class="co">## Amplitude variance reduction: 96.7%</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## Inverse warp deviations from identity (relative to domain length):</span></span>
 <span><span class="co">##     0%    10%    25%    50%    75%    90%   100% </span></span>
-<span><span class="co">## 0.0172 0.0186 0.0207 0.0260 0.0359 0.0365 0.0369 </span></span>
+<span><span class="co">## 0.0328 0.0670 0.0765 0.1161 0.1469 0.1841 0.2104 </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## Inverse warp slopes (1 = identity):</span></span>
-<span><span class="co">##   overall range: [0.74, 1.345]</span></span>
+<span><span class="co">##   overall range: [0.143, 7]</span></span>
 <span><span class="co">##   per-curve min slopes:</span></span>
 <span><span class="co">##    0%   10%   25%   50%   75%   90%  100% </span></span>
-<span><span class="co">## 0.740 0.800 0.890 0.890 0.920 0.923 0.925 </span></span>
+<span><span class="co">## 0.143 0.143 0.143 0.167 0.200 0.258 0.333 </span></span>
 <span><span class="co">##   per-curve max slopes:</span></span>
-<span><span class="co">##    0%   10%   25%   50%   75%   90%  100% </span></span>
-<span><span class="co">## 1.067 1.082 1.104 1.233 1.314 1.333 1.345</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">cca_reg</span><span class="op">)</span></span></code></pre></div>
+<span><span class="co">##   0%  10%  25%  50%  75%  90% 100% </span></span>
+<span><span class="co">##  2.0  3.9  7.0  7.0  7.0  7.0  7.0</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">pinch_reg</span><span class="op">)</span></span></code></pre></div>
 <p><img src="x04_Visualization_files/figure-html/unnamed-chunk-17-1.png" class="r-plt" alt="" width="90%"></p>
 <p>The registered curves, inverse warping functions, and template can
 also be extracted explicitly for custom plots:</p>
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/layout.html" class="external-link">layout</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/layout.html" class="external-link">layout</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu">tf</span><span class="fu">::</span><span class="va"><a href="https://tidyfun.github.io/tf/reference/pinch.html" class="external-link">pinch</a></span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span>, col <span class="op">=</span> <span class="va">pal_5</span>, lwd <span class="op">=</span> <span class="fl">2</span>, points <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="https://tidyfun.github.io/tf/reference/tf_registration.html" class="external-link">tf_inv_warps</a></span><span class="op">(</span><span class="va">cca_reg</span><span class="op">)</span>, col <span class="op">=</span> <span class="va">pal_5</span>, lwd <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="https://tidyfun.github.io/tf/reference/tf_registration.html" class="external-link">tf_aligned</a></span><span class="op">(</span><span class="va">cca_reg</span><span class="op">)</span>, col <span class="op">=</span> <span class="va">pal_5</span>, lwd <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="fu"><a href="https://tidyfun.github.io/tf/reference/tf_registration.html" class="external-link">tf_template</a></span><span class="op">(</span><span class="va">cca_reg</span><span class="op">)</span>, col <span class="op">=</span> <span class="st">"black"</span>, lwd <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="https://tidyfun.github.io/tf/reference/tf_registration.html" class="external-link">tf_inv_warps</a></span><span class="op">(</span><span class="va">pinch_reg</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span>, col <span class="op">=</span> <span class="va">pal_5</span>, lwd <span class="op">=</span> <span class="fl">2</span>, points <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/abline.html" class="external-link">abline</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">1</span><span class="op">)</span>, col <span class="op">=</span> <span class="st">"grey"</span>, lty <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="https://tidyfun.github.io/tf/reference/tf_registration.html" class="external-link">tf_aligned</a></span><span class="op">(</span><span class="va">pinch_reg</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span>, col <span class="op">=</span> <span class="va">pal_5</span>, lwd <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="fu"><a href="https://tidyfun.github.io/tf/reference/tf_registration.html" class="external-link">tf_template</a></span><span class="op">(</span><span class="va">pinch_reg</span><span class="op">)</span>, col <span class="op">=</span> <span class="st">"black"</span>, lwd <span class="op">=</span> <span class="fl">3</span>, lty<span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span></code></pre></div>
 <p><img src="x04_Visualization_files/figure-html/unnamed-chunk-18-1.png" class="r-plt" alt="" width="90%"></p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

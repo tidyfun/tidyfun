@@ -5,11 +5,12 @@
 The goal of **`tidyfun`** is to provide accessible and well-documented
 software that **makes functional data analysis in `R` easy**. In this
 vignette, we explore some aspects of data manipulation that are possible
-using **`tidyfun`**, emphasizing compatibility with the `tidyverse`.
+using **`tidyfun`** workflows with `tf` vectors, emphasizing
+compatibility with the **`tidyverse`**.
 
 Other vignettes have examined the **`tfd`** & **`tfb`** data types, and
 how to convert common formats for functional data (e.g. matrices, long-
-and wide-format data frames, `fda` objects) in these new data types.
+and wide-format data frames, **`fda`** objects) in these new data types.
 Because our goal is “tidy” data manipulation for functional data
 analysis, the result of data conversion processes has been a data frame
 in which a column contains the functional data of interest. This
@@ -59,9 +60,6 @@ chf_df |>
   slice(1:5) |>
   tf_ggplot(aes(tf = activity)) +
   geom_line(alpha = 0.1)
-## Warning: Large data expansion: 5 rows × 1440 grid points = 7200 rows
-## ℹ This may impact memory usage and plotting performance
-## ℹ Use `arg` in `tf_ggplot()` to specify a coarser evaluation grid
 ```
 
 ![](x03_Data_Wrangling_files/figure-html/plot_chf-1.png)
@@ -99,17 +97,15 @@ A quick plot of the `cca` tract profiles is below.
 dti_df |>
   tf_ggplot(aes(tf = cca)) +
   geom_line(alpha = 0.05)
-## Warning: Large data expansion: 382 rows × 93 grid points = 35526 rows
-## ℹ This may impact memory usage and plotting performance
-## ℹ Use `arg` in `tf_ggplot()` to specify a coarser evaluation grid
 ```
 
 ![](x03_Data_Wrangling_files/figure-html/plot_dti-1.png)
 
 ## Existing `tidyverse` functions
 
-Dataframes using `tidyfun` to store functional observations can be
-manipulated using tools from `dplyr`, including `select` and `filter`:
+Dataframes using **`tidyfun`** to store functional observations can be
+manipulated using tools from **`dplyr`**, including `select` and
+`filter`:
 
 ``` r
 chf_df |>
@@ -117,9 +113,6 @@ chf_df |>
   filter(day == "Mon") |>
   tf_ggplot(aes(tf = activity)) +
   geom_line(alpha = 0.05)
-## Warning: Large data expansion: 47 rows × 1440 grid points = 67680 rows
-## ℹ This may impact memory usage and plotting performance
-## ℹ Use `arg` in `tf_ggplot()` to specify a coarser evaluation grid
 ```
 
 ![](x03_Data_Wrangling_files/figure-html/unnamed-chunk-1-1.png)
@@ -133,9 +126,6 @@ chf_df |>
   summarize(mean_act = mean(activity)) |>
   tf_ggplot(aes(tf = mean_act, color = day)) +
   geom_line()
-## Warning: Large data expansion: 7 rows × 1440 grid points = 10080 rows
-## ℹ This may impact memory usage and plotting performance
-## ℹ Use `arg` in `tf_ggplot()` to specify a coarser evaluation grid
 ```
 
 ![](x03_Data_Wrangling_files/figure-html/unnamed-chunk-2-1.png)
@@ -149,14 +139,11 @@ chf_df |>
   mutate(exp_act = exp(activity)) |>
   tf_ggplot(aes(tf = exp_act)) +
   geom_line(alpha = 0.2)
-## Warning: Large data expansion: 5 rows × 1440 grid points = 7200 rows
-## ℹ This may impact memory usage and plotting performance
-## ℹ Use `arg` in `tf_ggplot()` to specify a coarser evaluation grid
 ```
 
 ![](x03_Data_Wrangling_files/figure-html/unnamed-chunk-3-1.png)
 
-Functions for data manipulation from `tidyr` are also supported. We
+Functions for data manipulation from **`tidyr`** are also supported. We
 illustrate by using `pivot_wider` to create new `tfd`-columns containing
 the activity profiles for each day of the week:
 
@@ -243,11 +230,12 @@ dti_df |>
 
 ![](x03_Data_Wrangling_files/figure-html/unnamed-chunk-7-1.png)
 
-## New `tidyfun` functions
+## `tf` helper functions in tidy workflows
 
-Some `dplyr` functions are useful in conjunction with new functions in
-`tidyfun`. For example, one might use `filter` with `tf_anywhere` to
-filter based on the values of observed functions:
+Some **`dplyr`** functions are useful in conjunction with **`tf`**
+helper functions. For example, one might use `filter` with
+[`tf_anywhere()`](https://tidyfun.github.io/tf/reference/tf_where.html)
+to filter based on the values of observed functions:
 
 ``` r
 like_to_move_it_move_it <- chf_df |> filter(tf_anywhere(activity, value > 9))
@@ -266,9 +254,6 @@ glimpse(like_to_move_it_move_it)
 like_to_move_it_move_it |>
   tf_ggplot(aes(tf = activity, colour = id)) +
   geom_line()
-## Warning: Large data expansion: 6 rows × 1440 grid points = 8640 rows
-## ℹ This may impact memory usage and plotting performance
-## ℹ Use `arg` in `tf_ggplot()` to specify a coarser evaluation grid
 ```
 
 ![](x03_Data_Wrangling_files/figure-html/unnamed-chunk-8-1.png)
@@ -284,8 +269,11 @@ dti_df |>
 
 ![](x03_Data_Wrangling_files/figure-html/unnamed-chunk-9-1.png)
 
-The existing `mutate` function can be combined with several `tidyfun`
-functions, including `tf_smooth`, `tf_zoom`, and `tf_derive`.
+The existing `mutate` function can be combined with several `tf`
+helpers, including
+[`tf_smooth()`](https://tidyfun.github.io/tf/reference/tf_smooth.html),
+[`tf_zoom()`](https://tidyfun.github.io/tf/reference/tf_zoom.html), and
+[`tf_derive()`](https://tidyfun.github.io/tf/reference/tf_derive.html).
 
 One can smooth existing observations using `tf_smooth`:
 
@@ -296,9 +284,6 @@ chf_df |>
   tf_ggplot(aes(tf = smooth_act)) +
   geom_line()
 ## Using `f = 0.15` as smoother span for `lowess()`.
-## Warning: Large data expansion: 7 rows × 1440 grid points = 10080 rows
-## ℹ This may impact memory usage and plotting performance
-## ℹ Use `arg` in `tf_ggplot()` to specify a coarser evaluation grid
 ```
 
 ![](x03_Data_Wrangling_files/figure-html/unnamed-chunk-10-1.png)
@@ -315,12 +300,6 @@ chf_df |>
   geom_line(aes(tf = mean_act), alpha = 0.2) +
   geom_line(aes(tf = smooth_mean), linewidth = 2)
 ## Using `f = 0.15` as smoother span for `lowess()`.
-## Warning: Large data expansion: 7 rows × 1440 grid points = 10080 rows
-## ℹ This may impact memory usage and plotting performance
-## ℹ Use `arg` in `tf_ggplot()` to specify a coarser evaluation grid
-## Large data expansion: 7 rows × 1440 grid points = 10080 rows
-## ℹ This may impact memory usage and plotting performance
-## ℹ Use `arg` in `tf_ggplot()` to specify a coarser evaluation grid
 ```
 
 ![](x03_Data_Wrangling_files/figure-html/unnamed-chunk-11-1.png)
@@ -334,9 +313,6 @@ chf_df |>
   mutate(daytime_act = tf_zoom(activity, 360, 1200)) |>
   tf_ggplot(aes(tf = daytime_act)) +
   geom_line(alpha = 0.2)
-## Warning: Large data expansion: 7 rows × 841 grid points = 5887 rows
-## ℹ This may impact memory usage and plotting performance
-## ℹ Use `arg` in `tf_ggplot()` to specify a coarser evaluation grid
 ```
 
 ![](x03_Data_Wrangling_files/figure-html/unnamed-chunk-12-1.png)
@@ -373,21 +349,27 @@ dti_df |>
 
 ## Working with `data.table`
 
-`tidyfun` functional data objects work within `data.table` as well.
+**`tidyfun`** functional data objects work within **`data.table`** as
+well.
 
 However, there is one specific known caveat when calculating the mean of
-a `tf` vector within a `data.table` context: By default, `data.table`
-will use optimized routines for summary statistics, which may cause
-`mean` to dispatch to `data.table`’s own optimized implementation,
-leading to unexpected behavior for `tf` vectors.
+a `tf` vector within a **`data.table`** context: By default,
+**`data.table`** will use optimized routines for summary statistics,
+which may cause `mean` to dispatch to **`data.table`**’s own optimized
+implementation, leading to unexpected behavior for `tf` vectors.
 
 To ensure the correct mean calculation for `tf` vectors, there are two
 solutions:
 
-- Set `options(data.table.optimize = 0)`, which disables optimization,
-  allowing the mean function to correctly dispatch for `tf` vectors.
-- Alternatively, explicitly call `tf:::mean.tf(activity)` in your code
-  to directly specify the correct `tf`-mean calculation.
+- Disable the optimization for the summary step and let
+  [`mean()`](https://rdrr.io/r/base/mean.html) dispatch normally:
+
+``` r
+withr::with_options(
+  list(data.table.optimize = 0),
+  data.table::as.data.table(chf_df)[, list(mean_act = mean(activity)), by = day]
+)
+```
 
 This caveat applies specifically to
 [`mean()`](https://rdrr.io/r/base/mean.html) and is the only known

@@ -31,8 +31,10 @@ tf_ggplot(data = NULL, mapping = aes(), ..., arg = NULL, interpolate = TRUE)
 
 - arg:
 
-  Optional. Evaluation grid for tf objects. If not provided, uses the
-  default evaluation grid of the tf objects.
+  Optional. Evaluation grid for tf objects. A numeric vector of arg
+  values, or a single integer specifying the desired grid length
+  (resolved to an equidistant grid over the tf domain). If `NULL`
+  (default), uses the natural grid of the tf objects.
 
 - interpolate:
 

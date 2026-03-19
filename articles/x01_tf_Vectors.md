@@ -117,7 +117,8 @@ tf_evaluator(cca_five) <- tf_approx_spline
   and one for irregular or sparse data. The `cca` data are irregular
   (values are missing for some subjects at some arguments) but the
   example below more clearly illustrates support for sparse and
-  irregular data using CD4 cell counts from a longitudinal study.
+  irregular data using CD4 cell counts from a longitudinal study
+  included in **`refund`**.
 
 ``` r
 cd4_vec <- tfd(refund::cd4)
@@ -148,7 +149,7 @@ Functional data in basis representation:
 - contains a **`basis`** function that defines how to evaluate the basis
   functions for new **`arg`**s and how to differentiate or integrate it.
 - (internal) flavors:
-  - `tfb_spline`: uses `mgcv`-spline bases
+  - `tfb_spline`: uses **`mgcv`**-spline bases
   - `tfb_fpc`: uses functional principal components
 - significant memory and time savings:
 
@@ -171,8 +172,8 @@ cca |>
 #### **`tfb_spline`**: spline basis
 
 - default for [`tfb()`](https://tidyfun.github.io/tf/reference/tfb.html)
-- accepts all arguments of `mgcv`’s `s()`-syntax: basis type `bs`, basis
-  dimension `k`, penalty order `m`, etc…
+- accepts all arguments of **`mgcv`**’s `s()`-syntax: basis type `bs`,
+  basis dimension `k`, penalty order `m`, etc…
 - also does non-Gaussian fits: `family` argument
   - all exponential families
   - but also: \\t\\-distribution, ZI-Poisson, Beta, …

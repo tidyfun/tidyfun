@@ -20,7 +20,7 @@ gglasagna(
 
 - data:
 
-  the data. Duhh.
+  A data frame containing the `tf` column to visualize.
 
 - tf:
 
@@ -49,10 +49,10 @@ gglasagna(
 
   add horizontal lines indicating borders between levels of `order` (if
   it is a discrete variable) and labels for its levels? Defaults to
-  TRUE. Supply a list of arguments (grep source code for
-  `order_ticks_args`) to override default appearance of labels. **Switch
-  this off if you use facetting, it's a hack and will produce
-  nonsense.**
+  TRUE. Supply a named list to override tick appearance, including label
+  styling, line type, alpha, rotation, and label placement. Disable this
+  when faceting; the tick annotations are not designed for faceted
+  layouts.
 
 ## Value
 

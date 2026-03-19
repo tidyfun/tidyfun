@@ -7,29 +7,25 @@
   };
 </script><script src="../lightswitch.js"></script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet"><link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet"><script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="tidyfun: Tidy Functional Data Wrangling and Visualization — tidyfun-package"><meta name="description" content='tidyfun makes data wrangling and exploratory analysis for functional data
 in R easier.
-tidyfun is based on the classes and methods defined in package tf and provides:
-new data types for representing functional data: tf::tfd() &amp;amp; tf::tfb()
-arithmetic &amp;amp; comparison operators (tf::tfgroupgenerics()),
-descriptive statistics: e.g. tf::mean.tf(), tf::median.tf()
-and graphics functions for such data: tf::plot.tf(), autoplot.tf(), geom_spaghetti(), gglasagna()
-functions to do smoothing (tf::tf_smooth.tfd()), differentiation and integration (tf::tf_derive.tfd())
-tidyverse-verbs for handling functional data inside data frames: tf_gather() etc.
+The tf package defines the core functional data classes and methods.
+tidyfun builds on those objects with:
+data-frame workflows for functional data: tf_gather() etc.
+graphics helpers for tf objects and tidy functional data frames: geom_spaghetti(), gglasagna()
+documentation and examples that show how to use tf objects in tidy workflows
 
 
-Also see vignette("Introducing tidyfun", "tidyfun") for a brief introduction.
+Start with vignette(package = "tidyfun") for the article index.
 
 '><meta property="og:description" content='tidyfun makes data wrangling and exploratory analysis for functional data
 in R easier.
-tidyfun is based on the classes and methods defined in package tf and provides:
-new data types for representing functional data: tf::tfd() &amp;amp; tf::tfb()
-arithmetic &amp;amp; comparison operators (tf::tfgroupgenerics()),
-descriptive statistics: e.g. tf::mean.tf(), tf::median.tf()
-and graphics functions for such data: tf::plot.tf(), autoplot.tf(), geom_spaghetti(), gglasagna()
-functions to do smoothing (tf::tf_smooth.tfd()), differentiation and integration (tf::tf_derive.tfd())
-tidyverse-verbs for handling functional data inside data frames: tf_gather() etc.
+The tf package defines the core functional data classes and methods.
+tidyfun builds on those objects with:
+data-frame workflows for functional data: tf_gather() etc.
+graphics helpers for tf objects and tidy functional data frames: geom_spaghetti(), gglasagna()
+documentation and examples that show how to use tf objects in tidy workflows
 
 
-Also see vignette("Introducing tidyfun", "tidyfun") for a brief introduction.
+Start with vignette(package = "tidyfun") for the article index.
 
 '></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -55,8 +51,11 @@ Also see vignette("Introducing tidyfun", "tidyfun") for a brief introduction.
     <li><a class="dropdown-item" href="../articles/x02_Conversion.html">Converting data to and from `tf`</a></li>
     <li><a class="dropdown-item" href="../articles/x03_Data_Wrangling.html">Data Wrangling</a></li>
     <li><a class="dropdown-item" href="../articles/x04_Visualization.html">Visualization</a></li>
-    <li><a class="dropdown-item" href="../articles/x05_Advice.html">Advice for Developers</a></li>
     <li><a class="dropdown-item" href="../articles/x06_Registration.html">Curve Registration</a></li>
+  </ul></li>
+<li class="nav-item dropdown">
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-developer-notes" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Developer Notes</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-developer-notes"><li><a class="dropdown-item" href="../articles/x05_Advice.html">Developer Notes</a></li>
   </ul></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
@@ -82,14 +81,13 @@ Also see vignette("Introducing tidyfun", "tidyfun") for a brief introduction.
 
     <div class="ref-description section level2">
     <p><code>tidyfun</code> makes data wrangling and exploratory analysis for functional data
-in <code>R</code> easier.<br><br><code>tidyfun</code> is based on the classes and methods defined in package <code>tf</code> and provides:</p><ul><li><p>new data types for representing functional data: <code><a href="https://tidyfun.github.io/tf/reference/tfd.html" class="external-link">tf::tfd()</a></code> &amp; <code><a href="https://tidyfun.github.io/tf/reference/tfb.html" class="external-link">tf::tfb()</a></code></p></li>
-<li><p>arithmetic &amp; comparison operators (<code><a href="https://tidyfun.github.io/tf/reference/tfgroupgenerics.html" class="external-link">tf::tfgroupgenerics()</a></code>),</p></li>
-<li><p>descriptive statistics: e.g. <code><a href="https://tidyfun.github.io/tf/reference/tfsummaries.html" class="external-link">tf::mean.tf()</a></code>, <code><a href="https://tidyfun.github.io/tf/reference/tfsummaries.html" class="external-link">tf::median.tf()</a></code></p></li>
-<li><p>and graphics functions for such data: <code><a href="https://tidyfun.github.io/tf/reference/tfviz.html" class="external-link">tf::plot.tf()</a></code>, <code><a href="autoplot.tf.html">autoplot.tf()</a></code>, <code><a href="ggspaghetti.html">geom_spaghetti()</a></code>, <code><a href="gglasagna.html">gglasagna()</a></code></p></li>
-<li><p>functions to do smoothing (<code><a href="https://tidyfun.github.io/tf/reference/tf_smooth.html" class="external-link">tf::tf_smooth.tfd()</a></code>), differentiation and integration (<code><a href="https://tidyfun.github.io/tf/reference/tf_derive.html" class="external-link">tf::tf_derive.tfd()</a></code>)</p></li>
-<li><p><code>tidyverse</code>-verbs for handling functional data inside data frames: <code><a href="tf_gather.html">tf_gather()</a></code> etc.
+in <code>R</code> easier.<br><br>
+The <code>tf</code> package defines the core functional data classes and methods.
+<code>tidyfun</code> builds on those objects with:</p><ul><li><p>data-frame workflows for functional data: <code><a href="tf_gather.html">tf_gather()</a></code> etc.</p></li>
+<li><p>graphics helpers for <code>tf</code> objects and tidy functional data frames: <code><a href="ggspaghetti.html">geom_spaghetti()</a></code>, <code><a href="gglasagna.html">gglasagna()</a></code></p></li>
+<li><p>documentation and examples that show how to use <code>tf</code> objects in tidy workflows
 <br><br><br>
-Also see <code>vignette("Introducing tidyfun", "tidyfun")</code> for a brief introduction.</p></li>
+Start with <code>vignette(package = "tidyfun")</code> for the article index.</p></li>
 </ul></div>
 
 

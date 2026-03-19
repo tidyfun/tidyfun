@@ -1,13 +1,17 @@
-# Advice for Developers
+# Developer Notes
+
+This article is written for package authors and maintainers who want to
+extend the **`tidyfun`**/**`tf`** ecosystem. End users can usually skip
+it.
 
 **`tidyfun`** is intended to make user interactions with functional data
-easier. The package depends on package **`tf`**, which defines a data
+easier. The package builds on package **`tf`**, which defines a data
 class (`tf`) so that vectors of functional observations are available,
 similar to vectors of class `numeric` or `character`[¹](#fn1)
 
 Such classes make it possible to store functional data alongside other
 variables in a single dataframe; by extension, tools for data
-manipulation from the `tidyverse` and elsewhere can be used with
+manipulation from the **`tidyverse`** and elsewhere can be used with
 datasets in which one or more variable is functional.
 
 Many basic analyses are available in **`tidyfun`** – it’s possible to
@@ -96,15 +100,13 @@ estimated basis can be easily obtained by users.
 
 ## Keep us informed!
 
-Our hope is that **`tidyfun`** will be a useful platform for other
-researchers and developers. For that reason, please let us know if you
-use **`tidyfun`** in your own work, identify
-[issues](https://github.com/tidyfun/tidyfun/issues), or have
+If you build on **`tidyfun`**, please let us know by opening an
+[issue](https://github.com/tidyfun/tidyfun/issues) or sending
 suggestions.
 
 ------------------------------------------------------------------------
 
-1.  This class and its subclasses and methods are defined in a separate
-    package without **`tidyverse`**-dependencies in order to make
-    package maintenance a little easier and to increase uptake among
-    people who don’t want to rely on **`tidyverse`** packages.
+1.  This class and its subclasses and methods live in a separate package
+    without **`tidyverse`** dependencies in order to keep maintenance
+    simpler and to support users who prefer not to depend on the
+    **`tidyverse`**.

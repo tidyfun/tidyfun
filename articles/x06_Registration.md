@@ -1,5 +1,11 @@
 # Curve Registration: Practical Guide and Pitfalls
 
+This vignette provides access to the registration workflows from
+**`tf`** and places them in the **`tidyfun`** site for convenience. It
+is aimed at users who need to understand templates, warps, and
+diagnostics rather than at casual end users exploring the core wrangling
+and plotting features.
+
 ## Registration: Template, Warp, Domain
 
 Registration aligns functions in time by reducing phase variation
@@ -66,12 +72,12 @@ Default template behavior in
 /
 [`tf_estimate_warps()`](https://tidyfun.github.io/tf/reference/tf_estimate_warps.html):
 
-| Method     | Default template behavior                                           | How to override                 |
-|:-----------|:--------------------------------------------------------------------|:--------------------------------|
-| `srvf`     | Karcher-type mean shape[¹](#fn1) estimated iteratively by `fdasrvf` | pass `template = ...`           |
-| `cc`       | arithmetic mean curve (estimated iteratively)                       | pass `template = ...`           |
-| `affine`   | arithmetic mean curve                                               | pass `template = ...`           |
-| `landmark` | column-wise mean of landmark locations                              | pass `template_landmarks = ...` |
+| Method     | Default template behavior                                               | How to override                 |
+|:-----------|:------------------------------------------------------------------------|:--------------------------------|
+| `srvf`     | Karcher-type mean shape[¹](#fn1) estimated iteratively by **`fdasrvf`** | pass `template = ...`           |
+| `cc`       | arithmetic mean curve (estimated iteratively)                           | pass `template = ...`           |
+| `affine`   | arithmetic mean curve                                                   | pass `template = ...`           |
+| `landmark` | column-wise mean of landmark locations                                  | pass `template_landmarks = ...` |
 
 Practical rules:
 
@@ -113,11 +119,11 @@ observed timepoints map to aligned “system” time.
 This distinction is fundamental for interpretation and edge behavior:
 
 - **Domain-preserving**: warps map domain endpoints to themselves.
-  Registration using the `srvf`, `cc`, and `landmark` methods in `tf` is
-  domain preserving.
+  Registration using the `srvf`, `cc`, and `landmark` methods in
+  **`tf`** is domain preserving.
 - **Non-domain-preserving**: warps can shift or scale outside (or into a
   subset of) the observed domain. Only available with the `affine`
-  method in `tf`.
+  method in **`tf`**.
 
 Implications:
 

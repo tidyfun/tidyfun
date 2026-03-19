@@ -106,7 +106,4 @@ dti_df |>
   dplyr::filter(visit == 1) |>
   tf_ggplot(aes(tf = cca, color = case)) +
   geom_line(alpha = 0.3)
-#> Warning: Large data expansion: 142 rows × 93 grid points = 13206 rows
-#> ℹ This may impact memory usage and plotting performance
-#> ℹ Use `arg` in `tf_ggplot()` to specify a coarser evaluation grid
 ```

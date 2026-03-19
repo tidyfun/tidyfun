@@ -39,8 +39,11 @@ appended as well.'></head><body>
     <li><a class="dropdown-item" href="../articles/x02_Conversion.html">Converting data to and from `tf`</a></li>
     <li><a class="dropdown-item" href="../articles/x03_Data_Wrangling.html">Data Wrangling</a></li>
     <li><a class="dropdown-item" href="../articles/x04_Visualization.html">Visualization</a></li>
-    <li><a class="dropdown-item" href="../articles/x05_Advice.html">Advice for Developers</a></li>
     <li><a class="dropdown-item" href="../articles/x06_Registration.html">Curve Registration</a></li>
+  </ul></li>
+<li class="nav-item dropdown">
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-developer-notes" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Developer Notes</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-developer-notes"><li><a class="dropdown-item" href="../articles/x05_Advice.html">Developer Notes</a></li>
   </ul></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
@@ -125,13 +128,13 @@ of the observed functions. Defaults to "arg".</p></dd>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p><code>domain</code> and <code>evaluator</code> can be specified as lists or vectors
-if you're nesting multiple functional data columns with different properties.
-Because quasi-quotation is <em>such</em> a bitch, you can only specify the evaluator
-functions as strings and not as bare names here.</p>
+if you are nesting multiple functional data columns with different properties.
+Because this interface captures evaluator names as text, supply the evaluator
+as a string rather than a bare function name.</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
-    <div class="dont-index"><p><code><a href="https://tidyfun.github.io/tf/reference/tfd.html" class="external-link">tf::tfd()</a></code> for <code>domain, evaluator</code></p>
+    <div class="dont-index"><p><code><a href="https://tidyfun.github.io/tf/reference/tfd.html" class="external-link">tf::tfd()</a></code> for details on <code>domain</code> and <code>evaluator</code>.</p>
 <p>Other tidyfun data wrangling functions:
 <code><a href="tf_evaluate.data.frame.html">tf_evaluate.data.frame()</a></code>,
 <code><a href="tf_gather.html">tf_gather()</a></code>,

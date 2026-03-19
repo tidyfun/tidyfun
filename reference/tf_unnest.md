@@ -114,14 +114,13 @@ columns.
 
 ## Details
 
-- Caution – uses slightly different defaults for names of unnested
+- Caution: this uses slightly different defaults for names of unnested
   columns than
   [`tidyr::unnest()`](https://tidyr.tidyverse.org/reference/unnest.html).
 
-- For `data.frames`, **make sure to have an ID column in your data
-  before unnesting!** If it does not include an ID column with a unique
-  identifier for each row, you will not be able to match arg-value pairs
-  to the different functions after unnesting.
+- For `data.frames`, include an ID column with a unique row identifier
+  before unnesting. Without it, arg-value pairs cannot be matched back
+  to their original functions after unnesting.
 
 ## See also
 

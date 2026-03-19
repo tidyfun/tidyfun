@@ -2,8 +2,8 @@
 
 The **`tidyfun`** package is designed to facilitate **functional data
 analysis in `R`**, with particular emphasis on compatibility with the
-`tidyverse`. In this vignette, we illustrate data visualization using
-**`tidyfun`**.
+**`tidyverse`**. In this vignette, we illustrate data visualization
+using **`tidyfun`**.
 
 We’ll draw on the
 [`tidyfun::dti_df`](https://tidyfun.github.io/tidyfun/reference/dti_df.md)
@@ -11,32 +11,32 @@ and the
 [`tidyfun::chf_df`](https://tidyfun.github.io/tidyfun/reference/chf_df.md)
 data sets for examples.
 
-## Plotting with `ggplot`
+## Plotting with **`ggplot2`**
 
-`ggplot` is a powerful framework for visualization. In this section,
-we’ll assume some basic familiarity with the package; if you’re new to
-`ggplot`, [this primer](https://rpubs.com/hadley/ggplot-intro) may be
-helpful.
+**`ggplot2`** is a powerful framework for visualization. In this
+section, we’ll assume some basic familiarity with the package; if you’re
+new to **`ggplot2`**, [this
+primer](https://rpubs.com/hadley/ggplot-intro) may be helpful.
 
 **`tidyfun`** provides
 [`tf_ggplot()`](https://tidyfun.github.io/tidyfun/reference/tf_ggplot.md)
-as the primary interface for plotting functional data with `ggplot2`. It
-works just like
+as the primary interface for plotting functional data with
+**`ggplot2`**. It works just like
 [`ggplot()`](https://ggplot2.tidyverse.org/reference/ggplot.html), but
 understands `tf` vectors — use the `tf` aesthetic to map a `tf` column
-to the plot, then add standard `ggplot2` geoms (`geom_line`,
+to the plot, then add standard **`ggplot2`** geoms (`geom_line`,
 `geom_point`, `geom_ribbon`, etc.).
 
 For heatmaps, use **`gglasagna`**; for sparklines / glyphs on maps, use
 **`geom_capellini`** (these use their own specialized stats and are
 called directly without `tf_ggplot`). The older geoms
-**`geom_spaghetti`**, **`geom_meatballs`**, and **`geom_errorband`** are
-still available for backward compatibility.
+**`geom_spaghetti`**, **`geom_meatballs`**, and **`geom_errorband`**
+remain available for backward compatibility.
 
 ### `tf_ggplot` with standard geoms
 
 One of the most fundamental plots for functional data is the spaghetti
-plot, which is implemented in `tidyfun` + `ggplot2` through
+plot, which is implemented in **`tidyfun`** and **`ggplot2`** through
 [`tf_ggplot()`](https://tidyfun.github.io/tidyfun/reference/tf_ggplot.md) +
 [`geom_line()`](https://ggplot2.tidyverse.org/reference/geom_path.html):
 
@@ -51,7 +51,7 @@ Adding
 [`geom_point()`](https://ggplot2.tidyverse.org/reference/geom_point.html)
 to
 [`geom_line()`](https://ggplot2.tidyverse.org/reference/geom_path.html)
-shows both the curves and the actually observed data values:
+shows both the curves and the observed data values:
 
 ``` r
 dti_df[1:3,] |>
@@ -60,10 +60,10 @@ dti_df[1:3,] |>
 
 ![](x04_Visualization_files/figure-html/unnamed-chunk-1-1.png)
 
-### Using with other `ggplot2` features
+### Using with other **`ggplot2`** features
 
 [`tf_ggplot()`](https://tidyfun.github.io/tidyfun/reference/tf_ggplot.md)
-plays nicely with standard `ggplot2` aesthetics and options.
+plays nicely with standard **`ggplot2`** aesthetics and options.
 
 You can, for example, define the color aesthetic for plots of `tf`
 variables using other observations:
@@ -71,11 +71,10 @@ variables using other observations:
 ``` r
 chf_df |>
   filter(id %in% 1:5) |>
-tf_ggplot(aes(tf = tf_smooth(activity, f = .05), color = gender)) + 
+  tf_ggplot(
+    aes(tf = tf_smooth(activity, f = .05), # smoothed inputs for clearer viz
+        color = gender)) +
   geom_line(alpha = 0.3)
-## Warning: Large data expansion: 28 rows × 1440 grid points = 40320 rows
-## ℹ This may impact memory usage and plotting performance
-## ℹ Use `arg` in `tf_ggplot()` to specify a coarser evaluation grid
 ```
 
 ![](x04_Visualization_files/figure-html/unnamed-chunk-2-1.png)
@@ -85,11 +84,9 @@ tf_ggplot(aes(tf = tf_smooth(activity, f = .05), color = gender)) +
 ``` r
 chf_df |>
   filter((id %in% 1:10) & (day %in% c("Mon", "Sun"))) |>
-tf_ggplot(aes(tf = tf_smooth(activity, f = .05), color = gender)) +
-  geom_line(alpha = 0.3) + facet_grid(~day)
-## Warning: Large data expansion: 18 rows × 1440 grid points = 25920 rows
-## ℹ This may impact memory usage and plotting performance
-## ℹ Use `arg` in `tf_ggplot()` to specify a coarser evaluation grid
+  tf_ggplot(aes(tf = tf_smooth(activity, f = .05), color = gender)) +
+  geom_line(alpha = 0.3, lwd = 1) +
+  facet_grid(~day)
 ```
 
 ![](x04_Visualization_files/figure-html/unnamed-chunk-3-1.png)
@@ -101,17 +98,14 @@ dti_df |>
   tf_ggplot(aes(tf = cca, col = case, alpha = 0.2 + 0.4 * (case == "control"))) +
   geom_line() + facet_wrap(~sex) +
   scale_alpha(guide = "none", range = c(0.2, 0.4))
-## Warning: Large data expansion: 382 rows × 93 grid points = 35526 rows
-## ℹ This may impact memory usage and plotting performance
-## ℹ Use `arg` in `tf_ggplot()` to specify a coarser evaluation grid
 ```
 
 ![](x04_Visualization_files/figure-html/dti-fig1-1.png)
 
 Together with **`tidyfun`**’s tools for functional data wrangling and
-summary statistics, the integration with `ggplot2` can produce useful
-exploratory analyses, like the plot below showing group-wise smoothed
-and unsmoothed mean activity profiles:
+summary statistics, the integration with **`ggplot2`** can produce
+useful exploratory analyses, like the plot below showing group-wise
+smoothed and unsmoothed mean activity profiles:
 
 ``` r
 chf_df |>
@@ -125,15 +119,6 @@ chf_df |>
   geom_line(aes(tf = mean_act), alpha = 0.1) +
   geom_point(aes(tf = mean_act), alpha = 0.1, size = .1) +
   facet_grid(day~.)
-## Warning: Large data expansion: 4 rows × 1440 grid points = 5760 rows
-## ℹ This may impact memory usage and plotting performance
-## ℹ Use `arg` in `tf_ggplot()` to specify a coarser evaluation grid
-## Large data expansion: 4 rows × 1440 grid points = 5760 rows
-## ℹ This may impact memory usage and plotting performance
-## ℹ Use `arg` in `tf_ggplot()` to specify a coarser evaluation grid
-## Large data expansion: 4 rows × 1440 grid points = 5760 rows
-## ℹ This may impact memory usage and plotting performance
-## ℹ Use `arg` in `tf_ggplot()` to specify a coarser evaluation grid
 ```
 
 ![](x04_Visualization_files/figure-html/unnamed-chunk-4-1.png)
@@ -175,8 +160,8 @@ are flagged as outliers and drawn separately.
 
 Like
 [`geom_boxplot()`](https://ggplot2.tidyverse.org/reference/geom_boxplot.html),
-the layer follows the usual `ggplot2` interface closely. Grouping works
-naturally through `colour`, `fill`, or `group`, and the same group
+the layer follows the usual **`ggplot2`** interface closely. Grouping
+works naturally through `colour`, `fill`, or `group`, and the same group
 colour is reused for the ribbon, the outlier curves, and the median if a
 group colour/fill is mapped; otherwise, the median defaults to black.
 
@@ -250,10 +235,18 @@ tf_ggplot(dti_df, aes(tf = rcst)) +
 Lasagna plots are “[a saucy alternative to spaghetti
 plots](https://pmc.ncbi.nlm.nih.gov/articles/PMC2937254/)”. They are a
 variant on a heatmaps which show functional observations in rows and use
-color to illustrate values taken at different arguments.
+color to illustrate values taken at different arguments. Especially for
+large samples or noisy data, lasagna plots can be more informative than
+spaghetti plots, which can be hard to read when many curves are plotted
+together. Lasagna plots also allow for easy visual comparison of groups
+of curves, and the `order` argument in
+[`gglasagna()`](https://tidyfun.github.io/tidyfun/reference/gglasagna.md)
+allows you to sort the curves by any variable or function of the data,
+which can help reveal patterns in the data.
 
-In `tidyfun`, lasagna plots are implemented through `gglasagna`. A first
-example, using the CHF data, is below.
+In **`tidyfun`**, lasagna plots are implemented through `gglasagna` (as
+well as a basic `plot` method, see ?!?). A first example, using the CHF
+data, is below.
 
 ``` r
 chf_df |>
@@ -270,11 +263,11 @@ taking advantage of facets, is next.
 dti_df |>
   gglasagna(
     tf = cca,
-    order = tf_integrate(cca, definite = TRUE),
+    order = tf_integrate(cca, definite = TRUE), #order by area under the curve
     arg = seq(0, 1, length.out = 101)
   ) +
   theme(axis.text.y = element_text(size = 6)) +
-  facet_wrap(~case, ncol = 2, scales = "free")
+  facet_wrap(~ case:sex, ncol = 2, scales = "free")
 ```
 
 ![](x04_Visualization_files/figure-html/dti-fig2-1.png)
@@ -282,7 +275,7 @@ dti_df |>
 ### `geom_capellini`
 
 To illustrate `geom_capellini`, we’ll start with some data prep for the
-iconic Canadian Weather data:
+iconic Canadian Weather data from **`fda`**:
 
 ``` r
 canada <- data.frame(
@@ -350,31 +343,9 @@ the size and direction of the extrema around 0.13 and 0.8.
 
 ``` r
 ggplot(cca_fpc_tbl[1:40,], aes(x =  fpc_1, y = fpc_2)) +
-  geom_point(size = .5, col = "red") +
+  geom_point(size = .5, col = viridis(3)[2]) +
   geom_capellini(aes(tf =cca_fpc),width = .01, height = .01, line.linetype = 1) +
   labs(x = "FPC1 score", y = "FPC2 score")
-## Warning: Removed 10 rows containing missing values or values outside the scale range
-## (`geom_point()`).
-## Warning: Removed 1 row containing missing values or values outside the scale range
-## (`geom_segment()`).
-## Removed 1 row containing missing values or values outside the scale range
-## (`geom_segment()`).
-## Removed 1 row containing missing values or values outside the scale range
-## (`geom_segment()`).
-## Removed 1 row containing missing values or values outside the scale range
-## (`geom_segment()`).
-## Removed 1 row containing missing values or values outside the scale range
-## (`geom_segment()`).
-## Removed 1 row containing missing values or values outside the scale range
-## (`geom_segment()`).
-## Removed 1 row containing missing values or values outside the scale range
-## (`geom_segment()`).
-## Removed 1 row containing missing values or values outside the scale range
-## (`geom_segment()`).
-## Removed 1 row containing missing values or values outside the scale range
-## (`geom_segment()`).
-## Removed 1 row containing missing values or values outside the scale range
-## (`geom_segment()`).
 ```
 
 ![](x04_Visualization_files/figure-html/unnamed-chunk-15-1.png)
@@ -398,7 +369,7 @@ cca <- dti_df$cca |>
 layout(t(1:2))
 
 plot(cca, type = "spaghetti")
-lines(c(median(cca), mean = mean(cca)), col = c(2, 4))
+lines(c(median(cca), mean = mean(cca)), col = viridis(3)[c(1, 3)])
 
 plot(cca, type = "lasagna", col = viridis(50))
 ```
@@ -431,39 +402,37 @@ aligned curves, inverse warps, and template and can be inspected
 directly:
 
 ``` r
-cca_reg <- tf_register(
-  cca[1:5],
-  method = "landmark",
-  landmarks = tf_landmarks_extrema(cca[1:5], "max")
-)
-
-cca_reg
+pinch_reg <- tf::pinch |> tfb() |> #smooth before registration for better results
+  tf_register() 
+## Percentage of input data variability preserved in basis representation
+## (per functional observation, approximate):
+## Min. 1st Qu.  Median Mean 3rd Qu.  Max.
+## 99.60 99.70 99.80 99.75 99.80 99.80
+pinch_reg
 ## <tf_registration>
-## Call: tf_register(x = cca[1:5], landmarks = tf_landmarks_extrema(cca[1:5], 
-##     "max"), method = "landmark")
-## 5 curves on [0, 1]
+## Call: tf_register(x = tfb(tf::pinch))
+## 20 curves on [0, 0.3]
 ## Components: aligned, inv_warps, template, original data
-summary(cca_reg)
-## tf_register(x = cca[1:5], landmarks = tf_landmarks_extrema(cca[1:5], 
-##     "max"), method = "landmark")
+summary(pinch_reg)
+## tf_register(x = tfb(tf::pinch))
 ## 
-## 5 curve(s) on [0, 1]
+## 20 curve(s) on [0, 0.3]
 ## 
-## Amplitude variance reduction: 9.6%
+## Amplitude variance reduction: 96.7%
 ## 
 ## Inverse warp deviations from identity (relative to domain length):
 ##     0%    10%    25%    50%    75%    90%   100% 
-## 0.0172 0.0186 0.0207 0.0260 0.0359 0.0365 0.0369 
+## 0.0328 0.0670 0.0765 0.1161 0.1469 0.1841 0.2104 
 ## 
 ## Inverse warp slopes (1 = identity):
-##   overall range: [0.74, 1.345]
+##   overall range: [0.143, 7]
 ##   per-curve min slopes:
 ##    0%   10%   25%   50%   75%   90%  100% 
-## 0.740 0.800 0.890 0.890 0.920 0.923 0.925 
+## 0.143 0.143 0.143 0.167 0.200 0.258 0.333 
 ##   per-curve max slopes:
-##    0%   10%   25%   50%   75%   90%  100% 
-## 1.067 1.082 1.104 1.233 1.314 1.333 1.345
-plot(cca_reg)
+##   0%  10%  25%  50%  75%  90% 100% 
+##  2.0  3.9  7.0  7.0  7.0  7.0  7.0
+plot(pinch_reg)
 ```
 
 ![](x04_Visualization_files/figure-html/unnamed-chunk-17-1.png)
@@ -472,11 +441,14 @@ The registered curves, inverse warping functions, and template can also
 be extracted explicitly for custom plots:
 
 ``` r
-layout(t(1:2))
+layout(t(1:3))
+plot(tf::pinch[1:5], col = pal_5, lwd = 2, points = FALSE)
 
-plot(tf_inv_warps(cca_reg), col = pal_5, lwd = 2)
-plot(tf_aligned(cca_reg), col = pal_5, lwd = 2)
-lines(tf_template(cca_reg), col = "black", lwd = 4)
+plot(tf_inv_warps(pinch_reg)[1:5], col = pal_5, lwd = 2, points = FALSE)
+abline(c(0,1), col = "grey", lty = 2)
+
+plot(tf_aligned(pinch_reg)[1:5], col = pal_5, lwd = 2)
+lines(tf_template(pinch_reg), col = "black", lwd = 3, lty= 3)
 ```
 
 ![](x04_Visualization_files/figure-html/unnamed-chunk-18-1.png)

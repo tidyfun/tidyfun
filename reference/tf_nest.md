@@ -65,15 +65,15 @@ a data frame with (at least) `.id` and `tfd` columns
 
 ## Details
 
-`domain` and `evaluator` can be specified as lists or vectors if you're
+`domain` and `evaluator` can be specified as lists or vectors if you are
 nesting multiple functional data columns with different properties.
-Because quasi-quotation is *such* a bitch, you can only specify the
-evaluator functions as strings and not as bare names here.
+Because this interface captures evaluator names as text, supply the
+evaluator as a string rather than a bare function name.
 
 ## See also
 
 [`tf::tfd()`](https://tidyfun.github.io/tf/reference/tfd.html) for
-`domain, evaluator`
+details on `domain` and `evaluator`.
 
 Other tidyfun data wrangling functions:
 [`tf_evaluate.data.frame()`](https://tidyfun.github.io/tidyfun/reference/tf_evaluate.data.frame.md),

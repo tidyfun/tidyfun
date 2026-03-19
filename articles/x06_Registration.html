@@ -44,8 +44,13 @@
     <li><a class="dropdown-item" href="../articles/x02_Conversion.html">Converting data to and from `tf`</a></li>
     <li><a class="dropdown-item" href="../articles/x03_Data_Wrangling.html">Data Wrangling</a></li>
     <li><a class="dropdown-item" href="../articles/x04_Visualization.html">Visualization</a></li>
-    <li><a class="dropdown-item" href="../articles/x05_Advice.html">Advice for Developers</a></li>
     <li><a class="dropdown-item" href="../articles/x06_Registration.html">Curve Registration</a></li>
+  </ul>
+</li>
+<li class="nav-item dropdown">
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-developer-notes" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Developer Notes</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-developer-notes">
+<li><a class="dropdown-item" href="../articles/x05_Advice.html">Developer Notes</a></li>
   </ul>
 </li>
       </ul>
@@ -84,6 +89,12 @@
 
     
     
+<p>This vignette provides access to the registration workflows from
+<strong><code>tf</code></strong> and places them in the
+<strong><code>tidyfun</code></strong> site for convenience. It is aimed
+at users who need to understand templates, warps, and diagnostics rather
+than at casual end users exploring the core wrangling and plotting
+features.</p>
 <div class="section level2">
 <h2 id="registration-template-warp-domain">Registration: Template, Warp, Domain<a class="anchor" aria-label="anchor" href="#registration-template-warp-domain"></a>
 </h2>
@@ -171,7 +182,7 @@ arithmetic means to general spaces. In this case, it is a centroid in
 the amplitude quotient space (functions modulo reparameterization),
 computed iteratively using the elastic (Fisher-Rao) distance rather than
 pointwise averaging.&lt;/p&gt;"><sup>1</sup></a> estimated iteratively
-by <code>fdasrvf</code>
+by <strong><code>fdasrvf</code></strong>
 </td>
 <td align="left">pass <code>template = ...</code>
 </td>
@@ -235,12 +246,12 @@ behavior:</p>
 <li>
 <strong>Domain-preserving</strong>: warps map domain endpoints to
 themselves. Registration using the <code>srvf</code>, <code>cc</code>,
-and <code>landmark</code> methods in <code>tf</code> is domain
-preserving.</li>
+and <code>landmark</code> methods in <strong><code>tf</code></strong> is
+domain preserving.</li>
 <li>
 <strong>Non-domain-preserving</strong>: warps can shift or scale
 outside (or into a subset of) the observed domain. Only available with
-the <code>affine</code> method in <code>tf</code>.</li>
+the <code>affine</code> method in <strong><code>tf</code></strong>.</li>
 </ul>
 <p>Implications:</p>
 <ol style="list-style-type: decimal">

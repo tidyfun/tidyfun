@@ -22,9 +22,9 @@ In the following examples, we’ll use `tfd` to get a `tf` vector from
 matrices. The `tfd` function expects data to be organized so that each
 row is the functional observation for a single subject. It’s possible to
 focus only on the resulting `tf` vector, but in keeping with the broader
-goals of `tidyfun` we’ll add these as columns to a data frame.
+goals of **`tidyfun`** we’ll add these as columns to a data frame.
 
-The `DTI` data in the `refund` package has been a popular example in
+The `DTI` data in the **`refund`** package has been a popular example in
 functional data analysis. In the code below, we create a data frame (or
 `tibble`) containing scalar covariates, and then add columns for the
 `cca` and `rcst` track profiles. This code was used to create the
@@ -75,16 +75,13 @@ dti_df |>
   geom_line() +
   facet_wrap(~sex) +
   scale_alpha(guide = "none", range = c(0.2, 0.4))
-## Warning: Large data expansion: 382 rows × 93 grid points = 35526 rows
-## ℹ This may impact memory usage and plotting performance
-## ℹ Use `arg` in `tf_ggplot()` to specify a coarser evaluation grid
 ```
 
 ![](x02_Conversion_files/figure-html/unnamed-chunk-3-1.png)
 
 We’ll repeat the same basic process using a second, and probably
 even-more-perennial, functional data example: the Canadian weather data
-in the `fda` package. Here, functional data are stored in a
+in the **`fda`** package. Here, functional data are stored in a
 three-dimensional array, with dimensions corresponding to day, station,
 and outcome (temperature, precipitation, and log10 precipitation).
 
@@ -146,12 +143,6 @@ precip_panel <- canada |>
   geom_line()
 
 gridExtra::grid.arrange(temp_panel, precip_panel, nrow = 1)
-## Warning: Large data expansion: 35 rows × 365 grid points = 12775 rows
-## ℹ This may impact memory usage and plotting performance
-## ℹ Use `arg` in `tf_ggplot()` to specify a coarser evaluation grid
-## Large data expansion: 35 rows × 365 grid points = 12775 rows
-## ℹ This may impact memory usage and plotting performance
-## ℹ Use `arg` in `tf_ggplot()` to specify a coarser evaluation grid
 ```
 
 ![](x02_Conversion_files/figure-html/unnamed-chunk-6-1.png)
@@ -167,10 +158,10 @@ each subject’s function takes at each argument. There are also often
 subject. For data in this form, we use `tf_nest` to produce a data frame
 containing a single row for each subject.
 
-A first example is the `sleepstudy` data from the `lme4` package, which
-is a nice example from longitudinal data analysis. This includes columns
-for `Subject`, `Days`, and `Reaction` – which correspond to the subject,
-argument, and value.
+A first example is the `sleepstudy` data from the **`lme4`** package,
+which is a nice example from longitudinal data analysis. This includes
+columns for `Subject`, `Days`, and `Reaction` – which correspond to the
+subject, argument, and value.
 
 ``` r
 data("sleepstudy", package = "lme4")
@@ -268,12 +259,9 @@ tibble(
 ## 18 372     ▃▃▄▄▃▄▅▅▆▅
 ```
 
-A second example uses the `ALA::fev1` dataset. `ALA` is not available on
-CRAN but can be installed using the line below.
-
-``` r
-install.packages("ALA", repos = "http://R-Forge.R-project.org")
-```
+A second example uses the `ALA::fev1` dataset. **`ALA`** is not on CRAN,
+so we do not show an install command here. The code below is
+illustrative only and is not evaluated when the vignette is built.
 
 In this dataset, both `height` and `logFEV1` are observed at multiple
 ages for each child; that is, there are two functions observed
@@ -283,29 +271,13 @@ non-functional covariates (like age and height at baseline), and
 functional observations `logFEV1` and `height`.
 
 ``` r
-ALA::fev1 |> glimpse()
-## Rows: 1,994
-## Columns: 6
-## $ id      <fct> 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, …
-## $ age     <dbl> 9.34, 10.39, 11.45, 12.46, 13.42, 15.47, 16.37, 6.59, 7.65, 12.74, 13.77, 14.69, 15.82, 16.67, 17.63, 6.91, 7.9…
-## $ height  <dbl> 1.20, 1.28, 1.33, 1.42, 1.48, 1.50, 1.52, 1.13, 1.19, 1.49, 1.53, 1.55, 1.56, 1.57, 1.57, 1.18, 1.23, 1.30, 1.3…
-## $ age0    <dbl> 9.34, 9.34, 9.34, 9.34, 9.34, 9.34, 9.34, 6.59, 6.59, 6.59, 6.59, 6.59, 6.59, 6.59, 6.59, 6.91, 6.91, 6.91, 6.9…
-## $ height0 <dbl> 1.20, 1.20, 1.20, 1.20, 1.20, 1.20, 1.20, 1.13, 1.13, 1.13, 1.13, 1.13, 1.13, 1.13, 1.13, 1.18, 1.18, 1.18, 1.1…
-## $ logFEV1 <dbl> 0.2151, 0.3716, 0.4886, 0.7514, 0.8329, 0.8920, 0.8713, 0.3075, 0.3507, 0.7561, 0.8671, 1.0473, 1.1537, 0.9243,…
 ALA::fev1 |>
   group_by(id) |>
   mutate(n_obs = n()) |>
-  filter(n_obs > 1) |> ungroup() |> 
+  filter(n_obs > 1) |>
+  ungroup() |>
   tf_nest(logFEV1, height, .arg = age) |>
   glimpse()
-## Rows: 252
-## Columns: 6
-## $ id      <fct> 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 15, 16, 18, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 35, …
-## $ age0    <dbl> 9.34, 6.59, 6.91, 6.76, 6.50, 6.90, 6.43, 7.19, 6.90, 7.79, 7.61, 7.55, 7.84, 6.51, 7.06, 7.13, 6.61, 7.37, 6.9…
-## $ height0 <dbl> 1.20, 1.13, 1.18, 1.15, 1.11, 1.24, 1.18, 1.27, 1.17, 1.13, 1.32, 1.25, 1.25, 1.20, 1.19, 1.24, 1.21, 1.23, 1.2…
-## $ n_obs   <int> 7, 8, 9, 10, 7, 11, 7, 9, 9, 10, 6, 3, 5, 11, 12, 10, 9, 8, 12, 2, 2, 11, 11, 7, 9, 11, 11, 4, 2, 12, 3, 9, 12,…
-## $ logFEV1 <tfd_irrg> ( 9.3,  0.22);(10.4,  0.37);(11.5,  0.49); ..., ( 6.6,  0.31);( 7.6,  0.35);(12.7,  0.76); ..., ( 6.9,  0.…
-## $ height  <tfd_irrg> ( 9.3,1.2);(10.4,1.3);(11.5,1.3); ..., ( 6.6,1.1);( 7.6,1.2);(12.7,1.5); ..., ( 6.9,1.2);( 8.0,1.2);( 9.0,…```
 ```
 
 #### … in “wide” format
@@ -470,8 +442,8 @@ cca_recombined
 
 ## Conversion from `fda` objects
 
-The `fda` package represents functional data as `fd` objects (basis
-function coefficients + basis definition). `tf` can convert these
+The **`fda`** package represents functional data as `fd` objects (basis
+function coefficients + basis definition). **`tf`** can convert these
 directly using `tfb_spline`, which re-expresses the `fd` basis in `tf`’s
 spline framework. This also works for `fdSmooth` objects returned by
 [`fda::smooth.basis`](https://rdrr.io/pkg/fda/man/smooth.basis.html).
@@ -499,7 +471,8 @@ weather_tf[1:3]
 ## Sydney   : ▁▁▁▁▂▃▃▄▄▅▆▇▇████▇▆▆▅▄▄▃▂▂
 ```
 
-The resulting `tfb` object can then be used with all `tidyfun` tools:
+The resulting `tfb` object can then be used with all **`tidyfun`**
+tools:
 
 ``` r
 tibble(
@@ -509,12 +482,9 @@ tibble(
 ) |>
   tf_ggplot(aes(tf = temp, color = region)) +
   geom_line(alpha = 0.5)
-## Warning: Large data expansion: 35 rows × 365 grid points = 12775 rows
-## ℹ This may impact memory usage and plotting performance
-## ℹ Use `arg` in `tf_ggplot()` to specify a coarser evaluation grid
 ```
 
-![](x02_Conversion_files/figure-html/unnamed-chunk-17-1.png)
+![](x02_Conversion_files/figure-html/unnamed-chunk-16-1.png)
 
 ## Reversing the conversion
 

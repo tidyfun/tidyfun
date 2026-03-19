@@ -1,8 +1,8 @@
 # Spaghetti plots for `tf` objects
 
-Plots a line for each entry of a `tf`-object. `geom_spaghetti` does
-spaghetti (i.e. "hairball") plots, `geom_meatballs` does spaghetti plots
-with points for the actual evaluations.
+Plots a line for each entry of a `tf`-object. `geom_spaghetti` draws a
+line through each function, and `geom_meatballs` adds points for the
+evaluated grid values.
 
 ## Usage
 
@@ -134,7 +134,8 @@ geom_meatballs(
 
 - arg:
 
-  where to evaluate the functions in `y` – defaults to the default ;)
+  where to evaluate the functions in `y`; defaults to the object's
+  default evaluation grid.
 
 - ...:
 

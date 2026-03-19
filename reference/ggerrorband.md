@@ -122,7 +122,8 @@ geom_errorband(
 
 - arg:
 
-  where to evaluate `tf` – defaults to the default ;)
+  where to evaluate `tf`; defaults to the object's default evaluation
+  grid.
 
 - ...:
 

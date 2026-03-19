@@ -1,8 +1,101 @@
 # Package index
 
-## tf - (Sub)classes: Constructors & converters
+## tidyfun workflows
 
-Defining and converting functional data objects
+User-facing wrappers for working with functional data inside data frames
+
+- [`tidyfun`](https://tidyfun.github.io/tidyfun/reference/tidyfun-package.md)
+  [`tidyfun-package`](https://tidyfun.github.io/tidyfun/reference/tidyfun-package.md)
+  : tidyfun: Tidy Functional Data Wrangling and Visualization
+
+- [`tf_gather()`](https://tidyfun.github.io/tidyfun/reference/tf_gather.md)
+  :
+
+  Gather all columns representing functional measurements into a
+  `tfd`-object
+
+- [`tf_spread()`](https://tidyfun.github.io/tidyfun/reference/tf_spread.md)
+  :
+
+  Spread a `tf`-column into many columns representing the function
+  evaluations.
+
+- [`tf_nest()`](https://tidyfun.github.io/tidyfun/reference/tf_nest.md)
+  :
+
+  Turn "long" tables into tidy data frames with `tf`-objects
+
+- [`tf_unnest()`](https://tidyfun.github.io/tidyfun/reference/tf_unnest.md)
+  :
+
+  Turn (data frames with) `tf`-objects / list columns into "long"
+  tables.
+
+- [`tf_evaluate(`*`<data.frame>`*`)`](https://tidyfun.github.io/tidyfun/reference/tf_evaluate.data.frame.md)
+  :
+
+  Evaluate `tf`s inside a `data.frame`
+
+## tidyfun graphics and display
+
+Plotting helpers and display methods provided by tidyfun
+
+- [`tf_ggplot()`](https://tidyfun.github.io/tidyfun/reference/tf_ggplot.md)
+  : Create a tf-aware ggplot
+
+- [`is_tf_ggplot()`](https://tidyfun.github.io/tidyfun/reference/is_tf_ggplot.md)
+  : Check if object is a tf_ggplot
+
+- [`parse_tf_aesthetics()`](https://tidyfun.github.io/tidyfun/reference/parse_tf_aesthetics.md)
+  : Parse aesthetic mappings to separate tf and regular aesthetics
+
+- [`` `+`( ``*`<tf_ggplot>`*`)`](https://tidyfun.github.io/tidyfun/reference/plus-.tf_ggplot.md)
+  : Add layers to tf_ggplot objects
+
+- [`print(`*`<tf_ggplot>`*`)`](https://tidyfun.github.io/tidyfun/reference/print.tf_ggplot.md)
+  : Print method for tf_ggplot
+
+- [`ggplot_build(`*`<tf_ggplot>`*`)`](https://tidyfun.github.io/tidyfun/reference/ggplot_build.tf_ggplot.md)
+  : ggplot_build method for tf_ggplot
+
+- [`stat_tf()`](https://tidyfun.github.io/tidyfun/reference/ggspaghetti.md)
+  [`geom_spaghetti()`](https://tidyfun.github.io/tidyfun/reference/ggspaghetti.md)
+  [`geom_meatballs()`](https://tidyfun.github.io/tidyfun/reference/ggspaghetti.md)
+  :
+
+  Spaghetti plots for `tf` objects
+
+- [`gglasagna()`](https://tidyfun.github.io/tidyfun/reference/gglasagna.md)
+  :
+
+  Lasagna plots for `tf`s using `ggplot2`
+
+- [`stat_errorband()`](https://tidyfun.github.io/tidyfun/reference/ggerrorband.md)
+  [`geom_errorband()`](https://tidyfun.github.io/tidyfun/reference/ggerrorband.md)
+  :
+
+  Error bands using `tf` objects as bounds
+
+- [`stat_capellini()`](https://tidyfun.github.io/tidyfun/reference/ggcapellini.md)
+  [`geom_capellini()`](https://tidyfun.github.io/tidyfun/reference/ggcapellini.md)
+  :
+
+  Glyph plots for `tf` objects
+
+- [`stat_fboxplot()`](https://tidyfun.github.io/tidyfun/reference/ggfboxplot.md)
+  [`geom_fboxplot()`](https://tidyfun.github.io/tidyfun/reference/ggfboxplot.md)
+  :
+
+  Functional boxplots for `tf` objects
+
+- [`type_sum(`*`<tf>`*`)`](https://tidyfun.github.io/tidyfun/reference/tftibble.md)
+  [`obj_sum(`*`<tf>`*`)`](https://tidyfun.github.io/tidyfun/reference/tftibble.md)
+  [`pillar_shaft(`*`<tf>`*`)`](https://tidyfun.github.io/tidyfun/reference/tftibble.md)
+  : Format tidy functional data for tibbles
+
+## Related tf classes and conversion
+
+Core functional-data classes and constructors documented for convenience
 
 - [`tfd()`](https://tidyfun.github.io/tf/reference/tfd.html)
   [`as.tfd()`](https://tidyfun.github.io/tf/reference/tfd.html)
@@ -43,9 +136,9 @@ Defining and converting functional data objects
 
   Change (basis) representation of a `tf`-object (from tf)
 
-## Evaluation and indexing
+## Related tf evaluation and computation
 
-Accessing, appending and evaluating functional data objects
+Indexing, summary, and calculus helpers documented for convenience
 
 - [`` `[`( ``*`<tf>`*`)`](https://tidyfun.github.io/tf/reference/tfbrackets.html)
   [`` `[<-`( ``*`<tf>`*`)`](https://tidyfun.github.io/tf/reference/tfbrackets.html)
@@ -77,10 +170,6 @@ Accessing, appending and evaluating functional data objects
 - [`tf_split()`](https://tidyfun.github.io/tf/reference/tf_splitcombine.html)
   [`tf_combine()`](https://tidyfun.github.io/tf/reference/tf_splitcombine.html)
   : Split / Combine functional fragments (from tf)
-
-## Arithmetic, logical and summary functions
-
-Functionality for computing with and comparing functional data
 
 - [`` `==`( ``*`<tfd>`*`)`](https://tidyfun.github.io/tf/reference/tfgroupgenerics.html)
   [`` `!=`( ``*`<tfd>`*`)`](https://tidyfun.github.io/tf/reference/tfgroupgenerics.html)
@@ -129,8 +218,6 @@ Functionality for computing with and comparing functional data
 
   Summarize each `tf` in a vector (function-wise) (from tf)
 
-## Differentiation, integration and simple smoothing
-
 - [`tf_derive()`](https://tidyfun.github.io/tf/reference/tf_derive.html)
   : Differentiating functional data: approximating derivative functions
   (from tf)
@@ -143,9 +230,10 @@ Functionality for computing with and comparing functional data
 
   Simple smoothing of `tf` objects (from tf)
 
-## Registering and warping
+## Related tf registration and utilities
 
-Functions for registering, and warping functional data
+Registration, search, random generation, and helper functions documented
+for convenience
 
 - [`tf_register()`](https://tidyfun.github.io/tf/reference/tf_register.html)
   :
@@ -173,135 +261,13 @@ Functions for registering, and warping functional data
 - [`tf_estimate_warps()`](https://tidyfun.github.io/tf/reference/tf_estimate_warps.html)
   : Estimate warping functions for registration (from tf)
 
-## Wrangling
-
-Reshaping and transforming tf-objects inside data frames
-
-- [`tf_gather()`](https://tidyfun.github.io/tidyfun/reference/tf_gather.md)
-  :
-
-  Gather all columns representing functional measurements into a
-  `tfd`-object
-
-- [`tf_spread()`](https://tidyfun.github.io/tidyfun/reference/tf_spread.md)
-  :
-
-  Spread a `tf`-column into many columns representing the function
-  evaluations.
-
-- [`tf_nest()`](https://tidyfun.github.io/tidyfun/reference/tf_nest.md)
-  :
-
-  Turn "long" tables into tidy data frames with `tf`-objects
-
-- [`tf_unnest()`](https://tidyfun.github.io/tidyfun/reference/tf_unnest.md)
-  :
-
-  Turn (data frames with) `tf`-objects / list columns into "long"
-  tables.
-
-- [`tf_evaluate(`*`<data.frame>`*`)`](https://tidyfun.github.io/tidyfun/reference/tf_evaluate.data.frame.md)
-  :
-
-  Evaluate `tf`s inside a `data.frame`
-
-## Visualization & Display
-
-Graphics functions and print formats
-
-- [`plot(`*`<tf>`*`)`](https://tidyfun.github.io/tf/reference/tfviz.html)
-  [`lines(`*`<tf>`*`)`](https://tidyfun.github.io/tf/reference/tfviz.html)
-  [`points(`*`<tf>`*`)`](https://tidyfun.github.io/tf/reference/tfviz.html)
-  :
-
-  `base` plots for `tf`s (from tf)
-
-- [`autoplot(`*`<tf>`*`)`](https://tidyfun.github.io/tidyfun/reference/autoplot.tf.md)
-  [`autolayer(`*`<tf>`*`)`](https://tidyfun.github.io/tidyfun/reference/autoplot.tf.md)
-  :
-
-  Autoplot and autolayer methods for `tf` objects
-
-- [`stat_tf()`](https://tidyfun.github.io/tidyfun/reference/ggspaghetti.md)
-  [`geom_spaghetti()`](https://tidyfun.github.io/tidyfun/reference/ggspaghetti.md)
-  [`geom_meatballs()`](https://tidyfun.github.io/tidyfun/reference/ggspaghetti.md)
-  :
-
-  Spaghetti plots for `tf` objects
-
-- [`gglasagna()`](https://tidyfun.github.io/tidyfun/reference/gglasagna.md)
-  :
-
-  Lasagna plots for `tf`s using `ggplot2`
-
-- [`stat_errorband()`](https://tidyfun.github.io/tidyfun/reference/ggerrorband.md)
-  [`geom_errorband()`](https://tidyfun.github.io/tidyfun/reference/ggerrorband.md)
-  :
-
-  Error bands using `tf` objects as bounds
-
-- [`stat_capellini()`](https://tidyfun.github.io/tidyfun/reference/ggcapellini.md)
-  [`geom_capellini()`](https://tidyfun.github.io/tidyfun/reference/ggcapellini.md)
-  :
-
-  Glyph plots for `tf` objects
-
-- [`stat_fboxplot()`](https://tidyfun.github.io/tidyfun/reference/ggfboxplot.md)
-  [`geom_fboxplot()`](https://tidyfun.github.io/tidyfun/reference/ggfboxplot.md)
-  :
-
-  Functional boxplots for `tf` objects
-
-- [`tf_ggplot()`](https://tidyfun.github.io/tidyfun/reference/tf_ggplot.md)
-  : Create a tf-aware ggplot
-
-- [`is_tf_ggplot()`](https://tidyfun.github.io/tidyfun/reference/is_tf_ggplot.md)
-  : Check if object is a tf_ggplot
-
-- [`parse_tf_aesthetics()`](https://tidyfun.github.io/tidyfun/reference/parse_tf_aesthetics.md)
-  : Parse aesthetic mappings to separate tf and regular aesthetics
-
-- [`transform_tf_data()`](https://tidyfun.github.io/tidyfun/reference/transform_tf_data.md)
-  : Transform data with tf aesthetics into long format
-
-- [`` `+`( ``*`<tf_ggplot>`*`)`](https://tidyfun.github.io/tidyfun/reference/plus-.tf_ggplot.md)
-  : Add layers to tf_ggplot objects
-
-- [`print(`*`<tf_ggplot>`*`)`](https://tidyfun.github.io/tidyfun/reference/print.tf_ggplot.md)
-  : Print method for tf_ggplot
-
-- [`ggplot_build(`*`<tf_ggplot>`*`)`](https://tidyfun.github.io/tidyfun/reference/ggplot_build.tf_ggplot.md)
-  : ggplot_build method for tf_ggplot
-
-- [`print(`*`<tf>`*`)`](https://tidyfun.github.io/tf/reference/tfdisplay.html)
-  [`print(`*`<tfd_reg>`*`)`](https://tidyfun.github.io/tf/reference/tfdisplay.html)
-  [`print(`*`<tfd_irreg>`*`)`](https://tidyfun.github.io/tf/reference/tfdisplay.html)
-  [`print(`*`<tfb>`*`)`](https://tidyfun.github.io/tf/reference/tfdisplay.html)
-  [`format(`*`<tf>`*`)`](https://tidyfun.github.io/tf/reference/tfdisplay.html)
-  : Pretty printing and formatting for functional data (from tf)
-
-- [`prep_plotting_arg()`](https://tidyfun.github.io/tf/reference/prep_plotting_arg.html)
-  : Preprocess evaluation grid for plotting (from tf)
-
-- [`type_sum(`*`<tf>`*`)`](https://tidyfun.github.io/tidyfun/reference/tftibble.md)
-  [`obj_sum(`*`<tf>`*`)`](https://tidyfun.github.io/tidyfun/reference/tftibble.md)
-  [`pillar_shaft(`*`<tf>`*`)`](https://tidyfun.github.io/tidyfun/reference/tftibble.md)
-  : Format tidy functional data for tibbles
-
-## Querying functional data
-
-Locating functional features like peaks or zero-crossings
-
 - [`tf_where()`](https://tidyfun.github.io/tf/reference/tf_where.html)
   [`tf_anywhere()`](https://tidyfun.github.io/tf/reference/tf_where.html)
   : Find out where functional data fulfills certain conditions. (from
   tf)
+
 - [`tf_zoom()`](https://tidyfun.github.io/tf/reference/tf_zoom.html) :
   Functions to zoom in/out on functions (from tf)
-
-## Utilities
-
-Utility functions
 
 - [`tf_arg()`](https://tidyfun.github.io/tf/reference/tfmethods.html)
   [`tf_evaluations()`](https://tidyfun.github.io/tf/reference/tfmethods.html)
@@ -329,10 +295,6 @@ Utility functions
 
   Utility functions for `tf`-objects (from tf)
 
-## Generating random functional data
-
-RNGs for curves
-
 - [`tf_rgp()`](https://tidyfun.github.io/tf/reference/tf_rgp.html) :
   Gaussian Process random generator (from tf)
 
@@ -341,10 +303,6 @@ RNGs for curves
   :
 
   Make a `tf` (more) irregular (from tf)
-
-## Accessories
-
-Tooling functions
 
 - [`in_range()`](https://tidyfun.github.io/tf/reference/in_range.html)
   [`` `%inr%` ``](https://tidyfun.github.io/tf/reference/in_range.html)
@@ -394,20 +352,49 @@ Tooling functions
 
 - : tf: S3 Classes and Methods for Tidy Functional Data (from tf)
 
-## Data Sets
+## Related tf display methods
 
-Functional data sets
+Core tf display helpers documented for convenience
 
-- [`chf_df`](https://tidyfun.github.io/tidyfun/reference/chf_df.md) :
-  Congestive heart failure accelerometry data
-- [`dti_df`](https://tidyfun.github.io/tidyfun/reference/dti_df.md) :
-  Diffusion tensor imaging data
-- [`tidyfun`](https://tidyfun.github.io/tidyfun/reference/tidyfun-package.md)
-  [`tidyfun-package`](https://tidyfun.github.io/tidyfun/reference/tidyfun-package.md)
-  : tidyfun: Tidy Functional Data Wrangling and Visualization
+- [`autoplot(`*`<tf>`*`)`](https://tidyfun.github.io/tidyfun/reference/autoplot.tf.md)
+  [`autolayer(`*`<tf>`*`)`](https://tidyfun.github.io/tidyfun/reference/autoplot.tf.md)
+  :
+
+  Autoplot and autolayer methods for `tf` objects
+
+- [`plot(`*`<tf>`*`)`](https://tidyfun.github.io/tf/reference/tfviz.html)
+  [`lines(`*`<tf>`*`)`](https://tidyfun.github.io/tf/reference/tfviz.html)
+  [`points(`*`<tf>`*`)`](https://tidyfun.github.io/tf/reference/tfviz.html)
+  :
+
+  `base` plots for `tf`s (from tf)
+
+- [`print(`*`<tf>`*`)`](https://tidyfun.github.io/tf/reference/tfdisplay.html)
+  [`print(`*`<tfd_reg>`*`)`](https://tidyfun.github.io/tf/reference/tfdisplay.html)
+  [`print(`*`<tfd_irreg>`*`)`](https://tidyfun.github.io/tf/reference/tfdisplay.html)
+  [`print(`*`<tfb>`*`)`](https://tidyfun.github.io/tf/reference/tfdisplay.html)
+  [`format(`*`<tf>`*`)`](https://tidyfun.github.io/tf/reference/tfdisplay.html)
+  : Pretty printing and formatting for functional data (from tf)
+
+- [`prep_plotting_arg()`](https://tidyfun.github.io/tf/reference/prep_plotting_arg.html)
+  : Preprocess evaluation grid for plotting (from tf)
+
+## Related tf datasets
+
+Functional data sets documented for convenience
+
 - [`gait`](https://tidyfun.github.io/tf/reference/gait.html) : Hip and
   knee angle while walking data (from tf)
 - [`growth`](https://tidyfun.github.io/tf/reference/growth.html) :
   Berkeley growth study data (from tf)
 - [`pinch`](https://tidyfun.github.io/tf/reference/pinch.html) : Pinch
   force data (from tf)
+
+## tidyfun datasets
+
+Functional data sets shipped with tidyfun
+
+- [`chf_df`](https://tidyfun.github.io/tidyfun/reference/chf_df.md) :
+  Congestive heart failure accelerometry data
+- [`dti_df`](https://tidyfun.github.io/tidyfun/reference/dti_df.md) :
+  Diffusion tensor imaging data

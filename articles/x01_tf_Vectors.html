@@ -44,8 +44,13 @@
     <li><a class="dropdown-item" href="../articles/x02_Conversion.html">Converting data to and from `tf`</a></li>
     <li><a class="dropdown-item" href="../articles/x03_Data_Wrangling.html">Data Wrangling</a></li>
     <li><a class="dropdown-item" href="../articles/x04_Visualization.html">Visualization</a></li>
-    <li><a class="dropdown-item" href="../articles/x05_Advice.html">Advice for Developers</a></li>
     <li><a class="dropdown-item" href="../articles/x06_Registration.html">Curve Registration</a></li>
+  </ul>
+</li>
+<li class="nav-item dropdown">
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-developer-notes" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Developer Notes</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-developer-notes">
+<li><a class="dropdown-item" href="../articles/x05_Advice.html">Developer Notes</a></li>
   </ul>
 </li>
       </ul>
@@ -79,7 +84,7 @@
                         <h4 data-toc-skip class="author">Jeff Goldsmith,
 Fabian Scheipl</h4>
             
-            <h4 data-toc-skip class="date">2026-03-18</h4>
+            <h4 data-toc-skip class="date">2026-03-19</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/tidyfun/tidyfun/blob/main/vignettes/x01_tf_Vectors.Rmd" class="external-link"><code>vignettes/x01_tf_Vectors.Rmd</code></a></small>
       <div class="d-none name"><code>x01_tf_Vectors.Rmd</code></div>
@@ -218,7 +223,8 @@ regular data with a common grid and one for irregular or sparse data.
 The <code>cca</code> data are irregular (values are missing for some
 subjects at some arguments) but the example below more clearly
 illustrates support for sparse and irregular data using CD4 cell counts
-from a longitudinal study.</li>
+from a longitudinal study included in
+<strong><code>refund</code></strong>.</li>
 </ul>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cd4_vec</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tidyfun.github.io/tf/reference/tfd.html" class="external-link">tfd</a></span><span class="op">(</span><span class="fu">refund</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/refund/man/cd4.html" class="external-link">cd4</a></span><span class="op">)</span></span>
@@ -254,7 +260,8 @@ it.</li>
 <li>(internal) flavors:
 <ul>
 <li>
-<code>tfb_spline</code>: uses <code>mgcv</code>-spline bases</li>
+<code>tfb_spline</code>: uses
+<strong><code>mgcv</code></strong>-spline bases</li>
 <li>
 <code>tfb_fpc</code>: uses functional principal components</li>
 </ul>
@@ -282,7 +289,7 @@ it.</li>
 <ul>
 <li>default for <code><a href="https://tidyfun.github.io/tf/reference/tfb.html" class="external-link">tfb()</a></code>
 </li>
-<li>accepts all arguments of <code>mgcv</code>’s
+<li>accepts all arguments of <strong><code>mgcv</code></strong>’s
 <code>s()</code>-syntax: basis type <code>bs</code>, basis dimension
 <code>k</code>, penalty order <code>m</code>, etc…</li>
 <li>also does non-Gaussian fits: <code>family</code> argument

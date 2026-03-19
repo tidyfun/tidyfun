@@ -1,8 +1,8 @@
 # Articles
 
-### Articles
+### User guides
 
-Articles & vignettes for tidyfun
+End-user articles for working with tidyfun
 
 - [tf Vectors and
   Operations](https://tidyfun.github.io/tidyfun/articles/x01_tf_Vectors.md):
@@ -11,7 +11,12 @@ Articles & vignettes for tidyfun
 - [Data
   Wrangling](https://tidyfun.github.io/tidyfun/articles/x03_Data_Wrangling.md):
 - [Visualization](https://tidyfun.github.io/tidyfun/articles/x04_Visualization.md):
-- [Advice for
-  Developers](https://tidyfun.github.io/tidyfun/articles/x05_Advice.md):
 - [Curve Registration: Practical Guide and
   Pitfalls](https://tidyfun.github.io/tidyfun/articles/x06_Registration.md):
+
+### Developer Notes
+
+Contributor and extension guidance
+
+- [Developer
+  Notes](https://tidyfun.github.io/tidyfun/articles/x05_Advice.md):

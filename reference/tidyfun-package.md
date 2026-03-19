@@ -3,38 +3,22 @@
 `tidyfun` makes data wrangling and exploratory analysis for functional
 data in `R` easier.  
   
-`tidyfun` is based on the classes and methods defined in package `tf`
-and provides:
+The `tf` package defines the core functional data classes and methods.
+`tidyfun` builds on those objects with:
 
-- new data types for representing functional data:
-  [`tf::tfd()`](https://tidyfun.github.io/tf/reference/tfd.html) &
-  [`tf::tfb()`](https://tidyfun.github.io/tf/reference/tfb.html)
+- data-frame workflows for functional data:
+  [`tf_gather()`](https://tidyfun.github.io/tidyfun/reference/tf_gather.md)
+  etc.
 
-- arithmetic & comparison operators
-  ([`tf::tfgroupgenerics()`](https://tidyfun.github.io/tf/reference/tfgroupgenerics.html)),
-
-- descriptive statistics: e.g.
-  [`tf::mean.tf()`](https://tidyfun.github.io/tf/reference/tfsummaries.html),
-  [`tf::median.tf()`](https://tidyfun.github.io/tf/reference/tfsummaries.html)
-
-- and graphics functions for such data:
-  [`tf::plot.tf()`](https://tidyfun.github.io/tf/reference/tfviz.html),
-  [`autoplot.tf()`](https://tidyfun.github.io/tidyfun/reference/autoplot.tf.md),
+- graphics helpers for `tf` objects and tidy functional data frames:
   [`geom_spaghetti()`](https://tidyfun.github.io/tidyfun/reference/ggspaghetti.md),
   [`gglasagna()`](https://tidyfun.github.io/tidyfun/reference/gglasagna.md)
 
-- functions to do smoothing
-  ([`tf::tf_smooth.tfd()`](https://tidyfun.github.io/tf/reference/tf_smooth.html)),
-  differentiation and integration
-  ([`tf::tf_derive.tfd()`](https://tidyfun.github.io/tf/reference/tf_derive.html))
-
-- `tidyverse`-verbs for handling functional data inside data frames:
-  [`tf_gather()`](https://tidyfun.github.io/tidyfun/reference/tf_gather.md)
-  etc.  
+- documentation and examples that show how to use `tf` objects in tidy
+  workflows  
     
     
-  Also see `vignette("Introducing tidyfun", "tidyfun")` for a brief
-  introduction.
+  Start with `vignette(package = "tidyfun")` for the article index.
 
 ## See also
 

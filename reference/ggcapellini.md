@@ -3,8 +3,8 @@
 Plots a miniature glyph / sparkline for each entry of a `tf`-object.
 (Capellini are tiny spaghetti – *angel hair* pasta.) Aesthetics `x` and
 `y` specify the location of the glyphs, the `tf` aesthetic defines their
-shapes. To accommodate all my fellow idiots, `geom_cappelini`,
-`geom_cappellini` and `geom_capelini` also work.
+shapes. The aliases `geom_cappelini`, `geom_cappellini`, and
+`geom_capelini` are also accepted.
 
 ## Usage
 
@@ -142,7 +142,8 @@ geom_capellini(
 
 - arg:
 
-  where to evaluate `tf` – defaults to the default ;)
+  where to evaluate `tf`; defaults to the object's default evaluation
+  grid.
 
 - add_lines:
 
@@ -207,7 +208,7 @@ geom_capellini(
 
 - stat:
 
-  that's "capellini"!
+  the stat to use; defaults to `"capellini"`.
 
 - box.colour:
 

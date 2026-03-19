@@ -29,8 +29,11 @@
     <li><a class="dropdown-item" href="../articles/x02_Conversion.html">Converting data to and from `tf`</a></li>
     <li><a class="dropdown-item" href="../articles/x03_Data_Wrangling.html">Data Wrangling</a></li>
     <li><a class="dropdown-item" href="../articles/x04_Visualization.html">Visualization</a></li>
-    <li><a class="dropdown-item" href="../articles/x05_Advice.html">Advice for Developers</a></li>
     <li><a class="dropdown-item" href="../articles/x06_Registration.html">Curve Registration</a></li>
+  </ul></li>
+<li class="nav-item dropdown">
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-developer-notes" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Developer Notes</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-developer-notes"><li><a class="dropdown-item" href="../articles/x05_Advice.html">Developer Notes</a></li>
   </ul></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
@@ -53,9 +56,153 @@
     </div>
 
     <div class="section level2">
-      <h2 id="tf-sub-classes-constructors-converters">tf - (Sub)classes: Constructors &amp; converters<a class="anchor" aria-label="anchor" href="#tf-sub-classes-constructors-converters"></a></h2>
+      <h2 id="tidyfun-workflows">tidyfun workflows<a class="anchor" aria-label="anchor" href="#tidyfun-workflows"></a></h2>
 
-      <div class="section-desc"><p>Defining and converting functional data objects</p></div>
+      <div class="section-desc"><p>User-facing wrappers for working with functional data inside data frames</p></div>
+
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="tidyfun-package.html">tidyfun</a></code> <code><a href="tidyfun-package.html">tidyfun-package</a></code>
+
+        </dt>
+        <dd>tidyfun: Tidy Functional Data Wrangling and Visualization</dd>
+
+        <dt>
+
+          <code><a href="tf_gather.html">tf_gather()</a></code>
+
+        </dt>
+        <dd>Gather all columns representing functional measurements into a <code>tfd</code>-object</dd>
+
+        <dt>
+
+          <code><a href="tf_spread.html">tf_spread()</a></code>
+
+        </dt>
+        <dd>Spread a <code>tf</code>-column into many columns representing the function evaluations.</dd>
+
+        <dt>
+
+          <code><a href="tf_nest.html">tf_nest()</a></code>
+
+        </dt>
+        <dd>Turn "long" tables into tidy data frames with <code>tf</code>-objects</dd>
+
+        <dt>
+
+          <code><a href="tf_unnest.html">tf_unnest()</a></code>
+
+        </dt>
+        <dd>Turn (data frames with) <code>tf</code>-objects / list columns into "long" tables.</dd>
+
+        <dt>
+
+          <code><a href="tf_evaluate.data.frame.html">tf_evaluate(<i>&lt;data.frame&gt;</i>)</a></code>
+
+        </dt>
+        <dd>Evaluate <code>tf</code>s inside a <code>data.frame</code></dd>
+      </dl></div><div class="section level2">
+      <h2 id="tidyfun-graphics-and-display">tidyfun graphics and display<a class="anchor" aria-label="anchor" href="#tidyfun-graphics-and-display"></a></h2>
+
+      <div class="section-desc"><p>Plotting helpers and display methods provided by tidyfun</p></div>
+
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="tf_ggplot.html">tf_ggplot()</a></code>
+
+        </dt>
+        <dd>Create a tf-aware ggplot</dd>
+
+        <dt>
+
+          <code><a href="is_tf_ggplot.html">is_tf_ggplot()</a></code>
+
+        </dt>
+        <dd>Check if object is a tf_ggplot</dd>
+
+        <dt>
+
+          <code><a href="parse_tf_aesthetics.html">parse_tf_aesthetics()</a></code>
+
+        </dt>
+        <dd>Parse aesthetic mappings to separate tf and regular aesthetics</dd>
+
+        <dt>
+
+          <code><a href="plus-.tf_ggplot.html">`+`(<i>&lt;tf_ggplot&gt;</i>)</a></code>
+
+        </dt>
+        <dd>Add layers to tf_ggplot objects</dd>
+
+        <dt>
+
+          <code><a href="print.tf_ggplot.html">print(<i>&lt;tf_ggplot&gt;</i>)</a></code>
+
+        </dt>
+        <dd>Print method for tf_ggplot</dd>
+
+        <dt>
+
+          <code><a href="ggplot_build.tf_ggplot.html">ggplot_build(<i>&lt;tf_ggplot&gt;</i>)</a></code>
+
+        </dt>
+        <dd>ggplot_build method for tf_ggplot</dd>
+
+        <dt>
+
+          <code><a href="ggspaghetti.html">stat_tf()</a></code> <code><a href="ggspaghetti.html">geom_spaghetti()</a></code> <code><a href="ggspaghetti.html">geom_meatballs()</a></code>
+
+        </dt>
+        <dd>Spaghetti plots for <code>tf</code> objects</dd>
+
+        <dt>
+
+          <code><a href="gglasagna.html">gglasagna()</a></code>
+
+        </dt>
+        <dd>Lasagna plots for <code>tf</code>s using <code>ggplot2</code></dd>
+
+        <dt>
+
+          <code><a href="ggerrorband.html">stat_errorband()</a></code> <code><a href="ggerrorband.html">geom_errorband()</a></code>
+
+        </dt>
+        <dd>Error bands using <code>tf</code> objects as bounds</dd>
+
+        <dt>
+
+          <code><a href="ggcapellini.html">stat_capellini()</a></code> <code><a href="ggcapellini.html">geom_capellini()</a></code>
+
+        </dt>
+        <dd>Glyph plots for <code>tf</code> objects</dd>
+
+        <dt>
+
+          <code><a href="ggfboxplot.html">stat_fboxplot()</a></code> <code><a href="ggfboxplot.html">geom_fboxplot()</a></code>
+
+        </dt>
+        <dd>Functional boxplots for <code>tf</code> objects</dd>
+
+        <dt>
+
+          <code><a href="tftibble.html">type_sum(<i>&lt;tf&gt;</i>)</a></code> <code><a href="tftibble.html">obj_sum(<i>&lt;tf&gt;</i>)</a></code> <code><a href="tftibble.html">pillar_shaft(<i>&lt;tf&gt;</i>)</a></code>
+
+        </dt>
+        <dd>Format tidy functional data for tibbles</dd>
+      </dl></div><div class="section level2">
+      <h2 id="related-tf-classes-and-conversion">Related tf classes and conversion<a class="anchor" aria-label="anchor" href="#related-tf-classes-and-conversion"></a></h2>
+
+      <div class="section-desc"><p>Core functional-data classes and constructors documented for convenience</p></div>
 
       <dl></dl></div><div class="section level2">
 
@@ -125,9 +272,9 @@
         </dt>
         <dd>Change (basis) representation of a <code>tf</code>-object (from tf)</dd>
       </dl></div><div class="section level2">
-      <h2 id="evaluation-and-indexing">Evaluation and indexing<a class="anchor" aria-label="anchor" href="#evaluation-and-indexing"></a></h2>
+      <h2 id="related-tf-evaluation-and-computation">Related tf evaluation and computation<a class="anchor" aria-label="anchor" href="#related-tf-evaluation-and-computation"></a></h2>
 
-      <div class="section-desc"><p>Accessing, appending and evaluating functional data objects</p></div>
+      <div class="section-desc"><p>Indexing, summary, and calculus helpers documented for convenience</p></div>
 
       <dl></dl></div><div class="section level2">
 
@@ -168,17 +315,8 @@
 
         </dt>
         <dd>Split / Combine functional fragments (from tf)</dd>
-      </dl></div><div class="section level2">
-      <h2 id="arithmetic-logical-and-summary-functions">Arithmetic, logical and summary functions<a class="anchor" aria-label="anchor" href="#arithmetic-logical-and-summary-functions"></a></h2>
 
-      <div class="section-desc"><p>Functionality for computing with and comparing functional data</p></div>
-
-      <dl></dl></div><div class="section level2">
-
-
-
-
-      <dl><dt>
+        <dt>
 
           <code><a href="https://tidyfun.github.io/tf/reference/tfgroupgenerics.html" class="external-link">`==`(<i>&lt;tfd&gt;</i>)</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfgroupgenerics.html" class="external-link">`!=`(<i>&lt;tfd&gt;</i>)</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfgroupgenerics.html" class="external-link">`==`(<i>&lt;tfb&gt;</i>)</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfgroupgenerics.html" class="external-link">`!=`(<i>&lt;tfb&gt;</i>)</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfgroupgenerics.html" class="external-link">vec_arith(<i>&lt;tfd&gt;</i>)</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfgroupgenerics.html" class="external-link">vec_arith(<i>&lt;tfb&gt;</i>)</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfgroupgenerics.html" class="external-link">Math(<i>&lt;tfd&gt;</i>)</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfgroupgenerics.html" class="external-link">Math(<i>&lt;tfb&gt;</i>)</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfgroupgenerics.html" class="external-link">Summary(<i>&lt;tf&gt;</i>)</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfgroupgenerics.html" class="external-link">cummax(<i>&lt;tfd&gt;</i>)</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfgroupgenerics.html" class="external-link">cummin(<i>&lt;tfd&gt;</i>)</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfgroupgenerics.html" class="external-link">cumsum(<i>&lt;tfd&gt;</i>)</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfgroupgenerics.html" class="external-link">cumprod(<i>&lt;tfd&gt;</i>)</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfgroupgenerics.html" class="external-link">cummax(<i>&lt;tfb&gt;</i>)</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfgroupgenerics.html" class="external-link">cummin(<i>&lt;tfb&gt;</i>)</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfgroupgenerics.html" class="external-link">cumsum(<i>&lt;tfb&gt;</i>)</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfgroupgenerics.html" class="external-link">cumprod(<i>&lt;tfb&gt;</i>)</a></code>
 
@@ -205,17 +343,8 @@
 
         </dt>
         <dd>Summarize each <code>tf</code> in a vector (function-wise) (from tf)</dd>
-      </dl></div><div class="section level2">
-      <h2 id="differentiation-integration-and-simple-smoothing">Differentiation, integration and simple smoothing<a class="anchor" aria-label="anchor" href="#differentiation-integration-and-simple-smoothing"></a></h2>
 
-
-
-      <dl></dl></div><div class="section level2">
-
-
-
-
-      <dl><dt>
+        <dt>
 
           <code><a href="https://tidyfun.github.io/tf/reference/tf_derive.html" class="external-link">tf_derive()</a></code>
 
@@ -236,9 +365,9 @@
         </dt>
         <dd>Simple smoothing of <code>tf</code> objects (from tf)</dd>
       </dl></div><div class="section level2">
-      <h2 id="registering-and-warping">Registering and warping<a class="anchor" aria-label="anchor" href="#registering-and-warping"></a></h2>
+      <h2 id="related-tf-registration-and-utilities">Related tf registration and utilities<a class="anchor" aria-label="anchor" href="#related-tf-registration-and-utilities"></a></h2>
 
-      <div class="section-desc"><p>Functions for registering, and warping functional data</p></div>
+      <div class="section-desc"><p>Registration, search, random generation, and helper functions documented for convenience</p></div>
 
       <dl></dl></div><div class="section level2">
 
@@ -286,189 +415,8 @@
 
         </dt>
         <dd>Estimate warping functions for registration (from tf)</dd>
-      </dl></div><div class="section level2">
-      <h2 id="wrangling">Wrangling<a class="anchor" aria-label="anchor" href="#wrangling"></a></h2>
-
-      <div class="section-desc"><p>Reshaping and transforming tf-objects inside data frames</p></div>
-
-      <dl></dl></div><div class="section level2">
-
-
-
-
-      <dl><dt>
-
-          <code><a href="tf_gather.html">tf_gather()</a></code>
-
-        </dt>
-        <dd>Gather all columns representing functional measurements into a <code>tfd</code>-object</dd>
 
         <dt>
-
-          <code><a href="tf_spread.html">tf_spread()</a></code>
-
-        </dt>
-        <dd>Spread a <code>tf</code>-column into many columns representing the function evaluations.</dd>
-
-        <dt>
-
-          <code><a href="tf_nest.html">tf_nest()</a></code>
-
-        </dt>
-        <dd>Turn "long" tables into tidy data frames with <code>tf</code>-objects</dd>
-
-        <dt>
-
-          <code><a href="tf_unnest.html">tf_unnest()</a></code>
-
-        </dt>
-        <dd>Turn (data frames with) <code>tf</code>-objects / list columns into "long" tables.</dd>
-
-        <dt>
-
-          <code><a href="tf_evaluate.data.frame.html">tf_evaluate(<i>&lt;data.frame&gt;</i>)</a></code>
-
-        </dt>
-        <dd>Evaluate <code>tf</code>s inside a <code>data.frame</code></dd>
-      </dl></div><div class="section level2">
-      <h2 id="visualization-display">Visualization &amp; Display<a class="anchor" aria-label="anchor" href="#visualization-display"></a></h2>
-
-      <div class="section-desc"><p>Graphics functions and print formats</p></div>
-
-      <dl></dl></div><div class="section level2">
-
-
-
-
-      <dl><dt>
-
-          <code><a href="https://tidyfun.github.io/tf/reference/tfviz.html" class="external-link">plot(<i>&lt;tf&gt;</i>)</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfviz.html" class="external-link">lines(<i>&lt;tf&gt;</i>)</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfviz.html" class="external-link">points(<i>&lt;tf&gt;</i>)</a></code>
-
-        </dt>
-        <dd><code>base</code> plots for <code>tf</code>s (from tf)</dd>
-
-        <dt>
-
-          <code><a href="autoplot.tf.html">autoplot(<i>&lt;tf&gt;</i>)</a></code> <code><a href="autoplot.tf.html">autolayer(<i>&lt;tf&gt;</i>)</a></code>
-
-        </dt>
-        <dd>Autoplot and autolayer methods for <code>tf</code> objects</dd>
-
-        <dt>
-
-          <code><a href="ggspaghetti.html">stat_tf()</a></code> <code><a href="ggspaghetti.html">geom_spaghetti()</a></code> <code><a href="ggspaghetti.html">geom_meatballs()</a></code>
-
-        </dt>
-        <dd>Spaghetti plots for <code>tf</code> objects</dd>
-
-        <dt>
-
-          <code><a href="gglasagna.html">gglasagna()</a></code>
-
-        </dt>
-        <dd>Lasagna plots for <code>tf</code>s using <code>ggplot2</code></dd>
-
-        <dt>
-
-          <code><a href="ggerrorband.html">stat_errorband()</a></code> <code><a href="ggerrorband.html">geom_errorband()</a></code>
-
-        </dt>
-        <dd>Error bands using <code>tf</code> objects as bounds</dd>
-
-        <dt>
-
-          <code><a href="ggcapellini.html">stat_capellini()</a></code> <code><a href="ggcapellini.html">geom_capellini()</a></code>
-
-        </dt>
-        <dd>Glyph plots for <code>tf</code> objects</dd>
-
-        <dt>
-
-          <code><a href="ggfboxplot.html">stat_fboxplot()</a></code> <code><a href="ggfboxplot.html">geom_fboxplot()</a></code>
-
-        </dt>
-        <dd>Functional boxplots for <code>tf</code> objects</dd>
-
-        <dt>
-
-          <code><a href="tf_ggplot.html">tf_ggplot()</a></code>
-
-        </dt>
-        <dd>Create a tf-aware ggplot</dd>
-
-        <dt>
-
-          <code><a href="is_tf_ggplot.html">is_tf_ggplot()</a></code>
-
-        </dt>
-        <dd>Check if object is a tf_ggplot</dd>
-
-        <dt>
-
-          <code><a href="parse_tf_aesthetics.html">parse_tf_aesthetics()</a></code>
-
-        </dt>
-        <dd>Parse aesthetic mappings to separate tf and regular aesthetics</dd>
-
-        <dt>
-
-          <code><a href="transform_tf_data.html">transform_tf_data()</a></code>
-
-        </dt>
-        <dd>Transform data with tf aesthetics into long format</dd>
-
-        <dt>
-
-          <code><a href="plus-.tf_ggplot.html">`+`(<i>&lt;tf_ggplot&gt;</i>)</a></code>
-
-        </dt>
-        <dd>Add layers to tf_ggplot objects</dd>
-
-        <dt>
-
-          <code><a href="print.tf_ggplot.html">print(<i>&lt;tf_ggplot&gt;</i>)</a></code>
-
-        </dt>
-        <dd>Print method for tf_ggplot</dd>
-
-        <dt>
-
-          <code><a href="ggplot_build.tf_ggplot.html">ggplot_build(<i>&lt;tf_ggplot&gt;</i>)</a></code>
-
-        </dt>
-        <dd>ggplot_build method for tf_ggplot</dd>
-
-        <dt>
-
-          <code><a href="https://tidyfun.github.io/tf/reference/tfdisplay.html" class="external-link">print(<i>&lt;tf&gt;</i>)</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfdisplay.html" class="external-link">print(<i>&lt;tfd_reg&gt;</i>)</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfdisplay.html" class="external-link">print(<i>&lt;tfd_irreg&gt;</i>)</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfdisplay.html" class="external-link">print(<i>&lt;tfb&gt;</i>)</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfdisplay.html" class="external-link">format(<i>&lt;tf&gt;</i>)</a></code>
-
-        </dt>
-        <dd>Pretty printing and formatting for functional data (from tf)</dd>
-
-        <dt>
-
-          <code><a href="https://tidyfun.github.io/tf/reference/prep_plotting_arg.html" class="external-link">prep_plotting_arg()</a></code>
-
-        </dt>
-        <dd>Preprocess evaluation grid for plotting (from tf)</dd>
-
-        <dt>
-
-          <code><a href="tftibble.html">type_sum(<i>&lt;tf&gt;</i>)</a></code> <code><a href="tftibble.html">obj_sum(<i>&lt;tf&gt;</i>)</a></code> <code><a href="tftibble.html">pillar_shaft(<i>&lt;tf&gt;</i>)</a></code>
-
-        </dt>
-        <dd>Format tidy functional data for tibbles</dd>
-      </dl></div><div class="section level2">
-      <h2 id="querying-functional-data">Querying functional data<a class="anchor" aria-label="anchor" href="#querying-functional-data"></a></h2>
-
-      <div class="section-desc"><p>Locating functional features like peaks or zero-crossings</p></div>
-
-      <dl></dl></div><div class="section level2">
-
-
-
-
-      <dl><dt>
 
           <code><a href="https://tidyfun.github.io/tf/reference/tf_where.html" class="external-link">tf_where()</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tf_where.html" class="external-link">tf_anywhere()</a></code>
 
@@ -481,33 +429,15 @@
 
         </dt>
         <dd>Functions to zoom in/out on functions (from tf)</dd>
-      </dl></div><div class="section level2">
-      <h2 id="utilities">Utilities<a class="anchor" aria-label="anchor" href="#utilities"></a></h2>
 
-      <div class="section-desc"><p>Utility functions</p></div>
-
-      <dl></dl></div><div class="section level2">
-
-
-
-
-      <dl><dt>
+        <dt>
 
           <code><a href="https://tidyfun.github.io/tf/reference/tfmethods.html" class="external-link">tf_arg()</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfmethods.html" class="external-link">tf_evaluations()</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfmethods.html" class="external-link">tf_count()</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfmethods.html" class="external-link">tf_domain()</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfmethods.html" class="external-link">`tf_domain&lt;-`()</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfmethods.html" class="external-link">tf_evaluator()</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfmethods.html" class="external-link">`tf_evaluator&lt;-`()</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfmethods.html" class="external-link">tf_basis()</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfmethods.html" class="external-link">`tf_arg&lt;-`()</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfmethods.html" class="external-link">coef(<i>&lt;tfb&gt;</i>)</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfmethods.html" class="external-link">rev(<i>&lt;tf&gt;</i>)</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfmethods.html" class="external-link">is.na(<i>&lt;tf&gt;</i>)</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfmethods.html" class="external-link">is.na(<i>&lt;tfd_irreg&gt;</i>)</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfmethods.html" class="external-link">is_tf()</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfmethods.html" class="external-link">is_tfd()</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfmethods.html" class="external-link">is_reg()</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfmethods.html" class="external-link">is_tfd_reg()</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfmethods.html" class="external-link">is_irreg()</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfmethods.html" class="external-link">is_tfd_irreg()</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfmethods.html" class="external-link">is_tfb()</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfmethods.html" class="external-link">is_tfb_spline()</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfmethods.html" class="external-link">is_tfb_fpc()</a></code>
 
         </dt>
         <dd>Utility functions for <code>tf</code>-objects (from tf)</dd>
-      </dl></div><div class="section level2">
-      <h2 id="generating-random-functional-data">Generating random functional data<a class="anchor" aria-label="anchor" href="#generating-random-functional-data"></a></h2>
 
-      <div class="section-desc"><p>RNGs for curves</p></div>
-
-      <dl></dl></div><div class="section level2">
-
-
-
-
-      <dl><dt>
+        <dt>
 
           <code><a href="https://tidyfun.github.io/tf/reference/tf_rgp.html" class="external-link">tf_rgp()</a></code>
 
@@ -520,17 +450,8 @@
 
         </dt>
         <dd>Make a <code>tf</code> (more) irregular (from tf)</dd>
-      </dl></div><div class="section level2">
-      <h2 id="accessories">Accessories<a class="anchor" aria-label="anchor" href="#accessories"></a></h2>
 
-      <div class="section-desc"><p>Tooling functions</p></div>
-
-      <dl></dl></div><div class="section level2">
-
-
-
-
-      <dl><dt>
+        <dt>
 
           <code><a href="https://tidyfun.github.io/tf/reference/in_range.html" class="external-link">in_range()</a></code> <code><a href="https://tidyfun.github.io/tf/reference/in_range.html" class="external-link">`%inr%`</a></code>
 
@@ -565,9 +486,9 @@
         </dt>
         <dd>tf: S3 Classes and Methods for Tidy Functional Data (from tf)</dd>
       </dl></div><div class="section level2">
-      <h2 id="data-sets">Data Sets<a class="anchor" aria-label="anchor" href="#data-sets"></a></h2>
+      <h2 id="related-tf-display-methods">Related tf display methods<a class="anchor" aria-label="anchor" href="#related-tf-display-methods"></a></h2>
 
-      <div class="section-desc"><p>Functional data sets</p></div>
+      <div class="section-desc"><p>Core tf display helpers documented for convenience</p></div>
 
       <dl></dl></div><div class="section level2">
 
@@ -576,26 +497,42 @@
 
       <dl><dt>
 
-          <code><a href="chf_df.html">chf_df</a></code>
+          <code><a href="autoplot.tf.html">autoplot(<i>&lt;tf&gt;</i>)</a></code> <code><a href="autoplot.tf.html">autolayer(<i>&lt;tf&gt;</i>)</a></code>
 
         </dt>
-        <dd>Congestive heart failure accelerometry data</dd>
+        <dd>Autoplot and autolayer methods for <code>tf</code> objects</dd>
 
         <dt>
 
-          <code><a href="dti_df.html">dti_df</a></code>
+          <code><a href="https://tidyfun.github.io/tf/reference/tfviz.html" class="external-link">plot(<i>&lt;tf&gt;</i>)</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfviz.html" class="external-link">lines(<i>&lt;tf&gt;</i>)</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfviz.html" class="external-link">points(<i>&lt;tf&gt;</i>)</a></code>
 
         </dt>
-        <dd>Diffusion tensor imaging data</dd>
+        <dd><code>base</code> plots for <code>tf</code>s (from tf)</dd>
 
         <dt>
 
-          <code><a href="tidyfun-package.html">tidyfun</a></code> <code><a href="tidyfun-package.html">tidyfun-package</a></code>
+          <code><a href="https://tidyfun.github.io/tf/reference/tfdisplay.html" class="external-link">print(<i>&lt;tf&gt;</i>)</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfdisplay.html" class="external-link">print(<i>&lt;tfd_reg&gt;</i>)</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfdisplay.html" class="external-link">print(<i>&lt;tfd_irreg&gt;</i>)</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfdisplay.html" class="external-link">print(<i>&lt;tfb&gt;</i>)</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfdisplay.html" class="external-link">format(<i>&lt;tf&gt;</i>)</a></code>
 
         </dt>
-        <dd>tidyfun: Tidy Functional Data Wrangling and Visualization</dd>
+        <dd>Pretty printing and formatting for functional data (from tf)</dd>
 
         <dt>
+
+          <code><a href="https://tidyfun.github.io/tf/reference/prep_plotting_arg.html" class="external-link">prep_plotting_arg()</a></code>
+
+        </dt>
+        <dd>Preprocess evaluation grid for plotting (from tf)</dd>
+      </dl></div><div class="section level2">
+      <h2 id="related-tf-datasets">Related tf datasets<a class="anchor" aria-label="anchor" href="#related-tf-datasets"></a></h2>
+
+      <div class="section-desc"><p>Functional data sets documented for convenience</p></div>
+
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
 
           <code><a href="https://tidyfun.github.io/tf/reference/gait.html" class="external-link">gait</a></code>
 
@@ -615,6 +552,29 @@
 
         </dt>
         <dd>Pinch force data (from tf)</dd>
+      </dl></div><div class="section level2">
+      <h2 id="tidyfun-datasets">tidyfun datasets<a class="anchor" aria-label="anchor" href="#tidyfun-datasets"></a></h2>
+
+      <div class="section-desc"><p>Functional data sets shipped with tidyfun</p></div>
+
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="chf_df.html">chf_df</a></code>
+
+        </dt>
+        <dd>Congestive heart failure accelerometry data</dd>
+
+        <dt>
+
+          <code><a href="dti_df.html">dti_df</a></code>
+
+        </dt>
+        <dd>Diffusion tensor imaging data</dd>
       </dl></div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
