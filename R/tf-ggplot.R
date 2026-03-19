@@ -402,7 +402,7 @@ finalize_tf_ggplot <- function(tf_plot) {
   }
 
   # Base mapping: regular plot-level aes + scalar tf aes remapped to column names.
-  # Does NOT include x/y/group from tf aes — those are per-layer.
+  # Does NOT include x/y/group from tf aes -- those are per-layer.
   base_mapping <- parsed_plot_aes$regular_aes
   for (aes_name in names(parsed_plot_aes$scalar_tf_aes)) {
     base_mapping[[aes_name]] <- rlang::sym(scalar_col_map[[aes_name]])
@@ -418,7 +418,7 @@ finalize_tf_ggplot <- function(tf_plot) {
 
     if (layer_info$is_tf_layer) {
       # Use promoted data (from tf-param expansion) when present;
-      # fall back to plot-level enriched_data.  Never use layer$data here —
+      # fall back to plot-level enriched_data.  Never use layer$data here --
       # ggproto reference semantics mean layer$data gets mutated by a previous
       # finalize call, breaking repeated ggplot_build() calls on the same object.
       effective_data <- layer_info$promoted_data %||%
@@ -1058,7 +1058,7 @@ ggplot_build.tf_ggplot <- function(plot, ...) {
 
 .onUnload <- function(libpath) {
   # globalCallingHandlers() errors when called with handlers on the stack
-  # (e.g., during R CMD check). Fail silently — the handler becomes inert
+  # (e.g., during R CMD check). Fail silently -- the handler becomes inert
   # once the package namespace is unloaded anyway.
   tryCatch(
     suspendInterrupts({

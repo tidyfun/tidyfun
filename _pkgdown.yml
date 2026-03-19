@@ -21,7 +21,6 @@ reference:
   - tf_ggplot
   - is_tf_ggplot
   - parse_tf_aesthetics
-  - transform_tf_data
   - "+.tf_ggplot"
   - print.tf_ggplot
   - ggplot_build.tf_ggplot
