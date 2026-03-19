@@ -113,7 +113,7 @@ Real-world functional data sets shipped with tidyfun
 - [`dti_df`](https://tidyfun.github.io/tidyfun/reference/dti_df.md) :
   Diffusion tensor imaging data
 
-### tf package: Constructors & converters
+## Constructors & converters (from tf)
 
 Defining and converting functional data objects (re-exported from tf)
 
@@ -156,7 +156,7 @@ Defining and converting functional data objects (re-exported from tf)
 
   Change (basis) representation of a `tf`-object (from tf)
 
-### tf package: Evaluating, indexing & re-arranging
+## Evaluating, indexing & re-arranging (from tf)
 
 Accessing, appending, evaluating, splitting & combining functional data
 objects
@@ -192,7 +192,7 @@ objects
   [`tf_combine()`](https://tidyfun.github.io/tf/reference/tf_splitcombine.html)
   : Split / Combine functional fragments (from tf)
 
-### tf package: Arithmetic, logical and summary functions
+## Arithmetic, logical and summary functions (from tf)
 
 Functionality for computing with and comparing functional data
 
@@ -261,7 +261,7 @@ Functionality for computing with and comparing functional data
 
   Tukey's Five Number Summary for `tf` vectors (from tf)
 
-### tf package: Differentiation, integration and smoothing
+## Differentiation, integration and smoothing (from tf)
 
 - [`tf_derive()`](https://tidyfun.github.io/tf/reference/tf_derive.html)
   : Differentiating functional data: approximating derivative functions
@@ -275,7 +275,7 @@ Functionality for computing with and comparing functional data
 
   Simple smoothing of `tf` objects (from tf)
 
-### tf package: Registering and warping
+## Registering and warping (from tf)
 
 Functions for registering and warping functional data
 
@@ -316,7 +316,7 @@ Functions for registering and warping functional data
 
   Invert a `tf` vector (from tf)
 
-### tf package: Visualization & display
+## Visualization & display (from tf)
 
 Base-R graphics and print formats for tf objects
 
@@ -337,7 +337,7 @@ Base-R graphics and print formats for tf objects
 - [`prep_plotting_arg()`](https://tidyfun.github.io/tf/reference/prep_plotting_arg.html)
   : Preprocess evaluation grid for plotting (from tf)
 
-### tf package: Querying functional data
+## Querying functional data (from tf)
 
 Locating functional features like peaks or zero-crossings
 
@@ -348,7 +348,7 @@ Locating functional features like peaks or zero-crossings
 - [`tf_zoom()`](https://tidyfun.github.io/tf/reference/tf_zoom.html) :
   Functions to zoom in/out on functions (from tf)
 
-### tf package: Utilities & random generation
+## Utilities & random generation (from tf)
 
 - [`tf_arg()`](https://tidyfun.github.io/tf/reference/tfmethods.html)
   [`tf_evaluations()`](https://tidyfun.github.io/tf/reference/tfmethods.html)
@@ -433,7 +433,7 @@ Locating functional features like peaks or zero-crossings
 
 - : tf: S3 Classes and Methods for Tidy Functional Data (from tf)
 
-### tf package: Data
+## Data (from tf)
 
 Functional data sets from tf
 
