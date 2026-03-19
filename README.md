@@ -12,7 +12,7 @@ experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](h
 version](https://tidyfun.r-universe.dev/tidyfun/badges/version)](https://tidyfun.r-universe.dev/tidyfun)
 [![MIT
 license](https://img.shields.io/badge/license-MIT-brightgreen.svg)](https://opensource.org/licenses/MIT)
-[![codecov](https://app.codecov.io/github/tidyfun/tidyfun/coverage.svg?branch=master)](https://app.codecov.io/github/tidyfun/tidyfun/branch/master)
+[![codecov](https://codecov.io/gh/tidyfun/tidyfun/branch/main/graph/badge.svg)](https://app.codecov.io/gh/tidyfun/tidyfun)
 <!-- badges: end -->
 
 **`tidyfun`** is a **`tidyverse`**-oriented interface layer around the
