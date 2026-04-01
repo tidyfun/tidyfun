@@ -233,7 +233,7 @@ tf_ggplot(dti_df, aes(tf = rcst)) +
 ### Heatmaps for functional data: `gglasagna`
 
 Lasagna plots are “[a saucy alternative to spaghetti
-plots](https://pmc.ncbi.nlm.nih.gov/articles/PMC2937254/)”. They are a
+plots](https://doi.org/10.1097/EDE.0b013e3181e5b06a)”. They are a
 variant on a heatmaps which show functional observations in rows and use
 color to illustrate values taken at different arguments. Especially for
 large samples or noisy data, lasagna plots can be more informative than
