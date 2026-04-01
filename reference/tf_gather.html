@@ -19,7 +19,7 @@ containing the functional measurements of the columns given in ....'></head><bod
 
     <a class="navbar-brand me-2" href="../index.html">tidyfun</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.1.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -136,61 +136,84 @@ See also <code><a href="https://tidyfun.github.io/tf/reference/tfd.html" class="
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">growth</span>, package <span class="op">=</span> <span class="st">"tf"</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="op">(</span><span class="va">d</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="va">growth</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="op">]</span><span class="op">$</span><span class="va">height</span><span class="op">[</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, matrix <span class="op">=</span> <span class="cn">TRUE</span><span class="op">]</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 5 × 10</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     `1`   `2`   `3`   `4`   `5`   `6`   `7`   `8`   `9`  `10`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span>  76.2  87.7  96    104.  111.  117.  122.  127.  133.  139.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span>  74.6  90    94.9  102.  109.  116.  123.  128.  135.  141.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span>  78.2  89.6  97.1  109.  116.  123.  128   134.  142.  149.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span>  77.7  90.3  98.6  106.  114.  121.  126.  131   137.  143 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span>  76    89    96    103   110   117   123   131   136   141 </span>
-<span class="r-in"><span><span class="fu">tf_gather</span><span class="op">(</span><span class="va">d</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 5 × 1</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         .tfd</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;tfd_reg&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> ▁▂▃▄▄▅▆▆▇▇</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> ▁▂▃▃▄▅▆▆▇█</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> ▁▂▃▄▅▆▆▇██</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> ▁▂▃▄▅▅▆▇▇█</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> ▁▂▃▄▄▅▆▇▇█</span>
-<span class="r-in"><span><span class="fu">tf_gather</span><span class="op">(</span><span class="va">d</span>, key <span class="op">=</span> <span class="st">"height_tf"</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 5 × 1</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    height_tf</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;tfd_reg&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> ▁▂▃▄▄▅▆▆▇▇</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> ▁▂▃▃▄▅▆▆▇█</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> ▁▂▃▄▅▆▆▇██</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> ▁▂▃▄▅▅▆▇▇█</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> ▁▂▃▄▄▅▆▇▇█</span>
-<span class="r-in"><span><span class="fu">tf_gather</span><span class="op">(</span><span class="va">d</span>, arg <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, length.out <span class="op">=</span> <span class="fl">10</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 5 × 1</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         .tfd</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;tfd_reg&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> ▁▂▃▄▄▅▆▆▇▇</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> ▁▂▃▃▄▅▆▆▇█</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> ▁▂▃▄▅▆▆▇██</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> ▁▂▃▄▅▅▆▇▇█</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> ▁▂▃▄▄▅▆▇▇█</span>
-<span class="r-in"><span><span class="op">(</span><span class="va">d2</span> <span class="op">&lt;-</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind_cols.html" class="external-link">bind_cols</a></span><span class="op">(</span>id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">d</span><span class="op">)</span>, <span class="va">d</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 5 × 11</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   id      `1`   `2`   `3`   `4`   `5`   `6`   `7`   `8`   `9`  `10`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> 1      76.2  87.7  96    104.  111.  117.  122.  127.  133.  139.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> 2      74.6  90    94.9  102.  109.  116.  123.  128.  135.  141.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> 3      78.2  89.6  97.1  109.  116.  123.  128   134.  142.  149.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> 4      77.7  90.3  98.6  106.  114.  121.  126.  131   137.  143 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> 5      76    89    96    103   110   117   123   131   136   141 </span>
-<span class="r-in"><span><span class="fu">tf_gather</span><span class="op">(</span><span class="va">d2</span>, <span class="op">-</span><span class="va">id</span><span class="op">)</span> <span class="co"># tf_gather(d2, matches("height")); tf_gather(d2, -1); etc</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 5 × 2</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   id          .tfd</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;tfd_reg&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> 1     ▁▂▃▄▄▅▆▆▇▇</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> 2     ▁▂▃▃▄▅▆▆▇█</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> 3     ▁▂▃▄▅▆▆▇██</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> 4     ▁▂▃▄▅▅▆▇▇█</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> 5     ▁▂▃▄▄▅▆▇▇█</span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="tf_spread.html">tf_spread</a></span><span class="op">(</span><span class="va">growth</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="op">]</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>id <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="va">d</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Rows: 5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Columns: 33</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ gender      <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span> female<span style="color: #949494;">, </span>female<span style="color: #949494;">, </span>female<span style="color: #949494;">, </span>female<span style="color: #949494;">, </span>female</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ height_1    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 76.2<span style="color: #949494;">, </span>74.6<span style="color: #949494;">, </span>78.2<span style="color: #949494;">, </span>77.7<span style="color: #949494;">, </span>76.0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ height_1.25 <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 80.4<span style="color: #949494;">, </span>78.0<span style="color: #949494;">, </span>81.8<span style="color: #949494;">, </span>80.5<span style="color: #949494;">, </span>80.0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ height_1.5  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 83.3<span style="color: #949494;">, </span>82.0<span style="color: #949494;">, </span>85.4<span style="color: #949494;">, </span>83.3<span style="color: #949494;">, </span>83.0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ height_1.75 <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 85.7<span style="color: #949494;">, </span>86.9<span style="color: #949494;">, </span>87.9<span style="color: #949494;">, </span>87.0<span style="color: #949494;">, </span>86.0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ height_2    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 87.7<span style="color: #949494;">, </span>90.0<span style="color: #949494;">, </span>89.6<span style="color: #949494;">, </span>90.3<span style="color: #949494;">, </span>89.0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ height_3    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 96.0<span style="color: #949494;">, </span>94.9<span style="color: #949494;">, </span>97.1<span style="color: #949494;">, </span>98.6<span style="color: #949494;">, </span>96.0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ height_4    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 103.8<span style="color: #949494;">, </span>102.1<span style="color: #949494;">, </span>109.2<span style="color: #949494;">, </span>106.3<span style="color: #949494;">, </span>103.0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ height_5    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 110.7<span style="color: #949494;">, </span>109.2<span style="color: #949494;">, </span>116.2<span style="color: #949494;">, </span>113.9<span style="color: #949494;">, </span>110.0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ height_6    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 116.8<span style="color: #949494;">, </span>115.6<span style="color: #949494;">, </span>122.9<span style="color: #949494;">, </span>120.7<span style="color: #949494;">, </span>117.0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ height_7    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 122.2<span style="color: #949494;">, </span>122.7<span style="color: #949494;">, </span>128.0<span style="color: #949494;">, </span>125.7<span style="color: #949494;">, </span>123.0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ height_8    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 127.4<span style="color: #949494;">, </span>128.2<span style="color: #949494;">, </span>134.2<span style="color: #949494;">, </span>131.0<span style="color: #949494;">, </span>131.0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ height_8.5  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 130.6<span style="color: #949494;">, </span>131.1<span style="color: #949494;">, </span>138.0<span style="color: #949494;">, </span>134.1<span style="color: #949494;">, </span>133.0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ height_9    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 133.4<span style="color: #949494;">, </span>134.8<span style="color: #949494;">, </span>141.5<span style="color: #949494;">, </span>137.1<span style="color: #949494;">, </span>136.0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ height_9.5  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 135.9<span style="color: #949494;">, </span>138.2<span style="color: #949494;">, </span>145.2<span style="color: #949494;">, </span>140.2<span style="color: #949494;">, </span>139.0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ height_10   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 138.6<span style="color: #949494;">, </span>140.9<span style="color: #949494;">, </span>148.8<span style="color: #949494;">, </span>143.0<span style="color: #949494;">, </span>141.0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ height_10.5 <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 142.4<span style="color: #949494;">, </span>143.4<span style="color: #949494;">, </span>152.3<span style="color: #949494;">, </span>145.7<span style="color: #949494;">, </span>144.0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ height_11   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 146.8<span style="color: #949494;">, </span>146.1<span style="color: #949494;">, </span>155.6<span style="color: #949494;">, </span>148.5<span style="color: #949494;">, </span>147.0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ height_11.5 <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 150.3<span style="color: #949494;">, </span>149.4<span style="color: #949494;">, </span>158.2<span style="color: #949494;">, </span>151.5<span style="color: #949494;">, </span>150.0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ height_12   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 153.1<span style="color: #949494;">, </span>152.9<span style="color: #949494;">, </span>159.6<span style="color: #949494;">, </span>154.8<span style="color: #949494;">, </span>153.0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ height_12.5 <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 155.0<span style="color: #949494;">, </span>156.4<span style="color: #949494;">, </span>160.1<span style="color: #949494;">, </span>158.4<span style="color: #949494;">, </span>157.0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ height_13   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 156.2<span style="color: #949494;">, </span>159.5<span style="color: #949494;">, </span>160.3<span style="color: #949494;">, </span>161.2<span style="color: #949494;">, </span>161.0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ height_13.5 <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 157.1<span style="color: #949494;">, </span>161.6<span style="color: #949494;">, </span>160.8<span style="color: #949494;">, </span>163.5<span style="color: #949494;">, </span>164.0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ height_14   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 157.7<span style="color: #949494;">, </span>162.6<span style="color: #949494;">, </span>161.6<span style="color: #949494;">, </span>165.2<span style="color: #949494;">, </span>166.0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ height_14.5 <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 158.0<span style="color: #949494;">, </span>163.6<span style="color: #949494;">, </span>161.8<span style="color: #949494;">, </span>166.0<span style="color: #949494;">, </span>167.0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ height_15   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 158.2<span style="color: #949494;">, </span>165.0<span style="color: #949494;">, </span>161.7<span style="color: #949494;">, </span>166.5<span style="color: #949494;">, </span>168.0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ height_15.5 <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 158.4<span style="color: #949494;">, </span>165.3<span style="color: #949494;">, </span>161.8<span style="color: #949494;">, </span>166.9<span style="color: #949494;">, </span>168.0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ height_16   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 158.6<span style="color: #949494;">, </span>165.6<span style="color: #949494;">, </span>161.9<span style="color: #949494;">, </span>167.2<span style="color: #949494;">, </span>169.0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ height_16.5 <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 158.7<span style="color: #949494;">, </span>165.9<span style="color: #949494;">, </span>161.9<span style="color: #949494;">, </span>167.4<span style="color: #949494;">, </span>169.0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ height_17   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 158.7<span style="color: #949494;">, </span>166.1<span style="color: #949494;">, </span>161.7<span style="color: #949494;">, </span>167.4<span style="color: #949494;">, </span>170.0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ height_17.5 <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 158.8<span style="color: #949494;">, </span>166.0<span style="color: #949494;">, </span>161.9<span style="color: #949494;">, </span>167.6<span style="color: #949494;">, </span>170.0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ height_18   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 158.9<span style="color: #949494;">, </span>166.0<span style="color: #949494;">, </span>162.2<span style="color: #949494;">, </span>167.8<span style="color: #949494;">, </span>170.0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ id          <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> 1<span style="color: #949494;">, </span>2<span style="color: #949494;">, </span>3<span style="color: #949494;">, </span>4<span style="color: #949494;">, </span>5</span>
+<span class="r-in"><span><span class="co"># tidyselect syntax for column selection:</span></span></span>
+<span class="r-in"><span><span class="fu">tf_gather</span><span class="op">(</span><span class="va">d</span>, <span class="fu">starts_with</span><span class="op">(</span><span class="st">"height"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> creating new <span style="color: #0000BB;">&lt;tfd&gt;</span>-column <span style="color: #0000BB;">"height"</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        gender id                     height</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> girl01 female  1 ▁▁▁▂▃▃▄▄▅▅▆▆▆▆▇▇▇▇▇▇██████</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> girl02 female  2 ▁▁▁▂▃▃▄▄▅▅▆▆▆▆▇▇▇█████████</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> girl03 female  3 ▁▁▂▂▃▄▄▅▅▆▆▇▇▇▇███████████</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> girl04 female  4 ▁▁▁▂▃▃▄▅▅▅▆▆▆▇▇▇██████████</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> girl05 female  5 ▁▁▁▂▃▃▄▄▅▅▆▆▆▆▇▇██████████</span>
+<span class="r-in"><span><span class="fu">tf_gather</span><span class="op">(</span><span class="va">d</span>, <span class="va">height_1</span><span class="op">:</span><span class="va">height_18</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> creating new <span style="color: #0000BB;">&lt;tfd&gt;</span>-column <span style="color: #0000BB;">"height"</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        gender id                     height</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> girl01 female  1 ▁▁▁▂▃▃▄▄▅▅▆▆▆▆▇▇▇▇▇▇██████</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> girl02 female  2 ▁▁▁▂▃▃▄▄▅▅▆▆▆▆▇▇▇█████████</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> girl03 female  3 ▁▁▂▂▃▄▄▅▅▆▆▇▇▇▇███████████</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> girl04 female  4 ▁▁▁▂▃▃▄▅▅▅▆▆▆▇▇▇██████████</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> girl05 female  5 ▁▁▁▂▃▃▄▄▅▅▆▆▆▆▇▇██████████</span>
+<span class="r-in"><span><span class="fu">tf_gather</span><span class="op">(</span><span class="va">d</span>, <span class="op">-</span><span class="va">gender</span>, <span class="op">-</span><span class="va">id</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> creating new <span style="color: #0000BB;">&lt;tfd&gt;</span>-column <span style="color: #0000BB;">"height"</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        gender id                     height</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> girl01 female  1 ▁▁▁▂▃▃▄▄▅▅▆▆▆▆▇▇▇▇▇▇██████</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> girl02 female  2 ▁▁▁▂▃▃▄▄▅▅▆▆▆▆▇▇▇█████████</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> girl03 female  3 ▁▁▂▂▃▄▄▅▅▆▆▇▇▇▇███████████</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> girl04 female  4 ▁▁▁▂▃▃▄▅▅▅▆▆▆▇▇▇██████████</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> girl05 female  5 ▁▁▁▂▃▃▄▄▅▅▆▆▆▆▇▇██████████</span>
+<span class="r-in"><span><span class="co"># custom key name and arg values:</span></span></span>
+<span class="r-in"><span><span class="fu">tf_gather</span><span class="op">(</span><span class="va">d</span>, <span class="fu">starts_with</span><span class="op">(</span><span class="st">"height"</span><span class="op">)</span>, key <span class="op">=</span> <span class="st">"height"</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        gender id                     height</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> girl01 female  1 ▁▁▁▂▃▃▄▄▅▅▆▆▆▆▇▇▇▇▇▇██████</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> girl02 female  2 ▁▁▁▂▃▃▄▄▅▅▆▆▆▆▇▇▇█████████</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> girl03 female  3 ▁▁▂▂▃▄▄▅▅▆▆▇▇▇▇███████████</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> girl04 female  4 ▁▁▁▂▃▃▄▅▅▅▆▆▆▇▇▇██████████</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> girl05 female  5 ▁▁▁▂▃▃▄▄▅▅▆▆▆▆▇▇██████████</span>
+<span class="r-in"><span><span class="fu">tf_gather</span><span class="op">(</span><span class="va">d</span>, <span class="fu">starts_with</span><span class="op">(</span><span class="st">"height"</span><span class="op">)</span>, arg <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, length.out <span class="op">=</span> <span class="fl">31</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> creating new <span style="color: #0000BB;">&lt;tfd&gt;</span>-column <span style="color: #0000BB;">"height"</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        gender id                     height</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> girl01 female  1 ▁▁▁▂▃▃▄▄▅▅▆▆▆▆▇▇▇▇▇▇██████</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> girl02 female  2 ▁▁▁▂▃▃▄▄▅▅▆▆▆▆▇▇▇█████████</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> girl03 female  3 ▁▁▂▂▃▄▄▅▅▆▆▇▇▇▇███████████</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> girl04 female  4 ▁▁▁▂▃▃▄▅▅▅▆▆▆▇▇▇██████████</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> girl05 female  5 ▁▁▁▂▃▃▄▄▅▅▆▆▆▆▇▇██████████</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
