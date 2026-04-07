@@ -15,7 +15,7 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/tidyfun/tidyfun/blob/main/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/tidyfun/tidyfun/blob/v0.1.1/DESCRIPTION)
 
 Scheipl F, Goldsmith J, Wrobel J (2026). *tidyfun: Tidy Functional Data
 Wrangling and Visualization*. R package version 0.1.1,
