@@ -385,7 +385,7 @@ cca_five <- cca[1:5]
 cca_five |> plot(xlim = c(-0.15, 1), col = pal_5, lwd = 2)
 
 text(
-  x = -0.1, y = cca_five[, 0.07], labels = names(cca_five), col = pal_5, cex = 1.5
+  x = -0.1, y = cca_five[, 0.07], labels = names(cca_five), col = pal_5, cex = 1
 )
 
 median(cca_five) |> lines(col = pal_5[3], lwd = 4)

@@ -269,7 +269,7 @@ template to produce shifted/deformed curves. Note that this shows the
 observed curve from the template. In practice, registration works in the
 <em>inverse</em> direction — estimating <span class="math inline">\(h_i^{-1}\)</span> to map an observed curve back to
 system time (i.e., to <em>align</em> it to a template).</p>
-<p><img src="x06_Registration_files/figure-html/warp-illustration-1.png" class="r-plt" alt="" width="768"></p>
+<p><img src="x06_Registration_files/figure-html/warp-illustration-1.png" class="r-plt" alt="" width="576"></p>
 <ul>
 <li>Note that the affine shift warp is NOT domain-preserving (it shrinks
 the domain down to [0.1, 0.9]), while the smooth and wiggly elastic
@@ -337,7 +337,7 @@ transparent:</p>
 <span><span class="va">pinch_inv_warp_shift</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tidyfun.github.io/tf/reference/tf_registration.html" class="external-link">tf_inv_warps</a></span><span class="op">(</span><span class="va">reg_shift</span><span class="op">)</span></span>
 <span><span class="va">pinch_small_reg</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tidyfun.github.io/tf/reference/tf_registration.html" class="external-link">tf_aligned</a></span><span class="op">(</span><span class="va">reg_shift</span><span class="op">)</span></span>
 <span><span class="va">pinch_template_shift</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tidyfun.github.io/tf/reference/tf_registration.html" class="external-link">tf_template</a></span><span class="op">(</span><span class="va">reg_shift</span><span class="op">)</span></span></code></pre></div>
-<p><img src="x06_Registration_files/figure-html/quickstart-plot-1.png" class="r-plt" alt="" width="768"></p>
+<p><img src="x06_Registration_files/figure-html/quickstart-plot-1.png" class="r-plt" alt="" width="576"></p>
 <p>Quick success checks:</p>
 <ul>
 <li>The template is plausible for the population you are aligning.</li>
@@ -668,7 +668,7 @@ modified band depth (MBD, see <code><a href="https://tidyfun.github.io/tf/refere
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="https://tidyfun.github.io/tf/reference/tf_registration.html" class="external-link">tf_aligned</a></span><span class="op">(</span><span class="va">reg_median</span><span class="op">)</span>, col <span class="op">=</span> <span class="va">alpha_palette</span>, lwd <span class="op">=</span> <span class="fl">1.5</span>, points <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>     main <span class="op">=</span> <span class="st">"Aligned to MBD median"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">bumps_median</span>, lwd <span class="op">=</span> <span class="fl">3</span>, lty <span class="op">=</span> <span class="fl">2</span>, col <span class="op">=</span> <span class="st">"red3"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="x06_Registration_files/figure-html/template-choice-1.png" class="r-plt" alt="" width="768"></p>
+<p><img src="x06_Registration_files/figure-html/template-choice-1.png" class="r-plt" alt="" width="576"></p>
 <p>The pointwise mean (top row, dashed) is smeared and not
 representative of any individual curve’s shape. Registration toward it
 produces poor alignment. The MBD median (bottom row, dashed red) is the
@@ -733,13 +733,13 @@ data.</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Inverse warp deviations from identity (relative to domain length):</span></span>
 <span><span class="co">#&gt;     0%    10%    25%    50%    75%    90%   100% </span></span>
-<span><span class="co">#&gt; 0.0483 0.0989 0.1222 0.1478 0.1725 0.1855 0.2374 </span></span>
+<span><span class="co">#&gt; 0.0487 0.0991 0.1221 0.1481 0.1722 0.1855 0.2384 </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Inverse warp slopes (1 = identity):</span></span>
-<span><span class="co">#&gt;   overall range: [1.088, 1.287]</span></span>
+<span><span class="co">#&gt;   overall range: [1.087, 1.287]</span></span>
 <span><span class="co">#&gt;   per-curve slopes:</span></span>
 <span><span class="co">#&gt;    0%   10%   25%   50%   75%   90%  100% </span></span>
-<span><span class="co">#&gt; 1.088 1.099 1.116 1.135 1.227 1.265 1.287 </span></span>
+<span><span class="co">#&gt; 1.087 1.089 1.117 1.136 1.229 1.262 1.287 </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Domain coverage loss after alignment (fraction of original range):</span></span>
 <span><span class="co">#&gt;     0%    10%    25%    50%    75%    90%   100% </span></span>
@@ -771,7 +771,7 @@ domain is lost per curve after alignment — relevant only for affine
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># plot() provides a 3-panel diagnostic:</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">reg_aff</span><span class="op">)</span></span></code></pre></div>
-<p><img src="x06_Registration_files/figure-html/diagnostics-plot-1.png" class="r-plt" alt="" width="768"></p>
+<p><img src="x06_Registration_files/figure-html/diagnostics-plot-1.png" class="r-plt" alt="" width="576"></p>
 <p>Check that (1) the template (dashed) looks representative of the
 original curve shapes, (2) inverse warping functions are not too far
 from the identity and have no extremely flat or steep segments, and (3)
@@ -792,7 +792,7 @@ aligned curves show better feature alignment to the template.</p>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt;                 metric       value</span></span>
 <span><span class="co">#&gt; 1       sd_peak_before 0.028031728</span></span>
-<span><span class="co">#&gt; 2 sd_peak_after_affine 0.002796824</span></span></code></pre></div>
+<span><span class="co">#&gt; 2 sd_peak_after_affine 0.002836273</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="step-4-compare-with-an-alternative-method">Step 4: Compare with an alternative method<a class="anchor" aria-label="anchor" href="#step-4-compare-with-an-alternative-method"></a>
@@ -830,7 +830,7 @@ aligned curves show better feature alignment to the template.</p>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt;                 metric       value</span></span>
 <span><span class="co">#&gt; 1       sd_peak_before 0.028031728</span></span>
-<span><span class="co">#&gt; 2 sd_peak_after_affine 0.002796824</span></span>
+<span><span class="co">#&gt; 2 sd_peak_after_affine 0.002836273</span></span>
 <span><span class="co">#&gt; 3   sd_peak_after_srvf 0.001349897</span></span></code></pre></div>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/layout.html" class="external-link">layout</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">6</span>, <span class="fl">2</span>, <span class="fl">3</span>, byrow <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
@@ -854,7 +854,7 @@ aligned curves show better feature alignment to the template.</p>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="https://tidyfun.github.io/tf/reference/tf_registration.html" class="external-link">tf_aligned</a></span><span class="op">(</span><span class="va">reg_srvf</span><span class="op">)</span>, main <span class="op">=</span> <span class="st">"SRVF Aligned"</span>,</span>
 <span>     col <span class="op">=</span> <span class="va">alpha_palette</span>, lwd <span class="op">=</span> <span class="fl">1.5</span>, points <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="fu"><a href="https://tidyfun.github.io/tf/reference/tf_registration.html" class="external-link">tf_template</a></span><span class="op">(</span><span class="va">reg_srvf</span><span class="op">)</span>, lwd <span class="op">=</span> <span class="fl">2</span>, lty <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
-<p><img src="x06_Registration_files/figure-html/diagnostics-optional-srvf-plot-1.png" class="r-plt" alt="" width="768"></p>
+<p><img src="x06_Registration_files/figure-html/diagnostics-optional-srvf-plot-1.png" class="r-plt" alt="" width="576"></p>
 <p>If different methods disagree strongly and diagnostics are unstable,
 treat conclusions as low confidence until you resolve data
 representation and model-choice sensitivity.</p>
@@ -1043,8 +1043,9 @@ leading and/or trailing NAs (under strong shifts/scales).</li>
 </h3>
 <p>Constructs piecewise linear warps by mapping user-specified landmark
 positions to target positions. No continuous optimization is performed —
-the warp is fully determined by the landmark correspondence. See <a href="https://doi.org/10.1214/aos/1176348794" class="external-link">Kneip &amp; Gasser (1992,
-Annals of Statistics)</a> and Ramsay &amp; Silverman (2005, Ch. 7).</p>
+the warp is fully determined by the landmark correspondence. See Kneip
+&amp; Gasser (1992, Annals of Statistics; <a href="https://projecteuclid.org/journals/annals-of-statistics/volume-20/issue-3/Statistical-Tools-to-Analyze-Data-Representing-a-Sample-of-Curves/10.1214/aos/1176348769.pdf" class="external-link">pdf</a>)
+and Ramsay &amp; Silverman (2005, Ch. 7).</p>
 <ul>
 <li>
 <strong>Template:</strong> Defined by column-wise means of the
@@ -1145,6 +1146,7 @@ knowledge.</li>
 <span><span class="va">inv_warp_lm2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tidyfun.github.io/tf/reference/tf_registration.html" class="external-link">tf_inv_warps</a></span><span class="op">(</span><span class="va">reg_lm2</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/layout.html" class="external-link">layout</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">12</span>, <span class="fl">4</span>, <span class="fl">3</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>cex.main <span class="op">=</span> <span class="fl">0.8</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/frame.html" class="external-link">plot.new</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">inv_warp_aff</span>, main <span class="op">=</span> <span class="st">"Affine Inverse Warps"</span>, ylab <span class="op">=</span> <span class="st">""</span>,</span>
 <span>     points <span class="op">=</span> <span class="cn">FALSE</span>, col <span class="op">=</span> <span class="va">alpha_palette</span>, lwd <span class="op">=</span> <span class="fl">1.5</span><span class="op">)</span></span>
@@ -1168,7 +1170,7 @@ knowledge.</li>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/abline.html" class="external-link">abline</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, lty <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="https://tidyfun.github.io/tf/reference/tf_registration.html" class="external-link">tf_aligned</a></span><span class="op">(</span><span class="va">reg_lm2</span><span class="op">)</span>, main <span class="op">=</span> <span class="st">"Landmark Registered\n (Start + Peak + End)"</span>, col <span class="op">=</span> <span class="va">alpha_palette</span>, lwd <span class="op">=</span> <span class="fl">1.5</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="https://tidyfun.github.io/tf/reference/tf_registration.html" class="external-link">tf_aligned</a></span><span class="op">(</span><span class="va">reg_lm2</span><span class="op">)</span>, main <span class="op">=</span> <span class="st">"Landmark Registered\n (Start + Peak + End)"</span>, type <span class="op">=</span> <span class="st">"lasagna"</span>, col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grDevices/palettes.html" class="external-link">hcl.colors</a></span><span class="op">(</span><span class="fl">12</span>, rev <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="x06_Registration_files/figure-html/pinch-compare-plot-1.png" class="r-plt" alt="" width="768"></p>
+<p><img src="x06_Registration_files/figure-html/pinch-compare-plot-1.png" class="r-plt" alt="" width="576"></p>
 <p>Note that affine registration with <code>shift+scale</code> warps
 produces some boundary <code>NA</code>s because the warps are not
 domain-preserving, but it does a good job aligning the peaks. Landmark
@@ -1181,12 +1183,12 @@ producing <code>NA</code>s.</p>
 <code class="sourceCode R"><span><span class="va">reg_srvf</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tidyfun.github.io/tf/reference/tf_register.html" class="external-link">tf_register</a></span><span class="op">(</span><span class="va">pinch_small</span>, method <span class="op">=</span> <span class="st">"srvf"</span><span class="op">)</span></span>
 <span><span class="va">inv_warp_srvf</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tidyfun.github.io/tf/reference/tf_registration.html" class="external-link">tf_inv_warps</a></span><span class="op">(</span><span class="va">reg_srvf</span><span class="op">)</span></span>
 <span><span class="va">reg_cc_unpen</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tidyfun.github.io/tf/reference/tf_register.html" class="external-link">tf_register</a></span><span class="op">(</span><span class="va">pinch_small</span>, method <span class="op">=</span> <span class="st">"cc"</span>, max_iter <span class="op">=</span> <span class="fl">10</span>, nbasis <span class="op">=</span> <span class="fl">10</span>, crit <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Iterative registration stopped after 5 of 10 iterations: alignment worsened</span></span>
-<span><span class="co">#&gt; (objective 0.5409 &gt; 0.5296).</span></span>
+<span><span class="co">#&gt; Iterative registration stopped after 4 of 10 iterations: alignment worsened</span></span>
+<span><span class="co">#&gt; (objective 0.7346 &gt; 0.539).</span></span>
 <span><span class="va">inv_warp_cc_unpen</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tidyfun.github.io/tf/reference/tf_registration.html" class="external-link">tf_inv_warps</a></span><span class="op">(</span><span class="va">reg_cc_unpen</span><span class="op">)</span></span>
 <span><span class="va">reg_cc_pen</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tidyfun.github.io/tf/reference/tf_register.html" class="external-link">tf_register</a></span><span class="op">(</span><span class="va">pinch_small</span>, method <span class="op">=</span> <span class="st">"cc"</span>, lambda <span class="op">=</span> <span class="fl">1e-4</span>, max_iter <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Iterative registration stopped after 18 of 20 iterations: alignment worsened</span></span>
-<span><span class="co">#&gt; (objective 0.438 &gt; 0.4374).</span></span>
+<span><span class="co">#&gt; Iterative registration stopped after 12 of 20 iterations: alignment worsened</span></span>
+<span><span class="co">#&gt; (objective 0.4575 &gt; 0.454).</span></span>
 <span><span class="va">inv_warp_cc_pen</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tidyfun.github.io/tf/reference/tf_registration.html" class="external-link">tf_inv_warps</a></span><span class="op">(</span><span class="va">reg_cc_pen</span><span class="op">)</span></span></code></pre></div>
 <p>SRVF and CC both use non-linear warps and tend to be able to align
 more complex phase variation than the <code>affine</code> method, but
@@ -1207,16 +1209,16 @@ quantitative diagnostics:</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Inverse warp deviations from identity (relative to domain length):</span></span>
 <span><span class="co">#&gt;     0%    10%    25%    50%    75%    90%   100% </span></span>
-<span><span class="co">#&gt; 0.1143 0.1418 0.1530 0.1664 0.1936 0.1965 0.1968 </span></span>
+<span><span class="co">#&gt; 0.1151 0.1431 0.1526 0.1637 0.1881 0.1949 0.1972 </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Inverse warp slopes (1 = identity):</span></span>
-<span><span class="co">#&gt;   overall range: [0.282, 4.434]</span></span>
+<span><span class="co">#&gt;   overall range: [0.261, 4.01]</span></span>
 <span><span class="co">#&gt;   per-curve min slopes:</span></span>
 <span><span class="co">#&gt;    0%   10%   25%   50%   75%   90%  100% </span></span>
-<span><span class="co">#&gt; 0.282 0.315 0.362 0.432 0.452 0.460 0.471 </span></span>
+<span><span class="co">#&gt; 0.261 0.315 0.358 0.428 0.461 0.474 0.505 </span></span>
 <span><span class="co">#&gt;   per-curve max slopes:</span></span>
 <span><span class="co">#&gt;    0%   10%   25%   50%   75%   90%  100% </span></span>
-<span><span class="co">#&gt; 2.350 2.366 2.549 3.006 3.377 3.904 4.434</span></span>
+<span><span class="co">#&gt; 2.259 2.335 2.510 2.699 3.362 3.888 4.010</span></span>
 <span><span class="co"># ... ouch! max slope almost 100 and only 40% amplitude variance reduction ....</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">reg_srvf</span><span class="op">)</span></span>
@@ -1243,23 +1245,23 @@ quantitative diagnostics:</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; 10 curve(s) on [0, 0.3]</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Amplitude variance reduction: 97.1%</span></span>
+<span><span class="co">#&gt; Amplitude variance reduction: 97%</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Inverse warp deviations from identity (relative to domain length):</span></span>
 <span><span class="co">#&gt;     0%    10%    25%    50%    75%    90%   100% </span></span>
-<span><span class="co">#&gt; 0.0192 0.0586 0.0812 0.1152 0.1535 0.1709 0.1947 </span></span>
+<span><span class="co">#&gt; 0.0214 0.0650 0.0925 0.1164 0.1526 0.1666 0.1905 </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Inverse warp slopes (1 = identity):</span></span>
-<span><span class="co">#&gt;   overall range: [0.508, 1.862]</span></span>
+<span><span class="co">#&gt;   overall range: [0.489, 1.776]</span></span>
 <span><span class="co">#&gt;   per-curve min slopes:</span></span>
 <span><span class="co">#&gt;    0%   10%   25%   50%   75%   90%  100% </span></span>
-<span><span class="co">#&gt; 0.508 0.550 0.592 0.782 0.823 0.855 0.878 </span></span>
+<span><span class="co">#&gt; 0.489 0.528 0.570 0.711 0.762 0.777 0.837 </span></span>
 <span><span class="co">#&gt;   per-curve max slopes:</span></span>
 <span><span class="co">#&gt;    0%   10%   25%   50%   75%   90%  100% </span></span>
-<span><span class="co">#&gt; 1.053 1.206 1.234 1.572 1.671 1.700 1.862</span></span></code></pre></div>
+<span><span class="co">#&gt; 1.087 1.158 1.202 1.456 1.575 1.619 1.776</span></span></code></pre></div>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/layout.html" class="external-link">layout</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">12</span>, <span class="fl">4</span>, <span class="fl">3</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>cex.main <span class="op">=</span> <span class="fl">0.8</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/frame.html" class="external-link">plot.new</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">inv_warp_srvf</span>, main <span class="op">=</span> <span class="st">"SRVF Inverse Warps"</span>, ylab <span class="op">=</span> <span class="st">""</span>,</span>
 <span>     points <span class="op">=</span> <span class="cn">FALSE</span>, col <span class="op">=</span> <span class="va">alpha_palette</span>, lwd <span class="op">=</span> <span class="fl">1.5</span><span class="op">)</span></span>
@@ -1287,7 +1289,7 @@ quantitative diagnostics:</p>
 <span>     col <span class="op">=</span> <span class="va">alpha_palette</span>, lwd <span class="op">=</span> <span class="fl">1.5</span>, points <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="https://tidyfun.github.io/tf/reference/tf_registration.html" class="external-link">tf_aligned</a></span><span class="op">(</span><span class="va">reg_cc_pen</span><span class="op">)</span>, main <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/expression.html" class="external-link">expression</a></span><span class="op">(</span><span class="st">"CC Registered ("</span> <span class="op">*</span> <span class="va">lambda</span> <span class="op">*</span> <span class="st">" = 1e-4)"</span><span class="op">)</span>,</span>
 <span>     type <span class="op">=</span> <span class="st">"lasagna"</span>, col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grDevices/palettes.html" class="external-link">hcl.colors</a></span><span class="op">(</span><span class="fl">12</span>, rev <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="x06_Registration_files/figure-html/pinch-compare-srvf-cc-plot-1.png" class="r-plt" alt="" width="768"></p>
+<p><img src="x06_Registration_files/figure-html/pinch-compare-srvf-cc-plot-1.png" class="r-plt" alt="" width="576"></p>
 </div>
 <div class="section level3">
 <h3 id="growth-data-deeper-real-data-workflow">Growth Data: Deeper Real-data Workflow<a class="anchor" aria-label="anchor" href="#growth-data-deeper-real-data-workflow"></a>
@@ -1346,6 +1348,7 @@ results.</p>
 <span>  <span class="op">(</span>\<span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="va">x</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, <span class="va">x</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span>, l <span class="op">=</span> <span class="fl">13</span><span class="op">)</span><span class="op">)</span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/layout.html" class="external-link">layout</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">8</span>, <span class="fl">4</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>cex.main <span class="op">=</span> <span class="fl">0.8</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">growth</span><span class="op">$</span><span class="va">raw_vel</span>, main <span class="op">=</span> <span class="st">"Raw Velocity (finite diff.)"</span>,</span>
 <span>     xlab <span class="op">=</span> <span class="st">"Age [years]"</span>, ylab <span class="op">=</span> <span class="st">"cm/year"</span>, lwd <span class="op">=</span> <span class="fl">0.8</span>, ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">30</span><span class="op">)</span><span class="op">)</span></span>
@@ -1366,7 +1369,7 @@ results.</p>
 <span>     xlab <span class="op">=</span> <span class="st">"Registered Age [years]"</span>, ylab <span class="op">=</span> <span class="st">"cm/year"</span>, lwd <span class="op">=</span> <span class="fl">0.8</span>, ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">30</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">reg_smooth</span>, main <span class="op">=</span> <span class="st">"SRVF Registered (smooth)"</span>,</span>
 <span>     type <span class="op">=</span> <span class="st">"lasagna"</span>, col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grDevices/palettes.html" class="external-link">hcl.colors</a></span><span class="op">(</span><span class="fl">12</span>, rev <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, breaks <span class="op">=</span> <span class="va">reg_brks</span><span class="op">)</span></span></code></pre></div>
-<p><img src="x06_Registration_files/figure-html/growth-raw-vs-smooth-plot-1.png" class="r-plt" alt="" width="768"></p>
+<p><img src="x06_Registration_files/figure-html/growth-raw-vs-smooth-plot-1.png" class="r-plt" alt="" width="576"></p>
 <p>The top row shows extreme, biologically implausible warps
 (i.e. mapping chronological ages 5-8 to “registered” ages &lt; 2) with
 local wiggles that are more likely to reflect noise in the raw velocity
@@ -1389,7 +1392,7 @@ smoother and more subtle warps.</p>
 <span><span class="va">reg_raw_pen</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tidyfun.github.io/tf/reference/tf_registration.html" class="external-link">tf_aligned</a></span><span class="op">(</span><span class="va">reg_raw_pen_obj</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/layout.html" class="external-link">layout</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">4</span>, <span class="fl">4</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>cex.main <span class="op">=</span> <span class="fl">0.8</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">growth</span><span class="op">$</span><span class="va">raw_vel</span>, main <span class="op">=</span> <span class="st">"Raw Velocity"</span>,</span>
 <span>     xlab <span class="op">=</span> <span class="st">"Age [years]"</span>, ylab <span class="op">=</span> <span class="st">"cm/year"</span>, lwd <span class="op">=</span> <span class="fl">0.8</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">inv_warp_raw_pen</span>, points <span class="op">=</span> <span class="cn">FALSE</span>,</span>
@@ -1401,7 +1404,7 @@ smoother and more subtle warps.</p>
 <span>     xlab <span class="op">=</span> <span class="st">"Registered Age [years]"</span>, ylab <span class="op">=</span> <span class="st">"cm/year"</span>, lwd <span class="op">=</span> <span class="fl">0.8</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">reg_raw_pen</span>, main <span class="op">=</span> <span class="st">"Penalized Registered (raw)"</span>,</span>
 <span>     type <span class="op">=</span> <span class="st">"lasagna"</span>, col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grDevices/palettes.html" class="external-link">hcl.colors</a></span><span class="op">(</span><span class="fl">12</span>, rev <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, breaks <span class="op">=</span> <span class="va">reg_brks</span><span class="op">)</span></span></code></pre></div>
-<p><img src="x06_Registration_files/figure-html/growth-penalization-plot-1.png" class="r-plt" alt="" width="768"></p>
+<p><img src="x06_Registration_files/figure-html/growth-penalization-plot-1.png" class="r-plt" alt="" width="576"></p>
 <p>Penalization smooths out the worst warp artifacts, and the result
 here looks more reasonable than the result for the (oversmoothed)
 <code>tfb</code>-inputs above. That said, in most cases the best
@@ -1456,7 +1459,7 @@ curve.</p>
 <span>     xlab <span class="op">=</span> <span class="st">"Registered Age [years]"</span>, ylab <span class="op">=</span> <span class="st">"cm/year"</span>, lwd <span class="op">=</span> <span class="fl">0.8</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">reg_lm</span>, main <span class="op">=</span> <span class="st">"Landmark Registered"</span>,</span>
 <span>     type <span class="op">=</span> <span class="st">"lasagna"</span>, col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grDevices/palettes.html" class="external-link">hcl.colors</a></span><span class="op">(</span><span class="fl">12</span>, rev <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, breaks <span class="op">=</span> <span class="va">reg_brks</span><span class="op">)</span></span></code></pre></div>
-<p><img src="x06_Registration_files/figure-html/growth-landmarks-plot-1.png" class="r-plt" alt="" width="768"></p>
+<p><img src="x06_Registration_files/figure-html/growth-landmarks-plot-1.png" class="r-plt" alt="" width="576"></p>
 <p>The piecewise linear warps align the pubertal peaks well, with the
 pubertal trough and infant growth landmarks anchoring the earlier
 phases. Compared to SRVF, the warps are simpler and fully interpretable
@@ -1476,8 +1479,7 @@ growth” above…).</p>
 <ul>
 <li>Kneip, A., &amp; Gasser, T. (1992). Statistical tools to analyze
 data representing a sample of curves. <em>Annals of Statistics</em>,
-20(3), 1266–1305. <a href="https://doi.org/10.1214/aos/1176348794" class="external-link">doi:10.1214/aos/1176348794</a>
-</li>
+20(3), 1266–1305. DOI 10.1214/aos/1176348794 (<a href="https://projecteuclid.org/journals/annals-of-statistics/volume-20/issue-3/Statistical-Tools-to-Analyze-Data-Representing-a-Sample-of-Curves/10.1214/aos/1176348769.pdf" class="external-link">pdf</a>)</li>
 <li>Marron, J.S., Ramsay, J.O., Sangalli, L.M., &amp; Srivastava, A.
 (2015). Functional data analysis of amplitude and phase variation.
 <em>Statistical Science</em>, 30(4), 468–484. <a href="https://doi.org/10.1214/15-EJS1030" class="external-link">doi:10.1214/15-EJS1030</a>
