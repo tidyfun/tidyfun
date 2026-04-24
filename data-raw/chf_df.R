@@ -35,4 +35,20 @@ chf_df <- inner_join(covar, filter(activity, week == 1), by = "id") |>
     )
   )
 
+# Rebuild the tf column with the current tf constructors so the serialized
+# dataset only references current strong dependencies.
+activity_old <- chf_df$activity
+evaluator_name <- attr(activity_old, "evaluator_name")
+chf_df$activity <- eval(
+  bquote(
+    tf::tfd(
+      tf::tf_evaluations(activity_old),
+      arg = tf::tf_arg(activity_old),
+      domain = tf::tf_domain(activity_old),
+      evaluator = .(as.name(evaluator_name))
+    )
+  )
+)
+rm(activity_old, evaluator_name)
+
 usethis::use_data(chf_df, overwrite = TRUE)

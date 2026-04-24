@@ -1,3 +1,8 @@
+# tidyfun 0.1.2
+
+* Rebuilt `chf_df` with current `tf` constructors before saving so the packaged
+  dataset no longer carries stale namespace references from pre-`tf` releases.
+
 # tidyfun 0.1.1
 
 * Initial CRAN submission.

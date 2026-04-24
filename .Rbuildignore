@@ -16,6 +16,7 @@
 ^\.claude$
 ^\.dockerignore$
 ^\.editorconfig$
+^\.git$
 ^\.gitattributes$
 ^\.github$
 ^\.gitignore$
