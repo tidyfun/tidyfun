@@ -23,7 +23,7 @@ primer](https://rpubs.com/hadley/ggplot-intro) may be helpful.
 as the primary interface for plotting functional data with
 **`ggplot2`**. It works just like
 [`ggplot()`](https://ggplot2.tidyverse.org/reference/ggplot.html), but
-understands `tf` vectors — use the `tf` aesthetic to map a `tf` column
+understands `tf` vectors – use the `tf` aesthetic to map a `tf` column
 to the plot, then add standard **`ggplot2`** geoms (`geom_line`,
 `geom_point`, `geom_ribbon`, etc.).
 

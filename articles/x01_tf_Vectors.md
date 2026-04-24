@@ -376,7 +376,7 @@ c(mean = mean(cca_five), sd = sd(cca_five))
 ## mean: ▇███▇▇▇▇▇▇▇▇▇▇▇▇▇▆▆▆▆▇▇███
 ## sd  : ▁▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
 
-tf_depth(cca_five) ## Modified Band-2 Depth (à la Sun/Genton/Nychka, 2012), others to come.
+tf_depth(cca_five) ## Modified Band-2 Depth (a la Sun/Genton/Nychka, 2012), others to come.
 ##        A        B        C        D        E 
 ## 1.221739 1.293478 1.319565 1.145652 1.019565
 median(cca_five) == cca_five[which.max(tf_depth(cca_five))]

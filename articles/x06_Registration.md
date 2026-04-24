@@ -52,7 +52,7 @@ Key interpretation:
 # One-shot registration (returns tf_registration object):
 reg <- tf_register(x, method = "...")
 tf_aligned(reg)   # registered/aligned curves
-tf_inv_warps(reg)     # estimated inverse warping functions (observed → aligned time)
+tf_inv_warps(reg)     # estimated inverse warping functions (observed -> aligned time)
 tf_template(reg)  # template used
 summary(reg)      # alignment diagnostics
 plot(reg)          # 3-panel diagnostic plot
@@ -91,16 +91,16 @@ Practical rules:
     trusting warps.
 
 4.  Under strong phase variation, the pointwise mean can be a poor
-    template — see [Unsuitable template](#unsuitable-template) in the
+    template – see [Unsuitable template](#unsuitable-template) in the
     Pitfalls section for an example and remedy.
 
 ### What is a Warping Function?
 
 [`tf_estimate_warps()`](https://tidyfun.github.io/tf/reference/tf_estimate_warps.html)
-returns forward warps \\h_i\\ (aligned → observed time), while
-`tf_inv_warps(reg)` returns the inverse warps \\h_i^{-1}\\ (observed →
+returns forward warps \\h_i\\ (aligned -\> observed time), while
+`tf_inv_warps(reg)` returns the inverse warps \\h_i^{-1}\\ (observed -\>
 aligned time) that are directly used for alignment. These are the
-natural functions to inspect and plot — they show how each curve’s
+natural functions to inspect and plot – they show how each curve’s
 observed timepoints map to aligned “system” time.
 
 - Warping functions close to the identity line imply there is little
@@ -139,7 +139,7 @@ The figure below illustrates how warping functions compose with a
 template to produce shifted/deformed curves. Note that this shows the
 *forward simulation* view, \\m(h(s))\\: applying a warp to generate an
 observed curve from the template. In practice, registration works in the
-*inverse* direction — estimating \\h_i^{-1}\\ to map an observed curve
+*inverse* direction – estimating \\h_i^{-1}\\ to map an observed curve
 back to system time (i.e., to *align* it to a template).
 
 ![](x06_Registration_files/figure-html/warp-illustration-1.png)
@@ -241,21 +241,21 @@ The `affine` and `landmark` methods also accept irregular grids
 Based on [benchmarks](https://tidyfun.github.io/sim-registration/)
 across 15 data-generating processes, 3 noise levels, and 5 methods:
 
-1.  **Reliable landmarks available?** → Use `landmark`. Fastest,
+1.  **Reliable landmarks available?** -\> Use `landmark`. Fastest,
     simplest warps, and most robust to outlier contamination (warp MISE
-    degrades only ~1.6× at 30% contamination vs 2.6–3.7× for iterative
+    degrades only ~1.6x at 30% contamination vs 2.6-3.7x for iterative
     methods).
-2.  **Mostly shift/scale variation?** → Use `affine`. Fast,
+2.  **Mostly shift/scale variation?** -\> Use `affine`. Fast,
     interpretable, but produces boundary `NA`s.
-3.  **Noisy data?** → Use `cc` (criterion 2) as a stable default — the
+3.  **Noisy data?** -\> Use `cc` (criterion 2) as a stable default – the
     most noise-robust method in our benchmarks. Or use `srvf` after
     pre-smoothing: `tfb(x, k = 25) |> tf_register(method = "srvf")`.
-4.  **Suspected outlier contamination (\>10%)?** → Use `landmark` if
+4.  **Suspected outlier contamination (\>10%)?** -\> Use `landmark` if
     possible. Otherwise, remove outliers before registration.
-5.  **Clean data, complex phase variation?** → Use `srvf`. Best overall
-    warp recovery on clean data with domain-preserving warps, but
-    rankings shift with noise level and template shape.
-6.  **Always compare ≥2 methods** and inspect diagnostics (see
+5.  **Clean data, complex phase variation?** -\> Use `srvf`. Best
+    overall warp recovery on clean data with domain-preserving warps,
+    but rankings shift with noise level and template shape.
+6.  **Always compare at least 2 methods** and inspect diagnostics (see
     [Diagnostics Workflow](#practical-diagnostics-workflow) below). No
     single method dominates across all conditions.
 
@@ -284,10 +284,10 @@ near-identical curves.
 compare before/after sensitivity.
 
 In our benchmarks[²](#fn2), CC methods (`method = "cc"`) were the most
-noise-robust, while SRVF degraded most sharply under noise — because
+noise-robust, while SRVF degraded most sharply under noise – because
 SRSFs involve numerical derivatives that amplify observation noise.
 Pre-smoothing SRVF inputs with `tfb(x, k = 25)` before registration
-reduced warp error (measured as warp MISE) by 50–70% under moderate
+reduced warp error (measured as warp MISE) by 50-70% under moderate
 noise. Recipe:
 `x_smooth <- tfb(x, k = 25); reg <- tf_register(x_smooth, method = "srvf")`.
 
@@ -302,7 +302,7 @@ on grid density.
 The `srvf` and `cc` methods require regular grids (`tfd_reg`);
 interpolate sparse or irregular data to a common regular grid first. The
 `affine` and `landmark` methods also accept irregular grids
-(`tfd_irreg`). Grid density can affect results — try at least two grid
+(`tfd_irreg`). Grid density can affect results – try at least two grid
 resolutions to check stability. SRVF performance varies substantially
 with grid resolution due to numerical differentiation: grid sizes around
 100 points are a robust default. Finer grids (\>200 points) can degrade
@@ -346,7 +346,7 @@ improvement in alignment, over-warping may be occurring.
 reasonable starting point; higher values pull warps toward the identity,
 reducing over-warping at the cost of alignment precision. For `srvf`,
 lambda penalization has inconsistent effects across DGPs and noise
-levels in our benchmarks — prefer pre-smoothing inputs (e.g.,
+levels in our benchmarks – prefer pre-smoothing inputs (e.g.,
 `tfb(x, k = 25)`) over lambda tuning. Note that optimal lambda values
 are problem-specific; the ranges above are derived from oracle (ex-post)
 analysis and have not been validated via cross-validation.
@@ -361,7 +361,7 @@ the MBD median.
 
 The default template for `affine` and `cc` registration is the pointwise
 arithmetic mean (re-estimated iteratively). When phase variation is
-large — curve features are spread far apart in time — the pointwise mean
+large – curve features are spread far apart in time – the pointwise mean
 gets smeared out and no longer resembles any individual curve. A robust
 alternative is to use the most *central* observed curve, e.g. the curve
 with the highest modified band depth (MBD, see
@@ -373,7 +373,7 @@ s <- seq(-4, 6, length.out = 201)
 mus <- c(-2, -1, 0, 1, 2)
 bumps <- tfd(t(sapply(mus, \(mu) dnorm(s, mu, sd = 0.5))), arg = s)
 
-# Pointwise mean is smeared — not a good template:
+# Pointwise mean is smeared -- not a good template:
 bumps_mean <- mean(bumps)
 # MBD median picks the most central observed curve:
 bumps_median <- median(bumps, depth = "MBD")
@@ -422,7 +422,7 @@ lines(bumps_median, lwd = 3, lty = 2, col = "red3")
 The pointwise mean (top row, dashed) is smeared and not representative
 of any individual curve’s shape. Registration toward it produces poor
 alignment. The MBD median (bottom row, dashed red) is the most central
-observed curve — it has the correct shape, and registration aligns the
+observed curve – it has the correct shape, and registration aligns the
 peaks well. When you expect strong phase variation, **inspect the
 default template** and consider supplying a suitable custom template
 like `template = median(x)`.
@@ -490,16 +490,16 @@ summary(reg_aff)
 
 Key things to check in the summary:
 
-- **Amplitude variance reduction** near 100% — registration captures
+- **Amplitude variance reduction** near 100% – registration captures
   most of the variability. A negative value would mean registration made
   things *worse* (see the [Unsuitable template](#unsuitable-template)
   section above for an example of when this can happen).
-- **Warp deviations** are moderate (well below 0.5, in most cases) — the
+- **Warp deviations** are moderate (well below 0.5, in most cases) – the
   aggregated timing corrections per function are not too extreme.
 - **Warp slopes**: For non-linear methods, slopes that veer far from 1
   indicate strong local time dilations or compressions.
 - **Domain coverage loss** shows how much of the original domain is lost
-  per curve after alignment — relevant only for affine
+  per curve after alignment – relevant only for affine
   (non-domain-preserving) warps.
 
 ### Step 2: Visual inspection via `plot()`
@@ -656,7 +656,7 @@ al. (2013)](https://doi.org/10.1016/j.csda.2012.12.001) for the
 - **Template:** Karcher mean on the shape manifold (iterative; see
   footnote in the [template table](#what-is-the-template) above), or
   user-supplied.
-- **Domain-preserving:** Yes — warps satisfy \\h(t\_\min) = t\_\min\\
+- **Domain-preserving:** Yes – warps satisfy \\h(t\_\min) = t\_\min\\
   and \\h(t\_\max) = t\_\max\\.
 - **Key arguments:** `method = "srvf"`. Pass `template` to override the
   Karcher mean. Control warp flexibility via `lambda` (default is `0`
@@ -670,7 +670,7 @@ al. (2013)](https://doi.org/10.1016/j.csda.2012.12.001) for the
 - **Weaknesses:** Sensitive to noise because SRSFs involve numerical
   derivatives that amplify observation noise. Pre-smoothing inputs
   (e.g., `tfb(x, k = 25)`) before registration reduces warp error
-  (measured as warp MISE) by 50–70% under moderate noise. Also
+  (measured as warp MISE) by 50-70% under moderate noise. Also
   grid-sensitive: avoid grids \>200 points on noisy data (see [Sparse or
   irregular grids](#sparse-or-irregular-grids)). Shows the most variable
   performance under template estimation compared to other methods.
@@ -703,7 +703,7 @@ JRSS-B)](https://doi.org/10.1111/1467-9868.00129) and Ramsay & Silverman
   their wiggliness via penalty parameter `lambda` (default is `0` for no
   penalization), and optimizer tolerances via `conv` and `iterlim`. In
   our experience, `crit = 1` without penalization tends to be
-  considerably less reliable than `crit = 2` or penalized variants — the
+  considerably less reliable than `crit = 2` or penalized variants – the
   unpenalized L2 criterion can produce strongly distorted warps.
 - **Strengths:** The most noise-robust and grid-insensitive method in
   our benchmarks. Tends to be the most stable method under template
@@ -729,7 +729,7 @@ and [Wang & Gasser (1997)](https://doi.org/10.1214/aos/1069362747) for
 context on shift/scale alignment models.
 
 - **Template:** Arithmetic mean, or user-supplied.
-- **Domain-preserving:** **No** — warps can shift or scale outside the
+- **Domain-preserving:** **No** – warps can shift or scale outside the
   observed domain, producing boundary `NA`s after
   [`tf_align()`](https://tidyfun.github.io/tf/reference/tf_align.html).
 - **Input grid:** Supports both regular and irregular grids (`tfd_reg`
@@ -746,7 +746,7 @@ context on shift/scale alignment models.
 ### Landmark
 
 Constructs piecewise linear warps by mapping user-specified landmark
-positions to target positions. No continuous optimization is performed —
+positions to target positions. No continuous optimization is performed –
 the warp is fully determined by the landmark correspondence. See Kneip &
 Gasser (1992, Annals of Statistics;
 [pdf](https://projecteuclid.org/journals/annals-of-statistics/volume-20/issue-3/Statistical-Tools-to-Analyze-Data-Representing-a-Sample-of-Curves/10.1214/aos/1176348769.pdf))
@@ -754,7 +754,7 @@ and Ramsay & Silverman (2005, Ch. 7).
 
 - **Template:** Defined by column-wise means of the landmark time points
   matrix, or user-supplied `template_landmarks`.
-- **Domain-preserving:** Yes — domain endpoints are used as boundary
+- **Domain-preserving:** Yes – domain endpoints are used as boundary
   anchors.
 - **Input grid:** Supports both regular and irregular grids (`tfd_reg`
   and `tfd_irreg`).
@@ -763,7 +763,7 @@ and Ramsay & Silverman (2005, Ch. 7).
   (optional target positions).
 - **Strengths:** Fast and deterministic. In our benchmarks, landmark
   registration was most robust to outlier contamination: warp MISE
-  degraded ~1.6× at 30% contamination, compared to 2.6–3.7× for
+  degraded ~1.6x at 30% contamination, compared to 2.6-3.7x for
   iterative methods.
 - **Weaknesses:** Requires the ability to identify reliable, consistent
   landmarks across all curves. Fragile when features are ambiguous and
@@ -1000,7 +1000,7 @@ plot(tf_aligned(reg_cc_pen), main = expression("CC Registered (" * lambda * " = 
 The Berkeley growth data contains height measurements for 39 boys and 54
 girls aged 1–18. Growth velocity curves (first derivatives of height)
 show a prominent pubertal growth spurt whose timing varies substantially
-between individuals — a natural target for registration. We use the
+between individuals – a natural target for registration. We use the
 subset of girls[⁵](#fn5) from this dataset to illustrate how data
 representation, penalization, and landmark choice affect registration
 quality.
@@ -1008,7 +1008,7 @@ quality.
 ``` r
 growth <- tf::growth |> dplyr::filter(gender == "female")
 
-# Raw velocity via finite differences — noisy, only 30 midpoints from 31 measurements:
+# Raw velocity via finite differences -- noisy, only 30 midpoints from 31 measurements:
 growth$raw_vel <- tf_derive(growth$height)
 
 # Smooth velocity via spline representation on a much denser grid, then derive analytically:
@@ -1083,7 +1083,7 @@ chronological ages 5-8 to “registered” ages \< 2) with local wiggles
 that are more likely to reflect noise in the raw velocity estimates
 rather than genuine timing differences. The bottom row, using smoother
 velocity curves, produces simpler and less extreme warps that capture
-the pubertal timing variation — the main feature of interest.
+the pubertal timing variation – the main feature of interest.
 
 #### Penalization
 
@@ -1125,7 +1125,7 @@ the warps still look too flexible.
 
 #### Landmark registration
 
-Landmark registration avoids continuous optimization entirely — it
+Landmark registration avoids continuous optimization entirely – it
 constructs piecewise linear warps from a (user-specified) correspondence
 of curve features. For growth velocity, natural landmarks are the *end
 of rapid infant growth* (velocity drops a lot below initial velocity),
@@ -1179,7 +1179,7 @@ plot(reg_lm, main = "Landmark Registered",
 The piecewise linear warps align the pubertal peaks well, with the
 pubertal trough and infant growth landmarks anchoring the earlier
 phases. Compared to SRVF, the warps are simpler and fully interpretable
-— each segment directly corresponds to a physiological period (early
+– each segment directly corresponds to a physiological period (early
 childhood, late childhood, pubertal acceleration, post-peak
 deceleration). The trade-off is that landmark registration cannot adapt
 between landmarks (alignment between successive landmarks depends
@@ -1217,7 +1217,7 @@ growth” above…).
 
 ------------------------------------------------------------------------
 
-1.  The Karcher mean (also called Fréchet mean) generalizes arithmetic
+1.  The Karcher mean (also called Frechet mean) generalizes arithmetic
     means to general spaces. In this case, it is a centroid in the
     amplitude quotient space (functions modulo reparameterization),
     computed iteratively using the elastic (Fisher-Rao) distance rather

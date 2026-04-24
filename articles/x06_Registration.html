@@ -26,7 +26,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">tidyfun</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.1.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.1.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -83,7 +83,7 @@
       <h1>Curve Registration: Practical Guide and Pitfalls</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/tidyfun/tidyfun/blob/v0.1.1/vignettes/x06_Registration.Rmd" class="external-link"><code>vignettes/x06_Registration.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/tidyfun/tidyfun/blob/main/vignettes/x06_Registration.Rmd" class="external-link"><code>vignettes/x06_Registration.Rmd</code></a></small>
       <div class="d-none name"><code>x06_Registration.Rmd</code></div>
     </div>
 
@@ -148,7 +148,7 @@ slope less than 1 indicates local dilation (events happen slower).</li>
 <code class="sourceCode R"><span><span class="co"># One-shot registration (returns tf_registration object):</span></span>
 <span><span class="va">reg</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tidyfun.github.io/tf/reference/tf_register.html" class="external-link">tf_register</a></span><span class="op">(</span><span class="va">x</span>, method <span class="op">=</span> <span class="st">"..."</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://tidyfun.github.io/tf/reference/tf_registration.html" class="external-link">tf_aligned</a></span><span class="op">(</span><span class="va">reg</span><span class="op">)</span>   <span class="co"># registered/aligned curves</span></span>
-<span><span class="fu"><a href="https://tidyfun.github.io/tf/reference/tf_registration.html" class="external-link">tf_inv_warps</a></span><span class="op">(</span><span class="va">reg</span><span class="op">)</span>     <span class="co"># estimated inverse warping functions (observed → aligned time)</span></span>
+<span><span class="fu"><a href="https://tidyfun.github.io/tf/reference/tf_registration.html" class="external-link">tf_inv_warps</a></span><span class="op">(</span><span class="va">reg</span><span class="op">)</span>     <span class="co"># estimated inverse warping functions (observed -&gt; aligned time)</span></span>
 <span><span class="fu"><a href="https://tidyfun.github.io/tf/reference/tf_registration.html" class="external-link">tf_template</a></span><span class="op">(</span><span class="va">reg</span><span class="op">)</span>  <span class="co"># template used</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">reg</span><span class="op">)</span>      <span class="co"># alignment diagnostics</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">reg</span><span class="op">)</span>          <span class="co"># 3-panel diagnostic plot</span></span>
@@ -177,7 +177,7 @@ registration: every estimated warp is relative to that template.</p>
 <tbody>
 <tr class="odd">
 <td align="left"><code>srvf</code></td>
-<td align="left">Karcher-type mean shape<a class="footnote-ref" tabindex="0" data-bs-toggle="popover" data-bs-content="&lt;p&gt;The Karcher mean (also called Fréchet mean) generalizes
+<td align="left">Karcher-type mean shape<a class="footnote-ref" tabindex="0" data-bs-toggle="popover" data-bs-content="&lt;p&gt;The Karcher mean (also called Frechet mean) generalizes
 arithmetic means to general spaces. In this case, it is a centroid in
 the amplitude quotient space (functions modulo reparameterization),
 computed iteratively using the elastic (Fisher-Rao) distance rather than
@@ -216,17 +216,17 @@ supply an explicit template.</p></li>
 <li><p>Always <em>visualize</em> raw curves and the template together
 before trusting warps.</p></li>
 <li><p>Under strong phase variation, the pointwise mean can be a poor
-template — see <a href="#unsuitable-template">Unsuitable template</a> in
+template – see <a href="#unsuitable-template">Unsuitable template</a> in
 the Pitfalls section for an example and remedy.</p></li>
 </ol>
 </div>
 <div class="section level3">
 <h3 id="what-is-a-warping-function">What is a Warping Function?<a class="anchor" aria-label="anchor" href="#what-is-a-warping-function"></a>
 </h3>
-<p><code><a href="https://tidyfun.github.io/tf/reference/tf_estimate_warps.html" class="external-link">tf_estimate_warps()</a></code> returns forward warps <span class="math inline">\(h_i\)</span> (aligned → observed time), while
-<code>tf_inv_warps(reg)</code> returns the inverse warps <span class="math inline">\(h_i^{-1}\)</span> (observed → aligned time) that
-are directly used for alignment. These are the natural functions to
-inspect and plot — they show how each curve’s observed timepoints map to
+<p><code><a href="https://tidyfun.github.io/tf/reference/tf_estimate_warps.html" class="external-link">tf_estimate_warps()</a></code> returns forward warps <span class="math inline">\(h_i\)</span> (aligned -&gt; observed time), while
+<code>tf_inv_warps(reg)</code> returns the inverse warps <span class="math inline">\(h_i^{-1}\)</span> (observed -&gt; aligned time)
+that are directly used for alignment. These are the natural functions to
+inspect and plot – they show how each curve’s observed timepoints map to
 aligned “system” time.</p>
 <ul>
 <li>Warping functions close to the identity line imply there is little
@@ -267,9 +267,9 @@ also about what time transformation is scientifically admissible.</li>
 template to produce shifted/deformed curves. Note that this shows the
 <em>forward simulation</em> view, <span class="math inline">\(m(h(s))\)</span>: applying a warp to generate an
 observed curve from the template. In practice, registration works in the
-<em>inverse</em> direction — estimating <span class="math inline">\(h_i^{-1}\)</span> to map an observed curve back to
+<em>inverse</em> direction – estimating <span class="math inline">\(h_i^{-1}\)</span> to map an observed curve back to
 system time (i.e., to <em>align</em> it to a template).</p>
-<p><img src="x06_Registration_files/figure-html/warp-illustration-1.png" class="r-plt" alt="" width="576"></p>
+<p><img src="x06_Registration_files/figure-html/warp-illustration-1.png"><!-- --></p>
 <ul>
 <li>Note that the affine shift warp is NOT domain-preserving (it shrinks
 the domain down to [0.1, 0.9]), while the smooth and wiggly elastic
@@ -337,7 +337,7 @@ transparent:</p>
 <span><span class="va">pinch_inv_warp_shift</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tidyfun.github.io/tf/reference/tf_registration.html" class="external-link">tf_inv_warps</a></span><span class="op">(</span><span class="va">reg_shift</span><span class="op">)</span></span>
 <span><span class="va">pinch_small_reg</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tidyfun.github.io/tf/reference/tf_registration.html" class="external-link">tf_aligned</a></span><span class="op">(</span><span class="va">reg_shift</span><span class="op">)</span></span>
 <span><span class="va">pinch_template_shift</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tidyfun.github.io/tf/reference/tf_registration.html" class="external-link">tf_template</a></span><span class="op">(</span><span class="va">reg_shift</span><span class="op">)</span></span></code></pre></div>
-<p><img src="x06_Registration_files/figure-html/quickstart-plot-1.png" class="r-plt" alt="" width="576"></p>
+<p><img src="x06_Registration_files/figure-html/quickstart-plot-1.png"><!-- --></p>
 <p>Quick success checks:</p>
 <ul>
 <li>The template is plausible for the population you are aligning.</li>
@@ -479,32 +479,33 @@ irregular grids (<code>tfd_irreg</code>).</p>
 15 data-generating processes, 3 noise levels, and 5 methods:</p>
 <ol style="list-style-type: decimal">
 <li>
-<strong>Reliable landmarks available?</strong> → Use
+<strong>Reliable landmarks available?</strong> -&gt; Use
 <code>landmark</code>. Fastest, simplest warps, and most robust to
-outlier contamination (warp MISE degrades only ~1.6× at 30%
-contamination vs 2.6–3.7× for iterative methods).</li>
+outlier contamination (warp MISE degrades only ~1.6x at 30%
+contamination vs 2.6-3.7x for iterative methods).</li>
 <li>
-<strong>Mostly shift/scale variation?</strong> → Use
+<strong>Mostly shift/scale variation?</strong> -&gt; Use
 <code>affine</code>. Fast, interpretable, but produces boundary
 <code>NA</code>s.</li>
 <li>
-<strong>Noisy data?</strong> → Use <code>cc</code> (criterion 2) as
-a stable default — the most noise-robust method in our benchmarks. Or
+<strong>Noisy data?</strong> -&gt; Use <code>cc</code> (criterion 2)
+as a stable default – the most noise-robust method in our benchmarks. Or
 use <code>srvf</code> after pre-smoothing:
 <code>tfb(x, k = 25) |&gt; tf_register(method = "srvf")</code>.</li>
 <li>
-<strong>Suspected outlier contamination (&gt;10%)?</strong> → Use
-<code>landmark</code> if possible. Otherwise, remove outliers before
+<strong>Suspected outlier contamination (&gt;10%)?</strong> -&gt;
+Use <code>landmark</code> if possible. Otherwise, remove outliers before
 registration.</li>
 <li>
-<strong>Clean data, complex phase variation?</strong> → Use
+<strong>Clean data, complex phase variation?</strong> -&gt; Use
 <code>srvf</code>. Best overall warp recovery on clean data with
 domain-preserving warps, but rankings shift with noise level and
 template shape.</li>
 <li>
-<strong>Always compare ≥2 methods</strong> and inspect diagnostics
-(see <a href="#practical-diagnostics-workflow">Diagnostics Workflow</a>
-below). No single method dominates across all conditions.</li>
+<strong>Always compare at least 2 methods</strong> and inspect
+diagnostics (see <a href="#practical-diagnostics-workflow">Diagnostics
+Workflow</a> below). No single method dominates across all
+conditions.</li>
 </ol>
 <p>See <a href="#theoretical-background">Theoretical Background</a>
 below for method-specific mathematical details.</p>
@@ -534,9 +535,9 @@ flexibility; compare before/after sensitivity.</p>
 <p>In our benchmarks<a class="footnote-ref" tabindex="0" data-bs-toggle="popover" data-bs-content='&lt;p&gt;For full details on the benchmark design and results,
 see &lt;a href="https://tidyfun.github.io/sim-registration/" class="external-link"&gt;tidyfun.github.io/sim-registration&lt;/a&gt;&lt;/p&gt;'><sup>2</sup></a>, CC methods (<code>method = "cc"</code>)
 were the most noise-robust, while SRVF degraded most sharply under noise
-— because SRSFs involve numerical derivatives that amplify observation
+– because SRSFs involve numerical derivatives that amplify observation
 noise. Pre-smoothing SRVF inputs with <code>tfb(x, k = 25)</code> before
-registration reduced warp error (measured as warp MISE) by 50–70% under
+registration reduced warp error (measured as warp MISE) by 50-70% under
 moderate noise. Recipe:
 <code>x_smooth &lt;- tfb(x, k = 25); reg &lt;- tf_register(x_smooth, method = "srvf")</code>.</p>
 </div>
@@ -551,7 +552,7 @@ sensitivity checks on grid density.</p>
 grids (<code>tfd_reg</code>); interpolate sparse or irregular data to a
 common regular grid first. The <code>affine</code> and
 <code>landmark</code> methods also accept irregular grids
-(<code>tfd_irreg</code>). Grid density can affect results — try at least
+(<code>tfd_irreg</code>). Grid density can affect results – try at least
 two grid resolutions to check stability. SRVF performance varies
 substantially with grid resolution due to numerical differentiation:
 grid sizes around 100 points are a robust default. Finer grids (&gt;200
@@ -599,7 +600,7 @@ in range <code>1e-4</code> to <code>0.01</code> is a reasonable starting
 point; higher values pull warps toward the identity, reducing
 over-warping at the cost of alignment precision. For <code>srvf</code>,
 lambda penalization has inconsistent effects across DGPs and noise
-levels in our benchmarks — prefer pre-smoothing inputs (e.g.,
+levels in our benchmarks – prefer pre-smoothing inputs (e.g.,
 <code>tfb(x, k = 25)</code>) over lambda tuning. Note that optimal
 lambda values are problem-specific; the ranges above are derived from
 oracle (ex-post) analysis and have not been validated via
@@ -615,8 +616,8 @@ the common curve shape.</p>
 alternative such as the MBD median.</p>
 <p>The default template for <code>affine</code> and <code>cc</code>
 registration is the pointwise arithmetic mean (re-estimated
-iteratively). When phase variation is large — curve features are spread
-far apart in time — the pointwise mean gets smeared out and no longer
+iteratively). When phase variation is large – curve features are spread
+far apart in time – the pointwise mean gets smeared out and no longer
 resembles any individual curve. A robust alternative is to use the most
 <em>central</em> observed curve, e.g. the curve with the highest
 modified band depth (MBD, see <code><a href="https://tidyfun.github.io/tf/reference/tf_depth.html" class="external-link">tf_depth()</a></code>).</p>
@@ -626,7 +627,7 @@ modified band depth (MBD, see <code><a href="https://tidyfun.github.io/tf/refere
 <span><span class="va">mus</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">2</span>, <span class="op">-</span><span class="fl">1</span>, <span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span></span>
 <span><span class="va">bumps</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tidyfun.github.io/tf/reference/tfd.html" class="external-link">tfd</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span><span class="va">mus</span>, \<span class="op">(</span><span class="va">mu</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">dnorm</a></span><span class="op">(</span><span class="va">s</span>, <span class="va">mu</span>, sd <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>, arg <span class="op">=</span> <span class="va">s</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Pointwise mean is smeared — not a good template:</span></span>
+<span><span class="co"># Pointwise mean is smeared -- not a good template:</span></span>
 <span><span class="va">bumps_mean</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">bumps</span><span class="op">)</span></span>
 <span><span class="co"># MBD median picks the most central observed curve:</span></span>
 <span><span class="va">bumps_median</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/median.html" class="external-link">median</a></span><span class="op">(</span><span class="va">bumps</span>, depth <span class="op">=</span> <span class="st">"MBD"</span><span class="op">)</span></span>
@@ -668,11 +669,11 @@ modified band depth (MBD, see <code><a href="https://tidyfun.github.io/tf/refere
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="https://tidyfun.github.io/tf/reference/tf_registration.html" class="external-link">tf_aligned</a></span><span class="op">(</span><span class="va">reg_median</span><span class="op">)</span>, col <span class="op">=</span> <span class="va">alpha_palette</span>, lwd <span class="op">=</span> <span class="fl">1.5</span>, points <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>     main <span class="op">=</span> <span class="st">"Aligned to MBD median"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">bumps_median</span>, lwd <span class="op">=</span> <span class="fl">3</span>, lty <span class="op">=</span> <span class="fl">2</span>, col <span class="op">=</span> <span class="st">"red3"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="x06_Registration_files/figure-html/template-choice-1.png" class="r-plt" alt="" width="576"></p>
+<p><img src="x06_Registration_files/figure-html/template-choice-1.png"><!-- --></p>
 <p>The pointwise mean (top row, dashed) is smeared and not
 representative of any individual curve’s shape. Registration toward it
 produces poor alignment. The MBD median (bottom row, dashed red) is the
-most central observed curve — it has the correct shape, and registration
+most central observed curve – it has the correct shape, and registration
 aligns the peaks well. When you expect strong phase variation,
 <strong>inspect the default template</strong> and consider supplying a
 suitable custom template like <code>template = median(x)</code>.</p>
@@ -747,13 +748,13 @@ data.</p>
 <p>Key things to check in the summary:</p>
 <ul>
 <li>
-<strong>Amplitude variance reduction</strong> near 100% —
+<strong>Amplitude variance reduction</strong> near 100% –
 registration captures most of the variability. A negative value would
 mean registration made things <em>worse</em> (see the <a href="#unsuitable-template">Unsuitable template</a> section above for an
 example of when this can happen).</li>
 <li>
 <strong>Warp deviations</strong> are moderate (well below 0.5, in
-most cases) — the aggregated timing corrections per function are not too
+most cases) – the aggregated timing corrections per function are not too
 extreme.</li>
 <li>
 <strong>Warp slopes</strong>: For non-linear methods, slopes that
@@ -761,7 +762,7 @@ veer far from 1 indicate strong local time dilations or
 compressions.</li>
 <li>
 <strong>Domain coverage loss</strong> shows how much of the original
-domain is lost per curve after alignment — relevant only for affine
+domain is lost per curve after alignment – relevant only for affine
 (non-domain-preserving) warps.</li>
 </ul>
 </div>
@@ -771,7 +772,7 @@ domain is lost per curve after alignment — relevant only for affine
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># plot() provides a 3-panel diagnostic:</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">reg_aff</span><span class="op">)</span></span></code></pre></div>
-<p><img src="x06_Registration_files/figure-html/diagnostics-plot-1.png" class="r-plt" alt="" width="576"></p>
+<p><img src="x06_Registration_files/figure-html/diagnostics-plot-1.png"><!-- --></p>
 <p>Check that (1) the template (dashed) looks representative of the
 original curve shapes, (2) inverse warping functions are not too far
 from the identity and have no extremely flat or steep segments, and (3)
@@ -854,7 +855,7 @@ aligned curves show better feature alignment to the template.</p>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="https://tidyfun.github.io/tf/reference/tf_registration.html" class="external-link">tf_aligned</a></span><span class="op">(</span><span class="va">reg_srvf</span><span class="op">)</span>, main <span class="op">=</span> <span class="st">"SRVF Aligned"</span>,</span>
 <span>     col <span class="op">=</span> <span class="va">alpha_palette</span>, lwd <span class="op">=</span> <span class="fl">1.5</span>, points <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="fu"><a href="https://tidyfun.github.io/tf/reference/tf_registration.html" class="external-link">tf_template</a></span><span class="op">(</span><span class="va">reg_srvf</span><span class="op">)</span>, lwd <span class="op">=</span> <span class="fl">2</span>, lty <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
-<p><img src="x06_Registration_files/figure-html/diagnostics-optional-srvf-plot-1.png" class="r-plt" alt="" width="576"></p>
+<p><img src="x06_Registration_files/figure-html/diagnostics-optional-srvf-plot-1.png"><!-- --></p>
 <p>If different methods disagree strongly and diagnostics are unstable,
 treat conclusions as low confidence until you resolve data
 representation and model-choice sensitivity.</p>
@@ -924,7 +925,7 @@ diffeomorphisms<a class="footnote-ref" tabindex="0" data-bs-toggle="popover" dat
 (iterative; see footnote in the <a href="#what-is-the-template">template
 table</a> above), or user-supplied.</li>
 <li>
-<strong>Domain-preserving:</strong> Yes — warps satisfy <span class="math inline">\(h(t_\min) = t_\min\)</span> and <span class="math inline">\(h(t_\max) = t_\max\)</span>.</li>
+<strong>Domain-preserving:</strong> Yes – warps satisfy <span class="math inline">\(h(t_\min) = t_\min\)</span> and <span class="math inline">\(h(t_\max) = t_\max\)</span>.</li>
 <li>
 <strong>Key arguments:</strong> <code>method = "srvf"</code>. Pass
 <code>template</code> to override the Karcher mean. Control warp
@@ -942,7 +943,7 @@ always compare with at least one alternative.</li>
 <strong>Weaknesses:</strong> Sensitive to noise because SRSFs
 involve numerical derivatives that amplify observation noise.
 Pre-smoothing inputs (e.g., <code>tfb(x, k = 25)</code>) before
-registration reduces warp error (measured as warp MISE) by 50–70% under
+registration reduces warp error (measured as warp MISE) by 50-70% under
 moderate noise. Also grid-sensitive: avoid grids &gt;200 points on noisy
 data (see <a href="#sparse-or-irregular-grids">Sparse or irregular
 grids</a>). Shows the most variable performance under template
@@ -984,7 +985,7 @@ wiggliness via penalty parameter <code>lambda</code> (default is
 <code>0</code> for no penalization), and optimizer tolerances via
 <code>conv</code> and <code>iterlim</code>. In our experience,
 <code>crit = 1</code> without penalization tends to be considerably less
-reliable than <code>crit = 2</code> or penalized variants — the
+reliable than <code>crit = 2</code> or penalized variants – the
 unpenalized L2 criterion can produce strongly distorted warps.</li>
 <li>
 <strong>Strengths:</strong> The most noise-robust and
@@ -1018,7 +1019,7 @@ Gasser (1997)</a> for context on shift/scale alignment models.</p>
 <li>
 <strong>Template:</strong> Arithmetic mean, or user-supplied.</li>
 <li>
-<strong>Domain-preserving:</strong> <strong>No</strong> — warps can
+<strong>Domain-preserving:</strong> <strong>No</strong> – warps can
 shift or scale outside the observed domain, producing boundary
 <code>NA</code>s after <code><a href="https://tidyfun.github.io/tf/reference/tf_align.html" class="external-link">tf_align()</a></code>.</li>
 <li>
@@ -1042,7 +1043,7 @@ leading and/or trailing NAs (under strong shifts/scales).</li>
 <h3 id="landmark">Landmark<a class="anchor" aria-label="anchor" href="#landmark"></a>
 </h3>
 <p>Constructs piecewise linear warps by mapping user-specified landmark
-positions to target positions. No continuous optimization is performed —
+positions to target positions. No continuous optimization is performed –
 the warp is fully determined by the landmark correspondence. See Kneip
 &amp; Gasser (1992, Annals of Statistics; <a href="https://projecteuclid.org/journals/annals-of-statistics/volume-20/issue-3/Statistical-Tools-to-Analyze-Data-Representing-a-Sample-of-Curves/10.1214/aos/1176348769.pdf" class="external-link">pdf</a>)
 and Ramsay &amp; Silverman (2005, Ch. 7).</p>
@@ -1052,7 +1053,7 @@ and Ramsay &amp; Silverman (2005, Ch. 7).</p>
 landmark time points matrix, or user-supplied
 <code>template_landmarks</code>.</li>
 <li>
-<strong>Domain-preserving:</strong> Yes — domain endpoints are used
+<strong>Domain-preserving:</strong> Yes – domain endpoints are used
 as boundary anchors.</li>
 <li>
 <strong>Input grid:</strong> Supports both regular and irregular
@@ -1065,8 +1066,8 @@ k\)</span> matrix of landmark positions),
 <li>
 <strong>Strengths:</strong> Fast and deterministic. In our
 benchmarks, landmark registration was most robust to outlier
-contamination: warp MISE degraded ~1.6× at 30% contamination, compared
-to 2.6–3.7× for iterative methods.</li>
+contamination: warp MISE degraded ~1.6x at 30% contamination, compared
+to 2.6-3.7x for iterative methods.</li>
 <li>
 <strong>Weaknesses:</strong> Requires the ability to identify
 reliable, consistent landmarks across all curves. Fragile when features
@@ -1170,7 +1171,7 @@ knowledge.</li>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/abline.html" class="external-link">abline</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, lty <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="https://tidyfun.github.io/tf/reference/tf_registration.html" class="external-link">tf_aligned</a></span><span class="op">(</span><span class="va">reg_lm2</span><span class="op">)</span>, main <span class="op">=</span> <span class="st">"Landmark Registered\n (Start + Peak + End)"</span>, col <span class="op">=</span> <span class="va">alpha_palette</span>, lwd <span class="op">=</span> <span class="fl">1.5</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="https://tidyfun.github.io/tf/reference/tf_registration.html" class="external-link">tf_aligned</a></span><span class="op">(</span><span class="va">reg_lm2</span><span class="op">)</span>, main <span class="op">=</span> <span class="st">"Landmark Registered\n (Start + Peak + End)"</span>, type <span class="op">=</span> <span class="st">"lasagna"</span>, col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grDevices/palettes.html" class="external-link">hcl.colors</a></span><span class="op">(</span><span class="fl">12</span>, rev <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="x06_Registration_files/figure-html/pinch-compare-plot-1.png" class="r-plt" alt="" width="576"></p>
+<p><img src="x06_Registration_files/figure-html/pinch-compare-plot-1.png"><!-- --></p>
 <p>Note that affine registration with <code>shift+scale</code> warps
 produces some boundary <code>NA</code>s because the warps are not
 domain-preserving, but it does a good job aligning the peaks. Landmark
@@ -1289,7 +1290,7 @@ quantitative diagnostics:</p>
 <span>     col <span class="op">=</span> <span class="va">alpha_palette</span>, lwd <span class="op">=</span> <span class="fl">1.5</span>, points <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="https://tidyfun.github.io/tf/reference/tf_registration.html" class="external-link">tf_aligned</a></span><span class="op">(</span><span class="va">reg_cc_pen</span><span class="op">)</span>, main <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/expression.html" class="external-link">expression</a></span><span class="op">(</span><span class="st">"CC Registered ("</span> <span class="op">*</span> <span class="va">lambda</span> <span class="op">*</span> <span class="st">" = 1e-4)"</span><span class="op">)</span>,</span>
 <span>     type <span class="op">=</span> <span class="st">"lasagna"</span>, col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grDevices/palettes.html" class="external-link">hcl.colors</a></span><span class="op">(</span><span class="fl">12</span>, rev <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="x06_Registration_files/figure-html/pinch-compare-srvf-cc-plot-1.png" class="r-plt" alt="" width="576"></p>
+<p><img src="x06_Registration_files/figure-html/pinch-compare-srvf-cc-plot-1.png"><!-- --></p>
 </div>
 <div class="section level3">
 <h3 id="growth-data-deeper-real-data-workflow">Growth Data: Deeper Real-data Workflow<a class="anchor" aria-label="anchor" href="#growth-data-deeper-real-data-workflow"></a>
@@ -1297,7 +1298,7 @@ quantitative diagnostics:</p>
 <p>The Berkeley growth data contains height measurements for 39 boys and
 54 girls aged 1–18. Growth velocity curves (first derivatives of height)
 show a prominent pubertal growth spurt whose timing varies substantially
-between individuals — a natural target for registration. We use the
+between individuals – a natural target for registration. We use the
 subset of girls<a class="footnote-ref" tabindex="0" data-bs-toggle="popover" data-bs-content="&lt;p&gt;.. because aligning female &lt;em&gt;and&lt;/em&gt; male growth
 curves to the same template does not make sense – they show different
 patterns!&lt;/p&gt;"><sup>5</sup></a> from this dataset to illustrate how data
@@ -1306,7 +1307,7 @@ quality.</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">growth</span> <span class="op">&lt;-</span> <span class="fu">tf</span><span class="fu">::</span><span class="va"><a href="https://tidyfun.github.io/tf/reference/growth.html" class="external-link">growth</a></span> <span class="op">|&gt;</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">gender</span> <span class="op">==</span> <span class="st">"female"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Raw velocity via finite differences — noisy, only 30 midpoints from 31 measurements:</span></span>
+<span><span class="co"># Raw velocity via finite differences -- noisy, only 30 midpoints from 31 measurements:</span></span>
 <span><span class="va">growth</span><span class="op">$</span><span class="va">raw_vel</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tidyfun.github.io/tf/reference/tf_derive.html" class="external-link">tf_derive</a></span><span class="op">(</span><span class="va">growth</span><span class="op">$</span><span class="va">height</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Smooth velocity via spline representation on a much denser grid, then derive analytically:</span></span>
@@ -1369,13 +1370,13 @@ results.</p>
 <span>     xlab <span class="op">=</span> <span class="st">"Registered Age [years]"</span>, ylab <span class="op">=</span> <span class="st">"cm/year"</span>, lwd <span class="op">=</span> <span class="fl">0.8</span>, ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">30</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">reg_smooth</span>, main <span class="op">=</span> <span class="st">"SRVF Registered (smooth)"</span>,</span>
 <span>     type <span class="op">=</span> <span class="st">"lasagna"</span>, col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grDevices/palettes.html" class="external-link">hcl.colors</a></span><span class="op">(</span><span class="fl">12</span>, rev <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, breaks <span class="op">=</span> <span class="va">reg_brks</span><span class="op">)</span></span></code></pre></div>
-<p><img src="x06_Registration_files/figure-html/growth-raw-vs-smooth-plot-1.png" class="r-plt" alt="" width="576"></p>
+<p><img src="x06_Registration_files/figure-html/growth-raw-vs-smooth-plot-1.png"><!-- --></p>
 <p>The top row shows extreme, biologically implausible warps
 (i.e. mapping chronological ages 5-8 to “registered” ages &lt; 2) with
 local wiggles that are more likely to reflect noise in the raw velocity
 estimates rather than genuine timing differences. The bottom row, using
 smoother velocity curves, produces simpler and less extreme warps that
-capture the pubertal timing variation — the main feature of
+capture the pubertal timing variation – the main feature of
 interest.</p>
 </div>
 <div class="section level4">
@@ -1404,7 +1405,7 @@ smoother and more subtle warps.</p>
 <span>     xlab <span class="op">=</span> <span class="st">"Registered Age [years]"</span>, ylab <span class="op">=</span> <span class="st">"cm/year"</span>, lwd <span class="op">=</span> <span class="fl">0.8</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">reg_raw_pen</span>, main <span class="op">=</span> <span class="st">"Penalized Registered (raw)"</span>,</span>
 <span>     type <span class="op">=</span> <span class="st">"lasagna"</span>, col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grDevices/palettes.html" class="external-link">hcl.colors</a></span><span class="op">(</span><span class="fl">12</span>, rev <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, breaks <span class="op">=</span> <span class="va">reg_brks</span><span class="op">)</span></span></code></pre></div>
-<p><img src="x06_Registration_files/figure-html/growth-penalization-plot-1.png" class="r-plt" alt="" width="576"></p>
+<p><img src="x06_Registration_files/figure-html/growth-penalization-plot-1.png"><!-- --></p>
 <p>Penalization smooths out the worst warp artifacts, and the result
 here looks more reasonable than the result for the (oversmoothed)
 <code>tfb</code>-inputs above. That said, in most cases the best
@@ -1414,7 +1415,7 @@ penalization only if the warps still look too flexible.</p>
 <div class="section level4">
 <h4 id="landmark-registration">Landmark registration<a class="anchor" aria-label="anchor" href="#landmark-registration"></a>
 </h4>
-<p>Landmark registration avoids continuous optimization entirely — it
+<p>Landmark registration avoids continuous optimization entirely – it
 constructs piecewise linear warps from a (user-specified) correspondence
 of curve features. For growth velocity, natural landmarks are the
 <em>end of rapid infant growth</em> (velocity drops a lot below initial
@@ -1459,11 +1460,11 @@ curve.</p>
 <span>     xlab <span class="op">=</span> <span class="st">"Registered Age [years]"</span>, ylab <span class="op">=</span> <span class="st">"cm/year"</span>, lwd <span class="op">=</span> <span class="fl">0.8</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">reg_lm</span>, main <span class="op">=</span> <span class="st">"Landmark Registered"</span>,</span>
 <span>     type <span class="op">=</span> <span class="st">"lasagna"</span>, col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grDevices/palettes.html" class="external-link">hcl.colors</a></span><span class="op">(</span><span class="fl">12</span>, rev <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, breaks <span class="op">=</span> <span class="va">reg_brks</span><span class="op">)</span></span></code></pre></div>
-<p><img src="x06_Registration_files/figure-html/growth-landmarks-plot-1.png" class="r-plt" alt="" width="576"></p>
+<p><img src="x06_Registration_files/figure-html/growth-landmarks-plot-1.png"><!-- --></p>
 <p>The piecewise linear warps align the pubertal peaks well, with the
 pubertal trough and infant growth landmarks anchoring the earlier
 phases. Compared to SRVF, the warps are simpler and fully interpretable
-— each segment directly corresponds to a physiological period (early
+– each segment directly corresponds to a physiological period (early
 childhood, late childhood, pubertal acceleration, post-peak
 deceleration). The trade-off is that landmark registration cannot adapt
 between landmarks (alignment between successive landmarks depends
