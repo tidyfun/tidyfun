@@ -17,6 +17,8 @@ knitr::opts_chunk$set(
   comment = "##",
   fig.width = 6,
   fig.height = 4,
+  dpi = 72,
+  fig.retina = 1,
   out.width = "90%"
 )
 
@@ -283,7 +285,7 @@ Compute functional summaries like mean functions, functional standard deviations
 ```{r}
 c(mean = mean(cca_five), sd = sd(cca_five))
 
-tf_depth(cca_five) ## Modified Band-2 Depth (à la Sun/Genton/Nychka, 2012), others to come.
+tf_depth(cca_five) ## Modified Band-2 Depth (a la Sun/Genton/Nychka, 2012), others to come.
 median(cca_five) == cca_five[which.max(tf_depth(cca_five))]
 summary(cca_five)
 ```

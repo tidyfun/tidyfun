@@ -7,6 +7,12 @@
 * local: Linux Mint 22.1, R 4.5.2
   `R CMD build`
   `R CMD check --as-cran`
+  `devtools::check(remote = TRUE, manual = TRUE)`
+  `pkgdown::build_site()`
+* R-hub: `rhub::rhub_doctor()` reports the repository is ready for
+  `rhub::rhub_check()`
+* win-builder: `devtools::check_win_devel()` submitted on 2026-04-24,
+  results pending by email
 
 ## Resubmission
 
@@ -27,6 +33,13 @@ for namespace references in packaged `.rda` files.
   no outbound network access for incoming/URL checks in the sandbox,
   `unable to verify current time`, and missing `tidy` for optional HTML
   validation.
+- `pkgdown::build_site()` succeeds. The site build reports missing alt text for
+  several plots in `x06_Registration.Rmd`; this affects site accessibility but
+  is not a CRAN check failure.
+- `devtools::check(remote = TRUE, manual = TRUE)` completed successfully after
+  building the current package state, although its remote incoming-feasibility
+  probe hit a Posit Package Manager `404` in this environment. The explicit
+  `R CMD check --as-cran` tarball run above is the authoritative local check.
 
 ## Reverse dependencies
 

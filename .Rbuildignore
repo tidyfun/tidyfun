@@ -13,6 +13,7 @@
 ^\.Renviron$
 ^\.Rproj\.user$
 ^\.ccache$
+^\.codex$
 ^\.claude$
 ^\.dockerignore$
 ^\.editorconfig$

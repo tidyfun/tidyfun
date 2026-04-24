@@ -17,6 +17,8 @@ knitr::opts_chunk$set(
   comment = "##",
   fig.width = 6,
   fig.height = 4,
+  dpi = 72,
+  fig.retina = 1,
   out.width = "90%"
 )
 
@@ -48,7 +50,7 @@ We'll draw on the `tidyfun::dti_df` and the `tidyfun::chf_df` data sets for exam
 
 **`ggplot2`** is a powerful framework for visualization. In this section, we'll assume some basic familiarity with the package; if you're new to **`ggplot2`**, [this primer](https://rpubs.com/hadley/ggplot-intro) may be helpful.
 
-**`tidyfun`** provides `tf_ggplot()` as the primary interface for plotting functional data with **`ggplot2`**. It works just like `ggplot()`, but understands `tf` vectors — use the `tf` aesthetic to map a `tf` column to the plot, then add standard **`ggplot2`** geoms (`geom_line`, `geom_point`, `geom_ribbon`, etc.).
+**`tidyfun`** provides `tf_ggplot()` as the primary interface for plotting functional data with **`ggplot2`**. It works just like `ggplot()`, but understands `tf` vectors -- use the `tf` aesthetic to map a `tf` column to the plot, then add standard **`ggplot2`** geoms (`geom_line`, `geom_point`, `geom_ribbon`, etc.).
 
 For heatmaps, use **`gglasagna`**; for sparklines / glyphs on maps, use **`geom_capellini`** (these use their own specialized stats and are called directly without `tf_ggplot`). The older geoms **`geom_spaghetti`**, **`geom_meatballs`**, and **`geom_errorband`** remain available for backward compatibility.
 
