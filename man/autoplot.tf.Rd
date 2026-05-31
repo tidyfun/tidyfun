@@ -12,7 +12,7 @@
 \arguments{
 \item{object}{a \code{tf} object}
 
-\item{...}{passed to \code{\link[ggplot2:geom_path]{ggplot2::geom_line()}}}
+\item{...}{passed to \code{\link[ggplot2:geom_line]{geom_line()}}}
 }
 \value{
 A \code{\link[=tf_ggplot]{tf_ggplot()}} object for \code{autoplot()}, a \code{\link[ggplot2:layer]{ggplot2::layer()}} object for \code{autolayer()}.
@@ -32,9 +32,10 @@ tf_ggplot() + autolayer(f)
 }
 }
 \seealso{
-Other tidyfun visualization: 
+Other tidyfun visualization:
+\code{\link[=autoplot.tf_mv]{autoplot.tf_mv()}},
 \code{\link{ggcapellini}},
-\code{\link{gglasagna}()},
+\code{\link[=gglasagna]{gglasagna()}},
 \code{\link{ggspaghetti}}
 }
 \concept{tidyfun visualization}

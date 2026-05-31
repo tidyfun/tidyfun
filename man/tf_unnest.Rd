@@ -3,12 +3,15 @@
 \name{tf_unnest}
 \alias{tf_unnest}
 \alias{tf_unnest.tf}
+\alias{tf_unnest.tf_mv}
 \alias{tf_unnest.data.frame}
 \title{Turn (data frames with) \code{tf}-objects / list columns into "long" tables.}
 \usage{
 tf_unnest(data, cols, arg, interpolate = TRUE, ...)
 
 \method{tf_unnest}{tf}(data, cols, arg, interpolate = TRUE, ...)
+
+\method{tf_unnest}{tf_mv}(data, cols, arg, interpolate = TRUE, ...)
 
 \method{tf_unnest}{data.frame}(
   data,
@@ -76,6 +79,9 @@ columns.
 \description{
 Similar in spirit to \code{\link[tidyr:unnest]{tidyr::unnest()}}, the reverse of \code{\link[=tf_nest]{tf_nest()}}.
 The \code{tf}-method simply turns a single \code{tfd} or \code{tfb} vector into a "long" \code{\link[tibble:tibble]{tibble::tibble()}}.
+For a multivariate \code{tf_mv} vector (functions \eqn{R \to R^d}{R -> R^d}) the
+\code{tf_mv}-method returns a "wide" long table with one value column per output
+dimension: \verb{(id, arg, <component 1>, ..., <component d>)}.
 }
 \details{
 \itemize{
@@ -94,10 +100,10 @@ tf_unnest(d, f)
 \seealso{
 \code{\link[=tf_evaluate.data.frame]{tf_evaluate.data.frame()}}
 
-Other tidyfun data wrangling functions: 
-\code{\link{tf_evaluate.data.frame}()},
-\code{\link{tf_gather}()},
-\code{\link{tf_nest}()},
-\code{\link{tf_spread}()}
+Other tidyfun data wrangling functions:
+\code{\link[=tf_evaluate.data.frame]{tf_evaluate.data.frame()}},
+\code{\link[=tf_gather]{tf_gather()}},
+\code{\link[=tf_nest]{tf_nest()}},
+\code{\link[=tf_spread]{tf_spread()}}
 }
 \concept{tidyfun data wrangling functions}

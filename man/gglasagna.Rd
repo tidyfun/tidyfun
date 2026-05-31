@@ -76,8 +76,9 @@ gglasagna(data, fb, label = id, order = group, order_by = dplyr::first)
 }
 }
 \seealso{
-Other tidyfun visualization: 
-\code{\link{autoplot.tf}()},
+Other tidyfun visualization:
+\code{\link[=autoplot.tf]{autoplot.tf()}},
+\code{\link[=autoplot.tf_mv]{autoplot.tf_mv()}},
 \code{\link{ggcapellini}},
 \code{\link{ggspaghetti}}
 }

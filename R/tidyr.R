@@ -305,6 +305,9 @@ tf_nest <- function(
 #'
 #' Similar in spirit to [tidyr::unnest()], the reverse of [tf_nest()].
 #' The `tf`-method simply turns a single `tfd` or `tfb` vector into a "long" [tibble::tibble()].
+#' For a multivariate `tf_mv` vector (functions \eqn{R \to R^d}{R -> R^d}) the
+#' `tf_mv`-method returns a "wide" long table with one value column per output
+#' dimension: `(id, arg, <component 1>, ..., <component d>)`.
 #'
 #' - Caution: this uses slightly different defaults for names of unnested columns
 #'   than `tidyr::unnest()`.
@@ -344,6 +347,54 @@ tf_unnest.tf <- function(data, cols, arg, interpolate = TRUE, ...) {
   id <- unique_id(names(data)) %||% seq_along(data)
   id <- ordered(id, levels = id) # don't reshuffle
   tidyr::unnest(tibble::tibble(id = id, data = tmp), cols = data)
+}
+
+#' @export
+#' @importFrom purrr imap reduce
+#' @rdname tf_unnest
+tf_unnest.tf_mv <- function(data, cols, arg, interpolate = TRUE, ...) {
+  # "wide" long form: (id, arg, <comp_1>, ..., <comp_d>).
+  # Mirrors tf::as.data.frame.tf_mv(unnest = TRUE) but honours `arg`/`interpolate`
+  # by unnesting each component (a univariate tf) via tf_unnest.tf and then
+  # full-outer-joining on (id, arg). For components sharing an arg grid this is a
+  # plain cbind; for mixed/irregular grids NAs fill where a component lacks an
+  # observation at that (id, arg). `id` stays the ordered factor from tf_unnest.tf.
+  has_arg <- !missing(arg)
+  comps <- tf_components(data)
+  per <- imap(comps, function(comp, nm) {
+    one <- if (has_arg) {
+      tf_unnest(comp, arg = arg, interpolate = interpolate)
+    } else {
+      tf_unnest(comp, interpolate = interpolate)
+    }
+    names(one)[names(one) == "value"] <- nm
+    one
+  })
+  out <- reduce(per, full_join, by = c("id", "arg"))
+  out[order(out$id, out$arg), , drop = FALSE]
+}
+
+# Long form with one row per (id, arg, component): (id, arg, .component, value).
+# `.component` is an ordered factor over the component names. NA values (e.g. a
+# component unobserved at some (id, arg) after the outer join) are dropped.
+# Used to drive value-vs-arg geoms (one group per id x component).
+#' @importFrom tidyr pivot_longer
+.tf_mv_unnest_long <- function(data, arg, interpolate = TRUE) {
+  has_arg <- !missing(arg)
+  wide <- if (has_arg) {
+    tf_unnest(data, arg = arg, interpolate = interpolate)
+  } else {
+    tf_unnest(data, interpolate = interpolate)
+  }
+  nms <- attr(data, "comp_names") %||% names(tf_components(data))
+  long <- pivot_longer(
+    wide,
+    cols = all_of(nms),
+    names_to = ".component",
+    values_to = "value"
+  )
+  long$.component <- ordered(long$.component, levels = nms)
+  long[!is.na(long$value), , drop = FALSE]
 }
 
 #' @export

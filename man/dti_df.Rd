@@ -60,7 +60,7 @@ Series C}, 61(3), 453--469. \doi{10.1111/j.1467-9876.2011.01031.x}
 \link{chf_df} for another example dataset,
 \code{vignette("x04_Visualization", package = "tidyfun")} for usage examples.
 
-Other tidyfun datasets: 
+Other tidyfun datasets:
 \code{\link{chf_df}}
 }
 \concept{tidyfun datasets}

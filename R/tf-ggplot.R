@@ -14,6 +14,12 @@
 #'   natural grid of the tf objects.
 #' @param interpolate Logical. Should tf objects be interpolated to the evaluation
 #'   grid? Defaults to TRUE.
+#' @param type Display mode for multivariate (`tf_mv`) aesthetics, mirroring
+#'   [tf::plot.tf_mv()]: `"trajectory"` draws the planar curve x(t) vs y(t)
+#'   (requires exactly 2 components), `"facet"` draws value-vs-arg with one group
+#'   per curve and component (add [ggplot2::facet_wrap()] on `.component`). If
+#'   `NULL` (default), resolves to `"trajectory"` for 2-component objects and
+#'   `"facet"` otherwise. Ignored for univariate tf aesthetics.
 #' @param ... Other arguments passed to ggplot2 functions.
 #'
 #' @details
@@ -60,7 +66,8 @@ tf_ggplot <- function(
   mapping = aes(),
   ...,
   arg = NULL,
-  interpolate = TRUE
+  interpolate = TRUE,
+  type = NULL
 ) {
   # Validate inputs
   if (!is.null(data) && !is.data.frame(data)) {
@@ -84,6 +91,10 @@ tf_ggplot <- function(
     }
   }
 
+  if (!is.null(type)) {
+    type <- match.arg(type, c("trajectory", "facet"))
+  }
+
   # Create base ggplot object
   p <- ggplot(data = data, mapping = mapping, ...)
 
@@ -91,6 +102,7 @@ tf_ggplot <- function(
   class(p) <- c("tf_ggplot", class(p))
   attr(p, "tf_arg") <- arg
   attr(p, "tf_interpolate") <- interpolate
+  attr(p, "tf_mv_type") <- type
   attr(p, "tf_original_data") <- data
   attr(p, "tf_original_mapping") <- mapping
   attr(p, "all_layers") <- list() # Store all layers in order with metadata
@@ -277,8 +289,11 @@ parse_tf_aesthetics <- function(mapping, data = NULL) {
     if (!layer_has_tf) {
       # This is a regular (non-tf) layer - store it instead of finalizing immediately
 
-      # Set the layer to use original data
-      e2$data <- e1$data
+      # Use the plot's data only when the layer brought none of its own (a layer
+      # carrying its own data, e.g. from autolayer(), must keep it).
+      if (inherits(e2$data, "waiver") || is.null(e2$data)) {
+        e2$data <- e1$data
+      }
 
       # Check for potential scale conflicts
       all_layers <- attr(e1, "all_layers")
@@ -350,6 +365,7 @@ parse_tf_aesthetics <- function(mapping, data = NULL) {
 finalize_tf_ggplot <- function(tf_plot) {
   user_arg <- attr(tf_plot, "tf_arg")
   interpolate <- attr(tf_plot, "tf_interpolate") %||% TRUE
+  mv_type <- attr(tf_plot, "tf_mv_type")
   original_data <- tf_plot$data
   all_layers <- attr(tf_plot, "all_layers") %||% list()
 
@@ -439,7 +455,8 @@ finalize_tf_ggplot <- function(tf_plot) {
           layer_idx = i,
           enriched_data = effective_data,
           user_arg = user_arg,
-          interpolate = interpolate
+          interpolate = interpolate,
+          mv_type = mv_type
         )
       }
       if (!is.null(result)) {
@@ -605,7 +622,8 @@ build_tf_layer_data <- function(
   layer_idx,
   enriched_data,
   user_arg,
-  interpolate
+  interpolate,
+  mv_type = NULL
 ) {
   layer <- layer_info$layer
   parsed_aes <- layer_info$parsed_aes
@@ -623,6 +641,10 @@ build_tf_layer_data <- function(
   if (length(effective_tf_aes) == 0) {
     return(NULL)
   }
+
+  # Planar curve x(t) vs y(t): both tf_x and tf_y present in this layer. Then
+  # tf_y must not overwrite x with its arg grid (x comes from tf_x's values).
+  planar_xy <- all(c("tf_x", "tf_y") %in% names(effective_tf_aes))
 
   # Evaluate all tf expressions
   tf_objects <- vector("list", length(effective_tf_aes))
@@ -651,6 +673,36 @@ build_tf_layer_data <- function(
       )
     }
     tf_objects[[aes_name]] <- tf_obj
+  }
+
+  # Multivariate (tf_mv) aesthetic: handled wholesale by a dedicated builder so
+  # the object never enters the univariate primary/secondary unnest path below.
+  is_mv <- vapply(tf_objects, is_tf_mv, logical(1))
+  if (any(is_mv)) {
+    if (length(effective_tf_aes) > 1L) {
+      cli::cli_abort(c(
+        "A {.cls tf_mv} aesthetic cannot be combined with other tf aesthetics in one layer.",
+        "i" = "Map the {.cls tf_mv} object on its own with {.code aes(tf = ...)}."
+      ))
+    }
+    aes_name <- names(effective_tf_aes)[1]
+    if (!aes_name %in% c("tf", "tf_y")) {
+      cli::cli_abort(c(
+        "A {.cls tf_mv} object must be mapped with {.code aes(tf = ...)}.",
+        "x" = "Got {.code aes({aes_name} = ...)}."
+      ))
+    }
+    return(build_tf_mv_layer_data(
+      mv = tf_objects[[1]],
+      mv_quo = effective_tf_aes[[1]],
+      parsed_aes = parsed_aes,
+      scalar_col_map = scalar_col_map,
+      layer_idx = layer_idx,
+      enriched_data = enriched_data,
+      user_arg = user_arg,
+      interpolate = interpolate,
+      mv_type = mv_type
+    ))
   }
 
   tf_lengths <- vapply(tf_objects, length, integer(1))
@@ -839,7 +891,8 @@ build_tf_layer_data <- function(
       aes_name_i,
       v_col,
       a_col,
-      g_col
+      g_col,
+      planar_xy = planar_xy
     )
   }
 
@@ -854,12 +907,173 @@ build_tf_layer_data <- function(
   list(long_data = long_data, new_mapping = new_mapping)
 }
 
-#' Add a tf aesthetic to an ggplot2 mapping object
+#' Build long-format data and mapping for a single multivariate (tf_mv) aesthetic
+#'
+#' Two displays, mirroring [tf::plot.tf_mv()]: `"trajectory"` (the planar curve
+#' x(t) vs y(t), default for `d == 2`) and `"facet"` (value-vs-arg, one group per
+#' curve x component, default otherwise). The caller (a `tf_mv` aesthetic mapped
+#' via `aes(tf = ...)`) guarantees this is the only tf aesthetic in the layer.
+#'
+#' @param mv The evaluated `tf_mv` object.
+#' @param mv_quo The quosure for the aesthetic (used for axis labels / source column).
+#' @param mv_type `"trajectory"`, `"facet"`, or `NULL` (resolve from `d`).
+#' @inheritParams build_tf_layer_data
+#' @returns `list(long_data, new_mapping, axis_labels)`.
 #' @keywords internal
-add_tf_aes_to_mapping <- function(mapping, aes_name, val_col, arg_col, id_col) {
+build_tf_mv_layer_data <- function(
+  mv,
+  mv_quo,
+  parsed_aes,
+  scalar_col_map,
+  layer_idx,
+  enriched_data,
+  user_arg,
+  interpolate,
+  mv_type = NULL
+) {
+  d <- tf_ncomp(mv)
+  comp_names <- attr(mv, "comp_names") %||% paste0("v", seq_len(d))
+  type <- match.arg(
+    mv_type %||% if (d == 2L) "trajectory" else "facet",
+    c("trajectory", "facet")
+  )
+  if (type == "trajectory" && d != 2L) {
+    cli::cli_abort(c(
+      "{.code type = \"trajectory\"} requires a {.cls tf_mv} with exactly 2 components.",
+      "x" = "This object has {d} component{?s}."
+    ))
+  }
+
+  # Resolve evaluation grid: integer -> equidistant over domain; numeric vector ->
+  # as-is; NULL -> natural/union grid (resolved downstream).
+  arg <- user_arg
+  if (!is.null(arg) && length(arg) == 1L) {
+    domain <- tf_domain(mv)
+    arg <- seq(domain[1], domain[2], length.out = as.integer(arg))
+  }
+
+  # Align enriched_data to one row per curve (mirror build_tf_layer_data).
+  n_funcs <- length(mv)
+  .n_enriched <- nrow(enriched_data)
+  if (is.null(.n_enriched) || .n_enriched == 0) {
+    enriched_data <- structure(
+      list(),
+      class = "data.frame",
+      row.names = seq_len(n_funcs)
+    )
+  }
+  n_rows <- nrow(enriched_data)
+  if (n_rows != n_funcs) {
+    if (n_rows == 1L && n_funcs > 1L) {
+      enriched_data <- enriched_data[rep(1L, n_funcs), , drop = FALSE]
+      n_rows <- n_funcs
+    } else {
+      cli::cli_abort(c(
+        "Layer data cannot be aligned with the {.cls tf_mv} aesthetic.",
+        "i" = "Data has {n_rows} row(s), but the {.cls tf_mv} has {n_funcs} curve(s)."
+      ))
+    }
+  }
+
+  work_data <- enriched_data
+  mv_expr <- rlang::quo_get_expr(mv_quo)
+  if (rlang::is_symbol(mv_expr)) {
+    src <- rlang::as_string(mv_expr)
+    if (src %in% names(work_data)) work_data[[src]] <- NULL
+  }
+  work_data$.row_id_ <- seq_len(n_rows)
+  mv_label <- paste(rlang::expr_deparse(mv_expr), collapse = "")
+
+  new_mapping <- parsed_aes$regular_aes
+
+  if (type == "trajectory") {
+    tj <- .tf_mv_trajectory_long(mv, arg = arg, interpolate = interpolate)
+    long_data <- left_join(tj, work_data, by = ".row_id_") |> select(-.row_id_)
+    new_mapping$x <- rlang::sym(".mv_x")
+    new_mapping$y <- rlang::sym(".mv_y")
+    new_mapping$group <- rlang::sym(".mv_id")
+    axis_labels <- list(x = comp_names[1], y = comp_names[2])
+  } else {
+    lg <- if (is.null(arg)) {
+      .tf_mv_unnest_long(mv, interpolate = interpolate)
+    } else {
+      .tf_mv_unnest_long(mv, arg = arg, interpolate = interpolate)
+    }
+    grp <- paste(lg$id, lg$.component, sep = ".")
+    lg$.mv_group <- ordered(grp, levels = unique(grp))
+    lg$.row_id_ <- as.integer(lg$id)
+    # rename the curve id to avoid colliding with a user covariate named "id"
+    names(lg)[names(lg) == "id"] <- ".mv_id"
+    long_data <- left_join(lg, work_data, by = ".row_id_") |> select(-.row_id_)
+    names(long_data)[names(long_data) == "arg"] <- ".mv_arg"
+    names(long_data)[names(long_data) == "value"] <- ".mv_value"
+    new_mapping$x <- rlang::sym(".mv_arg")
+    new_mapping$y <- rlang::sym(".mv_value")
+    new_mapping$group <- rlang::sym(".mv_group")
+    axis_labels <- list(x = "arg", y = mv_label)
+  }
+
+  # Layer-level scalar tf aes (e.g. colour = tf_depth(mv)): column already joined.
+  for (aes_name in names(parsed_aes$scalar_tf_aes)) {
+    key <- paste0(aes_name, ".layer.", layer_idx)
+    if (key %in% names(scalar_col_map)) {
+      new_mapping[[aes_name]] <- rlang::sym(scalar_col_map[[key]])
+    }
+  }
+
+  list(
+    long_data = long_data,
+    new_mapping = new_mapping,
+    axis_labels = axis_labels
+  )
+}
+
+# Long form for a 2-component tf_mv planar curve: (.row_id_, .mv_id, .mv_arg,
+# .mv_x, .mv_y), one row per (curve, grid point), ordered by (curve, arg).
+# Mirrors tf's trajectory_xy(): both components evaluated on the sorted union of
+# their argument grids (or `arg` if given), interpolating, with NA outside a
+# component's observed range so geom_path() breaks the curve there.
+.tf_mv_trajectory_long <- function(mv, arg = NULL, interpolate = TRUE) {
+  comps <- tf_components(mv)
+  grid <- arg %||%
+    sort(unique(unlist(
+      lapply(
+        comps,
+        \(comp) as.numeric(unlist(tf_arg(comp), use.names = FALSE))
+      ),
+      use.names = FALSE
+    )))
+  x <- as.matrix(comps[[1]], arg = grid, interpolate = TRUE)
+  y <- as.matrix(comps[[2]], arg = grid, interpolate = TRUE)
+  n <- nrow(x)
+  g <- length(grid)
+  id <- unique_id(names(mv)) %||% seq_len(n)
+  data.frame(
+    .row_id_ = rep(seq_len(n), each = g),
+    .mv_id = ordered(rep(id, each = g), levels = id),
+    .mv_arg = rep(grid, n),
+    .mv_x = as.vector(t(x)),
+    .mv_y = as.vector(t(y))
+  )
+}
+
+#' Add a tf aesthetic to an ggplot2 mapping object
+#'
+#' @param planar_xy `TRUE` when both `tf_x` and `tf_y` are present in the same
+#'   layer (a planar curve x(t) vs y(t)). In that case `tf_y` must NOT overwrite
+#'   `x` with its arg grid -- `x` comes from `tf_x`'s function values.
+#' @keywords internal
+add_tf_aes_to_mapping <- function(
+  mapping,
+  aes_name,
+  val_col,
+  arg_col,
+  id_col,
+  planar_xy = FALSE
+) {
   if (aes_name %in% c("tf", "tf_y")) {
     mapping$y <- rlang::sym(val_col)
-    mapping$x <- rlang::sym(arg_col)
+    if (!planar_xy) mapping$x <- rlang::sym(arg_col)
     mapping$group <- rlang::sym(id_col)
   } else if (aes_name == "tf_x") {
     mapping$x <- rlang::sym(val_col)

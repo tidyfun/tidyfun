@@ -33,6 +33,7 @@ Useful links:
 
 Authors:
 \itemize{
+  \item Fabian Scheipl \email{fabian.scheipl@googlemail.com} (\href{https://orcid.org/0000-0001-8172-3603}{ORCID}) [copyright holder]
   \item Jeff Goldsmith
   \item Julia Wrobel (\href{https://orcid.org/0000-0001-6783-1421}{ORCID})
 }

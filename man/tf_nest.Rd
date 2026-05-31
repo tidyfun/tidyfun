@@ -53,12 +53,12 @@ d <- dplyr::tibble(id = rep(1:3, each = 5), arg = rep(1:5, 3), value = rnorm(15)
 tf_nest(d, .id = id, .arg = arg)
 }
 \seealso{
-\code{\link[tf:tfd]{tf::tfd()}} for details on \code{domain} and \code{evaluator}.
+\code{\link[tf:tfd]{tfd()}} for details on \code{domain} and \code{evaluator}.
 
-Other tidyfun data wrangling functions: 
-\code{\link{tf_evaluate.data.frame}()},
-\code{\link{tf_gather}()},
-\code{\link{tf_spread}()},
-\code{\link{tf_unnest}()}
+Other tidyfun data wrangling functions:
+\code{\link[=tf_evaluate.data.frame]{tf_evaluate.data.frame()}},
+\code{\link[=tf_gather]{tf_gather()}},
+\code{\link[=tf_spread]{tf_spread()}},
+\code{\link[=tf_unnest]{tf_unnest()}}
 }
 \concept{tidyfun data wrangling functions}

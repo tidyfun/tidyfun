@@ -59,10 +59,10 @@ tf_gather(d, starts_with("height"), arg = seq(0, 1, length.out = 31))
 \seealso{
 \code{\link[dplyr:select]{dplyr::select()}}
 
-Other tidyfun data wrangling functions: 
-\code{\link{tf_evaluate.data.frame}()},
-\code{\link{tf_nest}()},
-\code{\link{tf_spread}()},
-\code{\link{tf_unnest}()}
+Other tidyfun data wrangling functions:
+\code{\link[=tf_evaluate.data.frame]{tf_evaluate.data.frame()}},
+\code{\link[=tf_nest]{tf_nest()}},
+\code{\link[=tf_spread]{tf_spread()}},
+\code{\link[=tf_unnest]{tf_unnest()}}
 }
 \concept{tidyfun data wrangling functions}

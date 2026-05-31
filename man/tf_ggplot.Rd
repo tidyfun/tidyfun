@@ -4,7 +4,14 @@
 \alias{tf_ggplot}
 \title{Create a tf-aware ggplot}
 \usage{
-tf_ggplot(data = NULL, mapping = aes(), ..., arg = NULL, interpolate = TRUE)
+tf_ggplot(
+  data = NULL,
+  mapping = aes(),
+  ...,
+  arg = NULL,
+  interpolate = TRUE,
+  type = NULL
+)
 }
 \arguments{
 \item{data}{Default dataset to use for plot. If not provided, must be supplied
@@ -22,6 +29,13 @@ natural grid of the tf objects.}
 
 \item{interpolate}{Logical. Should tf objects be interpolated to the evaluation
 grid? Defaults to TRUE.}
+
+\item{type}{Display mode for multivariate (\code{tf_mv}) aesthetics, mirroring
+\code{\link[tf:plot.tf_mv]{tf::plot.tf_mv()}}: \code{"trajectory"} draws the planar curve x(t) vs y(t)
+(requires exactly 2 components), \code{"facet"} draws value-vs-arg with one group
+per curve and component (add \code{\link[ggplot2:facet_wrap]{ggplot2::facet_wrap()}} on \code{.component}). If
+\code{NULL} (default), resolves to \code{"trajectory"} for 2-component objects and
+\code{"facet"} otherwise. Ignored for univariate tf aesthetics.}
 }
 \value{
 A tf_ggplot object that inherits from ggplot

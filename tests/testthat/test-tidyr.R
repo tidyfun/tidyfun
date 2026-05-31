@@ -135,3 +135,47 @@ test_that("tf_nest / tf_unnest work with numeric id-variables", {
   unnested <- tf_unnest(nested, cols = value)
   expect_equal(d, unnested, ignore_attr = TRUE)
 })
+
+# Multivariate (tf_mv) -------------------------------------------------------
+
+test_that("tf_unnest.tf_mv returns wide (id, arg, <components>)", {
+  set.seed(1)
+  mv <- tfd_mv(list(x = tf_rgp(3, 11L), y = tf_rgp(3, 11L)))
+  out <- tf_unnest(mv)
+  expect_named(out, c("id", "arg", "x", "y"))
+  expect_s3_class(out$id, "ordered")
+  expect_equal(nrow(out), 3 * 11)
+  # values match the underlying components
+  expect_equal(
+    sort(out$x),
+    sort(as.numeric(unlist(tf_evaluations(tf_component(mv, 1)))))
+  )
+})
+
+test_that("tf_unnest.tf_mv matches tf::as.data.frame on the native grid", {
+  set.seed(2)
+  mv <- tfd_mv(list(a = tf_rgp(4, 11L), b = tf_rgp(4, 11L)))
+  ours <- tf_unnest(mv)
+  ref <- as.data.frame(mv, unnest = TRUE)
+  expect_equal(sort(ours$a), sort(ref$a))
+  expect_equal(sort(ours$b), sort(ref$b))
+})
+
+test_that("tf_unnest.tf_mv honours a custom arg grid", {
+  set.seed(3)
+  mv <- tfd_mv(list(x = tf_rgp(3, 11L), y = tf_rgp(3, 11L)))
+  out <- tf_unnest(mv, arg = seq(0, 1, length.out = 5))
+  expect_equal(nrow(out), 3 * 5)
+  expect_setequal(out$arg, seq(0, 1, length.out = 5))
+})
+
+test_that("tf_unnest.tf_mv full-outer-joins misaligned component grids", {
+  set.seed(4)
+  cx <- tfd(matrix(rnorm(2 * 6), 2), arg = seq(0, 0.6, length.out = 6))
+  cy <- tfd(matrix(rnorm(2 * 6), 2), arg = seq(0.4, 1.0, length.out = 6))
+  mv <- tfd_mv(list(x = cx, y = cy))
+  out <- tf_unnest(mv)
+  # union grid -> some rows have NA in exactly one component
+  expect_true(any(is.na(out$x) & !is.na(out$y)))
+  expect_true(any(is.na(out$y) & !is.na(out$x)))
+})
