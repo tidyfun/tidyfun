@@ -66,6 +66,19 @@ test_that("tf = mv and tf_x/tf_y on its components are equivalent", {
   expect_equal(as.integer(b1$group), as.integer(b2$group))
 })
 
+test_that("tf_mv summaries with length 1 align like univariate summaries", {
+  set.seed(32)
+  d <- create_test_tf_mv_data(d = 2, n_funcs = 4, n_points = 11)
+  b <- ggplot_build(tf_ggplot(d, aes(tf = mean(mv))) + geom_path())$data[[1]]
+
+  expect_equal(length(unique(b$group)), 1)
+  expect_equal(nrow(b), 11)
+  expect_equal(
+    b$x,
+    as.numeric(unlist(tf_evaluations(tf_component(mean(d$mv), 1))))
+  )
+})
+
 # Single-tf-y regression ------------------------------------------------------
 
 test_that("univariate tf still maps x to the arg grid", {
@@ -125,6 +138,17 @@ test_that("trajectory on misaligned grids keeps NA so the path breaks", {
   )
 })
 
+test_that("trajectory informs when interpolate = FALSE is ignored", {
+  set.seed(51)
+  d <- create_test_tf_mv_data(d = 2, n_funcs = 1, n_points = 11)
+  expect_message(
+    ggplot_build(
+      tf_ggplot(d, aes(tf = mv), interpolate = FALSE) + geom_path()
+    ),
+    "ignored"
+  )
+})
+
 # Errors ----------------------------------------------------------------------
 
 test_that("trajectory with d != 2 errors", {
@@ -135,6 +159,15 @@ test_that("trajectory with d != 2 errors", {
       tf_ggplot(d, aes(tf = mv), type = "trajectory") + geom_path()
     ),
     "exactly 2"
+  )
+})
+
+test_that("trajectory errors with geom_line because it sorts by x", {
+  set.seed(61)
+  d <- create_test_tf_mv_data(d = 2, n_funcs = 1, n_points = 21)
+  expect_error(
+    ggplot_build(tf_ggplot(d, aes(tf = mv)) + geom_line()),
+    "geom_path"
   )
 })
 

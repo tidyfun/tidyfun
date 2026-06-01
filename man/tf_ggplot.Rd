@@ -28,7 +28,8 @@ an equidistant grid over the tf domain). If \code{NULL} (default), uses the
 natural grid of the tf objects.}
 
 \item{interpolate}{Logical. Should tf objects be interpolated to the evaluation
-grid? Defaults to TRUE.}
+grid? Defaults to TRUE. In \code{tf_mv} trajectory plots this is ignored and
+interpolation is always used to pair components on a common argument grid.}
 
 \item{type}{Display mode for multivariate (\code{tf_mv}) aesthetics, mirroring
 \code{\link[tf:plot.tf_mv]{tf::plot.tf_mv()}}: \code{"trajectory"} draws the planar curve x(t) vs y(t)

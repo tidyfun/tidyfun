@@ -7,6 +7,7 @@
 build_tf_mv_layer_data(
   mv,
   mv_quo,
+  geom,
   parsed_aes,
   scalar_col_map,
   layer_idx,
@@ -20,6 +21,8 @@ build_tf_mv_layer_data(
 \item{mv}{The evaluated \code{tf_mv} object.}
 
 \item{mv_quo}{The quosure for the aesthetic (used for axis labels / source column).}
+
+\item{geom}{The layer geom, used to reject geoms that reorder trajectories.}
 
 \item{scalar_col_map}{Named list: key -> column name in enriched_data}
 

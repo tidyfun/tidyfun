@@ -13,7 +13,8 @@
 #'   an equidistant grid over the tf domain). If `NULL` (default), uses the
 #'   natural grid of the tf objects.
 #' @param interpolate Logical. Should tf objects be interpolated to the evaluation
-#'   grid? Defaults to TRUE.
+#'   grid? Defaults to TRUE. In `tf_mv` trajectory plots this is ignored and
+#'   interpolation is always used to pair components on a common argument grid.
 #' @param type Display mode for multivariate (`tf_mv`) aesthetics, mirroring
 #'   [tf::plot.tf_mv()]: `"trajectory"` draws the planar curve x(t) vs y(t)
 #'   (requires exactly 2 components), `"facet"` draws value-vs-arg with one group
@@ -695,6 +696,7 @@ build_tf_layer_data <- function(
     return(build_tf_mv_layer_data(
       mv = tf_objects[[1]],
       mv_quo = effective_tf_aes[[1]],
+      geom = layer$geom,
       parsed_aes = parsed_aes,
       scalar_col_map = scalar_col_map,
       layer_idx = layer_idx,
@@ -916,6 +918,7 @@ build_tf_layer_data <- function(
 #'
 #' @param mv The evaluated `tf_mv` object.
 #' @param mv_quo The quosure for the aesthetic (used for axis labels / source column).
+#' @param geom The layer geom, used to reject geoms that reorder trajectories.
 #' @param mv_type `"trajectory"`, `"facet"`, or `NULL` (resolve from `d`).
 #' @inheritParams build_tf_layer_data
 #' @returns `list(long_data, new_mapping, axis_labels)`.
@@ -923,6 +926,7 @@ build_tf_layer_data <- function(
 build_tf_mv_layer_data <- function(
   mv,
   mv_quo,
+  geom,
   parsed_aes,
   scalar_col_map,
   layer_idx,
@@ -941,6 +945,12 @@ build_tf_mv_layer_data <- function(
     cli::cli_abort(c(
       "{.code type = \"trajectory\"} requires a {.cls tf_mv} with exactly 2 components.",
       "x" = "This object has {d} component{?s}."
+    ))
+  }
+  if (type == "trajectory" && inherits(geom, "GeomLine")) {
+    cli::cli_abort(c(
+      "{.fn geom_line} cannot draw {.cls tf_mv} trajectories correctly.",
+      "i" = "Use {.fn geom_path} to preserve argument order."
     ))
   }
 
@@ -964,7 +974,10 @@ build_tf_mv_layer_data <- function(
   }
   n_rows <- nrow(enriched_data)
   if (n_rows != n_funcs) {
-    if (n_rows == 1L && n_funcs > 1L) {
+    if (n_funcs == 1L && n_rows > 0) {
+      enriched_data <- enriched_data[1, , drop = FALSE]
+      n_rows <- 1L
+    } else if (n_rows == 1L && n_funcs > 1L) {
       enriched_data <- enriched_data[rep(1L, n_funcs), , drop = FALSE]
       n_rows <- n_funcs
     } else {
@@ -1034,6 +1047,12 @@ build_tf_mv_layer_data <- function(
 # their argument grids (or `arg` if given), interpolating, with NA outside a
 # component's observed range so geom_path() breaks the curve there.
 .tf_mv_trajectory_long <- function(mv, arg = NULL, interpolate = TRUE) {
+  if (isFALSE(interpolate)) {
+    cli::cli_inform(c(
+      "{.arg interpolate = FALSE} is ignored for {.cls tf_mv} trajectory plots.",
+      "i" = "Trajectory plots require paired component values on a common argument grid, so components are evaluated with interpolation."
+    ))
+  }
   comps <- tf_components(mv)
   grid <- arg %||%
     sort(unique(unlist(

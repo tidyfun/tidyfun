@@ -359,7 +359,7 @@ tf_unnest.tf_mv <- function(data, cols, arg, interpolate = TRUE, ...) {
   # full-outer-joining on (id, arg). For components sharing an arg grid this is a
   # plain cbind; for mixed/irregular grids NAs fill where a component lacks an
   # observation at that (id, arg). `id` stays the ordered factor from tf_unnest.tf.
-  has_arg <- !missing(arg)
+  has_arg <- !missing(arg) && !is.null(arg)
   comps <- tf_components(data)
   per <- imap(comps, function(comp, nm) {
     one <- if (has_arg) {
@@ -380,7 +380,7 @@ tf_unnest.tf_mv <- function(data, cols, arg, interpolate = TRUE, ...) {
 # Used to drive value-vs-arg geoms (one group per id x component).
 #' @importFrom tidyr pivot_longer
 .tf_mv_unnest_long <- function(data, arg, interpolate = TRUE) {
-  has_arg <- !missing(arg)
+  has_arg <- !missing(arg) && !is.null(arg)
   wide <- if (has_arg) {
     tf_unnest(data, arg = arg, interpolate = interpolate)
   } else {

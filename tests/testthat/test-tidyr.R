@@ -169,6 +169,18 @@ test_that("tf_unnest.tf_mv honours a custom arg grid", {
   expect_setequal(out$arg, seq(0, 1, length.out = 5))
 })
 
+test_that("tf_unnest.tf_mv treats arg = NULL as omitted", {
+  set.seed(33)
+  mv <- tfd_mv(list(x = tf_rgp(3, 11L), y = tf_rgp(3, 11L)))
+  omitted <- tf_unnest(mv)
+  explicit_null <- tf_unnest(mv, arg = NULL)
+  expect_equal(explicit_null, omitted)
+
+  long_omitted <- tidyfun:::.tf_mv_unnest_long(mv)
+  long_explicit_null <- tidyfun:::.tf_mv_unnest_long(mv, arg = NULL)
+  expect_equal(long_explicit_null, long_omitted)
+})
+
 test_that("tf_unnest.tf_mv full-outer-joins misaligned component grids", {
   set.seed(4)
   cx <- tfd(matrix(rnorm(2 * 6), 2), arg = seq(0, 0.6, length.out = 6))
