@@ -354,13 +354,26 @@ tf_unnest.tf <- function(data, cols, arg, interpolate = TRUE, ...) {
 #' @rdname tf_unnest
 tf_unnest.tf_mv <- function(data, cols, arg, interpolate = TRUE, ...) {
   # "wide" long form: (id, arg, <comp_1>, ..., <comp_d>).
-  # Mirrors tf::as.data.frame.tf_mv(unnest = TRUE) but honours `arg`/`interpolate`
-  # by unnesting each component (a univariate tf) via tf_unnest.tf and then
-  # full-outer-joining on (id, arg). For components sharing an arg grid this is a
-  # plain cbind; for mixed/irregular grids NAs fill where a component lacks an
-  # observation at that (id, arg). `id` stays the ordered factor from tf_unnest.tf.
+  # Mirrors tf::as.data.frame.tf_mv(unnest = TRUE, long = FALSE) but honours
+  # `arg`/`interpolate` by unnesting each component (a univariate tf) via
+  # tf_unnest.tf and then full-outer-joining on (id, arg). For components sharing
+  # an arg grid this is a plain cbind; for mixed/irregular grids NAs fill where a
+  # component lacks an observation at that (id, arg). `id` stays the ordered
+  # factor from tf_unnest.tf.
   has_arg <- !missing(arg) && !is.null(arg)
   comps <- tf_components(data)
+  if (length(data) == 0L) {
+    # tf_unnest.tf on zero-length components yields no (arg, value) columns to
+    # join on -- return the empty wide schema directly
+    empty <- c(
+      list(id = ordered(character(0)), arg = numeric(0)),
+      stats::setNames(
+        rep(list(numeric(0)), length(comps)),
+        names(comps)
+      )
+    )
+    return(tibble::as_tibble(empty))
+  }
   per <- imap(comps, function(comp, nm) {
     one <- if (has_arg) {
       tf_unnest(comp, arg = arg, interpolate = interpolate)

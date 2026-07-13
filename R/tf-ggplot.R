@@ -1043,15 +1043,20 @@ build_tf_mv_layer_data <- function(
 
 # Long form for a 2-component tf_mv planar curve: (.row_id_, .mv_id, .mv_arg,
 # .mv_x, .mv_y), one row per (curve, grid point), ordered by (curve, arg).
-# Mirrors tf's trajectory_xy(): both components evaluated on the sorted union of
-# their argument grids (or `arg` if given), interpolating, with NA outside a
-# component's observed range so geom_path() breaks the curve there.
+# Mirrors tf's mv_paired_xy() / as.matrix.tf_mv (see tf/R/plot-mv.R): both
+# components evaluated on the sorted union of their argument grids (or `arg` if
+# given), interpolating, with NA outside a component's observed range so
+# geom_path() breaks the curve there.
 .tf_mv_trajectory_long <- function(mv, arg = NULL, interpolate = TRUE) {
   if (isFALSE(interpolate)) {
-    cli::cli_inform(c(
-      "{.arg interpolate = FALSE} is ignored for {.cls tf_mv} trajectory plots.",
-      "i" = "Trajectory plots require paired component values on a common argument grid, so components are evaluated with interpolation."
-    ))
+    cli::cli_inform(
+      c(
+        "{.arg interpolate = FALSE} is ignored for {.cls tf_mv} trajectory plots.",
+        "i" = "Trajectory plots require paired component values on a common argument grid, so components are evaluated with interpolation."
+      ),
+      .frequency = "regularly",
+      .frequency_id = "tf_mv_trajectory_interpolate"
+    )
   }
   comps <- tf_components(mv)
   grid <- arg %||%
@@ -1062,6 +1067,16 @@ build_tf_mv_layer_data <- function(
       ),
       use.names = FALSE
     )))
+  if (length(mv) == 0L || length(grid) == 0L) {
+    # empty layer for zero-length tf_mv columns / empty grids
+    return(data.frame(
+      .row_id_ = integer(0),
+      .mv_id = ordered(character(0)),
+      .mv_arg = numeric(0),
+      .mv_x = numeric(0),
+      .mv_y = numeric(0)
+    ))
+  }
   x <- as.matrix(comps[[1]], arg = grid, interpolate = TRUE)
   y <- as.matrix(comps[[2]], arg = grid, interpolate = TRUE)
   n <- nrow(x)
