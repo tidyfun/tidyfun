@@ -143,55 +143,55 @@ dti_df |>
 
 ## Multivariate functional data (`tf_mv`)
 
-Vector-valued functional data -- functions $f: \mathbb{R} \to \mathbb{R}^d$ stored as `tf_mv` vectors (see the `tf` package) -- can be mapped with the `tf` aesthetic just like univariate `tf` columns. `tf_ggplot()` picks a display that mirrors `tf`'s base-R `plot.tf_mv()`:
+Vector-valued functional data -- functions $f: \mathbb{R} \to \mathbb{R}^d$ stored as `tf_mv` vectors (see the `tf` package and its "Vector-valued functional data" article) -- can be mapped with the `tf` aesthetic just like univariate `tf` columns. `tf_ggplot()` picks a display that mirrors `tf`'s base-R `plot.tf_mv()`:
 
 - for two-component objects (`d == 2`) the default is a **trajectory**: the planar curve $x(t)$ vs $y(t)$, drawn with `geom_path()`;
 - otherwise the default is a **facet** display: value-vs-arg curves with one group per curve and component.
 
+We use the built-in `tf::gait` data: hip and knee joint angles for 39 boys across one gait cycle, bundled into a single two-component `tfd_mv`.
+
 ```{r mv-setup}
-set.seed(1221)
-# a 2-component tf_mv: two coordinates observed over the same argument grid
-mv2 <- tfd_mv(list(x = tf_rgp(6), y = tf_rgp(6)))
-mv_df <- tibble(id = factor(1:6), mv = mv2)
+data(gait, package = "tf")
+gait_mv <- tfd_mv(list(hip = gait$hip_angle, knee = gait$knee_angle))
+gait_df <- tibble(id = factor(seq_along(gait_mv)), mv = gait_mv)
 ```
 
-For `d == 2`, mapping the whole `tf_mv` column draws each curve's planar trajectory. **Use `geom_path()`, not `geom_line()`**: `geom_path()` connects points in argument (time) order, while `geom_line()` would re-sort by `x` and mangle any non-monotone curve.
+The **facet** display shows one panel per component (value versus cycle phase). Pass `type = "facet"`, which unnests the data to a long form with a `.component` column; add `facet_wrap(~ .component)` yourself:
+
+```{r mv-facet}
+gait_df |>
+  tf_ggplot(aes(tf = mv), type = "facet") +
+  geom_line(alpha = 0.3) +
+  facet_wrap(~ .component, scales = "free_y")
+```
+
+The **trajectory** display (the `d == 2` default) collapses the phase axis and draws each subject's `(hip, knee)` cyclogram -- the characteristic gait "butterfly" loop. **Use `geom_path()`, not `geom_line()`**: `geom_path()` connects points in argument (time) order, while `geom_line()` would re-sort by `x` and mangle any non-monotone curve.
 
 ```{r mv-trajectory}
-mv_df |>
-  tf_ggplot(aes(tf = mv, color = id)) +
-  geom_path(linewidth = 1) +
-  coord_equal()
+gait_df |>
+  tf_ggplot(aes(tf = mv)) +
+  geom_path(alpha = 0.3) +
+  labs(x = "hip angle", y = "knee angle")
 ```
 
 Equivalently, you can map two separate univariate `tf` columns (or two components) to the `tf_x` and `tf_y` aesthetics -- handy when the coordinates live in different columns:
 
 ```{r mv-txty}
-tibble(fx = tf_rgp(6), fy = tf_rgp(6)) |>
-  tf_ggplot(aes(tf_x = fx, tf_y = fy)) +
-  geom_path()
-```
-
-For more than two components -- or to force value-vs-arg curves for a 2-component object via `type = "facet"` -- the data is unnested to a long form with a `.component` column. Add `facet_wrap(~ .component)` (or map `color = .component`) yourself:
-
-```{r mv-facet}
-mv3 <- tfd_mv(list(a = tf_rgp(4), b = tf_rgp(4), c = tf_rgp(4)))
-tibble(id = factor(1:4), mv = mv3) |>
-  tf_ggplot(aes(tf = mv, color = id)) +
-  geom_line() +
-  facet_wrap(~ .component)
+tibble(hip = gait$hip_angle, knee = gait$knee_angle) |>
+  tf_ggplot(aes(tf_x = hip, tf_y = knee)) +
+  geom_path(alpha = 0.3)
 ```
 
 `autoplot()` provides one-line shortcuts -- a trajectory for `d == 2` and a faceted display otherwise -- and `autolayer()` returns a single layer you can add to an existing plot:
 
 ```{r mv-autoplot}
-autoplot(mv2)
+autoplot(gait_mv)
 ```
 
 To unnest a `tf_mv` column to a "wide" long table yourself (one value column per component), use `tf_unnest()`:
 
 ```{r mv-unnest}
-tf_unnest(mv2) |> head()
+tf_unnest(gait_mv) |> head()
 ```
 
 ## Functional data boxplots with `geom_fboxplot`
