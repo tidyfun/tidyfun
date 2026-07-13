@@ -126,7 +126,8 @@ test_that("trajectory on misaligned grids keeps NA so the path breaks", {
   set.seed(5)
   cx <- tfd(matrix(rnorm(2 * 6), 2), arg = seq(0, 0.6, length.out = 6))
   cy <- tfd(matrix(rnorm(2 * 6), 2), arg = seq(0.4, 1.0, length.out = 6))
-  mv <- tfd_mv(list(x = cx, y = cy))
+  # disjoint component arg ranges -> tf 0.5.0 widens the shared domain
+  expect_warning(mv <- tfd_mv(list(x = cx, y = cy)), "Widening domain")
   tj <- tidyfun:::.tf_mv_trajectory_long(mv)
   # union grid introduces NAs outside each component's observed range
   expect_true(any(is.na(tj$.mv_x)))

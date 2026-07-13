@@ -185,7 +185,8 @@ test_that("tf_unnest.tf_mv full-outer-joins misaligned component grids", {
   set.seed(4)
   cx <- tfd(matrix(rnorm(2 * 6), 2), arg = seq(0, 0.6, length.out = 6))
   cy <- tfd(matrix(rnorm(2 * 6), 2), arg = seq(0.4, 1.0, length.out = 6))
-  mv <- tfd_mv(list(x = cx, y = cy))
+  # disjoint component arg ranges -> tf 0.5.0 widens the shared domain
+  expect_warning(mv <- tfd_mv(list(x = cx, y = cy)), "Widening domain")
   out <- tf_unnest(mv)
   # union grid -> some rows have NA in exactly one component
   expect_true(any(is.na(out$x) & !is.na(out$y)))
