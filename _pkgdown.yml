@@ -120,6 +120,7 @@ articles:
   - x03_Data_Wrangling
   - x04_Visualization
   - x06_Registration
+  - x07_Vector-valued_Functions
 - title: Developer Notes
   desc: Contributor and extension guidance
   contents:
@@ -144,6 +145,8 @@ navbar:
       href: articles/x04_Visualization.html
     - text: Curve Registration
       href: articles/x06_Registration.html
+    - text: Vector-valued Functional Data
+      href: articles/x07_Vector-valued_Functions.html
   - text: Developer Notes
     menu:
     - text: Developer Notes
