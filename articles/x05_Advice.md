@@ -7,7 +7,7 @@ it.
 **`tidyfun`** is intended to make user interactions with functional data
 easier. The package builds on package **`tf`**, which defines a data
 class (`tf`) so that vectors of functional observations are available,
-similar to vectors of class `numeric` or `character`[¹](#fn1)
+similar to vectors of class `numeric` or `character`[^1]
 
 Such classes make it possible to store functional data alongside other
 variables in a single dataframe; by extension, tools for data
@@ -104,9 +104,7 @@ If you build on **`tidyfun`**, please let us know by opening an
 [issue](https://github.com/tidyfun/tidyfun/issues) or sending
 suggestions.
 
-------------------------------------------------------------------------
-
-1.  This class and its subclasses and methods live in a separate package
-    without **`tidyverse`** dependencies in order to keep maintenance
-    simpler and to support users who prefer not to depend on the
-    **`tidyverse`**.
+[^1]: This class and its subclasses and methods live in a separate
+    package without **`tidyverse`** dependencies in order to keep
+    maintenance simpler and to support users who prefer not to depend on
+    the **`tidyverse`**.

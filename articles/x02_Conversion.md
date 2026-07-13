@@ -32,6 +32,7 @@ functional data analysis. In the code below, we create a data frame (or
 dataset included in the package.
 
 ``` r
+
 dti_df <- tibble(
   id = refund::DTI$ID,
   visit = refund::DTI$visit,
@@ -48,6 +49,7 @@ which functions are observed. The output of `tfd` is a vector, which we
 include in the `dti_df` data frame.
 
 ``` r
+
 dti_df
 ## # A tibble: 382 × 6
 ##       id visit sex    case                                            cca
@@ -70,6 +72,7 @@ Finally, we’ll make a quick spaghetti plot to illustrate that the
 complete functional data is included in each `tf` column.
 
 ``` r
+
 dti_df |>
   tf_ggplot(aes(tf = cca, col = case, alpha = 0.2 + 0.4 * (case == "control"))) +
   geom_line() +
@@ -94,6 +97,7 @@ observations in the columns instead of the rows, we have to use their
 transpose in the call to `tfd`:
 
 ``` r
+
 canada <- tibble(
   place = fda::CanadianWeather$place,
   region = fda::CanadianWeather$region,
@@ -113,6 +117,7 @@ canada <- tibble(
 The resulting data frame is shown below.
 
 ``` r
+
 canada
 ## # A tibble: 35 × 6
 ##    place       region     lat   lon                       temp
@@ -134,6 +139,7 @@ canada
 A plot containing both functional observations is shown below.
 
 ``` r
+
 temp_panel <- canada |>
   tf_ggplot(aes(tf = temp, color = region)) +
   geom_line()
@@ -164,6 +170,7 @@ columns for `Subject`, `Days`, and `Reaction` – which correspond to the
 subject, argument, and value.
 
 ``` r
+
 data("sleepstudy", package = "lme4")
 sleepstudy <- as_tibble(sleepstudy)
 
@@ -190,6 +197,7 @@ result is a data frame containing a single row for each curve (one per
 `Subject` ID:
 
 ``` r
+
 sleepstudy_tf <- sleepstudy |>
   tf_nest(Reaction, .id = Subject, .arg = Days)
 
@@ -220,6 +228,7 @@ sleepstudy_tf
 We’ll make a quick plot to show the result.
 
 ``` r
+
 sleepstudy_tf |>
   tf_ggplot(aes(tf = Reaction)) +
   geom_line()
@@ -232,6 +241,7 @@ additional time-varying or time-constant covariates besides the values
 that define the functions themselves, we could have simply done:
 
 ``` r
+
 tibble(
   Subject = unique(sleepstudy$Subject), 
   Reaction = tfd(sleepstudy, id = "Subject", arg = "Days", value = "Reaction")
@@ -271,6 +281,7 @@ non-functional covariates (like age and height at baseline), and
 functional observations `logFEV1` and `height`.
 
 ``` r
+
 ALA::fev1 |>
   group_by(id) |>
   mutate(n_obs = n()) |>
@@ -294,6 +305,7 @@ The example below again uses the
 (`tfd_irreg`).
 
 ``` r
+
 dti_df <- refund::DTI |>
   janitor::clean_names() |>
   select(-starts_with("rcst")) |>
@@ -334,6 +346,7 @@ the same basis. `tf_rebase` re-expresses one `tf` object in the
 representation of another:
 
 ``` r
+
 # reload the tidyfun version of the DTI data
 data(dti_df, package = "tidyfun")
 
@@ -400,6 +413,7 @@ separately or for stitching together functional observations from
 different sources.
 
 ``` r
+
 # split CCA profiles at their midpoint
 cca_halves <- tf_split(dti_df$cca[1:10], splits = 0.5)
 
@@ -449,6 +463,7 @@ spline framework. This also works for `fdSmooth` objects returned by
 [`fda::smooth.basis`](https://rdrr.io/pkg/fda/man/smooth.basis.html).
 
 ``` r
+
 # create an fd object from the Canadian weather data
 weather_basis <- fda::create.fourier.basis(c(0, 365), nbasis = 65)
 weather_fd <- fda::smooth.basis(
@@ -475,6 +490,7 @@ The resulting `tfb` object can then be used with all **`tidyfun`**
 tools:
 
 ``` r
+
 tibble(
   place = fda::CanadianWeather$place,
   region = fda::CanadianWeather$region,
@@ -503,6 +519,7 @@ frames. We’ll illustrate these with the `sleepstudy_tf` data set.
 First, to produce a long-format data frame, one can use `tf_unnest`:
 
 ``` r
+
 sleepstudy_tf |>
   tf_unnest(cols = Reaction) |>
   glimpse()
@@ -516,6 +533,7 @@ sleepstudy_tf |>
 To produce a wide-format data frame, one can use `tf_spread`:
 
 ``` r
+
 sleepstudy_tf |>
   tf_spread() |>
   glimpse()
@@ -540,6 +558,7 @@ To convert `tf` vector to a matrix with each row containing the function
 evaluations for one function, use `as.matrix`:
 
 ``` r
+
 reaction_matrix <- sleepstudy_tf |> pull(Reaction) |> as.matrix() 
  
 head(reaction_matrix)
@@ -569,6 +588,7 @@ To convert a `tf` vector to a standalone data frame with
 `unnest = TRUE`:
 
 ``` r
+
 sleepstudy_tf |> pull(Reaction) |> 
   as.data.frame(unnest = TRUE) |>
   head()

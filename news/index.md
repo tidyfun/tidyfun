@@ -2,6 +2,8 @@
 
 ## tidyfun 0.1.2
 
+CRAN release: 2026-04-24
+
 - Rebuilt `chf_df` with current `tf` constructors before saving so the
   packaged dataset no longer carries stale namespace references from
   pre-`tf` releases.

@@ -33,6 +33,7 @@ days for each of 47 subjects with congestive heart failure. In addition
 to `id` and `activity`, we observe several covariates.
 
 ``` r
+
 data(chf_df)
 
 chf_df
@@ -56,6 +57,7 @@ chf_df
 A quick plot of the first 5 curves:
 
 ``` r
+
 chf_df |>
   slice(1:5) |>
   tf_ggplot(aes(tf = activity)) +
@@ -71,6 +73,7 @@ callosum (cca) and the right corticospinal tract (rcst), along with
 several covariates.
 
 ``` r
+
 data(dti_df)
 
 dti_df
@@ -94,6 +97,7 @@ dti_df
 A quick plot of the `cca` tract profiles is below.
 
 ``` r
+
 dti_df |>
   tf_ggplot(aes(tf = cca)) +
   geom_line(alpha = 0.05)
@@ -108,6 +112,7 @@ manipulated using tools from **`dplyr`**, including `select` and
 `filter`:
 
 ``` r
+
 chf_df |>
   select(id, day, activity) |>
   filter(day == "Mon") |>
@@ -121,6 +126,7 @@ Operations using `group_by` and `summarize` also work – let’s look at
 some daily averages of these activity profiles:
 
 ``` r
+
 chf_df |>
   group_by(day) |>
   summarize(mean_act = mean(activity)) |>
@@ -134,6 +140,7 @@ One can `mutate` functional observations – here we exponentiate the log
 activity counts to obtain original recordings:
 
 ``` r
+
 chf_df |>
   slice(1:5) |>
   mutate(exp_act = exp(activity)) |>
@@ -148,6 +155,7 @@ illustrate by using `pivot_wider` to create new `tfd`-columns containing
 the activity profiles for each day of the week:
 
 ``` r
+
 chf_df |>
   select(id, day, activity) |>
   pivot_wider(
@@ -179,6 +187,7 @@ It’s also possible to join datasets based on non-functional keys. To
 illustrate, we’ll first create a pair of datasets:
 
 ``` r
+
 monday_df <- chf_df |>
   filter(day == "Mon") |>
   select(id, monday_act = activity)
@@ -191,6 +200,7 @@ These can be joined using the `id` variable as a key (and then tidied
 using `pivot_longer`):
 
 ``` r
+
 monday_df |>
   left_join(friday_df, by = "id") |>
   pivot_longer(monday_act:friday_act, names_to = "day", values_to = "activity")
@@ -214,6 +224,7 @@ Similar tidying can be done for the DTI data – let’s look at average
 RCST tract values for gender and case status:
 
 ``` r
+
 dti_df |>
   group_by(case, sex) |>
   summarize(mean_rcst = mean(rcst, na.rm = TRUE)) |>
@@ -238,6 +249,7 @@ helper functions. For example, one might use `filter` with
 to filter based on the values of observed functions:
 
 ``` r
+
 like_to_move_it_move_it <- chf_df |> filter(tf_anywhere(activity, value > 9))
 glimpse(like_to_move_it_move_it)
 ## Rows: 6
@@ -261,6 +273,7 @@ like_to_move_it_move_it |>
 A second example of this functionality in the DTI data is below.
 
 ``` r
+
 dti_df |>
   filter(tf_anywhere(cca, value < 0.26)) |>
   tf_ggplot(aes(tf = cca)) +
@@ -278,6 +291,7 @@ helpers, including
 One can smooth existing observations using `tf_smooth`:
 
 ``` r
+
 chf_df |>
   filter(id == 1) |>
   mutate(smooth_act = tf_smooth(activity)) |>
@@ -292,6 +306,7 @@ This can be combined with previous steps, like `group_by` and
 `summarize`, to build intuition through descriptive plots and summaries:
 
 ``` r
+
 chf_df |>
   group_by(day) |>
   summarize(mean_act = mean(activity)) |>
@@ -308,6 +323,7 @@ One can also extract observations over a subset of the full domain using
 `tf_zoom`:
 
 ``` r
+
 chf_df |>
   filter(id == 1) |>
   mutate(daytime_act = tf_zoom(activity, 360, 1200)) |>
@@ -321,6 +337,7 @@ We can also convert from `tfd` to `tfb` inside a `mutate` statement as
 part of a data processing pipeline:
 
 ``` r
+
 dti_df <- dti_df |> mutate(cca_tfb = tfb(cca, k = 25))
 ## Percentage of input data variability preserved in basis representation
 ## (per functional observation, approximate):
@@ -332,6 +349,7 @@ It’s also possible to compute derivatives as part of a processing
 pipeline:
 
 ``` r
+
 dti_df |>
   slice(1:10) |>
   mutate(
@@ -365,6 +383,7 @@ solutions:
   [`mean()`](https://rdrr.io/r/base/mean.html) dispatch normally:
 
 ``` r
+
 withr::with_options(
   list(data.table.optimize = 0),
   data.table::as.data.table(chf_df)[, list(mean_act = mean(activity)), by = day]

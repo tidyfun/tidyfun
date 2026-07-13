@@ -41,6 +41,7 @@ plot, which is implemented in **`tidyfun`** and **`ggplot2`** through
 [`geom_line()`](https://ggplot2.tidyverse.org/reference/geom_path.html):
 
 ``` r
+
 dti_df[1:10,] |>
   tf_ggplot(aes(tf = cca)) + geom_line(alpha = .3)
 ```
@@ -54,6 +55,7 @@ to
 shows both the curves and the observed data values:
 
 ``` r
+
 dti_df[1:3,] |>
   tf_ggplot(aes(tf = rcst)) + geom_line(alpha = .3) + geom_point(alpha= .3)
 ```
@@ -69,6 +71,7 @@ You can, for example, define the color aesthetic for plots of `tf`
 variables using other observations:
 
 ``` r
+
 chf_df |>
   filter(id %in% 1:5) |>
   tf_ggplot(
@@ -82,6 +85,7 @@ chf_df |>
 … or use facetting:
 
 ``` r
+
 chf_df |>
   filter((id %in% 1:10) & (day %in% c("Mon", "Sun"))) |>
   tf_ggplot(aes(tf = tf_smooth(activity, f = .05), color = gender)) +
@@ -94,6 +98,7 @@ chf_df |>
 Another example, using the DTI data, is below.
 
 ``` r
+
 dti_df |>
   tf_ggplot(aes(tf = cca, col = case, alpha = 0.2 + 0.4 * (case == "control"))) +
   geom_line() + facet_wrap(~sex) +
@@ -108,6 +113,7 @@ useful exploratory analyses, like the plot below showing group-wise
 smoothed and unsmoothed mean activity profiles:
 
 ``` r
+
 chf_df |>
   group_by(gender, day) |>
   summarize(mean_act = mean(activity),
@@ -127,6 +133,7 @@ chf_df |>
 pointwise standard errors:
 
 ``` r
+
 dti_df |>
   group_by(sex, case) |>
   summarize(
@@ -166,6 +173,7 @@ colour is reused for the ribbon, the outlier curves, and the median if a
 group colour/fill is mapped; otherwise, the median defaults to black.
 
 ``` r
+
 dti_df |> 
   tf_ggplot(aes(tf = cca, fill = case)) +
   geom_fboxplot(alpha = 0.35) +
@@ -175,6 +183,7 @@ dti_df |>
 ![](x04_Visualization_files/figure-html/unnamed-chunk-6-1.png)
 
 ``` r
+
 dti_df |>
   tf_ggplot(aes(tf = cca, colour = case)) +
   geom_fboxplot(depth = "FM", alpha = 0.3) +
@@ -184,6 +193,7 @@ dti_df |>
 ![](x04_Visualization_files/figure-html/unnamed-chunk-7-1.png)
 
 ``` r
+
 dti_df |>
   tf_ggplot(aes(tf = cca, colour = case)) +
   geom_fboxplot(depth = "RPD", alpha = 0.3) +
@@ -195,6 +205,7 @@ dti_df |>
 The layer also supports irregular functional data directly:
 
 ``` r
+
 tf_ggplot(dti_df, aes(tf = rcst)) + geom_fboxplot()
 ```
 
@@ -203,6 +214,7 @@ tf_ggplot(dti_df, aes(tf = rcst)) + geom_fboxplot()
 Useful arguments:
 
 ``` r
+
 tf_ggplot(dti_df, aes(tf = rcst)) + 
   geom_fboxplot(alpha = .5)
 ```
@@ -210,6 +222,7 @@ tf_ggplot(dti_df, aes(tf = rcst)) +
 ![](x04_Visualization_files/figure-html/unnamed-chunk-10-1.png)
 
 ``` r
+
 tf_ggplot(dti_df, aes(tf = rcst)) + 
   geom_fboxplot(alpha = .5, central = .2)
 ```
@@ -217,6 +230,7 @@ tf_ggplot(dti_df, aes(tf = rcst)) +
 ![](x04_Visualization_files/figure-html/unnamed-chunk-10-2.png)
 
 ``` r
+
 tf_ggplot(dti_df, aes(tf = rcst)) + 
   geom_fboxplot(alpha = .5, central = .2, outliers = FALSE)
 ```
@@ -224,6 +238,7 @@ tf_ggplot(dti_df, aes(tf = rcst)) +
 ![](x04_Visualization_files/figure-html/unnamed-chunk-10-3.png)
 
 ``` r
+
 tf_ggplot(dti_df, aes(tf = rcst)) +
   geom_fboxplot(orientation = "y", alpha = .3)
 ```
@@ -249,6 +264,7 @@ well as a basic `plot` method, see ?!?). A first example, using the CHF
 data, is below.
 
 ``` r
+
 chf_df |>
   filter(day %in% c("Mon", "Sun")) |>
   gglasagna(activity)
@@ -260,6 +276,7 @@ A somewhat more involved example, demonstrating the `order` argument and
 taking advantage of facets, is next.
 
 ``` r
+
 dti_df |>
   gglasagna(
     tf = cca,
@@ -278,6 +295,7 @@ To illustrate `geom_capellini`, we’ll start with some data prep for the
 iconic Canadian Weather data from **`fda`**:
 
 ``` r
+
 canada <- data.frame(
   place = fda::CanadianWeather$place,
   region = fda::CanadianWeather$region,
@@ -298,6 +316,7 @@ Now we can plot a map of Canada with annual temperature averages in red,
 precipitation in blue:
 
 ``` r
+
 ggplot(canada, aes(x = lon, y = lat)) +
   geom_capellini(aes(tf = precipl10),
     width = 4, height = 5, colour = "blue",
@@ -317,6 +336,7 @@ Another general use case for `geom_capellini` is visualizing FPCA
 decompositions:
 
 ``` r
+
 cca_fpc_tbl <- tibble(
   cca = dti_df$cca[1:30],
   cca_fpc = tfb_fpc(cca, pve = .8), 
@@ -342,6 +362,7 @@ So FPC1 is mostly a horizontal (level) shift, while FPC2 mostly affects
 the size and direction of the extrema around 0.13 and 0.8.
 
 ``` r
+
 ggplot(cca_fpc_tbl[1:40,], aes(x =  fpc_1, y = fpc_2)) +
   geom_point(size = .5, col = viridis(3)[2]) +
   geom_capellini(aes(tf =cca_fpc),width = .01, height = .01, line.linetype = 1) +
@@ -363,6 +384,7 @@ either spaghetti or lasagna plots, and `lines` to add lines to an
 existing plot:
 
 ``` r
+
 cca <- dti_df$cca |>
   tfd(arg = seq(0, 1, length.out = 93), interpolate = TRUE)
 
@@ -380,6 +402,7 @@ These `plot` methods use all the same graphics options and can be edited
 like other base graphics:
 
 ``` r
+
 cca_five <- cca[1:5]
 
 cca_five |> plot(xlim = c(-0.15, 1), col = pal_5, lwd = 2)
@@ -402,6 +425,7 @@ aligned curves, inverse warps, and template and can be inspected
 directly:
 
 ``` r
+
 pinch_reg <- tf::pinch |> tfb() |> #smooth before registration for better results
   tf_register() 
 ## Percentage of input data variability preserved in basis representation
@@ -441,6 +465,7 @@ The registered curves, inverse warping functions, and template can also
 be extracted explicitly for custom plots:
 
 ``` r
+
 layout(t(1:3))
 plot(tf::pinch[1:5], col = pal_5, lwd = 2, points = FALSE)
 

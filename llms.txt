@@ -22,12 +22,14 @@ same subject.
 Install the released version from CRAN:
 
 ``` r
+
 install.packages("tidyfun")
 ```
 
 Or install the current development version from GitHub:
 
 ``` r
+
 install.packages("pak")
 pak::pak("tidyfun/tidyfun")
 ```
@@ -66,6 +68,7 @@ following, which computes group-specific mean curves in the `dti_df`
 dataset, and plots the result:
 
 ``` r
+
 library("tidyfun")
 data(dti_df, package = "tidyfun")
 

@@ -37,6 +37,7 @@ callosum (`cca`). When printed, `tf` vectors show the first few `arg`
 and `value` pairs for each subject.
 
 ``` r
+
 data("dti_df")
 
 cca <- dti_df$cca
@@ -56,6 +57,7 @@ We also extract a simple 5-element vector of functions on a regular
 grid:
 
 ``` r
+
 cca_five <- cca[1:5, seq(0, 1, length.out = 93), interpolate = TRUE]
 rownames(cca_five) <- LETTERS[1:5]
 cca_five <- tfd(cca_five, signif = 2)
@@ -72,6 +74,7 @@ cca_five
 For illustration, we plot the vector `cca_five` below.
 
 ``` r
+
 plot(cca_five, xlim = c(-0.15, 1), col = pal_5)
 text(x = -0.1, y = cca_five[, 0.07], labels = names(cca_five), col = pal_5)
 ```
@@ -87,6 +90,7 @@ text(x = -0.1, y = cca_five[, 0.07], labels = names(cca_five), col = pal_5)
 - has a **`domain`**: the range of valid **`arg`**s.
 
 ``` r
+
 cca_five |>
   tf_evaluations() |>
   str()
@@ -108,6 +112,7 @@ cca_five |> tf_domain()
   defines how to inter-/extrapolate `evaluations` between `arg`s
 
 ``` r
+
 tf_evaluator(cca_five) |> str()
 ## function (x, arg, evaluations)
 tf_evaluator(cca_five) <- tf_approx_spline
@@ -121,6 +126,7 @@ tf_evaluator(cca_five) <- tf_approx_spline
   included in **`refund`**.
 
 ``` r
+
 cd4_vec <- tfd(refund::cd4)
 
 cd4_vec[1:2]
@@ -154,6 +160,7 @@ Functional data in basis representation:
 - significant memory and time savings:
 
 ``` r
+
 refund::DTI$cca |>
   object.size() |>
   print(units = "Kb")
@@ -179,6 +186,7 @@ cca |>
   - but also: \\t\\-distribution, ZI-Poisson, Beta, …
 
 ``` r
+
 cca_five_b <- cca_five |> tfb()
 ## Percentage of input data variability preserved in basis representation
 ## (per functional observation, approximate):
@@ -217,6 +225,7 @@ cca_five[1:2] |>
 **Function-specific (default), none**, prespecified (`sp`), or global:
 
 ``` r
+
 layout(t(1:2))
 cca_five |> plot()
 cca_five_b |> plot(col = "red")
@@ -264,6 +273,7 @@ without penalization in blue, and with manually set strong smoothing
 Dataset with heterogeneous roughness:
 
 ``` r
+
 layout(t(1:3))
 clrs <- scales::alpha(sample(viridis(15)), 0.5)
 plot(raw, main = "raw", col = clrs)
@@ -292,6 +302,7 @@ plot(tfb(raw, k = 55, global = TRUE), main = "global", col = clrs)
   minimal *percentage of variance explained* `pve`
 
 ``` r
+
 cca_five_fpc <- cca_five |> tfb_fpc(pve = 0.999)
 cca_five_fpc
 ## tfb[5]: [0,1] -> [0.3662524,0.6747586] in basis representation:
@@ -314,6 +325,7 @@ cca_five_fpc_lowrank
 ```
 
 ``` r
+
 layout(t(1:2))
 cca_five |> plot()
 cca_five_fpc |> plot(col = "red", ylab = "tfb_fpc(cca_five)")
@@ -336,6 +348,7 @@ as well, so you can:
 #### subset & subassign:
 
 ``` r
+
 cca_five[1:2]
 ## tfd[2]: [0,1] -> [0.4117148,0.655613] based on 93 evaluations each
 ## interpolation by tf_approx_spline 
@@ -355,6 +368,7 @@ cca_five
 #### compare & compute:
 
 ``` r
+
 cca_five[1] + cca_five[1] == 2 * cca_five[1]
 ## [1] TRUE
 log(exp(cca_five[2])) == cca_five[2]
@@ -370,6 +384,7 @@ deviations or variances or functional data depths over a vector of
 functional data:
 
 ``` r
+
 c(mean = mean(cca_five), sd = sd(cca_five))
 ## tfd[2]: [0,1] -> [0.01060056,0.6165761] based on 93 evaluations each
 ## interpolation by tf_approx_spline 
@@ -398,6 +413,7 @@ Compute summaries for each function like its mean or extreme values,
 quantiles, etc.
 
 ``` r
+
 tf_fmean(cca_five) # mean of each function's evaluations
 ##         A         B         C         D         E 
 ## 0.5202229 0.5266713 0.5090638 0.5308612 0.4661378
@@ -426,6 +442,7 @@ additional options, so it’s easy to get point values for `tf` objects,
 in `matrix` or `data.frame` formats:
 
 ``` r
+
 cca_five[1:2, seq(0, 1, length.out = 3)]
 ##           0       0.5         1
 ## A 0.4721627 0.4984125 0.5802742
@@ -450,6 +467,7 @@ cca_five[1:2, seq(0, 1, length.out = 7), matrix = FALSE] |> str()
 #### (simple, local) smoothing
 
 ``` r
+
 layout(t(1:3))
 cca_five |> plot(alpha = 0.2, ylab = "lowess")
 cca_five |>
@@ -474,6 +492,7 @@ cca_five |>
 #### differentiate & integrate:
 
 ``` r
+
 layout(t(1:3))
 cca_five |> plot(col = pal_5)
 cca_five |>
@@ -489,6 +508,7 @@ cca_five |>
 ![](x01_tf_Vectors_files/figure-html/unnamed-chunk-19-1.png)
 
 ``` r
+
 cca_five |> tf_integrate()
 ##         A         B         C         D         E 
 ## 0.5202229 0.5266713 0.5090638 0.5308612 0.4661378
@@ -500,6 +520,7 @@ cca_five |> tf_integrate()
 satisfying a condition on `value` \\f(t)\\ (and `arg`ument \\t\\):
 
 ``` r
+
 cca_five |> tf_anywhere(value > 0.65)
 ##     A     B     C     D     E 
 ## FALSE  TRUE  TRUE FALSE FALSE
@@ -521,6 +542,7 @@ cca_five |> tf_where(value > 0.6 & arg > 0.5, "first")
 #### zoom & query
 
 ``` r
+
 cca_five |> plot(xlim = c(-0.15, 1), col = pal_5, lwd = 2)
 text(x = -0.1, y = cca_five[, 0.07], labels = names(cca_five), col = pal_5, cex = 1.5)
 median(cca_five) |> lines(col = pal_5[3], lwd = 4)
@@ -529,6 +551,7 @@ median(cca_five) |> lines(col = pal_5[3], lwd = 4)
 ![](x01_tf_Vectors_files/figure-html/ex-fig2-1.png)
 
 ``` r
+
 # where are the first maxima of these functions?
 cca_five |> tf_where(value == max(value), "first")
 ##          A          B          C          D          E 

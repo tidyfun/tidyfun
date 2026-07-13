@@ -49,6 +49,7 @@ Key interpretation:
 **Core workflow in `tf`:**
 
 ``` r
+
 # One-shot registration (returns tf_registration object):
 reg <- tf_register(x, method = "...")
 tf_aligned(reg)   # registered/aligned curves
@@ -72,12 +73,12 @@ Default template behavior in
 /
 [`tf_estimate_warps()`](https://tidyfun.github.io/tf/reference/tf_estimate_warps.html):
 
-| Method     | Default template behavior                                               | How to override                 |
-|:-----------|:------------------------------------------------------------------------|:--------------------------------|
-| `srvf`     | Karcher-type mean shape[¹](#fn1) estimated iteratively by **`fdasrvf`** | pass `template = ...`           |
-| `cc`       | arithmetic mean curve (estimated iteratively)                           | pass `template = ...`           |
-| `affine`   | arithmetic mean curve                                                   | pass `template = ...`           |
-| `landmark` | column-wise mean of landmark locations                                  | pass `template_landmarks = ...` |
+| Method | Default template behavior | How to override |
+|:---|:---|:---|
+| `srvf` | Karcher-type mean shape[^1] estimated iteratively by **`fdasrvf`** | pass `template = ...` |
+| `cc` | arithmetic mean curve (estimated iteratively) | pass `template = ...` |
+| `affine` | arithmetic mean curve | pass `template = ...` |
+| `landmark` | column-wise mean of landmark locations | pass `template_landmarks = ...` |
 
 Practical rules:
 
@@ -162,6 +163,7 @@ domain, simply shifts the functions’ arguments). We pass an explicit
 template to make the target shape transparent:
 
 ``` r
+
 pinch_small <- pinch[1:10]
 template_affine <- pinch[7] |> tf_smooth(f= .2)
 
@@ -220,17 +222,17 @@ Quick success checks:
 
 ## Choosing a Registration Method
 
-|                           | `srvf` (default)                                               | `cc`                                                                                    | `affine`                                                                             | `landmark`                                                 |
-|:--------------------------|:---------------------------------------------------------------|:----------------------------------------------------------------------------------------|:-------------------------------------------------------------------------------------|:-----------------------------------------------------------|
-| **Use when**              | Smooth, non-linear timing differences with shared shape family | You want continuous-criterion alignment and can tune criterion                          | Mostly shift/scale timing variability; need interpretable warps                      | Reliable, repeated landmarks are available across curves   |
-| **Avoid when**            | Very noisy data, sparse grids, highly heterogeneous shapes     | Complex phase-amplitude interactions or severe irregularity                             | Strong non-linear timing deformation                                                 | Ambiguous/noisy landmarks or mismatched counts             |
-| **Template handling**     | Implicit Karcher-type mean unless `template` supplied          | Arithmetic mean unless `template` supplied                                              | Arithmetic mean unless `template` supplied                                           | Uses `template_landmarks` (default: column means)          |
-| **Key arguments**         | `method = "srvf"`, `lambda`                                    | `method = "cc"`, `crit = 1/2`, `nbasis`, `lambda`, `conv`, `iterlim`                    | `method = "affine"`, `type`, bounds                                                  | `method = "landmark"`, `landmarks`, `template_landmarks`   |
-| **Input grid**            | regular only                                                   | regular only                                                                            | regular + **irregular**                                                              | regular + **irregular**                                    |
-| **Noise robustness**      | Low (pre-smooth if noisy)                                      | High (most stable)                                                                      | Moderate                                                                             | Moderate; outlier-robust                                   |
-| **Typical speed**         | Fast (but O(n²) in grid)                                       | Moderate                                                                                | Fast                                                                                 | Very fast                                                  |
-| **Typical failure signs** | Unstable warps, over-warping, inconsistent reruns              | Sensitive to criterion choice, weak alignment gains                                     | Residual misalignment of local features, boundary `NA`s under stronger shifts/scales | Forced/broken alignments from bad landmarks                |
-| **First fallback**        | Pre-smooth inputs; try `affine` or `landmark`                  | Change criterion, basis dimension and/or amount of penalization; try `srvf` or `affine` | Set stricter/looser bounds; upgrade to `srvf`                                        | Check appropriateness of landmarks; use `srvf` or `affine` |
+|  | `srvf` (default) | `cc` | `affine` | `landmark` |
+|:---|:---|:---|:---|:---|
+| **Use when** | Smooth, non-linear timing differences with shared shape family | You want continuous-criterion alignment and can tune criterion | Mostly shift/scale timing variability; need interpretable warps | Reliable, repeated landmarks are available across curves |
+| **Avoid when** | Very noisy data, sparse grids, highly heterogeneous shapes | Complex phase-amplitude interactions or severe irregularity | Strong non-linear timing deformation | Ambiguous/noisy landmarks or mismatched counts |
+| **Template handling** | Implicit Karcher-type mean unless `template` supplied | Arithmetic mean unless `template` supplied | Arithmetic mean unless `template` supplied | Uses `template_landmarks` (default: column means) |
+| **Key arguments** | `method = "srvf"`, `lambda` | `method = "cc"`, `crit = 1/2`, `nbasis`, `lambda`, `conv`, `iterlim` | `method = "affine"`, `type`, bounds | `method = "landmark"`, `landmarks`, `template_landmarks` |
+| **Input grid** | regular only | regular only | regular + **irregular** | regular + **irregular** |
+| **Noise robustness** | Low (pre-smooth if noisy) | High (most stable) | Moderate | Moderate; outlier-robust |
+| **Typical speed** | Fast (but O(n²) in grid) | Moderate | Fast | Very fast |
+| **Typical failure signs** | Unstable warps, over-warping, inconsistent reruns | Sensitive to criterion choice, weak alignment gains | Residual misalignment of local features, boundary `NA`s under stronger shifts/scales | Forced/broken alignments from bad landmarks |
+| **First fallback** | Pre-smooth inputs; try `affine` or `landmark` | Change criterion, basis dimension and/or amount of penalization; try `srvf` or `affine` | Set stricter/looser bounds; upgrade to `srvf` | Check appropriateness of landmarks; use `srvf` or `affine` |
 
 The `srvf` and `cc` methods require regular grids (`tfd_reg` or `tfb`).
 The `affine` and `landmark` methods also accept irregular grids
@@ -283,7 +285,7 @@ near-identical curves.
 **Remedies:** Smooth inputs (more) first; reduce basis flexibility;
 compare before/after sensitivity.
 
-In our benchmarks[²](#fn2), CC methods (`method = "cc"`) were the most
+In our benchmarks[^2], CC methods (`method = "cc"`) were the most
 noise-robust, while SRVF degraded most sharply under noise – because
 SRSFs involve numerical derivatives that amplify observation noise.
 Pre-smoothing SRVF inputs with `tfb(x, k = 25)` before registration
@@ -368,6 +370,7 @@ with the highest modified band depth (MBD, see
 [`tf_depth()`](https://tidyfun.github.io/tf/reference/tf_depth.html)).
 
 ``` r
+
 # Gaussian bumps with large shifts:
 s <- seq(-4, 6, length.out = 201)
 mus <- c(-2, -1, 0, 1, 2)
@@ -454,6 +457,7 @@ We demonstrate this workflow below using the `pinch` data.
 ### Step 1: Register and inspect summary
 
 ``` r
+
 x <- pinch[1:10]
 
 # Register with affine shift warps:
@@ -505,6 +509,7 @@ Key things to check in the summary:
 ### Step 2: Visual inspection via `plot()`
 
 ``` r
+
 # plot() provides a 3-panel diagnostic:
 plot(reg_aff)
 ```
@@ -521,6 +526,7 @@ aligned curves show better feature alignment to the template.
 For this example:
 
 ``` r
+
 # Are global peak locations more concentrated after alignment?
 peak_before <- tf_where(x, value == max(value)) |> as.numeric()
 peak_after_aff <- tf_where(tf_aligned(reg_aff), value == max(value)) |> as.numeric()
@@ -537,6 +543,7 @@ data.frame(
 ### Step 4: Compare with an alternative method
 
 ``` r
+
 # Compare with SRVF (non-linear warps):
 reg_srvf <- tf_register(x, method = "srvf")
 
@@ -563,6 +570,7 @@ summary(reg_srvf)
 ```
 
 ``` r
+
 peak_after_srvf <- tf_where(tf_aligned(reg_srvf), value == max(value)) |> as.numeric()
 
 data.frame(
@@ -576,6 +584,7 @@ data.frame(
 ```
 
 ``` r
+
 layout(matrix(1:6, 2, 3, byrow = TRUE))
 # Affine:
 plot(x, main = "Original", col = alpha_palette, lwd = 1.5)
@@ -645,14 +654,13 @@ Represents each curve via its *square root velocity function* (SRVF),
 minimizing \\L_2\\ distances between (aligned) SRVFs. This corresponds
 to minimizing an *elastic* distance metric between functions modulo
 reparameterization (i.e. under “warping”) and transforms the non-linear
-alignment problem into a simpler optimization on a Hilbert
-sphere[³](#fn3). See [Srivastava et
-al. (2011)](https://doi.org/10.48550/arXiv.1103.3817) and [Tucker et
-al. (2013)](https://doi.org/10.1016/j.csda.2012.12.001) for the
-`fdasrvf` implementation.
+alignment problem into a simpler optimization on a Hilbert sphere[^3].
+See [Srivastava et al. (2011)](https://doi.org/10.48550/arXiv.1103.3817)
+and [Tucker et al. (2013)](https://doi.org/10.1016/j.csda.2012.12.001)
+for the `fdasrvf` implementation.
 
 - **Optimization:** Dynamic programming over the space of
-  diffeomorphisms[⁴](#fn4) (via `fdasrvf`).
+  diffeomorphisms[^4] (via `fdasrvf`).
 - **Template:** Karcher mean on the shape manifold (iterative; see
   footnote in the [template table](#what-is-the-template) above), or
   user-supplied.
@@ -783,6 +791,7 @@ and Ramsay & Silverman (2005, Ch. 7).
 ### Pinch Data: Cross-method Comparison
 
 ``` r
+
 pinch_small <- pinch[1:10]
 
 reg_aff <- tf_register(pinch_small, method = "affine", type = "shift_scale")
@@ -840,6 +849,7 @@ inv_warp_lm2 <- tf_inv_warps(reg_lm2)
 ```
 
 ``` r
+
 layout(t(matrix(1:12, 4, 3)))
 par(cex.main = 0.8)
 plot.new()
@@ -878,6 +888,7 @@ registration with start + peak + end landmarks does a good job aligning
 all three features without producing `NA`s.
 
 ``` r
+
 reg_srvf <- tf_register(pinch_small, method = "srvf")
 inv_warp_srvf <- tf_inv_warps(reg_srvf)
 reg_cc_unpen <- tf_register(pinch_small, method = "cc", max_iter = 10, nbasis = 10, crit = 1)
@@ -899,6 +910,7 @@ its poor amplitude variance reduction…) – using
 `summary(<tf_registration>)` for quick quantitative diagnostics:
 
 ``` r
+
 summary(reg_cc_unpen)
 #> tf_register(x = pinch_small, nbasis = 10, crit = 1, method = "cc", 
 #>     max_iter = 10)
@@ -962,6 +974,7 @@ summary(reg_cc_pen)
 ```
 
 ``` r
+
 layout(t(matrix(1:12, 4, 3)))
 par(cex.main = 0.8)
 plot.new()
@@ -1001,11 +1014,12 @@ The Berkeley growth data contains height measurements for 39 boys and 54
 girls aged 1–18. Growth velocity curves (first derivatives of height)
 show a prominent pubertal growth spurt whose timing varies substantially
 between individuals – a natural target for registration. We use the
-subset of girls[⁵](#fn5) from this dataset to illustrate how data
+subset of girls[^5] from this dataset to illustrate how data
 representation, penalization, and landmark choice affect registration
 quality.
 
 ``` r
+
 growth <- tf::growth |> dplyr::filter(gender == "female")
 
 # Raw velocity via finite differences -- noisy, only 30 midpoints from 31 measurements:
@@ -1037,6 +1051,7 @@ than genuine phase variation. Converting to a smooth representation
 first gives SRVF cleaner input and much better results.
 
 ``` r
+
 # SRVF on raw (noisy) velocity:
 reg_raw_obj <- tf_register(growth$raw_vel, method = "srvf")
 inv_warp_raw <- tf_inv_warps(reg_raw_obj)
@@ -1049,6 +1064,7 @@ reg_smooth <- tf_aligned(reg_smooth_obj)
 ```
 
 ``` r
+
 reg_brks <- range(c(tf_evaluations(reg_raw), tf_evaluations(reg_smooth))) |>
   (\(x) seq(x[1], x[2], l = 13))()
 
@@ -1093,6 +1109,7 @@ warping), trading less strict alignment for smoother and more subtle
 warps.
 
 ``` r
+
 # Penalized SRVF on the raw velocity:
 reg_raw_pen_obj <- tf_register(growth$raw_vel, method = "srvf", lambda = 0.1)
 inv_warp_raw_pen <- tf_inv_warps(reg_raw_pen_obj)
@@ -1100,6 +1117,7 @@ reg_raw_pen <- tf_aligned(reg_raw_pen_obj)
 ```
 
 ``` r
+
 layout(t(matrix(1:4, 4, 1)))
 par(cex.main = 0.8)
 plot(growth$raw_vel, main = "Raw Velocity",
@@ -1135,6 +1153,7 @@ identify these by searching for the minimum in age 5–(peak-1) and the
 maximum in age 8–17 on each smooth velocity curve.
 
 ``` r
+
 # End of rapid infant growth: 
 #    less than 2/3 of max early childhood growth (1-3) velocity before age 5
 growth_slows <- growth$smooth_vel |> tf_zoom(begin = 1, end = 5) |> 
@@ -1158,6 +1177,7 @@ reg_lm <- tf_aligned(reg_lm_obj)
 ```
 
 ``` r
+
 if (!exists("reg_brks")) {
   reg_brks <- range(c(tf_evaluations(growth$smooth_vel), tf_evaluations(reg_lm))) |>
     (\(x) seq(x[1], x[2], l = 13))()
@@ -1215,21 +1235,19 @@ growth” above…).
   warping. *Annals of Statistics*, 25(3), 1251–1276.
   [doi:10.1214/aos/1069362747](https://doi.org/10.1214/aos/1069362747)
 
-------------------------------------------------------------------------
-
-1.  The Karcher mean (also called Frechet mean) generalizes arithmetic
+[^1]: The Karcher mean (also called Frechet mean) generalizes arithmetic
     means to general spaces. In this case, it is a centroid in the
     amplitude quotient space (functions modulo reparameterization),
     computed iteratively using the elastic (Fisher-Rao) distance rather
     than pointwise averaging.
 
-2.  For full details on the benchmark design and results, see
+[^2]: For full details on the benchmark design and results, see
     [tidyfun.github.io/sim-registration](https://tidyfun.github.io/sim-registration/)
 
-3.  more specifically: the positive orthant of such a sphere, which is
+[^3]: more specifically: the positive orthant of such a sphere, which is
     the space of SRVFs of warping functions
 
-4.  smooth, monotone, one-to-one functions, basically.
+[^4]: smooth, monotone, one-to-one functions, basically.
 
-5.  .. because aligning female *and* male growth curves to the same
+[^5]: .. because aligning female *and* male growth curves to the same
     template does not make sense – they show different patterns!
