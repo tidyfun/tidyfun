@@ -83,6 +83,7 @@ gglasagna <- function(
       "{.arg tf} must be a {.cls tf} object, not {.obj_type_friendly {pull(data, {{ tf }})}}."
     )
   }
+  check_tf_1d(pull(data, {{ tf }}), "{.fn gglasagna}")
   order <- enexpr(order)
   has_order <- !is.null(order)
   order_by_label <- enexpr(order_by)

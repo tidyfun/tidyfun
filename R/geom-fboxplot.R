@@ -513,6 +513,11 @@ StatFboxplot <- ggplot2::ggproto(
   required_aes = c("tf"),
   retransform = FALSE,
   setup_params = function(data, params) {
+    # here and not (only) in compute_panel: errors thrown in compute_panel are
+    # downgraded to warnings by ggplot2, this must abort
+    if ("tf" %in% names(data)) {
+      check_tf_1d(data$tf, "{.fn geom_fboxplot}/{.fn stat_fboxplot}")
+    }
     params$orientation <- resolve_fboxplot_orientation(params$orientation)
     params
   },
@@ -534,6 +539,7 @@ StatFboxplot <- ggplot2::ggproto(
         "{.fn stat_fboxplot} requires a {.code tf} aesthetic mapping to a {.cls tf} object."
       )
     }
+    check_tf_1d(data$tf, "{.fn geom_fboxplot}/{.fn stat_fboxplot}")
 
     if (
       !is.numeric(central) ||
