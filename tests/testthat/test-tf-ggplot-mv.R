@@ -191,6 +191,92 @@ test_that("tf_mv mapped to a non-tf aesthetic errors", {
   )
 })
 
+# tfb_mv ----------------------------------------------------------------------
+
+test_that("tfb_mv columns plot in trajectory and facet mode", {
+  set.seed(10)
+  arg <- seq(0, 1, length.out = 21)
+  mvb <- tfb_mv(list(
+    x = tfb(tf_rgp(3, arg = arg), k = 8, verbose = FALSE),
+    y = tfb(tf_rgp(3, arg = arg), k = 8, verbose = FALSE)
+  ))
+  d <- data.frame(id = 1:3)
+  d$mv <- mvb
+
+  b_traj <- ggplot_build(tf_ggplot(d, aes(tf = mv)) + geom_path())$data[[1]]
+  expect_equal(length(unique(b_traj$group)), 3)
+  expect_equal(nrow(b_traj), 3 * 21)
+
+  b_facet <- ggplot_build(
+    tf_ggplot(d, aes(tf = mv), type = "facet") + geom_line()
+  )$data[[1]]
+  expect_equal(length(unique(b_facet$group)), 3 * 2)
+  expect_equal(nrow(b_facet), 3 * 2 * 21)
+})
+
+# Single-component tf_mv --------------------------------------------------------
+
+test_that("d = 1 tf_mv defaults to facet display with one group per curve", {
+  set.seed(101)
+  d <- data.frame(id = 1:3)
+  d$mv <- tfd_mv(list(a = tf_rgp(3, 11L)))
+  b <- ggplot_build(tf_ggplot(d, aes(tf = mv)) + geom_line())$data[[1]]
+  expect_equal(length(unique(b$group)), 3)
+  expect_equal(nrow(b), 3 * 11)
+})
+
+# Zero-length tf_mv -------------------------------------------------------------
+
+test_that("zero-length tf_mv columns build empty plots without error", {
+  set.seed(102)
+  d <- create_test_tf_mv_data(d = 2, n_funcs = 3, n_points = 11)
+  d0 <- d[0, , drop = FALSE]
+
+  b_traj <- ggplot_build(tf_ggplot(d0, aes(tf = mv)) + geom_path())
+  expect_s3_class(b_traj, "ggplot_built")
+  expect_equal(nrow(b_traj$data[[1]]), 0)
+
+  b_facet <- ggplot_build(
+    tf_ggplot(d0, aes(tf = mv), type = "facet") + geom_line()
+  )
+  expect_s3_class(b_facet, "ggplot_built")
+  expect_equal(nrow(b_facet$data[[1]]), 0)
+})
+
+# Univariate-only geoms abort informatively ------------------------------------
+
+test_that("tf_mv into geom_spaghetti/geom_meatballs aborts informatively", {
+  set.seed(103)
+  d <- create_test_tf_mv_data(d = 2, n_funcs = 3, n_points = 11)
+  expect_error(
+    ggplot_build(ggplot(d, aes(y = mv)) + geom_spaghetti()),
+    "does not support multivariate"
+  )
+  expect_error(
+    ggplot_build(ggplot(d, aes(y = mv)) + geom_meatballs()),
+    "does not support multivariate"
+  )
+})
+
+test_that("tf_mv into gglasagna aborts informatively", {
+  set.seed(104)
+  d <- create_test_tf_mv_data(d = 2, n_funcs = 3, n_points = 11)
+  expect_error(gglasagna(d, mv), "does not support multivariate")
+})
+
+test_that("tf_mv into geom_fboxplot aborts informatively", {
+  set.seed(105)
+  d <- create_test_tf_mv_data(d = 2, n_funcs = 5, n_points = 11)
+  expect_error(
+    ggplot_build(tf_ggplot(d, aes(tf = mv)) + geom_fboxplot()),
+    "does not support multivariate"
+  )
+  expect_error(
+    ggplot_build(ggplot(d, aes(tf = mv)) + geom_fboxplot()),
+    "does not support multivariate"
+  )
+})
+
 # autoplot / autolayer --------------------------------------------------------
 
 test_that("autoplot.tf_mv d == 2 is a trajectory tf_ggplot", {
@@ -209,6 +295,15 @@ test_that("autoplot.tf_mv d > 2 facets by component", {
   mv <- create_test_tf_mv(d = 3, n_funcs = 3)
   built <- ggplot_build(autoplot(mv))
   expect_s3_class(built$plot$facet, "FacetWrap")
+})
+
+test_that("autoplot.tf_mv honours type = 'facet' override for d == 2", {
+  set.seed(93)
+  mv <- create_test_tf_mv(d = 2, n_funcs = 4)
+  built <- ggplot_build(autoplot(mv, type = "facet"))
+  expect_s3_class(built$plot$facet, "FacetWrap")
+  expect_s3_class(built$plot$layers[[1]]$geom, "GeomLine")
+  expect_equal(length(unique(built$data[[1]]$PANEL)), 2)
 })
 
 test_that("autolayer.tf_mv works with plain ggplot() and tf_ggplot()", {
