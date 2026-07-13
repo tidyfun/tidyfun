@@ -156,7 +156,7 @@ test_that("tf_unnest.tf_mv matches tf::as.data.frame on the native grid", {
   set.seed(2)
   mv <- tfd_mv(list(a = tf_rgp(4, 11L), b = tf_rgp(4, 11L)))
   ours <- tf_unnest(mv)
-  ref <- as.data.frame(mv, unnest = TRUE)
+  ref <- as.data.frame(mv, unnest = TRUE, long = FALSE)
   expect_equal(sort(ours$a), sort(ref$a))
   expect_equal(sort(ours$b), sort(ref$b))
 })
