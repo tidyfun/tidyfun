@@ -192,3 +192,28 @@ test_that("tf_unnest.tf_mv full-outer-joins misaligned component grids", {
   expect_true(any(is.na(out$x) & !is.na(out$y)))
   expect_true(any(is.na(out$y) & !is.na(out$x)))
 })
+
+test_that(".tf_mv_unnest_long keeps genuine NA evaluations so lines break", {
+  # a curve with an observation gap, evaluated with interpolate = FALSE on a
+  # grid covering the gap, yields NA values at the unobserved args; those
+  # rows must survive into the long data -- dropping them would make
+  # geom_line() connect straight across the gap
+  cx <- tfd(list(c(0, 1, 1, 0)), arg = list(c(0, 1, 3, 4)))
+  mv <- tfd_mv(list(x = cx, y = cx))
+  long <- suppressWarnings(
+    tidyfun:::.tf_mv_unnest_long(mv, arg = 0:4, interpolate = FALSE)
+  )
+  x1 <- long[long$.component == "x", ]
+  expect_identical(nrow(x1), 5L)
+  expect_true(is.na(x1$value[x1$arg == 2]))
+})
+
+test_that(".tf_mv_unnest_long group codes are collision-free", {
+  # pasted labels would merge ("a.b", "c") and ("a", "b.c") into "a.b.c"
+  set.seed(30)
+  fx <- tfd(matrix(rnorm(10), nrow = 2), arg = seq(0, 1, length.out = 5))
+  names(fx) <- c("a.b", "a")
+  mv <- tfd_mv(list(c = fx, b.c = fx))
+  long <- tidyfun:::.tf_mv_unnest_long(mv)
+  expect_identical(length(unique(long$.mv_group)), 4L)
+})

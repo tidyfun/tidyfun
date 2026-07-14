@@ -318,3 +318,23 @@ test_that("autolayer.tf_mv works with plain ggplot() and tf_ggplot()", {
     "ggplot_built"
   )
 })
+
+test_that("covariates named like generated mv columns don't break the build", {
+  set.seed(31)
+  d <- tibble::tibble(
+    mv = tfd_mv(list(x = tf_rgp(3), y = tf_rgp(3))),
+    .mv_x = c("a", "b", "c")
+  )
+  p <- tf_ggplot(d, aes(tf = mv, colour = .mv_x), type = "facet") + geom_line()
+  b <- ggplot_build(p)
+  expect_identical(length(unique(b$data[[1]]$colour)), 3L)
+  # trajectory mode with the colliding covariate
+  p2 <- tf_ggplot(d, aes(tf = mv, colour = .mv_x)) + geom_path()
+  expect_s3_class(ggplot_build(p2), "ggplot_built")
+  # .component itself is reserved and errors informatively
+  d$.component <- 1:3
+  expect_error(
+    ggplot_build(tf_ggplot(d, aes(tf = mv), type = "facet") + geom_line()),
+    "reserved"
+  )
+})

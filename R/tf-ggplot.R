@@ -1012,30 +1012,60 @@ build_tf_mv_layer_data <- function(
     src <- rlang::as_string(mv_expr)
     if (src %in% names(work_data)) work_data[[src]] <- NULL
   }
-  work_data$.row_id_ <- seq_len(n_rows)
+  # protect the generated columns against same-named user covariates (which
+  # would get .x/.y-suffixed by the join while the mapping still references
+  # the bare name). `.component` is user-facing (facet_wrap(~.component)) and
+  # cannot be renamed, so a colliding covariate is an error.
+  if (".component" %in% names(work_data)) {
+    cli::cli_abort(c(
+      "Column {.val .component} in {.arg data} collides with the component
+       column generated for {.cls tf_mv} layers.",
+      i = "Rename that column: {.val .component} is reserved for faceting
+       mv displays (e.g. {.code facet_wrap(~.component)})."
+    ))
+  }
+  gen_col <- vapply(
+    c(
+      ".row_id_",
+      ".mv_id",
+      ".mv_arg",
+      ".mv_value",
+      ".mv_x",
+      ".mv_y",
+      ".mv_group"
+    ),
+    make_safe_column_name,
+    character(1),
+    existing_names = names(work_data)
+  )
+  work_data[[gen_col[[".row_id_"]]]] <- seq_len(n_rows)
   mv_label <- paste(rlang::expr_deparse(mv_expr), collapse = "")
 
   new_mapping <- parsed_aes$regular_aes
 
   if (type == "trajectory") {
     tj <- .tf_mv_trajectory_long(mv, arg = arg, interpolate = interpolate)
-    long_data <- left_join(tj, work_data, by = ".row_id_") |> select(-.row_id_)
-    new_mapping$x <- rlang::sym(".mv_x")
-    new_mapping$y <- rlang::sym(".mv_y")
-    new_mapping$group <- rlang::sym(".mv_id")
+    names(tj) <- unname(gen_col[names(tj)])
+    long_data <- left_join(tj, work_data, by = gen_col[[".row_id_"]]) |>
+      select(-all_of(gen_col[[".row_id_"]]))
+    new_mapping$x <- rlang::sym(gen_col[[".mv_x"]])
+    new_mapping$y <- rlang::sym(gen_col[[".mv_y"]])
+    new_mapping$group <- rlang::sym(gen_col[[".mv_id"]])
     axis_labels <- list(x = comp_names[1], y = comp_names[2])
   } else {
     lg <- .tf_mv_unnest_long(mv, arg = arg, interpolate = interpolate)
-    lg$.row_id_ <- as.integer(lg$id)
-    # rename BEFORE the join so user covariates named "id"/"arg"/"value" cannot
-    # collide
-    names(lg)[names(lg) == "id"] <- ".mv_id"
-    names(lg)[names(lg) == "arg"] <- ".mv_arg"
-    names(lg)[names(lg) == "value"] <- ".mv_value"
-    long_data <- left_join(lg, work_data, by = ".row_id_") |> select(-.row_id_)
-    new_mapping$x <- rlang::sym(".mv_arg")
-    new_mapping$y <- rlang::sym(".mv_value")
-    new_mapping$group <- rlang::sym(".mv_group")
+    lg[[gen_col[[".row_id_"]]]] <- as.integer(lg$id)
+    # rename BEFORE the join so user covariates named "id"/"arg"/"value" (or
+    # any ".mv_*") cannot collide
+    names(lg)[names(lg) == "id"] <- gen_col[[".mv_id"]]
+    names(lg)[names(lg) == "arg"] <- gen_col[[".mv_arg"]]
+    names(lg)[names(lg) == "value"] <- gen_col[[".mv_value"]]
+    names(lg)[names(lg) == ".mv_group"] <- gen_col[[".mv_group"]]
+    long_data <- left_join(lg, work_data, by = gen_col[[".row_id_"]]) |>
+      select(-all_of(gen_col[[".row_id_"]]))
+    new_mapping$x <- rlang::sym(gen_col[[".mv_arg"]])
+    new_mapping$y <- rlang::sym(gen_col[[".mv_value"]])
+    new_mapping$group <- rlang::sym(gen_col[[".mv_group"]])
     axis_labels <- list(x = "arg", y = mv_label)
   }
 

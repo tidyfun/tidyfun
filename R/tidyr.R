@@ -387,23 +387,40 @@ tf_unnest.tf_mv <- function(data, cols, arg, interpolate = TRUE, ...) {
 # Long form with one row per (id, arg, component):
 # (id, arg, .component, value, .mv_group). `.component` is an ordered factor
 # over the component names, `.mv_group` an ordered factor over id x component
-# (one group per curve and component). NA values (e.g. a component unobserved
-# at some (id, arg) after the outer join) are dropped.
+# (one group per curve and component). Assembled component-by-component on
+# each component's own grid -- NOT by pivoting the wide outer join: pivoting
+# would create structural NA rows (component unobserved at another
+# component's arg) that must be dropped, and dropping them also removes
+# *genuine* missing evaluations, so geom_line() would connect straight
+# across actually-missing intervals instead of breaking there. Per-component
+# assembly produces no structural rows, and genuine NAs stay in.
 # Used to drive value-vs-arg geoms.
-#' @importFrom tidyr pivot_longer
 .tf_mv_unnest_long <- function(data, arg = NULL, interpolate = TRUE) {
-  wide <- tf_unnest(data, arg = arg, interpolate = interpolate)
-  nms <- names(tf_components(data))
-  long <- pivot_longer(
-    wide,
-    cols = all_of(nms),
-    names_to = ".component",
-    values_to = "value",
-    values_drop_na = TRUE
-  )
-  long$.component <- ordered(long$.component, levels = nms)
-  grp <- paste(long$id, long$.component, sep = ".")
-  long$.mv_group <- ordered(grp, levels = unique(grp))
+  comps <- tf_components(data)
+  nms <- names(comps)
+  if (length(data) == 0L || !length(comps)) {
+    return(tibble::tibble(
+      id = ordered(character(0)),
+      arg = numeric(0),
+      value = numeric(0),
+      .component = ordered(character(0), levels = nms),
+      .mv_group = ordered(integer(0))
+    ))
+  }
+  per <- imap(comps, function(comp, nm) {
+    one <- tf_unnest(comp, arg = arg, interpolate = interpolate)
+    one$.component <- ordered(nm, levels = nms)
+    one
+  })
+  long <- dplyr::bind_rows(per)
+  # group-contiguous, arg-sorted within each (id, component) path
+  long <- long[order(long$id, long$.component, long$arg), , drop = FALSE]
+  # collision-free integer interaction code: pasted "id.component" labels can
+  # merge distinct pairs (e.g. ("a.b", "c") and ("a", "b.c"))
+  grp <- (match(as.character(long$id), unique(as.character(long$id))) - 1L) *
+    length(nms) +
+    as.integer(long$.component)
+  long$.mv_group <- ordered(grp, levels = sort(unique(grp)))
   long
 }
 

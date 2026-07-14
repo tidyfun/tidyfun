@@ -23,7 +23,7 @@ Remotes:
     tidyfun/tf@pr-233
 Depends:
     R (>= 4.1),
-    tf (>= 0.4.2)
+    tf (>= 0.5.0)
 Imports:
     cli,
     dplyr,
@@ -51,6 +51,7 @@ Suggests:
     scales,
     testthat (>= 3.0.0),
     tidyverse,
+    vctrs,
     viridisLite
 VignetteBuilder: 
     knitr
