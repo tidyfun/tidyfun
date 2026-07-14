@@ -513,8 +513,8 @@ StatFboxplot <- ggplot2::ggproto(
   required_aes = c("tf"),
   retransform = FALSE,
   setup_params = function(data, params) {
-    # here and not (only) in compute_panel: errors thrown in compute_panel are
-    # downgraded to warnings by ggplot2, this must abort
+    # must abort here: setup_params always runs before compute_panel, whose
+    # errors ggplot2 downgrades to warnings
     if ("tf" %in% names(data)) {
       check_tf_1d(data$tf, "{.fn geom_fboxplot}/{.fn stat_fboxplot}")
     }
@@ -539,7 +539,6 @@ StatFboxplot <- ggplot2::ggproto(
         "{.fn stat_fboxplot} requires a {.code tf} aesthetic mapping to a {.cls tf} object."
       )
     }
-    check_tf_1d(data$tf, "{.fn geom_fboxplot}/{.fn stat_fboxplot}")
 
     if (
       !is.numeric(central) ||

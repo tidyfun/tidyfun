@@ -29,13 +29,11 @@
 #' @seealso [geom_cappelini()] for glyph plots, [gglasagna()] for heatmaps.
 NULL
 
-# unlist() because tf_mv evaluations are data.frames, not numeric vectors
+# a curve is "finite" unless it contains NA/NaN (Inf passes, as before);
+# anyNA() also covers tf_mv, whose evaluations are data.frames
 #' @export
 is.finite.tf <- function(x) {
-  map_lgl(tf_evaluations(x), \(x) {
-    x <- unlist(x)
-    all(is.finite(x) | !is.na(x))
-  })
+  map_lgl(tf_evaluations(x), \(x) !anyNA(x))
 }
 
 # needed so ggplot2's find_scale() does not die in vctrs::vec_math() for the
@@ -76,8 +74,8 @@ StatTf <- ggproto(
   Stat,
   required_aes = "y",
   setup_params = function(data, params) {
-    # here and not (only) in compute_layer: this must abort before
-    # tf_arg() below chokes on multivariate input
+    # setup_params always runs before compute_layer, so this single check
+    # aborts before tf_arg() below chokes on multivariate input
     if ("y" %in% names(data)) {
       check_tf_1d(pull(data, y), "{.fn geom_spaghetti}/{.fn geom_meatballs}")
     }
@@ -92,7 +90,6 @@ StatTf <- ggproto(
         "{.arg y} must be a {.cls tf} object, not {.obj_type_friendly {data$y}}."
       )
     }
-    check_tf_1d(data$y, "{.fn geom_spaghetti}/{.fn geom_meatballs}")
     tf_eval <- suppressMessages(
       data |>
         mutate(y____id = names(y) %||% seq_along(y)) |>
