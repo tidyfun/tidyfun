@@ -602,6 +602,63 @@ infer_tf_axis_labels <- function(mapping, orientation = NA) {
   }
 }
 
+# Resolve a user-supplied evaluation grid: a single integer means "this many
+# equidistant points over the domain of `f`"; numeric vectors and NULL pass
+# through unchanged.
+resolve_arg_grid <- function(arg, f) {
+  if (!is.null(arg) && length(arg) == 1L) {
+    domain <- tf_domain(f)
+    arg <- seq(domain[1], domain[2], length.out = as.integer(arg))
+  }
+  arg
+}
+
+# Align enriched_data to one row per function: synthesise an empty frame when
+# there is no plot-level data (e.g. tf_ggplot() + geom_line(aes(tf = tf_rgp(5)))),
+# keep the first row for length-1 aesthetics, recycle a single row, abort
+# otherwise. `what` names the tf aesthetic(s) in the abort message.
+align_layer_data_rows <- function(enriched_data, n_funcs, what) {
+  .n_enriched <- nrow(enriched_data) # NULL for NULL / waiver / non-data-frames
+  if (is.null(.n_enriched) || .n_enriched == 0) {
+    enriched_data <- structure(
+      list(),
+      class = "data.frame",
+      row.names = seq_len(n_funcs)
+    )
+  }
+  n_rows <- nrow(enriched_data)
+  if (n_rows != n_funcs) {
+    if (n_funcs == 1L && n_rows > 0) {
+      enriched_data <- enriched_data[1, , drop = FALSE]
+    } else if (n_rows == 1L && n_funcs > 1L) {
+      enriched_data <- enriched_data[rep(1L, n_funcs), , drop = FALSE]
+    } else {
+      cli::cli_abort(c(
+        paste0("Layer data cannot be aligned with ", what, "."),
+        "i" = "Data has {n_rows} row(s) but there are {n_funcs} function(s)."
+      ))
+    }
+  }
+  enriched_data
+}
+
+# Point layer-level scalar tf aes (e.g. colour = tf_depth(f)) at their
+# pre-evaluated columns (already joined in from enriched_data).
+remap_scalar_tf_aes <- function(
+  mapping,
+  scalar_tf_aes,
+  scalar_col_map,
+  layer_idx
+) {
+  for (aes_name in names(scalar_tf_aes)) {
+    key <- paste0(aes_name, ".layer.", layer_idx)
+    if (key %in% names(scalar_col_map)) {
+      mapping[[aes_name]] <- rlang::sym(scalar_col_map[[key]])
+    }
+  }
+  mapping
+}
+
 #' Build long-format data and new mapping for a single tf layer
 #'
 #' Evaluates the layer's tf aesthetics independently on their own natural grid
@@ -733,44 +790,19 @@ build_tf_layer_data <- function(
   }
 
   # This layer's evaluation grid: user-specified or natural grid of first tf object.
-  # user_arg can be NULL, a numeric vector (explicit points), or a single integer
-  # (desired grid length, resolved to an equidistant grid over the tf domain).
-  arg <- user_arg
+  arg <- resolve_arg_grid(user_arg, tf_objects[[1]])
   if (is.null(arg)) {
     first_arg <- tf_arg(tf_objects[[1]])
     arg <- if (is.list(first_arg)) first_arg[[1]] else first_arg
-  } else if (length(arg) == 1L) {
-    domain <- tf_domain(tf_objects[[1]])
-    arg <- seq(domain[1], domain[2], length.out = as.integer(arg))
   }
 
-  # If there is no plot-level data (e.g. tf_ggplot() + geom_line(aes(tf = tf_rgp(5)))),
-  # synthesise a one-row-per-function data frame so joins and indexing work correctly.
   n_funcs <- common_n_funcs
-  .n_enriched <- nrow(enriched_data) # NULL for NULL / waiver / non-data-frames
-  if (is.null(.n_enriched) || .n_enriched == 0) {
-    enriched_data <- structure(
-      list(),
-      class = "data.frame",
-      row.names = seq_len(n_funcs)
-    )
-  }
-
+  enriched_data <- align_layer_data_rows(
+    enriched_data,
+    n_funcs,
+    "the evaluated tf aesthetics"
+  )
   n_rows <- nrow(enriched_data)
-  if (n_rows != n_funcs) {
-    if (n_funcs == 1L && n_rows > 0) {
-      enriched_data <- enriched_data[1, , drop = FALSE]
-      n_rows <- 1L
-    } else if (n_rows == 1L && n_funcs > 1L) {
-      enriched_data <- enriched_data[rep(1L, n_funcs), , drop = FALSE]
-      n_rows <- n_funcs
-    } else {
-      cli::cli_abort(c(
-        "Layer data cannot be aligned with the evaluated tf aesthetics",
-        "i" = "Data has {n_rows} row(s), but tf aesthetics evaluate to {n_funcs} function(s)."
-      ))
-    }
-  }
   n_grid <- length(arg)
   if (n_rows > 200 && n_grid > 100) {
     cli::cli_warn(
@@ -898,15 +930,33 @@ build_tf_layer_data <- function(
     )
   }
 
-  # Layer-level scalar tf aes: column is already in long_data (joined from enriched_data)
-  for (aes_name in names(parsed_aes$scalar_tf_aes)) {
-    key <- paste0(aes_name, ".layer.", layer_idx)
-    if (key %in% names(scalar_col_map)) {
-      new_mapping[[aes_name]] <- rlang::sym(scalar_col_map[[key]])
-    }
-  }
+  new_mapping <- remap_scalar_tf_aes(
+    new_mapping,
+    parsed_aes$scalar_tf_aes,
+    scalar_col_map,
+    layer_idx
+  )
 
   list(long_data = long_data, new_mapping = new_mapping)
+}
+
+# Resolve the tf_mv display type: NULL defaults to "trajectory" for exactly 2
+# components and "facet" otherwise; "trajectory" requires exactly 2 components.
+resolve_tf_mv_type <- function(type, d, call = rlang::caller_env()) {
+  type <- match.arg(
+    type %||% if (d == 2L) "trajectory" else "facet",
+    c("trajectory", "facet")
+  )
+  if (type == "trajectory" && d != 2L) {
+    cli::cli_abort(
+      c(
+        "{.code type = \"trajectory\"} requires a {.cls tf_mv} with exactly 2 components.",
+        "x" = "This object has {d} component{?s}."
+      ),
+      call = call
+    )
+  }
+  type
 }
 
 #' Build long-format data and mapping for a single multivariate (tf_mv) aesthetic
@@ -936,17 +986,8 @@ build_tf_mv_layer_data <- function(
   mv_type = NULL
 ) {
   d <- tf_ncomp(mv)
-  comp_names <- attr(mv, "comp_names") %||% paste0("v", seq_len(d))
-  type <- match.arg(
-    mv_type %||% if (d == 2L) "trajectory" else "facet",
-    c("trajectory", "facet")
-  )
-  if (type == "trajectory" && d != 2L) {
-    cli::cli_abort(c(
-      "{.code type = \"trajectory\"} requires a {.cls tf_mv} with exactly 2 components.",
-      "x" = "This object has {d} component{?s}."
-    ))
-  }
+  comp_names <- names(tf_components(mv))
+  type <- resolve_tf_mv_type(mv_type, d)
   if (type == "trajectory" && inherits(geom, "GeomLine")) {
     cli::cli_abort(c(
       "{.fn geom_line} cannot draw {.cls tf_mv} trajectories correctly.",
@@ -954,39 +995,16 @@ build_tf_mv_layer_data <- function(
     ))
   }
 
-  # Resolve evaluation grid: integer -> equidistant over domain; numeric vector ->
-  # as-is; NULL -> natural/union grid (resolved downstream).
-  arg <- user_arg
-  if (!is.null(arg) && length(arg) == 1L) {
-    domain <- tf_domain(mv)
-    arg <- seq(domain[1], domain[2], length.out = as.integer(arg))
-  }
+  # NULL `arg` means the natural/union grid, resolved downstream
+  arg <- resolve_arg_grid(user_arg, mv)
 
-  # Align enriched_data to one row per curve (mirror build_tf_layer_data).
   n_funcs <- length(mv)
-  .n_enriched <- nrow(enriched_data)
-  if (is.null(.n_enriched) || .n_enriched == 0) {
-    enriched_data <- structure(
-      list(),
-      class = "data.frame",
-      row.names = seq_len(n_funcs)
-    )
-  }
+  enriched_data <- align_layer_data_rows(
+    enriched_data,
+    n_funcs,
+    "the {.cls tf_mv} aesthetic"
+  )
   n_rows <- nrow(enriched_data)
-  if (n_rows != n_funcs) {
-    if (n_funcs == 1L && n_rows > 0) {
-      enriched_data <- enriched_data[1, , drop = FALSE]
-      n_rows <- 1L
-    } else if (n_rows == 1L && n_funcs > 1L) {
-      enriched_data <- enriched_data[rep(1L, n_funcs), , drop = FALSE]
-      n_rows <- n_funcs
-    } else {
-      cli::cli_abort(c(
-        "Layer data cannot be aligned with the {.cls tf_mv} aesthetic.",
-        "i" = "Data has {n_rows} row(s), but the {.cls tf_mv} has {n_funcs} curve(s)."
-      ))
-    }
-  }
 
   work_data <- enriched_data
   mv_expr <- rlang::quo_get_expr(mv_quo)
@@ -1007,32 +1025,26 @@ build_tf_mv_layer_data <- function(
     new_mapping$group <- rlang::sym(".mv_id")
     axis_labels <- list(x = comp_names[1], y = comp_names[2])
   } else {
-    lg <- if (is.null(arg)) {
-      .tf_mv_unnest_long(mv, interpolate = interpolate)
-    } else {
-      .tf_mv_unnest_long(mv, arg = arg, interpolate = interpolate)
-    }
-    grp <- paste(lg$id, lg$.component, sep = ".")
-    lg$.mv_group <- ordered(grp, levels = unique(grp))
+    lg <- .tf_mv_unnest_long(mv, arg = arg, interpolate = interpolate)
     lg$.row_id_ <- as.integer(lg$id)
-    # rename the curve id to avoid colliding with a user covariate named "id"
+    # rename BEFORE the join so user covariates named "id"/"arg"/"value" cannot
+    # collide
     names(lg)[names(lg) == "id"] <- ".mv_id"
+    names(lg)[names(lg) == "arg"] <- ".mv_arg"
+    names(lg)[names(lg) == "value"] <- ".mv_value"
     long_data <- left_join(lg, work_data, by = ".row_id_") |> select(-.row_id_)
-    names(long_data)[names(long_data) == "arg"] <- ".mv_arg"
-    names(long_data)[names(long_data) == "value"] <- ".mv_value"
     new_mapping$x <- rlang::sym(".mv_arg")
     new_mapping$y <- rlang::sym(".mv_value")
     new_mapping$group <- rlang::sym(".mv_group")
     axis_labels <- list(x = "arg", y = mv_label)
   }
 
-  # Layer-level scalar tf aes (e.g. colour = tf_depth(mv)): column already joined.
-  for (aes_name in names(parsed_aes$scalar_tf_aes)) {
-    key <- paste0(aes_name, ".layer.", layer_idx)
-    if (key %in% names(scalar_col_map)) {
-      new_mapping[[aes_name]] <- rlang::sym(scalar_col_map[[key]])
-    }
-  }
+  new_mapping <- remap_scalar_tf_aes(
+    new_mapping,
+    parsed_aes$scalar_tf_aes,
+    scalar_col_map,
+    layer_idx
+  )
 
   list(
     long_data = long_data,
@@ -1043,10 +1055,9 @@ build_tf_mv_layer_data <- function(
 
 # Long form for a 2-component tf_mv planar curve: (.row_id_, .mv_id, .mv_arg,
 # .mv_x, .mv_y), one row per (curve, grid point), ordered by (curve, arg).
-# Mirrors tf's mv_paired_xy() / as.matrix.tf_mv (see tf/R/plot-mv.R): both
-# components evaluated on the sorted union of their argument grids (or `arg` if
-# given), interpolating, with NA outside a component's observed range so
-# geom_path() breaks the curve there.
+# Both components are evaluated by tf::as.matrix.tf_mv on the sorted union of
+# their argument grids (or `arg` if given), interpolating, with NA outside a
+# component's observed range so geom_path() breaks the curve there.
 .tf_mv_trajectory_long <- function(mv, arg = NULL, interpolate = TRUE) {
   if (isFALSE(interpolate)) {
     cli::cli_inform(
@@ -1058,14 +1069,11 @@ build_tf_mv_layer_data <- function(
       .frequency_id = "tf_mv_trajectory_interpolate"
     )
   }
-  comps <- tf_components(mv)
+  # compute the grid here (rather than letting as.matrix resolve it) because
+  # it is needed as an exact numeric column below
   grid <- arg %||%
-    sort(unique(unlist(
-      lapply(
-        comps,
-        \(comp) as.numeric(unlist(tf_arg(comp), use.names = FALSE))
-      ),
-      use.names = FALSE
+    sort(unique(as.numeric(
+      unlist(map(tf_components(mv), tf_arg), use.names = FALSE)
     )))
   if (length(mv) == 0L || length(grid) == 0L) {
     # empty layer for zero-length tf_mv columns / empty grids
@@ -1077,17 +1085,16 @@ build_tf_mv_layer_data <- function(
       .mv_y = numeric(0)
     ))
   }
-  x <- as.matrix(comps[[1]], arg = grid, interpolate = TRUE)
-  y <- as.matrix(comps[[2]], arg = grid, interpolate = TRUE)
-  n <- nrow(x)
+  arr <- as.matrix(mv, arg = grid, interpolate = TRUE) # [curve, arg, component]
+  n <- dim(arr)[1L]
   g <- length(grid)
   id <- unique_id(names(mv)) %||% seq_len(n)
   data.frame(
     .row_id_ = rep(seq_len(n), each = g),
     .mv_id = ordered(rep(id, each = g), levels = id),
     .mv_arg = rep(grid, n),
-    .mv_x = as.vector(t(x)),
-    .mv_y = as.vector(t(y))
+    .mv_x = as.vector(t(arr[,, 1L])),
+    .mv_y = as.vector(t(arr[,, 2L]))
   )
 }
 
