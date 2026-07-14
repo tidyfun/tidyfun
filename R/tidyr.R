@@ -350,78 +350,59 @@ tf_unnest.tf <- function(data, cols, arg, interpolate = TRUE, ...) {
 }
 
 #' @export
-#' @importFrom purrr imap reduce
 #' @rdname tf_unnest
 tf_unnest.tf_mv <- function(data, cols, arg, interpolate = TRUE, ...) {
-  # "wide" long form: (id, arg, <comp_1>, ..., <comp_d>).
-  # Deliberately NOT tf::as.data.frame.tf_mv(unnest = TRUE, long = FALSE): that
-  # evaluates components on per-curve *union* grids, interpolating each
-  # component at the other components' args inside its observed range. Here each
-  # component is unnested on its own grid (or `arg`) via tf_unnest.tf and
-  # full-outer-joined on (id, arg), so a component is NA wherever it was not
-  # actually observed/evaluated, and `id` stays the ordered factor from
-  # tf_unnest.tf.
+  # "wide" long form: (id, arg, <comp_1>, ..., <comp_d>). Delegates to tf's
+  # grids = "component" export (tf >= 0.5.0): each component is evaluated
+  # strictly on its own grid (or `arg`), so a component is NA wherever it was
+  # not actually observed/evaluated -- no values are interpolated at the
+  # *other* components' args (which grids = "union" would do).
   if (missing(arg)) arg <- NULL
-  comps <- tf_components(data)
-  if (length(data) == 0L) {
-    # tf_unnest.tf on zero-length components yields no (arg, value) columns to
-    # join on -- return the empty wide schema directly
-    empty <- c(
-      list(id = ordered(character(0)), arg = numeric(0)),
-      stats::setNames(
-        rep(list(numeric(0)), length(comps)),
-        names(comps)
-      )
-    )
-    return(tibble::as_tibble(empty))
-  }
-  per <- imap(comps, function(comp, nm) {
-    one <- tf_unnest(comp, arg = arg, interpolate = interpolate)
-    names(one)[names(one) == "value"] <- nm
-    one
-  })
-  out <- reduce(per, full_join, by = c("id", "arg"))
-  out[order(out$id, out$arg), , drop = FALSE]
+  out <- as.data.frame(
+    data,
+    unnest = TRUE,
+    long = FALSE,
+    grids = "component",
+    arg = arg,
+    interpolate = interpolate
+  )
+  # tidyfun's id contract is an ordered factor (appearance order), as in
+  # tf_unnest.tf
+  out$id <- ordered(out$id, levels = levels(out$id))
+  tibble::as_tibble(out)
 }
 
 # Long form with one row per (id, arg, component):
 # (id, arg, .component, value, .mv_group). `.component` is an ordered factor
 # over the component names, `.mv_group` an ordered factor over id x component
-# (one group per curve and component). Assembled component-by-component on
-# each component's own grid -- NOT by pivoting the wide outer join: pivoting
-# would create structural NA rows (component unobserved at another
-# component's arg) that must be dropped, and dropping them also removes
-# *genuine* missing evaluations, so geom_line() would connect straight
-# across actually-missing intervals instead of breaking there. Per-component
-# assembly produces no structural rows, and genuine NAs stay in.
+# (one group per curve and component). Delegates to tf's grids = "component"
+# long export -- NOT the union-grid default and NOT a pivot of the wide
+# schema: pivoting would create structural NA rows (component unobserved at
+# another component's arg) that must be dropped, and dropping them also
+# removes *genuine* missing evaluations, so geom_line() would connect
+# straight across actually-missing intervals instead of breaking there.
+# The component export has no structural rows, and genuine NAs stay in.
 # Used to drive value-vs-arg geoms.
 .tf_mv_unnest_long <- function(data, arg = NULL, interpolate = TRUE) {
-  comps <- tf_components(data)
-  nms <- names(comps)
-  if (length(data) == 0L || !length(comps)) {
-    return(tibble::tibble(
-      id = ordered(character(0)),
-      arg = numeric(0),
-      value = numeric(0),
-      .component = ordered(character(0), levels = nms),
-      .mv_group = ordered(integer(0))
-    ))
-  }
-  per <- imap(comps, function(comp, nm) {
-    one <- tf_unnest(comp, arg = arg, interpolate = interpolate)
-    one$.component <- ordered(nm, levels = nms)
-    one
-  })
-  long <- dplyr::bind_rows(per)
+  nms <- names(tf_components(data))
+  long <- as.data.frame(
+    data,
+    unnest = TRUE,
+    long = TRUE,
+    grids = "component",
+    arg = arg,
+    interpolate = interpolate
+  )
+  names(long)[names(long) == "component"] <- ".component"
+  long$id <- ordered(long$id, levels = levels(long$id))
+  long$.component <- ordered(long$.component, levels = nms)
   # group-contiguous, arg-sorted within each (id, component) path
   long <- long[order(long$id, long$.component, long$arg), , drop = FALSE]
   # collision-free integer interaction code: pasted "id.component" labels can
   # merge distinct pairs (e.g. ("a.b", "c") and ("a", "b.c"))
-  grp <- (match(as.character(long$id), unique(as.character(long$id))) - 1L) *
-    length(nms) +
-    as.integer(long$.component)
+  grp <- (as.integer(long$id) - 1L) * length(nms) + as.integer(long$.component)
   long$.mv_group <- ordered(grp, levels = sort(unique(grp)))
-  long
+  tibble::as_tibble(long)
 }
 
 #' @export
