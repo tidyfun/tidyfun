@@ -340,7 +340,7 @@ tf_unnest <- function(data, cols, arg, interpolate = TRUE, ...) {
 #' @importFrom tidyr unnest
 #' @rdname tf_unnest
 tf_unnest.tf <- function(data, cols, arg, interpolate = TRUE, ...) {
-  if (missing(arg)) {
+  if (missing(arg) || is.null(arg)) {
     arg <- tf::ensure_list(tf_arg(data))
   }
   tmp <- data[, arg, matrix = FALSE, interpolate = interpolate]
@@ -354,13 +354,14 @@ tf_unnest.tf <- function(data, cols, arg, interpolate = TRUE, ...) {
 #' @rdname tf_unnest
 tf_unnest.tf_mv <- function(data, cols, arg, interpolate = TRUE, ...) {
   # "wide" long form: (id, arg, <comp_1>, ..., <comp_d>).
-  # Mirrors tf::as.data.frame.tf_mv(unnest = TRUE, long = FALSE) but honours
-  # `arg`/`interpolate` by unnesting each component (a univariate tf) via
-  # tf_unnest.tf and then full-outer-joining on (id, arg). For components sharing
-  # an arg grid this is a plain cbind; for mixed/irregular grids NAs fill where a
-  # component lacks an observation at that (id, arg). `id` stays the ordered
-  # factor from tf_unnest.tf.
-  has_arg <- !missing(arg) && !is.null(arg)
+  # Deliberately NOT tf::as.data.frame.tf_mv(unnest = TRUE, long = FALSE): that
+  # evaluates components on per-curve *union* grids, interpolating each
+  # component at the other components' args inside its observed range. Here each
+  # component is unnested on its own grid (or `arg`) via tf_unnest.tf and
+  # full-outer-joined on (id, arg), so a component is NA wherever it was not
+  # actually observed/evaluated, and `id` stays the ordered factor from
+  # tf_unnest.tf.
+  if (missing(arg)) arg <- NULL
   comps <- tf_components(data)
   if (length(data) == 0L) {
     # tf_unnest.tf on zero-length components yields no (arg, value) columns to
@@ -375,11 +376,7 @@ tf_unnest.tf_mv <- function(data, cols, arg, interpolate = TRUE, ...) {
     return(tibble::as_tibble(empty))
   }
   per <- imap(comps, function(comp, nm) {
-    one <- if (has_arg) {
-      tf_unnest(comp, arg = arg, interpolate = interpolate)
-    } else {
-      tf_unnest(comp, interpolate = interpolate)
-    }
+    one <- tf_unnest(comp, arg = arg, interpolate = interpolate)
     names(one)[names(one) == "value"] <- nm
     one
   })
@@ -387,27 +384,27 @@ tf_unnest.tf_mv <- function(data, cols, arg, interpolate = TRUE, ...) {
   out[order(out$id, out$arg), , drop = FALSE]
 }
 
-# Long form with one row per (id, arg, component): (id, arg, .component, value).
-# `.component` is an ordered factor over the component names. NA values (e.g. a
-# component unobserved at some (id, arg) after the outer join) are dropped.
-# Used to drive value-vs-arg geoms (one group per id x component).
+# Long form with one row per (id, arg, component):
+# (id, arg, .component, value, .mv_group). `.component` is an ordered factor
+# over the component names, `.mv_group` an ordered factor over id x component
+# (one group per curve and component). NA values (e.g. a component unobserved
+# at some (id, arg) after the outer join) are dropped.
+# Used to drive value-vs-arg geoms.
 #' @importFrom tidyr pivot_longer
-.tf_mv_unnest_long <- function(data, arg, interpolate = TRUE) {
-  has_arg <- !missing(arg) && !is.null(arg)
-  wide <- if (has_arg) {
-    tf_unnest(data, arg = arg, interpolate = interpolate)
-  } else {
-    tf_unnest(data, interpolate = interpolate)
-  }
-  nms <- attr(data, "comp_names") %||% names(tf_components(data))
+.tf_mv_unnest_long <- function(data, arg = NULL, interpolate = TRUE) {
+  wide <- tf_unnest(data, arg = arg, interpolate = interpolate)
+  nms <- names(tf_components(data))
   long <- pivot_longer(
     wide,
     cols = all_of(nms),
     names_to = ".component",
-    values_to = "value"
+    values_to = "value",
+    values_drop_na = TRUE
   )
   long$.component <- ordered(long$.component, levels = nms)
-  long[!is.na(long$value), , drop = FALSE]
+  grp <- paste(long$id, long$.component, sep = ".")
+  long$.mv_group <- ordered(grp, levels = unique(grp))
+  long
 }
 
 #' @export
