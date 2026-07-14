@@ -69,10 +69,7 @@ NULL
 #' @export
 #' @rdname autoplot.tf_mv
 autoplot.tf_mv <- function(object, ..., type = NULL) {
-  type <- match.arg(
-    type %||% if (tf_ncomp(object) == 2L) "trajectory" else "facet",
-    c("trajectory", "facet")
-  )
+  type <- resolve_tf_mv_type(type, tf_ncomp(object))
   data <- tibble::tibble(mv = object)
   if (type == "trajectory") {
     tf_ggplot(data, aes(tf = .data$mv), type = "trajectory") + geom_path(...)
@@ -86,16 +83,8 @@ autoplot.tf_mv <- function(object, ..., type = NULL) {
 #' @export
 #' @rdname autoplot.tf_mv
 autolayer.tf_mv <- function(object, ..., type = NULL) {
-  type <- match.arg(
-    type %||% if (tf_ncomp(object) == 2L) "trajectory" else "facet",
-    c("trajectory", "facet")
-  )
+  type <- resolve_tf_mv_type(type, tf_ncomp(object))
   if (type == "trajectory") {
-    if (tf_ncomp(object) != 2L) {
-      cli::cli_abort(
-        "{.code type = \"trajectory\"} requires a {.cls tf_mv} with exactly 2 components."
-      )
-    }
     df <- .tf_mv_trajectory_long(object)
     geom_path(
       mapping = aes(
@@ -109,8 +98,6 @@ autolayer.tf_mv <- function(object, ..., type = NULL) {
     )
   } else {
     df <- .tf_mv_unnest_long(object)
-    grp <- paste(df$id, df$.component, sep = ".")
-    df$.mv_group <- ordered(grp, levels = unique(grp))
     geom_line(
       mapping = aes(
         x = .data$arg,
