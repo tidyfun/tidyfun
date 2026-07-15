@@ -21,6 +21,32 @@ create_multi_tf_data <- function(n_funcs = 2, n_points = 11, seed = 123) {
   data
 }
 
+# Create a tf_mv (multivariate) test vector with d components
+create_test_tf_mv <- function(d = 2, n_funcs = 3, n_points = 11, seed = 123) {
+  set.seed(seed)
+  arg <- seq(0, 1, length.out = n_points)
+  comps <- stats::setNames(
+    lapply(seq_len(d), function(k) tf_rgp(n_funcs, arg = arg)),
+    if (d == 2) c("x", "y") else paste0("v", seq_len(d))
+  )
+  tfd_mv(comps)
+}
+
+# Create a data frame with a tf_mv column plus covariates
+create_test_tf_mv_data <- function(
+  d = 2,
+  n_funcs = 3,
+  n_points = 11,
+  seed = 123
+) {
+  data <- data.frame(
+    id = seq_len(n_funcs),
+    group = factor(rep_len(c("A", "B"), n_funcs))
+  )
+  data$mv <- create_test_tf_mv(d, n_funcs, n_points, seed)
+  data
+}
+
 # Create test data with confidence bands
 create_band_tf_data <- function(n_funcs = 2, n_points = 11, seed = 123) {
   set.seed(seed)

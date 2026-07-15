@@ -513,6 +513,11 @@ StatFboxplot <- ggplot2::ggproto(
   required_aes = c("tf"),
   retransform = FALSE,
   setup_params = function(data, params) {
+    # must abort here: setup_params always runs before compute_panel, whose
+    # errors ggplot2 downgrades to warnings
+    if ("tf" %in% names(data)) {
+      check_tf_1d(data$tf, "{.fn geom_fboxplot}/{.fn stat_fboxplot}")
+    }
     params$orientation <- resolve_fboxplot_orientation(params$orientation)
     params
   },

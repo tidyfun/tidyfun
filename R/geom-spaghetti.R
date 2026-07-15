@@ -29,9 +29,36 @@
 #' @seealso [geom_cappelini()] for glyph plots, [gglasagna()] for heatmaps.
 NULL
 
+# a curve is "finite" unless it contains NA/NaN (Inf passes, as before);
+# anyNA() also covers tf_mv, whose evaluations are data.frames
 #' @export
 is.finite.tf <- function(x) {
-  map_lgl(tf_evaluations(x), \(x) all(is.finite(x) | !is.na(x)))
+  map_lgl(tf_evaluations(x), \(x) !anyNA(x))
+}
+
+# needed so ggplot2's find_scale() does not die in vctrs::vec_math() for the
+# (atomic, index-backed) tf_mv class before the informative checks below run
+#' @export
+is.infinite.tf <- function(x) {
+  map_lgl(tf_evaluations(x), \(x) any(is.infinite(unlist(x))))
+}
+
+# Abort informatively when a multivariate tf_mv lands in a univariate-only
+# display. `what` labels the offending function(s) in the error message.
+check_tf_1d <- function(x, what, call = rlang::caller_env()) {
+  if (is_tf(x) && !tf::is_tf_1d(x)) {
+    cli::cli_abort(
+      c(
+        paste0(what, " does not support multivariate {.cls tf_mv} data."),
+        "i" = "Use {.fn tf_ggplot} with {.code aes(tf = ...)} and
+               {.code type = \"facet\"} or {.code type = \"trajectory\"},
+               or {.fn autoplot}, to display {.cls tf_mv} columns.",
+        "i" = "Or extract single components with {.fn tf_component} first."
+      ),
+      call = call
+    )
+  }
+  invisible(x)
 }
 
 #' @export
@@ -47,6 +74,11 @@ StatTf <- ggproto(
   Stat,
   required_aes = "y",
   setup_params = function(data, params) {
+    # setup_params always runs before compute_layer, so this single check
+    # aborts before tf_arg() below chokes on multivariate input
+    if ("y" %in% names(data)) {
+      check_tf_1d(pull(data, y), "{.fn geom_spaghetti}/{.fn geom_meatballs}")
+    }
     if (is.null(params$arg)) {
       params$arg <- list(tf_arg(pull(data, y)))
     }

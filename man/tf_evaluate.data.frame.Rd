@@ -38,10 +38,10 @@ d$f <- tf_rgp(3, 11L)
 str(tf_evaluate(d))
 }
 \seealso{
-Other tidyfun data wrangling functions: 
-\code{\link{tf_gather}()},
-\code{\link{tf_nest}()},
-\code{\link{tf_spread}()},
-\code{\link{tf_unnest}()}
+Other tidyfun data wrangling functions:
+\code{\link[=tf_gather]{tf_gather()}},
+\code{\link[=tf_nest]{tf_nest()}},
+\code{\link[=tf_spread]{tf_spread()}},
+\code{\link[=tf_unnest]{tf_unnest()}}
 }
 \concept{tidyfun data wrangling functions}

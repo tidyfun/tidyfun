@@ -45,10 +45,10 @@ tf_spread(d, -g)
 tf_spread(d)
 }
 \seealso{
-Other tidyfun data wrangling functions: 
-\code{\link{tf_evaluate.data.frame}()},
-\code{\link{tf_gather}()},
-\code{\link{tf_nest}()},
-\code{\link{tf_unnest}()}
+Other tidyfun data wrangling functions:
+\code{\link[=tf_evaluate.data.frame]{tf_evaluate.data.frame()}},
+\code{\link[=tf_gather]{tf_gather()}},
+\code{\link[=tf_nest]{tf_nest()}},
+\code{\link[=tf_unnest]{tf_unnest()}}
 }
 \concept{tidyfun data wrangling functions}

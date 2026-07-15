@@ -305,6 +305,9 @@ tf_nest <- function(
 #'
 #' Similar in spirit to [tidyr::unnest()], the reverse of [tf_nest()].
 #' The `tf`-method simply turns a single `tfd` or `tfb` vector into a "long" [tibble::tibble()].
+#' For a multivariate `tf_mv` vector (functions \eqn{R \to R^d}{R -> R^d}) the
+#' `tf_mv`-method returns a "wide" long table with one value column per output
+#' dimension: `(id, arg, <component 1>, ..., <component d>)`.
 #'
 #' - Caution: this uses slightly different defaults for names of unnested columns
 #'   than `tidyr::unnest()`.
@@ -337,13 +340,69 @@ tf_unnest <- function(data, cols, arg, interpolate = TRUE, ...) {
 #' @importFrom tidyr unnest
 #' @rdname tf_unnest
 tf_unnest.tf <- function(data, cols, arg, interpolate = TRUE, ...) {
-  if (missing(arg)) {
+  if (missing(arg) || is.null(arg)) {
     arg <- tf::ensure_list(tf_arg(data))
   }
   tmp <- data[, arg, matrix = FALSE, interpolate = interpolate]
   id <- unique_id(names(data)) %||% seq_along(data)
   id <- ordered(id, levels = id) # don't reshuffle
   tidyr::unnest(tibble::tibble(id = id, data = tmp), cols = data)
+}
+
+#' @export
+#' @rdname tf_unnest
+tf_unnest.tf_mv <- function(data, cols, arg, interpolate = TRUE, ...) {
+  # "wide" long form: (id, arg, <comp_1>, ..., <comp_d>). Delegates to tf's
+  # grids = "component" export (tf >= 0.5.0): each component is evaluated
+  # strictly on its own grid (or `arg`), so a component is NA wherever it was
+  # not actually observed/evaluated -- no values are interpolated at the
+  # *other* components' args (which grids = "union" would do).
+  if (missing(arg)) arg <- NULL
+  out <- as.data.frame(
+    data,
+    unnest = TRUE,
+    long = FALSE,
+    grids = "component",
+    arg = arg,
+    interpolate = interpolate
+  )
+  # tidyfun's id contract is an ordered factor (appearance order), as in
+  # tf_unnest.tf
+  out$id <- ordered(out$id, levels = levels(out$id))
+  tibble::as_tibble(out)
+}
+
+# Long form with one row per (id, arg, component):
+# (id, arg, .component, value, .mv_group). `.component` is an ordered factor
+# over the component names, `.mv_group` an ordered factor over id x component
+# (one group per curve and component). Delegates to tf's grids = "component"
+# long export -- NOT the union-grid default and NOT a pivot of the wide
+# schema: pivoting would create structural NA rows (component unobserved at
+# another component's arg) that must be dropped, and dropping them also
+# removes *genuine* missing evaluations, so geom_line() would connect
+# straight across actually-missing intervals instead of breaking there.
+# The component export has no structural rows, and genuine NAs stay in.
+# Used to drive value-vs-arg geoms.
+.tf_mv_unnest_long <- function(data, arg = NULL, interpolate = TRUE) {
+  nms <- names(tf_components(data))
+  long <- as.data.frame(
+    data,
+    unnest = TRUE,
+    long = TRUE,
+    grids = "component",
+    arg = arg,
+    interpolate = interpolate
+  )
+  names(long)[names(long) == "component"] <- ".component"
+  long$id <- ordered(long$id, levels = levels(long$id))
+  long$.component <- ordered(long$.component, levels = nms)
+  # group-contiguous, arg-sorted within each (id, component) path
+  long <- long[order(long$id, long$.component, long$arg), , drop = FALSE]
+  # collision-free integer interaction code: pasted "id.component" labels can
+  # merge distinct pairs (e.g. ("a.b", "c") and ("a", "b.c"))
+  grp <- (as.integer(long$id) - 1L) * length(nms) + as.integer(long$.component)
+  long$.mv_group <- ordered(grp, levels = sort(unique(grp)))
+  tibble::as_tibble(long)
 }
 
 #' @export

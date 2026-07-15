@@ -4,7 +4,19 @@
 \alias{add_tf_aes_to_mapping}
 \title{Add a tf aesthetic to an ggplot2 mapping object}
 \usage{
-add_tf_aes_to_mapping(mapping, aes_name, val_col, arg_col, id_col)
+add_tf_aes_to_mapping(
+  mapping,
+  aes_name,
+  val_col,
+  arg_col,
+  id_col,
+  planar_xy = FALSE
+)
+}
+\arguments{
+\item{planar_xy}{\code{TRUE} when both \code{tf_x} and \code{tf_y} are present in the same
+layer (a planar curve x(t) vs y(t)). In that case \code{tf_y} must NOT overwrite
+\code{x} with its arg grid -- \code{x} comes from \code{tf_x}'s function values.}
 }
 \description{
 Add a tf aesthetic to an ggplot2 mapping object

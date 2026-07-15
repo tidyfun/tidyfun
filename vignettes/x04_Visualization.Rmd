@@ -141,6 +141,59 @@ dti_df |>
   facet_grid(sex ~ case)
 ```
 
+## Multivariate functional data (`tf_mv`)
+
+Vector-valued functional data -- functions $f: \mathbb{R} \to \mathbb{R}^d$ stored as `tf_mv` vectors (see the `tf` package and its "Vector-valued functional data" article) -- can be mapped with the `tf` aesthetic just like univariate `tf` columns. `tf_ggplot()` picks a display that mirrors `tf`'s base-R `plot.tf_mv()`:
+
+- for two-component objects (`d == 2`) the default is a **trajectory**: the planar curve $x(t)$ vs $y(t)$, drawn with `geom_path()`;
+- otherwise the default is a **facet** display: value-vs-arg curves with one group per curve and component.
+
+We use the built-in `tf::gait` data: hip and knee joint angles for 39 boys across one gait cycle, bundled into a single two-component `tfd_mv`.
+
+```{r mv-setup}
+data(gait, package = "tf")
+gait_mv <- tfd_mv(list(hip = gait$hip_angle, knee = gait$knee_angle))
+gait_df <- tibble(id = factor(seq_along(gait_mv)), mv = gait_mv)
+```
+
+The **facet** display shows one panel per component (value versus cycle phase). Pass `type = "facet"`, which unnests the data to a long form with a `.component` column; add `facet_wrap(~ .component)` yourself:
+
+```{r mv-facet}
+gait_df |>
+  tf_ggplot(aes(tf = mv), type = "facet") +
+  geom_line(alpha = 0.3) +
+  facet_wrap(~ .component, scales = "free_y")
+```
+
+The **trajectory** display (the `d == 2` default) collapses the phase axis and draws each subject's `(hip, knee)` cyclogram -- the characteristic gait "butterfly" loop. **Use `geom_path()`, not `geom_line()`**: `geom_path()` connects points in argument (time) order, while `geom_line()` would re-sort by `x` and mangle any non-monotone curve.
+
+```{r mv-trajectory}
+gait_df |>
+  tf_ggplot(aes(tf = mv)) +
+  geom_path(alpha = 0.3) +
+  labs(x = "hip angle", y = "knee angle")
+```
+
+Equivalently, you can map two separate univariate `tf` columns (or two components) to the `tf_x` and `tf_y` aesthetics -- handy when the coordinates live in different columns:
+
+```{r mv-txty}
+tibble(hip = gait$hip_angle, knee = gait$knee_angle) |>
+  tf_ggplot(aes(tf_x = hip, tf_y = knee)) +
+  geom_path(alpha = 0.3)
+```
+
+`autoplot()` provides one-line shortcuts -- a trajectory for `d == 2` and a faceted display otherwise -- and `autolayer()` returns a single layer you can add to an existing plot:
+
+```{r mv-autoplot}
+autoplot(gait_mv)
+```
+
+To unnest a `tf_mv` column to a "wide" long table yourself (one value column per component), use `tf_unnest()`:
+
+```{r mv-unnest}
+tf_unnest(gait_mv) |> head()
+```
+
 ## Functional data boxplots with `geom_fboxplot`
 
 "Boxplots" for functional data are implemented in `tidyfun` through `geom_fboxplot()`. They show the deepest function (using modified band depth, `"MBD"`, by default) as a thick median curve, a filled central ribbon spanning the pointwise range of the deepest half of the sample (by default), and outer fence lines obtained by inflating that central envelope by a factor of `coef = 1.5`. Curves that leave the fence envelope anywhere are flagged as outliers and drawn separately.

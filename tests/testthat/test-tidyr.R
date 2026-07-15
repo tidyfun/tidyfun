@@ -135,3 +135,85 @@ test_that("tf_nest / tf_unnest work with numeric id-variables", {
   unnested <- tf_unnest(nested, cols = value)
   expect_equal(d, unnested, ignore_attr = TRUE)
 })
+
+# Multivariate (tf_mv) -------------------------------------------------------
+
+test_that("tf_unnest.tf_mv returns wide (id, arg, <components>)", {
+  set.seed(1)
+  mv <- tfd_mv(list(x = tf_rgp(3, 11L), y = tf_rgp(3, 11L)))
+  out <- tf_unnest(mv)
+  expect_named(out, c("id", "arg", "x", "y"))
+  expect_s3_class(out$id, "ordered")
+  expect_equal(nrow(out), 3 * 11)
+  # values match the underlying components
+  expect_equal(
+    sort(out$x),
+    sort(as.numeric(unlist(tf_evaluations(tf_component(mv, 1)))))
+  )
+})
+
+test_that("tf_unnest.tf_mv matches tf::as.data.frame on the native grid", {
+  set.seed(2)
+  mv <- tfd_mv(list(a = tf_rgp(4, 11L), b = tf_rgp(4, 11L)))
+  ours <- tf_unnest(mv)
+  ref <- as.data.frame(mv, unnest = TRUE, long = FALSE)
+  expect_equal(sort(ours$a), sort(ref$a))
+  expect_equal(sort(ours$b), sort(ref$b))
+})
+
+test_that("tf_unnest.tf_mv honours a custom arg grid", {
+  set.seed(3)
+  mv <- tfd_mv(list(x = tf_rgp(3, 11L), y = tf_rgp(3, 11L)))
+  out <- tf_unnest(mv, arg = seq(0, 1, length.out = 5))
+  expect_equal(nrow(out), 3 * 5)
+  expect_setequal(out$arg, seq(0, 1, length.out = 5))
+})
+
+test_that("tf_unnest.tf_mv treats arg = NULL as omitted", {
+  set.seed(33)
+  mv <- tfd_mv(list(x = tf_rgp(3, 11L), y = tf_rgp(3, 11L)))
+  omitted <- tf_unnest(mv)
+  explicit_null <- tf_unnest(mv, arg = NULL)
+  expect_equal(explicit_null, omitted)
+
+  long_omitted <- tidyfun:::.tf_mv_unnest_long(mv)
+  long_explicit_null <- tidyfun:::.tf_mv_unnest_long(mv, arg = NULL)
+  expect_equal(long_explicit_null, long_omitted)
+})
+
+test_that("tf_unnest.tf_mv full-outer-joins misaligned component grids", {
+  set.seed(4)
+  cx <- tfd(matrix(rnorm(2 * 6), 2), arg = seq(0, 0.6, length.out = 6))
+  cy <- tfd(matrix(rnorm(2 * 6), 2), arg = seq(0.4, 1.0, length.out = 6))
+  # disjoint component arg ranges -> tf 0.5.0 widens the shared domain
+  expect_warning(mv <- tfd_mv(list(x = cx, y = cy)), "Widening domain")
+  out <- tf_unnest(mv)
+  # union grid -> some rows have NA in exactly one component
+  expect_true(any(is.na(out$x) & !is.na(out$y)))
+  expect_true(any(is.na(out$y) & !is.na(out$x)))
+})
+
+test_that(".tf_mv_unnest_long keeps genuine NA evaluations so lines break", {
+  # a curve with an observation gap, evaluated with interpolate = FALSE on a
+  # grid covering the gap, yields NA values at the unobserved args; those
+  # rows must survive into the long data -- dropping them would make
+  # geom_line() connect straight across the gap
+  cx <- tfd(list(c(0, 1, 1, 0)), arg = list(c(0, 1, 3, 4)))
+  mv <- tfd_mv(list(x = cx, y = cx))
+  long <- suppressWarnings(
+    tidyfun:::.tf_mv_unnest_long(mv, arg = 0:4, interpolate = FALSE)
+  )
+  x1 <- long[long$.component == "x", ]
+  expect_identical(nrow(x1), 5L)
+  expect_true(is.na(x1$value[x1$arg == 2]))
+})
+
+test_that(".tf_mv_unnest_long group codes are collision-free", {
+  # pasted labels would merge ("a.b", "c") and ("a", "b.c") into "a.b.c"
+  set.seed(30)
+  fx <- tfd(matrix(rnorm(10), nrow = 2), arg = seq(0, 1, length.out = 5))
+  names(fx) <- c("a.b", "a")
+  mv <- tfd_mv(list(c = fx, b.c = fx))
+  long <- tidyfun:::.tf_mv_unnest_long(mv)
+  expect_identical(length(unique(long$.mv_group)), 4L)
+})
