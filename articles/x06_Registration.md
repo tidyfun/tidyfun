@@ -193,7 +193,7 @@ summary(reg_shift)
 #> 
 #> Inverse warp deviations from identity (relative to domain length):
 #>     0%    10%    25%    50%    75%    90%   100% 
-#> 0.0002 0.1027 0.1350 0.1875 0.2027 0.2090 0.2469 
+#> 0.0002 0.0966 0.1251 0.1693 0.1811 0.1862 0.2156 
 #> 
 #> Inverse warp slopes (1 = identity):
 #>   overall range: [1, 1]
@@ -479,13 +479,13 @@ summary(reg_aff)
 #> 
 #> Inverse warp deviations from identity (relative to domain length):
 #>     0%    10%    25%    50%    75%    90%   100% 
-#> 0.0483 0.0989 0.1222 0.1478 0.1725 0.1855 0.2374 
+#> 0.0482 0.0976 0.1208 0.1457 0.1674 0.1787 0.2204 
 #> 
 #> Inverse warp slopes (1 = identity):
-#>   overall range: [1.088, 1.287]
+#>   overall range: [1.087, 1.287]
 #>   per-curve slopes:
 #>    0%   10%   25%   50%   75%   90%  100% 
-#> 1.088 1.099 1.116 1.135 1.227 1.265 1.287 
+#> 1.087 1.089 1.117 1.136 1.229 1.262 1.287 
 #> 
 #> Domain coverage loss after alignment (fraction of original range):
 #>     0%    10%    25%    50%    75%    90%   100% 
@@ -537,7 +537,7 @@ data.frame(
 )
 #>                 metric       value
 #> 1       sd_peak_before 0.028031728
-#> 2 sd_peak_after_affine 0.002796824
+#> 2 sd_peak_after_affine 0.002836273
 ```
 
 ### Step 4: Compare with an alternative method
@@ -557,7 +557,7 @@ summary(reg_srvf)
 #> 
 #> Inverse warp deviations from identity (relative to domain length):
 #>     0%    10%    25%    50%    75%    90%   100% 
-#> 0.0430 0.0745 0.0852 0.1143 0.1240 0.1362 0.1594 
+#> 0.0424 0.0744 0.0852 0.1140 0.1237 0.1362 0.1594 
 #> 
 #> Inverse warp slopes (1 = identity):
 #>   overall range: [0.143, 7]
@@ -579,7 +579,7 @@ data.frame(
 )
 #>                 metric       value
 #> 1       sd_peak_before 0.028031728
-#> 2 sd_peak_after_affine 0.002796824
+#> 2 sd_peak_after_affine 0.002836273
 #> 3   sd_peak_after_srvf 0.001349897
 ```
 
@@ -778,7 +778,7 @@ and Ramsay & Silverman (2005, Ch. 7).
   often too simplistic if curves have few identifiable features (e.g.,
   only one peak per curve).
 - **Landmark detection:**
-  [`tf_landmarks_extrema()`](https://tidyfun.github.io/tf/reference/landmarks.html)
+  [`tf_landmarks_extrema()`](https://tidyfun.github.io/tf/reference/tf_landmarks_extrema.html)
   can automatically detect local maxima, minima, or zero crossings and
   cluster them across curves - usually better to pre-smooth noisy inputs
   with
@@ -892,12 +892,12 @@ all three features without producing `NA`s.
 reg_srvf <- tf_register(pinch_small, method = "srvf")
 inv_warp_srvf <- tf_inv_warps(reg_srvf)
 reg_cc_unpen <- tf_register(pinch_small, method = "cc", max_iter = 10, nbasis = 10, crit = 1)
-#> Iterative registration stopped after 5 of 10 iterations: alignment worsened
-#> (objective 0.5409 > 0.5296).
+#> Iterative registration stopped after 4 of 10 iterations: alignment worsened
+#> (objective 0.0735 > 0.0531 against the current template).
 inv_warp_cc_unpen <- tf_inv_warps(reg_cc_unpen)
 reg_cc_pen <- tf_register(pinch_small, method = "cc", lambda = 1e-4, max_iter = 20)
-#> Iterative registration stopped after 18 of 20 iterations: alignment worsened
-#> (objective 0.438 > 0.4374).
+#> Iterative registration stopped after 1 of 20 iterations: alignment worsened
+#> (objective 0.0869 > 0.0551 against the current template).
 inv_warp_cc_pen <- tf_inv_warps(reg_cc_pen)
 ```
 
@@ -921,16 +921,16 @@ summary(reg_cc_unpen)
 #> 
 #> Inverse warp deviations from identity (relative to domain length):
 #>     0%    10%    25%    50%    75%    90%   100% 
-#> 0.1143 0.1418 0.1530 0.1664 0.1936 0.1965 0.1968 
+#> 0.1150 0.1431 0.1526 0.1636 0.1881 0.1949 0.1972 
 #> 
 #> Inverse warp slopes (1 = identity):
-#>   overall range: [0.282, 4.434]
+#>   overall range: [0.261, 3.973]
 #>   per-curve min slopes:
 #>    0%   10%   25%   50%   75%   90%  100% 
-#> 0.282 0.315 0.362 0.432 0.452 0.460 0.471 
+#> 0.261 0.315 0.358 0.428 0.461 0.474 0.505 
 #>   per-curve max slopes:
 #>    0%   10%   25%   50%   75%   90%  100% 
-#> 2.350 2.366 2.549 3.006 3.377 3.904 4.434
+#> 2.257 2.328 2.506 2.694 3.346 3.860 3.973
 # ... ouch! max slope almost 100 and only 40% amplitude variance reduction ....
 
 summary(reg_srvf)
@@ -942,7 +942,7 @@ summary(reg_srvf)
 #> 
 #> Inverse warp deviations from identity (relative to domain length):
 #>     0%    10%    25%    50%    75%    90%   100% 
-#> 0.0430 0.0745 0.0852 0.1143 0.1240 0.1362 0.1594 
+#> 0.0424 0.0744 0.0852 0.1140 0.1237 0.1362 0.1594 
 #> 
 #> Inverse warp slopes (1 = identity):
 #>   overall range: [0.143, 7]
@@ -957,20 +957,20 @@ summary(reg_cc_pen)
 #> 
 #> 10 curve(s) on [0, 0.3]
 #> 
-#> Amplitude variance reduction: 97.1%
+#> Amplitude variance reduction: 95.3%
 #> 
 #> Inverse warp deviations from identity (relative to domain length):
 #>     0%    10%    25%    50%    75%    90%   100% 
-#> 0.0192 0.0586 0.0812 0.1152 0.1535 0.1709 0.1947 
+#> 0.1241 0.1303 0.1391 0.1603 0.1874 0.2102 0.2174 
 #> 
 #> Inverse warp slopes (1 = identity):
-#>   overall range: [0.508, 1.862]
+#>   overall range: [0.322, 1.876]
 #>   per-curve min slopes:
 #>    0%   10%   25%   50%   75%   90%  100% 
-#> 0.508 0.550 0.592 0.782 0.823 0.855 0.878 
+#> 0.322 0.345 0.362 0.389 0.393 0.420 0.464 
 #>   per-curve max slopes:
 #>    0%   10%   25%   50%   75%   90%  100% 
-#> 1.053 1.206 1.234 1.572 1.671 1.700 1.862
+#> 1.653 1.656 1.689 1.774 1.830 1.856 1.876
 ```
 
 ``` r

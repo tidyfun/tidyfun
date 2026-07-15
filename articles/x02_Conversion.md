@@ -441,7 +441,7 @@ cca_halves[[2]]
 
 # recombine
 cca_recombined <- tf_combine(cca_halves[[1]], cca_halves[[2]])
-## ! removing 10 duplicated points from input data.
+## Warning: removing 10 duplicated points from input data.
 cca_recombined 
 ## tfd[10]: [0,1] -> [0.3662524,0.7028992] based on 93 evaluations each
 ## interpolation by tf_approx_linear 

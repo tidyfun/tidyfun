@@ -13,6 +13,8 @@ End-user articles for working with tidyfun
 - [Visualization](https://tidyfun.github.io/tidyfun/articles/x04_Visualization.md):
 - [Curve Registration: Practical Guide and
   Pitfalls](https://tidyfun.github.io/tidyfun/articles/x06_Registration.md):
+- [Vector-valued functional data: gait cycles and hurricane
+  tracks](https://tidyfun.github.io/tidyfun/articles/x07_Vector-valued_Functions.md):
 
 ### Developer Notes
 

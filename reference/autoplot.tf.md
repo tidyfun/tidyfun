@@ -28,7 +28,7 @@ autolayer(object, ...)
 - ...:
 
   passed to
-  [`ggplot2::geom_line()`](https://ggplot2.tidyverse.org/reference/geom_path.html)
+  [`geom_line()`](https://ggplot2.tidyverse.org/reference/geom_path.html)
 
 ## Value
 
@@ -43,6 +43,7 @@ object for
 ## See also
 
 Other tidyfun visualization:
+[`autoplot.tf_mv()`](https://tidyfun.github.io/tidyfun/reference/autoplot.tf_mv.md),
 [`ggcapellini`](https://tidyfun.github.io/tidyfun/reference/ggcapellini.md),
 [`gglasagna()`](https://tidyfun.github.io/tidyfun/reference/gglasagna.md),
 [`ggspaghetti`](https://tidyfun.github.io/tidyfun/reference/ggspaghetti.md)

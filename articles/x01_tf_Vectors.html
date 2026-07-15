@@ -26,7 +26,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">tidyfun</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.1.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -45,6 +45,7 @@
     <li><a class="dropdown-item" href="../articles/x03_Data_Wrangling.html">Data Wrangling</a></li>
     <li><a class="dropdown-item" href="../articles/x04_Visualization.html">Visualization</a></li>
     <li><a class="dropdown-item" href="../articles/x06_Registration.html">Curve Registration</a></li>
+    <li><a class="dropdown-item" href="../articles/x07_Vector-valued_Functions.html">Vector-valued Functional Data</a></li>
   </ul>
 </li>
 <li class="nav-item dropdown">
@@ -84,7 +85,7 @@
                         <h4 data-toc-skip class="author">Jeff Goldsmith,
 Fabian Scheipl</h4>
             
-            <h4 data-toc-skip class="date">2026-07-13</h4>
+            <h4 data-toc-skip class="date">2026-07-15</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/tidyfun/tidyfun/blob/main/vignettes/x01_tf_Vectors.Rmd" class="external-link"><code>vignettes/x01_tf_Vectors.Rmd</code></a></small>
       <div class="d-none name"><code>x01_tf_Vectors.Rmd</code></div>
@@ -96,6 +97,15 @@ Fabian Scheipl</h4>
 <code>tfd</code> and <code>tfb</code> subclasses, and focuses on vectors
 of this class. It also illustrates operations for <code>tf</code>
 vectors.</p>
+<p>The functions in a <code>tf</code> vector are <em>scalar-valued</em>,
+i.e., <span class="math inline">\(f: \mathbb{R} \to \mathbb{R}\)</span>.
+For <strong>vector-valued</strong> functional data <span class="math inline">\(f: \mathbb{R} \to \mathbb{R}^d\)</span> – coupled
+signals sharing a common argument, like the (hip, knee) joint angles
+over a gait cycle or the (longitude, latitude) track of a hurricane –
+<code>tf</code> provides the analogous <code>tfd_mv</code> and
+<code>tfb_mv</code> classes, which bundle <span class="math inline">\(d\)</span> such <code>tf</code> vectors. These are
+introduced in the <a href="https://tidyfun.github.io/tidyfun/articles/x07_Vector-valued_Functions.html">vector-valued
+functions vignette</a>.</p>
 <div class="section level2">
 <h2 id="tf-class-definition">
 <code>tf</code>-Class: Definition<a class="anchor" aria-label="anchor" href="#tf-class-definition"></a>

@@ -202,36 +202,7 @@ for heatmaps.
 
 Other tidyfun visualization:
 [`autoplot.tf()`](https://tidyfun.github.io/tidyfun/reference/autoplot.tf.md),
-[`ggcapellini`](https://tidyfun.github.io/tidyfun/reference/ggcapellini.md),
-[`gglasagna()`](https://tidyfun.github.io/tidyfun/reference/gglasagna.md)
-
-Other tidyfun visualization:
-[`autoplot.tf()`](https://tidyfun.github.io/tidyfun/reference/autoplot.tf.md),
-[`ggcapellini`](https://tidyfun.github.io/tidyfun/reference/ggcapellini.md),
-[`gglasagna()`](https://tidyfun.github.io/tidyfun/reference/gglasagna.md)
-
-Other tidyfun visualization:
-[`autoplot.tf()`](https://tidyfun.github.io/tidyfun/reference/autoplot.tf.md),
-[`ggcapellini`](https://tidyfun.github.io/tidyfun/reference/ggcapellini.md),
-[`gglasagna()`](https://tidyfun.github.io/tidyfun/reference/gglasagna.md)
-
-Other tidyfun visualization:
-[`autoplot.tf()`](https://tidyfun.github.io/tidyfun/reference/autoplot.tf.md),
-[`ggcapellini`](https://tidyfun.github.io/tidyfun/reference/ggcapellini.md),
-[`gglasagna()`](https://tidyfun.github.io/tidyfun/reference/gglasagna.md)
-
-Other tidyfun visualization:
-[`autoplot.tf()`](https://tidyfun.github.io/tidyfun/reference/autoplot.tf.md),
-[`ggcapellini`](https://tidyfun.github.io/tidyfun/reference/ggcapellini.md),
-[`gglasagna()`](https://tidyfun.github.io/tidyfun/reference/gglasagna.md)
-
-Other tidyfun visualization:
-[`autoplot.tf()`](https://tidyfun.github.io/tidyfun/reference/autoplot.tf.md),
-[`ggcapellini`](https://tidyfun.github.io/tidyfun/reference/ggcapellini.md),
-[`gglasagna()`](https://tidyfun.github.io/tidyfun/reference/gglasagna.md)
-
-Other tidyfun visualization:
-[`autoplot.tf()`](https://tidyfun.github.io/tidyfun/reference/autoplot.tf.md),
+[`autoplot.tf_mv()`](https://tidyfun.github.io/tidyfun/reference/autoplot.tf_mv.md),
 [`ggcapellini`](https://tidyfun.github.io/tidyfun/reference/ggcapellini.md),
 [`gglasagna()`](https://tidyfun.github.io/tidyfun/reference/gglasagna.md)
 

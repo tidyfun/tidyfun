@@ -1,5 +1,35 @@
 # Changelog
 
+## tidyfun 0.2.0
+
+- `ggplot2` support for multivariate functional data (`tf_mv` columns,
+  see
+  [`tf::tfd_mv()`](https://tidyfun.github.io/tf/reference/tfd_mv.html)):
+  map them with `aes(tf = ...)` in
+  [`tf_ggplot()`](https://tidyfun.github.io/tidyfun/reference/tf_ggplot.md),
+  with `type = "facet"` (value-vs-arg curves, one panel per output
+  dimension) or `type = "trajectory"` (planar curves x(t) vs y(t) for
+  2-component objects).
+- New
+  [`autoplot.tf_mv()`](https://tidyfun.github.io/tidyfun/reference/autoplot.tf_mv.md)
+  and
+  [`autolayer.tf_mv()`](https://tidyfun.github.io/tidyfun/reference/autoplot.tf_mv.md)
+  methods for quick plots and layers of `tf_mv` objects.
+- New
+  [`tf_unnest.tf_mv()`](https://tidyfun.github.io/tidyfun/reference/tf_unnest.md)
+  method returning a “wide” long table with one value column per output
+  dimension: `(id, arg, <component 1>, ..., <component d>)`.
+- Behavior change: an explicitly mapped `x` aesthetic is no longer
+  silently overwritten by `tf_y`’s `arg` grid, so
+  `aes(tf_x = fx, tf_y = fy)` now correctly draws planar curves x(t) vs
+  y(t).
+- Univariate-only displays
+  ([`geom_spaghetti()`](https://tidyfun.github.io/tidyfun/reference/ggspaghetti.md)/[`geom_meatballs()`](https://tidyfun.github.io/tidyfun/reference/ggspaghetti.md),
+  [`gglasagna()`](https://tidyfun.github.io/tidyfun/reference/gglasagna.md),
+  [`geom_fboxplot()`](https://tidyfun.github.io/tidyfun/reference/ggfboxplot.md))
+  now fail early with an informative error for `tf_mv` inputs instead of
+  dying with obscure internal errors.
+
 ## tidyfun 0.1.2
 
 CRAN release: 2026-04-24

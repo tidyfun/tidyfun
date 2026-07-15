@@ -72,8 +72,8 @@ evaluator as a string rather than a bare function name.
 
 ## See also
 
-[`tf::tfd()`](https://tidyfun.github.io/tf/reference/tfd.html) for
-details on `domain` and `evaluator`.
+[`tfd()`](https://tidyfun.github.io/tf/reference/tfd.html) for details
+on `domain` and `evaluator`.
 
 Other tidyfun data wrangling functions:
 [`tf_evaluate.data.frame()`](https://tidyfun.github.io/tidyfun/reference/tf_evaluate.data.frame.md),

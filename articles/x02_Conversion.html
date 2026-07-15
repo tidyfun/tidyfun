@@ -26,7 +26,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">tidyfun</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.1.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -45,6 +45,7 @@
     <li><a class="dropdown-item" href="../articles/x03_Data_Wrangling.html">Data Wrangling</a></li>
     <li><a class="dropdown-item" href="../articles/x04_Visualization.html">Visualization</a></li>
     <li><a class="dropdown-item" href="../articles/x06_Registration.html">Curve Registration</a></li>
+    <li><a class="dropdown-item" href="../articles/x07_Vector-valued_Functions.html">Vector-valued Functional Data</a></li>
   </ul>
 </li>
 <li class="nav-item dropdown">
@@ -84,7 +85,7 @@
                         <h4 data-toc-skip class="author">Jeff Goldsmith,
 Fabian Scheipl</h4>
             
-            <h4 data-toc-skip class="date">2026-07-13</h4>
+            <h4 data-toc-skip class="date">2026-07-15</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/tidyfun/tidyfun/blob/main/vignettes/x02_Conversion.Rmd" class="external-link"><code>vignettes/x02_Conversion.Rmd</code></a></small>
       <div class="d-none name"><code>x02_Conversion.Rmd</code></div>
@@ -488,7 +489,7 @@ from different sources.</p>
 <span></span>
 <span><span class="co"># recombine</span></span>
 <span><span class="va">cca_recombined</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tidyfun.github.io/tf/reference/tf_splitcombine.html" class="external-link">tf_combine</a></span><span class="op">(</span><span class="va">cca_halves</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, <span class="va">cca_halves</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span>
-<span><span class="co">## <span style="color: #BBBB00;">!</span> removing 10 duplicated points from input data.</span></span>
+<span><span class="co">## Warning: removing 10 duplicated points from input data.</span></span>
 <span><span class="va">cca_recombined</span> </span>
 <span><span class="co">## tfd[10]: [0,1] -&gt; [0.3662524,0.7028992] based on 93 evaluations each</span></span>
 <span><span class="co">## interpolation by tf_approx_linear </span></span>

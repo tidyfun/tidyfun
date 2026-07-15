@@ -15,7 +15,8 @@ build_tf_layer_data(
   layer_idx,
   enriched_data,
   user_arg,
-  interpolate
+  interpolate,
+  mv_type = NULL
 )
 ```
 

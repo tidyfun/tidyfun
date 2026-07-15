@@ -37,6 +37,9 @@ Useful links:
 
 Authors:
 
+- Fabian Scheipl <fabian.scheipl@googlemail.com>
+  ([ORCID](https://orcid.org/0000-0001-8172-3603)) \[copyright holder\]
+
 - Jeff Goldsmith
 
 - Julia Wrobel ([ORCID](https://orcid.org/0000-0001-6783-1421))

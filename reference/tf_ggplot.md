@@ -9,7 +9,14 @@ standard ggplot2 geoms.
 ## Usage
 
 ``` r
-tf_ggplot(data = NULL, mapping = aes(), ..., arg = NULL, interpolate = TRUE)
+tf_ggplot(
+  data = NULL,
+  mapping = aes(),
+  ...,
+  arg = NULL,
+  interpolate = TRUE,
+  type = NULL
+)
 ```
 
 ## Arguments
@@ -39,7 +46,21 @@ tf_ggplot(data = NULL, mapping = aes(), ..., arg = NULL, interpolate = TRUE)
 - interpolate:
 
   Logical. Should tf objects be interpolated to the evaluation grid?
-  Defaults to TRUE.
+  Defaults to TRUE. In `tf_mv` trajectory plots this is ignored and
+  interpolation is always used to pair components on a common argument
+  grid.
+
+- type:
+
+  Display mode for multivariate (`tf_mv`) aesthetics, mirroring
+  [`tf::plot.tf_mv()`](https://tidyfun.github.io/tf/reference/plot.tf_mv.html):
+  `"trajectory"` draws the planar curve x(t) vs y(t) (requires exactly 2
+  components), `"facet"` draws value-vs-arg with one group per curve and
+  component (add
+  [`ggplot2::facet_wrap()`](https://ggplot2.tidyverse.org/reference/facet_wrap.html)
+  on `.component`). If `NULL` (default), resolves to `"trajectory"` for
+  2-component objects and `"facet"` otherwise. Ignored for univariate tf
+  aesthetics.
 
 ## Value
 

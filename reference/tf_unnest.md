@@ -7,6 +7,9 @@ the reverse of
 The `tf`-method simply turns a single `tfd` or `tfb` vector into a
 "long"
 [`tibble::tibble()`](https://tibble.tidyverse.org/reference/tibble.html).
+For a multivariate `tf_mv` vector (functions \\R \to R^d\\) the
+`tf_mv`-method returns a "wide" long table with one value column per
+output dimension: `(id, arg, <component 1>, ..., <component d>)`.
 
 ## Usage
 
@@ -14,6 +17,9 @@ The `tf`-method simply turns a single `tfd` or `tfb` vector into a
 tf_unnest(data, cols, arg, interpolate = TRUE, ...)
 
 # S3 method for class 'tf'
+tf_unnest(data, cols, arg, interpolate = TRUE, ...)
+
+# S3 method for class 'tf_mv'
 tf_unnest(data, cols, arg, interpolate = TRUE, ...)
 
 # S3 method for class 'data.frame'

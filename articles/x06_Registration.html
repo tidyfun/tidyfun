@@ -26,7 +26,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">tidyfun</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.1.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -45,6 +45,7 @@
     <li><a class="dropdown-item" href="../articles/x03_Data_Wrangling.html">Data Wrangling</a></li>
     <li><a class="dropdown-item" href="../articles/x04_Visualization.html">Visualization</a></li>
     <li><a class="dropdown-item" href="../articles/x06_Registration.html">Curve Registration</a></li>
+    <li><a class="dropdown-item" href="../articles/x07_Vector-valued_Functions.html">Vector-valued Functional Data</a></li>
   </ul>
 </li>
 <li class="nav-item dropdown">
@@ -323,7 +324,7 @@ transparent:</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Inverse warp deviations from identity (relative to domain length):</span></span>
 <span><span class="co">#&gt;     0%    10%    25%    50%    75%    90%   100% </span></span>
-<span><span class="co">#&gt; 0.0002 0.1027 0.1350 0.1875 0.2027 0.2090 0.2469 </span></span>
+<span><span class="co">#&gt; 0.0002 0.0966 0.1251 0.1693 0.1811 0.1862 0.2156 </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Inverse warp slopes (1 = identity):</span></span>
 <span><span class="co">#&gt;   overall range: [1, 1]</span></span>
@@ -734,13 +735,13 @@ data.</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Inverse warp deviations from identity (relative to domain length):</span></span>
 <span><span class="co">#&gt;     0%    10%    25%    50%    75%    90%   100% </span></span>
-<span><span class="co">#&gt; 0.0483 0.0989 0.1222 0.1478 0.1725 0.1855 0.2374 </span></span>
+<span><span class="co">#&gt; 0.0482 0.0976 0.1208 0.1457 0.1674 0.1787 0.2204 </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Inverse warp slopes (1 = identity):</span></span>
-<span><span class="co">#&gt;   overall range: [1.088, 1.287]</span></span>
+<span><span class="co">#&gt;   overall range: [1.087, 1.287]</span></span>
 <span><span class="co">#&gt;   per-curve slopes:</span></span>
 <span><span class="co">#&gt;    0%   10%   25%   50%   75%   90%  100% </span></span>
-<span><span class="co">#&gt; 1.088 1.099 1.116 1.135 1.227 1.265 1.287 </span></span>
+<span><span class="co">#&gt; 1.087 1.089 1.117 1.136 1.229 1.262 1.287 </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Domain coverage loss after alignment (fraction of original range):</span></span>
 <span><span class="co">#&gt;     0%    10%    25%    50%    75%    90%   100% </span></span>
@@ -793,7 +794,7 @@ aligned curves show better feature alignment to the template.</p>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt;                 metric       value</span></span>
 <span><span class="co">#&gt; 1       sd_peak_before 0.028031728</span></span>
-<span><span class="co">#&gt; 2 sd_peak_after_affine 0.002796824</span></span></code></pre></div>
+<span><span class="co">#&gt; 2 sd_peak_after_affine 0.002836273</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="step-4-compare-with-an-alternative-method">Step 4: Compare with an alternative method<a class="anchor" aria-label="anchor" href="#step-4-compare-with-an-alternative-method"></a>
@@ -812,7 +813,7 @@ aligned curves show better feature alignment to the template.</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Inverse warp deviations from identity (relative to domain length):</span></span>
 <span><span class="co">#&gt;     0%    10%    25%    50%    75%    90%   100% </span></span>
-<span><span class="co">#&gt; 0.0430 0.0745 0.0852 0.1143 0.1240 0.1362 0.1594 </span></span>
+<span><span class="co">#&gt; 0.0424 0.0744 0.0852 0.1140 0.1237 0.1362 0.1594 </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Inverse warp slopes (1 = identity):</span></span>
 <span><span class="co">#&gt;   overall range: [0.143, 7]</span></span>
@@ -831,7 +832,7 @@ aligned curves show better feature alignment to the template.</p>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt;                 metric       value</span></span>
 <span><span class="co">#&gt; 1       sd_peak_before 0.028031728</span></span>
-<span><span class="co">#&gt; 2 sd_peak_after_affine 0.002796824</span></span>
+<span><span class="co">#&gt; 2 sd_peak_after_affine 0.002836273</span></span>
 <span><span class="co">#&gt; 3   sd_peak_after_srvf 0.001349897</span></span></code></pre></div>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/layout.html" class="external-link">layout</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">6</span>, <span class="fl">2</span>, <span class="fl">3</span>, byrow <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
@@ -1075,7 +1076,7 @@ are ambiguous and often too simplistic if curves have few identifiable
 features (e.g., only one peak per curve).</li>
 <li>
 <strong>Landmark detection:</strong>
-<code><a href="https://tidyfun.github.io/tf/reference/landmarks.html" class="external-link">tf_landmarks_extrema()</a></code> can automatically detect local
+<code><a href="https://tidyfun.github.io/tf/reference/tf_landmarks_extrema.html" class="external-link">tf_landmarks_extrema()</a></code> can automatically detect local
 maxima, minima, or zero crossings and cluster them across curves -
 usually better to pre-smooth noisy inputs with <code><a href="https://tidyfun.github.io/tf/reference/tf_smooth.html" class="external-link">tf_smooth()</a></code>
 or <code>tfb</code> before calling this function. Results will typically
@@ -1104,7 +1105,7 @@ knowledge.</li>
 <span></span>
 <span><span class="co"># tf_landmarks_extrema needs smoothed inputs,</span></span>
 <span><span class="co">#     otherwise it tends to detect lots of spurious features:</span></span>
-<span><span class="va">pinch_small</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://tidyfun.github.io/tf/reference/landmarks.html" class="external-link">tf_landmarks_extrema</a></span><span class="op">(</span>which <span class="op">=</span> <span class="st">"max"</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">pinch_small</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://tidyfun.github.io/tf/reference/tf_landmarks_extrema.html" class="external-link">tf_landmarks_extrema</a></span><span class="op">(</span>which <span class="op">=</span> <span class="st">"max"</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt;       [,1]  [,2]  [,3]  [,4]</span></span>
 <span><span class="co">#&gt; [1,] 0.028 0.160 0.222 0.284</span></span>
 <span><span class="co">#&gt; [2,] 0.040 0.136 0.226 0.284</span></span>
@@ -1184,12 +1185,12 @@ producing <code>NA</code>s.</p>
 <code class="sourceCode R"><span><span class="va">reg_srvf</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tidyfun.github.io/tf/reference/tf_register.html" class="external-link">tf_register</a></span><span class="op">(</span><span class="va">pinch_small</span>, method <span class="op">=</span> <span class="st">"srvf"</span><span class="op">)</span></span>
 <span><span class="va">inv_warp_srvf</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tidyfun.github.io/tf/reference/tf_registration.html" class="external-link">tf_inv_warps</a></span><span class="op">(</span><span class="va">reg_srvf</span><span class="op">)</span></span>
 <span><span class="va">reg_cc_unpen</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tidyfun.github.io/tf/reference/tf_register.html" class="external-link">tf_register</a></span><span class="op">(</span><span class="va">pinch_small</span>, method <span class="op">=</span> <span class="st">"cc"</span>, max_iter <span class="op">=</span> <span class="fl">10</span>, nbasis <span class="op">=</span> <span class="fl">10</span>, crit <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Iterative registration stopped after 5 of 10 iterations: alignment worsened</span></span>
-<span><span class="co">#&gt; (objective 0.5409 &gt; 0.5296).</span></span>
+<span><span class="co">#&gt; Iterative registration stopped after 4 of 10 iterations: alignment worsened</span></span>
+<span><span class="co">#&gt; (objective 0.0735 &gt; 0.0531 against the current template).</span></span>
 <span><span class="va">inv_warp_cc_unpen</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tidyfun.github.io/tf/reference/tf_registration.html" class="external-link">tf_inv_warps</a></span><span class="op">(</span><span class="va">reg_cc_unpen</span><span class="op">)</span></span>
 <span><span class="va">reg_cc_pen</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tidyfun.github.io/tf/reference/tf_register.html" class="external-link">tf_register</a></span><span class="op">(</span><span class="va">pinch_small</span>, method <span class="op">=</span> <span class="st">"cc"</span>, lambda <span class="op">=</span> <span class="fl">1e-4</span>, max_iter <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Iterative registration stopped after 18 of 20 iterations: alignment worsened</span></span>
-<span><span class="co">#&gt; (objective 0.438 &gt; 0.4374).</span></span>
+<span><span class="co">#&gt; Iterative registration stopped after 1 of 20 iterations: alignment worsened</span></span>
+<span><span class="co">#&gt; (objective 0.0869 &gt; 0.0551 against the current template).</span></span>
 <span><span class="va">inv_warp_cc_pen</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tidyfun.github.io/tf/reference/tf_registration.html" class="external-link">tf_inv_warps</a></span><span class="op">(</span><span class="va">reg_cc_pen</span><span class="op">)</span></span></code></pre></div>
 <p>SRVF and CC both use non-linear warps and tend to be able to align
 more complex phase variation than the <code>affine</code> method, but
@@ -1210,16 +1211,16 @@ quantitative diagnostics:</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Inverse warp deviations from identity (relative to domain length):</span></span>
 <span><span class="co">#&gt;     0%    10%    25%    50%    75%    90%   100% </span></span>
-<span><span class="co">#&gt; 0.1143 0.1418 0.1530 0.1664 0.1936 0.1965 0.1968 </span></span>
+<span><span class="co">#&gt; 0.1150 0.1431 0.1526 0.1636 0.1881 0.1949 0.1972 </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Inverse warp slopes (1 = identity):</span></span>
-<span><span class="co">#&gt;   overall range: [0.282, 4.434]</span></span>
+<span><span class="co">#&gt;   overall range: [0.261, 3.973]</span></span>
 <span><span class="co">#&gt;   per-curve min slopes:</span></span>
 <span><span class="co">#&gt;    0%   10%   25%   50%   75%   90%  100% </span></span>
-<span><span class="co">#&gt; 0.282 0.315 0.362 0.432 0.452 0.460 0.471 </span></span>
+<span><span class="co">#&gt; 0.261 0.315 0.358 0.428 0.461 0.474 0.505 </span></span>
 <span><span class="co">#&gt;   per-curve max slopes:</span></span>
 <span><span class="co">#&gt;    0%   10%   25%   50%   75%   90%  100% </span></span>
-<span><span class="co">#&gt; 2.350 2.366 2.549 3.006 3.377 3.904 4.434</span></span>
+<span><span class="co">#&gt; 2.257 2.328 2.506 2.694 3.346 3.860 3.973</span></span>
 <span><span class="co"># ... ouch! max slope almost 100 and only 40% amplitude variance reduction ....</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">reg_srvf</span><span class="op">)</span></span>
@@ -1231,7 +1232,7 @@ quantitative diagnostics:</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Inverse warp deviations from identity (relative to domain length):</span></span>
 <span><span class="co">#&gt;     0%    10%    25%    50%    75%    90%   100% </span></span>
-<span><span class="co">#&gt; 0.0430 0.0745 0.0852 0.1143 0.1240 0.1362 0.1594 </span></span>
+<span><span class="co">#&gt; 0.0424 0.0744 0.0852 0.1140 0.1237 0.1362 0.1594 </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Inverse warp slopes (1 = identity):</span></span>
 <span><span class="co">#&gt;   overall range: [0.143, 7]</span></span>
@@ -1246,20 +1247,20 @@ quantitative diagnostics:</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; 10 curve(s) on [0, 0.3]</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Amplitude variance reduction: 97.1%</span></span>
+<span><span class="co">#&gt; Amplitude variance reduction: 95.3%</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Inverse warp deviations from identity (relative to domain length):</span></span>
 <span><span class="co">#&gt;     0%    10%    25%    50%    75%    90%   100% </span></span>
-<span><span class="co">#&gt; 0.0192 0.0586 0.0812 0.1152 0.1535 0.1709 0.1947 </span></span>
+<span><span class="co">#&gt; 0.1241 0.1303 0.1391 0.1603 0.1874 0.2102 0.2174 </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Inverse warp slopes (1 = identity):</span></span>
-<span><span class="co">#&gt;   overall range: [0.508, 1.862]</span></span>
+<span><span class="co">#&gt;   overall range: [0.322, 1.876]</span></span>
 <span><span class="co">#&gt;   per-curve min slopes:</span></span>
 <span><span class="co">#&gt;    0%   10%   25%   50%   75%   90%  100% </span></span>
-<span><span class="co">#&gt; 0.508 0.550 0.592 0.782 0.823 0.855 0.878 </span></span>
+<span><span class="co">#&gt; 0.322 0.345 0.362 0.389 0.393 0.420 0.464 </span></span>
 <span><span class="co">#&gt;   per-curve max slopes:</span></span>
 <span><span class="co">#&gt;    0%   10%   25%   50%   75%   90%  100% </span></span>
-<span><span class="co">#&gt; 1.053 1.206 1.234 1.572 1.671 1.700 1.862</span></span></code></pre></div>
+<span><span class="co">#&gt; 1.653 1.656 1.689 1.774 1.830 1.856 1.876</span></span></code></pre></div>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/layout.html" class="external-link">layout</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">12</span>, <span class="fl">4</span>, <span class="fl">3</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>cex.main <span class="op">=</span> <span class="fl">0.8</span><span class="op">)</span></span>

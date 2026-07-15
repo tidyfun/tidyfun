@@ -18,13 +18,13 @@ Source:
 [`DESCRIPTION`](https://github.com/tidyfun/tidyfun/blob/main/DESCRIPTION)
 
 Scheipl F, Goldsmith J, Wrobel J (2026). *tidyfun: Tidy Functional Data
-Wrangling and Visualization*. R package version 0.1.2,
+Wrangling and Visualization*. R package version 0.2.0,
 <https://github.com/tidyfun/tidyfun>.
 
     @Manual{,
       title = {tidyfun: Tidy Functional Data Wrangling and Visualization},
       author = {Fabian Scheipl and Jeff Goldsmith and Julia Wrobel},
       year = {2026},
-      note = {R package version 0.1.2},
+      note = {R package version 0.2.0},
       url = {https://github.com/tidyfun/tidyfun},
     }

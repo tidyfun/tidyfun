@@ -154,6 +154,112 @@ dti_df |>
 
 ![](x04_Visualization_files/figure-html/unnamed-chunk-5-1.png)
 
+### Multivariate functional data (`tf_mv`)
+
+Vector-valued functional data – functions \\f: \mathbb{R} \to
+\mathbb{R}^d\\ stored as `tf_mv` vectors (see the `tf` package and its
+“Vector-valued functional data” article) – can be mapped with the `tf`
+aesthetic just like univariate `tf` columns.
+[`tf_ggplot()`](https://tidyfun.github.io/tidyfun/reference/tf_ggplot.md)
+picks a display that mirrors `tf`’s base-R `plot.tf_mv()`:
+
+- for two-component objects (`d == 2`) the default is a **trajectory**:
+  the planar curve \\x(t)\\ vs \\y(t)\\, drawn with
+  [`geom_path()`](https://ggplot2.tidyverse.org/reference/geom_path.html);
+- otherwise the default is a **facet** display: value-vs-arg curves with
+  one group per curve and component.
+
+We use the built-in
+[`tf::gait`](https://tidyfun.github.io/tf/reference/gait.html) data: hip
+and knee joint angles for 39 boys across one gait cycle, bundled into a
+single two-component `tfd_mv`.
+
+``` r
+
+data(gait, package = "tf")
+gait_mv <- tfd_mv(list(hip = gait$hip_angle, knee = gait$knee_angle))
+gait_df <- tibble(id = factor(seq_along(gait_mv)), mv = gait_mv)
+```
+
+The **facet** display shows one panel per component (value versus cycle
+phase). Pass `type = "facet"`, which unnests the data to a long form
+with a `.component` column; add `facet_wrap(~ .component)` yourself:
+
+``` r
+
+gait_df |>
+  tf_ggplot(aes(tf = mv), type = "facet") +
+  geom_line(alpha = 0.3) +
+  facet_wrap(~ .component, scales = "free_y")
+```
+
+![](x04_Visualization_files/figure-html/mv-facet-1.png)
+
+The **trajectory** display (the `d == 2` default) collapses the phase
+axis and draws each subject’s `(hip, knee)` cyclogram – the
+characteristic gait “butterfly” loop. **Use
+[`geom_path()`](https://ggplot2.tidyverse.org/reference/geom_path.html),
+not
+[`geom_line()`](https://ggplot2.tidyverse.org/reference/geom_path.html)**:
+[`geom_path()`](https://ggplot2.tidyverse.org/reference/geom_path.html)
+connects points in argument (time) order, while
+[`geom_line()`](https://ggplot2.tidyverse.org/reference/geom_path.html)
+would re-sort by `x` and mangle any non-monotone curve.
+
+``` r
+
+gait_df |>
+  tf_ggplot(aes(tf = mv)) +
+  geom_path(alpha = 0.3) +
+  labs(x = "hip angle", y = "knee angle")
+```
+
+![](x04_Visualization_files/figure-html/mv-trajectory-1.png)
+
+Equivalently, you can map two separate univariate `tf` columns (or two
+components) to the `tf_x` and `tf_y` aesthetics – handy when the
+coordinates live in different columns:
+
+``` r
+
+tibble(hip = gait$hip_angle, knee = gait$knee_angle) |>
+  tf_ggplot(aes(tf_x = hip, tf_y = knee)) +
+  geom_path(alpha = 0.3)
+```
+
+![](x04_Visualization_files/figure-html/mv-txty-1.png)
+
+[`autoplot()`](https://ggplot2.tidyverse.org/reference/autoplot.html)
+provides one-line shortcuts – a trajectory for `d == 2` and a faceted
+display otherwise – and
+[`autolayer()`](https://ggplot2.tidyverse.org/reference/autolayer.html)
+returns a single layer you can add to an existing plot:
+
+``` r
+
+autoplot(gait_mv)
+```
+
+![](x04_Visualization_files/figure-html/mv-autoplot-1.png)
+
+To unnest a `tf_mv` column to a “wide” long table yourself (one value
+column per component), use
+[`tf_unnest()`](https://tidyfun.github.io/tidyfun/reference/tf_unnest.md):
+
+``` r
+
+tf_unnest(gait_mv) |> head()
+## # A tibble: 6 × 4
+##   id      arg   hip  knee
+##   <ord> <dbl> <dbl> <dbl>
+## 1 boy1  0.025    37    10
+## 2 boy1  0.075    36    15
+## 3 boy1  0.125    33    18
+## 4 boy1  0.175    29    18
+## 5 boy1  0.225    23    15
+## 6 boy1  0.275    18    14
+```
+
 ### Functional data boxplots with `geom_fboxplot`
 
 “Boxplots” for functional data are implemented in `tidyfun` through
@@ -446,7 +552,7 @@ summary(pinch_reg)
 ## 
 ## Inverse warp deviations from identity (relative to domain length):
 ##     0%    10%    25%    50%    75%    90%   100% 
-## 0.0328 0.0670 0.0765 0.1161 0.1469 0.1841 0.2104 
+## 0.0329 0.0670 0.0765 0.1161 0.1469 0.1841 0.2104 
 ## 
 ## Inverse warp slopes (1 = identity):
 ##   overall range: [0.143, 7]

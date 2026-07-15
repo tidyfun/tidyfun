@@ -13,7 +13,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">tidyfun</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.1.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -30,6 +30,7 @@
     <li><a class="dropdown-item" href="../articles/x03_Data_Wrangling.html">Data Wrangling</a></li>
     <li><a class="dropdown-item" href="../articles/x04_Visualization.html">Visualization</a></li>
     <li><a class="dropdown-item" href="../articles/x06_Registration.html">Curve Registration</a></li>
+    <li><a class="dropdown-item" href="../articles/x07_Vector-valued_Functions.html">Vector-valued Functional Data</a></li>
   </ul></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-developer-notes" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Developer Notes</button>
@@ -56,6 +57,15 @@
       <small>Source: <a href="https://github.com/tidyfun/tidyfun/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.2.0" id="tidyfun-020">tidyfun 0.2.0<a class="anchor" aria-label="anchor" href="#tidyfun-020"></a></h2>
+<ul><li>
+<code>ggplot2</code> support for multivariate functional data (<code>tf_mv</code> columns, see <code><a href="https://tidyfun.github.io/tf/reference/tfd_mv.html" class="external-link">tf::tfd_mv()</a></code>): map them with <code>aes(tf = ...)</code> in <code><a href="../reference/tf_ggplot.html">tf_ggplot()</a></code>, with <code>type = "facet"</code> (value-vs-arg curves, one panel per output dimension) or <code>type = "trajectory"</code> (planar curves x(t) vs y(t) for 2-component objects).</li>
+<li>New <code><a href="../reference/autoplot.tf_mv.html">autoplot.tf_mv()</a></code> and <code><a href="../reference/autoplot.tf_mv.html">autolayer.tf_mv()</a></code> methods for quick plots and layers of <code>tf_mv</code> objects.</li>
+<li>New <code><a href="../reference/tf_unnest.html">tf_unnest.tf_mv()</a></code> method returning a “wide” long table with one value column per output dimension: <code>(id, arg, &lt;component 1&gt;, ..., &lt;component d&gt;)</code>.</li>
+<li>Behavior change: an explicitly mapped <code>x</code> aesthetic is no longer silently overwritten by <code>tf_y</code>’s <code>arg</code> grid, so <code>aes(tf_x = fx, tf_y = fy)</code> now correctly draws planar curves x(t) vs y(t).</li>
+<li>Univariate-only displays (<code><a href="../reference/ggspaghetti.html">geom_spaghetti()</a></code>/<code><a href="../reference/ggspaghetti.html">geom_meatballs()</a></code>, <code><a href="../reference/gglasagna.html">gglasagna()</a></code>, <code><a href="../reference/ggfboxplot.html">geom_fboxplot()</a></code>) now fail early with an informative error for <code>tf_mv</code> inputs instead of dying with obscure internal errors.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.1.2" id="tidyfun-012">tidyfun 0.1.2<a class="anchor" aria-label="anchor" href="#tidyfun-012"></a></h2><p class="text-muted">CRAN release: 2026-04-24</p>
 <ul><li>Rebuilt <code>chf_df</code> with current <code>tf</code> constructors before saving so the packaged dataset no longer carries stale namespace references from pre-<code>tf</code> releases.</li>

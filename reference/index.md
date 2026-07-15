@@ -138,6 +138,12 @@ ggplot2 layers for functional data
 
   Autoplot and autolayer methods for `tf` objects
 
+- [`autoplot(`*`<tf_mv>`*`)`](https://tidyfun.github.io/tidyfun/reference/autoplot.tf_mv.md)
+  [`autolayer(`*`<tf_mv>`*`)`](https://tidyfun.github.io/tidyfun/reference/autoplot.tf_mv.md)
+  :
+
+  Autoplot and autolayer methods for multivariate (`tf_mv`) objects
+
 ### Visualization & display (from tf)
 
 Base-R graphics and print formats for tf objects
@@ -196,7 +202,9 @@ Locating functional features like peaks or zero-crossings
 Accessing, appending, evaluating, splitting & combining functional data
 objects
 
-- [`` `[`( ``*`<tf>`*`)`](https://tidyfun.github.io/tf/reference/tfbrackets.html)
+- [`` `[`( ``*`<tf_mv>`*`)`](https://tidyfun.github.io/tf/reference/tfbrackets.html)
+  [`` `[<-`( ``*`<tf_mv>`*`)`](https://tidyfun.github.io/tf/reference/tfbrackets.html)
+  [`` `[`( ``*`<tf>`*`)`](https://tidyfun.github.io/tf/reference/tfbrackets.html)
   [`` `[<-`( ``*`<tf>`*`)`](https://tidyfun.github.io/tf/reference/tfbrackets.html)
   :
 
@@ -257,6 +265,7 @@ Functionality for computing with and comparing functional data
   [`sd()`](https://tidyfun.github.io/tf/reference/tfsummaries.html)
   [`var()`](https://tidyfun.github.io/tf/reference/tfsummaries.html)
   [`summary(`*`<tf>`*`)`](https://tidyfun.github.io/tf/reference/tfsummaries.html)
+  [`summary(`*`<tf_mv>`*`)`](https://tidyfun.github.io/tf/reference/tfsummaries.html)
   :
 
   Functions that summarize `tf` objects across argument values (from tf)
@@ -281,7 +290,7 @@ Functionality for computing with and comparing functional data
 - [`rank()`](https://tidyfun.github.io/tf/reference/tf_order.html)
   [`xtfrm(`*`<tf>`*`)`](https://tidyfun.github.io/tf/reference/tf_order.html)
   [`sort(`*`<tf>`*`)`](https://tidyfun.github.io/tf/reference/tf_order.html)
-  :
+  [`tf_order()`](https://tidyfun.github.io/tf/reference/tf_order.html) :
 
   Rank, order and sort `tf` vectors (from tf)
 
@@ -325,21 +334,24 @@ Functions for registering and warping functional data
 - [`tf_aligned()`](https://tidyfun.github.io/tf/reference/tf_registration.html)
   [`tf_inv_warps()`](https://tidyfun.github.io/tf/reference/tf_registration.html)
   [`tf_template()`](https://tidyfun.github.io/tf/reference/tf_registration.html)
+  [`tf_rotations()`](https://tidyfun.github.io/tf/reference/tf_registration.html)
+  [`tf_scales()`](https://tidyfun.github.io/tf/reference/tf_registration.html)
   [`print(`*`<tf_registration>`*`)`](https://tidyfun.github.io/tf/reference/tf_registration.html)
+  [`print(`*`<tf_shape_registration>`*`)`](https://tidyfun.github.io/tf/reference/tf_registration.html)
   [`summary(`*`<tf_registration>`*`)`](https://tidyfun.github.io/tf/reference/tf_registration.html)
   [`print(`*`<summary.tf_registration>`*`)`](https://tidyfun.github.io/tf/reference/tf_registration.html)
+  [`summary(`*`<tf_shape_registration>`*`)`](https://tidyfun.github.io/tf/reference/tf_registration.html)
+  [`print(`*`<summary.tf_shape_registration>`*`)`](https://tidyfun.github.io/tf/reference/tf_registration.html)
   [`plot(`*`<tf_registration>`*`)`](https://tidyfun.github.io/tf/reference/tf_registration.html)
   [`` `[`( ``*`<tf_registration>`*`)`](https://tidyfun.github.io/tf/reference/tf_registration.html)
   [`length(`*`<tf_registration>`*`)`](https://tidyfun.github.io/tf/reference/tf_registration.html)
+  [`` `[`( ``*`<tf_shape_registration>`*`)`](https://tidyfun.github.io/tf/reference/tf_registration.html)
   : Registration Result Object (from tf)
 
 - [`tf_align()`](https://tidyfun.github.io/tf/reference/tf_align.html) :
   Apply warping functions to align functional data (from tf)
 
-- [`tf_landmarks_extrema()`](https://tidyfun.github.io/tf/reference/landmarks.html)
-  [`detect_landmarks()`](https://tidyfun.github.io/tf/reference/landmarks.html)
-  [`cluster_landmarks()`](https://tidyfun.github.io/tf/reference/landmarks.html)
-  [`build_landmark_matrix()`](https://tidyfun.github.io/tf/reference/landmarks.html)
+- [`tf_landmarks_extrema()`](https://tidyfun.github.io/tf/reference/tf_landmarks_extrema.html)
   : Find Extrema Locations in Functional Data (from tf)
 
 - [`tf_warp()`](https://tidyfun.github.io/tf/reference/tf_warp.html) :
@@ -364,9 +376,11 @@ Functions for registering and warping functional data
   [`` `tf_arg<-`() ``](https://tidyfun.github.io/tf/reference/tfmethods.html)
   [`coef(`*`<tfb>`*`)`](https://tidyfun.github.io/tf/reference/tfmethods.html)
   [`rev(`*`<tf>`*`)`](https://tidyfun.github.io/tf/reference/tfmethods.html)
+  [`rev(`*`<tf_mv>`*`)`](https://tidyfun.github.io/tf/reference/tfmethods.html)
   [`is.na(`*`<tf>`*`)`](https://tidyfun.github.io/tf/reference/tfmethods.html)
   [`is.na(`*`<tfd_irreg>`*`)`](https://tidyfun.github.io/tf/reference/tfmethods.html)
   [`is_tf()`](https://tidyfun.github.io/tf/reference/tfmethods.html)
+  [`is_tf_1d()`](https://tidyfun.github.io/tf/reference/tfmethods.html)
   [`is_tfd()`](https://tidyfun.github.io/tf/reference/tfmethods.html)
   [`is_reg()`](https://tidyfun.github.io/tf/reference/tfmethods.html)
   [`is_tfd_reg()`](https://tidyfun.github.io/tf/reference/tfmethods.html)
@@ -375,6 +389,9 @@ Functions for registering and warping functional data
   [`is_tfb()`](https://tidyfun.github.io/tf/reference/tfmethods.html)
   [`is_tfb_spline()`](https://tidyfun.github.io/tf/reference/tfmethods.html)
   [`is_tfb_fpc()`](https://tidyfun.github.io/tf/reference/tfmethods.html)
+  [`is_tf_mv()`](https://tidyfun.github.io/tf/reference/tfmethods.html)
+  [`is_tfd_mv()`](https://tidyfun.github.io/tf/reference/tfmethods.html)
+  [`is_tfb_mv()`](https://tidyfun.github.io/tf/reference/tfmethods.html)
   :
 
   Utility functions for `tf`-objects (from tf)
@@ -393,7 +410,7 @@ Functions for registering and warping functional data
   : Find out if values are inside given bounds (from tf)
 
 - [`ensure_list()`](https://tidyfun.github.io/tf/reference/ensure_list.html)
-  : Turns any object into a list (from tf)
+  : Wrap a non-list object in a list (from tf)
 
 - [`unique_id()`](https://tidyfun.github.io/tf/reference/unique_id.html)
   : Make syntactically valid unique names (from tf)

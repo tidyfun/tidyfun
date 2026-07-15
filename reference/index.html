@@ -13,7 +13,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">tidyfun</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.1.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -30,6 +30,7 @@
     <li><a class="dropdown-item" href="../articles/x03_Data_Wrangling.html">Data Wrangling</a></li>
     <li><a class="dropdown-item" href="../articles/x04_Visualization.html">Visualization</a></li>
     <li><a class="dropdown-item" href="../articles/x06_Registration.html">Curve Registration</a></li>
+    <li><a class="dropdown-item" href="../articles/x07_Vector-valued_Functions.html">Vector-valued Functional Data</a></li>
   </ul></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-developer-notes" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Developer Notes</button>
@@ -280,6 +281,13 @@
 
         </dt>
         <dd>Autoplot and autolayer methods for <code>tf</code> objects</dd>
+
+        <dt>
+
+          <code><a href="autoplot.tf_mv.html">autoplot(<i>&lt;tf_mv&gt;</i>)</a></code> <code><a href="autoplot.tf_mv.html">autolayer(<i>&lt;tf_mv&gt;</i>)</a></code>
+
+        </dt>
+        <dd>Autoplot and autolayer methods for multivariate (<code>tf_mv</code>) objects</dd>
       </dl></div><div class="section level2">
 
       <h3 id="visualization-display-from-tf-">Visualization &amp; display (from tf)<a class="anchor" aria-label="anchor" href="#visualization-display-from-tf-"></a></h3>
@@ -398,7 +406,7 @@
 
       <dl><dt>
 
-          <code><a href="https://tidyfun.github.io/tf/reference/tfbrackets.html" class="external-link">`[`(<i>&lt;tf&gt;</i>)</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfbrackets.html" class="external-link">`[&lt;-`(<i>&lt;tf&gt;</i>)</a></code>
+          <code><a href="https://tidyfun.github.io/tf/reference/tfbrackets.html" class="external-link">`[`(<i>&lt;tf_mv&gt;</i>)</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfbrackets.html" class="external-link">`[&lt;-`(<i>&lt;tf_mv&gt;</i>)</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfbrackets.html" class="external-link">`[`(<i>&lt;tf&gt;</i>)</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfbrackets.html" class="external-link">`[&lt;-`(<i>&lt;tf&gt;</i>)</a></code>
 
         </dt>
         <dd>Accessing, evaluating, subsetting and subassigning <code>tf</code> vectors (from tf)</dd>
@@ -449,7 +457,7 @@
 
         <dt>
 
-          <code><a href="https://tidyfun.github.io/tf/reference/tfsummaries.html" class="external-link">mean(<i>&lt;tf&gt;</i>)</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfsummaries.html" class="external-link">median(<i>&lt;tf&gt;</i>)</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfsummaries.html" class="external-link">sd()</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfsummaries.html" class="external-link">var()</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfsummaries.html" class="external-link">summary(<i>&lt;tf&gt;</i>)</a></code>
+          <code><a href="https://tidyfun.github.io/tf/reference/tfsummaries.html" class="external-link">mean(<i>&lt;tf&gt;</i>)</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfsummaries.html" class="external-link">median(<i>&lt;tf&gt;</i>)</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfsummaries.html" class="external-link">sd()</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfsummaries.html" class="external-link">var()</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfsummaries.html" class="external-link">summary(<i>&lt;tf&gt;</i>)</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfsummaries.html" class="external-link">summary(<i>&lt;tf_mv&gt;</i>)</a></code>
 
         </dt>
         <dd>Functions that summarize <code>tf</code> objects across argument values (from tf)</dd>
@@ -470,7 +478,7 @@
 
         <dt>
 
-          <code><a href="https://tidyfun.github.io/tf/reference/tf_order.html" class="external-link">rank()</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tf_order.html" class="external-link">xtfrm(<i>&lt;tf&gt;</i>)</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tf_order.html" class="external-link">sort(<i>&lt;tf&gt;</i>)</a></code>
+          <code><a href="https://tidyfun.github.io/tf/reference/tf_order.html" class="external-link">rank()</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tf_order.html" class="external-link">xtfrm(<i>&lt;tf&gt;</i>)</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tf_order.html" class="external-link">sort(<i>&lt;tf&gt;</i>)</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tf_order.html" class="external-link">tf_order()</a></code>
 
         </dt>
         <dd>Rank, order and sort <code>tf</code> vectors (from tf)</dd>
@@ -544,7 +552,7 @@
 
         <dt>
 
-          <code><a href="https://tidyfun.github.io/tf/reference/tf_registration.html" class="external-link">tf_aligned()</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tf_registration.html" class="external-link">tf_inv_warps()</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tf_registration.html" class="external-link">tf_template()</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tf_registration.html" class="external-link">print(<i>&lt;tf_registration&gt;</i>)</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tf_registration.html" class="external-link">summary(<i>&lt;tf_registration&gt;</i>)</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tf_registration.html" class="external-link">print(<i>&lt;summary.tf_registration&gt;</i>)</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tf_registration.html" class="external-link">plot(<i>&lt;tf_registration&gt;</i>)</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tf_registration.html" class="external-link">`[`(<i>&lt;tf_registration&gt;</i>)</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tf_registration.html" class="external-link">length(<i>&lt;tf_registration&gt;</i>)</a></code>
+          <code><a href="https://tidyfun.github.io/tf/reference/tf_registration.html" class="external-link">tf_aligned()</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tf_registration.html" class="external-link">tf_inv_warps()</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tf_registration.html" class="external-link">tf_template()</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tf_registration.html" class="external-link">tf_rotations()</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tf_registration.html" class="external-link">tf_scales()</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tf_registration.html" class="external-link">print(<i>&lt;tf_registration&gt;</i>)</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tf_registration.html" class="external-link">print(<i>&lt;tf_shape_registration&gt;</i>)</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tf_registration.html" class="external-link">summary(<i>&lt;tf_registration&gt;</i>)</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tf_registration.html" class="external-link">print(<i>&lt;summary.tf_registration&gt;</i>)</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tf_registration.html" class="external-link">summary(<i>&lt;tf_shape_registration&gt;</i>)</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tf_registration.html" class="external-link">print(<i>&lt;summary.tf_shape_registration&gt;</i>)</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tf_registration.html" class="external-link">plot(<i>&lt;tf_registration&gt;</i>)</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tf_registration.html" class="external-link">`[`(<i>&lt;tf_registration&gt;</i>)</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tf_registration.html" class="external-link">length(<i>&lt;tf_registration&gt;</i>)</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tf_registration.html" class="external-link">`[`(<i>&lt;tf_shape_registration&gt;</i>)</a></code>
 
         </dt>
         <dd>Registration Result Object (from tf)</dd>
@@ -558,7 +566,7 @@
 
         <dt>
 
-          <code><a href="https://tidyfun.github.io/tf/reference/landmarks.html" class="external-link">tf_landmarks_extrema()</a></code> <code><a href="https://tidyfun.github.io/tf/reference/landmarks.html" class="external-link">detect_landmarks()</a></code> <code><a href="https://tidyfun.github.io/tf/reference/landmarks.html" class="external-link">cluster_landmarks()</a></code> <code><a href="https://tidyfun.github.io/tf/reference/landmarks.html" class="external-link">build_landmark_matrix()</a></code>
+          <code><a href="https://tidyfun.github.io/tf/reference/tf_landmarks_extrema.html" class="external-link">tf_landmarks_extrema()</a></code>
 
         </dt>
         <dd>Find Extrema Locations in Functional Data (from tf)</dd>
@@ -588,7 +596,7 @@
 
       <dl><dt>
 
-          <code><a href="https://tidyfun.github.io/tf/reference/tfmethods.html" class="external-link">tf_arg()</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfmethods.html" class="external-link">tf_evaluations()</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfmethods.html" class="external-link">tf_count()</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfmethods.html" class="external-link">tf_domain()</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfmethods.html" class="external-link">`tf_domain&lt;-`()</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfmethods.html" class="external-link">tf_evaluator()</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfmethods.html" class="external-link">`tf_evaluator&lt;-`()</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfmethods.html" class="external-link">tf_basis()</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfmethods.html" class="external-link">`tf_arg&lt;-`()</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfmethods.html" class="external-link">coef(<i>&lt;tfb&gt;</i>)</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfmethods.html" class="external-link">rev(<i>&lt;tf&gt;</i>)</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfmethods.html" class="external-link">is.na(<i>&lt;tf&gt;</i>)</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfmethods.html" class="external-link">is.na(<i>&lt;tfd_irreg&gt;</i>)</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfmethods.html" class="external-link">is_tf()</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfmethods.html" class="external-link">is_tfd()</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfmethods.html" class="external-link">is_reg()</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfmethods.html" class="external-link">is_tfd_reg()</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfmethods.html" class="external-link">is_irreg()</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfmethods.html" class="external-link">is_tfd_irreg()</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfmethods.html" class="external-link">is_tfb()</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfmethods.html" class="external-link">is_tfb_spline()</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfmethods.html" class="external-link">is_tfb_fpc()</a></code>
+          <code><a href="https://tidyfun.github.io/tf/reference/tfmethods.html" class="external-link">tf_arg()</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfmethods.html" class="external-link">tf_evaluations()</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfmethods.html" class="external-link">tf_count()</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfmethods.html" class="external-link">tf_domain()</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfmethods.html" class="external-link">`tf_domain&lt;-`()</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfmethods.html" class="external-link">tf_evaluator()</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfmethods.html" class="external-link">`tf_evaluator&lt;-`()</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfmethods.html" class="external-link">tf_basis()</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfmethods.html" class="external-link">`tf_arg&lt;-`()</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfmethods.html" class="external-link">coef(<i>&lt;tfb&gt;</i>)</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfmethods.html" class="external-link">rev(<i>&lt;tf&gt;</i>)</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfmethods.html" class="external-link">rev(<i>&lt;tf_mv&gt;</i>)</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfmethods.html" class="external-link">is.na(<i>&lt;tf&gt;</i>)</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfmethods.html" class="external-link">is.na(<i>&lt;tfd_irreg&gt;</i>)</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfmethods.html" class="external-link">is_tf()</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfmethods.html" class="external-link">is_tf_1d()</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfmethods.html" class="external-link">is_tfd()</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfmethods.html" class="external-link">is_reg()</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfmethods.html" class="external-link">is_tfd_reg()</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfmethods.html" class="external-link">is_irreg()</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfmethods.html" class="external-link">is_tfd_irreg()</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfmethods.html" class="external-link">is_tfb()</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfmethods.html" class="external-link">is_tfb_spline()</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfmethods.html" class="external-link">is_tfb_fpc()</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfmethods.html" class="external-link">is_tf_mv()</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfmethods.html" class="external-link">is_tfd_mv()</a></code> <code><a href="https://tidyfun.github.io/tf/reference/tfmethods.html" class="external-link">is_tfb_mv()</a></code>
 
         </dt>
         <dd>Utility functions for <code>tf</code>-objects (from tf)</dd>
@@ -619,7 +627,7 @@
           <code><a href="https://tidyfun.github.io/tf/reference/ensure_list.html" class="external-link">ensure_list()</a></code>
 
         </dt>
-        <dd>Turns any object into a list (from tf)</dd>
+        <dd>Wrap a non-list object in a list (from tf)</dd>
 
         <dt>
 

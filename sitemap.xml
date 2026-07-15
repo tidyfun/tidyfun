@@ -10,12 +10,15 @@
 <url><loc>https://tidyfun.github.io/tidyfun/articles/x04_Visualization.html</loc></url>
 <url><loc>https://tidyfun.github.io/tidyfun/articles/x05_Advice.html</loc></url>
 <url><loc>https://tidyfun.github.io/tidyfun/articles/x06_Registration.html</loc></url>
+<url><loc>https://tidyfun.github.io/tidyfun/articles/x07_Vector-valued_Functions.html</loc></url>
 <url><loc>https://tidyfun.github.io/tidyfun/authors.html</loc></url>
 <url><loc>https://tidyfun.github.io/tidyfun/index.html</loc></url>
 <url><loc>https://tidyfun.github.io/tidyfun/news/index.html</loc></url>
 <url><loc>https://tidyfun.github.io/tidyfun/reference/add_tf_aes_to_mapping.html</loc></url>
 <url><loc>https://tidyfun.github.io/tidyfun/reference/autoplot.tf.html</loc></url>
+<url><loc>https://tidyfun.github.io/tidyfun/reference/autoplot.tf_mv.html</loc></url>
 <url><loc>https://tidyfun.github.io/tidyfun/reference/build_tf_layer_data.html</loc></url>
+<url><loc>https://tidyfun.github.io/tidyfun/reference/build_tf_mv_layer_data.html</loc></url>
 <url><loc>https://tidyfun.github.io/tidyfun/reference/chf_df.html</loc></url>
 <url><loc>https://tidyfun.github.io/tidyfun/reference/dti_df.html</loc></url>
 <url><loc>https://tidyfun.github.io/tidyfun/reference/finalize_tf_ggplot.html</loc></url>

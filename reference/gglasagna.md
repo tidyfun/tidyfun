@@ -77,6 +77,7 @@ ordering of observations obtained by
 
 Other tidyfun visualization:
 [`autoplot.tf()`](https://tidyfun.github.io/tidyfun/reference/autoplot.tf.md),
+[`autoplot.tf_mv()`](https://tidyfun.github.io/tidyfun/reference/autoplot.tf_mv.md),
 [`ggcapellini`](https://tidyfun.github.io/tidyfun/reference/ggcapellini.md),
 [`ggspaghetti`](https://tidyfun.github.io/tidyfun/reference/ggspaghetti.md)
 
