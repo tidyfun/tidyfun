@@ -1,6 +1,6 @@
 Package: tidyfun
 Title: Tidy Functional Data Wrangling and Visualization
-Version: 0.1.2
+Version: 0.2.0
 Authors@R: c(
     person("Fabian", "Scheipl", , "fabian.scheipl@googlemail.com", role = c("aut", "cre", "cph"),
            comment = c(ORCID = "0000-0001-8172-3603")),
@@ -19,8 +19,6 @@ License: MIT + file LICENSE
 URL: https://github.com/tidyfun/tidyfun,
     https://tidyfun.github.io/tidyfun/
 BugReports: https://github.com/tidyfun/tidyfun/issues
-Remotes:
-    tidyfun/tf
 Depends:
     R (>= 4.1),
     tf (>= 0.5.0)

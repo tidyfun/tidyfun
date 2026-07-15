@@ -1,4 +1,4 @@
-# tidyfun (development version)
+# tidyfun 0.2.0
 
 * `ggplot2` support for multivariate functional data (`tf_mv` columns, see
   `tf::tfd_mv()`): map them with `aes(tf = ...)` in `tf_ggplot()`, with
