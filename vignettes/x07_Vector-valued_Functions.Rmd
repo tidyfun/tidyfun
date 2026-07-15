@@ -27,7 +27,9 @@ set.seed(1)
 has_fdasrvf <- requireNamespace("fdasrvf", quietly = TRUE)
 ```
 
-A `tf` vector represents a sample of functions $f: \mathbb{R} \to \mathbb{R}$.
+A `tf` vector represents a sample of functions $f: \mathbb{R} \to \mathbb{R}$
+(see the [tf vectors vignette](https://tidyfun.github.io/tidyfun/articles/x01_tf_Vectors.html)
+for an introduction to these classes and their operations).
 Many real measurement processes, though, produce several coupled signals that
 share a common argument: the `(hip, knee)` joint-angle pair sampled across a
 gait cycle, the `(longitude, latitude)` position of a hurricane sampled in

@@ -40,7 +40,9 @@ pal_5 <- viridis(7)[-(1:2)]
 set.seed(1221)
 ```
 
-This vignette introduces the `tf` class, as well as the `tfd` and `tfb` subclasses, and focuses on vectors of this class. It also illustrates operations for `tf` vectors. 
+This vignette introduces the `tf` class, as well as the `tfd` and `tfb` subclasses, and focuses on vectors of this class. It also illustrates operations for `tf` vectors.
+
+The functions in a `tf` vector are *scalar-valued*, i.e., $f: \mathbb{R} \to \mathbb{R}$. For **vector-valued** functional data $f: \mathbb{R} \to \mathbb{R}^d$ -- coupled signals sharing a common argument, like the (hip, knee) joint angles over a gait cycle or the (longitude, latitude) track of a hurricane -- `tf` provides the analogous `tfd_mv` and `tfb_mv` classes, which bundle $d$ such `tf` vectors. These are introduced in the [vector-valued functions vignette](https://tidyfun.github.io/tidyfun/articles/x07_Vector-valued_Functions.html).
 
 # `tf`-Class: Definition
 
