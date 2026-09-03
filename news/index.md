@@ -2,6 +2,8 @@
 
 ## tidyfun 0.2.0
 
+CRAN release: 2026-07-16
+
 - `ggplot2` support for multivariate functional data (`tf_mv` columns,
   see
   [`tf::tfd_mv()`](https://tidyfun.github.io/tf/reference/tfd_mv.html)):

@@ -602,7 +602,7 @@ data.frame(
 #>         registration     sd_hip    sd_knee
 #> 1                raw 8.28498797 9.54533186
 #> 2       1 arc-length 8.04009724 7.39283787
-#> 3 2 reference (knee) 7.98495998 6.28556398
+#> 3 2 reference (knee) 7.91270379 6.33047672
 #> 4          3 srvf_mv 8.20232891 8.22321203
 #> 5        4 shape (*) 0.01935199 0.02937269
 ```
@@ -735,7 +735,7 @@ rmse_per_subject <- sqrt(unlist(lapply(tf_evaluations(resid), function(m) {
 })))
 summary(rmse_per_subject)
 #>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-#>  0.1902  0.2941  0.3617  0.3635  0.4258  0.5423
+#>  0.1685  0.2931  0.3377  0.3485  0.4048  0.5658
 ```
 
 The first 2-3 FPCs explain most of the remaining within-component
@@ -765,14 +765,14 @@ also available.
 
 g_m <- tfb_mfpc(g_aligned, pve = 0.95)
 g_m
-#> tfb_mv<d=2>[39] (hip, knee): [0.025, 0.975] -> [-10.88034, 65.81107] x [0.6682493, 80.65438]
+#> tfb_mv<d=2>[39] (hip, knee): [0.025, 0.975] -> [-10.93848, 65.14214] x [0.405835, 80.19255]
 #> components in basis representation: 7 MFPCs
-#> [1]: ▆▆▅▅▄▄▃▃▂▂▂▂▃▄▅▆▇▇▆▆ | ▁▂▂▂▂▂▂▂▂▂▃▄▆▇▇▇▆▄▃▂
-#> [2]: ▇▇▇▆▅▄▃▂▂▁▁▂▃▄▅▆▇▇▇▇ | ▂▃▃▃▃▂▂▁▁▂▃▄▆▇█▇▆▅▃▂
-#> [3]: ▇▇▆▅▄▃▂▂▁▁▁▂▃▄▆▇███▇ | ▂▃▄▃▃▂▂▁▁▂▃▅▆███▇▅▃▂
-#> [4]: ▆▅▅▄▄▃▃▂▁▁▁▁▂▃▄▅▅▆▅▅ | ▁▂▂▂▂▁▁▁▁▁▂▄▅▇▇▇▆▄▁▁
-#> [5]: ▄▃▂▂▂▁▁▁▁▁▁▁▁▃▄▅▆▆▅▅ | ▁▁▁▁▁▁▁▁▁▂▂▄▅▇█▇▆▄▁▁
-#> [6]: █▇▆▅▄▄▃▃▃▂▂▂▃▄▆▇████ | ▂▃▃▂▂▂▂▁▂▂▃▄▆▇▇▇▆▄▂▂
+#> [1]: ▆▆▅▅▄▄▃▃▂▂▂▂▃▄▅▆▇▇▇▆ | ▁▂▂▂▂▂▂▂▂▂▃▄▆▇▇▇▆▄▃▂
+#> [2]: ▇▇▆▅▄▄▃▂▁▁▁▂▃▄▆▇▇▇▇▇ | ▂▃▃▃▂▂▁▁▁▂▃▄▆▇█▇▆▅▃▂
+#> [3]: ▇▇▆▅▄▃▂▂▁▁▁▂▃▄▆▇███▇ | ▂▃▄▃▃▂▂▁▁▂▃▅▇███▇▅▃▂
+#> [4]: ▆▆▅▄▄▃▃▂▁▁▁▁▂▃▄▅▅▆▅▅ | ▁▂▂▂▂▁▁▁▁▁▂▄▆▇▇▇▆▄▁▁
+#> [5]: ▄▃▂▂▂▁▁▁▁▁▁▁▂▃▄▅▆▆▅▅ | ▁▁▁▁▁▁▁▁▁▂▃▄▆▇█▇▆▄▁▁
+#> [6]: █▇▆▅▄▄▃▃▂▂▂▂▃▄▆▇████ | ▂▃▃▂▂▂▂▁▂▂▃▄▆▇▇▇▆▄▂▂
 #> 
 #>     [....]   (33 not shown)
 
@@ -782,7 +782,7 @@ ve     <- nu / sum(nu)                  # variance share per shared mode
 dim(scores)
 #> [1] 39  7
 round(head(ve, 4), 3)
-#> [1] 0.472 0.225 0.136 0.078
+#> [1] 0.465 0.224 0.138 0.084
 ```
 
 The multivariate eigenfunctions come back as a `tfd_mv` – one bivariate
@@ -834,11 +834,11 @@ data.frame(
   rmse           = round(c(rmse_mv(g_b), rmse_mv(g_m)), 3)
 )
 #>    representation stored_scores  rmse
-#> 1 independent FPC            22 0.374
-#> 2     joint MFPCA             7 1.255
+#> 1 independent FPC            23 0.359
+#> 2     joint MFPCA             7 1.228
 ```
 
-The first 2 shared modes already capture 70% of the joint variance. New
+The first 2 shared modes already capture 69% of the joint variance. New
 subjects can be projected onto this fitted basis with
 [`tf_rebase()`](https://tidyfun.github.io/tf/reference/tf_rebase.html),
 which re-scores them jointly rather than component by component.
