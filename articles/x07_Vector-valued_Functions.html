@@ -651,7 +651,7 @@ illustrates the collapse.</p>
 <span><span class="co">#&gt;         registration     sd_hip    sd_knee</span></span>
 <span><span class="co">#&gt; 1                raw 8.28498797 9.54533186</span></span>
 <span><span class="co">#&gt; 2       1 arc-length 8.04009724 7.39283787</span></span>
-<span><span class="co">#&gt; 3 2 reference (knee) 7.91270379 6.33047672</span></span>
+<span><span class="co">#&gt; 3 2 reference (knee) 7.98495998 6.28556398</span></span>
 <span><span class="co">#&gt; 4          3 srvf_mv 8.20232891 8.22321203</span></span>
 <span><span class="co">#&gt; 5        4 shape (*) 0.01935199 0.02937269</span></span></code></pre></div>
 <p>In degree units the phase rungs chip away at the spread only modestly
@@ -769,7 +769,7 @@ modes:</p>
 <span><span class="op">}</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">rmse_per_subject</span><span class="op">)</span></span>
 <span><span class="co">#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span></span>
-<span><span class="co">#&gt;  0.1685  0.2931  0.3377  0.3485  0.4048  0.5658</span></span></code></pre></div>
+<span><span class="co">#&gt;  0.1902  0.2941  0.3617  0.3635  0.4258  0.5423</span></span></code></pre></div>
 <p>The first 2-3 FPCs explain most of the remaining within-component
 variance, and the RMSE between the registered and FPC-reconstructed
 <code>(hip, knee)</code> curves is well below a degree for most
@@ -798,14 +798,14 @@ available.</p>
 <div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">g_m</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tidyfun.github.io/tf/reference/tfb_mfpc.html" class="external-link">tfb_mfpc</a></span><span class="op">(</span><span class="va">g_aligned</span>, pve <span class="op">=</span> <span class="fl">0.95</span><span class="op">)</span></span>
 <span><span class="va">g_m</span></span>
-<span><span class="co">#&gt; tfb_mv&lt;d=2&gt;[39] (hip, knee): [0.025, 0.975] -&gt; [-10.93848, 65.14214] x [0.405835, 80.19255]</span></span>
+<span><span class="co">#&gt; tfb_mv&lt;d=2&gt;[39] (hip, knee): [0.025, 0.975] -&gt; [-10.88034, 65.81107] x [0.6682493, 80.65438]</span></span>
 <span><span class="co">#&gt; components in basis representation: 7 MFPCs</span></span>
-<span><span class="co">#&gt; [1]: ▆▆▅▅▄▄▃▃▂▂▂▂▃▄▅▆▇▇▇▆ | ▁▂▂▂▂▂▂▂▂▂▃▄▆▇▇▇▆▄▃▂</span></span>
-<span><span class="co">#&gt; [2]: ▇▇▆▅▄▄▃▂▁▁▁▂▃▄▆▇▇▇▇▇ | ▂▃▃▃▂▂▁▁▁▂▃▄▆▇█▇▆▅▃▂</span></span>
-<span><span class="co">#&gt; [3]: ▇▇▆▅▄▃▂▂▁▁▁▂▃▄▆▇███▇ | ▂▃▄▃▃▂▂▁▁▂▃▅▇███▇▅▃▂</span></span>
-<span><span class="co">#&gt; [4]: ▆▆▅▄▄▃▃▂▁▁▁▁▂▃▄▅▅▆▅▅ | ▁▂▂▂▂▁▁▁▁▁▂▄▆▇▇▇▆▄▁▁</span></span>
-<span><span class="co">#&gt; [5]: ▄▃▂▂▂▁▁▁▁▁▁▁▂▃▄▅▆▆▅▅ | ▁▁▁▁▁▁▁▁▁▂▃▄▆▇█▇▆▄▁▁</span></span>
-<span><span class="co">#&gt; [6]: █▇▆▅▄▄▃▃▂▂▂▂▃▄▆▇████ | ▂▃▃▂▂▂▂▁▂▂▃▄▆▇▇▇▆▄▂▂</span></span>
+<span><span class="co">#&gt; [1]: ▆▆▅▅▄▄▃▃▂▂▂▂▃▄▅▆▇▇▆▆ | ▁▂▂▂▂▂▂▂▂▂▃▄▆▇▇▇▆▄▃▂</span></span>
+<span><span class="co">#&gt; [2]: ▇▇▇▆▅▄▃▂▂▁▁▂▃▄▅▆▇▇▇▇ | ▂▃▃▃▃▂▂▁▁▂▃▄▆▇█▇▆▅▃▂</span></span>
+<span><span class="co">#&gt; [3]: ▇▇▆▅▄▃▂▂▁▁▁▂▃▄▆▇███▇ | ▂▃▄▃▃▂▂▁▁▂▃▅▆███▇▅▃▂</span></span>
+<span><span class="co">#&gt; [4]: ▆▅▅▄▄▃▃▂▁▁▁▁▂▃▄▅▅▆▅▅ | ▁▂▂▂▂▁▁▁▁▁▂▄▅▇▇▇▆▄▁▁</span></span>
+<span><span class="co">#&gt; [5]: ▄▃▂▂▂▁▁▁▁▁▁▁▁▃▄▅▆▆▅▅ | ▁▁▁▁▁▁▁▁▁▂▂▄▅▇█▇▆▄▁▁</span></span>
+<span><span class="co">#&gt; [6]: █▇▆▅▄▄▃▃▃▂▂▂▃▄▆▇████ | ▂▃▃▂▂▂▂▁▂▂▃▄▆▇▇▇▆▄▂▂</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;     [....]   (33 not shown)</span></span>
 <span></span>
@@ -815,7 +815,7 @@ available.</p>
 <span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">scores</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 39  7</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">ve</span>, <span class="fl">4</span><span class="op">)</span>, <span class="fl">3</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 0.465 0.224 0.138 0.084</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 0.472 0.225 0.136 0.078</span></span></code></pre></div>
 <p>The multivariate eigenfunctions come back as a <code>tfd_mv</code> –
 one bivariate “curve” per mode – so each MFPC can be inspected component
 by component. The leading mode’s hip and knee parts move together, which
@@ -856,9 +856,9 @@ error in exchange for the shared coordinate system:</p>
 <span>  rmse           <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu">rmse_mv</span><span class="op">(</span><span class="va">g_b</span><span class="op">)</span>, <span class="fu">rmse_mv</span><span class="op">(</span><span class="va">g_m</span><span class="op">)</span><span class="op">)</span>, <span class="fl">3</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt;    representation stored_scores  rmse</span></span>
-<span><span class="co">#&gt; 1 independent FPC            23 0.359</span></span>
-<span><span class="co">#&gt; 2     joint MFPCA             7 1.228</span></span></code></pre></div>
-<p>The first 2 shared modes already capture 69% of the joint variance.
+<span><span class="co">#&gt; 1 independent FPC            22 0.374</span></span>
+<span><span class="co">#&gt; 2     joint MFPCA             7 1.255</span></span></code></pre></div>
+<p>The first 2 shared modes already capture 70% of the joint variance.
 New subjects can be projected onto this fitted basis with
 <code><a href="https://tidyfun.github.io/tf/reference/tf_rebase.html" class="external-link">tf_rebase()</a></code>, which re-scores them jointly rather than
 component by component.</p>

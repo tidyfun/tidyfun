@@ -332,6 +332,9 @@ ggplot2 layers for functional data
 
   Autoplot and autolayer methods for multivariate (`tf_mv`) objects
 
+- [`tf_phaseplane()`](https://tidyfun.github.io/tidyfun/reference/tf_phaseplane.md)
+  : Phase-plane representation of functional data
+
 ### Visualization & display (from tf)
 
 Base-R graphics and print formats for tf objects

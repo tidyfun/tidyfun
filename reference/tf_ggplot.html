@@ -135,6 +135,12 @@ per curve and component (add <code><a href="https://ggplot2.tidyverse.org/refere
 <li><p>Each function becomes multiple rows (one per evaluation point)</p></li>
 <li><p>Group identifiers are created to maintain function identity</p></li>
 <li><p>Non-tf columns are replicated appropriately</p></li>
+<li><p>A column <code>.arg</code> holding the argument value of each evaluation point is
+added, so it can be used in aesthetics, e.g. <code>aes(colour = .arg)</code> colours
+each curve segment by its position along the domain – useful for
+trajectory plots of <code>tf_mv</code> objects or planar curves <code>aes(tf_x, tf_y)</code>,
+where the argument is not shown on an axis. (<code>.arg</code> and <code>.component</code> are
+reserved names: <code>data</code> must not contain columns with these names.)</p></li>
 </ul></div>
 
     <div class="section level2">

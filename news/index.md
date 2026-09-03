@@ -4,6 +4,24 @@
 
 CRAN release: 2026-07-16
 
+- Trajectory plots of `tf_mv` objects (and all other
+  [`tf_ggplot()`](https://tidyfun.github.io/tidyfun/reference/tf_ggplot.md)
+  layers) now provide a column `.arg` with the argument value of each
+  evaluation point, so `aes(colour = .arg)` colours curve segments by
+  their position along the domain.
+  [`autoplot()`](https://ggplot2.tidyverse.org/reference/autoplot.html)/[`autolayer()`](https://ggplot2.tidyverse.org/reference/autolayer.html)
+  for `tf_mv` objects gain a `colour_by_arg` argument for the same
+  purpose.
+- New
+  [`tf_phaseplane()`](https://tidyfun.github.io/tidyfun/reference/tf_phaseplane.md)
+  for phase-plane plots (as in
+  [`fda::phaseplanePlot()`](https://rdrr.io/pkg/fda/man/phaseplanePlot.html)):
+  turns a univariate `tf` into a two-component `tf_mv` of derivatives
+  (velocity vs. acceleration by default) that can be plotted as a
+  trajectory with
+  [`tf_ggplot()`](https://tidyfun.github.io/tidyfun/reference/tf_ggplot.md)
+  or
+  [`autoplot()`](https://ggplot2.tidyverse.org/reference/autoplot.html).
 - `ggplot2` support for multivariate functional data (`tf_mv` columns,
   see
   [`tf::tfd_mv()`](https://tidyfun.github.io/tf/reference/tfd_mv.html)):

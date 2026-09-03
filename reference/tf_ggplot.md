@@ -90,6 +90,14 @@ When tf aesthetics are used, the data is automatically transformed:
 
 - Non-tf columns are replicated appropriately
 
+- A column `.arg` holding the argument value of each evaluation point is
+  added, so it can be used in aesthetics, e.g. `aes(colour = .arg)`
+  colours each curve segment by its position along the domain – useful
+  for trajectory plots of `tf_mv` objects or planar curves
+  `aes(tf_x, tf_y)`, where the argument is not shown on an axis. (`.arg`
+  and `.component` are reserved names: `data` must not contain columns
+  with these names.)
+
 ## Examples
 
 ``` r

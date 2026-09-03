@@ -242,6 +242,107 @@ autoplot(gait_mv)
 
 ![](x04_Visualization_files/figure-html/mv-autoplot-1.png)
 
+#### Colouring trajectories by argument
+
+A trajectory plot hides *where* along the domain each point lies – the
+argument (here: the phase of the gait cycle) is not shown on any axis.
+Every
+[`tf_ggplot()`](https://tidyfun.github.io/tidyfun/reference/tf_ggplot.md)
+layer provides a column `.arg` holding the argument value of each
+evaluation point, so you can map it to the `colour` aesthetic to colour
+each segment of a curve by its position along the domain.
+[`autoplot()`](https://ggplot2.tidyverse.org/reference/autoplot.html)
+offers the same via `colour_by_arg = TRUE`:
+
+``` r
+
+gait_df |>
+  tf_ggplot(aes(tf = mv, colour = .arg)) +
+  geom_path() +
+  scale_colour_viridis_c("phase") +
+  labs(x = "hip angle", y = "knee angle")
+```
+
+![](x04_Visualization_files/figure-html/mv-arg-colour-1.png)
+
+``` r
+
+
+autoplot(gait_mv, colour_by_arg = TRUE)
+```
+
+![](x04_Visualization_files/figure-html/mv-arg-colour-2.png)
+
+#### Phase-plane plots
+
+Phase-plane plots (see
+[`fda::phaseplanePlot()`](https://rdrr.io/pkg/fda/man/phaseplanePlot.html))
+display a *univariate* function through two of its derivatives, most
+commonly the first derivative (velocity) against the second
+(acceleration), so that cyclic or oscillatory behaviour shows up as
+loops.
+[`tf_phaseplane()`](https://tidyfun.github.io/tidyfun/reference/tf_phaseplane.md)
+turns a `tf` vector into a two-component `tf_mv` object of derivatives
+(components `D1` and `D2` by default; use `order` to pick other
+derivatives, `0` denoting the function itself) that can be plotted as a
+trajectory like any other `tf_mv`:
+
+``` r
+
+# derivatives are computed by finite differences, so we use smoothed knee
+# angles on a fine grid
+knee_smooth <- tfb(gait$knee_angle, k = 12, verbose = FALSE) |>
+  tfd(arg = seq(0.025, 0.975, by = 0.005))
+knee_pp <- tf_phaseplane(knee_smooth)
+knee_pp
+## tfd_mv<d=2>[39] (D1, D2): [0.025, 0.975] -> [-586.5944, 462.8204] x [-7663.794, 9187.194]
+## components based on 191 evaluations each, interpolation by tf_approx_linear
+## [1]: ▆▆▅▅▅▅▅▅▅▅▅▆▆▆▇▇▇▇▆▅▄▃▂▂▂▃ | ▄▄▄▄▄▄▄▅▅▅▅▅▅▅▅▄▄▃▃▂▂▃▄▅▅▅
+## [2]: ▆▆▅▄▄▄▄▄▅▅▅▅▆▇███▇▆▅▄▃▂▂▃▃ | ▄▃▃▃▄▅▅▅▅▄▅▅▆▆▆▄▃▂▂▂▂▃▄▅▅▅
+## [3]: ▆▆▅▅▄▄▄▄▄▄▅▅▆▇███▇▆▅▄▂▁▁▂▃ | ▄▃▃▃▄▄▄▄▅▅▅▅▆▇▆▄▃▃▂▂▁▂▄▆▅▅
+## [4]: ▆▆▅▅▄▄▄▅▅▅▅▆▆▇██▇▆▅▄▃▁▁▂▃▄ | ▄▃▃▃▄▄▅▅▄▄▅▆▆▆▅▃▂▂▃▃▁▁▅█▇▅
+## [5]: ▅▅▅▅▅▅▅▅▅▅▅▆▆▇██▇▆▅▄▃▁▁▂▃▄ | ▄▄▄▄▅▅▄▄▄▅▅▅▆▆▆▄▃▂▂▂▁▂▅█▇▅
+## [6]: ▆▅▅▅▅▅▄▄▄▄▅▅▅▆▇▇▇▇▆▆▄▃▂▂▂▂ | ▄▄▄▄▄▄▄▄▄▄▅▅▆▆▆▅▄▃▃▂▂▂▃▄▄▄
+## 
+##     [....]   (33 not shown)
+
+tibble(id = factor(seq_along(knee_pp)), pp = knee_pp) |>
+  tf_ggplot(aes(tf = pp, colour = .arg)) +
+  geom_path(alpha = 0.5) +
+  geom_hline(yintercept = 0, linetype = 2) +
+  geom_vline(xintercept = 0, linetype = 2) +
+  scale_colour_viridis_c("phase") +
+  labs(x = "knee angle velocity", y = "knee angle acceleration")
+```
+
+![](x04_Visualization_files/figure-html/phaseplane-1.png)
+
+To mark specific argument values as in
+[`fda::phaseplanePlot()`](https://rdrr.io/pkg/fda/man/phaseplanePlot.html),
+evaluate the phase-plane object at those points with
+[`tf_unnest()`](https://tidyfun.github.io/tidyfun/reference/tf_unnest.md)
+(which yields one column per component for `tf_mv` input) and add a text
+layer with its own data. Here we label the phase-plane of the mean knee
+angle at every tenth of the gait cycle:
+
+``` r
+
+mean_pp <- tf_phaseplane(mean(knee_smooth))
+marks <- tf_unnest(mean_pp, arg = seq(0.1, 0.9, by = 0.1))
+tibble(pp = mean_pp) |>
+  tf_ggplot(aes(tf = pp)) +
+  geom_path() +
+  geom_hline(yintercept = 0, linetype = 2) +
+  geom_vline(xintercept = 0, linetype = 2) +
+  geom_label(
+    data = marks, aes(x = D1, y = D2, label = arg),
+    inherit.aes = FALSE
+  ) +
+  labs(x = "knee angle velocity", y = "knee angle acceleration")
+```
+
+![](x04_Visualization_files/figure-html/phaseplane-labels-1.png)
+
 To unnest a `tf_mv` column to a “wide” long table yourself (one value
 column per component), use
 [`tf_unnest()`](https://tidyfun.github.io/tidyfun/reference/tf_unnest.md):

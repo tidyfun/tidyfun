@@ -8,10 +8,10 @@ Plotting methods for vector-valued functional data (`tf_mv`, functions
 
 ``` r
 # S3 method for class 'tf_mv'
-autoplot(object, ..., type = NULL)
+autoplot(object, ..., type = NULL, colour_by_arg = FALSE)
 
 # S3 method for class 'tf_mv'
-autolayer(object, ..., type = NULL)
+autolayer(object, ..., type = NULL, colour_by_arg = FALSE)
 ```
 
 ## Arguments
@@ -32,6 +32,11 @@ autolayer(object, ..., type = NULL)
 
   `"trajectory"`, `"facet"`, or `NULL` to resolve from the number of
   components (see Details).
+
+- colour_by_arg:
+
+  colour the segments of trajectories by their argument value? Defaults
+  to `FALSE`. Only available for `type = "trajectory"`.
 
 ## Value
 
@@ -56,13 +61,25 @@ returns a single layer (no faceting) and works with plain
 as well as
 [`tf_ggplot()`](https://tidyfun.github.io/tidyfun/reference/tf_ggplot.md).
 
+Trajectory plots lose the information about *where* along the domain a
+point lies. Set `colour_by_arg = TRUE` to colour each segment of the
+trajectories by its argument value. This maps the `.arg` column that
+[`tf_ggplot()`](https://tidyfun.github.io/tidyfun/reference/tf_ggplot.md)
+provides to the `colour` aesthetic, so
+`autoplot(mv, colour_by_arg = TRUE)` is equivalent to
+`tf_ggplot(data, aes(tf = mv, colour = .arg)) + geom_path()`.
+
 ## See also
+
+[`tf_phaseplane()`](https://tidyfun.github.io/tidyfun/reference/tf_phaseplane.md)
+for phase-plane plots of univariate functions.
 
 Other tidyfun visualization:
 [`autoplot.tf()`](https://tidyfun.github.io/tidyfun/reference/autoplot.tf.md),
 [`ggcapellini`](https://tidyfun.github.io/tidyfun/reference/ggcapellini.md),
 [`gglasagna()`](https://tidyfun.github.io/tidyfun/reference/gglasagna.md),
-[`ggspaghetti`](https://tidyfun.github.io/tidyfun/reference/ggspaghetti.md)
+[`ggspaghetti`](https://tidyfun.github.io/tidyfun/reference/ggspaghetti.md),
+[`tf_phaseplane()`](https://tidyfun.github.io/tidyfun/reference/tf_phaseplane.md)
 
 ## Examples
 
@@ -71,5 +88,11 @@ library(ggplot2)
 mv <- tfd_mv(list(x = tf_rgp(5), y = tf_rgp(5)))
 autoplot(mv)
 
+autoplot(mv, colour_by_arg = TRUE)
+
 ggplot() + autolayer(mv)
+
+# phase-plane plot of a univariate function (velocity vs. acceleration):
+f <- tf_rgp(3, arg = 101L, nugget = 0)
+autoplot(tf_phaseplane(f), colour_by_arg = TRUE)
 ```
