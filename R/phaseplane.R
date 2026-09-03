@@ -25,11 +25,13 @@
 #'   x- and y-axis. Defaults to `c(1, 2)` (velocity vs. acceleration); `0`
 #'   means the function itself. Maximal order for [tf::tfb_spline()] objects
 #'   is 2.
-#' @param arg optional grid on which to evaluate the derivatives; defaults to
-#'   `f`'s own grid, see [tf::tf_derive()].
+#' @param arg optional grid on which to evaluate the derivatives (and, for
+#'   `order` 0, the function itself); defaults to `f`'s own grid, see
+#'   [tf::tf_derive()].
 #' @returns A two-component `tf_mv` object (`tfb_mv` for `tfb` input if both
-#'   derivatives can be represented in basis form, otherwise `tfd_mv`) with
-#'   components named `"D<order>"`, e.g. `"D1"` and `"D2"`.
+#'   components can be represented in basis form and no `arg` is given,
+#'   otherwise `tfd_mv`) with components named `"D<order>"`, e.g. `"D1"` and
+#'   `"D2"`.
 #' @examples
 #' library(ggplot2)
 #' arg <- seq(0, 1, length.out = 101)
@@ -72,22 +74,26 @@ tf_phaseplane <- function(f, order = c(1L, 2L), arg = NULL) {
     )
   }
   order <- as.integer(order)
+  # tfb objects are differentiated analytically on their own grid and
+  # evaluated on `arg` afterwards: tf_derive(<tfb>, arg = ) yields objects that
+  # cannot be evaluated reliably on other grids.
   derive <- function(o) {
     if (o == 0L) {
-      return(f)
-    }
-    if (is.null(arg)) {
+      f
+    } else if (is.null(arg) || is_tfb(f)) {
       tf_derive(f, order = o)
     } else {
       tf_derive(f, arg = arg, order = o)
     }
   }
   components <- stats::setNames(map(order, derive), paste0("D", order))
-  if (all(map_lgl(components, is_tfb))) {
+  if (is.null(arg) && all(map_lgl(components, is_tfb))) {
     return(tfb_mv(components))
   }
-  # mixed representations (e.g. tfb with non-identity link derives to tfd):
-  # coerce everything to tfd for a valid tf_mv
-  components <- map(components, \(x) if (is_tfb(x)) tfd(x) else x)
+  # mixed representations (e.g. tfb with non-identity link derives to tfd) or
+  # an explicit `arg`: coerce everything to tfd on a common grid
+  components <- map(components, \(x) {
+    if (is_tfb(x) || !is.null(arg)) tfd(x, arg = arg %||% tf_arg(x)) else x
+  })
   tfd_mv(components)
 }

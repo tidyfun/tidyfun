@@ -47,6 +47,15 @@ test_that("tf_phaseplane evaluates on a user-supplied arg grid", {
   grid <- seq(0, 1, length.out = 26)
   pp <- tf_phaseplane(f, arg = grid)
   expect_equal(tf_arg(pp), grid)
+  # order 0 evaluates the function itself on `arg`, too
+  pp0 <- tf_phaseplane(f, order = c(0, 1), arg = grid)
+  expect_equal(tf_arg(pp0), grid)
+  expect_equal(tf_arg(tf_component(pp0, 1)), grid)
+  expect_equal(tf_component(pp0, 1), tfd(f, arg = grid))
+  # tfb input with `arg` yields all components on that grid
+  fb <- tfb(f, k = 15, verbose = FALSE)
+  ppb <- tf_phaseplane(fb, order = c(0, 2), arg = grid)
+  expect_equal(tf_arg(ppb), grid)
 })
 
 test_that("tf_phaseplane keeps tfb input in basis representation", {

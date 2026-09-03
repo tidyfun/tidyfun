@@ -396,6 +396,13 @@ test_that("a user column named .arg errors informatively", {
     ggplot_build(tf_ggplot(d3, aes(tf = func)) + geom_line()),
     "reserved"
   )
+  # .component is reserved in univariate layers as well
+  d4 <- create_test_tf_data(n_funcs = 3, n_points = 11)
+  d4$.component <- 1:3
+  expect_error(
+    ggplot_build(tf_ggplot(d4, aes(tf = func)) + geom_line()),
+    "reserved"
+  )
 })
 
 test_that("autoplot/autolayer colour trajectories by arg on request", {

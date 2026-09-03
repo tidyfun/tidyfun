@@ -14,13 +14,15 @@ x- and y-axis. Defaults to \code{c(1, 2)} (velocity vs. acceleration); \code{0}
 means the function itself. Maximal order for \code{\link[tf:tfb_spline]{tf::tfb_spline()}} objects
 is 2.}
 
-\item{arg}{optional grid on which to evaluate the derivatives; defaults to
-\code{f}'s own grid, see \code{\link[tf:tf_derive]{tf::tf_derive()}}.}
+\item{arg}{optional grid on which to evaluate the derivatives (and, for
+\code{order} 0, the function itself); defaults to \code{f}'s own grid, see
+\code{\link[tf:tf_derive]{tf::tf_derive()}}.}
 }
 \value{
 A two-component \code{tf_mv} object (\code{tfb_mv} for \code{tfb} input if both
-derivatives can be represented in basis form, otherwise \code{tfd_mv}) with
-components named \code{"D<order>"}, e.g. \code{"D1"} and \code{"D2"}.
+components can be represented in basis form and no \code{arg} is given,
+otherwise \code{tfd_mv}) with components named \code{"D<order>"}, e.g. \code{"D1"} and
+\code{"D2"}.
 }
 \description{
 Turns a univariate \code{tf} vector into a two-component \code{\link[tf:tfd_mv]{tf::tfd_mv()}} /

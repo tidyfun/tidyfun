@@ -870,7 +870,7 @@ build_tf_layer_data <- function(
     }
   }
 
-  check_reserved_tf_columns(work_data, ".arg")
+  check_reserved_tf_columns(work_data, c(".arg", ".component"))
   long_data <- left_join(tf_long, work_data, by = ".row_id_") |>
     select(-.row_id_)
   # user-facing copy of the evaluation grid, e.g. for aes(colour = .arg)
