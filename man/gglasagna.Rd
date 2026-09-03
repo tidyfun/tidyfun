@@ -80,6 +80,7 @@ Other tidyfun visualization:
 \code{\link[=autoplot.tf]{autoplot.tf()}},
 \code{\link[=autoplot.tf_mv]{autoplot.tf_mv()}},
 \code{\link{ggcapellini}},
-\code{\link{ggspaghetti}}
+\code{\link{ggspaghetti}},
+\code{\link[=tf_phaseplane]{tf_phaseplane()}}
 }
 \concept{tidyfun visualization}

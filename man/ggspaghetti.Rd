@@ -178,6 +178,7 @@ Other tidyfun visualization:
 \code{\link[=autoplot.tf]{autoplot.tf()}},
 \code{\link[=autoplot.tf_mv]{autoplot.tf_mv()}},
 \code{\link{ggcapellini}},
-\code{\link[=gglasagna]{gglasagna()}}
+\code{\link[=gglasagna]{gglasagna()}},
+\code{\link[=tf_phaseplane]{tf_phaseplane()}}
 }
 \concept{tidyfun visualization}

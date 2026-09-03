@@ -36,6 +36,7 @@ Other tidyfun visualization:
 \code{\link[=autoplot.tf_mv]{autoplot.tf_mv()}},
 \code{\link{ggcapellini}},
 \code{\link[=gglasagna]{gglasagna()}},
-\code{\link{ggspaghetti}}
+\code{\link{ggspaghetti}},
+\code{\link[=tf_phaseplane]{tf_phaseplane()}}
 }
 \concept{tidyfun visualization}

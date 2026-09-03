@@ -1,5 +1,14 @@
 # tidyfun 0.2.0
 
+* Trajectory plots of `tf_mv` objects (and all other `tf_ggplot()` layers) now
+  provide a column `.arg` with the argument value of each evaluation point, so
+  `aes(colour = .arg)` colours curve segments by their position along the
+  domain. `autoplot()`/`autolayer()` for `tf_mv` objects gain a
+  `colour_by_arg` argument for the same purpose.
+* New `tf_phaseplane()` for phase-plane plots (as in `fda::phaseplanePlot()`):
+  turns a univariate `tf` into a two-component `tf_mv` of derivatives
+  (velocity vs. acceleration by default) that can be plotted as a trajectory
+  with `tf_ggplot()` or `autoplot()`.
 * `ggplot2` support for multivariate functional data (`tf_mv` columns, see
   `tf::tfd_mv()`): map them with `aes(tf = ...)` in `tf_ggplot()`, with
   `type = "facet"` (value-vs-arg curves, one panel per output dimension) or

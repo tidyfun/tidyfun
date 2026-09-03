@@ -188,6 +188,58 @@ tibble(hip = gait$hip_angle, knee = gait$knee_angle) |>
 autoplot(gait_mv)
 ```
 
+### Colouring trajectories by argument
+
+A trajectory plot hides *where* along the domain each point lies -- the argument (here: the phase of the gait cycle) is not shown on any axis. Every `tf_ggplot()` layer provides a column `.arg` holding the argument value of each evaluation point, so you can map it to the `colour` aesthetic to colour each segment of a curve by its position along the domain. `autoplot()` offers the same via `colour_by_arg = TRUE`:
+
+```{r mv-arg-colour}
+gait_df |>
+  tf_ggplot(aes(tf = mv, colour = .arg)) +
+  geom_path() +
+  scale_colour_viridis_c("phase") +
+  labs(x = "hip angle", y = "knee angle")
+
+autoplot(gait_mv, colour_by_arg = TRUE)
+```
+
+### Phase-plane plots
+
+Phase-plane plots (see `fda::phaseplanePlot()`) display a *univariate* function through two of its derivatives, most commonly the first derivative (velocity) against the second (acceleration), so that cyclic or oscillatory behaviour shows up as loops. `tf_phaseplane()` turns a `tf` vector into a two-component `tf_mv` object of derivatives (components `D1` and `D2` by default; use `order` to pick other derivatives, `0` denoting the function itself) that can be plotted as a trajectory like any other `tf_mv`:
+
+```{r phaseplane}
+# derivatives are computed by finite differences, so we use smoothed knee
+# angles on a fine grid
+knee_smooth <- tfb(gait$knee_angle, k = 12, verbose = FALSE) |>
+  tfd(arg = seq(0.025, 0.975, by = 0.005))
+knee_pp <- tf_phaseplane(knee_smooth)
+knee_pp
+
+tibble(id = factor(seq_along(knee_pp)), pp = knee_pp) |>
+  tf_ggplot(aes(tf = pp, colour = .arg)) +
+  geom_path(alpha = 0.5) +
+  geom_hline(yintercept = 0, linetype = 2) +
+  geom_vline(xintercept = 0, linetype = 2) +
+  scale_colour_viridis_c("phase") +
+  labs(x = "knee angle velocity", y = "knee angle acceleration")
+```
+
+To mark specific argument values as in `fda::phaseplanePlot()`, evaluate the phase-plane object at those points with `tf_unnest()` (which yields one column per component for `tf_mv` input) and add a text layer with its own data. Here we label the phase-plane of the mean knee angle at every tenth of the gait cycle:
+
+```{r phaseplane-labels}
+mean_pp <- tf_phaseplane(mean(knee_smooth))
+marks <- tf_unnest(mean_pp, arg = seq(0.1, 0.9, by = 0.1))
+tibble(pp = mean_pp) |>
+  tf_ggplot(aes(tf = pp)) +
+  geom_path() +
+  geom_hline(yintercept = 0, linetype = 2) +
+  geom_vline(xintercept = 0, linetype = 2) +
+  geom_label(
+    data = marks, aes(x = D1, y = D2, label = arg),
+    inherit.aes = FALSE
+  ) +
+  labs(x = "knee angle velocity", y = "knee angle acceleration")
+```
+
 To unnest a `tf_mv` column to a "wide" long table yourself (one value column per component), use `tf_unnest()`:
 
 ```{r mv-unnest}
