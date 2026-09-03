@@ -338,3 +338,102 @@ test_that("covariates named like generated mv columns don't break the build", {
     "reserved"
   )
 })
+
+# Colouring trajectories by argument ------------------------------------------
+
+test_that("trajectory long data exposes .arg for aesthetics", {
+  set.seed(200)
+  d <- create_test_tf_mv_data(d = 2, n_funcs = 3, n_points = 11)
+  p <- tf_ggplot(d, aes(tf = mv, colour = .arg)) + geom_path()
+  b <- ggplot_build(p)
+  ld <- layer_data(p)
+  # colour varies within each curve: one distinct colour per grid point
+  expect_equal(length(unique(ld$colour)), 11)
+  expect_equal(length(unique(ld$colour[ld$group == ld$group[1]])), 11)
+  # the continuous colour scale is trained on the arg grid
+  expect_equal(range(b$plot$scales$get_scales("colour")$range$range), c(0, 1))
+  # the .arg column is the exact evaluation grid, ordered per curve
+  built_layer <- b$plot@layers[[1]]
+  expect_true(".arg" %in% names(built_layer$data))
+  expect_equal(
+    built_layer$data$.arg,
+    rep(seq(0, 1, length.out = 11), 3)
+  )
+})
+
+test_that(".arg is available in facet, planar tf_x/tf_y and univariate layers", {
+  set.seed(201)
+  d <- create_test_tf_mv_data(d = 3, n_funcs = 2, n_points = 11)
+  p <- tf_ggplot(d, aes(tf = mv, colour = .arg), type = "facet") + geom_line()
+  ld <- layer_data(p)
+  expect_equal(length(unique(ld$colour)), 11)
+
+  d2 <- tibble::tibble(fx = tf_rgp(2, 11L), fy = tf_rgp(2, 11L))
+  p2 <- tf_ggplot(d2, aes(tf_x = fx, tf_y = fy, colour = .arg)) + geom_path()
+  ld2 <- layer_data(p2)
+  expect_equal(length(unique(ld2$colour)), 11)
+  expect_equal(length(unique(ld2$group)), 2)
+
+  d3 <- create_test_tf_data(n_funcs = 2, n_points = 11)
+  p3 <- tf_ggplot(d3, aes(tf = func, colour = .arg)) + geom_line()
+  ld3 <- layer_data(p3)
+  expect_equal(length(unique(ld3$colour)), 11)
+  # .arg is a copy of the layer's arg grid (mapped to x here)
+  expect_equal(ld3$x, ggplot_build(p3)$plot@layers[[1]]$data$.arg)
+})
+
+test_that("a user column named .arg errors informatively", {
+  set.seed(202)
+  d <- create_test_tf_mv_data(d = 2, n_funcs = 3, n_points = 11)
+  d$.arg <- 1:3
+  expect_error(
+    ggplot_build(tf_ggplot(d, aes(tf = mv)) + geom_path()),
+    "reserved"
+  )
+  d3 <- create_test_tf_data(n_funcs = 3, n_points = 11)
+  d3$.arg <- 1:3
+  expect_error(
+    ggplot_build(tf_ggplot(d3, aes(tf = func)) + geom_line()),
+    "reserved"
+  )
+  # .component is reserved in univariate layers as well
+  d4 <- create_test_tf_data(n_funcs = 3, n_points = 11)
+  d4$.component <- 1:3
+  expect_error(
+    ggplot_build(tf_ggplot(d4, aes(tf = func)) + geom_line()),
+    "reserved"
+  )
+})
+
+test_that("autoplot/autolayer colour trajectories by arg on request", {
+  set.seed(203)
+  mv <- create_test_tf_mv(d = 2, n_funcs = 3, n_points = 11)
+
+  p <- autoplot(mv, colour_by_arg = TRUE)
+  expect_true(is_tf_ggplot(p))
+  b <- ggplot_build(p)
+  expect_s3_class(b$plot@layers[[1]]$geom, "GeomPath")
+  expect_equal(length(unique(b$data[[1]]$colour)), 11)
+  expect_equal(b$plot@labels$colour, "arg")
+  # explicit labs() still win
+  b2 <- ggplot_build(autoplot(mv, colour_by_arg = TRUE) + labs(colour = "t"))
+  expect_equal(b2$plot@labels$colour, "t")
+  # default: no colour mapping
+  b0 <- ggplot_build(autoplot(mv))
+  expect_equal(length(unique(b0$data[[1]]$colour)), 1)
+
+  bl <- ggplot_build(ggplot() + autolayer(mv, colour_by_arg = TRUE))
+  expect_equal(length(unique(bl$data[[1]]$colour)), 11)
+  bl2 <- ggplot_build(tf_ggplot() + autolayer(mv, colour_by_arg = TRUE))
+  expect_equal(length(unique(bl2$data[[1]]$colour)), 11)
+})
+
+test_that("colour_by_arg is rejected for facet displays and bad input", {
+  set.seed(204)
+  mv2 <- create_test_tf_mv(d = 2, n_funcs = 2, n_points = 11)
+  mv3 <- create_test_tf_mv(d = 3, n_funcs = 2, n_points = 11)
+  expect_error(autoplot(mv3, colour_by_arg = TRUE), "trajectory")
+  expect_error(autoplot(mv2, type = "facet", colour_by_arg = TRUE), "trajectory")
+  expect_error(autolayer(mv3, colour_by_arg = TRUE), "trajectory")
+  expect_error(autoplot(mv2, colour_by_arg = "yes"), "TRUE")
+})

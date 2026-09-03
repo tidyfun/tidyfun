@@ -5,9 +5,9 @@
 \alias{autolayer.tf_mv}
 \title{Autoplot and autolayer methods for multivariate (\code{tf_mv}) objects}
 \usage{
-\method{autoplot}{tf_mv}(object, ..., type = NULL)
+\method{autoplot}{tf_mv}(object, ..., type = NULL, colour_by_arg = FALSE)
 
-\method{autolayer}{tf_mv}(object, ..., type = NULL)
+\method{autolayer}{tf_mv}(object, ..., type = NULL, colour_by_arg = FALSE)
 }
 \arguments{
 \item{object}{a \code{tf_mv} object}
@@ -16,6 +16,9 @@
 
 \item{type}{\code{"trajectory"}, \code{"facet"}, or \code{NULL} to resolve from the number of
 components (see Details).}
+
+\item{colour_by_arg}{colour the segments of trajectories by their argument
+value? Defaults to \code{FALSE}. Only available for \code{type = "trajectory"}.}
 }
 \value{
 A \code{\link[=tf_ggplot]{tf_ggplot()}} object for \code{autoplot()}, a \code{\link[ggplot2:layer]{ggplot2::layer()}} for
@@ -31,20 +34,34 @@ the planar curve x(t) vs y(t) (drawn with \code{\link[ggplot2:geom_path]{geom_pa
 argument order). Otherwise the default is \code{"facet"}: value-vs-arg curves with
 one panel per output dimension. \code{autolayer()} returns a single layer (no
 faceting) and works with plain \code{\link[ggplot2:ggplot]{ggplot2::ggplot()}} as well as \code{\link[=tf_ggplot]{tf_ggplot()}}.
+
+Trajectory plots lose the information about \emph{where} along the domain a
+point lies. Set \code{colour_by_arg = TRUE} to colour each segment of the
+trajectories by its argument value. This maps the \code{.arg} column that
+\code{\link[=tf_ggplot]{tf_ggplot()}} provides to the \code{colour} aesthetic, so
+\code{autoplot(mv, colour_by_arg = TRUE)} is equivalent to
+\code{tf_ggplot(data, aes(tf = mv, colour = .arg)) + geom_path()}.
 }
 \examples{
 \dontshow{if (rlang::is_installed("ggplot2")) withAutoprint(\{ # examplesIf}
 library(ggplot2)
 mv <- tfd_mv(list(x = tf_rgp(5), y = tf_rgp(5)))
 autoplot(mv)
+autoplot(mv, colour_by_arg = TRUE)
 ggplot() + autolayer(mv)
+# phase-plane plot of a univariate function (velocity vs. acceleration):
+f <- tf_rgp(3, arg = 101L, nugget = 0)
+autoplot(tf_phaseplane(f), colour_by_arg = TRUE)
 \dontshow{\}) # examplesIf}
 }
 \seealso{
+\code{\link[=tf_phaseplane]{tf_phaseplane()}} for phase-plane plots of univariate functions.
+
 Other tidyfun visualization:
 \code{\link[=autoplot.tf]{autoplot.tf()}},
 \code{\link{ggcapellini}},
 \code{\link[=gglasagna]{gglasagna()}},
-\code{\link{ggspaghetti}}
+\code{\link{ggspaghetti}},
+\code{\link[=tf_phaseplane]{tf_phaseplane()}}
 }
 \concept{tidyfun visualization}

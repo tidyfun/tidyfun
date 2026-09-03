@@ -62,6 +62,12 @@ When tf aesthetics are used, the data is automatically transformed:
 \item Each function becomes multiple rows (one per evaluation point)
 \item Group identifiers are created to maintain function identity
 \item Non-tf columns are replicated appropriately
+\item A column \code{.arg} holding the argument value of each evaluation point is
+added, so it can be used in aesthetics, e.g. \code{aes(colour = .arg)} colours
+each curve segment by its position along the domain -- useful for
+trajectory plots of \code{tf_mv} objects or planar curves \code{aes(tf_x, tf_y)},
+where the argument is not shown on an axis. (\code{.arg} and \code{.component} are
+reserved names: \code{data} must not contain columns with these names.)
 }
 }
 \examples{

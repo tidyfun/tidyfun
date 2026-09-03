@@ -36,6 +36,12 @@
 #' - Each function becomes multiple rows (one per evaluation point)
 #' - Group identifiers are created to maintain function identity
 #' - Non-tf columns are replicated appropriately
+#' - A column `.arg` holding the argument value of each evaluation point is
+#'   added, so it can be used in aesthetics, e.g. `aes(colour = .arg)` colours
+#'   each curve segment by its position along the domain -- useful for
+#'   trajectory plots of `tf_mv` objects or planar curves `aes(tf_x, tf_y)`,
+#'   where the argument is not shown on an axis. (`.arg` and `.component` are
+#'   reserved names: `data` must not contain columns with these names.)
 #'
 #' @return A tf_ggplot object that inherits from ggplot
 #'
@@ -864,8 +870,11 @@ build_tf_layer_data <- function(
     }
   }
 
+  check_reserved_tf_columns(work_data, c(".arg", ".component"))
   long_data <- left_join(tf_long, work_data, by = ".row_id_") |>
     select(-.row_id_)
+  # user-facing copy of the evaluation grid, e.g. for aes(colour = .arg)
+  long_data$.arg <- long_data[[arg_col]]
 
   # Build the layer mapping
   new_mapping <- parsed_aes$regular_aes
@@ -938,6 +947,29 @@ build_tf_layer_data <- function(
   )
 
   list(long_data = long_data, new_mapping = new_mapping)
+}
+
+# Abort if `data` contains a column whose name tf_ggplot() reserves for the
+# user-facing columns it generates in every layer's long-format data
+# (`.arg`: the evaluation grid; `.component`: the tf_mv component). These
+# names cannot be made collision-safe because users reference them directly,
+# e.g. in aes(colour = .arg) or facet_wrap(~.component).
+check_reserved_tf_columns <- function(data, reserved, call = rlang::caller_env()) {
+  clash <- intersect(reserved, names(data))
+  if (length(clash)) {
+    cli::cli_abort(
+      c(
+        "Column{?s} {.val {clash}} in {.arg data} collide{?s/} with the
+         column{?s} generated for tf layers.",
+        i = "Rename {cli::qty(length(clash))}{?that column/those columns}:
+         {.val {reserved}} {?is/are} reserved for use in aesthetics and
+         facets (e.g. {.code aes(colour = .arg)},
+         {.code facet_wrap(~.component)})."
+      ),
+      call = call
+    )
+  }
+  invisible(data)
 }
 
 # Resolve the tf_mv display type: NULL defaults to "trajectory" for exactly 2
@@ -1016,14 +1048,7 @@ build_tf_mv_layer_data <- function(
   # would get .x/.y-suffixed by the join while the mapping still references
   # the bare name). `.component` is user-facing (facet_wrap(~.component)) and
   # cannot be renamed, so a colliding covariate is an error.
-  if (".component" %in% names(work_data)) {
-    cli::cli_abort(c(
-      "Column {.val .component} in {.arg data} collides with the component
-       column generated for {.cls tf_mv} layers.",
-      i = "Rename that column: {.val .component} is reserved for faceting
-       mv displays (e.g. {.code facet_wrap(~.component)})."
-    ))
-  }
+  check_reserved_tf_columns(work_data, c(".arg", ".component"))
   gen_col <- vapply(
     c(
       ".row_id_",
@@ -1048,6 +1073,7 @@ build_tf_mv_layer_data <- function(
     names(tj) <- unname(gen_col[names(tj)])
     long_data <- left_join(tj, work_data, by = gen_col[[".row_id_"]]) |>
       select(-all_of(gen_col[[".row_id_"]]))
+    long_data$.arg <- long_data[[gen_col[[".mv_arg"]]]]
     new_mapping$x <- rlang::sym(gen_col[[".mv_x"]])
     new_mapping$y <- rlang::sym(gen_col[[".mv_y"]])
     new_mapping$group <- rlang::sym(gen_col[[".mv_id"]])
@@ -1063,6 +1089,7 @@ build_tf_mv_layer_data <- function(
     names(lg)[names(lg) == ".mv_group"] <- gen_col[[".mv_group"]]
     long_data <- left_join(lg, work_data, by = gen_col[[".row_id_"]]) |>
       select(-all_of(gen_col[[".row_id_"]]))
+    long_data$.arg <- long_data[[gen_col[[".mv_arg"]]]]
     new_mapping$x <- rlang::sym(gen_col[[".mv_arg"]])
     new_mapping$y <- rlang::sym(gen_col[[".mv_value"]])
     new_mapping$group <- rlang::sym(gen_col[[".mv_group"]])

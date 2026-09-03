@@ -48,6 +48,7 @@ reference:
   - geom_capellini
   - autoplot.tf
   - autoplot.tf_mv
+  - tf_phaseplane
 - subtitle: "Visualization & display (from tf)"
   desc: Base-R graphics and print formats for tf objects
   contents:
