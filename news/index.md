@@ -4,6 +4,9 @@
 
 CRAN release: 2026-07-16
 
+- Package logo is now `man/figures/logo.png` (animated PNG) instead of
+  `logo.gif`, so it is picked up by dynamic HTML help and
+  [`tools::pkg2HTML()`](https://rdrr.io/r/tools/pkg2HTML.html) refmans.
 - Trajectory plots of `tf_mv` objects (and all other
   [`tf_ggplot()`](https://tidyfun.github.io/tidyfun/reference/tf_ggplot.md)
   layers) now provide a column `.arg` with the argument value of each

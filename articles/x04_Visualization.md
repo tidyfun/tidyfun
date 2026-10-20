@@ -649,20 +649,20 @@ summary(pinch_reg)
 ## 
 ## 20 curve(s) on [0, 0.3]
 ## 
-## Amplitude variance reduction: 96.7%
+## Amplitude variance reduction: 96.6%
 ## 
 ## Inverse warp deviations from identity (relative to domain length):
 ##     0%    10%    25%    50%    75%    90%   100% 
-## 0.0329 0.0670 0.0765 0.1161 0.1469 0.1841 0.2104 
+## 0.0320 0.0669 0.0765 0.1160 0.1458 0.1860 0.2108 
 ## 
 ## Inverse warp slopes (1 = identity):
 ##   overall range: [0.143, 7]
 ##   per-curve min slopes:
 ##    0%   10%   25%   50%   75%   90%  100% 
-## 0.143 0.143 0.143 0.167 0.200 0.258 0.333 
+## 0.143 0.143 0.143 0.167 0.200 0.333 0.333 
 ##   per-curve max slopes:
 ##   0%  10%  25%  50%  75%  90% 100% 
-##  2.0  3.9  7.0  7.0  7.0  7.0  7.0
+##    2    4    7    7    7    7    7
 plot(pinch_reg)
 ```
 

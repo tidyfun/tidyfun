@@ -1,4 +1,4 @@
-# tidyfun [![tidyfun website](reference/figures/logo.gif)](https://tidyfun.github.io/tidyfun/)
+# tidyfun
 
 **`tidyfun`** is a **`tidyverse`**-oriented interface layer around the
 core **`tf`** package. It makes functional data analysis in `R` easier
