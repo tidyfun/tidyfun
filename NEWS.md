@@ -1,5 +1,8 @@
 # tidyfun 0.2.0
 
+* Package logo is now `man/figures/logo.png` (animated PNG) instead of
+  `logo.gif`, so it is picked up by dynamic HTML help and `tools::pkg2HTML()`
+  refmans.
 * Trajectory plots of `tf_mv` objects (and all other `tf_ggplot()` layers) now
   provide a column `.arg` with the argument value of each evaluation point, so
   `aes(colour = .arg)` colours curve segments by their position along the
